@@ -1,9 +1,5 @@
 language: node_js
 node_js:
   - node
-script:
-    - cd client
-    - npm ci
-    - npm test
-    - npm run build
-
+cache: npm
+script: build_scripts/build.sh --strict --verbose
