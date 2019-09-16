@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "jest": "latest",
     "linked-list": "^2.1.0",
     "mocha": "^6.2.0",

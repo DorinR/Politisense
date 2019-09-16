@@ -1,26 +1,28 @@
-const Scrape = require('../src/Scraper')
+import { Scraper } from '../src/Scraper'
 const assert = require('chai').assert
 
 // eslint-disable-next-line no-undef
 describe('All Scraper Request Tests', () => {
   // eslint-disable-next-line no-undef
   test('Valid URL returns html', () => {
-    const req = new Scrape.Scraper('https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States')
-    let html = ''
-    req.scrape((result) => {
-      html = result
-      assert.notEqual(html, '', 'html is returned by scraping a good url')
-      assert.isTrue(html.length > 1000, 'html returned should be quite large')
-    })
+    const req = new Scraper('https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States')
+    req.scrape()
+      .then((html) => {
+        assert.isTrue(typeof html === 'string', 'valid html is delivered by the scraper')
+      })
+      .catch((e) => {
+        assert.fail('valid html should be delivered by the scraper')
+      })
   })
   // eslint-disable-next-line no-undef
-  test('Invalid URL returns null', () => {
-    const req = new Scrape.Scraper('',
-      (result) => {
-        assert.fail('the callback should never be used here')
-      }, (result) => {
-        assert.isTrue(true, 'request has failed')
-      })
+  test('Invalid URL invokes fail function', () => {
+    const req = new Scraper('')
     req.scrape()
+      .then((html) => {
+        assert.fail('valid html is delivered by the scraper where none should exist')
+      })
+      .catch((e) => {
+        assert.isTrue(true, 'there is no valid html coming from this link')
+      })
   })
 })

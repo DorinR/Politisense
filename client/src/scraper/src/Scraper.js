@@ -13,28 +13,21 @@ class ScrapeError extends Error {
 }
 
 class Scraper {
-  constructor (url, success, fail) {
+  constructor (url) {
     this.url = url
-    if (typeof fail === 'undefined') {
-      this.fail = ScrapeError.doThrow
-    } else {
-      this.fail = fail
-    }
-    if (typeof success === 'undefined') {
-      this.success = ScrapeError.doThrow
-    } else {
-      this.success = success
-    }
   }
 
-  async scrape () {
-    RequestLibrary(this.url)
-      .then((html) => {
-        this.success(html)
-      })
-      .catch((e) => {
-        this.fail(e)
-      })
+  async scrape (url) {
+    this.url = (typeof url === 'undefined') ? this.url : url
+    return new Promise((resolve, reject) => {
+      RequestLibrary(this.url)
+        .then((html) => {
+          resolve(html)
+        })
+        .catch((e) => {
+          reject(new ScrapeError('could not scrape page: ' + e.message))
+        })
+    })
   }
 }
 module.exports.Scraper = Scraper

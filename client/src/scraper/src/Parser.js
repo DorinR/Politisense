@@ -6,19 +6,28 @@ class ParseError extends Error {
     this.message = msg
     this.name = 'ParseError'
   }
+
+  static doThrow (e) {
+    throw new ParseError(e.message)
+  }
 }
 
 class Parser {
-  constructor (tag, cb) {
-    this.tag = tag
-    this.select = cb
+  constructor () {
+    this.tag = ''
+    this.filter = function () {}
+    this.load = ParsingLibrary.load
   }
 
-  parse (html) {
-    const $ = ParsingLibrary.load(html)
+  parse (html, tag, filter) {
+    this.tag = (typeof tag === 'undefined') ? this.tag : tag
+    this.filter = (typeof filter === 'undefined') ? this.filter : filter
+    const $ = this.load(html)
+    const tagList = []
     $(this.tag).each((i, elem) => {
-      this.select(elem.attribs.href)
+      tagList[i - 1] = this.filter(elem)
     })
+    return tagList
   }
 }
 module.exports.Parser = Parser

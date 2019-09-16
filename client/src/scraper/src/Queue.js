@@ -1,18 +1,14 @@
 const LinkedList = require('linked-list')
 
-class JobQueue {
+class Queue {
   constructor () {
     this.queue = new LinkedList()
   }
 
-  enqueue (scraper, parser, processor) {
+  enqueue (task) {
     const item = new LinkedList.Item()
     // eslint-disable-next-line dot-notation
-    item['scraper'] = scraper
-    // eslint-disable-next-line dot-notation
-    item['parser'] = parser
-    // eslint-disable-next-line dot-notation
-    item['processor'] = processor
+    item['item'] = task
     this.queue.append(item)
   }
 
@@ -22,11 +18,12 @@ class JobQueue {
     }
     const head = this.queue.head
     head.detach()
-    return head.scraper
+    return head.item
   }
 
   size () {
     return this.queue.size
   }
 }
-module.exports.JobQueue = JobQueue
+
+module.exports.Queue = Queue
