@@ -1,4 +1,4 @@
-import { Scraper } from '../src/Scraper'
+import { Scraper } from '../src/WebPageScraper'
 const assert = require('chai').assert
 
 // eslint-disable-next-line no-undef

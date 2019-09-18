@@ -1,5 +1,4 @@
-
-class Processor {
+class LinkSelectorXML {
   constructor () {
     this.urls = []
     this.xmlLinks = []
@@ -12,7 +11,7 @@ class Processor {
       }
       const l = link.toLowerCase()
       if (l.includes('xml')) {
-        this.xmlLinks.push('xml')
+        this.xmlLinks.push(link)
       } else {
         this.urls.push(link)
       }
@@ -21,4 +20,4 @@ class Processor {
   }
 }
 
-module.exports.Processor = Processor
+module.exports.Processor = LinkSelectorXML

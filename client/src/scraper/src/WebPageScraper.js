@@ -12,7 +12,7 @@ class ScrapeError extends Error {
   }
 }
 
-class Scraper {
+class WebPageScraper {
   constructor (url) {
     this.url = url
   }
@@ -20,7 +20,10 @@ class Scraper {
   async scrape (url) {
     this.url = (typeof url === 'undefined') ? this.url : url
     return new Promise((resolve, reject) => {
-      RequestLibrary(this.url)
+      RequestLibrary({
+        uri: this.url,
+        timeout: 30000 // 30 seconds
+      })
         .then((html) => {
           resolve(html)
         })
@@ -30,5 +33,5 @@ class Scraper {
     })
   }
 }
-module.exports.Scraper = Scraper
+module.exports.Scraper = WebPageScraper
 module.exports.ScrapeError = ScrapeError

@@ -1,4 +1,4 @@
-import { Job } from '../src/Job'
+import { Job } from '../src/ScrapeJob'
 
 const chai = require('chai')
 chai.should()

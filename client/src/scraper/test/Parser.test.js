@@ -11,7 +11,7 @@ describe('All Parser Tests', () => {
     req.scrape()
       .then((html) => {
         assert.isTrue(typeof html === 'string', 'valid html is delivered by the scraper')
-        return parser.parse(html, 'a', (elem) => {
+        return parser.parseHTML(html, 'a', (elem) => {
           return elem.attr.href
         })
       })
@@ -30,7 +30,7 @@ describe('All Parser Tests', () => {
     req.scrape()
       .then((html) => {
         assert.isTrue(typeof html === 'string', 'valid html is delivered by the scraper')
-        return parser.parse(html, '', (elem) => {
+        return parser.parseHTML(html, '', (elem) => {
           return elem
         })
       })

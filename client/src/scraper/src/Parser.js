@@ -19,7 +19,7 @@ class Parser {
     this.load = ParsingLibrary.load
   }
 
-  parse (html, tag, filter) {
+  parseHTML (html, tag, filter) {
     this.tag = (typeof tag === 'undefined') ? this.tag : tag
     this.filter = (typeof filter === 'undefined') ? this.filter : filter
     const $ = this.load(html)
