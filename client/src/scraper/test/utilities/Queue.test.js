@@ -1,5 +1,5 @@
-import { Queue } from '../src/Queue'
-import { Job } from '../src/ScrapeJob'
+import { Queue } from '../../src/utilities/Queue'
+import { Job } from '../../src/ScrapeJob'
 const assert = require('chai').assert
 const expect = require('chai').expect
 

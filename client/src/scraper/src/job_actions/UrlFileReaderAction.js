@@ -1,11 +1,13 @@
 const fetch = require('node-fetch')
+const JobAction = require('./JobAction').AbstractJobAction
 
-class FileReader {
+class UrlFileReader extends JobAction {
   constructor (filepath) {
+    super()
     this.fp = filepath
   }
 
-  read () {
+  perform () {
     // eslint-disable-next-line no-undef
     return fetch(this.fp)
       .then((result) => {
@@ -14,10 +16,15 @@ class FileReader {
       .then((body) => {
         return body
       })
+      .then((body) => {
+        console.log('Done Retrieving xml: ' + this.fp)
+        return body
+      })
       .catch((e) => {
+        console.error(e.message)
         return this.fp
       })
   }
 }
 
-module.exports.Reader = FileReader
+module.exports.FileReader = UrlFileReader

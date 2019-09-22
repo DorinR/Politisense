@@ -1,4 +1,5 @@
 const RequestLibrary = require('request-promise')
+const JobAction = require('./JobAction').AbstractJobAction
 
 class ScrapeError extends Error {
   constructor (message) {
@@ -12,19 +13,21 @@ class ScrapeError extends Error {
   }
 }
 
-class WebPageScraper {
+class LinkScraperAction extends JobAction {
   constructor (url) {
+    super()
     this.url = url
   }
 
-  async scrape (url) {
+  async perform (url) {
     this.url = (typeof url === 'undefined') ? this.url : url
     return new Promise((resolve, reject) => {
       RequestLibrary({
         uri: this.url,
-        timeout: 30000 // 30 seconds
+        timeout: 60000
       })
         .then((html) => {
+          console.log('Done Scraping: ' + this.url)
           resolve(html)
         })
         .catch((e) => {
@@ -33,5 +36,5 @@ class WebPageScraper {
     })
   }
 }
-module.exports.Scraper = WebPageScraper
+module.exports.LinkScraper = LinkScraperAction
 module.exports.ScrapeError = ScrapeError

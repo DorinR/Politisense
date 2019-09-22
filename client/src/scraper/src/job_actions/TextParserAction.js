@@ -1,4 +1,5 @@
 const ParsingLibrary = require('cheerio')
+const JobAction = require('./JobAction').AbstractJobAction
 
 class ParseError extends Error {
   constructor (msg) {
@@ -12,14 +13,15 @@ class ParseError extends Error {
   }
 }
 
-class Parser {
+class TextParserAction extends JobAction {
   constructor () {
+    super()
     this.tag = ''
     this.filter = function () {}
     this.load = ParsingLibrary.load
   }
 
-  parseHTML (html, tag, filter) {
+  perform (html, tag, filter) {
     this.tag = (typeof tag === 'undefined') ? this.tag : tag
     this.filter = (typeof filter === 'undefined') ? this.filter : filter
     const $ = this.load(html)
@@ -30,5 +32,5 @@ class Parser {
     return tagList
   }
 }
-module.exports.Parser = Parser
+module.exports.TextParser = TextParserAction
 module.exports.ParseError = ParseError

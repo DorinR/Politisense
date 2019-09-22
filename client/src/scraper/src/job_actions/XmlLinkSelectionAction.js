@@ -1,10 +1,13 @@
-class LinkSelectorXML {
+const JobAction = require('./JobAction').AbstractJobAction
+
+class XmlLinkSelectionAction extends JobAction {
   constructor () {
+    super()
     this.urls = []
     this.xmlLinks = []
   }
 
-  process (links) {
+  perform (links) {
     links.forEach((link) => {
       if (typeof link === 'undefined') {
         return
@@ -20,4 +23,4 @@ class LinkSelectorXML {
   }
 }
 
-module.exports.Processor = LinkSelectorXML
+module.exports.XmlLinkSelector = XmlLinkSelectionAction

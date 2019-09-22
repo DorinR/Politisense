@@ -1,22 +1,19 @@
-const Scraper = require('./WebPageScraper').Scraper
-const ScrapeError = require('./WebPageScraper').ScrapeError
-const Parser = require('./Parser').Parser
-const Processor = require('./LinkSelectorXML').Processor
+const Scraper = require('./job_actions/LinkScraperAction').LinkScraper
+const ScrapeError = require('./job_actions/LinkScraperAction').ScrapeError
+const Parser = require('./job_actions/TextParserAction').TextParser
+const Processor = require('./job_actions/XmlLinkSelectionAction').XmlLinkSelector
+const Job = require('./Job').AbstractJob
 
-class ProcessingError extends Error {
-  constructor (msg) {
-    super()
-    this.message = msg
-    this.name = 'ProcessingError'
+class ScrapeJob extends Job {
+  // eslint-disable-next-line no-useless-constructor
+  constructor (url, manager) {
+    super(url, manager)
   }
-}
-class ScrapeJob {
-  constructor (url, mngr) {
-    this.scraper = new Scraper(url)
+
+  initialiseJobComponents () {
+    this.scraper = new Scraper(this.url)
     this.parser = new Parser()
     this.processor = new Processor()
-    this.mngr = mngr
-    this.tlds = ['https://www.ourcommons.ca', 'https://www.parl.ca']
   }
 
   parse (html) {
@@ -24,28 +21,24 @@ class ScrapeJob {
     const select = (elem) => {
       return $(elem).attr('href')
     }
-    return this.parser.parseHTML(html, 'a', select)
+    return this.parser.perform(html, 'a', select)
   }
 
   process (links) {
-    return this.processor.process(links)
+    return this.processor.perform(links)
   }
 
-  createNewJobs (urls) {
-    const newJobs = []
-    urls.forEach((url) => {
-      newJobs.push(new ScrapeJob(url, this.mngr))
-    })
-    return newJobs
+  createNewJob (url, manager) {
+    return new ScrapeJob(url, manager)
   }
 
-  getXmlLinks () {
+  result () {
     return this.processor.xmlLinks
   }
 
   async execute () {
     return new Promise((resolve, reject) => {
-      this.scraper.scrape()
+      this.scraper.perform()
         .then((html) => {
           return this.parse(html)
         })
@@ -53,24 +46,29 @@ class ScrapeJob {
           return this.process(links)
         })
         .then((urls) => {
-          this.mngr.enqueueJobsCb(this.createNewJobs(urls))
-          resolve(this.getXmlLinks())
+          this.manager.enqueueJobsCb(super.createNewJobs(urls))
+          this.done = true
+          resolve(this.result())
         })
         .catch((e) => {
           let link = this.scraper.url
-          const error = new ScrapeError('Malformed link passed to scraper: ' + link)
+          this.done = true
+          if (e.name !== 'ScrapeError') {
+            reject(e)
+          }
+          const error = new ScrapeError('Malformed link passed to scraper: ' + link + '\n' + e.message)
           if (this.scraper.url.includes('https://')) {
             reject(error)
           }
           if (this.scraper.url.startsWith('//')) {
             link = 'https:' + this.scraper.url
-            this.mngr.enqueueJobsCb([new ScrapeJob(link, this.mngr)])
+            this.manager.enqueueJobsCb([new ScrapeJob(link, this.manager)])
             error.message = 're-enqueuing link as: ' + link
           } else if (this.scraper.url.startsWith('/')) {
             link = this.tlds[0] + this.scraper.url
-            this.mngr.enqueueJobsCb([new ScrapeJob(link, this.mngr)])
+            this.manager.enqueueJobsCb([new ScrapeJob(link, this.manager)])
             const link0 = this.tlds[1] + this.scraper.url
-            this.mngr.enqueueJobsCb([new ScrapeJob(link0, this.mngr)])
+            this.manager.enqueueJobsCb([new ScrapeJob(link0, this.manager)])
             error.message = 're-enqueuing link as: ' + link + ' and as ' + link0
           }
           reject(error)
@@ -78,5 +76,4 @@ class ScrapeJob {
     })
   }
 }
-module.exports.Job = ScrapeJob
-module.exports.ProcessingError = ProcessingError
+module.exports.ScrapeJob = ScrapeJob

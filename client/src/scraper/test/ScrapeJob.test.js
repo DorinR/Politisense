@@ -1,4 +1,5 @@
-import { Job } from '../src/ScrapeJob'
+import { ScrapeJob } from '../src/ScrapeJob'
+import { ScrapeRunner } from '../src/ScrapeRunner'
 
 const chai = require('chai')
 chai.should()
@@ -9,19 +10,17 @@ describe('All Job tests', () => {
   // eslint-disable-next-line no-undef
   test('Can execute a Job', () => {
     const url = 'https://www.ourcommons.ca/en'
-    const exc = new Job(url)
-    return exc.execute().should.eventually.be.a('array')
-  })
-  // eslint-disable-next-line no-undef
-  test('Job salvages poor links', () => {
-    const url = 'www.ourcommons.ca/en'
-    const exc = new Job(url)
+    const mngr = new ScrapeRunner()
+    mngr.enqueueJobsCb = function () {}
+    const exc = new ScrapeJob(url, mngr)
     return exc.execute().should.eventually.be.a('array')
   })
   // eslint-disable-next-line no-undef
   test('Job throws on bad link', () => {
     const url = 'https://'
-    const exc = new Job(url)
+    const mngr = new ScrapeRunner()
+    mngr.enqueueJobsCb = () => {}
+    const exc = new ScrapeJob(url, mngr)
     exc.execute().should.eventually.throw().notify(chai.done)
   })
 })
