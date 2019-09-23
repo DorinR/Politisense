@@ -1,6 +1,6 @@
 const fb = require('firebase')
 
-class Firebase {
+class _Firebase {
   constructor () {
     this.config = {
       apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
@@ -15,15 +15,55 @@ class Firebase {
     this.db = fb.database()
   }
 }
+class Reference {
+  constructor (reference) {
+    this.reference = reference
+  }
+
+  select () {
+    return new Promise((resolve, reject) => {
+      this.reference
+        .once('value')
+        .then((snapshot) => {
+          resolve(snapshot)
+        })
+        .catch((e) => {
+          reject(e)
+        })
+    })
+  }
+
+  insert (model) {
+    return new Promise((resolve) => {
+      this.reference
+        .push(model)
+        .then(() => {
+          resolve(true)
+        })
+        .catch((e) => {
+          resolve(false)
+        })
+    })
+  }
+}
+
+class Firebase {
+  constructor () {
+    this.firebase = new _Firebase()
+  }
+
+  Bill () {
+    return new Reference(this.firebase.db.ref('bills'))
+  }
+
+  Politician () {
+    return new Reference(this.firebase.db.ref('politicians'))
+  }
+
+  User () {
+    return new Reference(this.firebase.db.ref('users'))
+  }
+}
 
 module.exports.Firebase = Firebase
-
-var firebase = new Firebase()
-firebase.db.ref('users')
-  .once('value')
-  .then((snapshot) => {
-    console.log(snapshot.val())
-  })
-  .catch((e) => {
-    console.log(e.message)
-  })
+module.exports.Reference = Reference
