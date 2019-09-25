@@ -16,6 +16,14 @@ class XmlDataParser {
   getDataInAttribute (tag, attribute) {
     return this.$(tag)[0].attribs[attribute]
   }
+
+  billXmlToJson () {
+    let bill = {}
+    bill.id = this.getDataInAttribute('BillNumber', 'number')
+    bill.title = this.$('BillTitle').text()
+    return this.$('BillTitle').children().attr('language', 'en')
+    // return bill
+  }
 }
 
 module.exports.XmlDataParser = XmlDataParser
