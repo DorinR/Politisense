@@ -18,6 +18,12 @@ class XmlDataParser {
   }
 
   billXmlToJson () {
+    // only store passed bills
+    const currentState = this.getDataInAttribute('Events', 'laagCurrentStage')
+    if (currentState !== 'RoyalAssentGiven') {
+      return null
+    }
+
     let bill = {}
     bill.id = this.getDataInAttribute('BillNumber', 'number')
     bill.title = this.$('BillTitle').text()

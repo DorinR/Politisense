@@ -1,3 +1,4 @@
+/* eslint-env mocha */
 import { XmlDataParser } from '../src/XmlDataParser'
 import { assert } from 'chai'
 // import { expect } from 'chai'
@@ -6,28 +7,38 @@ import { assert } from 'chai'
 const fs = require('fs')
 const path = require('path')
 
-
 describe('XmlDataParser', () => {
-  it('get text in xml', () => {
+  it('should get text in xml using getDataInTag()', () => {
     const xml = '<text>ANSWER</text>'
     const parser = new XmlDataParser(xml)
-    const parserAns = parser.getDataInTag('text')
-    assert.strictEqual(parserAns, 'ANSWER')
+    const parserRes = parser.getDataInTag('text')
+    assert.strictEqual(parserRes, 'ANSWER')
   })
 
-  it('get value of specified attribute', () => {
+  it('should get value of specified attribute using getDataInAttribute', () => {
     const xml = '<text attribute="attr">ANSWER</text>'
     const parser = new XmlDataParser(xml)
-    const parserAns = parser.getDataInAttribute('text', 'attribute')
-    assert.strictEqual(parserAns, 'attr')
+    const parserRes = parser.getDataInAttribute('text', 'attribute')
+    assert.strictEqual(parserRes, 'attr')
   })
 
-  it('get xml from file', () => {
-    const pathToXml = path.resolve(__dirname, './billc51.xml')
+  it('should return null if the bill was not passed', () => {
+    const pathToXml = path.resolve(__dirname, './testUnpassedBill.xml')
+    const xml = fs.readFileSync(pathToXml) // added test bill to read
+    const parser = new XmlDataParser(xml)
+
+    const res = parser.billXmlToJson()
+    assert.isNull(res)
+  })
+
+  it('get xml from file', () => { // TODO to complete
+    const pathToXml = path.resolve(__dirname, './testBill.xml')
     const xml = fs.readFileSync(pathToXml) // added test bill to read
     const parser = new XmlDataParser(xml)
 
     const ans = parser.billXmlToJson()
+
+    // TODO assert non-null result first
     console.log(ans)
   })
 })
