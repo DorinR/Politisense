@@ -31,14 +31,19 @@ describe('XmlDataParser', () => {
     assert.isNull(res)
   })
 
-  it('get xml from file', () => { // TODO to complete
-    const pathToXml = path.resolve(__dirname, './testBill.xml')
-    const xml = fs.readFileSync(pathToXml) // added test bill to read
-    const parser = new XmlDataParser(xml)
+  it('should return specified bill info', () => {
+    const parser = getParserForBill('./testBill.xml')
+    const bill = parser.billXmlToJson()
 
-    const ans = parser.billXmlToJson()
-
-    // TODO assert non-null result first
-    console.log(ans)
+    assert.isNotNull(bill)
+    assert.strictEqual(bill.id, '51')
+    assert.strictEqual(bill.title, 'An Act to amend the Criminal Code and the Department of Justice Act and to make consequential amendments to another Act')
+    assert.strictEqual(bill.sponsorName, 'Jody Wilson-Raybould')
   })
 })
+
+function getParserForBill (billFileLocation) {
+  const pathToXml = path.resolve(__dirname, billFileLocation)
+  const xml = fs.readFileSync(pathToXml)
+  return new XmlDataParser(xml)
+}

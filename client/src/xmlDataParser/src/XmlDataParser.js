@@ -26,9 +26,10 @@ class XmlDataParser {
 
     const bill = {}
     bill.id = this.getDataInAttribute('BillNumber', 'number')
-    bill.title = this.$('BillTitle').text()
-    return this.$('BillTitle').find("Title[language='en']").text()
-    // return bill
+    bill.title = this.$('BillTitle').find("Title[language='en']").text().trim()
+    bill.sponsorName = this.$('SponsorAffiliation').find('FullName').text()
+
+    return bill
   }
 }
 
