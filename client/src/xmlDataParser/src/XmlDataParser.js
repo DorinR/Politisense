@@ -24,10 +24,10 @@ class XmlDataParser {
       return null
     }
 
-    let bill = {}
+    const bill = {}
     bill.id = this.getDataInAttribute('BillNumber', 'number')
     bill.title = this.$('BillTitle').text()
-    return this.$('BillTitle').children().attr('language', 'en')
+    return this.$('BillTitle').find("Title[language='en']").text()
     // return bill
   }
 }
