@@ -32,7 +32,7 @@ describe('XmlDataParser', () => {
   })
 
   it('should return specified bill info', () => {
-    const parser = getParserForBill('./testBill.xml')
+    const parser = getParserForXmlFile('./testBill.xml')
     const bill = parser.billXmlToJson()
 
     assert.isNotNull(bill)
@@ -40,10 +40,20 @@ describe('XmlDataParser', () => {
     assert.strictEqual(bill.title, 'An Act to amend the Criminal Code and the Department of Justice Act and to make consequential amendments to another Act')
     assert.strictEqual(bill.sponsorName, 'Jody Wilson-Raybould')
   })
+
+  it('should return specified mp info', () => {
+    const parser = getParserForXmlFile('./testMp.xml')
+    const mp = parser.mpXmlToJson()
+
+    assert.strictEqual(mp.firstName, 'Jody')
+    assert.strictEqual(mp.lastName, 'Wilson-Raybould')
+    assert.strictEqual(mp.party, 'Independent')
+    assert.strictEqual(mp.riding, 'Vancouver Granville')
+  })
 })
 
-function getParserForBill (billFileLocation) {
-  const pathToXml = path.resolve(__dirname, billFileLocation)
+function getParserForXmlFile (xmlFilePath) {
+  const pathToXml = path.resolve(__dirname, xmlFilePath)
   const xml = fs.readFileSync(pathToXml)
   return new XmlDataParser(xml)
 }

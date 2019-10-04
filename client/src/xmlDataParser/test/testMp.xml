@@ -1,0 +1,28 @@
+﻿<Profile>
+    <MemberOfParliamentRole xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <PersonShortHonorific>Hon.</PersonShortHonorific>
+        <PersonOfficialFirstName>Jody</PersonOfficialFirstName>
+        <PersonOfficialLastName>Wilson-Raybould</PersonOfficialLastName>
+        <ConstituencyName>Vancouver Granville</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>British Columbia</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Independent</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliamentRole>
+    <CaucusMemberRoles xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <CaucusMemberRole>
+            <CaucusShortName>Independent</CaucusShortName>
+            <FromDateTime>2019-04-02T18:15:01</FromDateTime>
+            <ToDateTime xsi:nil="true"/>
+            <ParliamentNumber>42</ParliamentNumber>
+        </CaucusMemberRole>
+    </CaucusMemberRoles>
+    <ParliamentaryPositionRoles xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+    <CommitteeMemberRoles xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+    <ProfileParliamentaryAssociationsandInterparliamentaryGroupRoles xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                                                                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+</Profile>
