@@ -19,65 +19,97 @@ import { mainListItems, secondaryListItems } from './Listitems'
 import Chart from './Chart'
 import Deposits from './Deposits'
 import Orders from './Orders'
+import {D3Chart} from './D3Chart'
+import * as d3 from 'd3'
+import { useState, useRef, useEffect } from 'react'
+import { Button} from 'react-bootstrap';
+
+
+// style for the btn
+const btnStyle = {
+  "float": "right",
+  "position": "relative",
+  "bottom": 20,
+  "left":5,
+  "right":40,
+  "margin-right": 150
+
+}
 
 const drawerWidth = 240
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex'
-  },
-  menuButton: {
-    marginRight: 36
-  },
-  menuButtonHidden: {
-    display: 'none'
-  },
-  title: {
-    flexGrow: 1
-  },
-  drawerPaper: {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    width: theme.spacing(7),
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9)
-    }
-  },
-  content: {
-    flexGrow: 1,
-  },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4)
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column'
-  },
-  fixedHeight: {
-    height: 240
-  },
-  active: {
-    borderRight: '5px solid #43D0C4'
-  }
+const useStyles = makeStyles(theme =>
+    ({
+      root: {
+        display: 'flex'
+      },
+      menuButton: {
+        marginRight: 36
+      },
+      menuButtonHidden: {
+        display: 'none'
+      },
+      title: {
+        flexGrow: 1
+      },
+      drawerPaper: {
+        position: 'relative',
+        whiteSpace: 'nowrap',
+        width: drawerWidth,
+        transition: theme.transitions.create('width', {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.enteringScreen
+        })
+      },
+      drawerPaperClose: {
+        overflowX: 'hidden',
+        transition: theme.transitions.create('width', {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.leavingScreen
+        }),
+        width: theme.spacing(7),
+        [theme.breakpoints.up('sm')]: {
+          width: theme.spacing(9)
+        }
+      },
+      content: {
+        flexGrow: 1,
+      },
+      container: {
+        paddingTop: theme.spacing(4),
+        paddingBottom: theme.spacing(4)
+      },
+      paper: {
+        padding: theme.spacing(2),
+        display: 'flex',
+        overflow: 'auto',
+        flexDirection: 'column'
+      },
+      fixedHeight: {
+        height: 240
+      },
+      active: {
+        borderRight: '5px solid #43D0C4'
+      }
 }))
 
+
+
+const generateData = (value, length = 5) =>
+d3.range(length).map((item, index) => ({
+  date: index,
+  value: Math.random() * 100
+}));
+
+
 export default function Dashboard () {
+
+  const changeData = () => {
+    setData(generateData())
+  }
+
   const classes = useStyles()
-  const [open, setOpen] = React.useState(true)
+  const [data, setData] = useState(generateData());
+  const [open, setOpen] = useState(true)
   const handleDrawerOpen = () => {
     setOpen(true)
   }
@@ -92,10 +124,17 @@ export default function Dashboard () {
       <main className={classes.content}>
         <Container maxWidth='lg' className={classes.container}>
           <Grid container spacing={3}>
-            {/* Chart */}
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
-                <Chart />
+                 <D3Chart
+                      data = {data}
+                      width={800}
+                      height={200}
+                      innerRadius= {30}
+                      outerRadius ={80} />
+                <div>
+                <Button style={btnStyle} type="submit" onClick={changeData} >Transform </Button>
+                </div>
               </Paper>
             </Grid>
             {/* Recent Deposits */}
