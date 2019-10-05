@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import clsx from 'clsx'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
@@ -24,6 +24,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import PollIcon from '@material-ui/icons/Poll'
 import RssFeedIcon from '@material-ui/icons/RssFeed'
 import AnnouncementIcon from '@material-ui/icons/Announcement'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import { Link } from 'react-router-dom'
 
 const drawerWidth = 240
 
@@ -90,6 +92,9 @@ const useStyles = makeStyles(theme => ({
     height: 120,
     border: '2px solid red',
     borderRadius: '50%'
+  },
+  routerLink: {
+    textDecoration: 'none'
   }
 }))
 
@@ -148,70 +153,49 @@ export default function MiniDrawer({ children }) {
       >
         <div className={classes.toolbar}>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
+            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </div>
         <Divider />
         <ListItem button>
-          <ListItemIcon>
-            <PersonIcon />
-          </ListItemIcon>
-          {open ? (
-            <ListItemAvatar>
-              <Avatar
-                alt='Remy Sharp'
-                src={trudeau}
-                className={classes.bigAvatar}
-              />
+          <ListItemIcon><PersonIcon /></ListItemIcon>
+          {open
+            ? <ListItemAvatar>
+              <Avatar alt='Remy Sharp' src={trudeau} className={classes.bigAvatar} />
             </ListItemAvatar>
-          ) : null}
+            : null}
         </ListItem>
-        {open ? (
-          <ListItem>
+        {open
+          ? <ListItem>
             <ListItemText>
-              Liberal Party of Canada
-              <br />
-              Riding: Papineau
-              <br />
-              In Office since 2015
+              Liberal Party of Canada<br />Riding: Papineau<br />In Office since 2015
             </ListItemText>
-          </ListItem>
-        ) : null}
+            </ListItem> : null}
         <Divider />
         <List>
           <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon>
-              <MapIcon />
-            </ListItemIcon>
+            <ListItemIcon><MapIcon /></ListItemIcon>
             <ListItemText primary='Map' />
           </ListItem>
           <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary='Dashboard' />
+            <ListItemIcon><DashboardIcon /></ListItemIcon>
+            <Link to='/dashboard' className={classes.routerLink}>Dashboard</Link>
           </ListItem>
           <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon>
-              <PollIcon />
-            </ListItemIcon>
+            <ListItemIcon><PollIcon /></ListItemIcon>
             <ListItemText primary='Poll' />
           </ListItem>
           <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon>
-              <RssFeedIcon />
-            </ListItemIcon>
+            <ListItemIcon><RssFeedIcon /></ListItemIcon>
             <ListItemText primary='News Feed' />
           </ListItem>
           <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon>
-              <AnnouncementIcon />
-            </ListItemIcon>
+            <ListItemIcon><AnnouncementIcon /></ListItemIcon>
             <ListItemText primary='Happening now' />
+          </ListItem>
+          <ListItem button onClick={handleDrawerOpen}>
+            <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+            <Link to='/logout' className={classes.routerLink}>Logout</Link>
           </ListItem>
         </List>
       </Drawer>

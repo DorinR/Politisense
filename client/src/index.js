@@ -10,16 +10,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const theme = createMuiTheme({
   palette: {
     primary: {
-      // light: '#fff',
       main: '#43D0C4',
       contrastText: '#fff'
-      // dark: '#fff'
-    },
-    // background:{
-    //   default:'#000'
-    // },
-    secondary: {
-      main: '#f44336'
     }
   },
   typography: {
