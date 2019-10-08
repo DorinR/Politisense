@@ -1,10 +1,31 @@
 import * as d3 from 'd3'
 import React, { useRef, useEffect } from 'react'
+import {legend} from 'd3'
 
-//https://medium.com/@jeffbutsch/using-d3-in-react-with-hooks-4a6c61f1d102
+
+const header_style = {
+    "width": 200,
+    "height":0
+}
+
  export const D3Chart = (props)=> {
 
+        var yes_counter=0
+        var no_counter= 0
+
         const ref = useRef(null);
+
+        const bills_data = props.data
+
+        bills_data.map(d =>{
+            console.log(d.FirstName)
+             if(d.FirstName.includes("Nay") )
+                 {no_counter++}
+             if(d.FirstName.includes("Yea")){
+                 yes_counter++}
+            })
+
+        const data_objects= [{index:0, value: yes_counter,title: "Total Yes's"},{index:1,value:no_counter,title:"Total No's"}]
 
         const createPie = d3
             .pie()
@@ -24,10 +45,11 @@ import React, { useRef, useEffect } from 'react'
         useEffect(
             ()=> {
 
-            const data = createPie(props.data);
+            const data = createPie(data_objects);
 
-            const group = d3.select(ref.current);
-            const groupWithData = group.selectAll("g.arc").data(data);
+            const group = d3.select(ref.current)
+            const groupWithData = group.selectAll("g.arc").data(data)
+
 
             groupWithData.exit().remove();
 
@@ -55,16 +77,40 @@ import React, { useRef, useEffect } from 'react'
                 .attr("transform", d => `translate(${createArc.centroid(d)})`)
                 .style("fill", "white")
                 .style("font-size", 10)
-                .text(d => format(d.value));
+                .text(d => format(d.value))
+
+            var svg = d3.select("#my_data").append("g").attr("transform","translate(100 60)")
+            var keys = ["No","Yes"]
+
+            svg.selectAll("mydots")
+                .data(keys)
+                .enter()
+                .append("circle")
+                .attr("cx", 100)
+                .attr("cy", function(d,i){ return 100 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+                .attr("r", 7)
+                .style("fill", function(d,i){ return colors(i)})
+
+            svg.selectAll("mylabels")
+                .data(keys)
+                .enter()
+                .append("text")
+                .attr("x", 120)
+                .attr("y", function(d,i){ return 100 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+                .style("fill", function(d,i){ return colors(i)})
+                .text(function(d){ return d})
+                .attr("text-anchor", "left")
+                .style("alignment-baseline", "middle")
+
         }
         , [props.data]);
 
     return (
         <div>
-             <svg width={props.width} height={props.height}>
+             <svg id="my_data" width={props.width} height={props.height}>
                 <g
                 ref={ref}
-                transform={`translate(${props.outerRadius+600} ${props.outerRadius})`}
+                transform={`translate(${props.height/2} ${props.height/2})`}
                 />
             </svg>
         </div>

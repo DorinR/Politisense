@@ -116,7 +116,7 @@ export default function Login () {
                       value={password}
                     />
                     <Typography variant='h6' gutterBottom style={{ textAlign: 'center' }}>
-                        OR
+                      OR
                     </Typography>
                     <Grid
                       container
@@ -141,12 +141,12 @@ export default function Login () {
                       color='primary'
                       className={classes.submit}
                     >
-                        Log in
+                      Log in
                     </Button>
                     <Grid container>
                       <Grid item xs>
                         <Link href='#' variant='body2'>
-                            Forgot password?
+                          Forgot password?
                         </Link>
                       </Grid>
                       <Grid item>
