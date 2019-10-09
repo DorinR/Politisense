@@ -15,17 +15,34 @@ class _Firebase {
     this.db = fb.database()
   }
 }
+
 class Reference {
   constructor (reference) {
     this.reference = reference
   }
 
-  select () {
+  select (selection) {
     return new Promise((resolve, reject) => {
       this.reference
         .once('value')
         .then((snapshot) => {
-          resolve(snapshot)
+          const result = {}
+          if (typeof selection === 'undefined') {
+            resolve(snapshot.val())
+          }
+          snapshot.forEach((child) => {
+            const key = child.key
+            let desired = true
+            Object.keys(selection).forEach((required) => {
+              if (!child.hasChild(required) || child.val()[required] !== selection[required]) {
+                desired = false
+              }
+            })
+            if (desired) {
+              result[key] = child.val()
+            }
+          })
+          resolve(result)
         })
         .catch((e) => {
           reject(e)
@@ -50,6 +67,7 @@ class Reference {
 class Firebase {
   constructor () {
     this.firebase = new _Firebase()
+    this.reference = this.firebase.db.ref
   }
 
   Bill () {
@@ -62,6 +80,18 @@ class Firebase {
 
   User () {
     return new Reference(this.firebase.db.ref('users'))
+  }
+
+  VoteRecord () {
+    return new Reference(this.firebase.db.ref('vote_records'))
+  }
+
+  open () {
+    this.firebase.db.goOnline()
+  }
+
+  close () {
+    this.firebase.db.goOffline()
   }
 }
 
