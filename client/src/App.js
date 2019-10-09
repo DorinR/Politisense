@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch
+} from 'react-router-dom'
 import Login from './Components/Auth/Login'
 import SignUp from './Components/Auth/SignUp'
 import Navbar from './Components/Navbar'
 import Questions from './Components/Questions'
 import Dashboard from './Components/Dashboard/Dashboard'
 import Logout from './Components/Logout'
+import UserAccount from './Components/UserAccount'
 import Map from './Components/Map'
 
 const App = () => {
@@ -25,6 +31,7 @@ const App = () => {
           <PrivateRoute path='/questions' component={Questions} />
           <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/map' component={Map} />
+          <PrivateRoute path='/account' component={UserAccount} />
         </div>
       </Navbar>
     </div>
@@ -32,11 +39,14 @@ const App = () => {
 
   const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route
-      {...rest} render={(props) => (
-        localStorage.getItem('user')
-          ? <Component {...props} />
-          : <Redirect to='/login' />
-      )}
+      {...rest}
+      render={props =>
+        localStorage.getItem('user') ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to='/login' />
+        )
+      }
     />
   )
 

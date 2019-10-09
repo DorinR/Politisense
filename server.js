@@ -3,20 +3,26 @@ const express = require('express')
 const app = express()
 
 // Example of adding a user to firestore
-const db = firebase.firestore()
-const usersCollection = db.collection('users')
-usersCollection
-  .add({
-    name: 'Valterri Bottas',
-    email: 'v.bottas@petronas-amg-mercedez.com',
-    password: 'finlandIsTheBest'
-  })
-  .catch(err => {
-    console.log(err)
-  })
-  .then(docRef => {
-    console.log('user successfully added!')
-  })
+// const db = firebase.firestore()
+// const usersCollection = db.collection('users')
+// usersCollection
+//   .add({
+//     firstName: 'Valterri',
+//     lastName: 'Bottas',
+//     email: 'v.bottas@petronas-amg-mercedez.com',
+//     password: 'finlandIsTheBest',
+//     politicalProfile: {
+//       riding: 'Dorval-Lachine',
+//       representative: 'Benjamin Franklin',
+//       inOfficeSince: 2015
+//     }
+//   })
+//   .catch(err => {
+//     console.log(err)
+//   })
+//   .then(docRef => {
+//     console.log('user successfully added!')
+//   })
 
 // Init Middleware
 app.use(express.json({ extended: false })) //allows us to get the data from the post body

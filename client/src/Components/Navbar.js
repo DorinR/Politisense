@@ -26,6 +26,12 @@ import RssFeedIcon from '@material-ui/icons/RssFeed'
 import AnnouncementIcon from '@material-ui/icons/Announcement'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { Link } from 'react-router-dom'
+import RepresentativeInfo from './Dashboard/Sidebar/RepresentativeInfo'
+import RepresentativeImage from './Dashboard/Sidebar/RepresentativeImage'
+import Tooltip from '@material-ui/core/Tooltip'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import Fab from '@material-ui/core/Fab'
+import Box from '@material-ui/core/Box'
 
 const drawerWidth = 240
 
@@ -95,6 +101,13 @@ const useStyles = makeStyles(theme => ({
   },
   routerLink: {
     textDecoration: 'none'
+  },
+  fab: {
+    margin: theme.spacing(2),
+    backgroundColor: 'white'
+  },
+  politisenseIcon: {
+    color: '#41aaa8'
   }
 }))
 
@@ -135,6 +148,17 @@ export default function MiniDrawer({ children }) {
           <Typography variant='h6' noWrap>
             Politisense
           </Typography>
+          <Typography style={{ flex: 1 }}></Typography>
+          <Link to='/account'>
+            <Tooltip title='My Account' aria-label='add'>
+              <Fab size='small' className={classes.fab}>
+                <AccountCircleIcon
+                  fontSize='large'
+                  className={classes.politisenseIcon}
+                />
+              </Fab>
+            </Tooltip>
+          </Link>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -153,49 +177,56 @@ export default function MiniDrawer({ children }) {
       >
         <div className={classes.toolbar}>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === 'rtl' ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </div>
         <Divider />
+        <Box p={1} />
         <ListItem button>
-          <ListItemIcon><PersonIcon /></ListItemIcon>
-          {open
-            ? <ListItemAvatar>
-              <Avatar alt='Remy Sharp' src={trudeau} className={classes.bigAvatar} />
+          <ListItemIcon>
+            <PersonIcon
+              className={classes.politisenseIcon}
+              onClick={handleDrawerOpen}
+            />
+          </ListItemIcon>
+          {open ? (
+            <ListItemAvatar>
+              <RepresentativeImage representativeToLoad='Justin Trudeau' />
             </ListItemAvatar>
-            : null}
+          ) : null}
         </ListItem>
-        {open
-          ? <ListItem>
-            <ListItemText>
-              Liberal Party of Canada<br />Riding: Papineau<br />In Office since 2015
-            </ListItemText>
-            </ListItem> : null}
+        {open ? (
+          <ListItem>
+            <RepresentativeInfo representativeToLoad='Justin Trudeau' />
+          </ListItem>
+        ) : null}
         <Divider />
         <List>
           <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon><MapIcon /></ListItemIcon>
+            <ListItemIcon>
+              <MapIcon className={classes.politisenseIcon} />
+            </ListItemIcon>
             <ListItemText primary='Map' />
           </ListItem>
           <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon><DashboardIcon /></ListItemIcon>
-            <Link to='/dashboard' className={classes.routerLink}>Dashboard</Link>
+            <ListItemIcon>
+              <DashboardIcon className={classes.politisenseIcon} />
+            </ListItemIcon>
+            <Link to='/dashboard' className={classes.routerLink}>
+              Dashboard
+            </Link>
           </ListItem>
           <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon><PollIcon /></ListItemIcon>
-            <ListItemText primary='Poll' />
-          </ListItem>
-          <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon><RssFeedIcon /></ListItemIcon>
-            <ListItemText primary='News Feed' />
-          </ListItem>
-          <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon><AnnouncementIcon /></ListItemIcon>
-            <ListItemText primary='Happening now' />
-          </ListItem>
-          <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon><ExitToAppIcon /></ListItemIcon>
-            <Link to='/logout' className={classes.routerLink}>Logout</Link>
+            <ListItemIcon>
+              <ExitToAppIcon className={classes.politisenseIcon} />
+            </ListItemIcon>
+            <Link to='/logout' className={classes.routerLink}>
+              Logout
+            </Link>
           </ListItem>
         </List>
       </Drawer>
