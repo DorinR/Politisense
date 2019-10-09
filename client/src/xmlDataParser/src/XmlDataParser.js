@@ -14,7 +14,7 @@ class XmlDataParser {
   }
 
   getDataInAttribute (tag, attribute) {
-    return this.$(tag)[0].attribs[attribute]
+    return this.$(tag).attr(attribute)
   }
 
   billXmlToJson () {
@@ -32,6 +32,19 @@ class XmlDataParser {
     bill.sponsorName = this.$('SponsorAffiliation').find('FullName').text()
 
     return bill
+  }
+
+  getAllBillsFromXml () {
+    const bills = []
+    this.$('Bills').find('Bill').each((i, billData) => {
+      const billXml = this.$(billData).toString()
+      const parser = new XmlDataParser(billXml)
+      const bill = parser.billXmlToJson()
+      if (bill !== null) {
+        bills.push(bill)
+      }
+    })
+    return bills
   }
 
   mpXmlToJson () {

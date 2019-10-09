@@ -51,6 +51,14 @@ describe('XmlDataParser', () => {
     assert.strictEqual(mp.party, 'Independent')
     assert.strictEqual(mp.riding, 'Vancouver Granville')
   })
+
+  it('should get all bills in the list', () => { // TODO more asserts
+    const parser = getParserForXmlFile('./testBillsList.xml')
+    const bills = parser.getAllBillsFromXml()
+
+    console.log(bills)
+    assert.strictEqual(bills.length, 5)
+  })
 })
 
 function getParserForXmlFile (xmlFilePath) {
