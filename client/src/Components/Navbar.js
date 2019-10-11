@@ -100,7 +100,8 @@ const useStyles = makeStyles(theme => ({
     borderRadius: '50%'
   },
   routerLink: {
-    textDecoration: 'none'
+    textDecoration: 'none',
+    color: 'inherit'
   },
   fab: {
     margin: theme.spacing(2),
@@ -210,7 +211,9 @@ export default function MiniDrawer({ children }) {
             <ListItemIcon>
               <MapIcon className={classes.politisenseIcon} />
             </ListItemIcon>
-            <ListItemText primary='Map' />
+            <Link to='/map' className={classes.routerLink}>
+              Map
+            </Link>
           </ListItem>
           <ListItem button onClick={handleDrawerOpen}>
             <ListItemIcon>
