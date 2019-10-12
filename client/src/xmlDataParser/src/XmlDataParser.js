@@ -17,16 +17,6 @@ class XmlDataParser {
     return this.$(tag).attr(attribute)
   }
 
-  mpXmlToJson () {
-    const mp = {}
-    mp.firstName = this.getDataInTag('PersonOfficialFirstName')
-    mp.lastName = this.getDataInTag('PersonOfficialLastName')
-    mp.party = this.$('CaucusShortName').eq(0).text()
-    mp.riding = this.getDataInTag('ConstituencyName')
-
-    return mp
-  }
-
   // returns the xml tag that holds the desired item
   get TAG_NAME () {
     throw new TypeError('Abstract Method: Implement and call in class')

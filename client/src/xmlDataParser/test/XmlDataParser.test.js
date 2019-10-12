@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 import { XmlDataParser } from '../src/XmlDataParser'
 import { BillXmlParser } from '../src/BillXmlParser'
+import { MpXmlParser } from '../src/MpXmlParser'
 import { assert } from 'chai'
 // import { expect } from 'chai'
 // import { should } from 'chai'
@@ -44,8 +45,8 @@ describe('XmlDataParser', () => {
   })
 
   it('should return specified mp info', () => {
-    const parser = getParserForXmlFile('./testMp.xml')
-    const mp = parser.mpXmlToJson()
+    const parser = getMpParserForXmlFile('./testMp.xml')
+    const mp = parser.xmlToJson()
 
     assert.strictEqual(mp.firstName, 'Jody')
     assert.strictEqual(mp.lastName, 'Wilson-Raybould')
@@ -59,16 +60,19 @@ describe('XmlDataParser', () => {
 
     assert.strictEqual(bills.length, 5)
   })
-})
 
-function getParserForXmlFile (xmlFilePath) {
-  const pathToXml = path.resolve(__dirname, xmlFilePath)
-  const xml = fs.readFileSync(pathToXml)
-  return new XmlDataParser(xml)
-}
+  // TODO: test mp list
+
+})
 
 function getBillParserForXmlFile (xmlFilePath) {
   const pathToXml = path.resolve(__dirname, xmlFilePath)
   const xml = fs.readFileSync(pathToXml)
   return new BillXmlParser(xml)
+}
+
+function getMpParserForXmlFile (xmlFilePath) {
+  const pathToXml = path.resolve(__dirname, xmlFilePath)
+  const xml = fs.readFileSync(pathToXml)
+  return new MpXmlParser(xml)
 }
