@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="624cb1aa-00c0-4f51-bcb8-e307d457bb6b" name="Default Changelist" comment="#8 merged dashboard branch">
+    <list default="true" id="624cb1aa-00c0-4f51-bcb8-e307d457bb6b" name="Default Changelist" comment="#9 #8 #7 #35 fixed camelCase">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/Components/Dashboard/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/Components/Dashboard/Dashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/Components/Dashboard/D3Chart.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/Components/Dashboard/D3Chart.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +51,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="removed bootstrap" />
     <MESSAGE value="#8 merged dashboard branch" />
-    <option name="LAST_COMMIT_MESSAGE" value="#8 merged dashboard branch" />
+    <MESSAGE value="#9 #8 #7 #35 fixed camelCase" />
+    <option name="LAST_COMMIT_MESSAGE" value="#9 #8 #7 #35 fixed camelCase" />
   </component>
 </project>
