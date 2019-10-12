@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 import { XmlDataParser } from '../src/XmlDataParser'
+import { BillXmlParser } from '../src/BillXmlParser'
 import { assert } from 'chai'
 // import { expect } from 'chai'
 // import { should } from 'chai'
@@ -25,15 +26,15 @@ describe('XmlDataParser', () => {
   it('should return null if the bill was not passed', () => {
     const pathToXml = path.resolve(__dirname, './testUnpassedBill.xml')
     const xml = fs.readFileSync(pathToXml) // added test bill to read
-    const parser = new XmlDataParser(xml)
+    const parser = new BillXmlParser(xml)
 
-    const res = parser.billXmlToJson()
+    const res = parser.xmlToJson()
     assert.isNull(res)
   })
 
   it('should return specified bill info', () => {
-    const parser = getParserForXmlFile('./testBill.xml')
-    const bill = parser.billXmlToJson()
+    const parser = getBillParserForXmlFile('./testBill.xml')
+    const bill = parser.xmlToJson()
 
     assert.isNotNull(bill)
     assert.strictEqual(bill.id, '9002286')
@@ -53,10 +54,9 @@ describe('XmlDataParser', () => {
   })
 
   it('should get all bills in the list', () => { // TODO more asserts
-    const parser = getParserForXmlFile('./testBillsList.xml')
-    const bills = parser.getAllBillsFromXml()
+    const parser = getBillParserForXmlFile('./testBillsList.xml')
+    const bills = parser.getAllFromXml()
 
-    console.log(bills)
     assert.strictEqual(bills.length, 5)
   })
 })
@@ -65,4 +65,10 @@ function getParserForXmlFile (xmlFilePath) {
   const pathToXml = path.resolve(__dirname, xmlFilePath)
   const xml = fs.readFileSync(pathToXml)
   return new XmlDataParser(xml)
+}
+
+function getBillParserForXmlFile (xmlFilePath) {
+  const pathToXml = path.resolve(__dirname, xmlFilePath)
+  const xml = fs.readFileSync(pathToXml)
+  return new BillXmlParser(xml)
 }
