@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<List xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>Niki</PersonOfficialFirstName>
+        <PersonOfficialLastName>Ashton</PersonOfficialLastName>
+        <ConstituencyName>Churchill—Keewatinook Aski</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>NDP</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific>Hon.</PersonShortHonorific>
+        <PersonOfficialFirstName>Candice</PersonOfficialFirstName>
+        <PersonOfficialLastName>Bergen</PersonOfficialLastName>
+        <ConstituencyName>Portage—Lisgar</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Conservative</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>James</PersonOfficialFirstName>
+        <PersonOfficialLastName>Bezan</PersonOfficialLastName>
+        <ConstituencyName>Selkirk—Interlake—Eastman</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Conservative</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>Daniel</PersonOfficialFirstName>
+        <PersonOfficialLastName>Blaikie</PersonOfficialLastName>
+        <ConstituencyName>Elmwood—Transcona</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>NDP</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific>Hon.</PersonShortHonorific>
+        <PersonOfficialFirstName>Jim</PersonOfficialFirstName>
+        <PersonOfficialLastName>Carr</PersonOfficialLastName>
+        <ConstituencyName>Winnipeg South Centre</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>Terry</PersonOfficialFirstName>
+        <PersonOfficialLastName>Duguid</PersonOfficialLastName>
+        <ConstituencyName>Winnipeg South</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>Doug</PersonOfficialFirstName>
+        <PersonOfficialLastName>Eyolfson</PersonOfficialLastName>
+        <ConstituencyName>Charleswood—St. James—Assiniboia—Headingley</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>Ted</PersonOfficialFirstName>
+        <PersonOfficialLastName>Falk</PersonOfficialLastName>
+        <ConstituencyName>Provencher</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Conservative</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>Kevin</PersonOfficialFirstName>
+        <PersonOfficialLastName>Lamoureux</PersonOfficialLastName>
+        <ConstituencyName>Winnipeg North</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>Larry</PersonOfficialFirstName>
+        <PersonOfficialLastName>Maguire</PersonOfficialLastName>
+        <ConstituencyName>Brandon—Souris</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Conservative</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific>Hon.</PersonShortHonorific>
+        <PersonOfficialFirstName>MaryAnn</PersonOfficialFirstName>
+        <PersonOfficialLastName>Mihychuk</PersonOfficialLastName>
+        <ConstituencyName>Kildonan—St. Paul</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>Robert-Falcon</PersonOfficialFirstName>
+        <PersonOfficialLastName>Ouellette</PersonOfficialLastName>
+        <ConstituencyName>Winnipeg Centre</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>Robert</PersonOfficialFirstName>
+        <PersonOfficialLastName>Sopuck</PersonOfficialLastName>
+        <ConstituencyName>Dauphin—Swan River—Neepawa</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Conservative</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>Dan</PersonOfficialFirstName>
+        <PersonOfficialLastName>Vandal</PersonOfficialLastName>
+        <ConstituencyName>Saint Boniface—Saint Vital</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Manitoba</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>2015-10-19T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+</List>
