@@ -87,7 +87,7 @@ export default function Login () {
             <Grid container>
               <Grid item sm={12}>
                 <div className={classes.paper}>
-                  <img src={logo} className={classes.logo} />
+                  <img src={logo} alt= {""} className={classes.logo} />
                   <form className={classes.form} noValidate onSubmit={handleSubmit}>
                     <TextField
                       variant='outlined'

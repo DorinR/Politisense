@@ -70,13 +70,6 @@ const useStyles = makeStyles(theme =>
 export default function Dashboard () {
   const classes = useStyles()
   const [data, setData] = useState([])
-  const [open, setOpen] = useState(true)
-  const handleDrawerOpen = () => {
-    setOpen(true)
-  }
-  const handleDrawerClose = () => {
-    setOpen(false)
-  }
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
   useEffect(() => {
     extractData()
@@ -93,7 +86,7 @@ export default function Dashboard () {
       <main className={classes.content}>
         <Container maxWidth='lg' className={classes.container}>
           <Grid container>
-            <Grid item xs={12} md={8} lg={3}>
+            <Grid item xs={3} md={3} lg={3}>
               <Paper className={fixedHeightPaper}>
                 <Typography>
                   Total Votes for healthcare

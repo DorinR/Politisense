@@ -23,6 +23,7 @@ class RepresentativeImage extends React.Component {
     let db = firebase.firestore()
     let representativesRef = db.collection('representatives')
     let query = representativesRef
+      query
       .where('name', '==', this.props.representativeToLoad)
       .get()
       .then(snapshot => {

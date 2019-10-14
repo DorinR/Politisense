@@ -6,7 +6,6 @@ import * as serviceWorker from './serviceWorker'
 import './Firebase'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
-
 const theme = createMuiTheme({
   palette: {
     primary: {

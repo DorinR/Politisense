@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import clsx from 'clsx'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
@@ -14,16 +14,10 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import PersonIcon from '@material-ui/icons/Person'
 import MapIcon from '@material-ui/icons/Map'
 import DashboardIcon from '@material-ui/icons/Dashboard'
-import Avatar from '@material-ui/core/Avatar'
-import trudeau from '../assets/trudeau.jpg'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import PollIcon from '@material-ui/icons/Poll'
-import RssFeedIcon from '@material-ui/icons/RssFeed'
-import AnnouncementIcon from '@material-ui/icons/Announcement'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { Link } from 'react-router-dom'
 import RepresentativeInfo from './Dashboard/Sidebar/RepresentativeInfo'
@@ -112,7 +106,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function MiniDrawer({ children }) {
+export default function MiniDrawer ({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -149,7 +143,7 @@ export default function MiniDrawer({ children }) {
           <Typography variant='h6' noWrap>
             Politisense
           </Typography>
-          <Typography style={{ flex: 1 }}></Typography>
+          <Typography style={{ flex: 1 }} />
           <Link to='/account'>
             <Tooltip title='My Account' aria-label='add'>
               <Fab size='small' className={classes.fab}>

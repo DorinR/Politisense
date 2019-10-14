@@ -1,19 +1,19 @@
 import * as d3 from 'd3'
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect} from 'react'
 
 export const D3Chart = (props) => {
-  var yesCounter = 0
-  var noCounter = 0
 
-  const ref = useRef(null)
-  const billsData = props.data
+   const ref = useRef(null)
+   let yesCounter = 0
+   let  noCounter = 0
+   const billsData = props.data
 
-  billsData.map(d => {
-    console.log(d.FirstName)
-    if (d.FirstName.includes('Nay')) { noCounter++ }
-    if (d.FirstName.includes('Yea')) {
-      yesCounter++
-    }
+  // the bills.csv is imported from the gov website, the FirstName is an attribute that indicates
+  // what did the Mp voted for specific bill
+  billsData.map((d) => {
+    if (d.FirstName.includes('Nay')) { noCounter++}
+    if (d.FirstName.includes('Yea')) {  yesCounter++}
+    return null
   })
 
   const dataObjects = [{ index: 0, value: yesCounter, title: "Total Yes's" }, { index: 1, value: noCounter, title: "Total No's" }]
@@ -67,8 +67,8 @@ export const D3Chart = (props) => {
         .style('font-size', 10)
         .text(d => format(d.value))
 
-      var svg = d3.select('#my_data').append('g').attr('transform', 'translate(100 60)')
-      var keys = ['No', 'Yes']
+      let svg = d3.select('#my_data').append('g').attr('transform', 'translate(100 60)')
+      let keys = ['No', 'Yes']
 
       svg.selectAll('mydots')
         .data(keys)
@@ -90,7 +90,7 @@ export const D3Chart = (props) => {
         .attr('text-anchor', 'left')
         .style('alignment-baseline', 'middle')
     }
-    , [props.data])
+    , [props.data, dataObjects, createArc, colors, format, createPie])
 
   return (
     <div>
