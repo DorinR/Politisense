@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {
   BrowserRouter as Router,
   Route,
@@ -8,7 +8,6 @@ import {
 import Login from './Components/Auth/Login'
 import SignUp from './Components/Auth/SignUp'
 import Navbar from './Components/Navbar'
-import Questions from './Components/Questions'
 import Dashboard from './Components/Dashboard/Dashboard'
 import Logout from './Components/Logout'
 import UserAccount from './Components/UserAccount'
@@ -28,7 +27,6 @@ const App = () => {
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
           <PrivateRoute path='/dashboard' component={Dashboard} />
-          <PrivateRoute path='/questions' component={Questions} />
           <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/map' component={Map} />
           <PrivateRoute path='/account' component={UserAccount} />
@@ -45,8 +43,7 @@ const App = () => {
           <Component {...props} />
         ) : (
           <Redirect to='/login' />
-        )
-      }
+        )}
     />
   )
 
