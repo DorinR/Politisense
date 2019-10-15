@@ -21,7 +21,7 @@ describe('BillDataParser', () => {
     const bill = parser.xmlToJson()
 
     assert.isNotNull(bill)
-    assert.strictEqual(bill.id, '9002286')
+    assert.strictEqual(bill.id, 9002286)
     assert.strictEqual(bill.number, 'C-51')
     assert.strictEqual(bill.title, 'An Act to amend the Criminal Code and the Department of Justice Act and to make consequential amendments to another Act')
     assert.strictEqual(bill.sponsorName, 'Jody Wilson-Raybould')
