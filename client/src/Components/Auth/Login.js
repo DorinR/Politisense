@@ -70,7 +70,7 @@ export default function Login () {
       window.confirm("successfully logged in")
       localStorage.setItem('user', JSON.stringify(credentials))
     }
-    window.confirm("The username and password you entered did not match our records. Please double-check and try again.")
+    else {window.confirm("The username and password you entered did not match our records. Please double-check and try again.")}
 
   }
   const handleSubmit = (e) => {
