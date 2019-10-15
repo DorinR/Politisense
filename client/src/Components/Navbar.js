@@ -201,30 +201,30 @@ export default function MiniDrawer ({ children }) {
         ) : null}
         <Divider />
         <List>
-          <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon>
-              <MapIcon className={classes.politisenseIcon} />
-            </ListItemIcon>
-            <Link to='/map' className={classes.routerLink}>
+          <Link to='/map' className={classes.routerLink}>
+            <ListItem button>
+              <ListItemIcon>
+                <MapIcon className={classes.politisenseIcon} />
+              </ListItemIcon>
               Map
-            </Link>
-          </ListItem>
-          <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon>
-              <DashboardIcon className={classes.politisenseIcon} />
-            </ListItemIcon>
-            <Link to='/dashboard' className={classes.routerLink}>
+            </ListItem>
+          </Link>
+          <Link to='/dashboard' className={classes.routerLink}>
+            <ListItem button>
+              <ListItemIcon>
+                <DashboardIcon className={classes.politisenseIcon} />
+              </ListItemIcon>
               Dashboard
-            </Link>
-          </ListItem>
-          <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon>
-              <ExitToAppIcon className={classes.politisenseIcon} />
-            </ListItemIcon>
-            <Link to='/logout' className={classes.routerLink}>
+            </ListItem>
+          </Link>
+          <Link to='/logout' className={classes.routerLink}>
+            <ListItem button>
+              <ListItemIcon>
+                <ExitToAppIcon className={classes.politisenseIcon} />
+              </ListItemIcon>
               Logout
-            </Link>
-          </ListItem>
+            </ListItem>
+          </Link>
         </List>
       </Drawer>
       <main className={classes.content}>
