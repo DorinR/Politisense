@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import { Redirect, Link as RouterLink } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
-import Link from '@material-ui/core/Link'
 import Typography from '@material-ui/core/Typography'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFacebook, faLinkedin, faTwitter, faGoogle } from '@fortawesome/free-brands-svg-icons'
@@ -40,7 +39,8 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center'
   },
   routerLink: {
-    textDecoration: 'none'
+    textDecoration: 'none',
+    color: '#43D0C4'
   },
   logo: {
     margin: theme.spacing(15, 0, 2)
@@ -87,7 +87,7 @@ export default function Login () {
             <Grid container>
               <Grid item sm={12}>
                 <div className={classes.paper}>
-                  <img src={logo} alt= {""} className={classes.logo} />
+                  <img src={logo} alt='' className={classes.logo} />
                   <form className={classes.form} noValidate onSubmit={handleSubmit}>
                     <TextField
                       variant='outlined'
@@ -145,16 +145,14 @@ export default function Login () {
                     </Button>
                     <Grid container>
                       <Grid item xs>
-                        <Link href='#' variant='body2'>
+                        <Link variant='body2' to='/signup' className={classes.routerLink}>
                           Forgot password?
                         </Link>
                       </Grid>
                       <Grid item>
-                        <RouterLink to='/signup' className={classes.routerLink}>
-                          <Link variant='body2'>
-                            {"Don't have an account? Sign Up"}
-                          </Link>
-                        </RouterLink>
+                        <Link variant='body2' to='/signup' className={classes.routerLink}>
+                          {"Don't have an account? Sign Up"}
+                        </Link>
                       </Grid>
                     </Grid>
                   </form>
