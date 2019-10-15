@@ -67,8 +67,11 @@ export default function Login () {
     // localStorage.setItem()
     if (credentials.username === 'user' && credentials.password === 'test') {
       setAuthenticated(true)
+      window.confirm("successfully logged in")
       localStorage.setItem('user', JSON.stringify(credentials))
     }
+    window.confirm("The username and password you entered did not match our records. Please double-check and try again.")
+
   }
   const handleSubmit = (e) => {
     e.preventDefault()
