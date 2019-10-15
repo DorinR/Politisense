@@ -1,40 +1,39 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import firebase from '../../../config/Firebase'
 import ListItemText from '@material-ui/core/ListItemText'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Box from '@material-ui/core/Box'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 
-const styles = theme => ({
-  customCardContent: {
-    padding: 5,
-    paddingBottom: '5px!important',
-    backgroundColor: '#f7f7f7'
-  },
-  customHeadingText: {
-    color: '#41aaa8',
-    fontStyle: 'italic',
-    fontWeight: 'bold'
-  }
-})
+const useStyles = makeStyles(theme =>
+  ({
+    customCardContent: {
+      padding: 5,
+      paddingBottom: '5px!important',
+      backgroundColor: '#f7f7f7'
+    },
+    customHeadingText: {
+      color: '#41aaa8',
+      fontStyle: 'italic',
+      fontWeight: 'bold'
+    }
+  }))
 
-class RepresentativeInfo extends React.Component {
-  state = {
-    name: '',
-    politicalParty: '',
-    riding: '',
-    yearElected: 1000
-  }
+export default function RepresentativeInfo (props) {
+  const classes = useStyles()
+  const [name, setName] = useState('')
+  const [politicalParty, setPoliticalParty] = useState('')
+  const [riding, setRiding] = useState('')
+  const [yearElected, setYearElected] = useState(1000)
 
-  constructor(props) {
-    super(props)
-    let db = firebase.firestore()
-    let representativesRef = db.collection('representatives')
-    let query = representativesRef
-      query
-      .where('name', '==', this.props.representativeToLoad)
+  useEffect(() => {
+    const db = firebase.firestore()
+    const representativesRef = db.collection('representatives')
+    const query = representativesRef
+    query
+      .where('name', '==', props.representativeToLoad)
       .get()
       .then(snapshot => {
         if (snapshot.empty) {
@@ -42,62 +41,52 @@ class RepresentativeInfo extends React.Component {
           return
         }
         snapshot.forEach(doc => {
-          console.log(doc.id, '=>', doc.data())
-          let { name, politicalParty, riding, yearElected } = doc.data()
-          this.setState({
-            name,
-            politicalParty,
-            riding,
-            yearElected
-          })
+          const { name, politicalParty, riding, yearElected } = doc.data()
+          setName(name)
+          setPoliticalParty(politicalParty)
+          setYearElected(yearElected)
+          setRiding(riding)
         })
       })
       .catch(err => {
         console.log('Error getting documents', err)
       })
-  }
-
-  render() {
-    const { classes } = this.props
-
-    return (
-      <ListItemText>
-        <Card>
-          <CardContent className={classes.customCardContent}>
-            <Typography className={classes.customHeadingText}>NAME</Typography>
-            {this.state.name}
-          </CardContent>
-        </Card>
-        <Box m={1} />
-        <Card>
-          <CardContent className={classes.customCardContent}>
-            <Typography className={classes.customHeadingText}>
+  })
+  return (
+    <ListItemText>
+      <Card>
+        <CardContent className={classes.customCardContent}>
+          <Typography className={classes.customHeadingText}>NAME</Typography>
+          {name}
+        </CardContent>
+      </Card>
+      <Box m={1} />
+      <Card>
+        <CardContent className={classes.customCardContent}>
+          <Typography className={classes.customHeadingText}>
               POLITICAL PARTY
-            </Typography>
-            {this.state.politicalParty}
-          </CardContent>
-        </Card>
-        <Box m={1} />
-        <Card>
-          <CardContent className={classes.customCardContent}>
-            <Typography className={classes.customHeadingText}>
+          </Typography>
+          {politicalParty}
+        </CardContent>
+      </Card>
+      <Box m={1} />
+      <Card>
+        <CardContent className={classes.customCardContent}>
+          <Typography className={classes.customHeadingText}>
               RIDING
-            </Typography>
-            {this.state.riding}
-          </CardContent>
-        </Card>
-        <Box m={1} />
-        <Card>
-          <CardContent className={classes.customCardContent}>
-            <Typography className={classes.customHeadingText}>
+          </Typography>
+          {riding}
+        </CardContent>
+      </Card>
+      <Box m={1} />
+      <Card>
+        <CardContent className={classes.customCardContent}>
+          <Typography className={classes.customHeadingText}>
               YEAR ELECTED
-            </Typography>
-            {this.state.yearElected}
-          </CardContent>
-        </Card>
-      </ListItemText>
-    )
-  }
+          </Typography>
+          {yearElected}
+        </CardContent>
+      </Card>
+    </ListItemText>
+  )
 }
-
-export default withStyles(styles)(RepresentativeInfo)

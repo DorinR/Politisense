@@ -1,30 +1,28 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import firebase from '../../../config/Firebase'
 import Avatar from '@material-ui/core/Avatar'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
-const styles = theme => ({
-  bigAvatar: {
-    margin: 1,
-    width: 120,
-    height: 120,
-    border: '3px solid #41aaa8'
-  }
-})
+const useStyles = makeStyles(theme =>
+  ({
+    bigAvatar: {
+      margin: 1,
+      width: 120,
+      height: 120,
+      border: '3px solid #41aaa8'
+    }
+  }))
 
-class RepresentativeImage extends React.Component {
-  state = {
-    name: '',
-    imageUrl: ''
-  }
+export default function RepresentativeImage (props) {
+  const classes = useStyles()
+  const [name, setName] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
 
-  constructor(props) {
-    super(props)
-    let db = firebase.firestore()
-    let representativesRef = db.collection('representatives')
-    let query = representativesRef
-      query
-      .where('name', '==', this.props.representativeToLoad)
+  useEffect(() => {
+    const db = firebase.firestore()
+    const query = db.collection('representatives')
+    query
+      .where('name', '==', props.representativeToLoad)
       .get()
       .then(snapshot => {
         if (snapshot.empty) {
@@ -33,29 +31,20 @@ class RepresentativeImage extends React.Component {
         }
         snapshot.forEach(doc => {
           console.log(doc.id, '=>', doc.data())
-          let { name, imageUrl } = doc.data()
-          this.setState({
-            name,
-            imageUrl
-          })
+          const { name, imageUrl } = doc.data()
+          setName(name)
+          setImageUrl(imageUrl)
         })
       })
       .catch(err => {
         console.log('Error getting documents', err)
       })
-  }
-
-  render() {
-    const { classes } = this.props
-
-    return (
-      <Avatar
-        alt={this.state.name}
-        src={this.state.imageUrl}
-        className={classes.bigAvatar}
-      />
-    )
-  }
+  })
+  return (
+    <Avatar
+      alt={name}
+      src={imageUrl}
+      className={classes.bigAvatar}
+    />
+  )
 }
-
-export default withStyles(styles)(RepresentativeImage)
