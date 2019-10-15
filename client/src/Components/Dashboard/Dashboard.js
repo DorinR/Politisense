@@ -86,8 +86,9 @@ export default function Dashboard () {
       <main className={classes.content}>
         <Container maxWidth='lg' className={classes.container}>
           <Grid container>
-            <Grid item xs={3} md={3} lg={3}>
+            <Grid item xs={12} md={7} lg={3}>
               <Paper className={fixedHeightPaper}>
+               <div>
                 <Typography>
                   Total Votes for healthcare
                 </Typography>
@@ -97,7 +98,7 @@ export default function Dashboard () {
                   innerRadius={30}
                   outerRadius={80}
                 />
-                <div />
+               </div>
               </Paper>
             </Grid>
           </Grid>

@@ -2,7 +2,6 @@ import * as d3 from 'd3'
 import React, { useRef, useEffect} from 'react'
 
 export const D3Chart = (props) => {
-
    const ref = useRef(null)
    let yesCounter = 0
    let  noCounter = 0
@@ -94,7 +93,7 @@ export const D3Chart = (props) => {
 
   return (
     <div>
-      <svg id='my_data' width={props.width} height={props.height}>
+      <svg id='my_data' height={props.height}>
         <g
           ref={ref}
           transform={`translate(${props.height / 2} ${props.height / 2})`}
