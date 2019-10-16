@@ -1,6 +1,7 @@
-const fb = require('firebase')
+const fs = require('firebase')
+require('firebase/firestore')
 
-class _Firebase {
+class _Firestore {
   constructor () {
     this.config = {
       apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
@@ -11,8 +12,8 @@ class _Firebase {
       messagingSenderId: '1084760992823',
       appId: '1:1084760992823:web:c6402249f92d54372ce3b2'
     }
-    fb.initializeApp(this.config)
-    this.db = fb.database()
+    fs.initializeApp(this.config)
+    this.db = fs.firestore()
   }
 }
 
@@ -21,79 +22,63 @@ class Reference {
     this.reference = reference
   }
 
-  select (selection) {
-    return new Promise((resolve, reject) => {
-      this.reference
-        .once('value')
-        .then((snapshot) => {
-          const result = {}
-          if (typeof selection === 'undefined') {
-            resolve(snapshot.val())
-          }
-          snapshot.forEach((child) => {
-            const key = child.key
-            let desired = true
-            Object.keys(selection).forEach((required) => {
-              if (!child.hasChild(required) || child.val()[required] !== selection[required]) {
-                desired = false
-              }
-            })
-            if (desired) {
-              result[key] = child.val()
-            }
-          })
-          resolve(result)
-        })
-        .catch((e) => {
-          reject(e)
-        })
-    })
+  select (attribute, operator, value) {
+    if (typeof attribute === 'undefined' || typeof operator === 'undefined' || typeof value === 'undefined') {
+ 	   return new Promise((resolve, reject) => {
+               this.reference.get()
+          		.then((snapshot) => { 
+				resolve(snapshot) })
+        		.catch((err) => { reject(err) })
+      })
+    } else {
+ 	   return new Promise((resolve, reject) => {
+                this.reference.where(attribute, operator, value)
+		     .get()
+                     .then((snapshot) => { resolve(snapshot) })
+          	     .catch((err) => { reject(err) })
+      })
+    }
   }
 
   insert (model) {
     return new Promise((resolve) => {
-      this.reference
-        .push(model)
-        .then(() => {
-          resolve(true)
-        })
-        .catch((e) => {
-          resolve(false)
-        })
+      this.reference.add(model)
+        .then((result) => { resolve(true) })
+        .catch((err) => { resolve(false) })
     })
   }
 }
 
-class Firebase {
+class Firestore {
   constructor () {
-    this.firebase = new _Firebase()
-    this.reference = this.firebase.db.ref
+    this.firestore = new _Firestore()
+    this.reference = this.firestore.db
   }
 
   Bill () {
-    return new Reference(this.firebase.db.ref('bills'))
+    return new Reference(this.reference.collection('bills'))
   }
 
   Politician () {
-    return new Reference(this.firebase.db.ref('politicians'))
+    return new Reference(this.reference.collection('politicians'))
   }
 
   User () {
-    return new Reference(this.firebase.db.ref('users'))
+    return new Reference(this.reference.collection('users'))
   }
 
   VoteRecord () {
-    return new Reference(this.firebase.db.ref('vote_records'))
-  }
-
-  open () {
-    this.firebase.db.goOnline()
-  }
-
-  close () {
-    this.firebase.db.goOffline()
+    return new Reference(this.reference.collection('vote_records'))
   }
 }
 
-module.exports.Firebase = Firebase
+module.exports.Firestore = Firestore
 module.exports.Reference = Reference
+
+const f = new Firestore()
+f.Bill().select()
+  .then(snapshot => {
+  	snapshot.forEach(docSnapshot => {
+		console.log(docSnapshot.data())
+	})})
+  .catch(err => {console.log(err.message)})
