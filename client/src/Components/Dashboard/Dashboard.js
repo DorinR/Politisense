@@ -11,6 +11,14 @@ import * as d3 from 'd3'
 import bills from './bills.csv'
 
 const drawerWidth = 240
+const containerStyle = {
+
+    height: 240,
+    width: 513.02
+}
+
+
+
 const useStyles = makeStyles(theme =>
   ({
     root: {
@@ -86,17 +94,17 @@ export default function Dashboard () {
       <main className={classes.content}>
         <Container maxWidth='lg' className={classes.container}>
           <Grid container>
-            <Grid item xs={12} md={7} lg={3}>
+            <Grid item xs={3} md={3} lg={3}>
               <Paper className={fixedHeightPaper}>
-               <div>
+               <div className="parent">
                 <Typography>
                   Total Votes for healthcare
                 </Typography>
                 <D3Chart
                   data={data}
                   height={200}
-                  innerRadius={30}
-                  outerRadius={80}
+                  innerRadius={0}
+                  outerRadius={30}
                 />
                </div>
               </Paper>

@@ -36,7 +36,7 @@ export const D3Chart = (props) => {
       const data = createPie(dataObjects)
 
       const group = d3.select(ref.current)
-      const groupWithData = group.selectAll('g.arc').data(data)
+      const groupWithData = group.selectAll('g.arc').data(data).attr("transform","translate(-30 -30)")
 
       groupWithData.exit().remove()
 
@@ -58,45 +58,47 @@ export const D3Chart = (props) => {
         .append('text')
         .merge(groupWithData.select('text'))
 
+
       text
         .attr('text-anchor', 'middle')
         .attr('alignment-baseline', 'middle')
         .attr('transform', d => `translate(${createArc.centroid(d)})`)
         .style('fill', 'white')
-        .style('font-size', 10)
+        .style('font-size', 7)
         .text(d => format(d.value))
 
-      let svg = d3.select('#my_data').append('g').attr('transform', 'translate(100 60)')
+      let svg = d3.select('#my_data')
       let keys = ['No', 'Yes']
 
       svg.selectAll('mydots')
         .data(keys)
         .enter()
         .append('circle')
-        .attr('cx', 100)
-        .attr('cy', function (d, i) { return 100 + i * 25 })
-        .attr('r', 7)
+        .attr('cx', 75)
+        .attr('cy', function (d, i) { return 35 + i * 25 })
+        .attr('r', 2)
         .style('fill', function (d, i) { return colors(i) })
 
       svg.selectAll('mylabels')
         .data(keys)
         .enter()
         .append('text')
-        .attr('x', 120)
-        .attr('y', function (d, i) { return 100 + i * 25 })
+        .attr('x',80 )
+        .attr('y', function (d, i) { return 35 + i * 25 })
         .style('fill', function (d, i) { return colors(i) })
         .text(function (d) { return d })
         .attr('text-anchor', 'left')
         .style('alignment-baseline', 'middle')
+          .style("font-size",8)
     }
     , [props.data, dataObjects, createArc, colors, format, createPie])
 
   return (
     <div>
-      <svg id='my_data' height={props.height}>
+      <svg id='my_data' viewBox="0 0 100 100" >
         <g
           ref={ref}
-          transform={`translate(${props.height / 2} ${props.height / 2})`}
+          transform={`translate(${props.height / 3} ${props.height / 3})`}
         />
       </svg>
     </div>
