@@ -1,8 +1,5 @@
-// const firebase = require('firebase')
 import * as firebase from 'firebase'
 import 'firebase/firestore'
-
-// const settings = { timestampsInSnapshots: true }
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
@@ -15,6 +12,5 @@ const firebaseConfig = {
 }
 
 firebase.initializeApp(firebaseConfig)
-// firebase.firestore().settings(settings)
 
 export default firebase
