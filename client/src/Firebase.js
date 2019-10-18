@@ -24,18 +24,25 @@ class Reference {
 
   select (attribute, operator, value) {
     if (typeof attribute === 'undefined' || typeof operator === 'undefined' || typeof value === 'undefined') {
- 	   return new Promise((resolve, reject) => {
-               this.reference.get()
-          		.then((snapshot) => { 
-				resolve(snapshot) })
-        		.catch((err) => { reject(err) })
+      return new Promise((resolve, reject) => {
+        this.reference.get()
+          .then((snapshot) => {
+            resolve(snapshot)
+          })
+          .catch((err) => {
+            reject(err)
+          })
       })
     } else {
- 	   return new Promise((resolve, reject) => {
-                this.reference.where(attribute, operator, value)
-		     .get()
-                     .then((snapshot) => { resolve(snapshot) })
-          	     .catch((err) => { reject(err) })
+      return new Promise((resolve, reject) => {
+        this.reference.where(attribute, operator, value)
+          .get()
+          .then((snapshot) => {
+            resolve(snapshot)
+          })
+          .catch((err) => {
+            reject(err)
+          })
       })
     }
   }
@@ -43,8 +50,12 @@ class Reference {
   insert (model) {
     return new Promise((resolve) => {
       this.reference.add(model)
-        .then((result) => { resolve(true) })
-        .catch((err) => { resolve(false) })
+        .then((result) => {
+          resolve(true)
+        })
+        .catch(() => {
+          resolve(false)
+        })
     })
   }
 }
@@ -72,13 +83,5 @@ class Firestore {
   }
 }
 
-module.exports.Firestore = Firestore
-module.exports.Reference = Reference
-
-const f = new Firestore()
-f.Bill().select()
-  .then(snapshot => {
-  	snapshot.forEach(docSnapshot => {
-		console.log(docSnapshot.data())
-	})})
-  .catch(err => {console.log(err.message)})
+export { Firestore }
+export { Reference }
