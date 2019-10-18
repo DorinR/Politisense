@@ -181,11 +181,11 @@ export default function MiniDrawer ({ children }) {
         </div>
         <Divider />
         <Box p={1} />
-        <ListItem button>
+        <ListItem button onClick={handleDrawerOpen}>
           <ListItemIcon>
             <PersonIcon
               className={classes.politisenseIcon}
-              onClick={handleDrawerOpen}
+
             />
           </ListItemIcon>
           {open ? (

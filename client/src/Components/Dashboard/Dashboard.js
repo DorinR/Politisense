@@ -73,7 +73,7 @@ export default function Dashboard () {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
 
   useEffect(() => {
-      getVotingRecord()
+    getVotingRecord()
   }, [])
 
   const getVotingRecord = () => {
@@ -90,17 +90,17 @@ export default function Dashboard () {
           <Grid container>
             <Grid item xs={3} md={3} lg={3}>
               <Paper className={fixedHeightPaper}>
-               <div className="parent">
-                <Typography>
+                <div className='parent'>
+                  <Typography>
                   Total Votes for Healthcare
-                </Typography>
-                <D3Chart
-                  data={data}
-                  height={200}
-                  innerRadius={0}
-                  outerRadius={30}
-                />
-               </div>
+                  </Typography>
+                  <D3Chart
+                    data={data}
+                    height={200}
+                    innerRadius={0}
+                    outerRadius={30}
+                  />
+                </div>
               </Paper>
             </Grid>
           </Grid>
