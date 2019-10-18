@@ -5,17 +5,23 @@ export const D3Chart = (props) => {
    const ref = useRef(null)
    let yesCounter = 0
    let  noCounter = 0
-   const billsData = props.data
+   const votingRecord = props.data
 
-  // the bills.csv is imported from the gov website, the FirstName is an attribute that indicates
-  // what did the Mp voted for specific bill
-  billsData.map((d) => {
-    if (d.FirstName.includes('Nay')) { noCounter++}
-    if (d.FirstName.includes('Yea')) {  yesCounter++}
-    return null
-  })
+  // the voting_record.csv is imported from the gov website, the FirstName is an attribute that indicates
+  // what did the ZIAD ABOULTAIF vote for a specific bill
+  const getTotalVotes= (data,yesCounter,noCounter) => {
+      data.map((d) => {
+            if (d.FirstName.includes('Nay')) { noCounter++}
+            if (d.FirstName.includes('Yea')) {  yesCounter++}
+            return null
+        })
+      return [yesCounter,noCounter]
+    }
 
-  const dataObjects = [{ index: 0, value: yesCounter, title: "Total Yes's" }, { index: 1, value: noCounter, title: "Total No's" }]
+   let totalVotes = getTotalVotes(votingRecord,yesCounter,noCounter)
+   yesCounter = totalVotes[0]
+   noCounter = totalVotes[1]
+   let totalYesNoVotes = [{ index: 0, title: "Total Yes's", value: yesCounter}, { index: 1, title: "Total No's", value: noCounter}]
 
   const createPie = d3
     .pie()
@@ -33,7 +39,7 @@ export const D3Chart = (props) => {
 
   useEffect(
     () => {
-      const data = createPie(dataObjects)
+      const data = createPie(totalYesNoVotes)
 
       const group = d3.select(ref.current)
       const groupWithData = group.selectAll('g.arc').data(data).attr("transform","translate(-30 -30)")
@@ -58,7 +64,6 @@ export const D3Chart = (props) => {
         .append('text')
         .merge(groupWithData.select('text'))
 
-
       text
         .attr('text-anchor', 'middle')
         .attr('alignment-baseline', 'middle')
@@ -67,7 +72,7 @@ export const D3Chart = (props) => {
         .style('font-size', 7)
         .text(d => format(d.value))
 
-      let svg = d3.select('#my_data')
+      let svg = d3.select('#svg')
       let keys = ['No', 'Yes']
 
       svg.selectAll('mydots')
@@ -91,11 +96,11 @@ export const D3Chart = (props) => {
         .style('alignment-baseline', 'middle')
           .style("font-size",8)
     }
-    , [props.data, dataObjects, createArc, colors, format, createPie])
+    , [props.data, totalYesNoVotes, createArc, colors, format, createPie])
 
   return (
     <div>
-      <svg id='my_data' viewBox="0 0 100 100" >
+      <svg id='svg' viewBox="0 0 100 100" >
         <g
           ref={ref}
           transform={`translate(${props.height / 3} ${props.height / 3})`}

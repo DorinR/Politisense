@@ -8,17 +8,9 @@ import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import { D3Chart } from './D3Chart'
 import * as d3 from 'd3'
-import bills from './bills.csv'
+import votingRecord from './voting_record.csv'
 
 const drawerWidth = 240
-const containerStyle = {
-
-    height: 240,
-    width: 513.02
-}
-
-
-
 const useStyles = makeStyles(theme =>
   ({
     root: {
@@ -79,11 +71,13 @@ export default function Dashboard () {
   const classes = useStyles()
   const [data, setData] = useState([])
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
+
   useEffect(() => {
-    extractData()
+      getVotingRecord()
   }, [])
-  const extractData = () => {
-    d3.csv(bills).then(data => {
+
+  const getVotingRecord = () => {
+    d3.csv(votingRecord).then(data => {
       setData(data)
     })
   }
@@ -98,7 +92,7 @@ export default function Dashboard () {
               <Paper className={fixedHeightPaper}>
                <div className="parent">
                 <Typography>
-                  Total Votes for healthcare
+                  Total Votes for Healthcare
                 </Typography>
                 <D3Chart
                   data={data}
