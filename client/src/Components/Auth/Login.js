@@ -64,7 +64,6 @@ export default function Login () {
 
   function login (username, password) {
     const credentials = { username: username, password: password }
-    // localStorage.setItem()
     if (credentials.username === 'user' && credentials.password === 'test') {
       setAuthenticated(true)
       window.confirm('successfully logged in')
