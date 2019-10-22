@@ -85,4 +85,3 @@ class Firestore {
 
 export { Firestore }
 export { Reference }
-

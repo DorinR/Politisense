@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import firebase from '../../../config/Firebase'
+import firebase from '../../../Firebase'
 import Avatar from '@material-ui/core/Avatar'
 import { makeStyles } from '@material-ui/core/styles'
 
