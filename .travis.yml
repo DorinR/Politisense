@@ -1,5 +1,5 @@
 language: node_js
 node_js:
-  - node
+  - 12.13.0
 cache: npm
 script: build_scripts/build.sh --strict --verbose
