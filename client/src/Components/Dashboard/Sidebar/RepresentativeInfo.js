@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import firebase from '../../../config/Firebase'
+import firebase from '../../../Firebase'
 import ListItemText from '@material-ui/core/ListItemText'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
