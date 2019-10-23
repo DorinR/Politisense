@@ -14,19 +14,19 @@ describe('All Processor Tests', () => {
     const req = new LinkScraper('https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States')
     const parser = new TextParser()
     const selector = new XmlLinkSelector()
-    return req.scrape()
+    return req.perform()
       .then((html) => {
         assert.isTrue(typeof html === 'string', 'valid html is delivered by the scraper')
         const $ = parser.load(html)
         const select = (elem) => {
           return $(elem).attr('href')
         }
-        return parser.parseHTML(html, 'a', select)
+        return parser.perform(html, 'a', select)
       })
       .then((links) => {
         assert.isTrue(typeof links === typeof [], 'returned links are an array')
         assert.isTrue(links.length > 0, 'links are indeed present')
-        return selector.process(links)
+        return selector.perform(links)
       })
       .catch((e) => {
         throw e
@@ -38,7 +38,7 @@ describe('All Processor Tests', () => {
     const req = new LinkScraper('https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States')
     const parser = new TextParser()
     const selector = new XmlLinkSelector()
-    req.scrape()
+    req.perform()
       .then((html) => {
         assert.isTrue(typeof html === 'string', 'valid html is delivered by the scraper')
         return parser.parseHTML(html, '', (elem) => {

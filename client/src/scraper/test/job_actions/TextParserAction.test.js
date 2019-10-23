@@ -12,14 +12,14 @@ describe('All Parser Tests', () => {
   test('Parser can find patterns', () => {
     const req = new LinkScraper('https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States')
     const parser = new TextParser()
-    return req.scrape()
+    return req.perform()
       .then((html) => {
         assert.isTrue(typeof html === 'string', 'valid html is delivered by the scraper')
         const $ = parser.load(html)
         const select = (elem) => {
           return $(elem).attr('href')
         }
-        return parser.parseHTML(html, 'a', select)
+        return parser.perform(html, 'a', select)
       })
       .then((links) => {
         assert.isTrue(typeof links === typeof [], 'returned links are an array')
@@ -35,14 +35,14 @@ describe('All Parser Tests', () => {
   test('Parser cannot find fake patterns', () => {
     const req = new LinkScraper('https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States')
     const parser = new TextParser()
-    req.scrape()
+    req.perform()
       .then((html) => {
         assert.isTrue(typeof html === 'string', 'valid html is delivered by the scraper')
         const $ = parser.load(html)
         const select = (elem) => {
           return $(elem).attr('href')
         }
-        return parser.parseHTML(html, 'a', select)
+        return parser.perform(html, 'a', select)
       })
       .then((links) => {
         assert.isTrue(typeof links === typeof [], 'returned links are an array')
