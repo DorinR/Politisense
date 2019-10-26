@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import firebase from '../../../Firebase'
+import { Firestore } from '../../../Firebase'
 import ListItemText from '@material-ui/core/ListItemText'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
@@ -29,8 +29,8 @@ export default function RepresentativeInfo (props) {
   const [yearElected, setYearElected] = useState(1000)
 
   useEffect(() => {
-    const db = firebase.firestore()
-    const representativesRef = db.collection('representatives')
+    const db = Firestore()
+    const representativesRef = db.Politician()
     const query = representativesRef
     query
       .where('name', '==', props.representativeToLoad)

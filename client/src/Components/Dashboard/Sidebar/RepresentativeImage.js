@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import firebase from '../../../Firebase'
+import { Firestore } from '../../../Firebase'
 import Avatar from '@material-ui/core/Avatar'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -19,8 +19,8 @@ export default function RepresentativeImage (props) {
   const [imageUrl, setImageUrl] = useState('')
 
   useEffect(() => {
-    const db = firebase.firestore()
-    const query = db.collection('representatives')
+    const db =  Firestore()
+    const query = db.Politician()
     query
       .where('name', '==', props.representativeToLoad)
       .get()
