@@ -1,27 +1,26 @@
 import React, { useState, useEffect } from 'react'
-import firebase from '../../../Firebase'
 import ListItemText from '@material-ui/core/ListItemText'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
+const Firestore = require('../../../Firebase').Firestore
 
-const useStyles = makeStyles(theme =>
-  ({
-    customCardContent: {
-      padding: 5,
-      paddingBottom: '5px!important',
-      backgroundColor: '#f7f7f7'
-    },
-    customHeadingText: {
-      color: '#41aaa8',
-      fontStyle: 'italic',
-      fontWeight: 'bold'
-    }
-  }))
+const useStyles = makeStyles(theme => ({
+  customCardContent: {
+    padding: 5,
+    paddingBottom: '5px!important',
+    backgroundColor: '#f7f7f7'
+  },
+  customHeadingText: {
+    color: '#41aaa8',
+    fontStyle: 'italic',
+    fontWeight: 'bold'
+  }
+}))
 
-export default function RepresentativeInfo (props) {
+export default function RepresentativeInfo(props) {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -29,12 +28,9 @@ export default function RepresentativeInfo (props) {
   const [yearElected, setYearElected] = useState(1000)
 
   useEffect(() => {
-    const db = firebase.firestore()
-    const representativesRef = db.collection('representatives')
-    const query = representativesRef
-    query
-      .where('name', '==', props.representativeToLoad)
-      .get()
+    let fb = new Firestore()
+    fb.Politician()
+      .select('name', '==', props.representativeToLoad)
       .then(snapshot => {
         if (snapshot.empty) {
           console.log('No matching documents.')
@@ -64,7 +60,7 @@ export default function RepresentativeInfo (props) {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-              POLITICAL PARTY
+            POLITICAL PARTY
           </Typography>
           {politicalParty}
         </CardContent>
@@ -72,9 +68,7 @@ export default function RepresentativeInfo (props) {
       <Box m={1} />
       <Card>
         <CardContent className={classes.customCardContent}>
-          <Typography className={classes.customHeadingText}>
-              RIDING
-          </Typography>
+          <Typography className={classes.customHeadingText}>RIDING</Typography>
           {riding}
         </CardContent>
       </Card>
@@ -82,7 +76,7 @@ export default function RepresentativeInfo (props) {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-              YEAR ELECTED
+            YEAR ELECTED
           </Typography>
           {yearElected}
         </CardContent>
