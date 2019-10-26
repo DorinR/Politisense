@@ -28,8 +28,8 @@ export default function RepresentativeInfo(props) {
   const [yearElected, setYearElected] = useState(1000)
 
   useEffect(() => {
-    let fb = new Firestore()
-    fb.Politician()
+    let db = new Firestore()
+    db.Politician()
       .select('name', '==', props.representativeToLoad)
       .then(snapshot => {
         if (snapshot.empty) {

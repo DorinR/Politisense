@@ -18,8 +18,8 @@ export default function RepresentativeImage(props) {
   const [imageUrl, setImageUrl] = useState('')
 
   useEffect(() => {
-    let fb = new Firestore()
-    fb.Politician()
+    let db = new Firestore()
+    db.Politician()
       .select('name', '==', props.representativeToLoad)
       .then(snapshot => {
         if (snapshot.empty) {
