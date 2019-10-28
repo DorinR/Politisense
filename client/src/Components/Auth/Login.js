@@ -50,21 +50,21 @@ const useStyles = makeStyles(theme => ({
 export default function Login () {
   const classes = useStyles()
 
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value)
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value)
   }
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value)
   }
 
-  function login (username, password) {
-    const credentials = { username: username, password: password }
-    if (credentials.username === 'user' && credentials.password === 'test') {
+  function login (email, password) {
+    const credentials = { email: email, password: password }
+    if (credentials.email === 'user' && credentials.password === 'test') {
       setAuthenticated(true)
       window.confirm('successfully logged in')
       localStorage.setItem('user', JSON.stringify(credentials))
@@ -72,8 +72,8 @@ export default function Login () {
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    login(username, password)
-    setUsername('')
+    login(email, password)
+    setEmail('')
     setPassword('')
   }
   return (
@@ -98,8 +98,8 @@ export default function Login () {
                       label='Email Address'
                       name='email'
                       autoComplete='email'
-                      onChange={handleUsernameChange}
-                      value={username}
+                      onChange={handleEmailChange}
+                      value={email}
                       autoFocus
                     />
                     <TextField

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
-
+import axios from 'axios'
 const useStyles = makeStyles(theme => ({
   '@global': {
     body: {
@@ -47,6 +47,24 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp () {
   const classes = useStyles()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [authenticated, setAuthenticated] = useState(false)
+  const [firstname, setFirstname] = useState('')
+  const [lastname, setLastname] = useState('')
+  const [postalCode, setPostalCode] = useState('')
+
+  const handleSubmit= (e) => {
+    e.preventDefault()
+    let user = {
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      postalCode: postalCode,
+      password: password
+    }
+    axios.post('http://localhost:5000/api/users/signup', user).then(r => console.log("successfully done!")).catch(e=>console.log(e))
+  }
 
   return (
     <div>
@@ -62,12 +80,13 @@ export default function SignUp () {
       <Container component='main' maxWidth='xs'>
         <CssBaseline />
         <div className={classes.paper}>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  onChange={e => setFirstname(e.target.value)}
                   autoComplete='fname'
-                  name='firstName'
+                  name='firstname'
                   variant='outlined'
                   required
                   fullWidth
@@ -78,17 +97,19 @@ export default function SignUp () {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  onChange={e => setLastname(e.target.value)}
                   variant='outlined'
                   required
                   fullWidth
                   id='lastName'
                   label='Last Name'
-                  name='lastName'
+                  name='lastname'
                   autoComplete='lname'
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  onChange={e => setEmail(e.target.value)}
                   variant='outlined'
                   required
                   fullWidth
@@ -100,16 +121,18 @@ export default function SignUp () {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  onChange={e => setPostalCode(e.target.value)}
                   variant='outlined'
                   required
                   fullWidth
                   id='postal_code'
                   label='Postal Code'
-                  name='postal_code'
+                  name='postalCode'
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                   onChange={e => setPassword(e.target.value)}
                   variant='outlined'
                   required
                   fullWidth
