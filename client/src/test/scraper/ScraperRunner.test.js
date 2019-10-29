@@ -1,4 +1,4 @@
-import { ScrapeRunner } from '../src/ScrapeRunner'
+import { ScrapeRunner } from '../../scraper/ScrapeRunner'
 
 const chai = require('chai')
 chai.should()

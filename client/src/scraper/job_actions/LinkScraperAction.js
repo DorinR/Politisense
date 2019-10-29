@@ -1,11 +1,13 @@
 const RequestLibrary = require('request-promise')
 const JobAction = require('./JobAction').AbstractJobAction
 
+const ScrapeErrorName = 'ScrapeError'
+
 class ScrapeError extends Error {
   constructor (message) {
     super()
     this.message = message
-    this.name = 'ScrapeError'
+    this.name = ScrapeErrorName
   }
 
   static doThrow (e) {
@@ -38,3 +40,4 @@ class LinkScraperAction extends JobAction {
 }
 module.exports.LinkScraper = LinkScraperAction
 module.exports.ScrapeError = ScrapeError
+module.exports.ScrapeErrorName = ScrapeErrorName

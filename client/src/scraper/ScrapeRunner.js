@@ -2,12 +2,13 @@ const Queue = require('./utilities/Queue').Queue
 const ScrapeJob = require('./ScrapeJob').ScrapeJob
 const Reader = require('./job_actions/UrlFileReaderAction').FileReader
 class ScrapeJobManager {
-  constructor (count, wait) {
+  constructor (count, wait, startingUrl, topLevelDomains) {
     this.linkQueue = new Queue()
     this.xmlSet = new Set()
-    this.returnedLinkCount = count
-    this.waitPeriod = wait
-    this.startingUrl = 'https://www.ourcommons.ca'
+    this.returnedLinkCount = typeof count === 'undefined' ? 50 : count
+    this.waitPeriod = typeof wait === 'undefined' ? 5000 : wait
+    this.startingUrl = typeof startingUrl === 'undefined' ? 'https://www.ourcommons.ca' : startingUrl
+    this.topLevelDomains = topLevelDomains
     this.jobs = []
   }
 
@@ -148,12 +149,18 @@ class ScrapeJobManager {
   createXmlLinks (xmlSet) {
     const xmlLinks = []
     const j = new ScrapeJob()
-    xmlSet.forEach((i) => {
-      if (i.includes(j.tlds[0]) || i.includes(j.tlds[1])) {
-        xmlLinks.push(i)
-      } else {
-        xmlLinks.push(j.tlds[0] + i)
-        xmlLinks.push(j.tlds[1] + i)
+    xmlSet.forEach((link) => {
+      let included = false
+      j.tlds.forEach(tld => {
+        if (link.includes(tld)) {
+          xmlLinks.push(link)
+          included = true
+        }
+      })
+      if (!included) {
+        j.tlds.forEach(tld => {
+          xmlLinks.push(tld + link)
+        })
       }
     })
     return xmlLinks
@@ -161,8 +168,8 @@ class ScrapeJobManager {
 }
 
 class ScrapeRunner {
-  constructor (count, wait) {
-    this.manager = new ScrapeJobManager(count, wait)
+  constructor (count, wait, startingUrl, topLevelDomains) {
+    this.manager = new ScrapeJobManager(count, wait, startingUrl, topLevelDomains)
   }
 
   getXmlContent () {

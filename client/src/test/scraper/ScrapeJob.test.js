@@ -1,5 +1,5 @@
-import { ScrapeJob } from '../src/ScrapeJob'
-import { ScrapeRunner } from '../src/ScrapeRunner'
+import { ScrapeJob } from '../../scraper/ScrapeJob'
+import { ScrapeRunner } from '../../scraper/ScrapeRunner'
 
 const chai = require('chai')
 chai.should()

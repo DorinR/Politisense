@@ -1,4 +1,4 @@
-import { LinkScraper } from '../../src/job_actions/LinkScraperAction'
+import { LinkScraper } from '../../../scraper/job_actions/LinkScraperAction'
 const chai = require('chai')
 chai.should()
 const chaiPromise = require('chai-as-promised')

@@ -1,13 +1,14 @@
 const Scraper = require('./job_actions/LinkScraperAction').LinkScraper
 const ScrapeError = require('./job_actions/LinkScraperAction').ScrapeError
+const ScrapeErrorName = require('./job_actions/LinkScraperAction').ScrapeErrorName
 const Parser = require('./job_actions/TextParserAction').TextParser
 const Processor = require('./job_actions/XmlLinkSelectionAction').XmlLinkSelector
 const Job = require('./Job').AbstractJob
 
 class ScrapeJob extends Job {
   // eslint-disable-next-line no-useless-constructor
-  constructor (url, manager) {
-    super(url, manager)
+  constructor (url, manager, topLevelDomains) {
+    super(url, manager, topLevelDomains)
   }
 
   initialiseJobComponents () {
@@ -53,7 +54,7 @@ class ScrapeJob extends Job {
         .catch((e) => {
           let link = this.scraper.url
           this.done = true
-          if (e.name !== 'ScrapeError') {
+          if (e.name !== ScrapeErrorName) {
             reject(e)
           }
           const error = new ScrapeError('Malformed link passed to scraper: ' + link + '\n' + e.message)

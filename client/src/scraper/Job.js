@@ -1,9 +1,9 @@
 
 class Job {
-  constructor (url, manager) {
+  constructor (url, manager, topLevelDomains) {
     this.url = url
     this.manager = manager
-    this.tlds = ['https://www.ourcommons.ca', 'https://www.parl.ca']
+    this.tlds = typeof topLevelDomains === 'undefined' ? ['https://www.ourcommons.ca', 'https://www.parl.ca'] : topLevelDomains
     this.initialiseJobComponents()
     this.done = false
   }
