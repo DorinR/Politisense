@@ -26,7 +26,7 @@ class BillXmlParser extends XmlDataParser {
       this.getDataInAttribute('BillNumber', 'number')
     bill.title = this.$('BillTitle').find('Title[language=\'en\']').text().trim()
     bill.sponsorName = this.$('SponsorAffiliation').find('FullName').text()
-    bill.text = ''
+    bill.textUrl = ''
     this.$('Publications').find('Publication').each((i, pub) => {
       const isRoyalAssent = this.$(pub).find('Title').text().includes('Royal Assent')
       if (isRoyalAssent) {

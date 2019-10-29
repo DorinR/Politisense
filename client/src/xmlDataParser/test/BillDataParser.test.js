@@ -25,6 +25,7 @@ describe('BillDataParser', () => {
     assert.strictEqual(bill.number, 'C-51')
     assert.strictEqual(bill.title, 'An Act to amend the Criminal Code and the Department of Justice Act and to make consequential amendments to another Act')
     assert.strictEqual(bill.sponsorName, 'Jody Wilson-Raybould')
+    // TODO: add test textUrl
   })
 
   it('should get all bills in the list of bills in the xml', () => { // TODO more asserts
