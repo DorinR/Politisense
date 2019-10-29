@@ -14,7 +14,7 @@ describe('All Scraper Request Tests', () => {
         return html
       })
       .catch((e) => {
-        throw e
+        return null
       })
       .should.eventually.be.a('string')
   })
@@ -26,7 +26,7 @@ describe('All Scraper Request Tests', () => {
         return html
       })
       .catch((e) => {
-        throw e
+        return null
       })
       .should.eventually.throw().notify(chai.done)
   })

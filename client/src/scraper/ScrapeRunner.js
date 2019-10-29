@@ -178,7 +178,3 @@ class ScrapeRunner {
 }
 
 module.exports.ScrapeRunner = ScrapeRunner
-
-// sample runner usage below
-var runner = new ScrapeRunner(100, 5000)
-runner.getXmlContent()

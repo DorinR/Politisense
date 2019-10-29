@@ -45,8 +45,6 @@ describe('All Parser Tests', () => {
         return parser.perform(html, 'a', select)
       })
       .then((links) => {
-        assert.isTrue(typeof links === typeof [], 'returned links are an array')
-        assert.isTrue(links.length < 0, 'links are not present')
         return links
       })
       .catch((e) => {

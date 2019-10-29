@@ -41,14 +41,14 @@ describe('All Processor Tests', () => {
     req.perform()
       .then((html) => {
         assert.isTrue(typeof html === 'string', 'valid html is delivered by the scraper')
-        return parser.parseHTML(html, '', (elem) => {
+        return parser.perform(html, '', (elem) => {
           return elem
         })
       })
       .then((links) => {
         assert.isTrue(typeof links === typeof [], 'returned links are an array')
-        assert.isTrue(links.length < 0, 'links are not present')
-        const xmls = selector.process(links)
+        assert.isTrue(links.length <= 0, 'links are not present')
+        const xmls = selector.perform(links)
         assert.isTrue(xmls.length === 0, 'should not find any links')
         return xmls
       })
