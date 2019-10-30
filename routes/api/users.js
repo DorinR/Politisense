@@ -11,5 +11,6 @@ router.get('/', (req, res) => res.send('user route'))
 // @desc  signup User
 // @access Public
 router.post('/signup', controller.userSignup)
+router.post('/login', controller.userLogin)
 
 module.exports = router

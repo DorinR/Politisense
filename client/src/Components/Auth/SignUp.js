@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Redirect, Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
@@ -47,25 +47,65 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp () {
   const classes = useStyles()
+  const [registered, setRegistered] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [authenticated, setAuthenticated] = useState(false)
+  const [passwordConfirm, setPasswordConfirm] = useState('')
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
   const [postalCode, setPostalCode] = useState('')
+  const [validForm, setValidForm] = useState(false)
+  const [errors, setErrors] = useState({ firstname: '', lastname: '', email: '', postalCode: '', password: '', passwordConfirm: '' })
 
-  const handleSubmit= (e) => {
+  function checkEmpty (obj) {
+    for (var key in obj) {
+      if (obj[key] !== null && obj[key] !== '') { return false }
+    }
+    return true
+  }
+  function checkForm () {
+    if (firstname && lastname && email && postalCode && password && passwordConfirm) {
+      setValidForm(true)
+    }
+  }
+
+  const handleSubmit = (e) => {
     e.preventDefault()
-    let user = {
+    const user = {
       firstname: firstname,
       lastname: lastname,
       email: email,
       postalCode: postalCode,
       password: password
     }
-    axios.post('http://localhost:5000/api/users/signup', user).then(r => console.log("successfully done!")).catch(e=>console.log(e))
+    const nameFormat = /^[a-z ,.'-]+$/i
+    const emailFormat = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+    const postalCodeFormat = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/
+    const passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+    const errors = {}
+    errors.firstname = !user.firstname.match(nameFormat) ? 'Invalid name format' : ''
+    errors.lastname = !user.lastname.match(nameFormat) ? 'Invalid name format' : ''
+    errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
+    errors.postalCode = !user.postalCode.match(postalCodeFormat) ? 'Invalid postal code' : ''
+    errors.password = !user.password.match(passwordFormat) ? 'Invalid password format' : ''
+    errors.passwordConfirm = !(user.password === passwordConfirm) ? 'Passwords do not match' : ''
+    if (checkEmpty(errors)) {
+      axios.post('http://localhost:5000/api/users/signup', user).then(
+        res => {
+          if (res.data.success) {
+            setRegistered(true)
+          } else {
+            console.log('fail')
+          }
+        }).catch(e => console.log(e))
+    } else {
+      setErrors(errors)
+      console.log(errors)
+    }
   }
-
+  if (registered) {
+    return <Redirect to={{ pathname: '/login', state: { message: 'sign up successful' } }} />
+  }
   return (
     <div>
       <div className={classes.root}>
@@ -80,7 +120,7 @@ export default function SignUp () {
       <Container component='main' maxWidth='xs'>
         <CssBaseline />
         <div className={classes.paper}>
-          <form className={classes.form} noValidate onSubmit={handleSubmit}>
+          <form className={classes.form} noValidate onSubmit={handleSubmit} onChange={checkForm}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -92,6 +132,8 @@ export default function SignUp () {
                   fullWidth
                   id='firstName'
                   label='First Name'
+                  error={errors.firstname !== ''}
+                  helperText={errors.firstname}
                   autoFocus
                 />
               </Grid>
@@ -105,6 +147,8 @@ export default function SignUp () {
                   label='Last Name'
                   name='lastname'
                   autoComplete='lname'
+                  error={errors.lastname !== ''}
+                  helperText={errors.lastname}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -117,6 +161,8 @@ export default function SignUp () {
                   label='Email Address'
                   name='email'
                   autoComplete='email'
+                  error={errors.email !== ''}
+                  helperText={errors.email}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -128,11 +174,13 @@ export default function SignUp () {
                   id='postal_code'
                   label='Postal Code'
                   name='postalCode'
+                  error={errors.postalCode !== ''}
+                  helperText={errors.postalCode}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                   onChange={e => setPassword(e.target.value)}
+                  onChange={e => setPassword(e.target.value)}
                   variant='outlined'
                   required
                   fullWidth
@@ -141,6 +189,23 @@ export default function SignUp () {
                   type='password'
                   id='password'
                   autoComplete='current-password'
+                  error={errors.password !== ''}
+                  helperText={errors.password}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  onChange={e => setPasswordConfirm(e.target.value)}
+                  variant='outlined'
+                  required
+                  fullWidth
+                  name='passwordConfirm'
+                  label='Confirm Password'
+                  type='password'
+                  id='passwordConfirm'
+                  autoComplete='current-password'
+                  error={errors.passwordConfirm !== ''}
+                  helperText={errors.passwordConfirm}
                 />
               </Grid>
             </Grid>
@@ -150,6 +215,7 @@ export default function SignUp () {
               variant='contained'
               color='primary'
               className={classes.submit}
+              disabled={!validForm}
             >
             Sign Up
             </Button>

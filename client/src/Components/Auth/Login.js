@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Redirect, Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -10,6 +10,8 @@ import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import canadaimage from '../../assets/canada.jpg'
 import logo from '../../assets/PolotisenseTentativeLogo.png'
+import { Box } from '@material-ui/core'
+import axios from 'axios'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -44,15 +46,24 @@ const useStyles = makeStyles(theme => ({
   },
   logo: {
     margin: theme.spacing(15, 0, 2)
+  },
+  quote: {
+    color: '#43D0C4'
   }
 }))
 
-export default function Login () {
+export default function Login (props) {
   const classes = useStyles()
-
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
+  const [message, setMessage] = useState()
+
+  useEffect(() => {
+    if (props.location.state !== undefined) {
+      setMessage('Your account has been successfully created!')
+    }
+  })
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value)
@@ -62,19 +73,27 @@ export default function Login () {
     setPassword(e.target.value)
   }
 
-  function login (email, password) {
-    const credentials = { email: email, password: password }
-    if (credentials.email === 'user' && credentials.password === 'test') {
-      setAuthenticated(true)
-      window.confirm('successfully logged in')
-      localStorage.setItem('user', JSON.stringify(credentials))
-    } else { window.confirm('The username and password you entered did not match our records. Please double-check and try again.') }
-  }
+  // function login () {
+  //
+  //   if (user.email === 'user' && user.password === 'test') {
+  //     setAuthenticated(true)
+  //     window.confirm('successfully logged in')
+  //     localStorage.setItem('user', JSON.stringify(user))
+  //   } else { window.confirm('The username and password you entered did not match our records. Please double-check and try again.') }
+  // }
   const handleSubmit = (e) => {
     e.preventDefault()
-    login(email, password)
-    setEmail('')
-    setPassword('')
+    const user = { email: email, password: password }
+    axios.post('http://localhost:5000/api/users/login', user).then(
+      res => {
+        if (res.data.success) {
+          setAuthenticated(true)
+          window.confirm('successfully logged in')
+          localStorage.setItem('user', JSON.stringify(user))
+        } else {
+          console.log('fail')
+        }
+      }).catch(e => console.log(e))
   }
   return (
     authenticated
@@ -89,6 +108,8 @@ export default function Login () {
                 <div className={classes.paper}>
                   <img src={logo} alt='' className={classes.logo} />
                   <form className={classes.form} noValidate onSubmit={handleSubmit}>
+                    {(message ? (
+                      <Box className={classes.quote}>{message}</Box>) : null)}
                     <TextField
                       variant='outlined'
                       margin='normal'
