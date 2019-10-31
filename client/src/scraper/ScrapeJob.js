@@ -63,14 +63,13 @@ class ScrapeJob extends Job {
           }
           if (this.scraper.url.startsWith('//')) {
             link = 'https:' + this.scraper.url
-            this.manager.enqueueJobsCb([new ScrapeJob(link, this.manager)])
+            this.manager.enqueueJobsCb([new ScrapeJob(link, this.manager, this.tlds)])
             error.message = 're-enqueuing link as: ' + link
           } else if (this.scraper.url.startsWith('/')) {
-            link = this.tlds[0] + this.scraper.url
-            this.manager.enqueueJobsCb([new ScrapeJob(link, this.manager)])
-            const link0 = this.tlds[1] + this.scraper.url
-            this.manager.enqueueJobsCb([new ScrapeJob(link0, this.manager)])
-            error.message = 're-enqueuing link as: ' + link + ' and as ' + link0
+            this.tlds.forEach(tld => {
+              const newLink = tld + link
+              this.manager.enqueueJobsCb([new ScrapeJob(newLink, this.manager, this.tlds)])
+            })
           }
           reject(error)
         })

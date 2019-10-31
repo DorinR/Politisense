@@ -1,10 +1,10 @@
 import { ScrapeJob } from '../../scraper/ScrapeJob'
 import { ScrapeRunner } from '../../scraper/ScrapeRunner'
-
 const chai = require('chai')
 chai.should()
 const chaiPromise = require('chai-as-promised')
 chai.use(chaiPromise)
+
 // eslint-disable-next-line no-undef
 describe('All Job tests', () => {
   // eslint-disable-next-line no-undef
@@ -13,7 +13,11 @@ describe('All Job tests', () => {
     const mngr = new ScrapeRunner()
     mngr.enqueueJobsCb = function () {}
     const exc = new ScrapeJob(url, mngr)
-    return exc.execute().should.eventually.be.a('array')
+    return exc.execute().then(result => {
+      return result
+    }).then(array => {
+      array.should.be.an('array')
+    })
   })
   // eslint-disable-next-line no-undef
   test('Job throws on bad link', () => {
