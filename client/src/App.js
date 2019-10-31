@@ -12,6 +12,7 @@ import Dashboard from './Components/Dashboard/Dashboard'
 import Logout from './Components/Logout'
 import UserAccount from './Components/UserAccount'
 import Map from './Components/Map'
+import DashboardTabs from './Components/Dashboard/DashboardTabs'
 
 const App = () => {
   const LoginContainer = () => (
@@ -26,7 +27,7 @@ const App = () => {
       <Navbar>
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
-          <PrivateRoute path='/dashboard' component={Dashboard} />
+          <PrivateRoute path='/dashboard' component={DashboardTabs} />
           <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/map' component={Map} />
           <PrivateRoute path='/account' component={UserAccount} />
@@ -43,7 +44,8 @@ const App = () => {
           <Component {...props} />
         ) : (
           <Redirect to='/login' />
-        )}
+        )
+      }
     />
   )
 
