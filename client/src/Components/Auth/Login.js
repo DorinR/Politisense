@@ -57,7 +57,8 @@ export default function Login (props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
-  const [message, setMessage] = useState()
+  const [message, setMessage] = useState('')
+  const [errors, setErrors] = useState({ email: '', password: '' })
 
   useEffect(() => {
     if (props.location.state !== undefined) {
@@ -84,16 +85,24 @@ export default function Login (props) {
   const handleSubmit = (e) => {
     e.preventDefault()
     const user = { email: email, password: password }
-    axios.post('http://localhost:5000/api/users/login', user).then(
-      res => {
-        if (res.data.success) {
-          setAuthenticated(true)
-          window.confirm('successfully logged in')
-          localStorage.setItem('user', JSON.stringify(user))
-        } else {
-          console.log('fail')
-        }
-      }).catch(e => console.log(e))
+    const emailFormat = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+    const errors = {}
+    errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
+    errors.password = (password === '' || password == null) ? 'Please enter a password' : ''
+    if (errors.email === '' && errors.password === '') {
+      axios.post('http://localhost:5000/api/users/login', user).then(
+        res => {
+          if (res.data.success) {
+            setAuthenticated(true)
+            localStorage.setItem('user', JSON.stringify(user))
+          } else {
+            console.log('fail')
+          }
+        }).catch(e => console.log(e))
+    } else {
+      setErrors(errors)
+      console.log(errors)
+    }
   }
   return (
     authenticated
@@ -121,6 +130,8 @@ export default function Login (props) {
                       autoComplete='email'
                       onChange={handleEmailChange}
                       value={email}
+                      error={errors.email !== ''}
+                      helperText={errors.email}
                       autoFocus
                     />
                     <TextField
@@ -135,6 +146,8 @@ export default function Login (props) {
                       autoComplete='current-password'
                       onChange={handlePasswordChange}
                       value={password}
+                      error={errors.password !== ''}
+                      helperText={errors.password}
                     />
                     <Typography variant='h6' gutterBottom style={{ textAlign: 'center' }}>
                       OR
