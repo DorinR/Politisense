@@ -1,6 +1,14 @@
 const fs = require('firebase')
 require('firebase/firestore')
 
+var instance = null
+function getInstance () {
+  if (!instance) {
+    instance = new _Firestore()
+  }
+  return instance
+}
+
 class _Firestore {
   constructor () {
     this.config = {
@@ -62,7 +70,7 @@ class Reference {
 
 class Firestore {
   constructor () {
-    this.firestore = new _Firestore()
+    this.firestore = getInstance()
     this.reference = this.firestore.db
   }
 

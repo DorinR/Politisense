@@ -1,6 +1,7 @@
 const Classifier = require('./Classifier').Classifier
 const FireStore = require('../Firebase').FireStore
 
+
 class ClassificationManager {
   constructor () {
     this.classifier = new Classifier()
@@ -12,6 +13,10 @@ class ClassificationManager {
       .then(result => {
         result.forEach(doc => ({
          const {name, link} = doc.data()
+          new scraper.perform(link)
+            .then(html => {
+
+            })
         })
       })
       .catch(e => {
