@@ -13,7 +13,7 @@ class _Classifier {
 
   addDocument (name, contents) {
     this.documents.push(name)
-    this.classifier.add(contents)
+    this.classifier.addDocument(contents, this.documents.length - 1, false)
   }
 
   getAllTermsForDocument (name) {
@@ -26,10 +26,10 @@ class _Classifier {
   }
 
   getAllTermsByDocuments () {
-    const documents = new Array(this.documents.length)
+    const documents = new Map()
     let index = 0
     while (index < this.documents.length) {
-      documents[index] = this.classifier.listTerms(index++)
+      documents.set(this.documents[index], this.classifier.listTerms(index++))
     }
     return documents
   }

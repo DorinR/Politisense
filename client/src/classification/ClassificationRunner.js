@@ -1,27 +1,146 @@
 const Classifier = require('./Classifier').Classifier
 const FireStore = require('../Firebase').FireStore
-
+const Reader = require('../scraper/job_actions/UrlFileReaderAction').FileReader
+const Scraper = require('../scraper/job_actions/LinkScraperAction').LinkScraper
+const ScrapeError = require('../scraper/job_actions/LinkScraperAction').ScrapeError
+const Parser = require('../scraper/job_actions/TextParserAction').TextParser
+const Selector = require('../scraper/job_actions/SelectionAction').Selector
 
 class ClassificationManager {
   constructor () {
     this.classifier = new Classifier()
+    this.documentCount = 0
+    this.onDone = () => {}
   }
 
-  load () {
-    const fs = new FireStore()
-    fs.Bill().select()
-      .then(result => {
-        result.forEach(doc => ({
-         const {name, link} = doc.data()
-          new scraper.perform(link)
-            .then(html => {
+  getCurrentClassifications () {
+    return this.classifier.getAllTermsByDocuments()
+  }
 
-            })
+  parseForLinks (html) {
+    const parser = new Parser()
+    const $ = parser.load(html)
+    return parser.perform(html, 'a', (elem) => {
+      return $(elem).attr('href')
+    })
+  }
+
+  selectXmlFileFromLinks (links) {
+    const groupSelector = new Selector('/Content/Bills/')
+    groupSelector.perform(links)
+    const xmlSelector = new Selector('xml')
+    xmlSelector.perform(groupSelector.selected)
+    return xmlSelector.selected[0]
+  }
+
+  retrieveXmlFile (fp) {
+    const filepath = 'https://www.parl.ca' + fp.slice(0, fp.length)
+    return new Reader(filepath).perform()
+  }
+
+  getInitialDomNodes (xml) {
+    const parser = new Parser()
+    const $ = parser.loadAsXml(xml)
+    const startingNodes = $('Bill')[0] ? $('Bill')[0].children : null
+    if (!startingNodes) {
+      throw new ScrapeError('cannot scrape bill')
+    }
+    const nodes = []
+    startingNodes.forEach(node => {
+      nodes.push(node)
+    })
+    return startingNodes
+  }
+
+  getAllContent (nodes) {
+    let contentString = ''
+    while (nodes.length > 0) {
+      const node = nodes[0]
+      if (node && node.children && node.children.length > 0) {
+        node.children.forEach(node => {
+          nodes.push(node)
         })
-      })
-      .catch(e => {
-        console.log(e)
-      })
+      } else if (node.type === 'text') {
+        contentString += node.data + ' '
+      }
+      nodes.shift()
+    }
+    return contentString
+  }
+
+  async fetch (document) {
+    return new Promise((resolve, reject) => {
+      const contents = document.data()
+      new Scraper(contents.link).perform()
+        .then(html => {
+          return this.parseForLinks(html)
+        })
+        .then(links => {
+          return this.selectXmlFileFromLinks(links)
+        })
+        .then(filepath => {
+          return this.retrieveXmlFile(filepath)
+        })
+        .then(xml => {
+          return this.getInitialDomNodes(xml)
+        })
+        .then(nodes => {
+          return this.getAllContent(nodes)
+        })
+        .then(content => {
+          return {
+            name: contents.name,
+            content: content
+          }
+        })
+        .then(result => {
+          this.classifier.addDocument(result.name, result.content)
+          if (--this.documentCount === 0) {
+            this.onDone()
+          }
+          resolve(result)
+        })
+        .catch(e => {
+          --this.documentCount
+          reject(e)
+        })
+    })
+  }
+
+  fetchDocuments (documents) {
+    documents.forEach(doc => {
+      this.fetchDocument(doc)
+
+        .catch(e => {
+          console.error(e.message)
+        })
+    })
+  }
+
+  async fetchDocument (document) {
+    return new Promise((resolve, reject) => {
+      this.fetch(document)
+        .then(result => {
+          resolve(result)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  }
+
+  async fetchDocumentData () {
+    return new Promise((resolve, reject) => {
+      new FireStore().Bill()
+        .select()
+        .then(documents => {
+          this.documentCount = documents.size
+          this.fetchDocuments(documents)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
   }
 }
 
@@ -29,15 +148,21 @@ class ClassificationRunner {
   constructor () {
     this.manager = new ClassificationManager()
   }
+
+  initialiseFromFirestore (onDone) {
+    this.manager.onDone = onDone
+    this.manager.fetchDocumentData()
+  }
 }
 
 module.exports.ClassificationRunner = ClassificationRunner
 
-const fs = new FireStore()
-fs.Bill().insert({
-  name: 'Some act to do something',
-  link: 'https://www.parl.ca/DocumentViewer/en/8707934?Language=E'
-})
-
-const test = new ClassificationManager()
-test.load()
+const test = new ClassificationRunner()
+const done = () => {
+  const classifcations = test.manager.getCurrentClassifications()
+  classifcations.forEach((v, k) => {
+    console.log(k)
+    console.log(v)
+  })
+}
+test.initialiseFromFirestore(done)
