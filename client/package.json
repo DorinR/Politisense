@@ -17,6 +17,7 @@
     "express-validator": "^6.2.0",
     "firebase": "^4.8.0",
     "jsonwebtoken": "^8.5.1",
+    "natural": "^0.6.3",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1",
