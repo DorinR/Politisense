@@ -19,7 +19,7 @@ class _Firestore {
   }
 }
 
-function getInstance() {
+function getInstance () {
   if (!instance) {
     instance = new _Firestore()
   }
