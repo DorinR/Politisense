@@ -6,7 +6,7 @@ class _Classifier {
     if (json === null) {
       this.classifier = new TfIdf()
     } else {
-      this.classifier = new TfIdf(json)
+      this.classifier = new TfIdf(JSON.parse(json))
     }
     this.documents = []
   }

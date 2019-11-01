@@ -17,6 +17,35 @@ class ClassificationManager {
     return this.classifier.getAllTermsByDocuments()
   }
 
+  load () {
+    return new Promise(resolve => {
+      new FireStore().BillClassification()
+        .select()
+        .then(query => {
+          let i = 0
+          query.forEach((doc) => {
+            if (i++ === query.size - 1) {
+              console.log(doc.data())
+              this.classifier.load(doc.state)
+            }
+          })
+        })
+        .catch(e => {
+          console.error(e.message)
+        })
+    })
+  }
+
+  save () {
+    const state = this.classifier.save()
+    console.log(state)
+    new FireStore().BillClassification()
+      .insert({ state: state })
+      .catch(e => {
+        console.error(e.message)
+      })
+  }
+
   parseForLinks (html) {
     const parser = new Parser()
     const $ = parser.load(html)
@@ -110,7 +139,6 @@ class ClassificationManager {
   fetchDocuments (documents) {
     documents.forEach(doc => {
       this.fetchDocument(doc)
-
         .catch(e => {
           console.error(e.message)
         })
@@ -149,20 +177,27 @@ class ClassificationRunner {
     this.manager = new ClassificationManager()
   }
 
-  initialiseFromFirestore (onDone) {
+  createBillClassificationsFromFirestore (onDone) {
     this.manager.onDone = onDone
     this.manager.fetchDocumentData()
+  }
+
+  initialiseFromFirestore () {
+    return this.manager.load()
+  }
+
+  save () {
+    this.manager.save()
+  }
+
+  getClassifications () {
+    return this.manager.getCurrentClassifications()
   }
 }
 
 module.exports.ClassificationRunner = ClassificationRunner
 
 const test = new ClassificationRunner()
-const done = () => {
-  const classifcations = test.manager.getCurrentClassifications()
-  classifcations.forEach((v, k) => {
-    console.log(k)
-    console.log(v)
-  })
-}
-test.initialiseFromFirestore(done)
+test.createBillClassificationsFromFirestore(() => {
+  console.log(test.getClassifications())
+})
