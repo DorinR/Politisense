@@ -63,7 +63,6 @@ exports.userLogin = (req, res) => {
 
 exports.getUserByEmail = (req, res) => {
   let userEmail = req.params.userEmail
-  console.log(userEmail)
   const db = new Firestore()
   db.User()
     .select('email', '==', userEmail)

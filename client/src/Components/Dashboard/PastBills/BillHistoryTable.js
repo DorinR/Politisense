@@ -76,7 +76,7 @@ export default function BillHistoryTable() {
     // const user = JSON.parse(localStorage.getItem('userToken')) // not working for now but will be added
 
     let user = {
-      email: 'ishmammurtaza@gmail.com'
+      email: 'cap1@gmail.com'
     }
 
     // get the user's riding
@@ -88,7 +88,7 @@ export default function BillHistoryTable() {
           let riding = res.data.data.riding
           setUserPostalCode(postalCode)
           setUserRiding(riding)
-          console.log(postalCode)
+          // console.log(postalCode)
         }
       })
       .catch(err => console.log(err))
@@ -100,7 +100,7 @@ export default function BillHistoryTable() {
       })
       .then(res => {
         if (res.data.success) {
-          console.log(res.data.data)
+          // console.log(res.data.data)
           let representative = res.data.data.representative
           setUserRepresentative(representative)
         }
