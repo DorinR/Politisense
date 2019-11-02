@@ -12,13 +12,11 @@ exports.userSignup = (req, res) => {
   const db = new Firestore()
   db.User()
     .insert(user)
-    .then(
-      () => {
-        res.json({
-          success: true
-        })
-      }
-    )
+    .then(() => {
+      res.json({
+        success: true
+      })
+    })
     .catch(err => {
       console.log('Error getting documents', err)
     })
@@ -38,7 +36,7 @@ exports.userLogin = (req, res) => {
         return
       }
       let data = {}
-      snapshot.forEach(function (doc) {
+      snapshot.forEach(function(doc) {
         data = doc.data()
       })
       res.json({
@@ -62,3 +60,31 @@ exports.userLogin = (req, res) => {
 //       console.log('Error getting documents', err)
 //     })
 // }
+
+exports.getUserByEmail = (req, res) => {
+  let userEmail = req.params.userEmail
+  console.log(userEmail)
+  const db = new Firestore()
+  db.User()
+    .select('email', '==', userEmail)
+    .then(snapshot => {
+      if (snapshot.empty) {
+        res.status(400).json({
+          message: 'user not found',
+          success: false
+        })
+      }
+      snapshot.forEach(doc => {
+        res.json({
+          success: true,
+          data: doc.data()
+        })
+      })
+    })
+    .catch(err =>
+      res.status(404).json({
+        message: 'UserController.js',
+        success: false
+      })
+    )
+}

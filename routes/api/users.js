@@ -13,4 +13,9 @@ router.get('/', (req, res) => res.send('user route'))
 router.post('/signup', controller.userSignup)
 router.post('/login', controller.userLogin)
 
+// @route post api/users/:email
+// @desc  get user postal code
+// @access Public
+router.get('/:userEmail', controller.getUserByEmail)
+
 module.exports = router
