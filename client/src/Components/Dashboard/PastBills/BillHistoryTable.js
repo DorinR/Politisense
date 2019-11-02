@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
@@ -8,6 +8,8 @@ import TableHead from '@material-ui/core/TableHead'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import BillDetails from './BillDetails'
+import axios from 'axios'
+import { Firestore } from '../../../Firebase'
 
 const columns = [
   { id: 'billNumber', label: 'Bill Number', minWidth: 100 },
@@ -62,6 +64,61 @@ export default function BillHistoryTable() {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const [userPostalCode, setUserPostalCode] = React.useState('')
+  const [userRiding, setUserRiding] = React.useState('')
+  const [userRepresentative, setUserRepresentative] = React.useState('')
+  const [
+    representativeVotingRecord,
+    setRepresentativeVotingRecord
+  ] = React.useState('')
+
+  useEffect(() => {
+    // const user = JSON.parse(localStorage.getItem('userToken')) // not working for now but will be added
+
+    let user = {
+      email: 'ishmammurtaza@gmail.com'
+    }
+
+    // get the user's riding
+    axios
+      .get(`/api/users/${user.email}`)
+      .then(res => {
+        if (res.data.success) {
+          let postalCode = res.data.data.postalCode
+          let riding = res.data.data.riding
+          setUserPostalCode(postalCode)
+          setUserRiding(riding)
+          console.log(postalCode)
+        }
+      })
+      .catch(err => console.log(err))
+
+    // get the MP for that riding
+    axios
+      .get('/api/representatives/riding', {
+        riding: userRiding
+      })
+      .then(res => {
+        if (res.data.success) {
+          console.log(res.data.data)
+          let representative = res.data.data.representative
+          setUserRepresentative(representative)
+        }
+      })
+      .catch(err => console.log(err))
+
+    axios
+      .get('api/voteRecord/getVotesByRepresentative', {
+        representative: userRepresentative
+      })
+      .then(res => {
+        if (res.data.success) {
+          console.log(res.data.data)
+          setRepresentativeVotingRecord(res.data.data)
+        }
+      })
+      .catch(err => console.log(err))
+  })
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)

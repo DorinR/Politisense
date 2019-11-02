@@ -95,7 +95,11 @@ class Firestore {
   }
 
   VoteRecord() {
-    return new Reference(this.reference.collection('vote_records'))
+    return new Reference(this.reference.collection('voteRecord'))
+  }
+
+  Riding() {
+    return new Reference(this.reference.collection('ridings'))
   }
 }
 

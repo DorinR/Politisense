@@ -53,5 +53,6 @@
     "concurrently": "^4.1.2",
     "nodemon": "^1.19.3",
     "standard": "^14.1.0"
-  }
+  },
+  "proxy": "http://localhost:5000"
 }
