@@ -18,14 +18,15 @@ class VoteXmlParser extends XmlDataParser {
 
     // only get votes related to bills
     const billNumber = this.getDataInTag('BillNumberCode')
-    if (billNumber === '') {
+    const voteSubject = this.getDataInTag('DecisionDivisionSubject').trim()
+    if (billNumber === '' || !this.isFinalDecision(voteSubject)) {
       return null
     } else {
       vote.billNumber = billNumber
+      vote.subject = voteSubject
     }
 
-    vote.number = this.getDataInTag('DecisionDivisionNumber')
-    vote.subject = this.getDataInTag('DecisionDivisionSubject')
+    vote.number = Number(this.getDataInTag('DecisionDivisionNumber'))
     vote.yeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
     vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
     vote.accepted = (vote.yeas > vote.nays)
@@ -34,6 +35,10 @@ class VoteXmlParser extends XmlDataParser {
     // TODO test
 
     return vote
+  }
+
+  isFinalDecision (voteSubject) {
+    return voteSubject.includes('3rd reading')
   }
 }
 
