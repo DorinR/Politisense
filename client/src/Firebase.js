@@ -10,7 +10,7 @@ function getInstance () {
 }
 
 class _Firestore {
-  constructor () {
+  constructor() {
     this.config = {
       apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
       authDomain: 'abdulla-2c3a5.firebaseapp.com',
@@ -26,39 +26,46 @@ class _Firestore {
 }
 
 class Reference {
-  constructor (reference) {
+  constructor(reference) {
     this.reference = reference
   }
 
-  select (attribute, operator, value) {
-    if (typeof attribute === 'undefined' || typeof operator === 'undefined' || typeof value === 'undefined') {
+  select(attribute, operator, value) {
+    if (
+      typeof attribute === 'undefined' ||
+      typeof operator === 'undefined' ||
+      typeof value === 'undefined'
+    ) {
       return new Promise((resolve, reject) => {
-        this.reference.get()
-          .then((snapshot) => {
+        this.reference
+          .get()
+          .then(snapshot => {
             resolve(snapshot)
           })
-          .catch((err) => {
+          .catch(err => {
             reject(err)
           })
       })
     } else {
       return new Promise((resolve, reject) => {
-        this.reference.where(attribute, operator, value)
+        this.reference
+          .where(attribute, operator, value)
           .get()
-          .then((snapshot) => {
+          .then(snapshot => {
             resolve(snapshot)
           })
-          .catch((err) => {
+          .catch(err => {
             reject(err)
           })
       })
     }
   }
 
-  insert (model) {
-    return new Promise((resolve) => {
-      this.reference.add(model)
-        .then((result) => {
+  insert(model) {
+    return new Promise(resolve => {
+      this.reference
+        .add(model)
+        .then(result => {
           resolve(true)
         })
         .catch(() => {
@@ -74,7 +81,7 @@ class Firestore {
     this.reference = this.firestore.db
   }
 
-  Bill () {
+  Bill() {
     return new Reference(this.reference.collection('bills'))
   }
 
@@ -86,11 +93,11 @@ class Firestore {
     return new Reference(this.reference.collection('politicians'))
   }
 
-  User () {
+  User() {
     return new Reference(this.reference.collection('users'))
   }
 
-  VoteRecord () {
+  VoteRecord() {
     return new Reference(this.reference.collection('vote_records'))
   }
 }
