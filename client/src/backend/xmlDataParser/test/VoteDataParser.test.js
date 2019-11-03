@@ -27,6 +27,7 @@ describe('VoteParticipantsXmlParser', () => {
   it('should return dictionary of voters for bill C-47', () => {
     const parser = getVoteParticipantsParserForXmlFile('testXml/testVoteParticipants.xml')
     const voters = parser.getAllFromXml()
+    assert.typeOf(voters, 'object', 'we get an dictionary object mapping Mps with there votes, not a list')
 
     assert.lengthOf(Object.keys(voters), 294, 'there were 294 voters, paired or not')
     const yeaVoters = Object.keys(voters).filter(key => voters[key].vote === 'Yea')
@@ -50,6 +51,13 @@ describe('VoteParticipantsXmlParser', () => {
     assert.hasAnyKeys(voters, 'Marilène Gill', 'Marilène Gill is a voter')
     assert.strictEqual(voters['Marilène Gill'].vote, 'Nay')
     assert.isTrue(voters['Marilène Gill'].paired)
+  })
+
+  it('should return an empty JSON if there is no participant data', () => {
+    const voteParticipantsXmlWithNoParticipantData = '<?xml version="1.0" encoding="utf-8"?>\n' +
+      '<List xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />'
+    const parser = new VoteParticipantsXmlParser(voteParticipantsXmlWithNoParticipantData)
+    assert.isEmpty(parser.getAllFromXml())
   })
 })
 
