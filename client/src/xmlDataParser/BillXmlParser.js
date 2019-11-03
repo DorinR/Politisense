@@ -30,7 +30,7 @@ class BillXmlParser extends XmlDataParser {
     this.$('Publications').find('Publication').each((i, pub) => {
       const isRoyalAssent = this.$(pub).find('Title').text().includes('Royal Assent')
       if (isRoyalAssent) {
-        bill.text = this.$(pub).find('PublicationFile[language=\'en\']').attr('relativePath').replace('//', 'https://www.')
+        bill.textUrl = this.$(pub).find('PublicationFile[language=\'en\']').attr('relativePath').replace('//', 'https://www.')
       }
     })
 

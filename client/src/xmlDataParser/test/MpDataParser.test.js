@@ -17,11 +17,11 @@ describe('MpDataParser', () => {
     assert.strictEqual(mp.riding, 'Vancouver Granville')
   })
 
-  it('should get all mps in the list of mps in the xml', () => { // TODO more asserts
+  it('should get all mps in the list of mps in the xml', () => {
     const parser = getMpParserForXmlFile('testXml/testMp_List.xml')
     const mps = parser.getAllFromXml()
 
-    assert.strictEqual(mps.length, 14)
+    assert.strictEqual(mps.length, 8)
   })
 })
 

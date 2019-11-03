@@ -25,10 +25,10 @@ describe('BillDataParser', () => {
     assert.strictEqual(bill.number, 'C-51')
     assert.strictEqual(bill.title, 'An Act to amend the Criminal Code and the Department of Justice Act and to make consequential amendments to another Act')
     assert.strictEqual(bill.sponsorName, 'Jody Wilson-Raybould')
-    // TODO: add test textUrl
+    assert.strictEqual(bill.textUrl, 'https://www.parl.ca/DocumentViewer/en/10276765?Language=E')
   })
 
-  it('should get all bills in the list of bills in the xml', () => { // TODO more asserts
+  it('should get all bills in the list of bills in the xml', () => {
     const parser = getBillParserForXmlFile('testXml/testBill_List.xml')
     const bills = parser.getAllFromXml()
 

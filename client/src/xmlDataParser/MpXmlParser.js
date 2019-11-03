@@ -6,9 +6,7 @@ class MpXmlParser extends XmlDataParser {
   }
 
   get LIST_TAG_NAME () {
-    return 'List'
-    // TODO: Update to use new xml format, and update test xml to reflect this.
-    // return 'ArrayOfMemberOfParliament'
+    return 'ArrayOfMemberOfParliament'
   }
 
   generateNewParser (xml) {
