@@ -57,7 +57,7 @@ export default function BillDetails(props) {
 
   return (
     <div>
-      <Button variant='outlined' color='secondary' onClick={handleClickOpen}>
+      <Button variant='outlined' onClick={handleClickOpen}>
         View Details
       </Button>
       <Dialog

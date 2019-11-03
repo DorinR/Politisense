@@ -20,6 +20,12 @@ const columns = [
     align: 'right'
   },
   {
+    id: 'representativeVote',
+    label: 'Representative Vote',
+    minWidth: 50,
+    align: 'right'
+  },
+  {
     id: 'moreInfo',
     label: 'Details',
     minWidth: 170,
@@ -27,8 +33,14 @@ const columns = [
   }
 ]
 
-function createData(billNumber, voteDate, billSummary, moreInfo) {
-  return { billNumber, voteDate, billSummary, moreInfo }
+function createData(
+  billNumber,
+  voteDate,
+  billSummary,
+  representativeVote,
+  moreInfo
+) {
+  return { billNumber, voteDate, billSummary, representativeVote, moreInfo }
 }
 
 let rows = []
@@ -102,14 +114,23 @@ async function fetchRepresentativeVotes(representative) {
 
 function generateTableRows(votes) {
   votes.forEach(vote => {
-    let { billNumber, dateVoted, voteName, billSummary, billText } = vote
+    let {
+      billNumber,
+      dateVoted,
+      voteName,
+      representativeVote,
+      billSummary,
+      billText
+    } = vote
     let tableRow = createData(
       billNumber,
       dateVoted,
       voteName,
+      representativeVote,
       <BillDetails billSummary={billSummary} billText={billText} />
     )
     rows.push(tableRow)
+    console.log(representativeVote)
   })
 }
 
@@ -175,7 +196,6 @@ export default function BillHistoryTable() {
   return (
     <Paper className={classes.root}>
       <div className={classes.tableWrapper}>
-        <h1>{userRiding}</h1>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
