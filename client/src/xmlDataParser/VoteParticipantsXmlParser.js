@@ -23,12 +23,14 @@ class VoteParticipantsXmlParser extends XmlDataParser {
     participant.vote = (voteValue === 'Paired') ? '' : voteValue
 
     participant.paired = this.getDataInTag('Paired') === '1'
+
+    return participant
   }
 
   getAllFromXml () {
     const participants = super.getAllFromXml()
 
-    // rather than array, use a key value JSON where the key is the Mps name
+    // rather than array, use a key value JSON where the key is the Mp's name
     const votes = {}
     for (const participant of participants) {
       const name = participant.name
