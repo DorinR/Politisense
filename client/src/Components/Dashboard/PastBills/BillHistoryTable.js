@@ -9,14 +9,13 @@ import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import BillDetails from './BillDetails'
 import axios from 'axios'
-import { Firestore } from '../../../Firebase'
 
 const columns = [
   { id: 'billNumber', label: 'Bill Number', minWidth: 100 },
   { id: 'voteDate', label: 'Date Voted', minWidth: 100 },
   {
-    id: 'billSubject',
-    label: 'Bill Subject',
+    id: 'billSummary',
+    label: 'Bill Summary',
     minWidth: 200,
     align: 'right'
   },
@@ -28,27 +27,11 @@ const columns = [
   }
 ]
 
-function createData(billNumber, voteDate, billSubject, moreInfo) {
-  return { billNumber, voteDate, billSubject, moreInfo }
+function createData(billNumber, voteDate, billSummary, moreInfo) {
+  return { billNumber, voteDate, billSummary, moreInfo }
 }
 
-const rows = [
-  createData('No. 1377', '2019.06.19', 'The Bill Summary', <BillDetails />),
-  createData('China', 'CN', 'The Bill Summary', <BillDetails />),
-  createData('Italy', 'IT', 'The Bill Summary', <BillDetails />),
-  createData('United States', 'US', 'The Bill Summary', <BillDetails />),
-  createData('Canada', 'CA', 'The Bill Summary', <BillDetails />),
-  createData('Australia', 'AU', 'The Bill Summary', <BillDetails />),
-  createData('Germany', 'DE', 'The Bill Summary', <BillDetails />),
-  createData('Ireland', 'IE', 'The Bill Summary', <BillDetails />),
-  createData('Mexico', 'MX', 'The Bill Summary', <BillDetails />),
-  createData('Japan', 'JP', 'The Bill Summary', <BillDetails />),
-  createData('France', 'FR', 'The Bill Summary', <BillDetails />),
-  createData('United Kingdom', 'GB', 'The Bill Summary', <BillDetails />),
-  createData('Russia', 'RU', 'The Bill Summary', <BillDetails />),
-  createData('Nigeria', 'NG', 'The Bill Summary', <BillDetails />),
-  createData('Brazil', 'BR', 'The Bill Summary', <BillDetails />)
-]
+let rows = []
 
 const useStyles = makeStyles({
   root: {
@@ -60,11 +43,84 @@ const useStyles = makeStyles({
   }
 })
 
+var userRiding = ''
+var userRepresentative = ''
+var userRepresentativeVotes = []
+var testingVotesToDisplay = [
+  { vote: 'this is the vote text' },
+  { vote: 'this is the vote text of another vote' }
+]
+
+async function fetchUserRiding(userEmail) {
+  console.log('call 1')
+  let result = ''
+  await axios
+    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+    .then(res => {
+      if (res.data.success) {
+        let riding = res.data.data.riding
+        result = riding
+      }
+    })
+    .catch(err => console.log(err))
+  return result
+}
+
+async function fetchRepresentative(riding) {
+  console.log('call 2')
+  let result = ''
+  await axios
+    .get(
+      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+    )
+    .then(res => {
+      if (res.data.success) {
+        let representative = res.data.data.representative
+        result = representative
+      }
+    })
+    .catch(err => console.log(err))
+  return result
+}
+
+async function fetchRepresentativeVotes(representative) {
+  console.log('call 3')
+  let result = []
+  await axios
+    .get(
+      `http://localhost:5000/api/voteRecord/getVotesByRepresentative/${representative}`
+    )
+    .then(res => {
+      if (res.data.success) {
+        let votes = res.data.data
+        votes.forEach(vote => result.push(vote))
+      }
+    })
+    .catch(err => console.log(err))
+  return result
+}
+
+function generateTableRows(votes) {
+  votes.forEach(vote => {
+    let { billNumber, dateVoted, voteName, billSummary, billText } = vote
+    let tableRow = createData(
+      billNumber,
+      dateVoted,
+      voteName,
+      <BillDetails billSummary={billSummary} billText={billText} />
+    )
+    rows.push(tableRow)
+  })
+}
+
+function displayVotes() {
+  console.log(JSON.stringify(testingVotesToDisplay))
+}
+
 export default function BillHistoryTable() {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
-  const [userPostalCode, setUserPostalCode] = React.useState('')
   const [userRiding, setUserRiding] = React.useState('')
   const [userRepresentative, setUserRepresentative] = React.useState('')
   const [
@@ -73,52 +129,39 @@ export default function BillHistoryTable() {
   ] = React.useState('')
 
   useEffect(() => {
-    // const user = JSON.parse(localStorage.getItem('userToken')) // not working for now but will be added
-
-    let user = {
-      email: 'cap1@gmail.com'
+    async function getData() {
+      let userEmail = 'cap1@gmail.com'
+      let riding = await fetchUserRiding(userEmail)
+      console.log('riding from the use effect function: ' + riding)
+      let representative = await fetchRepresentative(riding)
+      console.log(
+        'representative from the use effect function: ' + representative
+      )
+      let votes = await fetchRepresentativeVotes(representative)
+      generateTableRows(votes)
+      // console.log('votes from the use effect function: ' + votes)
     }
 
-    // get the user's riding
-    axios
-      .get(`/api/users/${user.email}`)
-      .then(res => {
-        if (res.data.success) {
-          let postalCode = res.data.data.postalCode
-          let riding = res.data.data.riding
-          setUserPostalCode(postalCode)
-          setUserRiding(riding)
-          // console.log(postalCode)
-        }
-      })
-      .catch(err => console.log(err))
+    getData()
 
-    // get the MP for that riding
-    axios
-      .get('/api/representatives/riding', {
-        riding: userRiding
-      })
-      .then(res => {
-        if (res.data.success) {
-          // console.log(res.data.data)
-          let representative = res.data.data.representative
-          setUserRepresentative(representative)
-        }
-      })
-      .catch(err => console.log(err))
+    // let userEmail = 'cap1@gmail.com'
+    // let res = fetchUserRiding(userEmail)
+    // console.log(res)
+    // console.log(res)
+    // setUserRiding(res)
+  }, [])
 
-    axios
-      .get('api/voteRecord/getVotesByRepresentative', {
-        representative: userRepresentative
-      })
-      .then(res => {
-        if (res.data.success) {
-          console.log(res.data.data)
-          setRepresentativeVotingRecord(res.data.data)
-        }
-      })
-      .catch(err => console.log(err))
-  })
+  // useEffect(() => {
+  //   fetchRepresentative()
+  // }, [])
+
+  // useEffect(() => {
+  //   fetchRepresentativeVotes()
+  // }, [])
+
+  // useEffect(() => {
+  //   displayVotes()
+  // }, [])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -132,6 +175,7 @@ export default function BillHistoryTable() {
   return (
     <Paper className={classes.root}>
       <div className={classes.tableWrapper}>
+        <h1>{userRiding}</h1>
         <Table stickyHeader>
           <TableHead>
             <TableRow>

@@ -45,7 +45,7 @@ const DialogContent = withStyles(theme => ({
   }
 }))(MuiDialogContent)
 
-export default function BillDetails() {
+export default function BillDetails(props) {
   const [open, setOpen] = React.useState(false)
 
   const handleClickOpen = () => {
@@ -66,36 +66,10 @@ export default function BillDetails() {
         open={open}
       >
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          C-48 — An Act respecting the regulation of vessels that transport
-          crude oil or persistent oil to or from ports or marine installations
-          located along British Columbia's north coast
+          {props.billSummary}
         </DialogTitle>
         <DialogContent dividers>
-          <Typography gutterBottom>
-            That a Message be sent to the Senate to acquaint Their Honours that,
-            in relation to Bill C-48, An Act respecting the regulation of
-            vessels that transport crude oil or persistent oil to or from ports
-            or marine installations located along British Columbia's north
-            coast, the House: agrees with amendment 1 made by the Senate;
-            proposes that, as a consequence of Senate amendment 1, the following
-            amendment be added: “1. Clause 2, page 1: add the following after
-            line 15: “Indigenous peoples of Canada has the meaning assigned by
-            the definition aboriginal peoples of Canada in subsection 35(2) of
-            the Constitution Act, 1982. (peuples autochtones du Canada)”;”;
-            proposes that amendment 2 be amended by replacing the text of the
-            amendment with the following: “32 (1) During the fifth year after
-            the day on which this section comes into force, a review of the
-            provisions and operation of this Act must be undertaken by any
-            committee of the Senate, of the House of Commons or of both Houses
-            of Parliament that is designated or established for that purpose,
-            including a review of the impact of this Act on the environment, on
-            social and economic conditions and on the Indigenous peoples of
-            Canada. (2) The committee referred to in subsection (1) must submit
-            a report of the results of the review to the Senate, the House of
-            Commons or both Houses of Parliament, as the case may be, on any of
-            the first 15 days on which the Senate or the House of Commons, as
-            the case may be, is sitting after the report is completed.”
-          </Typography>
+          <Typography gutterBottom>{props.billText}</Typography>
         </DialogContent>
       </Dialog>
     </div>

@@ -1,9 +1,12 @@
 import { Firestore } from '../client/src/Firebase'
 
-exports.getVotesByRepresentative = (req, res) => {
-  console.log('getVotesByRep endpoint hit')
-  const representative = req.body.representative
-  let allBillsVotedOn = []
+exports.getVotesByRepresentative = async (req, res) => {
+  const representative = req.params.representative
+  console.log(
+    'API Call 3 - getVotesByRepresentative was called with the representative: ' +
+      representative
+  )
+  var allBillsVotedOn = []
   const db = new Firestore()
   db.VoteRecord()
     .select()
@@ -14,7 +17,10 @@ exports.getVotesByRepresentative = (req, res) => {
           success: false
         })
       }
-
+      var countDocs = 0
+      snapshot.forEach(doc => {
+        countDocs++
+      })
       snapshot.forEach(doc => {
         let { billId, voteId, voteName, voters } = doc.data()
         let bill = {
@@ -38,7 +44,6 @@ exports.getVotesByRepresentative = (req, res) => {
                 success: false
               })
             }
-
             snapshot.forEach(doc => {
               let { billNumber, billSummary, billText, dateVoted } = doc.data()
               ;(bill['billNumber'] = billNumber),
@@ -48,27 +53,29 @@ exports.getVotesByRepresentative = (req, res) => {
 
               allBillsVotedOn.push(bill)
             })
-            res.status(200).json({
-              success: true,
-              data: allBillsVotedOn
-            })
+            if (allBillsVotedOn.length === countDocs) {
+              return res.status(200).json({
+                success: true,
+                data: allBillsVotedOn
+              })
+            }
           })
-          .catch(
-            err =>
-              res.status(404).json({
-                message: 'Error finding bills corresponding to representative',
-                success: false
-              }),
-            Promise.reject(err)
-          )
+        // .catch(
+        //   err =>
+        //     res.status(404).json({
+        //       message: 'Error finding bills corresponding to representative',
+        //       success: false
+        //     }),
+        //   Promise.reject(err)
+        // )
       })
+      // return res.status(200).json(allBillsVotedOn)
     })
-    .catch(err =>
-      res.status(404).json({
-        message: 'Error getting bills voted on by representative',
-        success: false
-      })
-    )
-  // console.log('here are all the bills')
-  // console.log(allBillsVotedOn)
+    .then(array => {
+      // res.status(200).json({
+      //   success: true,
+      //   data: array[0]
+      // })
+    })
+    .catch(err => Promise.reject(err))
 }
