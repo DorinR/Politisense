@@ -34,6 +34,13 @@ describe('BillDataParser', () => {
 
     assert.strictEqual(bills.length, 5)
   })
+
+  it('should return null if the xml file is not for bills', () => {
+    const parser = new BillXmlParser('')
+    const bills = parser.getAllFromXml()
+
+    assert.isNull(bills)
+  })
 })
 
 function getBillParserForXmlFile (xmlFilePath) {

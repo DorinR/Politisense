@@ -37,9 +37,14 @@ class XmlDataParser {
     throw new TypeError('Abstract Method: Implement and call in class')
   }
 
-  // returns a list of JSONs that represent the item
+  // returns a list of JSONs that represent the item, null if the xml doesn't match
   getAllFromXml () {
     const listOfItems = []
+
+    if (this.$(this.LIST_TAG_NAME) <= 0) {
+      return null
+    }
+
     this.$(this.LIST_TAG_NAME).find(this.TAG_NAME).each((i, data) => {
       const xml = this.$(data).toString()
       const parser = this.generateNewParser(xml)

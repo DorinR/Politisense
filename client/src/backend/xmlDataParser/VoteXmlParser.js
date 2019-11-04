@@ -31,9 +31,6 @@ class VoteXmlParser extends XmlDataParser {
     vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
     vote.accepted = (vote.yeas > vote.nays)
 
-    // TODO get map of mp with vote type
-    // TODO test
-
     return vote
   }
 
