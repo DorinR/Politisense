@@ -15,12 +15,10 @@ class Quiz_Feature extends Component {
       question: "",
       answerOptions: [],
       answer: "",
-      answersCount: {},
       answersCount: {
-        r: 0,
-        j: 0,
-        v: 0,
-        b: 0
+        Culture: 0,
+        Economics: 0,
+        Environment: 0
       },
       result: ""
     };
@@ -98,7 +96,9 @@ class Quiz_Feature extends Component {
   }
 
   setResults(result) {
+    console.log(result);
     if (result.length === 1) {
+      console.log(result);
       this.setState({ result: result[0] });
     } else {
       this.setState({ result: "Undetermined" });

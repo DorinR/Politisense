@@ -1,4 +1,4 @@
-var quizQuestions = [
+var QuizQuestions = [
   {
     question: "What should the Canadian Government focus on?",
     answers: [
@@ -20,7 +20,7 @@ var quizQuestions = [
     question: "Do you want taxes to?",
     answers: [
       {
-        type: "Culture",
+        type: "Environment",
         content: "Remain the same"
       },
       {
@@ -86,4 +86,4 @@ var quizQuestions = [
   }
 ];
 
-export default quizQuestions;
+export default QuizQuestions;

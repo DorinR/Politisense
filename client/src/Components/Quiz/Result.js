@@ -1,11 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { TransitionGroup } from "react-transition-group";
-import "./questions_index.css";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 function Result(props) {
   return (
-    <TransitionGroup
+    <ReactCSSTransitionGroup
       className="container_questionnaire result"
       component="div"
       transitionName="fade"
@@ -17,7 +16,7 @@ function Result(props) {
       <div>
         You prefer <strong>{props.quizResult}</strong>!
       </div>
-    </TransitionGroup>
+    </ReactCSSTransitionGroup>
   );
 }
 
