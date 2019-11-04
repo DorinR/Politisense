@@ -1,25 +1,25 @@
-import React from "react";
-import PropTypes from "prop-types";
-import "./questions_index.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import './questions_index.css'
 
-function AnswerOption(props) {
+function AnswerOption (props) {
   return (
-    <li className="answerOption">
+    <li className='answerOption'>
       <input
-        type="radio"
-        className="radioCustomButton"
-        name="radioGroup"
+        type='radio'
+        className='radioCustomButton'
+        name='radioGroup'
         checked={props.answerType === props.answer}
         id={props.answerType}
         value={props.answerType}
         disabled={props.answer}
         onChange={props.onAnswerSelected}
       />
-      <label className="radioCustomLabel" htmlFor={props.answerType}>
+      <label className='radioCustomLabel' htmlFor={props.answerType}>
         {props.answerContent}
       </label>
     </li>
-  );
+  )
 }
 
 AnswerOption.propTypes = {
@@ -27,6 +27,6 @@ AnswerOption.propTypes = {
   answerContent: PropTypes.string.isRequired,
   answer: PropTypes.string.isRequired,
   onAnswerSelected: PropTypes.func.isRequired
-};
+}
 
-export default AnswerOption;
+export default AnswerOption
