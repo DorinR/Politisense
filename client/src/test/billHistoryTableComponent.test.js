@@ -1,7 +1,6 @@
 import {
   fetchUserRiding,
-  fetchRepresentative,
-  fetchRepresentativeVotes
+  fetchRepresentative
 } from '../Components/Dashboard/PastBills/BillHistoryTable.js'
 
 const chai = require('chai')

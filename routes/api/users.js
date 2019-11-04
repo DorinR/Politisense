@@ -13,8 +13,8 @@ router.get('/', (req, res) => res.send('user route'))
 router.post('/signup', controller.userSignup)
 router.post('/login', controller.userLogin)
 
-// @route post api/users/:email
-// @desc  get user postal code
+// @route post api/users/:userEmail/getUser
+// @desc  get user by email
 // @access Public
 router.get('/:userEmail/getUser', controller.getUserByEmail)
 

@@ -2,10 +2,6 @@ import { Firestore } from '../client/src/Firebase'
 
 exports.getVotesByRepresentative = async (req, res) => {
   const representative = req.params.representative.toLowerCase()
-  console.log(
-    'API Call 3 - getVotesByRepresentative was called with the representative: ' +
-      representative
-  )
   var allBillsVotedOn = []
   const db = new Firestore()
   db.VoteRecord()
@@ -81,22 +77,12 @@ exports.getVotesByRepresentative = async (req, res) => {
         } else {
           console.log('representative did not vote on this bill')
         }
-        // .catch(
-        //   err =>
-        //     res.status(404).json({
-        //       message: 'Error finding bills corresponding to representative',
-        //       success: false
-        //     }),
-        //   Promise.reject(err)
-        // )
       })
-      // return res.status(200).json(allBillsVotedOn)
     })
-    .then(array => {
-      // res.status(200).json({
-      //   success: true,
-      //   data: array[0]
-      // })
+    .catch(err => {
+      res.status(400).json({
+        message: 'Error retriving user',
+        success: false
+      })
     })
-    .catch(err => Promise.reject(err))
 }

@@ -48,24 +48,9 @@ exports.userLogin = (req, res) => {
       console.log('Error getting documents', err)
     })
 }
-//   db.User()
-//     .select('email', '==', user.email)
-//     .then(
-//       () => {
-//         res.json({
-//           success: true
-//         })
-//       })
-//     .catch(err => {
-//       console.log('Error getting documents', err)
-//     })
-// }
 
 exports.getUserByEmail = (req, res) => {
   let userEmail = req.params.userEmail
-  console.log(
-    'API Call 1 - getUserByEmail was called with the userEmail: ' + userEmail
-  )
   const db = new Firestore()
   db.User()
     .select('email', '==', userEmail)
