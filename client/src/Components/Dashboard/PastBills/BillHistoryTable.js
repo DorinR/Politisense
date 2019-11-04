@@ -55,8 +55,7 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchUserRiding(userEmail) {
-  console.log('call 1')
+export async function fetchUserRiding(userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -67,11 +66,11 @@ async function fetchUserRiding(userEmail) {
       }
     })
     .catch(err => console.log(err))
+  console.log(result)
   return result
 }
 
-async function fetchRepresentative(riding) {
-  console.log('call 2')
+export async function fetchRepresentative(riding) {
   let result = ''
   await axios
     .get(
@@ -87,8 +86,7 @@ async function fetchRepresentative(riding) {
   return result
 }
 
-async function fetchRepresentativeVotes(representative) {
-  console.log('call 3')
+export async function fetchRepresentativeVotes(representative) {
   let result = []
   await axios
     .get(
