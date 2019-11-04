@@ -134,10 +134,6 @@ function generateTableRows(votes) {
   })
 }
 
-function displayVotes() {
-  console.log(JSON.stringify(testingVotesToDisplay))
-}
-
 export default function BillHistoryTable() {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
@@ -160,16 +156,8 @@ export default function BillHistoryTable() {
       )
       let votes = await fetchRepresentativeVotes(representative)
       generateTableRows(votes)
-      // console.log('votes from the use effect function: ' + votes)
     }
-
     getData()
-
-    // let userEmail = 'cap1@gmail.com'
-    // let res = fetchUserRiding(userEmail)
-    // console.log(res)
-    // console.log(res)
-    // setUserRiding(res)
   }, [])
 
   // useEffect(() => {

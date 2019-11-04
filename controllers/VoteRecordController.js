@@ -23,43 +23,64 @@ exports.getVotesByRepresentative = async (req, res) => {
       })
       snapshot.forEach(doc => {
         let { billId, voteId, voteName, voters } = doc.data()
-        let bill = {
-          billId: billId,
-          voteId: voteId,
-          voteName: voteName,
-          voters: voters
-        }
-        bill['representativeVote'] = 'unknown'
-        voters.forEach(item => {
-          if (item.representative === representative) {
-            bill['representativeVote'] = item.vote
+        let representativeVotedOnThisBill = false
+        voters.forEach(rep => {
+          let mutableRep = representative
+          let areEqual =
+            rep.representative.toLowerCase() === mutableRep.toLowerCase()
+          if (areEqual) {
+            representativeVotedOnThisBill = true
           }
         })
-        db.Bill()
-          .select('billId', '==', bill.billId)
-          .then(snapshot => {
-            if (snapshot.empty) {
-              res.status(400).json({
-                message: 'Bill ID not found',
-                success: false
-              })
-            }
-            snapshot.forEach(doc => {
-              let { billNumber, billSummary, billText, dateVoted } = doc.data()
-              ;(bill['billNumber'] = billNumber),
-                (bill['billSummary'] = billSummary),
-                (bill['billText'] = billText),
-                (bill['dateVoted'] = dateVoted)
-
-              allBillsVotedOn.push(bill)
-            })
-            if (allBillsVotedOn.length === countDocs) {
-              return res.status(200).json({
-                success: true,
-                data: allBillsVotedOn
-              })
+        if (!representativeVotedOnThisBill) {
+          countDocs--
+        }
+        if (representativeVotedOnThisBill) {
+          let bill = {
+            billId: billId,
+            voteId: voteId,
+            voteName: voteName,
+            voters: voters
+          }
+          bill['representativeVote'] = 'unknown'
+          voters.forEach(item => {
+            if (item.representative === representative) {
+              bill['representativeVote'] = item.vote
             }
           })
+          db.Bill()
+            .select('billId', '==', bill.billId)
+            .then(snapshot => {
+              if (snapshot.empty) {
+                res.status(400).json({
+                  message: 'Bill ID not found',
+                  success: false
+                })
+              }
+              snapshot.forEach(doc => {
+                let {
+                  billNumber,
+                  billSummary,
+                  billText,
+                  dateVoted
+                } = doc.data()
+                ;(bill['billNumber'] = billNumber),
+                  (bill['billSummary'] = billSummary),
+                  (bill['billText'] = billText),
+                  (bill['dateVoted'] = dateVoted)
+
+                allBillsVotedOn.push(bill)
+              })
+              if (allBillsVotedOn.length === countDocs) {
+                return res.status(200).json({
+                  success: true,
+                  data: allBillsVotedOn
+                })
+              }
+            })
+        } else {
+          console.log('representative did not vote on this bill')
+        }
         // .catch(
         //   err =>
         //     res.status(404).json({
