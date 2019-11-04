@@ -143,7 +143,7 @@ export default function BillHistoryTable() {
       generateTableRows(votes)
     }
     getData()
-  })
+  }, [rowsPerPage])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)

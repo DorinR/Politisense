@@ -6,10 +6,6 @@ import {
 
 const chai = require('chai')
 chai.should()
-const chaiPromise = require('chai-as-promised')
-chai.use(chaiPromise)
-// const component = new BillHistoryTable()
-// var fb = new Firestore()
 
 describe('BillHistoryTable API Call Tests', () => {
   test('can get user riding', async () => {
