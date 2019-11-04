@@ -71,7 +71,9 @@ class ScrapeJobManager {
           this.xmlSet.join(xml)
         }
       })
-      .catch((e) => {})
+      .catch((e) => {
+        throw e
+      })
   }
 
   async traverse () {
@@ -80,10 +82,6 @@ class ScrapeJobManager {
       try {
         job = this.linkQueue.dequeue()
         this.jobs.push(job)
-        if (this.jobs.length > 1000 && require('events').EventEmitter.defaultMaxListeners < 1000) {
-          require('events').EventEmitter.defaultMaxListeners = 1000
-          continue
-        }
       } catch (e) {
         let currentIndex = 0
         while (currentIndex < this.jobs.length) {
@@ -173,6 +171,7 @@ class ScrapeRunner {
   }
 
   getXmlContent () {
+    require('events').EventEmitter.defaultMaxListeners = 1000
     return this.manager.getXmlContent()
   }
 }
