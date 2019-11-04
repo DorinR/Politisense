@@ -12,13 +12,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function RepresentativeImage(props) {
+export default function RepresentativeImage (props) {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [imageUrl, setImageUrl] = useState('')
 
   useEffect(() => {
-    let db = new Firestore()
+    const db = new Firestore()
     db.Politician()
       .select('name', '==', props.representativeToLoad)
       .then(snapshot => {
