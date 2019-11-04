@@ -1,7 +1,7 @@
 import { Firestore } from '../client/src/Firebase'
 
 exports.getVotesByRepresentative = async (req, res) => {
-  const representative = req.params.representative
+  const representative = req.params.representative.toLowerCase()
   console.log(
     'API Call 3 - getVotesByRepresentative was called with the representative: ' +
       representative

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
@@ -55,14 +55,6 @@ const useStyles = makeStyles({
   }
 })
 
-var userRiding = ''
-var userRepresentative = ''
-var userRepresentativeVotes = []
-var testingVotesToDisplay = [
-  { vote: 'this is the vote text' },
-  { vote: 'this is the vote text of another vote' }
-]
-
 async function fetchUserRiding(userEmail) {
   console.log('call 1')
   let result = ''
@@ -113,6 +105,7 @@ async function fetchRepresentativeVotes(representative) {
 }
 
 function generateTableRows(votes) {
+  rows = []
   votes.forEach(vote => {
     let {
       billNumber,
@@ -138,16 +131,10 @@ export default function BillHistoryTable() {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
-  const [userRiding, setUserRiding] = React.useState('')
-  const [userRepresentative, setUserRepresentative] = React.useState('')
-  const [
-    representativeVotingRecord,
-    setRepresentativeVotingRecord
-  ] = React.useState('')
 
   useEffect(() => {
     async function getData() {
-      let userEmail = 'cap1@gmail.com'
+      let userEmail = 'cap1@gmail.com' // once login is fully implemented, this should be replaced with getting email from localstorage token
       let riding = await fetchUserRiding(userEmail)
       console.log('riding from the use effect function: ' + riding)
       let representative = await fetchRepresentative(riding)
@@ -158,19 +145,7 @@ export default function BillHistoryTable() {
       generateTableRows(votes)
     }
     getData()
-  }, [])
-
-  // useEffect(() => {
-  //   fetchRepresentative()
-  // }, [])
-
-  // useEffect(() => {
-  //   fetchRepresentativeVotes()
-  // }, [])
-
-  // useEffect(() => {
-  //   displayVotes()
-  // }, [])
+  })
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
