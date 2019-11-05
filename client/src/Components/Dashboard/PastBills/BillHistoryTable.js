@@ -132,18 +132,15 @@ export default function BillHistoryTable() {
 
   useEffect(() => {
     async function getData() {
-      let userEmail = 'cap1@gmail.com' // once login is fully implemented, this should be replaced with getting email from localstorage token
-      let riding = await fetchUserRiding(userEmail)
-      console.log('riding from the use effect function: ' + riding)
+      let user = JSON.parse(localStorage.getItem('user'))
+      let { email } = user
+      let riding = await fetchUserRiding(email)
       let representative = await fetchRepresentative(riding)
-      console.log(
-        'representative from the use effect function: ' + representative
-      )
       let votes = await fetchRepresentativeVotes(representative)
       generateTableRows(votes)
     }
     getData()
-  }, [rowsPerPage])
+  })
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
