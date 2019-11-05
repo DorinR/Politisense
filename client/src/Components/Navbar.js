@@ -151,7 +151,6 @@ export default function MiniDrawer({ children }) {
       let riding = await fetchUserRiding(email)
       let representative = await fetchRepresentative(riding)
       setUserRepresentative(representative)
-      console.log('representative fetched: ' + representative)
     }
     getData()
   })
