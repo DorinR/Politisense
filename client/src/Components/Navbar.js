@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import clsx from 'clsx'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
@@ -26,6 +26,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import Fab from '@material-ui/core/Fab'
 import Box from '@material-ui/core/Box'
+import axios from 'axios'
 
 const drawerWidth = 240
 
@@ -106,10 +107,54 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function MiniDrawer ({ children }) {
+export async function fetchUserRiding(userEmail) {
+  let result = ''
+  await axios
+    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+    .then(res => {
+      if (res.data.success) {
+        let riding = res.data.data.riding
+        result = riding
+      }
+    })
+    .catch(err => console.log(err))
+  console.log(result)
+  return result
+}
+
+export async function fetchRepresentative(riding) {
+  let result = ''
+  await axios
+    .get(
+      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+    )
+    .then(res => {
+      if (res.data.success) {
+        let representative = res.data.data.representative
+        result = representative
+      }
+    })
+    .catch(err => console.log(err))
+  return result
+}
+
+export default function MiniDrawer({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
+  const [userRepresentative, setUserRepresentative] = React.useState('')
+
+  useEffect(() => {
+    async function getData() {
+      let user = JSON.parse(localStorage.getItem('user'))
+      let { email } = user
+      let riding = await fetchUserRiding(email)
+      let representative = await fetchRepresentative(riding)
+      setUserRepresentative(representative)
+      console.log('representative fetched: ' + representative)
+    }
+    getData()
+  })
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -183,20 +228,17 @@ export default function MiniDrawer ({ children }) {
         <Box p={1} />
         <ListItem button onClick={handleDrawerOpen}>
           <ListItemIcon>
-            <PersonIcon
-              className={classes.politisenseIcon}
-
-            />
+            <PersonIcon className={classes.politisenseIcon} />
           </ListItemIcon>
           {open ? (
             <ListItemAvatar>
-              <RepresentativeImage representativeToLoad='Justin Trudeau' />
+              <RepresentativeImage representativeToLoad={userRepresentative} />
             </ListItemAvatar>
           ) : null}
         </ListItem>
         {open ? (
           <ListItem>
-            <RepresentativeInfo representativeToLoad='Justin Trudeau' />
+            <RepresentativeInfo representativeToLoad={userRepresentative} />
           </ListItem>
         ) : null}
         <Divider />
