@@ -54,14 +54,9 @@ exports.getVotesByRepresentative = async (req, res) => {
                 })
               }
               snapshot.forEach(doc => {
-                let {
-                  billNumber,
-                  billSummary,
-                  billText,
-                  dateVoted
-                } = doc.data()
+                let { billNumber, billTitle, billText, dateVoted } = doc.data()
                 ;(bill['billNumber'] = billNumber),
-                  (bill['billSummary'] = billSummary),
+                  (bill['billTitle'] = billTitle),
                   (bill['billText'] = billText),
                   (bill['dateVoted'] = dateVoted)
 

@@ -14,8 +14,8 @@ const columns = [
   { id: 'billNumber', label: 'Bill Number', minWidth: 100 },
   { id: 'voteDate', label: 'Date Voted', minWidth: 100 },
   {
-    id: 'billSummary',
-    label: 'Bill Summary',
+    id: 'billTitle',
+    label: 'Bill Title',
     minWidth: 200,
     align: 'right'
   },
@@ -36,11 +36,11 @@ const columns = [
 function createData(
   billNumber,
   voteDate,
-  billSummary,
+  billTitle,
   representativeVote,
   moreInfo
 ) {
-  return { billNumber, voteDate, billSummary, representativeVote, moreInfo }
+  return { billNumber, voteDate, billTitle, representativeVote, moreInfo }
 }
 
 let rows = []
@@ -110,7 +110,7 @@ function generateTableRows(votes) {
       dateVoted,
       voteName,
       representativeVote,
-      billSummary,
+      billTitle,
       billText
     } = vote
     let tableRow = createData(
@@ -118,7 +118,7 @@ function generateTableRows(votes) {
       dateVoted,
       voteName,
       representativeVote,
-      <BillDetails billSummary={billSummary} billText={billText} />
+      <BillDetails billTitle={billTitle} billText={billText} />
     )
     rows.push(tableRow)
     console.log(representativeVote)
