@@ -78,7 +78,7 @@ export async function fetchRepresentative(riding) {
     )
     .then(res => {
       if (res.data.success) {
-        let representative = res.data.data.representative
+        let representative = res.data.data.name
         result = representative
       }
     })
