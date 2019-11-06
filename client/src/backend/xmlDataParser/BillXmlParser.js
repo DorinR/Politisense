@@ -25,8 +25,8 @@ class BillXmlParser extends XmlDataParser {
     bill.number = this.getDataInAttribute('BillNumber', 'prefix') + '-' +
       this.getDataInAttribute('BillNumber', 'number')
     bill.title = this.$('BillTitle').find('Title[language=\'en\']').text().trim()
-    bill.sponsorName = this.$('SponsorAffiliation').find('FullName').text()
-    // TODO: lowercase it????
+    const sponsorName = this.$('SponsorAffiliation').find('FirstName').text() + ' ' + this.$('SponsorAffiliation').find('LastName').text()
+    bill.sponsorName = sponsorName.toLowerCase()
     bill.textUrl = this.getTextUrl()
     bill.dateVoted = this.formatXmlDate(this.getDataInTag('BillIntroducedDate'))
     bill.text = '' // TODO: get the bill text when getting from online

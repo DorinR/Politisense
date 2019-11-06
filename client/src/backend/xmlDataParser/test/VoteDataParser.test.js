@@ -1,4 +1,4 @@
-/* eslint-env mocha */
+/* eslint-env jest */
 import { assert } from 'chai'
 
 import { VoteXmlParser } from '../VoteXmlParser'
@@ -20,7 +20,7 @@ describe('VoteXmlParser', () => {
     assert.strictEqual(vote.yeas, 177)
     assert.strictEqual(vote.nays, 139)
     assert.isTrue(vote.accepted)
-    assert.hasAnyKeys(vote, 'voters')
+    assert.hasAnyKeys(vote, ['voters'])
   })
 })
 
@@ -39,17 +39,17 @@ describe('VoteParticipantsXmlParser', () => {
     assert.lengthOf(Object.keys(pairedVoters), 2, '2 members did a paired vote')
 
     // check case of normal vote
-    assert.hasAnyKeys(voters, 'michael chong', 'Michael Chong is a voter')
+    assert.hasAnyKeys(voters, ['michael chong'], 'Michael Chong is a voter')
     assert.strictEqual(voters['michael chong'].vote, 'Nay')
     assert.isFalse(voters['michael chong'].paired)
 
     // check case of paired vote with no Yea/nay
-    assert.hasAnyKeys(voters, 'jean-yves duclos', 'Jean-Yves Duclos is a voter')
+    assert.hasAnyKeys(voters, ['jean-yves duclos'], 'Jean-Yves Duclos is a voter')
     assert.strictEqual(voters['jean-yves duclos'].vote, 'Paired')
     assert.isTrue(voters['jean-yves duclos'].paired)
 
     // check case of paired vote with a Yea/Nay
-    assert.hasAnyKeys(voters, 'marilène gill', 'Marilène Gill is a voter')
+    assert.hasAnyKeys(voters, ['marilène gill'], 'Marilène Gill is a voter')
     assert.strictEqual(voters['marilène gill'].vote, 'Nay')
     assert.isTrue(voters['marilène gill'].paired)
   })

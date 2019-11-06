@@ -1,4 +1,4 @@
-/* eslint-env mocha */
+/* eslint-env jest */
 import { assert } from 'chai'
 
 import { MpXmlParser } from '../MpXmlParser'
@@ -14,8 +14,8 @@ describe('MpDataParser', () => {
     assert.strictEqual(mp.name, 'jody wilson-raybould')
     assert.strictEqual(mp.party, 'independent')
     assert.strictEqual(mp.riding, 'vancouver granville')
-    assert.strictEqual(mp.yearElected, '2015-10-19')
-    assert.hasAnyKeys(mp, 'imageUrl')
+    assert.strictEqual(mp.yearElected, 2015)
+    assert.hasAnyKeys(mp, ['imageUrl'])
   })
 
   it('should get all mps in the list of mps in the xml', () => {

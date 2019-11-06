@@ -9,14 +9,30 @@ class XmlDataParser {
     })
   }
 
+  /**
+   * returns any text within an element and its child elements
+   * @param {string} tag
+   * @returns {string}
+   */
   getDataInTag (tag) {
     return this.$(tag).text()
   }
 
+  /**
+   * get the value of an attribute within an element
+   * @param {string} tag
+   * @param {string} attribute
+   * @returns {string}
+   */
   getDataInAttribute (tag, attribute) {
     return this.$(tag).attr(attribute)
   }
 
+  /**
+   * Takes a datetime string and returns a string that's only a date
+   * @param {string} xmlDate
+   * @returns {string}
+   */
   formatXmlDate (xmlDate) {
     return xmlDate.substring(0, xmlDate.indexOf('T'))
   }

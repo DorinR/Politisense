@@ -1,4 +1,4 @@
-/* eslint-env mocha */
+/* eslint-env jest */
 import { assert } from 'chai'
 
 import { XmlDataParser } from '../XmlDataParser'
@@ -17,5 +17,10 @@ describe('XmlDataParser', () => {
     const parserRes = parser.getDataInAttribute('text', 'attribute')
     assert.strictEqual(parserRes, 'attr')
   })
-  // TODO: Test format date
+
+  it('should return date in expected format when given a datetime to format', () => {
+    const dateAsString = '2011-10-10T14:48:00'
+    const formattedDate = new XmlDataParser('').formatXmlDate(dateAsString)
+    assert.strictEqual(formattedDate, '2011-10-10')
+  })
 })
