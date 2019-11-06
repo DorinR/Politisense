@@ -17,6 +17,10 @@ class XmlDataParser {
     return this.$(tag).attr(attribute)
   }
 
+  formatXmlDate (xmlDate) {
+    return xmlDate.substring(0, xmlDate.indexOf('T'))
+  }
+
   // returns the xml tag that holds the desired item
   get TAG_NAME () {
     throw new TypeError('Abstract Method: Implement and call in class')

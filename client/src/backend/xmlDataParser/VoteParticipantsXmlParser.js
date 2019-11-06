@@ -16,12 +16,10 @@ class VoteParticipantsXmlParser extends XmlDataParser {
   xmlToJson () {
     const participant = {}
 
-    participant.name = this.getDataInTag('FirstName') + ' ' + this.getDataInTag('LastName')
-
-    // values can be 'Yea', 'Nay', or ''
-    const voteValue = this.getDataInTag('VoteValueName')
-    participant.vote = (voteValue === 'Paired') ? '' : voteValue
-
+    const name = this.getDataInTag('FirstName') + ' ' + this.getDataInTag('LastName')
+    participant.name = name.toLowerCase()
+    // values can be 'Yea', 'Nay', or 'Paired'
+    participant.vote = this.getDataInTag('VoteValueName')
     participant.paired = this.getDataInTag('Paired') === '1'
 
     return participant

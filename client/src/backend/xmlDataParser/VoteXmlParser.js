@@ -18,18 +18,19 @@ class VoteXmlParser extends XmlDataParser {
 
     // only get votes related to bills
     const billNumber = this.getDataInTag('BillNumberCode')
-    const voteSubject = this.getDataInTag('DecisionDivisionSubject').trim()
-    if (billNumber === '' || !this.isFinalDecision(voteSubject)) {
+    const name = this.getDataInTag('DecisionDivisionSubject').trim()
+    if (billNumber === '' || !this.isFinalDecision(name)) {
       return null
     } else {
       vote.billNumber = billNumber
-      vote.subject = voteSubject
+      vote.name = name
     }
 
-    vote.number = Number(this.getDataInTag('DecisionDivisionNumber'))
+    vote.id = Number(this.getDataInTag('DecisionDivisionNumber'))
     vote.yeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
     vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
     vote.accepted = (vote.yeas > vote.nays)
+    vote.voters = {}// TODO: param voters for the list of voters
 
     return vote
   }

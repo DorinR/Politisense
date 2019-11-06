@@ -26,15 +26,23 @@ class BillXmlParser extends XmlDataParser {
       this.getDataInAttribute('BillNumber', 'number')
     bill.title = this.$('BillTitle').find('Title[language=\'en\']').text().trim()
     bill.sponsorName = this.$('SponsorAffiliation').find('FullName').text()
-    bill.textUrl = ''
+    // TODO: lowercase it????
+    bill.textUrl = this.getTextUrl()
+    bill.dateVoted = this.formatXmlDate(this.getDataInTag('BillIntroducedDate'))
+    bill.text = '' // TODO: get the bill text when getting from online
+
+    return bill
+  }
+
+  getTextUrl () {
+    let textUrl = ''
     this.$('Publications').find('Publication').each((i, pub) => {
       const isRoyalAssent = this.$(pub).find('Title').text().includes('Royal Assent')
       if (isRoyalAssent) {
-        bill.textUrl = this.$(pub).find('PublicationFile[language=\'en\']').attr('relativePath').replace('//', 'https://www.')
+        textUrl = this.$(pub).find('PublicationFile[language=\'en\']').attr('relativePath').replace('//', 'https://www.')
       }
     })
-
-    return bill
+    return textUrl
   }
 }
 

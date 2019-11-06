@@ -11,10 +11,11 @@ describe('MpDataParser', () => {
     const parser = getMpParserForXmlFile('testXml/testMp.xml')
     const mp = parser.xmlToJson()
 
-    assert.strictEqual(mp.firstName, 'Jody')
-    assert.strictEqual(mp.lastName, 'Wilson-Raybould')
-    assert.strictEqual(mp.party, 'Independent')
-    assert.strictEqual(mp.riding, 'Vancouver Granville')
+    assert.strictEqual(mp.name, 'jody wilson-raybould')
+    assert.strictEqual(mp.party, 'independent')
+    assert.strictEqual(mp.riding, 'vancouver granville')
+    assert.strictEqual(mp.yearElected, '2015-10-19')
+    assert.hasAnyKeys(mp, 'imageUrl')
   })
 
   it('should get all mps in the list of mps in the xml', () => {

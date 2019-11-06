@@ -15,10 +15,16 @@ class MpXmlParser extends XmlDataParser {
 
   xmlToJson () {
     const mp = {}
-    mp.firstName = this.getDataInTag('PersonOfficialFirstName')
-    mp.lastName = this.getDataInTag('PersonOfficialLastName')
-    mp.party = this.$('CaucusShortName').eq(0).text()
-    mp.riding = this.getDataInTag('ConstituencyName')
+
+    const firstName = this.getDataInTag('PersonOfficialFirstName')
+    const lastName = this.getDataInTag('PersonOfficialLastName')
+    const name = firstName + ' ' + lastName
+    mp.name = name.toLowerCase()
+
+    mp.party = this.$('CaucusShortName').eq(0).text().toLowerCase()
+    mp.riding = this.getDataInTag('ConstituencyName').toLowerCase()
+    mp.yearElected = this.formatXmlDate((this.getDataInTag('FromDateTime')))
+    mp.imageUrl = '' // TODO: imageUrl, empty for now, need to find a way to get it
 
     return mp
   }

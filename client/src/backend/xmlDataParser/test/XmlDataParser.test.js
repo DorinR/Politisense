@@ -17,4 +17,5 @@ describe('XmlDataParser', () => {
     const parserRes = parser.getDataInAttribute('text', 'attribute')
     assert.strictEqual(parserRes, 'attr')
   })
+  // TODO: Test format date
 })

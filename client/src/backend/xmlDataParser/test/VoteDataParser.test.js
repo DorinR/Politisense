@@ -14,12 +14,13 @@ describe('VoteXmlParser', () => {
     assert.lengthOf(votes, 1, 'only 1 final vote for a bill')
 
     const vote = votes[0]
-    assert.strictEqual(vote.number, 95)
+    assert.strictEqual(vote.id, 95)
     assert.strictEqual(vote.billNumber, 'C-19')
-    assert.strictEqual(vote.subject, '3rd reading and adoption of Bill C-19, An Act for granting to Her Majesty certain sums of money for the federal public administration for the fiscal year ending March 31, 2017')
+    assert.strictEqual(vote.name, '3rd reading and adoption of Bill C-19, An Act for granting to Her Majesty certain sums of money for the federal public administration for the fiscal year ending March 31, 2017')
     assert.strictEqual(vote.yeas, 177)
     assert.strictEqual(vote.nays, 139)
     assert.isTrue(vote.accepted)
+    assert.hasAnyKeys(vote, 'voters')
   })
 })
 
@@ -38,19 +39,19 @@ describe('VoteParticipantsXmlParser', () => {
     assert.lengthOf(Object.keys(pairedVoters), 2, '2 members did a paired vote')
 
     // check case of normal vote
-    assert.hasAnyKeys(voters, 'Michael Chong', 'Michael Chong is a voter')
-    assert.strictEqual(voters['Michael Chong'].vote, 'Nay')
-    assert.isFalse(voters['Michael Chong'].paired)
+    assert.hasAnyKeys(voters, 'michael chong', 'Michael Chong is a voter')
+    assert.strictEqual(voters['michael chong'].vote, 'Nay')
+    assert.isFalse(voters['michael chong'].paired)
 
     // check case of paired vote with no Yea/nay
-    assert.hasAnyKeys(voters, 'Jean-Yves Duclos', 'Jean-Yves Duclos is a voter')
-    assert.strictEqual(voters['Jean-Yves Duclos'].vote, '')
-    assert.isTrue(voters['Jean-Yves Duclos'].paired)
+    assert.hasAnyKeys(voters, 'jean-yves duclos', 'Jean-Yves Duclos is a voter')
+    assert.strictEqual(voters['jean-yves duclos'].vote, 'Paired')
+    assert.isTrue(voters['jean-yves duclos'].paired)
 
     // check case of paired vote with a Yea/Nay
-    assert.hasAnyKeys(voters, 'Marilène Gill', 'Marilène Gill is a voter')
-    assert.strictEqual(voters['Marilène Gill'].vote, 'Nay')
-    assert.isTrue(voters['Marilène Gill'].paired)
+    assert.hasAnyKeys(voters, 'marilène gill', 'Marilène Gill is a voter')
+    assert.strictEqual(voters['marilène gill'].vote, 'Nay')
+    assert.isTrue(voters['marilène gill'].paired)
   })
 
   it('should return an empty JSON if there is no participant data', () => {
