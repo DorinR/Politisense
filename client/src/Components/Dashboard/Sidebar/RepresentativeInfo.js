@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function RepresentativeInfo(props) {
+export default function RepresentativeInfo (props) {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -28,7 +28,7 @@ export default function RepresentativeInfo(props) {
   const [yearElected, setYearElected] = useState(1000)
 
   useEffect(() => {
-    let db = new Firestore()
+    const db = new Firestore()
     db.Politician()
       .select('name', '==', props.representativeToLoad)
       .then(snapshot => {
