@@ -26,7 +26,8 @@ class LinkScraperAction extends JobAction {
     return new Promise((resolve, reject) => {
       RequestLibrary({
         uri: this.url,
-        timeout: 60000
+        timeout: 60000,
+        followAllRedirects: true
       })
         .then((html) => {
           console.log('Done Scraping: ' + this.url)

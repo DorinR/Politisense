@@ -68,7 +68,9 @@ class ScrapeJobManager {
     await job.execute()
       .then((xml) => {
         if (xml.length > 0) {
-          this.xmlSet.join(xml)
+          xml.forEach(x => {
+            this.xmlSet.add(x)
+          })
         }
       })
       .catch((e) => {
