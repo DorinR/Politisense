@@ -6,7 +6,7 @@ import { VoteParticipantsXmlParser } from '../xmlDataParser/VoteParticipantsXmlP
 
 class BroadDataGetter {
   async getGovernmentData (scrapeRunnerXmlCount) {
-    const runner = new ScrapeRunner(scrapeRunnerXmlCount, 40000, undefined, undefined)
+    const runner = new ScrapeRunner(scrapeRunnerXmlCount, 60000, undefined, undefined)
     const promisedXmlList = await runner.getXmlContent()
     const xmlList = await Promise.all(promisedXmlList)
 
@@ -29,17 +29,7 @@ class BroadDataGetter {
       }
     }
 
-    // get mp images
-    const mpImageList = []
-    for (const mp of data.mps) {
-      mpImageList.push(new Promise((resolve) => {
-        new MpXmlParser('').getMpImageUrl(mp.name).then((imageUrl) => {
-          mp.imageUrl = imageUrl
-          resolve('done')
-        })
-      }))
-    }
-    await Promise.all(mpImageList)
+    await this.addImageUrlForAllMps(data.mps)
 
     console.log('Returning Data')
     return data
@@ -55,6 +45,19 @@ class BroadDataGetter {
       if (dataToPush !== null) data.push(dataToPush)
     }
     return data
+  }
+
+  async addImageUrlForAllMps (mpList) {
+    const mpImageList = []
+    for (const mp of mpList) {
+      mpImageList.push(new Promise((resolve) => {
+        new MpXmlParser('').getMpImageUrl(mp.name).then((imageUrl) => {
+          mp.imageUrl = imageUrl
+          resolve('done')
+        })
+      }))
+    }
+    return Promise.all(mpImageList)
   }
 }
 
