@@ -22,6 +22,16 @@ describe('VoteXmlParser', () => {
     assert.isTrue(vote.accepted)
     assert.hasAnyKeys(vote, ['voters'])
   })
+
+  // TODO: test of getting vote participants with parser, might need to fix
+  it('should get vote participants when given an id', (done) => {
+    jest.setTimeout(10000)
+    const parser = new VoteXmlParser('')
+    parser.getVoters(752).then(voters => {
+      assert.lengthOf(Object.keys(voters), 294, 'there were 294 voters, paired or not')
+      done()
+    })
+  })
 })
 
 describe('VoteParticipantsXmlParser', () => {

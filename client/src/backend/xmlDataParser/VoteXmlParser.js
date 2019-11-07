@@ -1,6 +1,12 @@
 import { XmlDataParser } from './XmlDataParser'
+import { ScrapeRunner } from '../../scraper/ScrapeRunner'
+import { VoteParticipantsXmlParser } from './VoteParticipantsXmlParser'
 
 class VoteXmlParser extends XmlDataParser {
+  static getVoteParticipantsUrl (voteId) {
+    return `https://www.ourcommons.ca/Parliamentarians/en/votes/42/1/${voteId}/`
+  }
+
   get TAG_NAME () {
     return 'VoteParticipant'
   }
@@ -33,6 +39,17 @@ class VoteXmlParser extends XmlDataParser {
     vote.voters = {}// TODO: param voters for the list of voters
 
     return vote
+  }
+
+  // TODO: Tried something with parser might not be useful
+  async getVoters (voteId) {
+    const url = VoteXmlParser.getVoteParticipantsUrl(voteId)
+    const runner = new ScrapeRunner(1, 15000, url, undefined)
+    const promisedXmlList = await runner.getXmlContent()
+    const xmlList = await Promise.all(promisedXmlList)
+
+    const voteParticipantsXml = xmlList.find(xml => xml.includes(`<DecisionDivisionNumber>${voteId}`))
+    return new VoteParticipantsXmlParser(voteParticipantsXml).getAllFromXml()
   }
 
   isFinalDecision (voteSubject) {
