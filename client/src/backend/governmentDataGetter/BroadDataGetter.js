@@ -6,7 +6,7 @@ import { VoteParticipantsXmlParser } from '../xmlDataParser/VoteParticipantsXmlP
 
 class BroadDataGetter {
   async getGovernmentData (scrapeRunnerXmlCount) {
-    const runner = new ScrapeRunner(scrapeRunnerXmlCount, 30000, undefined, undefined)
+    const runner = new ScrapeRunner(scrapeRunnerXmlCount, 40000, undefined, undefined)
     const promisedXmlList = await runner.getXmlContent()
     const xmlList = await Promise.all(promisedXmlList)
 
@@ -28,6 +28,18 @@ class BroadDataGetter {
         data.voteParticipants[voteParticipantParser.getVoteId()] = voteParticipantParser.getAllFromXml()
       }
     }
+
+    // get mp images
+    const mpImageList = []
+    for (const mp of data.mps) {
+      mpImageList.push(new Promise((resolve) => {
+        new MpXmlParser('').getMpImageUrl(mp.name).then((imageUrl) => {
+          mp.imageUrl = imageUrl
+          resolve('done')
+        })
+      }))
+    }
+    await Promise.all(mpImageList)
 
     console.log('Returning Data')
     return data

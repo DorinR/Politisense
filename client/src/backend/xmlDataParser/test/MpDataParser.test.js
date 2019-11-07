@@ -32,6 +32,17 @@ describe('MpDataParser', () => {
 
     assert.strictEqual(mps.length, 8)
   })
+
+  it('should get the image url of the mp', (done) => {
+    const parser = getMpParserForXmlFile('testXml/testMp.xml')
+    const mp = parser.xmlToJson()
+
+    parser.getMpImageUrl(mp.name).then(url => {
+      expect(url).not.toBeNull()
+      expect(url).toBe('https://www.ourcommons.ca/Content/Parliamentarians/Images/OfficialMPPhotos/42/WilsonRaybouldJody_Lib.jpg')
+      done()
+    })
+  })
 })
 
 function getMpParserForXmlFile (xmlFilePath) {

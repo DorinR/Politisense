@@ -6,7 +6,7 @@ describe('BroadDataGetter.test', () => {
     const minutes = 60000
     jest.setTimeout(3 * minutes)
     const dataGetter = new BroadDataGetter()
-    dataGetter.getGovernmentData(6).then(data => {
+    dataGetter.getGovernmentData(4).then(data => {
       expect(typeof data).toBe('object')
       console.log(JSON.stringify(data))
       done()
