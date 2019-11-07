@@ -16,8 +16,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
 import TextField from '@material-ui/core/TextField'
-import axios from 'axios'
-import { Redirect } from 'react-router'
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -173,7 +171,7 @@ export default function HorizontalLinearStepper (props) {
         setActiveStep(0)
         setPostalCode('')
     }
-    
+
     return (
         <div className={classes.root}>
         <div>
