@@ -14,7 +14,6 @@ import UserAccount from './Components/UserAccount'
 import Map from './Components/Map'
 import Questionnaire from './Components/Questionnaire'
 
-
 const App = () => {
   const LoginContainer = () => (
     <div className='container'>
@@ -53,10 +52,10 @@ const App = () => {
   return (
     <Router>
       <Switch>
-         <Route exact path='/(login)' component={LoginContainer} />
-         <Route exact path='/signup' component={LoginContainer} />
-         <Route exact path='/question' component={Questionnaire} />
-         <Route component={DefaultContainer} />
+        <Route exact path='/(login)' component={LoginContainer} />
+        <Route exact path='/signup' component={LoginContainer} />
+        <Route exact path='/question' component={Questionnaire} />
+        <Route component={DefaultContainer} />
       </Switch>
     </Router>
   )
