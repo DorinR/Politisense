@@ -61,8 +61,8 @@ class XmlDataParser {
   getAllFromXml () {
     const listOfItems = []
 
-    if (this.$(this.LIST_TAG_NAME) <= 0) {
-      return null
+    if (!this.hasListOfData()) {
+      return []
     }
 
     this.$(this.LIST_TAG_NAME).find(this.TAG_NAME).each((i, data) => {
@@ -74,6 +74,14 @@ class XmlDataParser {
       }
     })
     return listOfItems
+  }
+
+  hasListOfData () {
+    return this.$(this.LIST_TAG_NAME).length > 0
+  }
+
+  hasData () {
+    return this.$(this.TAG_NAME).length > 0
   }
 }
 

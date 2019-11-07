@@ -9,6 +9,10 @@ const path = require('path')
 describe('MpDataParser', () => {
   it('should return mp info from xml', () => {
     const parser = getMpParserForXmlFile('testXml/testMp.xml')
+
+    assert.isTrue(parser.hasData())
+    assert.isFalse(parser.hasListOfData())
+
     const mp = parser.xmlToJson()
 
     assert.strictEqual(mp.name, 'jody wilson-raybould')
@@ -20,6 +24,10 @@ describe('MpDataParser', () => {
 
   it('should get all mps in the list of mps in the xml', () => {
     const parser = getMpParserForXmlFile('testXml/testMp_List.xml')
+
+    assert.isTrue(parser.hasData())
+    assert.isTrue(parser.hasListOfData())
+
     const mps = parser.getAllFromXml()
 
     assert.strictEqual(mps.length, 8)

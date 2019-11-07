@@ -70,6 +70,13 @@ describe('VoteParticipantsXmlParser', () => {
     const parser = new VoteParticipantsXmlParser(voteParticipantsXmlWithNoParticipantData)
     assert.isEmpty(parser.getAllFromXml())
   })
+
+  it('should get the vote id from the list of participants', () => {
+    const parser = getVoteParticipantsParserForXmlFile('testXml/testVoteParticipants.xml')
+    const voteId = parser.getVoteId()
+
+    assert.strictEqual(voteId, 752)
+  })
 })
 
 function getVoteParserForXmlFile (xmlFilePath) {

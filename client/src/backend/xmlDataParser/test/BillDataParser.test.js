@@ -37,11 +37,11 @@ describe('BillDataParser', () => {
     assert.strictEqual(bills.length, 5)
   })
 
-  it('should return null if the xml file is not for bills', () => {
+  it('should return empty list if the xml file is not for bills', () => {
     const parser = new BillXmlParser('')
     const bills = parser.getAllFromXml()
 
-    assert.isNull(bills)
+    assert.isEmpty(bills)
   })
 })
 

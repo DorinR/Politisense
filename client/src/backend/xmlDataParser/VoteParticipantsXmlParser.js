@@ -27,6 +27,9 @@ class VoteParticipantsXmlParser extends XmlDataParser {
 
   getAllFromXml () {
     const participants = super.getAllFromXml()
+    if (participants === []) {
+      return {}
+    }
 
     // rather than array, use a key value JSON where the key is the Mp's name
     const votes = {}
@@ -39,6 +42,10 @@ class VoteParticipantsXmlParser extends XmlDataParser {
     }
 
     return votes
+  }
+
+  getVoteId () {
+    return Number(this.$('DecisionDivisionNumber').eq(0).text())
   }
 }
 

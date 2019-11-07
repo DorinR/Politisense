@@ -25,6 +25,10 @@ class MpXmlParser extends XmlDataParser {
 
     return mp
   }
+
+  hasData () {
+    return super.hasData() || this.$(this.TAG_NAME + 'Role').length > 0
+  }
 }
 
 module.exports.MpXmlParser = MpXmlParser
