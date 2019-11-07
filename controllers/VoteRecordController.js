@@ -18,34 +18,27 @@ exports.getVotesByRepresentative = async (req, res) => {
         countDocs++
       })
       snapshot.forEach(doc => {
-        let { billId, voteId, voteName, voters } = doc.data()
+        let { billNumber, voteId, voteName, voters } = doc.data()
         let representativeVotedOnThisBill = false
-        voters.forEach(rep => {
-          let mutableRep = representative
-          let areEqual =
-            rep.representative.toLowerCase() === mutableRep.toLowerCase()
-          if (areEqual) {
-            representativeVotedOnThisBill = true
-          }
-        })
+        let representativeVote = voters[representative]['vote']
+        if (representativeVote) {
+          representativeVotedOnThisBill = true
+        }
+
         if (!representativeVotedOnThisBill) {
           countDocs--
         }
         if (representativeVotedOnThisBill) {
           let bill = {
-            billId: billId,
+            billNumber: billNumber,
             voteId: voteId,
             voteName: voteName,
             voters: voters
           }
-          bill['representativeVote'] = 'unknown'
-          voters.forEach(item => {
-            if (item.representative === representative) {
-              bill['representativeVote'] = item.vote
-            }
-          })
+          bill['representativeVote'] = voters[representative]['vote']
+
           db.Bill()
-            .select('billId', '==', bill.billId)
+            .select('number', '==', bill.billNumber)
             .then(snapshot => {
               if (snapshot.empty) {
                 res.status(400).json({
@@ -54,15 +47,9 @@ exports.getVotesByRepresentative = async (req, res) => {
                 })
               }
               snapshot.forEach(doc => {
-                let {
-                  billNumber,
-                  billSummary,
-                  billText,
-                  dateVoted
-                } = doc.data()
-                ;(bill['billNumber'] = billNumber),
-                  (bill['billSummary'] = billSummary),
-                  (bill['billText'] = billText),
+                let { title, text, dateVoted } = doc.data()
+                ;(bill['billTitle'] = title),
+                  (bill['billText'] = text),
                   (bill['dateVoted'] = dateVoted)
 
                 allBillsVotedOn.push(bill)

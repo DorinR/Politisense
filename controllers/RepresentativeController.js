@@ -3,7 +3,7 @@ import { Firestore } from '../client/src/Firebase'
 exports.getRepresentativeByRiding = (req, res) => {
   const db = new Firestore()
   const riding = req.params.riding
-  db.Riding()
+  db.Politician()
     .select('riding', '==', riding)
     .then(snapshot => {
       if (snapshot.empty) {
