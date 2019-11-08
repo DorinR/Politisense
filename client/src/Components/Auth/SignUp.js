@@ -57,6 +57,13 @@ export default function SignUp () {
   const [user, setUser] = useState({})
   const [errors, setErrors] = useState({ firstname: '', lastname: '', email: '', password: '', passwordConfirm: '' })
 
+  function checkEmpty (obj) {
+    for (var key in obj) {
+      if (obj[key] !== null && obj[key] !== '') { return false }
+    }
+    return true
+  }
+
   function checkForm () {
     if (firstname && lastname && email && password && passwordConfirm) {
       setValidForm(true)
@@ -92,97 +99,115 @@ export default function SignUp () {
     return <Redirect to={{ pathname: '/question', state: { user: user } }} />
   }
   return (
-    <div>
-      <div className={classes.root}>
-        <AppBar position='static'>
-          <Toolbar>
-            <Typography variant='h6' className={classes.title}>
-              Sign Up
-            </Typography>
-          </Toolbar>
-        </AppBar>
-      </div>
-      <Container component='main' maxWidth='xs'>
-        <CssBaseline />
-        <div className={classes.paper}>
-          <form className={classes.form} noValidate>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete='fname'
-                  name='firstName'
-                  variant='outlined'
-                  required
-                  fullWidth
-                  id='firstName'
-                  label='First Name'
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  id='lastName'
-                  label='Last Name'
-                  name='lastName'
-                  autoComplete='lname'
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  id='email'
-                  label='Email Address'
-                  name='email'
-                  autoComplete='email'
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  id='postal_code'
-                  label='Postal Code'
-                  name='postal_code'
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  name='password'
-                  label='Password'
-                  type='password'
-                  id='password'
-                  autoComplete='current-password'
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              color='primary'
-              className={classes.submit}
-            >
-            Sign Up
-            </Button>
-            <Grid container justify='flex-end'>
-              <Grid item>
-                <Link variant='body2' to='/' className={classes.routerLink}>
-                  Already have an account? Log in
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
+      <div>
+        <div className={classes.root}>
+          <AppBar position='static'>
+            <Toolbar>
+              <Typography variant='h6' className={classes.title}>
+                Sign Up
+              </Typography>
+            </Toolbar>
+          </AppBar>
         </div>
-      </Container>
-    </div>
+        <Container component='main' maxWidth='xs'>
+          <CssBaseline />
+          <div className={classes.paper}>
+            <form className={classes.form} noValidate onSubmit={handleSubmit} onChange={checkForm}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                      onChange={e => setFirstname(e.target.value)}
+                      autoComplete='fname'
+                      name='firstname'
+                      variant='outlined'
+                      required
+                      fullWidth
+                      id='firstName'
+                      label='First Name'
+                      error={errors.firstname !== ''}
+                      helperText={errors.firstname}
+                      autoFocus
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                      onChange={e => setLastname(e.target.value)}
+                      variant='outlined'
+                      required
+                      fullWidth
+                      id='lastName'
+                      label='Last Name'
+                      name='lastname'
+                      autoComplete='lname'
+                      error={errors.lastname !== ''}
+                      helperText={errors.lastname}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                      onChange={e => setEmail(e.target.value)}
+                      variant='outlined'
+                      required
+                      fullWidth
+                      id='email'
+                      label='Email Address'
+                      name='email'
+                      autoComplete='email'
+                      error={errors.email !== ''}
+                      helperText={errors.email}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                      onChange={e => setPassword(e.target.value)}
+                      variant='outlined'
+                      required
+                      fullWidth
+                      name='password'
+                      label='Password'
+                      type='password'
+                      id='password'
+                      autoComplete='current-password'
+                      error={errors.password !== ''}
+                      helperText={errors.password}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                      onChange={e => setPasswordConfirm(e.target.value)}
+                      variant='outlined'
+                      required
+                      fullWidth
+                      name='passwordConfirm'
+                      label='Confirm Password'
+                      type='password'
+                      id='passwordConfirm'
+                      autoComplete='current-password'
+                      error={errors.passwordConfirm !== ''}
+                      helperText={errors.passwordConfirm}
+                  />
+                </Grid>
+              </Grid>
+              <Button
+                  type='submit'
+                  fullWidth
+                  variant='contained'
+                  color='primary'
+                  className={classes.submit}
+                  disabled={!validForm}
+              >
+                CONTINUE WITH SIGN UP
+              </Button>
+              <Grid container justify='flex-end'>
+                <Grid item>
+                  <Link variant='body2' to='/' className={classes.routerLink}>
+                    Already have an account? Log in
+                  </Link>
+                </Grid>
+              </Grid>
+            </form>
+          </div>
+        </Container>
+      </div>
   )
 }
