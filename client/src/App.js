@@ -1,17 +1,14 @@
 import React from 'react'
-import {
-  BrowserRouter as Router,
-  Route,
-  Redirect,
-  Switch
-} from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 import Login from './Components/Auth/Login'
 import SignUp from './Components/Auth/SignUp'
 import Navbar from './Components/Navbar'
 import Dashboard from './Components/Dashboard/Dashboard'
 import Logout from './Components/Logout'
 import UserAccount from './Components/UserAccount'
+import MapWrapper from './Components/MapWrapper'
 import Map from './Components/Map'
+import Questionnaire from './Components/Questionnaire'
 import Quiz_Feature from './Components/Quiz_Feature'
 
 const App = () => {
@@ -20,7 +17,6 @@ const App = () => {
       <Route exact path='/' render={() => <Redirect to='/login' />} />
       <Route path='/signup' component={SignUp} />
       <Route path='/login' component={Login} />
-      <Route exact path='/question' component={Quiz_Feature} />
     </div>
   )
   const DefaultContainer = () => (

@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import canadaimage from '../../assets/canada.jpg'
 import logo from '../../assets/PolotisenseTentativeLogo.png'
 
+
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100vh'
@@ -58,23 +59,73 @@ export default function Login () {
     setUsername(e.target.value)
   }
 
+  function handleSocialLogin (social) {
+    return new Promise((resolve, reject) => {
+      let provider
+      switch (social) {
+        case 'facebook':
+          provider = facebookProvider
+          break
+        case 'google':
+          provider = googleProvider
+          break
+        case 'twitter':
+          provider = twitterProvider
+          break
+        case 'microsoft':
+          provider = microsoftProvider
+          break
+        default:
+          reject(new Error('no provider found'))
+      }
+
+      signInWithSocialProviders(provider)
+        .then(function (res) {
+          return res
+        })
+        .then(res => {
+          resolve(res.user)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value)
+  }
+
   const handlePasswordChange = (e) => {
     setPassword(e.target.value)
   }
 
-  function login (username, password) {
-    const credentials = { username: username, password: password }
-    if (credentials.username === 'user' && credentials.password === 'test') {
-      setAuthenticated(true)
-      window.confirm('successfully logged in')
-      localStorage.setItem('user', JSON.stringify(credentials))
-    } else { window.confirm('The username and password you entered did not match our records. Please double-check and try again.') }
-  }
   const handleSubmit = (e) => {
     e.preventDefault()
-    login(username, password)
-    setUsername('')
-    setPassword('')
+    const user = { email: email, password: password }
+    const emailFormat = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+    const errors = {}
+    errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
+    errors.password = (password === '' || password == null) ? 'Please enter a password' : ''
+    if (errors.email === '' && errors.password === '') {
+      axios.post('http://localhost:5000/api/users/login', user).then(
+        res => {
+          if (res.data.success) {
+            localStorage.setItem('user', JSON.stringify(user.email))
+            setAuthenticated(true)
+          } else {
+            if (res.data.type === 'email') {
+              errors.email = res.data.auth
+            }
+            if (res.data.type === 'password') {
+              errors.password = res.data.auth
+            }
+            setErrors(errors)
+          }
+        }).catch(e => console.log(e))
+    } else {
+      setErrors(errors)
+    }
   }
   return (
     authenticated
