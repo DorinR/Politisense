@@ -5,11 +5,12 @@ class ScrapeJobManager {
   constructor (count, wait, startingUrl, topLevelDomains) {
     this.linkQueue = new Queue()
     this.xmlSet = new Set()
-    this.returnedLinkCount = typeof count === 'undefined' ? 50 : count
+    this.returnedLinkCount = typeof count === 'undefined' ? 150 : count
     this.waitPeriod = typeof wait === 'undefined' ? 5000 : wait
     this.startingUrl = typeof startingUrl === 'undefined' ? 'https://www.ourcommons.ca' : startingUrl
-    this.topLevelDomains = topLevelDomains
+    this.topLevelDomains = typeof topLevelDomains === 'undefined' ? ['https://www.ourcommons.ca', 'https://www.parl.ca'] : topLevelDomains
     this.jobs = []
+    this.activeJobCount = 0
   }
 
   async getXmlContent () {
@@ -38,7 +39,9 @@ class ScrapeJobManager {
   }
 
   getXmlContentFromLinks (xmlLinks) {
+    console.log('--------------------------------------------------------------------------------------------------------')
     console.log('Retrieving xml content from links...')
+    console.log('--------------------------------------------------------------------------------------------------------')
     return this.xmlContent(xmlLinks)
   }
 
@@ -57,10 +60,24 @@ class ScrapeJobManager {
   }
 
   enqueueJobsCb (jobs) {
-    jobs.forEach((job) => {
+    jobs.some((job) => {
+      let shouldSkip = true
       try {
-        this.linkQueue.enqueue(job)
-      } catch (e) {}
+        this.topLevelDomains.some(tld => {
+          const link = tld.slice(12, tld.length - 1)
+          if (job.url.includes(link)) {
+            shouldSkip = false
+            return !shouldSkip
+          }
+        })
+        if (!shouldSkip) {
+          this.linkQueue.enqueue(job)
+        }
+      } catch (e) {
+        if (typeof e !== typeof (new RangeError())) {
+          console.log(e.message)
+        }
+      }
     })
   }
 
@@ -98,8 +115,10 @@ class ScrapeJobManager {
         this.logNewJobCount()
         continue
       }
+      this.activeJobCount++
       job.execute()
         .then((xmlLinks) => {
+          this.activeJobCount--
           if (xmlLinks.length > 0) {
             xmlLinks.forEach((xml) => {
               this.xmlSet.add(xml)
@@ -108,33 +127,40 @@ class ScrapeJobManager {
           }
         })
         .catch((e) => {
+          this.activeJobCount--
           if (e.name !== 'ScrapeError') {
-            console.log(e.message)
+            console.error(e.message)
           }
         })
     }
-    this.finish()
+    await this.finish()
   }
 
   logNewJobCount () {
     if (this.linkQueue.size() > 0) {
-      console.log('starting to process ' + this.linkQueue.size() + ' scraping jobs...')
+      console.debug('starting to process ' + this.linkQueue.size() + ' scraping jobs...')
     }
   }
 
   logActiveJobCount () {
     if (this.activeJobCount > 0) {
-      console.log('There are ' + this.jobs.length + ' active scraping jobs, waiting for them to complete')
+      console.debug('There are ' + this.jobs.length + ' active scraping jobs, waiting for them to complete')
     }
   }
 
-  finish () {
-    console.log('Found ' + this.returnedLinkCount + ' XML Links, stopping scraping process')
+  async finish () {
+    console.log('--------------------------------------------------------------------------------------------------------')
+    console.log('Found the minimum (' + this.returnedLinkCount + ') number of XML Links. No more requests will be queued.')
+    console.log('--------------------------------------------------------------------------------------------------------')
+    while (this.activeJobCount > 0) {
+      console.log('Waiting for ' + this.activeJobCount + ' jobs to complete before processing xml links...')
+      await this.hold(10000)
+    }
   }
 
   xmlLinkProgress () {
     if (this.xmlSet.size > 0) {
-      console.log('There are currently ' + this.xmlSet.size + ' potential xml links')
+      console.debug('There are currently ' + this.xmlSet.size + ' potential xml links')
     }
   }
 
@@ -144,6 +170,12 @@ class ScrapeJobManager {
         setTimeout(resolve, ms)
       })
     }
+  }
+
+  hold (ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms)
+    })
   }
 
   createXmlLinks (xmlSet) {
@@ -168,13 +200,21 @@ class ScrapeJobManager {
 }
 
 class ScrapeRunner {
-  constructor (count, wait, startingUrl, topLevelDomains) {
-    this.manager = new ScrapeJobManager(count, wait, startingUrl, topLevelDomains)
+  constructor (minimumFileCount, requestWaveInterval, startingUrl, domainScope) {
+    this.manager = new ScrapeJobManager(minimumFileCount, requestWaveInterval, startingUrl, domainScope)
   }
 
   getXmlContent () {
     require('events').EventEmitter.defaultMaxListeners = 1000
-    return this.manager.getXmlContent()
+    return new Promise(resolve => {
+      this.manager.getXmlContent()
+        .then(promises => {
+          Promise.all(promises)
+            .then(xmls => {
+              resolve(xmls.filter(xml => xml !== null))
+            })
+        })
+    })
   }
 }
 

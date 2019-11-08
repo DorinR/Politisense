@@ -21,16 +21,25 @@ class LinkScraperAction extends JobAction {
     this.url = url
   }
 
+  static headers () {
+    return {
+      Accept: '*/*',
+      'User-Agent': 'PostmanRuntime/7.19.0'
+    }
+  }
+
   async perform (url) {
     this.url = (typeof url === 'undefined') ? this.url : url
     return new Promise((resolve, reject) => {
       RequestLibrary({
         uri: this.url,
         timeout: 60000,
-        followAllRedirects: true
+        followAllRedirects: true,
+        resolveWithFullResponse: true,
+        headers: LinkScraperAction.headers()
       })
         .then((html) => {
-          console.log('Done Scraping: ' + this.url)
+          console.debug('Done Scraping: ' + this.url)
           resolve(html)
         })
         .catch((e) => {
