@@ -65,7 +65,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Login () {
+export default function Login (props) {
   const classes = useStyles()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -176,7 +176,7 @@ export default function Login () {
   if (authenticated) {
     return <Redirect to={{ pathname: '/dashboard' }} />
   }
-  
+
   return (
       <Grid container component='main' className={classes.root}>
         <CssBaseline />

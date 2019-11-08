@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Redirect, Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
@@ -47,7 +47,50 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp () {
   const classes = useStyles()
+  const [registered, setRegistered] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
+  const [firstname, setFirstname] = useState('')
+  const [lastname, setLastname] = useState('')
+  const [validForm, setValidForm] = useState(false)
+  const [user, setUser] = useState({})
+  const [errors, setErrors] = useState({ firstname: '', lastname: '', email: '', password: '', passwordConfirm: '' })
 
+  function checkForm () {
+    if (firstname && lastname && email && password && passwordConfirm) {
+      setValidForm(true)
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const user = {
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      password: password
+    }
+    setUser(user)
+    const nameFormat = /^[a-z ,.'-]+$/i
+    const emailFormat = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+    const passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+    const errors = {}
+    errors.firstname = !user.firstname.match(nameFormat) ? 'Invalid name format' : ''
+    errors.lastname = !user.lastname.match(nameFormat) ? 'Invalid name format' : ''
+    errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
+    errors.password = !user.password.match(passwordFormat) ? 'Invalid password format' : ''
+    errors.passwordConfirm = !(user.password === passwordConfirm) ? 'Passwords do not match' : ''
+    if (checkEmpty(errors)) {
+      setRegistered(true)
+    } else {
+      setErrors(errors)
+    }
+  }
+  if (registered) {
+    localStorage.setItem('user', JSON.stringify(user.email))
+    return <Redirect to={{ pathname: '/question', state: { user: user } }} />
+  }
   return (
     <div>
       <div className={classes.root}>
