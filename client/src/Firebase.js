@@ -31,6 +31,56 @@ class Reference {
     this.reference = reference
   }
 
+  where (attribute, operator, value) {
+    this.reference.where(attribute, operator, value)
+    return this
+  }
+
+  update (model) {
+    return new Promise((resolve, reject) => {
+      this.reference
+        .get()
+        .then(snapshot => {
+          const updates = new Map()
+          snapshot.forEach(document => {
+            const datum = document.data()
+            for (const key of Object.keys(model)) {
+              datum[key] = model[key]
+            }
+            updates.set(document.id, datum)
+          })
+          return updates
+        })
+        .then(updates => {
+          updates.forEach((id, datum) => {
+            this.reference.doc(id).update(datum)
+          })
+          resolve(updates.size)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  }
+
+  delete () {
+    return new Promise((resolve, reject) => {
+      this.reference
+        .get()
+        .then(snapshot => {
+          let count = 0
+          snapshot.forEach(doc => {
+            doc.ref.delete()
+            count++
+          })
+          resolve(count)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  }
+
   select (attribute, operator, value) {
     if (
       typeof attribute === 'undefined' ||
