@@ -1,8 +1,15 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+const cors = require('cors')
+
+// bodyparser middleware
+app.use(cors())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
 
 // Init Middleware
-app.use(express.json({ extended: false })) //allows us to get the data from the post body
+app.use(express.json({ extended: false })) // allows us to get the data from the post body
 
 // test root endpoint
 app.get('/', (req, res) => res.send('API Running'))
