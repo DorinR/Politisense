@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Redirect, Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import Paper from '@material-ui/core/Paper'
 import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import axios from 'axios'
 import SaveIcon from '@material-ui/icons/Save'
-import Icon from '@material-ui/core/Icon'
+import { withSnackbar } from 'notistack'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -68,10 +66,13 @@ export async function fetchUserData(userEmail) {
   return result
 }
 
-export async function updatePassword(newPassword) {
-  console.log(
-    'called backend to set new password with password: ' + newPassword
-  )
+export async function updatePassword(user, newPassword) {
+  // call backend to get back the user object for that email
+  console.log('user before adding new password: ' + JSON.stringify(user))
+  user.password = newPassword
+  console.log('user after adding new password: ' + JSON.stringify(user))
+  // change the password property to the new password
+  // overwrite the user with that email with the new password
   //   let result = ''
   //   await axios
   //     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -86,7 +87,7 @@ export async function updatePassword(newPassword) {
   //   return result
 }
 
-export default function UserAccount() {
+function ChangeAccountPassword(props) {
   const classes = useStyles()
   const [changeCompleted, setChangeCompleted] = useState(false)
   const [email, setEmail] = useState('')
@@ -107,13 +108,15 @@ export default function UserAccount() {
     email: '',
     password: '',
     passwordConfirm: '',
-    previousPassword: ''
+    previousPassword: '',
+    userEnteredPreviousPassword: ''
   })
 
   useEffect(() => {
     async function getData() {
       let user = JSON.parse(localStorage.getItem('user'))
       let { email } = user
+      setEmail(email)
       let fullUserDetails = await fetchUserData(email)
       let { password } = fullUserDetails
       setPreviousPasswordFromDb(password)
@@ -145,9 +148,10 @@ export default function UserAccount() {
       password: password
     }
 
-    if (userEnteredPreviousPassword !== previousPasswordFromDb) {
-      errors.previousPassword = 'incorrect password'
-    }
+    errors.userEnteredPreviousPassword =
+      userEnteredPreviousPassword !== previousPasswordFromDb
+        ? 'incorrect password'
+        : ''
 
     errors.password = !user.password.match(passwordFormat)
       ? 'Invalid password format'
@@ -156,7 +160,10 @@ export default function UserAccount() {
       ? 'Passwords do not match'
       : ''
     if (checkEmpty(errors)) {
-      updatePassword(password)
+      updatePassword(user, password)
+      props.enqueueSnackbar('Password Successfully Changed!', {
+        variant: 'success'
+      })
       setChangeCompleted(true)
     } else {
       setErrors(errors)
@@ -172,15 +179,15 @@ export default function UserAccount() {
           <form className={classes.form} noValidate onSubmit={handleSubmit}>
             <Grid item xs={12}>
               <TextField
-                margin='normal'
                 onChange={e => setUserEnteredPreviousPassword(e.target.value)}
+                margin='normal'
                 variant='filled'
                 required
                 fullWidth
-                name='previousPassword'
+                name='userEnteredPreviousPassword'
                 label='Previous Password'
                 type='password'
-                id='previousPassword'
+                id='userEnteredPreviousPassword'
                 error={errors.userEnteredPreviousPassword !== ''}
                 helperText={errors.userEnteredPreviousPassword}
               />
@@ -236,3 +243,5 @@ export default function UserAccount() {
     </div>
   )
 }
+
+export default withSnackbar(ChangeAccountPassword)
