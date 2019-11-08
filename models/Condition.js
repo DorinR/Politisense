@@ -1,4 +1,3 @@
-
 class ModelError extends TypeError {
   constructor (param, type) {
     super('Condition violated in model: Type of ' + param + ' is not ' + typeof type({}))
