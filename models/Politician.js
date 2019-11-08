@@ -1,13 +1,13 @@
+const Condition = require('./Condition').Condition
+
 class Politician {
-  /**
-   *
-   * @param {string} name
-   * @param {string} party
-   * @param {string} riding
-   * @param {number} yearElected
-   * @param {string} imageUrl
-   */
-  constructor(name, party, riding, yearElected, imageUrl) {
+  constructor (name, party, riding, yearElected, imageUrl) {
+    Condition.parameter(name).isType(String)
+    Condition.parameter(party).isType(String)
+    Condition.parameter(riding).isType(String)
+    Condition.parameter(yearElected).isType(Number)
+    Condition.parameter(imageUrl).isType(String)
+
     this.name = name
     this.party = party
     this.riding = riding
@@ -15,3 +15,5 @@ class Politician {
     this.imageUrl = imageUrl
   }
 }
+
+export { Politician }
