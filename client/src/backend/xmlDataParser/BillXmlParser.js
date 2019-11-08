@@ -1,6 +1,11 @@
 import { XmlDataParser } from './XmlDataParser'
 
 class BillXmlParser extends XmlDataParser {
+  constructor (xml, currentParliament = undefined) {
+    super(xml)
+    this.currentParliament = currentParliament
+  }
+
   get TAG_NAME () {
     return 'Bill'
   }
@@ -14,6 +19,13 @@ class BillXmlParser extends XmlDataParser {
   }
 
   xmlToJson () {
+    // if bill isn't in current parliament, don't store it
+    const parliamentNumber = this.getDataInAttribute('ParliamentSession', 'parliamentNumber')
+    const parliamentSession = this.getDataInAttribute('ParliamentSession', 'sessionNumber')
+    if (!this.isCurrentParliament(parliamentNumber, parliamentSession)) {
+      return null
+    }
+
     // only store passed bills
     const currentState = this.getDataInAttribute('Events', 'laagCurrentStage')
     if (currentState !== 'RoyalAssentGiven') {
@@ -43,6 +55,14 @@ class BillXmlParser extends XmlDataParser {
       }
     })
     return textUrl
+  }
+
+  isCurrentParliament (parliamentNumber, parliamentSession) {
+    if (typeof this.currentParliament === 'undefined') {
+      return true
+    }
+
+    return this.currentParliament.number === parliamentNumber && this.currentParliament.session === parliamentSession
   }
 }
 

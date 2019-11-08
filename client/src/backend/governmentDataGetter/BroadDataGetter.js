@@ -3,6 +3,9 @@ import { BillXmlParser } from '../xmlDataParser/BillXmlParser'
 import { MpXmlParser } from '../xmlDataParser/MpXmlParser'
 import { VoteXmlParser } from '../xmlDataParser/VoteXmlParser'
 import { VoteParticipantsXmlParser } from '../xmlDataParser/VoteParticipantsXmlParser'
+import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
+
+const cheerio = require('cheerio')
 
 class BroadDataGetter {
   async getGovernmentData (scrapeRunnerXmlCount) {
@@ -17,9 +20,11 @@ class BroadDataGetter {
       voteParticipants: {}
     }
 
+    const currentParliament = await this.getCurrentParliament()
+
     console.log(`Trying to convert ${xmlList.length} xml files into data`)
     for (const xml of xmlList) {
-      data.bills = this.addUniqueData(data.bills, this.getPossibleDataFromXmlParser(new BillXmlParser(xml)), 'id')
+      data.bills = this.addUniqueData(data.bills, this.getPossibleDataFromXmlParser(new BillXmlParser(xml, currentParliament)), 'id')
       data.mps = this.addUniqueData(data.mps, this.getPossibleDataFromXmlParser(new MpXmlParser(xml)), 'name')
       data.votes = this.addUniqueData(data.votes, this.getPossibleDataFromXmlParser(new VoteXmlParser(xml)), 'id')
       // vote participants is always wanted in a group so getting it is a little different
@@ -59,6 +64,23 @@ class BroadDataGetter {
       const dataAlreadyExists = listToAddTo.some(existingData => existingData[uniqueKey] === dataToAdd[uniqueKey])
       return !dataAlreadyExists
     }))
+  }
+
+  async getCurrentParliament () {
+    const url = 'https://www.ourcommons.ca/'
+
+    let html = ''
+    try {
+      html = await new LinkScraper(url).perform()
+    } catch (e) {
+      console.log(e.message)
+      return ''
+    }
+
+    const $ = cheerio.load(html)
+    const currentParliamentText = $('span.subtitle', 'div[aria-labelledby="tabbed-widget-members-work-tab"]').text()
+    const parliamentTextAsArray = currentParliamentText.split(', ')
+    return { number: parseInt(parliamentTextAsArray[0]), session: parseInt(parliamentTextAsArray[1]) }
   }
 
   async addImageUrlForAllMps (mpList) {

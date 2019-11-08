@@ -13,4 +13,17 @@ describe('BroadDataGetter.test', () => {
       done()
     })
   })
+
+  it('should return the current parliament session', (done) => {
+    const dataGetter = new BroadDataGetter()
+    dataGetter.getCurrentParliament().then(parliament => {
+      expect(typeof parliament.number).toBe('number')
+      expect(typeof parliament.session).toBe('number')
+      // A parliament session is either 1, 2 or 3
+      expect(parliament.session).toBeLessThanOrEqual(3)
+      expect(parliament.session).toBeGreaterThanOrEqual(1)
+      console.log(JSON.stringify(parliament))
+      done()
+    })
+  })
 })
