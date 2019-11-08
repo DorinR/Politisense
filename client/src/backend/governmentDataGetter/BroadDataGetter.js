@@ -19,9 +19,9 @@ class BroadDataGetter {
 
     console.log(`Trying to convert ${xmlList.length} xml files into data`)
     for (const xml of xmlList) {
-      data.bills = data.bills.concat(this.getPossibleDataFromXmlParser(new BillXmlParser(xml)))
-      data.mps = data.mps.concat(this.getPossibleDataFromXmlParser(new MpXmlParser(xml)))
-      data.votes = data.votes.concat(this.getPossibleDataFromXmlParser(new VoteXmlParser(xml)))
+      data.bills = this.addUniqueData(data.bills, this.getPossibleDataFromXmlParser(new BillXmlParser(xml)), 'id')
+      data.mps = this.addUniqueData(data.mps, this.getPossibleDataFromXmlParser(new MpXmlParser(xml)), 'name')
+      data.votes = this.addUniqueData(data.votes, this.getPossibleDataFromXmlParser(new VoteXmlParser(xml)), 'id')
       // vote participants is always wanted in a group so getting it is a little different
       const voteParticipantParser = new VoteParticipantsXmlParser(xml)
       if (voteParticipantParser.hasListOfData() && voteParticipantParser.hasData()) {
@@ -45,6 +45,20 @@ class BroadDataGetter {
       if (dataToPush !== null) data.push(dataToPush)
     }
     return data
+  }
+
+  /**
+   * Only adds objects to list when a certain object key that must be unique to the list is not being added
+   * @param {[]} listToAddTo
+   * @param {[]} dataListToAdd
+   * @param {string} uniqueKey
+   * @return {[]}
+   */
+  addUniqueData (listToAddTo, dataListToAdd, uniqueKey) {
+    return listToAddTo.concat(dataListToAdd.filter(dataToAdd => {
+      const dataAlreadyExists = listToAddTo.some(existingData => existingData[uniqueKey] === dataToAdd[uniqueKey])
+      return !dataAlreadyExists
+    }))
   }
 
   async addImageUrlForAllMps (mpList) {

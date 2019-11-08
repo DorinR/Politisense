@@ -27,7 +27,10 @@ class LinkScraperAction extends JobAction {
       RequestLibrary({
         uri: this.url,
         timeout: 60000,
-        maxRedirects: 30
+        headers: {
+          'User-Agent': 'Politisense',
+          Accept: '*/*'
+        }
       })
         .then((html) => {
           console.log('Done Scraping: ' + this.url)
