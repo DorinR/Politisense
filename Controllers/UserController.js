@@ -8,7 +8,7 @@ exports.check = (req, res) => {
       .then(snapshot => {
     if (snapshot.empty) {
     res.json({
-      sucess: false,
+      success: false,
       data: 'its already in db'
     })
   } else {

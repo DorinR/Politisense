@@ -1,3 +1,5 @@
+import {describe} from "mocha";
+
 const Firestore = require('../Firebase').Firestore
 
 const chai = require('chai')

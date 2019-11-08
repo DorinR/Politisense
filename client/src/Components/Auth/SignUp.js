@@ -9,6 +9,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import axios from 'axios'
+// import Popup from './Popup';
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -56,9 +58,8 @@ export default function SignUp () {
   const [validForm, setValidForm] = useState(false)
   const [user, setUser] = useState({})
   const [errors, setErrors] = useState({ firstname: '', lastname: '', email: '', password: '', passwordConfirm: '' })
-
   function checkEmpty (obj) {
-    for (var key in obj) {
+    for (let key in obj) {
       if (obj[key] !== null && obj[key] !== '') { return false }
     }
     return true
@@ -89,7 +90,19 @@ export default function SignUp () {
     errors.password = !user.password.match(passwordFormat) ? 'Invalid password format' : ''
     errors.passwordConfirm = !(user.password === passwordConfirm) ? 'Passwords do not match' : ''
     if (checkEmpty(errors)) {
-      setRegistered(true)
+      axios.post('http://localhost:5000/api/users/check',{ email : email}).then(
+          (res)=>{
+            if (res.data.success==false) {
+              setRegistered(true)
+            }
+            else{
+              errors.email= "Already taken"
+              setErrors(errors)
+              return <Redirect to={{ pathname: '/signup', state: { user: "" } }} />
+            }
+          }
+
+      )
     } else {
       setErrors(errors)
     }

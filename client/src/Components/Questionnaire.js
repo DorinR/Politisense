@@ -16,6 +16,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
 import TextField from '@material-ui/core/TextField'
+import axios from 'axios'
+import { Redirect } from 'react-router'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -135,8 +137,20 @@ export default function HorizontalLinearStepper (props) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log('successfully completed the questions')
-    props.history.push('/dashboard')
+    axios.post('http://localhost:5000/api/users/setRiding', { postalCode: postalCode }).then((res) => {
+      if (res.data.success) {
+        const userToSignup = props.location.state.user
+        userToSignup.postalCode = postalCode
+        userToSignup.riding = res.data.data
+        userToSignup.category1 = category1
+        userToSignup.category2 = category2
+        localStorage.setItem('user', JSON.stringify(userToSignup))
+        axios.post('http://localhost:5000/api/users/signup', userToSignup)
+        props.history.push('/dashboard')
+      } else {
+        console.log('Could not fetch riding')
+      }
+    }).catch((error) => { console.log(error) })
   }
 
   const checkValidPostalCode = () => {
@@ -170,6 +184,10 @@ export default function HorizontalLinearStepper (props) {
   const handleReset = () => {
     setActiveStep(0)
     setPostalCode('')
+  }
+
+  if (props.location.state === undefined) {
+    return <Redirect to='/login' />
   }
 
   return (
