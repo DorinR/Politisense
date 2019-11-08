@@ -10,7 +10,7 @@ function getInstance () {
 }
 
 class _Firestore {
-  constructor() {
+  constructor () {
     this.config = {
       apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
       authDomain: 'abdulla-2c3a5.firebaseapp.com',
@@ -26,11 +26,11 @@ class _Firestore {
 }
 
 class Reference {
-  constructor(reference) {
+  constructor (reference) {
     this.reference = reference
   }
 
-  select(attribute, operator, value) {
+  select (attribute, operator, value) {
     if (
       typeof attribute === 'undefined' ||
       typeof operator === 'undefined' ||
@@ -61,7 +61,7 @@ class Reference {
     }
   }
 
-  insert(model) {
+  insert (model) {
     return new Promise(resolve => {
       this.reference
         .add(model)
@@ -81,23 +81,22 @@ class Firestore {
     this.reference = this.firestore.db
   }
 
-  Bill() {
+  Bill () {
     return new Reference(this.reference.collection('bills'))
   }
 
   BillClassification () {
     return new Reference(this.reference.collection('bill_classification'))
   }
-
   Politician () {
     return new Reference(this.reference.collection('politicians'))
   }
 
-  User() {
+  User () {
     return new Reference(this.reference.collection('users'))
   }
 
-  VoteRecord() {
+  VoteRecord () {
     return new Reference(this.reference.collection('vote_records'))
   }
 }
