@@ -24,7 +24,7 @@ class LinkScraperAction extends JobAction {
   static headers () {
     return {
       Accept: '*/*',
-      'User-Agent': 'PostmanRuntime/7.19.0'
+      'User-Agent': 'PolitisenseScraper/0.1'
     }
   }
 
