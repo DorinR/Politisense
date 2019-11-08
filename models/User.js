@@ -8,7 +8,7 @@ class User {
     Condition.parameter(password).isType(String)
     Condition.parameter(postalCode).isType(String)
     Condition.parameter(riding).isType(String)
-    Condition.parameter(categories).isType(String)
+    Condition.parameter(categories).isType(Object)
 
     this.email = email
     this.firstname = firstname
