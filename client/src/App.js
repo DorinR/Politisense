@@ -6,9 +6,8 @@ import Navbar from './Components/Navbar'
 import Dashboard from './Components/Dashboard/Dashboard'
 import Logout from './Components/Logout'
 import UserAccount from './Components/UserAccount'
-import MapWrapper from './Components/MapWrapper'
 import Map from './Components/Map'
-import Questionnaire from './Components/Questionnaire'
+// import Questionnaire from './Components/Questionnaire'
 import Quiz_Feature from './Components/Quiz_Feature'
 
 const App = () => {

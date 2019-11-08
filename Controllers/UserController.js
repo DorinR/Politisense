@@ -1,6 +1,76 @@
 import { Firestore } from '../client/src/Firebase'
 import represent from 'represent'
 
+exports.check = (req, res) => {
+  const email = req.body.email
+  const db = new Firestore()
+  db.User().select('email', '==', email)
+      .then(snapshot => {
+    if (snapshot.empty) {
+    res.json({
+      sucess: false,
+      data: 'its already in db'
+    })
+  } else {
+    res.json({
+      success: true,
+      data: 'doesnt exist'
+    })
+  }
+})
+.catch(err => {
+    console.log('Error getting documents', err)
+  })
+}
+exports.userSignup = (req, res) => {
+  let user = {}
+  if (req.body.password) {
+    user = {
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      postalCode: req.body.postalCode,
+      categories: { category1: req.body.category1, category2: req.body.category2 },
+      riding: req.body.riding,
+      password: req.body.password
+    }
+  } else {
+    user = {
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      postalCode: req.body.postalCode,
+      categories: { category1: req.body.category1, category2: req.body.category2 },
+      riding: req.body.riding,
+      email: req.body.email
+    }
+  }
+  const db = new Firestore()
+  db.User().select('email', '==', user.email)
+      .then(snapshot => {
+    if (snapshot.empty) {
+    db.User()
+        .insert(user)
+        .then(
+            () => {
+      res.json({
+        success: true
+      })
+    }
+  )
+  .catch(err => {
+      console.log('Error getting documents', err)
+    })
+  } else {
+    res.json({
+      success: false,
+      message: 'Please try a different email address'
+    })
+  }
+})
+.catch(err => {
+    console.log('Error getting documents', err)
+  })
+}
 exports.userLogin = (req, res) => {
   const db = new Firestore()
   const user = {
