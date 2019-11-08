@@ -130,7 +130,9 @@ class ClassificationManager {
           resolve(result)
         })
         .catch(e => {
-          --this.documentCount
+          if (--this.documentCount === 0) {
+            this.onDone()
+          }
           reject(e)
         })
     })
@@ -179,7 +181,7 @@ class ClassificationRunner {
 
   createBillClassificationsFromFirestore (onDone) {
     this.manager.onDone = onDone
-    this.manager.fetchDocumentData()
+    return this.manager.fetchDocumentData()
   }
 
   initialiseFromFirestore () {
@@ -196,8 +198,3 @@ class ClassificationRunner {
 }
 
 module.exports.ClassificationRunner = ClassificationRunner
-
-const test = new ClassificationRunner()
-test.createBillClassificationsFromFirestore(() => {
-  console.log(test.getClassifications())
-})

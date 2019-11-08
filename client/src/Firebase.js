@@ -102,5 +102,5 @@ class Firestore {
   }
 }
 
-module.exports.FireStore = Firestore
-module.exports.Reference = Reference
+export { Firestore }
+export { Reference }
