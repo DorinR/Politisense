@@ -11,7 +11,7 @@ import Navbar from './Components/Navbar'
 import Dashboard from './Components/Dashboard/Dashboard'
 import Logout from './Components/Logout'
 import UserAccount from './Components/UserAccount'
-import Map from './Components/Map'
+import MapWrapper from './Components/Dashboard/MapWrapper'
 import Questionnaire from './Components/Questionnaire'
 
 const App = () => {
@@ -30,7 +30,7 @@ const App = () => {
           <Route exact path='/' render={() => <Redirect to='/login' />} />
           <PrivateRoute path='/dashboard' component={Dashboard} />
           <PrivateRoute path='/logout' component={Logout} />
-          <PrivateRoute path='/map' component={Map} />
+          <PrivateRoute path='/map' component={MapWrapper} />
           <PrivateRoute path='/account' component={UserAccount} />
         </div>
       </Navbar>
