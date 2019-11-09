@@ -22,12 +22,6 @@ describe('All firebase tests', () => {
       .delete().should.eventually.be.a(1)
   })
 
-  test('can retrieve records', () => {
-    let fb = new Firestore()
-    fb.Bill().select().should.eventually.be.a('object')
-    fb = null
-  })
-
   test('can filter records (legacy)', () => {
     fb.Bill().select('id', '==', '2').should.eventually.be.a('object')
   })

@@ -39,6 +39,7 @@ class Reference {
           const updates = new Map()
           snapshot.forEach(document => {
             const datum = document.data()
+            // eslint-disable-next-line no-unused-vars
             for (const key of Object.keys(model)) {
               datum[key] = model[key]
             }
