@@ -1,8 +1,6 @@
 const fs = require('firebase')
 require('firebase/firestore')
 
-let instance = null
-
 class _Firestore {
   constructor () {
     this.config = {
@@ -14,16 +12,9 @@ class _Firestore {
       messagingSenderId: '1084760992823',
       appId: '1:1084760992823:web:c6402249f92d54372ce3b2'
     }
-    fs.initializeApp(this.config)
+    this.app = fs.initializeApp(this.config)
     this.db = fs.firestore()
   }
-}
-
-function getInstance () {
-  if (!instance) {
-    instance = new _Firestore()
-  }
-  return instance
 }
 
 class Reference {
@@ -128,7 +119,7 @@ class Reference {
 
 class Firestore {
   constructor () {
-    this.firestore = getInstance()
+    this.firestore = new _Firestore()
     this.reference = this.firestore.db
   }
 
@@ -146,6 +137,16 @@ class Firestore {
 
   VoteRecord () {
     return new Reference(this.reference.collection('vote_records'))
+  }
+
+  async close () {
+    await this.firestore.app.delete()
+      .then(result => {
+        this.firestore.db.terminate()
+          .then(result => {})
+          .catch(e => {})
+      })
+      .catch(e => {})
   }
 }
 
