@@ -20,9 +20,7 @@ class BillXmlParser extends XmlDataParser {
 
   xmlToJson () {
     // if bill isn't in current parliament, don't store it
-    const parliamentNumber = this.getDataInAttribute('ParliamentSession', 'parliamentNumber')
-    const parliamentSession = this.getDataInAttribute('ParliamentSession', 'sessionNumber')
-    if (!this.isCurrentParliament(parliamentNumber, parliamentSession)) {
+    if (!this.isCurrentParliament()) {
       return null
     }
 
@@ -57,11 +55,13 @@ class BillXmlParser extends XmlDataParser {
     return textUrl
   }
 
-  isCurrentParliament (parliamentNumber, parliamentSession) {
+  isCurrentParliament () {
     if (typeof this.currentParliament === 'undefined') {
       return true
     }
 
+    const parliamentNumber = this.getDataInAttribute('ParliamentSession', 'parliamentNumber')
+    const parliamentSession = this.getDataInAttribute('ParliamentSession', 'sessionNumber')
     return this.currentParliament.number === parliamentNumber && this.currentParliament.session === parliamentSession
   }
 }

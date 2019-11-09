@@ -43,10 +43,21 @@ describe('BillDataParser', () => {
 
     assert.isEmpty(bills)
   })
+
+  it('should return null if the bill is not of the specified parliament', () => {
+    const parliamentThatDoesntMatchBill = {
+      number: 41,
+      session: 2
+    }
+    const parser = getBillParserForXmlFile('testXml/testBill.xml', parliamentThatDoesntMatchBill)
+    const bill = parser.xmlToJson()
+
+    assert.isNull(bill)
+  })
 })
 
-function getBillParserForXmlFile (xmlFilePath) {
+function getBillParserForXmlFile (xmlFilePath, currentParliament = undefined) {
   const pathToXml = path.resolve(__dirname, xmlFilePath)
   const xml = fs.readFileSync(pathToXml)
-  return new BillXmlParser(xml)
+  return new BillXmlParser(xml, currentParliament)
 }
