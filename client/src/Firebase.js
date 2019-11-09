@@ -12,7 +12,11 @@ class _Firestore {
       messagingSenderId: '1084760992823',
       appId: '1:1084760992823:web:c6402249f92d54372ce3b2'
     }
-    this.app = fs.initializeApp(this.config)
+    if (!this.app || !fs.app) {
+      this.app = fs.initializeApp(this.config)
+    } else {
+      this.app = fs.app
+    }
     this.db = fs.firestore()
   }
 }
