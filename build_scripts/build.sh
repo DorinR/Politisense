@@ -46,7 +46,7 @@ done
 }
 build () {
 	style_errors=0;
-	cd ../client
+	cd client
 	npm install
 	process_flags $@
 	npm test
