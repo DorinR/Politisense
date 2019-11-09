@@ -22,8 +22,8 @@ describe("testing login functionality ", () => {
   });
 });
 
-describe("testing login functionality ", () => {
-  test("logs user into the system", async () => {
+describe("testing signup functionality ", () => {
+  test("registers user into the system", async () => {
     let res = await signupAPICall({
       email: "ishmammurtaza@gmail.com",
       password: "hello123"
