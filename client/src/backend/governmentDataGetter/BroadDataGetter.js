@@ -29,8 +29,8 @@ class BroadDataGetter {
         mustHaveRoyalAssent: true,
         mustBeInCurrentParliament: true
       }, currentParliament)), 'id')
-      data.mps = this.addUniqueData(data.mps, this.getPossibleDataFromXmlParser(new MpXmlParser(xml)), 'name')
-      data.votes = this.addUniqueData(data.votes, this.getPossibleDataFromXmlParser(new VoteXmlParser(xml)), 'id')
+      data.mps = this.addUniqueData(data.mps, this.getPossibleDataFromXmlParser(new MpXmlParser(xml, true)), 'name')
+      data.votes = this.addUniqueData(data.votes, this.getPossibleDataFromXmlParser(new VoteXmlParser(xml, currentParliament)), 'id')
       // vote participants is always wanted in a group so getting it is a little different
       const voteParticipantParser = new VoteParticipantsXmlParser(xml)
       if (voteParticipantParser.hasListOfData() && voteParticipantParser.hasData()) {

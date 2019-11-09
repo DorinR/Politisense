@@ -41,6 +41,8 @@ class BillXmlParser extends XmlDataParser {
     bill.sponsorName = sponsorName.toLowerCase()
     bill.textUrl = this.getTextUrl() // TODO: change to `link`
     bill.dateVoted = this.formatXmlDate(this.getDataInTag('BillIntroducedDate'))
+
+    // async data, added separately
     bill.text = '' // TODO: get the bill text when getting from online
 
     return bill

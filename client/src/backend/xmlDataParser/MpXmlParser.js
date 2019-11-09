@@ -4,6 +4,11 @@ import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
 const cheerio = require('cheerio')
 
 class MpXmlParser extends XmlDataParser {
+  constructor (xml, mustBeACurrentMember = false) {
+    super(xml)
+    this.mustBeACurrentMember = mustBeACurrentMember
+  }
+
   get TAG_NAME () {
     return 'MemberOfParliament'
   }
@@ -13,20 +18,35 @@ class MpXmlParser extends XmlDataParser {
   }
 
   generateNewParser (xml) {
-    return new MpXmlParser(xml)
+    return new MpXmlParser(xml, this.mustBeACurrentMember)
   }
 
   xmlToJson () {
+    if (!this.passesFilters()) {
+      return null
+    }
+
     const mp = {}
 
     const name = this.getDataInTag('PersonOfficialFirstName') + ' ' + this.getDataInTag('PersonOfficialLastName')
     mp.name = name.toLowerCase()
-    mp.party = this.$('CaucusShortName').eq(0).text().toLowerCase()
+    mp.party = this.getDataInTag('CaucusShortName').toLowerCase()
     mp.riding = this.getDataInTag('ConstituencyName').toLowerCase()
     mp.yearElected = Number(this.getDataInTag('FromDateTime').substring(0, 4))
-    mp.imageUrl = '' // TODO: imageUrl, empty for now, need to put together
+
+    // async data, added separately
+    mp.imageUrl = ''
 
     return mp
+  }
+
+  passesFilters () {
+    return (!this.mustBeACurrentMember || this.isACurrentMember())
+  }
+
+  isACurrentMember () {
+    const dateEnded = this.getDataInTag('ToDateTime')
+    return dateEnded === ''
   }
 
   hasData () {
@@ -37,7 +57,6 @@ class MpXmlParser extends XmlDataParser {
     return `https://www.ourcommons.ca/Members/en/search?searchText=${mpName}&parliament=all`
   }
 
-  // TODO: Refactor to work with scraper
   async getMpImageUrl (mpName) {
     const linkScraper = new LinkScraper(this.getWebPageWithMpImage(mpName))
 

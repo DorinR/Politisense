@@ -15,7 +15,7 @@ class XmlDataParser {
    * @returns {string}
    */
   getDataInTag (tag) {
-    return this.$(tag).text()
+    return this.$(tag).eq(0).text()
   }
 
   /**
@@ -25,7 +25,7 @@ class XmlDataParser {
    * @returns {string}
    */
   getDataInAttribute (tag, attribute) {
-    return this.$(tag).attr(attribute)
+    return this.$(tag).eq(0).attr(attribute)
   }
 
   /**

@@ -6,9 +6,9 @@ import { MpXmlParser } from '../MpXmlParser'
 const fs = require('fs')
 const path = require('path')
 
-describe('MpDataParser', () => {
+describe('MpXmlParser', () => {
   it('should return mp info from xml', () => {
-    const parser = getMpParserForXmlFile('testXml/testMp.xml')
+    const parser = getMpParserForXmlFile('testXml/testMp.xml', true)
 
     assert.isTrue(parser.hasData())
     assert.isFalse(parser.hasListOfData())
@@ -43,10 +43,15 @@ describe('MpDataParser', () => {
       done()
     })
   })
+
+  it('should return true if is a current mp', () => {
+    const parser = getMpParserForXmlFile('testXml/testMp.xml')
+    assert.isTrue(parser.isACurrentMember())
+  })
 })
 
-function getMpParserForXmlFile (xmlFilePath) {
+function getMpParserForXmlFile (xmlFilePath, mustBeACurrentMember = false) {
   const pathToXml = path.resolve(__dirname, xmlFilePath)
   const xml = fs.readFileSync(pathToXml)
-  return new MpXmlParser(xml)
+  return new MpXmlParser(xml, mustBeACurrentMember)
 }

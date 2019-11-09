@@ -33,6 +33,7 @@ class VoteParticipantsXmlParser extends XmlDataParser {
 
     // rather than array, use a key value JSON where the key is the Mp's name
     const votes = {}
+    // eslint-disable-next-line no-unused-vars
     for (const participant of participants) {
       const name = participant.name
       votes[name] = {
@@ -45,7 +46,7 @@ class VoteParticipantsXmlParser extends XmlDataParser {
   }
 
   getVoteId () {
-    return Number(this.$('DecisionDivisionNumber').eq(0).text())
+    return Number(this.getDataInTag('DecisionDivisionNumber'))
   }
 }
 

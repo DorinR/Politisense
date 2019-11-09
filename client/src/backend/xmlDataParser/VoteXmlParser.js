@@ -7,6 +7,11 @@ class VoteXmlParser extends XmlDataParser {
     return `https://www.ourcommons.ca/Parliamentarians/en/votes/42/1/${voteId}/`
   }
 
+  constructor (xml, currentParliament = undefined) {
+    super(xml)
+    this.currentParliament = currentParliament
+  }
+
   get TAG_NAME () {
     return 'VoteParticipant'
   }
@@ -16,10 +21,14 @@ class VoteXmlParser extends XmlDataParser {
   }
 
   generateNewParser (xml) {
-    return new VoteXmlParser(xml)
+    return new VoteXmlParser(xml, this.currentParliament)
   }
 
   xmlToJson () {
+    if (!this.isInCurrentParliament()) {
+      return null
+    }
+
     const vote = {}
 
     // only get votes related to bills
@@ -36,12 +45,24 @@ class VoteXmlParser extends XmlDataParser {
     vote.yeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
     vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
     vote.accepted = (vote.yeas > vote.nays)
-    vote.voters = {}// TODO: param voters for the list of voters
+
+    // async data, added separately
+    vote.voters = {} // TODO: param voters for the list of voters
 
     return vote
   }
 
-  // TODO: Tried something with parser might not be useful
+  isInCurrentParliament () {
+    if (typeof this.currentParliament === 'undefined') {
+      return true
+    }
+
+    const parliamentNumber = Number(this.getDataInAttribute('ParliamentSession', 'parliamentNumber'))
+    const parliamentSession = Number(this.getDataInAttribute('ParliamentSession', 'sessionNumber'))
+    return this.currentParliament.number === parliamentNumber && this.currentParliament.session === parliamentSession
+  }
+
+  // TODO: REFACTOR to use Link instead
   async getVoters (voteId) {
     const url = VoteXmlParser.getVoteParticipantsUrl(voteId)
     const runner = new ScrapeRunner(1, 15000, url, undefined)
@@ -53,7 +74,7 @@ class VoteXmlParser extends XmlDataParser {
   }
 
   isFinalDecision (voteSubject) {
-    return voteSubject.includes('3rd reading')
+    return voteSubject.includes('3rd reading and adoption')
   }
 }
 
