@@ -1,16 +1,23 @@
-import {describe} from "mocha";
-const { check } = require('../../../../Controllers/UserController')
-const assert = require('assert')
+import  {fetchUser, loginAPICall} from '../../Components/Auth/Login'
 
-describe ('checks if email existed or not',function () {
-    it('should return either true or false as success and message as data',function () {
-        // call the function
-        let req = {
-            body:{
-                email:"james_bond12@gmail.com"
-            }
-        }
-        let res={}
-        check(req,res)
+const chai = require('chai')
+chai.should()
+
+describe('checks if the user exist ', () => {
+    test('checks if user exists or not in firebase db', async () => {
+        let res = await fetchUser("baraka.khalid4@gmail.com")
+
+        res.data.success.should.equal(true)
     })
 })
+
+
+describe('testing login functionality ', () => {
+    test('logs user into the system', async () => {
+        let res = await loginAPICall({email:'ishmammurtaza@gmail.com', password: "hello123"})
+        res.data.success.should.equal(true)
+    })
+})
+
+
+

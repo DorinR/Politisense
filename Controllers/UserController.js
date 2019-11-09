@@ -9,12 +9,13 @@ exports.check = (req, res) => {
     if (snapshot.empty) {
     res.json({
       success: false,
-      data: 'its already in db'
+      data: 'doesnt exist'
+
     })
   } else {
     res.json({
       success: true,
-      data: 'doesnt exist'
+      data: 'its already in db'
     })
   }
 })

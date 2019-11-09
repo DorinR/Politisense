@@ -63,6 +63,29 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+
+export async function fetchUser (email){
+  let result = ''
+  await axios.post('http://localhost:5000/api/users/check',{email: email}).then(res => {
+    result = res
+  })
+  return result
+}
+
+
+export async function loginAPICall (user){
+  let result = ''
+  await axios.post('http://localhost:5000/api/users/login', user).then(res => {
+    result = res
+  })
+  return result
+}
+
+
+
+
+
+
 export default function Login (props) {
   const classes = useStyles()
   const [email, setEmail] = useState('')
@@ -79,10 +102,11 @@ export default function Login (props) {
     return db.firebase.auth().signInWithPopup(_provider)
   }
 
+
   function validateUserFromSocialProviders (type, callback) {
     const user = callback(type)
         .then(user => {
-          axios.post('http://localhost:5000/api/users/check', { email: user.email }).then((res) => {
+          let response = fetchUser(user.email).then((res) => {
             if (res.data.success) {
               localStorage.setItem('user', JSON.stringify(user.email))
               setAuthenticated(true)
@@ -94,10 +118,12 @@ export default function Login (props) {
               }
               props.history.push({
                 pathname: '/question',
-                state: { user: newUser }
+                state: {user: newUser}
               })
             }
+
           })
+
         })
         .catch(e => { console.log(e) })
   }
@@ -143,6 +169,8 @@ export default function Login (props) {
     setPassword(e.target.value)
   }
 
+
+
   const handleSubmit = (e) => {
     e.preventDefault()
     const user = { email: email, password: password }
@@ -151,7 +179,7 @@ export default function Login (props) {
     errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
     errors.password = (password === '' || password == null) ? 'Please enter a password' : ''
     if (errors.email === '' && errors.password === '') {
-      axios.post('http://localhost:5000/api/users/login', user).then(
+       loginAPICall(user).then(
         res => {
           if (res.data.success) {
             localStorage.setItem('user', JSON.stringify(user.email))
