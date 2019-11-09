@@ -23,7 +23,9 @@ describe('All firebase tests', () => {
   })
 
   test('can retrieve records', () => {
+    let fb = new Firestore()
     fb.Bill().select().should.eventually.be.a('object')
+    fb = null
   })
 
   test('can filter records (legacy)', () => {
