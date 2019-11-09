@@ -75,3 +75,36 @@ exports.getUserByEmail = (req, res) => {
       })
     )
 }
+
+exports.updateUser = (req, res) => {
+  let documentToChangeId = 0
+  const db = new Firestore()
+
+  db.User()
+    .select('email', '==', req.body.email)
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.log('no user with this email found')
+      }
+      snapshot.forEach(doc => {
+        documentToChangeId = doc.id
+      })
+      return db
+        .User()
+        .reference.doc(documentToChangeId)
+        .update({
+          password: req.body.password
+        })
+    })
+    .then(() => {
+      res.json({
+        success: true
+      })
+    })
+    .catch(err => {
+      res.status(400).json({
+        success: false,
+        message: 'getting userID unsuccessfull'
+      })
+    })
+}

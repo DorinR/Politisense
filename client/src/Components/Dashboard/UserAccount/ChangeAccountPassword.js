@@ -62,29 +62,19 @@ export async function fetchUserData(userEmail) {
       }
     })
     .catch(err => console.log(err))
-  console.log(result)
   return result
 }
 
 export async function updatePassword(user, newPassword) {
-  // call backend to get back the user object for that email
-  console.log('user before adding new password: ' + JSON.stringify(user))
-  user.password = newPassword
-  console.log('user after adding new password: ' + JSON.stringify(user))
-  // change the password property to the new password
-  // overwrite the user with that email with the new password
-  //   let result = ''
-  //   await axios
-  //     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
-  //     .then(res => {
-  //       if (res.data.success) {
-  //         let user = res.data.data
-  //         result = user
-  //       }
-  //     })
-  //     .catch(err => console.log(err))
-  //   console.log(result)
-  //   return result
+  user['password'] = newPassword
+  axios
+    .post(`http://localhost:5000/api/users/updateUser`, user)
+    .then(res => {
+      if (res.data.success) {
+        console.log('password update was successful')
+      }
+    })
+    .catch(err => console.log(err))
 }
 
 function ChangeAccountPassword(props) {
@@ -100,6 +90,7 @@ function ChangeAccountPassword(props) {
   const [passwordConfirm, setPasswordConfirm] = useState('')
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
+  const [fetchedUserDetails, setFetchedUserDetails] = useState('')
   const [validForm, setValidForm] = useState(false)
   const [user, setUser] = useState({})
   const [errors, setErrors] = useState({
@@ -118,11 +109,12 @@ function ChangeAccountPassword(props) {
       let { email } = user
       setEmail(email)
       let fullUserDetails = await fetchUserData(email)
+      setFetchedUserDetails(fullUserDetails)
       let { password } = fullUserDetails
       setPreviousPasswordFromDb(password)
     }
     getData()
-  })
+  }, [])
 
   function checkEmpty(obj) {
     for (var key in obj) {
@@ -160,7 +152,7 @@ function ChangeAccountPassword(props) {
       ? 'Passwords do not match'
       : ''
     if (checkEmpty(errors)) {
-      updatePassword(user, password)
+      updatePassword(fetchedUserDetails, password)
       props.enqueueSnackbar('Password Successfully Changed!', {
         variant: 'success'
       })
