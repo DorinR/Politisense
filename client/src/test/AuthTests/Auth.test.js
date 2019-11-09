@@ -1,4 +1,5 @@
 import { fetchUser, loginAPICall } from "../../Components/Auth/Login";
+import { signupAPICall } from "../../Components/Auth/SignUp";
 import { setRiding } from "../../Components/Questionnaire";
 
 const chai = require("chai");
@@ -14,6 +15,16 @@ describe("checks if the user exist ", () => {
 describe("testing login functionality ", () => {
   test("logs user into the system", async () => {
     let res = await loginAPICall({
+      email: "ishmammurtaza@gmail.com",
+      password: "hello123"
+    });
+    res.data.success.should.equal(true);
+  });
+});
+
+describe("testing login functionality ", () => {
+  test("logs user into the system", async () => {
+    let res = await signupAPICall({
       email: "ishmammurtaza@gmail.com",
       password: "hello123"
     });
