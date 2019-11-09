@@ -9,9 +9,9 @@ describe('All Scraper Request Tests', () => {
   // eslint-disable-next-line no-undef
   test('Valid URL returns html', () => {
     const req = new LinkScraper('https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States')
-    return req.perform()
+    req.perform()
       .then((html) => {
-        return html
+        return html.body
       })
       .catch((e) => {
         return null
@@ -23,10 +23,10 @@ describe('All Scraper Request Tests', () => {
     const req = new LinkScraper('')
     req.perform()
       .then((html) => {
-        return html
+        return html.body
       })
       .catch((e) => {
-        return null
+        throw e
       })
       .should.eventually.throw().notify(chai.done)
   })

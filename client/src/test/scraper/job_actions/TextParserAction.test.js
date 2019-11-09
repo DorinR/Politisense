@@ -14,6 +14,7 @@ describe('All Parser Tests', () => {
     const parser = new TextParser()
     return req.perform()
       .then((html) => {
+        html = html.body
         assert.isTrue(typeof html === 'string', 'valid html is delivered by the scraper')
         const $ = parser.load(html)
         const select = (elem) => {
@@ -37,6 +38,7 @@ describe('All Parser Tests', () => {
     const parser = new TextParser()
     req.perform()
       .then((html) => {
+        html = html.body
         assert.isTrue(typeof html === 'string', 'valid html is delivered by the scraper')
         const $ = parser.load(html)
         const select = (elem) => {
