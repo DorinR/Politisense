@@ -56,7 +56,7 @@ exports.getUserByEmail = (req, res) => {
     .select('email', '==', userEmail)
     .then(snapshot => {
       if (snapshot.empty) {
-        res.status(400).json({
+        res.status(404).json({
           message: 'user not found',
           success: false
         })
@@ -102,7 +102,7 @@ exports.updateUser = (req, res) => {
       })
     })
     .catch(err => {
-      res.status(400).json({
+      res.status(404).json({
         success: false,
         message: 'getting userID unsuccessfull'
       })
