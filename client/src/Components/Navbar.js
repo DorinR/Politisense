@@ -153,7 +153,7 @@ export default function MiniDrawer({ children }) {
       setUserRepresentative(representative)
     }
     getData()
-  })
+  }, [])
 
   const handleDrawerOpen = () => {
     setOpen(true)
