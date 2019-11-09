@@ -45,7 +45,7 @@ const DialogContent = withStyles(theme => ({
   }
 }))(MuiDialogContent)
 
-export default function BillDetails(props) {
+export default function BillDetails (props) {
   const [open, setOpen] = React.useState(false)
 
   const handleClickOpen = () => {

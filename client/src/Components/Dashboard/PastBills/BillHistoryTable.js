@@ -61,7 +61,7 @@ export async function fetchUserRiding(userEmail) {
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
-        let riding = res.data.data.riding
+        const riding = res.data.data.riding
         result = riding
       }
     })
@@ -78,7 +78,7 @@ export async function fetchRepresentative(riding) {
     )
     .then(res => {
       if (res.data.success) {
-        let representative = res.data.data.name
+        const representative = res.data.data.name
         result = representative
       }
     })
@@ -87,14 +87,14 @@ export async function fetchRepresentative(riding) {
 }
 
 export async function fetchRepresentativeVotes(representative) {
-  let result = []
+  const result = []
   await axios
     .get(
       `http://localhost:5000/api/voteRecord/getVotesByRepresentative/${representative}`
     )
     .then(res => {
       if (res.data.success) {
-        let votes = res.data.data
+        const votes = res.data.data
         votes.forEach(vote => result.push(vote))
       }
     })
@@ -105,7 +105,7 @@ export async function fetchRepresentativeVotes(representative) {
 function generateTableRows(votes) {
   rows = []
   votes.forEach(vote => {
-    let {
+    const {
       billNumber,
       dateVoted,
       voteName,
@@ -113,7 +113,7 @@ function generateTableRows(votes) {
       billTitle,
       billText
     } = vote
-    let tableRow = createData(
+    const tableRow = createData(
       billNumber,
       dateVoted,
       voteName,
@@ -132,11 +132,17 @@ export default function BillHistoryTable() {
 
   useEffect(() => {
     async function getData() {
-      let user = JSON.parse(localStorage.getItem('user'))
-      let { email } = user
-      let riding = await fetchUserRiding(email)
-      let representative = await fetchRepresentative(riding)
-      let votes = await fetchRepresentativeVotes(representative)
+      const user = JSON.parse(localStorage.getItem('user'))
+      const { email } = user
+      console.log('email from localstorage: ' + email)
+      const riding = await fetchUserRiding(email)
+      console.log('riding fetched from that user: ' + riding)
+      const representative = await fetchRepresentative(riding)
+      console.log('representative fetched from that riding: ' + representative)
+      const votes = await fetchRepresentativeVotes(representative)
+      console.log(
+        'votes fetched for that representative: ' + JSON.stringify(votes)
+      )
       generateTableRows(votes)
     }
     getData()
