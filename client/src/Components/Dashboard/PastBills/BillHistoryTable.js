@@ -121,7 +121,6 @@ function generateTableRows(votes) {
       <BillDetails billTitle={billTitle} billText={billText} />
     )
     rows.push(tableRow)
-    console.log(representativeVote)
   })
 }
 
@@ -134,15 +133,9 @@ export default function BillHistoryTable() {
     async function getData() {
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
-      console.log('email from localstorage: ' + email)
       const riding = await fetchUserRiding(email)
-      console.log('riding fetched from that user: ' + riding)
       const representative = await fetchRepresentative(riding)
-      console.log('representative fetched from that riding: ' + representative)
       const votes = await fetchRepresentativeVotes(representative)
-      console.log(
-        'votes fetched for that representative: ' + JSON.stringify(votes)
-      )
       generateTableRows(votes)
     }
     getData()

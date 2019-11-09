@@ -1,6 +1,6 @@
 import { Firestore } from '../client/src/Firebase'
 
-exports.getVotesByRepresentative = async (req, res) => {
+exports.getVotesByRepresentative = (req, res) => {
   let representative = req.params.representative.toLowerCase()
   var allBillsVotedOn = []
   let db = new Firestore()
