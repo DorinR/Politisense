@@ -6,18 +6,20 @@ import { BillXmlParser } from '../BillXmlParser'
 const fs = require('fs')
 const path = require('path')
 
-describe('BillDataParser', () => {
-  it('should return null if the bill was not passed', () => {
-    const pathToXml = path.resolve(__dirname, 'testXml/testBill_Unpassed.xml')
-    const xml = fs.readFileSync(pathToXml) // added test bill to read
-    const parser = new BillXmlParser(xml)
+describe('BillXmlParser', () => {
+  it('should return null if the bill does not have Royal Assent and its specified', () => {
+    const xml = getXmlFromFilePath('testXml/testBill_Unpassed.xml')
 
-    const res = parser.xmlToJson()
-    assert.isNull(res)
+    let parser = new BillXmlParser(xml, { mustHaveRoyalAssent: true })
+    assert.isNull(parser.xmlToJson())
+
+    parser = new BillXmlParser(xml)
+    assert.isNotNull(parser.xmlToJson())
   })
 
   it('should return specified bill info from xml', () => {
-    const parser = getBillParserForXmlFile('testXml/testBill.xml')
+    const xml = getXmlFromFilePath('testXml/testBill.xml')
+    const parser = new BillXmlParser(xml)
     const bill = parser.xmlToJson()
 
     assert.isNotNull(bill)
@@ -30,8 +32,9 @@ describe('BillDataParser', () => {
     assert.hasAnyKeys(bill, ['text'])
   })
 
-  it('should get all bills in the list of bills in the xml', () => {
-    const parser = getBillParserForXmlFile('testXml/testBill_List.xml')
+  it('should get all Royal Assent bills in the list of bills in the xml, ', () => {
+    const xml = getXmlFromFilePath('testXml/testBill_List.xml')
+    const parser = new BillXmlParser(xml, { mustHaveRoyalAssent: true })
     const bills = parser.getAllFromXml()
 
     assert.strictEqual(bills.length, 5)
@@ -45,22 +48,23 @@ describe('BillDataParser', () => {
   })
 
   it('should return null if the bill is not of the specified parliament', () => {
+    const xml = getXmlFromFilePath('testXml/testBill.xml')
+
     const parliamentThatDoesntMatchBill = {
       number: 41,
       session: 2
     }
-    let parser = getBillParserForXmlFile('testXml/testBill.xml', parliamentThatDoesntMatchBill)
+
+    let parser = new BillXmlParser(xml, { mustBeInCurrentParliament: true }, parliamentThatDoesntMatchBill)
     const bill = parser.xmlToJson()
     assert.isNull(bill)
 
-    parser = getBillParserForXmlFile('testXml/testBill.xml')
-    const billWithUndefinedParliament = parser.xmlToJson()
-    assert.isNotNull(billWithUndefinedParliament)
+    parser = new BillXmlParser(xml, { mustBeInCurrentParliament: true })
+    assert.throws(parser.xmlToJson)
   })
 })
 
-function getBillParserForXmlFile (xmlFilePath, currentParliament = undefined) {
+function getXmlFromFilePath (xmlFilePath) {
   const pathToXml = path.resolve(__dirname, xmlFilePath)
-  const xml = fs.readFileSync(pathToXml)
-  return new BillXmlParser(xml, currentParliament)
+  return fs.readFileSync(pathToXml)
 }

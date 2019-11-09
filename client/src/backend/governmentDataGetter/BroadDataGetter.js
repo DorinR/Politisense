@@ -23,8 +23,12 @@ class BroadDataGetter {
     const currentParliament = await this.getCurrentParliament()
 
     console.log(`Trying to convert ${xmlList.length} xml files into data`)
+    // eslint-disable-next-line no-unused-vars
     for (const xml of xmlList) {
-      data.bills = this.addUniqueData(data.bills, this.getPossibleDataFromXmlParser(new BillXmlParser(xml, currentParliament)), 'id')
+      data.bills = this.addUniqueData(data.bills, this.getPossibleDataFromXmlParser(new BillXmlParser(xml, {
+        mustHaveRoyalAssent: true,
+        mustBeInCurrentParliament: true
+      }, currentParliament)), 'id')
       data.mps = this.addUniqueData(data.mps, this.getPossibleDataFromXmlParser(new MpXmlParser(xml)), 'name')
       data.votes = this.addUniqueData(data.votes, this.getPossibleDataFromXmlParser(new VoteXmlParser(xml)), 'id')
       // vote participants is always wanted in a group so getting it is a little different
@@ -85,6 +89,7 @@ class BroadDataGetter {
 
   async addImageUrlForAllMps (mpList) {
     const mpImageList = []
+    // eslint-disable-next-line no-unused-vars
     for (const mp of mpList) {
       mpImageList.push(new Promise((resolve) => {
         new MpXmlParser('').getMpImageUrl(mp.name).then((imageUrl) => {

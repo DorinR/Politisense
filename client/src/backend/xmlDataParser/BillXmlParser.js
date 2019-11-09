@@ -1,8 +1,17 @@
 import { XmlDataParser } from './XmlDataParser'
 
+class CurrentParliamentNotSpecifiedError extends Error {
+  constructor (msg) {
+    super()
+    this.message = msg
+    this.name = this.constructor.name
+  }
+}
+
 class BillXmlParser extends XmlDataParser {
-  constructor (xml, currentParliament = undefined) {
+  constructor (xml, filters = undefined, currentParliament = undefined) {
     super(xml)
+    this.filters = Object.assign({}, BillXmlParser.defaultFilters, filters)
     this.currentParliament = currentParliament
   }
 
@@ -15,18 +24,11 @@ class BillXmlParser extends XmlDataParser {
   }
 
   generateNewParser (xml) {
-    return new BillXmlParser(xml)
+    return new BillXmlParser(xml, this.filters, this.currentParliament)
   }
 
   xmlToJson () {
-    // if bill isn't in current parliament, don't store it
-    if (!this.isCurrentParliament()) {
-      return null
-    }
-
-    // only store passed bills
-    const currentState = this.getDataInAttribute('Events', 'laagCurrentStage')
-    if (currentState !== 'RoyalAssentGiven') {
+    if (!this.passesFilters()) {
       return null
     }
 
@@ -55,15 +57,30 @@ class BillXmlParser extends XmlDataParser {
     return textUrl
   }
 
-  isCurrentParliament () {
+  passesFilters () {
+    return (!this.filters.mustHaveRoyalAssent || this.hasRoyalAssent()) &&
+      (!this.filters.mustBeInCurrentParliament || this.isInCurrentParliament())
+  }
+
+  hasRoyalAssent () {
+    const currentState = this.getDataInAttribute('Events', 'laagCurrentStage')
+    return currentState === 'RoyalAssentGiven'
+  }
+
+  isInCurrentParliament () {
     if (typeof this.currentParliament === 'undefined') {
-      return true
+      throw new CurrentParliamentNotSpecifiedError('Must specify what the current parliament is if it is used as a filter.')
     }
 
     const parliamentNumber = Number(this.getDataInAttribute('ParliamentSession', 'parliamentNumber'))
     const parliamentSession = Number(this.getDataInAttribute('ParliamentSession', 'sessionNumber'))
     return this.currentParliament.number === parliamentNumber && this.currentParliament.session === parliamentSession
   }
+}
+
+BillXmlParser.defaultFilters = {
+  mustHaveRoyalAssent: false,
+  mustBeInCurrentParliament: false
 }
 
 module.exports.BillXmlParser = BillXmlParser
