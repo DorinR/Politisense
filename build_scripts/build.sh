@@ -47,7 +47,7 @@ done
 build () {
 	cd client
 	npm install
-	#process_flags $@
+	process_flags $@
 	npm test -- --detectOpenHandles --forceExit
 	echo "run build"
 	npm run build
