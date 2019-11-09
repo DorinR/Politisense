@@ -11,6 +11,7 @@
     "@material-ui/icons": "^4.4.1",
     "@types/react-router-dom": "^4.3.5",
     "bcryptjs": "^2.4.3",
+    "cheerio": "^1.0.0-rc.3",
     "config": "^3.2.3",
     "cors": "^2.8.5",
     "eslint": "^6.3.0",
@@ -18,13 +19,21 @@
     "express-validator": "^6.2.0",
     "firebase": "^4.8.0",
     "jsonwebtoken": "^8.5.1",
+    "linked-list": "^2.1.0",
+    "node-fetch": "^2.6.0",
     "react": "^16.9.0",
+    "react-addons-css-transition-group": "^15.6.2",
+    "react-addons-update": "^15.6.2",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
     "react-window": "^1.8.5",
     "recharts": "^1.7.1",
-    "typescript": "^3.6.2"
+    "request": "latest",
+    "request-promise": "^4.2.4",
+    "typescript": "^3.6.2",
+    "xhr2": "^0.2.0",
+    "xmlhttprequest": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -52,6 +61,8 @@
     "chai-as-promised": "^7.1.1",
     "concurrently": "^4.1.2",
     "nodemon": "^1.19.3",
+    "jest": "24.8.0",
+    "mocha": "^6.2.0",
     "standard": "^14.1.0"
   },
   "proxy": "http://localhost:5000"
