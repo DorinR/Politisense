@@ -60,8 +60,8 @@ class BillXmlParser extends XmlDataParser {
       return true
     }
 
-    const parliamentNumber = this.getDataInAttribute('ParliamentSession', 'parliamentNumber')
-    const parliamentSession = this.getDataInAttribute('ParliamentSession', 'sessionNumber')
+    const parliamentNumber = Number(this.getDataInAttribute('ParliamentSession', 'parliamentNumber'))
+    const parliamentSession = Number(this.getDataInAttribute('ParliamentSession', 'sessionNumber'))
     return this.currentParliament.number === parliamentNumber && this.currentParliament.session === parliamentSession
   }
 }

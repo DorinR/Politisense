@@ -49,10 +49,13 @@ describe('BillDataParser', () => {
       number: 41,
       session: 2
     }
-    const parser = getBillParserForXmlFile('testXml/testBill.xml', parliamentThatDoesntMatchBill)
+    let parser = getBillParserForXmlFile('testXml/testBill.xml', parliamentThatDoesntMatchBill)
     const bill = parser.xmlToJson()
-
     assert.isNull(bill)
+
+    parser = getBillParserForXmlFile('testXml/testBill.xml')
+    const billWithUndefinedParliament = parser.xmlToJson()
+    assert.isNotNull(billWithUndefinedParliament)
   })
 })
 
