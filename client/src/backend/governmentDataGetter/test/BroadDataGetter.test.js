@@ -1,5 +1,6 @@
 /* eslint-env jest */
 import { BroadDataGetter } from '../BroadDataGetter'
+import { ScrapeRunner } from '../../../scraper/ScrapeRunner'
 
 describe('BroadDataGetter.test', () => {
   it('should return some data', (done) => {
@@ -7,7 +8,7 @@ describe('BroadDataGetter.test', () => {
     jest.setTimeout(5 * minutes)
 
     const dataGetter = new BroadDataGetter()
-    dataGetter.getGovernmentData(4).then(data => {
+    dataGetter.getGovernmentData(50).then(data => {
       expect(typeof data).toBe('object')
       console.log(JSON.stringify(data))
       done()
@@ -26,4 +27,17 @@ describe('BroadDataGetter.test', () => {
       done()
     })
   })
+
+  // TODO: trying to get scrapeRunner to work
+  test('name', async () => {
+    await new ScrapeRunner(5, undefined, undefined, undefined)
+      .getXmlContent()
+      .then(res => {
+        console.log(res.length)
+        return res
+      })
+      .catch(e => {
+        throw e
+      })
+  }, 600000)
 })

@@ -9,9 +9,8 @@ const cheerio = require('cheerio')
 
 class BroadDataGetter {
   async getGovernmentData (scrapeRunnerXmlCount) {
-    const runner = new ScrapeRunner(scrapeRunnerXmlCount, 60000, undefined, undefined)
-    const promisedXmlList = await runner.getXmlContent()
-    const xmlList = await Promise.all(promisedXmlList)
+    const runner = new ScrapeRunner(scrapeRunnerXmlCount, undefined, undefined, undefined)
+    const xmlList = await runner.getXmlContent()
 
     const data = {
       bills: [],

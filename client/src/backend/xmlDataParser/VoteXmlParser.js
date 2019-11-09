@@ -65,9 +65,8 @@ class VoteXmlParser extends XmlDataParser {
   // TODO: REFACTOR to use Link instead
   async getVoters (voteId) {
     const url = VoteXmlParser.getVoteParticipantsUrl(voteId)
-    const runner = new ScrapeRunner(1, 15000, url, undefined)
-    const promisedXmlList = await runner.getXmlContent()
-    const xmlList = await Promise.all(promisedXmlList)
+    const runner = new ScrapeRunner(2, undefined, url, undefined)
+    const xmlList = await runner.getXmlContent()
 
     const voteParticipantsXml = xmlList.find(xml => xml.includes(`<DecisionDivisionNumber>${voteId}`))
     return new VoteParticipantsXmlParser(voteParticipantsXml).getAllFromXml()
