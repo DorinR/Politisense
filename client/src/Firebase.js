@@ -25,7 +25,6 @@ function getInstance () {
   }
   return instance
 }
-
 class Reference {
   constructor (reference) {
     this.reference = reference
