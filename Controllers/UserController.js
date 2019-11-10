@@ -5,23 +5,23 @@ exports.check = (req, res) => {
   const email = req.body.email
   const db = new Firestore()
   db.User().select('email', '==', email)
-      .then(snapshot => {
-    if (snapshot.empty) {
-    res.json({
-      success: false,
-      data: 'doesnt exist'
+    .then(snapshot => {
+      if (snapshot.empty) {
+        res.json({
+          success: false,
+          data: 'doesnt exist'
 
+        })
+      } else {
+        res.json({
+          success: true,
+          data: 'its already in db'
+        })
+      }
     })
-  } else {
-    res.json({
-      success: true,
-      data: 'its already in db'
+    .catch(err => {
+      console.log('Error getting documents', err)
     })
-  }
-})
-.catch(err => {
-    console.log('Error getting documents', err)
-  })
 }
 exports.userSignup = (req, res) => {
   let user = {}
@@ -47,30 +47,30 @@ exports.userSignup = (req, res) => {
   }
   const db = new Firestore()
   db.User().select('email', '==', user.email)
-      .then(snapshot => {
-    if (snapshot.empty) {
-    db.User()
-        .insert(user)
-        .then(
+    .then(snapshot => {
+      if (snapshot.empty) {
+        db.User()
+          .insert(user)
+          .then(
             () => {
-      res.json({
-        success: true
-      })
-    }
-  )
-  .catch(err => {
+              res.json({
+                success: true
+              })
+            }
+          )
+          .catch(err => {
+            console.log('Error getting documents', err)
+          })
+      } else {
+        res.json({
+          success: false,
+          message: 'Please try a different email address'
+        })
+      }
+    })
+    .catch(err => {
       console.log('Error getting documents', err)
     })
-  } else {
-    res.json({
-      success: false,
-      message: 'Please try a different email address'
-    })
-  }
-})
-.catch(err => {
-    console.log('Error getting documents', err)
-  })
 }
 exports.userLogin = (req, res) => {
   const db = new Firestore()

@@ -170,7 +170,7 @@ export default function Login (props) {
   const handleSubmit = e => {
     e.preventDefault()
     const user = { email: email, password: password }
-    const emailFormat = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+    const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     const errors = {}
     errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
     errors.password =
