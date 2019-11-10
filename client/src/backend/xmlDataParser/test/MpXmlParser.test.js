@@ -16,7 +16,7 @@ describe('MpXmlParser', () => {
     const mp = parser.xmlToJson()
 
     assert.strictEqual(mp.name, 'jody wilson-raybould')
-    assert.strictEqual(mp.party, 'independent')
+    assert.strictEqual(mp.politicalParty, 'independent')
     assert.strictEqual(mp.riding, 'vancouver granville')
     assert.strictEqual(mp.yearElected, 2015)
     assert.hasAnyKeys(mp, ['imageUrl'])

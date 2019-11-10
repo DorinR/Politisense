@@ -31,7 +31,7 @@ class MpXmlParser extends XmlDataParser {
     try {
       const name = this.getDataInTag('PersonOfficialFirstName') + ' ' + this.getDataInTag('PersonOfficialLastName')
       mp.name = name.toLowerCase()
-      mp.party = this.getDataInTag('CaucusShortName').toLowerCase()
+      mp.politicalParty = this.getDataInTag('CaucusShortName').toLowerCase()
       mp.riding = this.getDataInTag('ConstituencyName').toLowerCase()
       mp.yearElected = Number(this.getDataInTag('FromDateTime').substring(0, 4))
     } catch (e) {

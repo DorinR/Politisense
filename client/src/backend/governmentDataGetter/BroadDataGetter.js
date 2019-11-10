@@ -3,6 +3,7 @@ import { BillXmlParser } from '../xmlDataParser/BillXmlParser'
 import { MpXmlParser } from '../xmlDataParser/MpXmlParser'
 import { VoteXmlParser } from '../xmlDataParser/VoteXmlParser'
 import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
+import { Firestore } from '../../Firebase'
 
 const cheerio = require('cheerio')
 const Promise = require('bluebird')
@@ -45,6 +46,11 @@ class BroadDataGetter {
     await this.addVotersForAllVotes(data.votes, currentParliament)
 
     await this.addImageUrlForAllMps(data.mps)
+
+    // add data to db
+    // let fb = new Firestore()
+    // await this.addDataToDatabase(fb.Politician(), data.mps)
+    // fb = null
 
     console.log('Returning Data')
     return data
@@ -127,6 +133,18 @@ class BroadDataGetter {
         })
       })
     }, { concurrency: 20 })
+  }
+
+  async addDataToDatabase (dbDoc, dataList) {
+    return Promise.map(dataList, (data) => {
+      return new Promise((resolve, reject) => {
+        dbDoc.insert(data).then(res => {
+          resolve(res)
+        }).catch(e => {
+          reject(e)
+        })
+      })
+    }, { concurrency: 10 })
   }
 }
 
