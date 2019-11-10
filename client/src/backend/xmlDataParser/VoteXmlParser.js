@@ -45,7 +45,6 @@ class VoteXmlParser extends XmlDataParser {
       vote.id = Number(this.getDataInTag('DecisionDivisionNumber'))
       vote.yeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
       vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
-      vote.accepted = (vote.yeas > vote.nays)
     } catch (e) {
       console.debug(e.message)
       return null

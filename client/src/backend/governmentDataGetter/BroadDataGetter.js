@@ -38,6 +38,10 @@ class BroadDataGetter {
       }
     }
 
+    // data post-processing
+    const billNumberList = data.bills.map(bill => bill.number)
+    data.votes = this.filterVotesBasedOnGatheredBills(data.votes, billNumberList)
+
     await this.addImageUrlForAllMps(data.mps)
 
     console.log('Returning Data')
@@ -87,6 +91,12 @@ class BroadDataGetter {
     const currentParliamentText = $('span.subtitle', 'div[aria-labelledby="tabbed-widget-members-work-tab"]').text()
     const parliamentTextAsArray = currentParliamentText.split(', ')
     return { number: parseInt(parliamentTextAsArray[0]), session: parseInt(parliamentTextAsArray[1]) }
+  }
+
+  filterVotesBasedOnGatheredBills (votes, billNumberList) {
+    return votes.filter(vote => {
+      return billNumberList.some(billNumber => vote.billNumber === billNumber)
+    })
   }
 
   async addImageUrlForAllMps (mpList) {

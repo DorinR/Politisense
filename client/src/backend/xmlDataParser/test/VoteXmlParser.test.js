@@ -19,7 +19,6 @@ describe('VoteXmlParser', () => {
     assert.strictEqual(vote.name, '3rd reading and adoption of Bill C-19, An Act for granting to Her Majesty certain sums of money for the federal public administration for the fiscal year ending March 31, 2017')
     assert.strictEqual(vote.yeas, 177)
     assert.strictEqual(vote.nays, 139)
-    assert.isTrue(vote.accepted)
     assert.hasAnyKeys(vote, ['voters'])
   })
 
