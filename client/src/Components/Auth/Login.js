@@ -279,8 +279,7 @@ export default function Login (props) {
                 OR
               </Typography>
               <div className='Wrapper' style={gridStyle}>
-                <Grid container>
-                  <Grid container>
+                <Grid container justify='center'>
                     <Grid item xs={6} className={classes.social}>
                       <FacebookLoginButton
                         onClick={() =>
@@ -299,8 +298,6 @@ export default function Login (props) {
                           )}
                       />
                     </Grid>
-                  </Grid>
-                  <Grid container>
                     <Grid item xs={6} className={classes.social}>
                       <GoogleLoginButton
                         type='button'
@@ -312,16 +309,6 @@ export default function Login (props) {
                           )}
                       />
                     </Grid>
-                    <Grid item xs={6} className={classes.social}>
-                      <MicrosoftLoginButton
-                        onClick={() =>
-                          validateUserFromSocialProviders(
-                            'microsoft',
-                            handleSocialLogin
-                          )}
-                      />
-                    </Grid>
-                  </Grid>
                 </Grid>
               </div>
             </div>
