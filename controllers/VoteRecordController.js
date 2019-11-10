@@ -1,75 +1,76 @@
 import { Firestore } from '../client/src/Firebase'
 
-exports.getVotesByRepresentative = (req, res) => {
+exports.getVotesByRepresentative = async (req, res) => {
   let representative = req.params.representative.toLowerCase()
   var allBillsVotedOn = []
   let db = new Firestore()
-  db.VoteRecord()
-    .select()
-    .then(snapshot => {
-      if (snapshot.empty) {
+
+  function getSupplementalBillInformation(bill) {
+    db.Bill()
+      .select('number', '==', bill.billNumber)
+      .then(snapshot => {
+        if (snapshot.empty) {
+          res.status(400).json({
+            message: 'Bill ID not found',
+            success: false
+          })
+        }
+        snapshot.forEach(doc => {
+          let { title, text, dateVoted } = doc.data()
+          ;(bill['billTitle'] = title),
+            (bill['billText'] = text),
+            (bill['dateVoted'] = dateVoted)
+
+          allBillsVotedOn.push(bill)
+        })
+      })
+      .catch(err => {
         res.status(400).json({
-          message: 'Voting Record Not Found',
+          message: 'Error retriving bill',
           success: false
         })
-      }
-      var countDocs = 0
-      snapshot.forEach(doc => {
-        countDocs++
       })
-      snapshot.forEach(doc => {
-        let { billNumber, voteId, voteName, voters } = doc.data()
-        let representativeVotedOnThisBill = false
-        let representativeVote = voters[representative]['vote']
-        if (representativeVote) {
-          representativeVotedOnThisBill = true
-        }
+  }
 
-        if (!representativeVotedOnThisBill) {
-          countDocs--
+  async function getAllBillsVotedOnByRepresentative(representative) {
+    allBillsVotedOn = []
+    db.VoteRecord()
+      .select()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          res.status(400).json({
+            message: 'Voting Record Not Found',
+            success: false
+          })
         }
-        if (representativeVotedOnThisBill) {
-          let bill = {
-            billNumber: billNumber,
-            voteId: voteId,
-            voteName: voteName,
-            voters: voters
+        snapshot.forEach(doc => {
+          let { billNumber, voteId, voteName, voters } = doc.data()
+          let representativeVote = voters[representative]['vote']
+          if (representativeVote) {
+            let bill = {
+              billNumber: billNumber,
+              voteId: voteId,
+              voteName: voteName,
+              voters: voters
+            }
+            bill['representativeVote'] = voters[representative]['vote']
+
+            getSupplementalBillInformation(bill)
           }
-          bill['representativeVote'] = voters[representative]['vote']
-
-          db.Bill()
-            .select('number', '==', bill.billNumber)
-            .then(snapshot => {
-              if (snapshot.empty) {
-                res.status(400).json({
-                  message: 'Bill ID not found',
-                  success: false
-                })
-              }
-              snapshot.forEach(doc => {
-                let { title, text, dateVoted } = doc.data()
-                ;(bill['billTitle'] = title),
-                  (bill['billText'] = text),
-                  (bill['dateVoted'] = dateVoted)
-
-                allBillsVotedOn.push(bill)
-              })
-              if (allBillsVotedOn.length === countDocs) {
-                return res.status(200).json({
-                  success: true,
-                  data: allBillsVotedOn
-                })
-              }
-            })
-        } else {
-          console.log('representative did not vote on this bill')
-        }
+        })
+        setTimeout(() => {
+          return res.status(200).json({
+            success: true,
+            data: allBillsVotedOn
+          })
+        }, 300)
       })
-    })
-    .catch(err => {
-      res.status(400).json({
-        message: 'Error retriving user',
-        success: false
+      .catch(err => {
+        res.status(400).json({
+          message: 'Error retriving bill',
+          success: false
+        })
       })
-    })
+  }
+  getAllBillsVotedOnByRepresentative(representative)
 }
