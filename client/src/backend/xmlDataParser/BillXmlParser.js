@@ -40,7 +40,7 @@ class BillXmlParser extends XmlDataParser {
       bill.title = this.$('BillTitle').find('Title[language=\'en\']').text().trim()
       const sponsorName = this.$('SponsorAffiliation').find('FirstName').text() + ' ' + this.$('SponsorAffiliation').find('LastName').text()
       bill.sponsorName = sponsorName.toLowerCase()
-      bill.textUrl = this.getTextUrl() // TODO: change to `link`
+      bill.link = this.getLinkToBillText()
       bill.dateVoted = this.formatXmlDate(this.getDataInTag('BillIntroducedDate'))
     } catch (e) {
       console.debug(e.message)
@@ -53,15 +53,15 @@ class BillXmlParser extends XmlDataParser {
     return bill
   }
 
-  getTextUrl () {
-    let textUrl = ''
+  getLinkToBillText () {
+    let link = ''
     this.$('Publications').find('Publication').each((i, pub) => {
       const isRoyalAssent = this.$(pub).find('Title').text().includes('Royal Assent')
       if (isRoyalAssent) {
-        textUrl = this.$(pub).find('PublicationFile[language=\'en\']').attr('relativePath').replace('//', 'https://www.')
+        link = this.$(pub).find('PublicationFile[language=\'en\']').attr('relativePath').replace('//', 'https://www.')
       }
     })
-    return textUrl
+    return link
   }
 
   passesFilters () {

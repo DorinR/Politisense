@@ -27,7 +27,7 @@ describe('BillXmlParser', () => {
     assert.strictEqual(bill.number, 'C-51')
     assert.strictEqual(bill.title, 'An Act to amend the Criminal Code and the Department of Justice Act and to make consequential amendments to another Act')
     assert.strictEqual(bill.sponsorName, 'jody wilson-raybould')
-    assert.strictEqual(bill.textUrl, 'https://www.parl.ca/DocumentViewer/en/10276765?Language=E')
+    assert.strictEqual(bill.link, 'https://www.parl.ca/DocumentViewer/en/10276765?Language=E')
     assert.strictEqual(bill.dateVoted, '2017-06-06')
     assert.hasAnyKeys(bill, ['text'])
   })
