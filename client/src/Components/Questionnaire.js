@@ -64,6 +64,7 @@ export default function HorizontalLinearStepper (props) {
   const classes = useStyles()
   const [activeStep, setActiveStep] = useState(0)
   const steps = getSteps()
+  // eslint-disable-next-line no-unused-vars
   const [options, setOptions] = useState(['Economics', 'Social Issues', 'Healthcare'])
   const [category1, setCatergory1] = useState('Economics')
   const [category2, setCatergory2] = useState('')
