@@ -25,7 +25,7 @@ class ClassificationManager {
           let i = 0
           query.forEach((doc) => {
             if (i++ === query.size - 1) {
-              console.log(doc.data())
+              console.debug(doc.data())
               this.classifier.load(doc.state)
             }
           })
@@ -38,7 +38,7 @@ class ClassificationManager {
 
   save () {
     const state = this.classifier.save()
-    console.log(state)
+    console.debug(state)
     new FireStore().BillClassification()
       .insert({ state: state })
       .catch(e => {
