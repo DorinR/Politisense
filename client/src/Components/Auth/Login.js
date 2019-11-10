@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Redirect, Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -15,8 +15,6 @@ import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import canadaimage from '../../assets/canada.jpg'
 import logo from '../../assets/PolotisenseTentativeLogo.png'
-import { Box } from '@material-ui/core'
-import axios from 'axios'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,58 +49,41 @@ const useStyles = makeStyles(theme => ({
   },
   logo: {
     margin: theme.spacing(15, 0, 2)
-  },
-  quote: {
-    color: '#43D0C4'
   }
 }))
 
-export default function Login(props) {
+export default function Login() {
   const classes = useStyles()
-  const [email, setEmail] = useState('')
+
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
-  const [message, setMessage] = useState('')
-  const [errors, setErrors] = useState({ email: '', password: '' })
 
-  useEffect(() => {
-    if (props.location.state !== undefined) {
-      setMessage('Your account has been successfully created!')
-    }
-  })
-
-  const handleEmailChange = e => {
-    setEmail(e.target.value)
+  const handleUsernameChange = e => {
+    setUsername(e.target.value)
   }
 
   const handlePasswordChange = e => {
     setPassword(e.target.value)
   }
 
+  function login(username, password) {
+    const credentials = { username: username, password: password }
+    if (credentials.username === 'user' && credentials.password === 'test') {
+      setAuthenticated(true)
+      window.confirm('successfully logged in')
+      localStorage.setItem('user', JSON.stringify(credentials))
+    } else {
+      window.confirm(
+        'The username and password you entered did not match our records. Please double-check and try again.'
+      )
+    }
+  }
   const handleSubmit = e => {
     e.preventDefault()
-    const user = { email: email, password: password }
-    const emailFormat = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
-    const errors = {}
-    errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
-    errors.password =
-      password === '' || password == null ? 'Please enter a password' : ''
-    if (errors.email === '' && errors.password === '') {
-      axios
-        .post('http://localhost:5000/api/users/login', user)
-        .then(res => {
-          if (res.data.success) {
-            setAuthenticated(true)
-            localStorage.setItem('user', JSON.stringify(user))
-          } else {
-            console.log('fail')
-          }
-        })
-        .catch(e => console.log(e))
-    } else {
-      setErrors(errors)
-      console.log(errors)
-    }
+    login(username, password)
+    setUsername('')
+    setPassword('')
   }
   return authenticated ? (
     <Redirect to='/dashboard' />
@@ -116,9 +97,6 @@ export default function Login(props) {
             <div className={classes.paper}>
               <img src={logo} alt='' className={classes.logo} />
               <form className={classes.form} noValidate onSubmit={handleSubmit}>
-                {message ? (
-                  <Box className={classes.quote}>{message}</Box>
-                ) : null}
                 <TextField
                   variant='outlined'
                   margin='normal'
@@ -128,10 +106,8 @@ export default function Login(props) {
                   label='Email Address'
                   name='email'
                   autoComplete='email'
-                  onChange={handleEmailChange}
-                  value={email}
-                  error={errors.email !== ''}
-                  helperText={errors.email}
+                  onChange={handleUsernameChange}
+                  value={username}
                   autoFocus
                 />
                 <TextField
@@ -146,8 +122,6 @@ export default function Login(props) {
                   autoComplete='current-password'
                   onChange={handlePasswordChange}
                   value={password}
-                  error={errors.password !== ''}
-                  helperText={errors.password}
                 />
                 <Typography
                   variant='h6'

@@ -66,7 +66,6 @@ export async function fetchUserRiding(userEmail) {
       }
     })
     .catch(err => console.log(err))
-  console.log(result)
   return result
 }
 
