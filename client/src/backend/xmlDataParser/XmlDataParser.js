@@ -74,14 +74,16 @@ class XmlDataParser {
   }
 
   // returns a list of JSONs that represent the item, null if the xml doesn't match
-  getAllFromXml () {
+  getAllFromXml (onlyFromListTag = false) {
     const listOfItems = []
 
-    if (!this.hasListOfData()) {
+    if (onlyFromListTag && !this.hasListOfData()) {
       return []
     }
 
-    this.$(this.LIST_TAG_NAME).find(this.TAG_NAME).each((i, data) => {
+    const foundData = onlyFromListTag ? this.$(this.LIST_TAG_NAME).find(this.TAG_NAME) : this.$(this.TAG_NAME)
+
+    foundData.each((i, data) => {
       const xml = this.$(data).toString()
       const parser = this.generateNewParser(xml)
       const item = parser.xmlToJson()

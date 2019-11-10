@@ -50,12 +50,8 @@ class BroadDataGetter {
 
   getPossibleDataFromXmlParser (xmlParser) {
     let data = []
-    if (xmlParser.hasListOfData()) {
-      data = data.concat(xmlParser.getAllFromXml())
-    } else if (xmlParser.hasData()) {
-      // can return null if there is an unwanted aspect of to the data, such as a non active bill
-      const dataToPush = xmlParser.xmlToJson()
-      if (dataToPush !== null) data.push(dataToPush)
+    if (xmlParser.hasData()) {
+      data = data.concat(xmlParser.getAllFromXml(false))
     }
     return data
   }

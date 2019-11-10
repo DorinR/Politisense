@@ -61,8 +61,8 @@ class VoteXmlParser extends XmlDataParser {
       return true
     }
 
-    const parliamentNumber = Number(this.getDataInAttribute('ParliamentSession', 'parliamentNumber', true))
-    const parliamentSession = Number(this.getDataInAttribute('ParliamentSession', 'sessionNumber', true))
+    const parliamentNumber = Number(this.getDataInTag('ParliamentNumber', true))
+    const parliamentSession = Number(this.getDataInTag('SessionNumber', true))
     return this.currentParliament.number === parliamentNumber && this.currentParliament.session === parliamentSession
   }
 
