@@ -78,6 +78,7 @@ export default function HorizontalLinearStepper (props) {
   const classes = useStyles()
   const [activeStep, setActiveStep] = useState(0)
   const steps = getSteps()
+  // eslint-disable-next-line no-unused-vars
   const [options, setOptions] = useState(['Economics', 'Social Issues', 'Healthcare'])
   const [category1, setCatergory1] = useState('Economics')
   const [category2, setCatergory2] = useState('')
@@ -190,6 +191,7 @@ export default function HorizontalLinearStepper (props) {
             userToSignup.riding = res.data.data
             userToSignup.category1 = category1
             userToSignup.category2 = category2
+            // eslint-disable-next-line no-undef
             localStorage.setItem('user', JSON.stringify(userToSignup))
             axios.post('http://localhost:5000/api/users/signup', userToSignup)
             props.history.push('/dashboard')
@@ -279,15 +281,21 @@ export default function HorizontalLinearStepper (props) {
                   <Typography className={classes.instructions}>
                     Registration completed. You're all set!
                   </Typography>
-                  <Button onClick={handleReset}>Reset</Button>
-                  <Button
-                    onClick={handleSubmit}
-                    variant='contained'
-                    color='primary'
-                    className={classes.button}
-                  >
+                  <div className={classes.actions}>
+                    <Button
+                      className={classes.button}
+                      onClick={handleReset}
+                    >Reset
+                    </Button>
+                    <Button
+                      onClick={handleSubmit}
+                      variant='contained'
+                      color='primary'
+                      className={classes.button}
+                    >
                     Confirm information
-                  </Button>
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div>

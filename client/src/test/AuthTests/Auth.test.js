@@ -34,9 +34,9 @@ describe('testing signup functionality ', () => {
 
 describe("checks the user's postal code ", () => {
   test('check if postal code matches a federal riding', async () => {
-    const res = await setRiding({
-      postalCode: 'J7W0A1'
-    })
+    const res = await setRiding(
+      'J7W0A1'
+    )
     res.data.success.should.equal(true)
   })
 })
