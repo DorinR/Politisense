@@ -68,8 +68,11 @@ export default function Login() {
   }
 
   function login(username, password) {
-    const credentials = { username: username, password: password }
-    if (credentials.username === 'user' && credentials.password === 'test') {
+    const credentials = { email: username, password: password }
+    if (
+      credentials.email === 'ishmammurtaza@gmail.com' &&
+      credentials.password === 'hello123'
+    ) {
       setAuthenticated(true)
       window.confirm('successfully logged in')
       localStorage.setItem('user', JSON.stringify(credentials))
