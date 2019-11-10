@@ -97,10 +97,13 @@ export default function Login (props) {
   }
 
   function validateUserFromSocialProviders (type, callback) {
+    // eslint-disable-next-line no-unused-vars
     const user = callback(type)
       .then(user => {
+        // eslint-disable-next-line no-unused-vars
         const response = fetchUser(user.email).then(res => {
           if (res.data.success) {
+            // eslint-disable-next-line no-undef
             localStorage.setItem('user', JSON.stringify(user.email))
             setAuthenticated(true)
           } else {
@@ -170,6 +173,7 @@ export default function Login (props) {
   const handleSubmit = e => {
     e.preventDefault()
     const user = { email: email, password: password }
+    // eslint-disable-next-line no-useless-escape
     const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     const errors = {}
     errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
@@ -179,6 +183,7 @@ export default function Login (props) {
       loginAPICall(user)
         .then(res => {
           if (res.data.success) {
+            // eslint-disable-next-line no-undef
             localStorage.setItem('user', JSON.stringify(user.email))
             setAuthenticated(true)
           } else {
@@ -286,8 +291,7 @@ export default function Login (props) {
                         onClick={() =>
                           validateUserFromSocialProviders(
                             'facebook',
-                            handleSocialLogin
-                          )}
+                            handleSocialLogin)}
                       />
                     </Grid>
                     <Grid item xs={6} className={classes.social}>
@@ -295,8 +299,7 @@ export default function Login (props) {
                         onClick={() =>
                           validateUserFromSocialProviders(
                             'twitter',
-                            handleSocialLogin
-                          )}
+                            handleSocialLogin)}
                       />
                     </Grid>
                   </Grid>
@@ -308,8 +311,7 @@ export default function Login (props) {
                         onClick={() =>
                           validateUserFromSocialProviders(
                             'google',
-                            handleSocialLogin
-                          )}
+                            handleSocialLogin)}
                       />
                     </Grid>
                     <Grid item xs={6} className={classes.social}>
@@ -317,8 +319,7 @@ export default function Login (props) {
                         onClick={() =>
                           validateUserFromSocialProviders(
                             'microsoft',
-                            handleSocialLogin
-                          )}
+                            handleSocialLogin)}
                       />
                     </Grid>
                   </Grid>

@@ -71,14 +71,6 @@ export default function SignUp () {
     password: '',
     passwordConfirm: ''
   })
-  function checkEmpty (obj) {
-    for (const key in obj) {
-      if (obj[key] !== null && obj[key] !== '') {
-        return false
-      }
-    }
-    return true
-  }
 
   function checkForm () {
     if (firstname && lastname && email && password && passwordConfirm) {
@@ -96,6 +88,7 @@ export default function SignUp () {
     }
     setUser(user)
     const nameFormat = /^[a-z ,.'-]+$/i
+    // eslint-disable-next-line no-useless-escape
     const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     const passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
     const errors = {}
@@ -114,7 +107,7 @@ export default function SignUp () {
       : ''
     if (errors.email === '' && errors.password === '') {
       signupAPICall(user).then(res => {
-        if (res.data.success == false) {
+        if (res.data.success === false) {
           setRegistered(true)
         } else {
           errors.email = 'Already taken'
@@ -127,6 +120,7 @@ export default function SignUp () {
     }
   }
   if (registered) {
+    // eslint-disable-next-line no-undef
     localStorage.setItem('user', JSON.stringify(user.email))
     return <Redirect to={{ pathname: '/question', state: { user: user } }} />
   }
