@@ -2,7 +2,6 @@ import { ScrapeRunner } from '../../scraper/ScrapeRunner'
 import { BillXmlParser } from '../xmlDataParser/BillXmlParser'
 import { MpXmlParser } from '../xmlDataParser/MpXmlParser'
 import { VoteXmlParser } from '../xmlDataParser/VoteXmlParser'
-import { VoteParticipantsXmlParser } from '../xmlDataParser/VoteParticipantsXmlParser'
 import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
 
 const cheerio = require('cheerio')
@@ -32,10 +31,11 @@ class BroadDataGetter {
       data.mps = this.addUniqueData(data.mps, this.getPossibleDataFromXmlParser(new MpXmlParser(xml, true)), 'name')
       data.votes = this.addUniqueData(data.votes, this.getPossibleDataFromXmlParser(new VoteXmlParser(xml, currentParliament)), 'id')
       // vote participants is always wanted in a group so getting it is a little different
-      const voteParticipantParser = new VoteParticipantsXmlParser(xml)
-      if (voteParticipantParser.hasListOfData() && voteParticipantParser.hasData()) {
-        data.voteParticipants[voteParticipantParser.getVoteId()] = voteParticipantParser.getAllFromXml()
-      }
+      // TODO: remove?
+      // const voteParticipantParser = new VoteParticipantsXmlParser(xml)
+      // if (voteParticipantParser.hasListOfData() && voteParticipantParser.hasData()) {
+      //   data.voteParticipants[voteParticipantParser.getVoteId()] = voteParticipantParser.getAllFromXml()
+      // }
     }
 
     // data post-processing
