@@ -10,7 +10,6 @@ import Container from "@material-ui/core/Container";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import axios from "axios";
-// import Popup from './Popup';
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -25,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center"
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(3)
   },
   submit: {
@@ -73,7 +72,7 @@ export default function SignUp() {
     passwordConfirm: ""
   });
   function checkEmpty(obj) {
-    for (let key in obj) {
+    for (const key in obj) {
       if (obj[key] !== null && obj[key] !== "") {
         return false;
       }
