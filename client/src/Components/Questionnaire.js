@@ -78,11 +78,7 @@ export default function HorizontalLinearStepper (props) {
   const classes = useStyles()
   const [activeStep, setActiveStep] = useState(0)
   const steps = getSteps()
-  const [options, setOptions] = useState([
-    'Economics',
-    'Social Issues',
-    'Healthcare'
-  ])
+  const [options, setOptions] = useState(['Economics', 'Social Issues', 'Healthcare'])
   const [category1, setCatergory1] = useState('Economics')
   const [category2, setCatergory2] = useState('')
   const [errors, setErrors] = useState({ postalCode: '' })

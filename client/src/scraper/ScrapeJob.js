@@ -41,7 +41,7 @@ class ScrapeJob extends Job {
     return new Promise((resolve, reject) => {
       this.scraper.perform()
         .then((html) => {
-          return this.parse(html)
+          return this.parse(html.body)
         })
         .then((links) => {
           return this.process(links)
