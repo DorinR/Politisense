@@ -70,7 +70,7 @@ class MpXmlParser extends XmlDataParser {
       const res = await linkScraper.perform()
       htmlWithMpImage = await res.body
     } catch (e) {
-      console.log(e.message)
+      console.error(e.message)
       return ''
     }
 

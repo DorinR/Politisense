@@ -3,6 +3,7 @@ import { assert } from 'chai'
 
 import { VoteXmlParser } from '../VoteXmlParser'
 import { VoteParticipantsXmlParser } from '../VoteParticipantsXmlParser'
+import { CurrentParliamentNotSpecifiedError } from '../XmlDataParser'
 
 const fs = require('fs')
 const path = require('path')
@@ -27,14 +28,17 @@ describe('VoteXmlParser', () => {
     assert.isFalse(parser.isInCurrentParliament())
   })
 
-  // TODO: test of getting vote participants with parser, might need to fix
-  xit('should get vote participants when given an id', (done) => {
-    jest.setTimeout(10000)
-    const parser = new VoteXmlParser('')
+  it('should get vote participants when given an id', (done) => {
+    const parser = new VoteXmlParser('', { number: 42, session: 1 })
     parser.getVoters(752).then(voters => {
       assert.lengthOf(Object.keys(voters), 294, 'there were 294 voters, paired or not')
       done()
     })
+  })
+
+  it('should throw an error if you try to get voters without current parliament', async () => {
+    const parser = new VoteXmlParser('')
+    await expect(parser.getVoters(752)).rejects.toThrow(CurrentParliamentNotSpecifiedError)
   })
 })
 

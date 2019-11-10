@@ -28,16 +28,19 @@ describe('BroadDataGetter.test', () => {
     })
   })
 
-  // TODO: trying to get scrapeRunner to work
-  test('name', async () => {
-    await new ScrapeRunner(5, undefined, undefined, undefined)
-      .getXmlContent()
-      .then(res => {
-        console.log(res.length)
-        return res
-      })
-      .catch(e => {
-        throw e
-      })
-  }, 600000)
+  it('should only keep votes without same number and having greatest id', () => {
+    const votes = [
+      { id: 2, billNumber: 111 },
+      { id: 1, billNumber: 111 },
+      { id: 8, billNumber: 111 },
+      { id: 3, billNumber: 111 },
+      { id: 10, billNumber: 222 },
+      { id: 16, billNumber: 222 }
+    ]
+
+    const dataGetter = new BroadDataGetter()
+    const filteredVotes = dataGetter.removeMultipleBillVotes(votes)
+    expect(filteredVotes).toHaveLength(2)
+    expect(filteredVotes).toEqual(expect.arrayContaining([{ id: 8, billNumber: 111 }, { id: 16, billNumber: 222 }]))
+  })
 })

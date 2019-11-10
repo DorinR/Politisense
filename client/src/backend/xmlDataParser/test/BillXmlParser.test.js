@@ -2,6 +2,7 @@
 import { assert } from 'chai'
 
 import { BillXmlParser } from '../BillXmlParser'
+import { CurrentParliamentNotSpecifiedError } from '../XmlDataParser'
 
 const fs = require('fs')
 const path = require('path')
@@ -60,7 +61,7 @@ describe('BillXmlParser', () => {
     assert.isNull(bill)
 
     parser = new BillXmlParser(xml, { mustBeInCurrentParliament: true })
-    assert.throws(parser.xmlToJson)
+    assert.throws(() => { parser.xmlToJson() }, CurrentParliamentNotSpecifiedError)
   })
 })
 

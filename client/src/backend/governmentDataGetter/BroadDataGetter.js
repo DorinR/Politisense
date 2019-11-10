@@ -41,6 +41,8 @@ class BroadDataGetter {
     // data post-processing
     const billNumberList = data.bills.map(bill => bill.number)
     data.votes = this.filterVotesBasedOnGatheredBills(data.votes, billNumberList)
+    data.votes = this.removeMultipleBillVotes(data.votes)
+    await this.addVotersForAllVotes(data.votes, currentParliament)
 
     await this.addImageUrlForAllMps(data.mps)
 
@@ -56,13 +58,7 @@ class BroadDataGetter {
     return data
   }
 
-  /**
-   * Only adds objects to list when a certain object key that must be unique to the list is not being added
-   * @param {[]} listToAddTo
-   * @param {[]} dataListToAdd
-   * @param {string} uniqueKey
-   * @return {[]}
-   */
+  // Only adds objects to list when a certain object key that must be unique to the list is not being added
   addUniqueData (listToAddTo, dataListToAdd, uniqueKey) {
     return listToAddTo.concat(dataListToAdd.filter(dataToAdd => {
       const dataAlreadyExists = listToAddTo.some(existingData => existingData[uniqueKey] === dataToAdd[uniqueKey])
@@ -79,7 +75,7 @@ class BroadDataGetter {
       const res = await linkScraper.perform()
       html = await res.body
     } catch (e) {
-      console.log(e.message)
+      console.error(e.message)
       return ''
     }
 
@@ -95,11 +91,38 @@ class BroadDataGetter {
     })
   }
 
+  removeMultipleBillVotes (votes) {
+    const filteredVotes = []
+    // eslint-disable-next-line no-unused-vars
+    for (const vote of votes) {
+      const existingVoteIndex = filteredVotes.findIndex(v => v.billNumber === vote.billNumber)
+      if (existingVoteIndex >= 0) {
+        const existingVote = filteredVotes[existingVoteIndex]
+        // newer votes have a greater id number
+        filteredVotes[existingVoteIndex] = (vote.id > existingVote.id) ? vote : existingVote
+      } else {
+        filteredVotes.push(vote)
+      }
+    }
+    return filteredVotes
+  }
+
   async addImageUrlForAllMps (mpList) {
     return Promise.map(mpList, (mp) => {
       return new Promise((resolve) => {
         new MpXmlParser('').getMpImageUrl(mp.name).then((imageUrl) => {
           mp.imageUrl = imageUrl
+          resolve('done')
+        })
+      })
+    }, { concurrency: 20 })
+  }
+
+  async addVotersForAllVotes (votes, currentParliament) {
+    return Promise.map(votes, (vote) => {
+      return new Promise((resolve) => {
+        new VoteXmlParser('', currentParliament).getVoters(vote.id).then((voters) => {
+          vote.voters = voters
           resolve('done')
         })
       })

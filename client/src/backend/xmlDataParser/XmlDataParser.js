@@ -8,6 +8,14 @@ class DataFromXmlNotFoundError extends Error {
   }
 }
 
+class CurrentParliamentNotSpecifiedError extends Error {
+  constructor (msg) {
+    super()
+    this.message = msg
+    this.name = this.constructor.name
+  }
+}
+
 class XmlDataParser {
   constructor (xml) {
     this.xml = xml
@@ -109,3 +117,4 @@ class XmlDataParser {
 
 module.exports.XmlDataParser = XmlDataParser
 module.exports.DataFromXmlNotFoundError = DataFromXmlNotFoundError
+module.exports.CurrentParliamentNotSpecifiedError = CurrentParliamentNotSpecifiedError

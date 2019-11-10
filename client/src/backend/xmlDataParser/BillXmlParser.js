@@ -1,12 +1,4 @@
-import { XmlDataParser } from './XmlDataParser'
-
-class CurrentParliamentNotSpecifiedError extends Error {
-  constructor (msg) {
-    super()
-    this.message = msg
-    this.name = this.constructor.name
-  }
-}
+import { CurrentParliamentNotSpecifiedError, XmlDataParser } from './XmlDataParser'
 
 class BillXmlParser extends XmlDataParser {
   constructor (xml, filters = undefined, currentParliament = undefined) {

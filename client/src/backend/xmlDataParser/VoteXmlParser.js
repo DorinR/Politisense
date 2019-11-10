@@ -1,10 +1,11 @@
-import { XmlDataParser } from './XmlDataParser'
-import { ScrapeRunner } from '../../scraper/ScrapeRunner'
+import { CurrentParliamentNotSpecifiedError, XmlDataParser } from './XmlDataParser'
 import { VoteParticipantsXmlParser } from './VoteParticipantsXmlParser'
+import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
 
 class VoteXmlParser extends XmlDataParser {
-  static getVoteParticipantsUrl (voteId) {
-    return `https://www.ourcommons.ca/Parliamentarians/en/votes/42/1/${voteId}/`
+  static getVoteParticipantsUrl (voteId, currentParliament) {
+    return `https://www.ourcommons.ca/Parliamentarians/en/HouseVotes/ExportDetailsVotes?
+    output=XML&parliament=${currentParliament.number}&session=${currentParliament.session}&vote=${voteId}`
   }
 
   constructor (xml, currentParliament = undefined) {
@@ -66,14 +67,23 @@ class VoteXmlParser extends XmlDataParser {
     return this.currentParliament.number === parliamentNumber && this.currentParliament.session === parliamentSession
   }
 
-  // TODO: REFACTOR to use Link instead
   async getVoters (voteId) {
-    const url = VoteXmlParser.getVoteParticipantsUrl(voteId)
-    const runner = new ScrapeRunner(2, undefined, url, undefined)
-    const xmlList = await runner.getXmlContent()
+    if (typeof this.currentParliament === 'undefined') {
+      throw new CurrentParliamentNotSpecifiedError('Must specify what the current parliament is if it is used as a filter.')
+    }
 
-    const voteParticipantsXml = xmlList.find(xml => xml.includes(`<DecisionDivisionNumber>${voteId}`))
-    return new VoteParticipantsXmlParser(voteParticipantsXml).getAllFromXml()
+    const linkScraper = new LinkScraper(VoteXmlParser.getVoteParticipantsUrl(voteId, this.currentParliament))
+
+    let voteParticipants = ''
+    try {
+      const res = await linkScraper.perform()
+      voteParticipants = await res.body
+    } catch (e) {
+      console.error(e.message)
+      return ''
+    }
+
+    return new VoteParticipantsXmlParser(voteParticipants).getAllFromXml()
   }
 
   isFinalDecision (voteSubject) {
