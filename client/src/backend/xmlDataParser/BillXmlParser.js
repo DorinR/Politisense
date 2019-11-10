@@ -33,14 +33,19 @@ class BillXmlParser extends XmlDataParser {
     }
 
     const bill = {}
-    bill.id = Number(this.getDataInAttribute(this.TAG_NAME, 'id'))
-    bill.number = this.getDataInAttribute('BillNumber', 'prefix') + '-' +
-      this.getDataInAttribute('BillNumber', 'number')
-    bill.title = this.$('BillTitle').find('Title[language=\'en\']').text().trim()
-    const sponsorName = this.$('SponsorAffiliation').find('FirstName').text() + ' ' + this.$('SponsorAffiliation').find('LastName').text()
-    bill.sponsorName = sponsorName.toLowerCase()
-    bill.textUrl = this.getTextUrl() // TODO: change to `link`
-    bill.dateVoted = this.formatXmlDate(this.getDataInTag('BillIntroducedDate'))
+    try {
+      bill.id = Number(this.getDataInAttribute(this.TAG_NAME, 'id'))
+      bill.number = this.getDataInAttribute('BillNumber', 'prefix') + '-' +
+        this.getDataInAttribute('BillNumber', 'number')
+      bill.title = this.$('BillTitle').find('Title[language=\'en\']').text().trim()
+      const sponsorName = this.$('SponsorAffiliation').find('FirstName').text() + ' ' + this.$('SponsorAffiliation').find('LastName').text()
+      bill.sponsorName = sponsorName.toLowerCase()
+      bill.textUrl = this.getTextUrl() // TODO: change to `link`
+      bill.dateVoted = this.formatXmlDate(this.getDataInTag('BillIntroducedDate'))
+    } catch (e) {
+      console.debug(e.message)
+      return null
+    }
 
     // async data, added separately
     bill.text = '' // TODO: get the bill text when getting from online
@@ -65,7 +70,7 @@ class BillXmlParser extends XmlDataParser {
   }
 
   hasRoyalAssent () {
-    const currentState = this.getDataInAttribute('Events', 'laagCurrentStage')
+    const currentState = this.getDataInAttribute('Events', 'laagCurrentStage', true)
     return currentState === 'RoyalAssentGiven'
   }
 
@@ -74,8 +79,8 @@ class BillXmlParser extends XmlDataParser {
       throw new CurrentParliamentNotSpecifiedError('Must specify what the current parliament is if it is used as a filter.')
     }
 
-    const parliamentNumber = Number(this.getDataInAttribute('ParliamentSession', 'parliamentNumber'))
-    const parliamentSession = Number(this.getDataInAttribute('ParliamentSession', 'sessionNumber'))
+    const parliamentNumber = Number(this.getDataInAttribute('ParliamentSession', 'parliamentNumber', true))
+    const parliamentSession = Number(this.getDataInAttribute('ParliamentSession', 'sessionNumber', true))
     return this.currentParliament.number === parliamentNumber && this.currentParliament.session === parliamentSession
   }
 }

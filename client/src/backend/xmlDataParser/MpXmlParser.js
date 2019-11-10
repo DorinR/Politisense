@@ -28,11 +28,16 @@ class MpXmlParser extends XmlDataParser {
 
     const mp = {}
 
-    const name = this.getDataInTag('PersonOfficialFirstName') + ' ' + this.getDataInTag('PersonOfficialLastName')
-    mp.name = name.toLowerCase()
-    mp.party = this.getDataInTag('CaucusShortName').toLowerCase()
-    mp.riding = this.getDataInTag('ConstituencyName').toLowerCase()
-    mp.yearElected = Number(this.getDataInTag('FromDateTime').substring(0, 4))
+    try {
+      const name = this.getDataInTag('PersonOfficialFirstName') + ' ' + this.getDataInTag('PersonOfficialLastName')
+      mp.name = name.toLowerCase()
+      mp.party = this.getDataInTag('CaucusShortName').toLowerCase()
+      mp.riding = this.getDataInTag('ConstituencyName').toLowerCase()
+      mp.yearElected = Number(this.getDataInTag('FromDateTime').substring(0, 4))
+    } catch (e) {
+      console.debug(e.message)
+      return null
+    }
 
     // async data, added separately
     mp.imageUrl = ''
@@ -45,12 +50,12 @@ class MpXmlParser extends XmlDataParser {
   }
 
   isACurrentMember () {
-    const dateEnded = this.getDataInTag('ToDateTime')
+    const dateEnded = this.getDataInTag('ToDateTime', true)
     return dateEnded === ''
   }
 
   hasData () {
-    return super.hasData() || this.$(this.TAG_NAME + 'Role').length > 0
+    return super.hasData() || this.isTagInXml(this.TAG_NAME + 'Role')
   }
 
   getWebPageWithMpImage (mpName) {
@@ -62,7 +67,8 @@ class MpXmlParser extends XmlDataParser {
 
     let htmlWithMpImage = ''
     try {
-      htmlWithMpImage = await linkScraper.perform()
+      const res = await linkScraper.perform()
+      htmlWithMpImage = await res.body
     } catch (e) {
       console.log(e.message)
       return ''

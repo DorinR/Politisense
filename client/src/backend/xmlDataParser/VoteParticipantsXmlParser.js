@@ -16,11 +16,16 @@ class VoteParticipantsXmlParser extends XmlDataParser {
   xmlToJson () {
     const participant = {}
 
-    const name = this.getDataInTag('FirstName') + ' ' + this.getDataInTag('LastName')
-    participant.name = name.toLowerCase()
-    // values can be 'Yea', 'Nay', or 'Paired'
-    participant.vote = this.getDataInTag('VoteValueName')
-    participant.paired = this.getDataInTag('Paired') === '1'
+    try {
+      const name = this.getDataInTag('FirstName') + ' ' + this.getDataInTag('LastName')
+      participant.name = name.toLowerCase()
+      // values can be 'Yea', 'Nay', or 'Paired'
+      participant.vote = this.getDataInTag('VoteValueName')
+      participant.paired = this.getDataInTag('Paired') === '1'
+    } catch (e) {
+      console.debug(e.message)
+      return null
+    }
 
     return participant
   }
@@ -46,7 +51,7 @@ class VoteParticipantsXmlParser extends XmlDataParser {
   }
 
   getVoteId () {
-    return Number(this.getDataInTag('DecisionDivisionNumber'))
+    return Number(this.getDataInTag('DecisionDivisionNumber', true))
   }
 }
 

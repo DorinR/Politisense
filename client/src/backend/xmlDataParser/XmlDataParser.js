@@ -1,5 +1,13 @@
 const cheerio = require('cheerio')
 
+class DataFromXmlNotFoundError extends Error {
+  constructor (msg) {
+    super()
+    this.message = msg
+    this.name = this.constructor.name
+  }
+}
+
 class XmlDataParser {
   constructor (xml) {
     this.xml = xml
@@ -12,27 +20,35 @@ class XmlDataParser {
   /**
    * returns any text within an element and its child elements
    * @param {string} tag
-   * @returns {string}
+   * @returns {string | *}
+   * @param {boolean} allowMissingTag
    */
-  getDataInTag (tag) {
+  getDataInTag (tag, allowMissingTag = false) {
+    if (!this.isTagInXml(tag)) {
+      if (allowMissingTag) {
+        return ''
+      } else {
+        throw new DataFromXmlNotFoundError(`The tag ${tag} does not exist in the xml file.`)
+      }
+    }
+
     return this.$(tag).eq(0).text()
   }
 
-  /**
-   * get the value of an attribute within an element
-   * @param {string} tag
-   * @param {string} attribute
-   * @returns {string}
-   */
-  getDataInAttribute (tag, attribute) {
+  // get the value of an attribute within an element
+  getDataInAttribute (tag, attribute, allowMissingTag = false) {
+    if (!this.isTagInXml(tag)) {
+      if (allowMissingTag) {
+        return ''
+      } else {
+        throw new DataFromXmlNotFoundError(`The tag ${tag} does not exist in the xml file.`)
+      }
+    }
+
     return this.$(tag).eq(0).attr(attribute)
   }
 
-  /**
-   * Takes a datetime string and returns a string that's only a date
-   * @param {string} xmlDate
-   * @returns {string}
-   */
+  // Takes a datetime string and returns a string that's only a date
   formatXmlDate (xmlDate) {
     return xmlDate.substring(0, xmlDate.indexOf('T'))
   }
@@ -76,13 +92,18 @@ class XmlDataParser {
     return listOfItems
   }
 
+  isTagInXml (tag) {
+    return this.$(tag).length > 0
+  }
+
   hasListOfData () {
-    return this.$(this.LIST_TAG_NAME).length > 0
+    return this.isTagInXml(this.LIST_TAG_NAME)
   }
 
   hasData () {
-    return this.$(this.TAG_NAME).length > 0
+    return this.isTagInXml(this.TAG_NAME)
   }
 }
 
 module.exports.XmlDataParser = XmlDataParser
+module.exports.DataFromXmlNotFoundError = DataFromXmlNotFoundError

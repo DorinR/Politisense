@@ -31,20 +31,25 @@ class VoteXmlParser extends XmlDataParser {
 
     const vote = {}
 
-    // only get votes related to bills
-    const billNumber = this.getDataInTag('BillNumberCode')
-    const name = this.getDataInTag('DecisionDivisionSubject').trim()
-    if (billNumber === '' || !this.isFinalDecision(name)) {
-      return null
-    } else {
-      vote.billNumber = billNumber
-      vote.name = name
-    }
+    try {
+      // only get votes related to bills
+      const billNumber = this.getDataInTag('BillNumberCode')
+      const name = this.getDataInTag('DecisionDivisionSubject').trim()
+      if (billNumber === '' || !this.isFinalDecision(name)) {
+        return null
+      } else {
+        vote.billNumber = billNumber
+        vote.name = name
+      }
 
-    vote.id = Number(this.getDataInTag('DecisionDivisionNumber'))
-    vote.yeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
-    vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
-    vote.accepted = (vote.yeas > vote.nays)
+      vote.id = Number(this.getDataInTag('DecisionDivisionNumber'))
+      vote.yeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
+      vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
+      vote.accepted = (vote.yeas > vote.nays)
+    } catch (e) {
+      console.debug(e.message)
+      return null
+    }
 
     // async data, added separately
     vote.voters = {} // TODO: param voters for the list of voters
@@ -57,8 +62,8 @@ class VoteXmlParser extends XmlDataParser {
       return true
     }
 
-    const parliamentNumber = Number(this.getDataInAttribute('ParliamentSession', 'parliamentNumber'))
-    const parliamentSession = Number(this.getDataInAttribute('ParliamentSession', 'sessionNumber'))
+    const parliamentNumber = Number(this.getDataInAttribute('ParliamentSession', 'parliamentNumber', true))
+    const parliamentSession = Number(this.getDataInAttribute('ParliamentSession', 'sessionNumber', true))
     return this.currentParliament.number === parliamentNumber && this.currentParliament.session === parliamentSession
   }
 
