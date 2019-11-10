@@ -11,6 +11,7 @@
     "@material-ui/icons": "^4.4.1",
     "@types/react-router-dom": "^4.3.5",
     "bcryptjs": "^2.4.3",
+    "bluebird": "^3.7.1",
     "cheerio": "^1.0.0-rc.3",
     "config": "^3.2.3",
     "eslint": "^6.3.0",

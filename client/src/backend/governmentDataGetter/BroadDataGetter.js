@@ -6,6 +6,7 @@ import { VoteParticipantsXmlParser } from '../xmlDataParser/VoteParticipantsXmlP
 import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
 
 const cheerio = require('cheerio')
+const Promise = require('bluebird')
 
 class BroadDataGetter {
   async getGovernmentData (scrapeRunnerXmlCount) {
@@ -71,10 +72,12 @@ class BroadDataGetter {
 
   async getCurrentParliament () {
     const url = 'https://www.ourcommons.ca/'
+    const linkScraper = new LinkScraper(url)
 
     let html = ''
     try {
-      html = await new LinkScraper(url).perform()
+      const res = await linkScraper.perform()
+      html = await res.body
     } catch (e) {
       console.log(e.message)
       return ''
@@ -87,17 +90,14 @@ class BroadDataGetter {
   }
 
   async addImageUrlForAllMps (mpList) {
-    const mpImageList = []
-    // eslint-disable-next-line no-unused-vars
-    for (const mp of mpList) {
-      mpImageList.push(new Promise((resolve) => {
+    return Promise.map(mpList, (mp) => {
+      return new Promise((resolve) => {
         new MpXmlParser('').getMpImageUrl(mp.name).then((imageUrl) => {
           mp.imageUrl = imageUrl
           resolve('done')
         })
-      }))
-    }
-    return Promise.all(mpImageList)
+      })
+    }, { concurrency: 20 })
   }
 }
 
