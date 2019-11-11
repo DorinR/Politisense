@@ -13,6 +13,9 @@ module.exports = {
   getUserByEmail: function (req, res) {
     return UserController.getUserByEmail(req, res)
   },
+  updateUser: function (req, res) {
+    return UserController.updateUser(req, res)
+  },
 
   setRiding: function (req, res) {
     return UserController.setRiding(req, res)
