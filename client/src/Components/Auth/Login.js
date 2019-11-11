@@ -61,37 +61,41 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUser (email) {
+export async function fetchUser(email) {
   let result = ''
   await axios
     .post('http://localhost:5000/api/users/checkIfUserExists', { email: email })
     .then(res => {
       result = res
-    }).catch(err => console.log(err))
+    })
+    .catch(err => console.error(err))
   return result
 }
 
-export async function loginAPICall (user) {
+export async function loginAPICall(user) {
   let result = ''
-  await axios.post('http://localhost:5000/api/users/login', user).then(res => {
-    result = res
-  }).catch(err => console.log(err))
+  await axios
+    .post('http://localhost:5000/api/users/login', user)
+    .then(res => {
+      result = res
+    })
+    .catch(err => console.error(err))
   return result
 }
 
-export default function Login (props) {
+export default function Login(props) {
   const classes = useStyles()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
   const [errors, setErrors] = useState({ email: '', password: '' })
 
-  function signInWithSocialProviders (_provider, firestore) {
+  function signInWithSocialProviders(_provider, firestore) {
     const ret = firestore.firebase.auth().signInWithPopup(_provider)
     return ret
   }
 
-  function validateUserFromSocialProviders (type, callback) {
+  function validateUserFromSocialProviders(type, callback) {
     callback(type)
       .then(user => {
         fetchUser(user.email).then(res => {
@@ -121,7 +125,7 @@ export default function Login (props) {
       })
   }
 
-  function handleSocialLogin (social) {
+  function handleSocialLogin(social) {
     return new Promise((resolve, reject) => {
       const db = new Firestore()
       let provider
@@ -143,7 +147,7 @@ export default function Login (props) {
       }
 
       signInWithSocialProviders(provider, db)
-        .then(function (res) {
+        .then(function(res) {
           return res
         })
         .then(res => {
@@ -283,7 +287,8 @@ export default function Login (props) {
                         validateUserFromSocialProviders(
                           'facebook',
                           handleSocialLogin
-                      )}
+                        )
+                      }
                     />
                   </Grid>
                   <Grid item xs={6} className={classes.social}>
@@ -292,7 +297,8 @@ export default function Login (props) {
                         validateUserFromSocialProviders(
                           'twitter',
                           handleSocialLogin
-                      )}
+                        )
+                      }
                     />
                   </Grid>
                   <Grid item xs={6} className={classes.social}>
@@ -303,7 +309,8 @@ export default function Login (props) {
                         validateUserFromSocialProviders(
                           'google',
                           handleSocialLogin
-                      )}
+                        )
+                      }
                     />
                   </Grid>
                 </Grid>
