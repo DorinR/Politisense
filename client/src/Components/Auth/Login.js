@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme => ({
 export async function fetchUser (email) {
   let result = ''
   await axios
-    .post('http://localhost:5000/api/users/check', { email: email })
+    .post('http://localhost:5000/api/users/checkIfUserExists', { email: email })
     .then(res => {
       result = res
     }).catch(err => console.log(err))
@@ -97,12 +97,9 @@ export default function Login (props) {
   }
 
   function validateUserFromSocialProviders (type, callback) {
-    //eslint-disable-next-line no-unused-vars
-    const user = callback(type)
+    callback(type)
       .then(user => {
-        //eslint-disable-next-line no-unused-vars
         const response = fetchUser(user.email).then(res => {
-          console.log(user)
           if (res.data.success) {
             localStorage.setItem('user', JSON.stringify(user))
             setAuthenticated(true)

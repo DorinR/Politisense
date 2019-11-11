@@ -6,7 +6,7 @@ router.get('/', (req, res) => res.send('user route'))
 router.post('/signup', controller.userSignup)
 router.post('/login', controller.userLogin)
 router.post('/setRiding', controller.setRiding)
-router.post('/check', controller.check)
+router.post('/checkIfUserExists', controller.checkIfUserExists)
 
 // @route post api/users/signup
 // @desc  signup User

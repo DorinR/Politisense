@@ -18,8 +18,8 @@ module.exports = {
   setRiding: function (req, res) {
     return UserController.setRiding(req, res)
   },
-  check: function (req, res) {
-    return UserController.check(req, res)
+  checkIfUserExists: function (req, res) {
+    return UserController.checkIfUserExists(req, res)
   },
   // Representatives
   getRepresentativeByRiding: function (req, res) {

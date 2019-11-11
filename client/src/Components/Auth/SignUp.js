@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 
 export async function signupAPICall (user) {
   let result = ''
-  await axios.post('http://localhost:5000/api/users/check', user).then(res => {
+  await axios.post('http://localhost:5000/api/users/checkIfUserExists', user).then(res => {
     result = res
   })
   return result
@@ -72,7 +72,7 @@ export default function SignUp () {
     passwordConfirm: ''
   })
 
-  function checkForm () {
+  function checkIfFormIsValid () {
     if (firstname && lastname && email && password && passwordConfirm) {
       setValidForm(true)
     }
@@ -142,7 +142,7 @@ export default function SignUp () {
             className={classes.form}
             noValidate
             onSubmit={handleSubmit}
-            onChange={checkForm}
+            onChange={checkIfFormIsValid}
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
