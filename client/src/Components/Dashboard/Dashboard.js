@@ -79,7 +79,6 @@ function a11yProps (index) {
 export default function Dashboard () {
   const classes = useStyles()
   const theme = useTheme()
-  const [ setData] = useState([])
   const [expanded, setExpanded] = React.useState(false)
   const [tabValue, setTabValue] = React.useState(0)
 
