@@ -5,6 +5,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import axios from 'axios'
 
+const useStyles = makeStyles(theme => ({
+  '@global': {
+    body: {
+      backgroundColor: theme.palette.common.white
+    }
+  }
+}))
+
 export async function fetchUserData(userEmail) {
   let result = ''
   await axios

@@ -77,7 +77,6 @@ export async function updatePassword(user, newPassword) {
 function ChangeAccountPassword(props) {
   const classes = useStyles()
   const [changeCompleted, setChangeCompleted] = useState(false)
-  const [setEmail] = useState('')
   const [
     userEnteredPreviousPassword,
     setUserEnteredPreviousPassword
@@ -101,7 +100,6 @@ function ChangeAccountPassword(props) {
     async function getData() {
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
-      setEmail(email)
       const fullUserDetails = await fetchUserData(email)
       setFetchedUserDetails(fullUserDetails)
       const { password } = fullUserDetails
