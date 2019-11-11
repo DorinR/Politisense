@@ -58,10 +58,8 @@ exports.userSignup = (req, res) => {
           message: 'Please try a different email address'
         })
       }
-      db.close()
     })
     .catch(err => {
-      db.close()
       console.log('Error getting documents', err)
     })
 }
@@ -96,10 +94,8 @@ exports.userLogin = (req, res) => {
           })
         }
       })
-      db.close()
     })
     .catch(err => {
-      db.close()
       console.log('Error getting documents', err)
     })
 }
@@ -122,10 +118,8 @@ exports.getUserByEmail = (req, res) => {
           data: doc.data()
         })
       })
-      db.close()
     })
     .catch(err =>
-      db.close()
       res.status(404).json({
         message: 'UserController.js',
         success: false
