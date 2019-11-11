@@ -2,13 +2,13 @@
 import { assert } from 'chai'
 
 import { BillXmlParser } from '../BillXmlParser'
-import { CurrentParliamentNotSpecifiedError } from '../XmlDataParser'
+import { ParliamentNotSetError } from '../XmlParserError'
 
 const fs = require('fs')
 const path = require('path')
 
 describe('BillXmlParser', () => {
-  it('should return null if the bill does not have Royal Assent and its specified', () => {
+  it('should return null if the bill does not have Royal Assent', () => {
     const xml = getXmlFromFilePath('testXml/testBill_Unpassed.xml')
 
     let parser = new BillXmlParser(xml, { mustHaveRoyalAssent: true })
@@ -33,7 +33,7 @@ describe('BillXmlParser', () => {
     assert.hasAnyKeys(bill, ['text'])
   })
 
-  it('should get all Royal Assent bills in the list of bills in the xml, ', () => {
+  it('should get all Royal Assent bills, ', () => {
     const xml = getXmlFromFilePath('testXml/testBill_List.xml')
     const parser = new BillXmlParser(xml, { mustHaveRoyalAssent: true })
     const bills = parser.getAllFromXml()
@@ -41,14 +41,14 @@ describe('BillXmlParser', () => {
     assert.strictEqual(bills.length, 5)
   })
 
-  it('should return empty list if the xml file is not for bills', () => {
+  it('should return empty list if non bill xml', () => {
     const parser = new BillXmlParser('')
     const bills = parser.getAllFromXml()
 
     assert.isEmpty(bills)
   })
 
-  it('should return null if the bill is not of the specified parliament', () => {
+  it('should return null if bill is not of parliament', () => {
     const xml = getXmlFromFilePath('testXml/testBill.xml')
 
     const parliamentThatDoesntMatchBill = {
@@ -61,7 +61,7 @@ describe('BillXmlParser', () => {
     assert.isNull(bill)
 
     parser = new BillXmlParser(xml, { mustBeInCurrentParliament: true })
-    assert.throws(() => { parser.xmlToJson() }, CurrentParliamentNotSpecifiedError)
+    assert.throws(() => { parser.xmlToJson() }, ParliamentNotSetError)
   })
 })
 

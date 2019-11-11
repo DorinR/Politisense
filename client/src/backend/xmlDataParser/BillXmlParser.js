@@ -1,4 +1,5 @@
-import { CurrentParliamentNotSpecifiedError, XmlDataParser } from './XmlDataParser'
+import { XmlDataParser } from './XmlDataParser'
+import { ParliamentNotSetError } from './XmlParserError'
 
 class BillXmlParser extends XmlDataParser {
   constructor (xml, filters = undefined, currentParliament = undefined) {
@@ -68,7 +69,7 @@ class BillXmlParser extends XmlDataParser {
 
   isInCurrentParliament () {
     if (typeof this.currentParliament === 'undefined') {
-      throw new CurrentParliamentNotSpecifiedError('Must specify what the current parliament is if it is used as a filter.')
+      throw new ParliamentNotSetError('Must specify what the current parliament is if it is used as a filter.')
     }
 
     const parliamentNumber = Number(this.getDataInAttribute('ParliamentSession', 'parliamentNumber', true))

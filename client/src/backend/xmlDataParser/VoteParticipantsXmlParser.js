@@ -38,13 +38,13 @@ class VoteParticipantsXmlParser extends XmlDataParser {
 
     const votes = {}
     // eslint-disable-next-line no-unused-vars
-    for (const participant of participants) {
+    participants.forEach(participant => {
       const name = participant.name
       votes[name] = {
         vote: participant.vote,
         paired: participant.paired
       }
-    }
+    })
 
     return votes
   }

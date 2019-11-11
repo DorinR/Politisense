@@ -1,20 +1,6 @@
+import { DataNotFoundError } from './XmlParserError'
+
 const cheerio = require('cheerio')
-
-class DataFromXmlNotFoundError extends Error {
-  constructor (msg) {
-    super()
-    this.message = msg
-    this.name = this.constructor.name
-  }
-}
-
-class CurrentParliamentNotSpecifiedError extends Error {
-  constructor (msg) {
-    super()
-    this.message = msg
-    this.name = this.constructor.name
-  }
-}
 
 class XmlDataParser {
   constructor (xml) {
@@ -30,7 +16,7 @@ class XmlDataParser {
       if (allowMissingTag) {
         return ''
       } else {
-        throw new DataFromXmlNotFoundError(`The tag ${tag} does not exist in the xml file.`)
+        throw new DataNotFoundError(`The tag ${tag} does not exist in the xml file.`)
       }
     }
     return this.$(tag).eq(0).text()
@@ -41,7 +27,7 @@ class XmlDataParser {
       if (allowMissingTag) {
         return ''
       } else {
-        throw new DataFromXmlNotFoundError(`The tag ${tag} does not exist in the xml file.`)
+        throw new DataNotFoundError(`The tag ${tag} does not exist in the xml file.`)
       }
     }
 
@@ -102,5 +88,3 @@ class XmlDataParser {
 }
 
 module.exports.XmlDataParser = XmlDataParser
-module.exports.DataFromXmlNotFoundError = DataFromXmlNotFoundError
-module.exports.CurrentParliamentNotSpecifiedError = CurrentParliamentNotSpecifiedError

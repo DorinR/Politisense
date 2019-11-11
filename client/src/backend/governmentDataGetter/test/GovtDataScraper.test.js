@@ -1,9 +1,18 @@
 /* eslint-env jest */
-import { BroadDataGetter } from '../BroadDataGetter'
+import { GovtDataScraper } from '../GovtDataScraper'
 
-describe('BroadDataGetter', () => {
+describe('GovtDataScraper', () => {
+  it('sasasasa', (done) => {
+    jest.setTimeout(60000 * 10)
+    const dg = new GovtDataScraper()
+    dg.getGovernmentData(5).then(data => {
+      console.log(JSON.stringify(data))
+      done()
+    })
+  })
+
   it('should return the current parliament session', (done) => {
-    const dataGetter = new BroadDataGetter()
+    const dataGetter = new GovtDataScraper()
     dataGetter.getCurrentParliament().then(parliament => {
       expect(typeof parliament.number).toBe('number')
       expect(typeof parliament.session).toBe('number')
@@ -25,7 +34,7 @@ describe('BroadDataGetter', () => {
       { id: 16, billNumber: 222 }
     ]
 
-    const dataGetter = new BroadDataGetter()
+    const dataGetter = new GovtDataScraper()
     const filteredVotes = dataGetter.removeMultipleBillVotes(votes)
     expect(filteredVotes).toHaveLength(2)
     expect(filteredVotes).toEqual(expect.arrayContaining([{ id: 8, billNumber: 111 }, { id: 16, billNumber: 222 }]))

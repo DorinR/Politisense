@@ -3,7 +3,7 @@ import { assert } from 'chai'
 
 import { VoteXmlParser } from '../VoteXmlParser'
 import { VoteParticipantsXmlParser } from '../VoteParticipantsXmlParser'
-import { CurrentParliamentNotSpecifiedError } from '../XmlDataParser'
+import { ParliamentNotSetError } from '../XmlParserError'
 
 const fs = require('fs')
 const path = require('path')
@@ -23,7 +23,7 @@ describe('VoteXmlParser', () => {
     assert.hasAnyKeys(vote, ['voters'])
   })
 
-  it('should return false if current parliament is specified and not satisfied', () => {
+  it('should return false if current parliament not satisfied', () => {
     const parser = new VoteXmlParser('', { number: 42, session: 1 })
     assert.isFalse(parser.isInCurrentParliament())
   })
@@ -36,9 +36,9 @@ describe('VoteXmlParser', () => {
     })
   })
 
-  it('should throw an error if you try to get voters without current parliament', async () => {
+  it('should throw error if get voters without parliament', async () => {
     const parser = new VoteXmlParser('')
-    await expect(parser.getVoters(752)).rejects.toThrow(CurrentParliamentNotSpecifiedError)
+    await expect(parser.getVoters(752)).rejects.toThrow(ParliamentNotSetError)
   })
 })
 
@@ -72,7 +72,7 @@ describe('VoteParticipantsXmlParser', () => {
     assert.isTrue(voters['marilène gill'].paired)
   })
 
-  it('should return an empty JSON if there is no participant data', () => {
+  it('should return empty JSON if no participant data', () => {
     const voteParticipantsXmlWithNoParticipantData = '<?xml version="1.0" encoding="utf-8"?>\n' +
       '<List xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />'
     const parser = new VoteParticipantsXmlParser(voteParticipantsXmlWithNoParticipantData)

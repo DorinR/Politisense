@@ -1,4 +1,5 @@
-import { CurrentParliamentNotSpecifiedError, XmlDataParser } from './XmlDataParser'
+import { XmlDataParser } from './XmlDataParser'
+import { ParliamentNotSetError } from './XmlParserError'
 import { VoteParticipantsXmlParser } from './VoteParticipantsXmlParser'
 import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
 
@@ -54,7 +55,7 @@ class VoteXmlParser extends XmlDataParser {
   }
 
   isVoteForBill () {
-    return this.getDataInTag('BillNumberCode') !== ''
+    return this.getDataInTag('BillNumberCode', true) !== ''
   }
 
   isInCurrentParliament () {
@@ -68,13 +69,13 @@ class VoteXmlParser extends XmlDataParser {
   }
 
   isFinalDecision () {
-    const voteSubject = this.getDataInTag('DecisionDivisionSubject').trim()
+    const voteSubject = this.getDataInTag('DecisionDivisionSubject', true).trim()
     return voteSubject.includes('3rd reading and adoption')
   }
 
   async getVoters (voteId) {
     if (typeof this.currentParliament === 'undefined') {
-      throw new CurrentParliamentNotSpecifiedError('Must specify what the current parliament is if it is used as a filter.')
+      throw new ParliamentNotSetError('Must specify what the current parliament is if it is used as a filter.')
     }
 
     const linkScraper = new LinkScraper(VoteXmlParser.getVoteParticipantsUrl(voteId, this.currentParliament))

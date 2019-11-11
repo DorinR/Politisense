@@ -7,7 +7,7 @@ import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
 const cheerio = require('cheerio')
 const Promise = require('bluebird')
 
-class BroadDataGetter {
+class GovtDataScraper {
   async getGovernmentData (scrapeRunnerXmlCount) {
     const runner = new ScrapeRunner(scrapeRunnerXmlCount, undefined, undefined, undefined)
     const xmlList = await runner.getXmlContent()
@@ -22,22 +22,18 @@ class BroadDataGetter {
     const currentParliament = await this.getCurrentParliament()
 
     console.log(`Trying to convert ${xmlList.length} xml files into data`)
-    // eslint-disable-next-line no-unused-vars
-    for (const xml of xmlList) {
+
+    xmlList.foreach(xml => {
       data.bills = this.addUniqueData(data.bills, this.getPossibleDataFromXmlParser(new BillXmlParser(xml, {
         mustHaveRoyalAssent: true,
         mustBeInCurrentParliament: true
       }, currentParliament)), 'id')
       data.mps = this.addUniqueData(data.mps, this.getPossibleDataFromXmlParser(new MpXmlParser(xml, true)), 'name')
       data.votes = this.addUniqueData(data.votes, this.getPossibleDataFromXmlParser(new VoteXmlParser(xml, currentParliament)), 'id')
-    }
+    })
 
-    // data post-processing
     const billNumberList = data.bills.map(bill => bill.number)
-    data.votes = this.filterVotesBasedOnGatheredBills(data.votes, billNumberList)
-    data.votes = this.removeMultipleBillVotes(data.votes)
-    await this.addVotersForAllVotes(data.votes, currentParliament)
-
+    await this.cleanUpVotes(data.votes, billNumberList, currentParliament)
     await this.addImageUrlForAllMps(data.mps)
 
     console.log('Returning Data')
@@ -52,7 +48,6 @@ class BroadDataGetter {
     return data
   }
 
-  // Only adds objects to list when a certain object key that must be unique to the list is not being added
   addUniqueData (listToAddTo, dataListToAdd, uniqueKey) {
     return listToAddTo.concat(dataListToAdd.filter(dataToAdd => {
       const dataAlreadyExists = listToAddTo.some(existingData => existingData[uniqueKey] === dataToAdd[uniqueKey])
@@ -87,8 +82,7 @@ class BroadDataGetter {
 
   removeMultipleBillVotes (votes) {
     const filteredVotes = []
-    // eslint-disable-next-line no-unused-vars
-    for (const vote of votes) {
+    votes.forEach(vote => {
       const existingVoteIndex = filteredVotes.findIndex(v => v.billNumber === vote.billNumber)
       if (existingVoteIndex >= 0) {
         const existingVote = filteredVotes[existingVoteIndex]
@@ -97,7 +91,7 @@ class BroadDataGetter {
       } else {
         filteredVotes.push(vote)
       }
-    }
+    })
     return filteredVotes
   }
 
@@ -123,6 +117,12 @@ class BroadDataGetter {
     }, { concurrency: 20 })
   }
 
+  async cleanUpVotes (votes, billNumberList, currentParliament) {
+    votes = this.filterVotesBasedOnGatheredBills(votes, billNumberList)
+    votes = this.removeMultipleBillVotes(votes)
+    await this.addVotersForAllVotes(votes, currentParliament)
+  }
+
   async addDataToDatabase (dbDoc, dataList) {
     return Promise.map(dataList, (data) => {
       return new Promise((resolve, reject) => {
@@ -136,4 +136,4 @@ class BroadDataGetter {
   }
 }
 
-module.exports.BroadDataGetter = BroadDataGetter
+module.exports.GovtDataScraper = GovtDataScraper

@@ -1,7 +1,8 @@
 /* eslint-env jest */
 import { assert } from 'chai'
 
-import { DataFromXmlNotFoundError, XmlDataParser } from '../XmlDataParser'
+import { XmlDataParser } from '../XmlDataParser'
+import { DataNotFoundError } from '../XmlParserError'
 
 describe('XmlDataParser', () => {
   it('should get text in xml using getDataInTag()', () => {
@@ -21,8 +22,8 @@ describe('XmlDataParser', () => {
   it('should throw error if the tag was not found in the xml', () => {
     const xml = ''
     const parser = new XmlDataParser(xml)
-    assert.throws(() => { parser.getDataInTag('nonExistingTag') }, DataFromXmlNotFoundError)
-    assert.throws(() => { parser.getDataInAttribute('nonExistingTag', 'a') }, DataFromXmlNotFoundError)
+    assert.throws(() => { parser.getDataInTag('nonExistingTag') }, DataNotFoundError)
+    assert.throws(() => { parser.getDataInAttribute('nonExistingTag', 'a') }, DataNotFoundError)
 
     // extra param that prevents error
     assert.strictEqual(parser.getDataInTag('nonExistingTag', true), '')
