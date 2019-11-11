@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import Paper from '@material-ui/core/Paper'
-import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import axios from 'axios'
@@ -16,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserData (userEmail) {
+export async function fetchUserData(userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -31,7 +28,7 @@ export async function fetchUserData (userEmail) {
   return result
 }
 
-export default function ViewAccountDetails () {
+export default function ViewAccountDetails() {
   const classes = useStyles()
   const [email, setEmail] = useState('')
   const [firstname, setFirstname] = useState('')
@@ -40,7 +37,7 @@ export default function ViewAccountDetails () {
   const [riding, setRiding] = useState('')
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
       const fullUserDetails = await fetchUserData(email)
