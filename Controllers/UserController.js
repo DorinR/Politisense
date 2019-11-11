@@ -74,6 +74,7 @@ exports.userSignup = (req, res) => {
 }
 exports.userLogin = (req, res) => {
   const db = new Firestore()
+  console.log(req.body.email)
   const user = {
     email: req.body.email,
     password: req.body.password
