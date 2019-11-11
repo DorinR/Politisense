@@ -71,6 +71,7 @@ export async function fetchUser (email) {
   return result
 }
 
+
 export async function loginAPICall (user) {
   let result = ''
   await axios.post('http://localhost:5000/api/users/login', user).then(res => {

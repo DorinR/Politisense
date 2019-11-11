@@ -8,11 +8,11 @@ import {
 import Login from './Components/Auth/Login'
 import SignUp from './Components/Auth/SignUp'
 import Navbar from './Components/Navbar'
-import Dashboard from './Components/Dashboard/Dashboard'
 import Logout from './Components/Logout'
 import UserAccount from './Components/UserAccount'
 import Map from './Components/Map'
-import Questionnaire from './Components/Questionnaire'
+import DashboardTabs from './Components/Dashboard/DashboardTabs'
+import QuizFeature from './Components/QuizFeature'
 
 const App = () => {
   const LoginContainer = () => (
@@ -27,7 +27,7 @@ const App = () => {
       <Navbar>
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
-          <PrivateRoute path='/dashboard' component={Dashboard} />
+          <PrivateRoute path='/dashboard' component={DashboardTabs} />
           <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/map' component={Map} />
           <PrivateRoute path='/account' component={UserAccount} />
@@ -44,7 +44,8 @@ const App = () => {
           <Component {...props} />
         ) : (
           <Redirect to='/login' />
-        )}
+        )
+      }
     />
   )
 
@@ -53,7 +54,7 @@ const App = () => {
       <Switch>
         <Route exact path='/(login)' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
-        <Route exact path='/question' component={Questionnaire} />
+        <Route exact path='/question' component={QuizFeature} />
         <Route component={DefaultContainer} />
       </Switch>
     </Router>

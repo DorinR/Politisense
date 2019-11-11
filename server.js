@@ -16,6 +16,9 @@ app.get('/', (req, res) => res.send('API Running'))
 
 // define our routes (these link to the endpoints in routes/api/...)
 app.use('/api/users', require('./routes/api/users'))
+app.use('/api/representatives', require('./routes/api/representatives'))
+app.use('/api/voteRecord', require('./routes/api/voteRecord'))
+app.use('/api/bills', require('./routes/api/bills'))
 app.use('/api/auth', require('./routes/api/auth'))
 
 const PORT = process.env.PORT || 5000
