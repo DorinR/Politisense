@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function SignUp () {
+export default function SignUp() {
   const classes = useStyles()
 
   return (
@@ -128,7 +128,7 @@ export default function SignUp () {
               color='primary'
               className={classes.submit}
             >
-            Sign Up
+              Sign Up
             </Button>
             <Grid container justify='flex-end'>
               <Grid item>
