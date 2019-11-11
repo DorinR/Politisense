@@ -2,18 +2,6 @@
 import { BroadDataGetter } from '../BroadDataGetter'
 
 describe('BroadDataGetter', () => {
-  xit('should return some data', (done) => {
-    const minutes = 60000
-    jest.setTimeout(5 * minutes)
-
-    const dataGetter = new BroadDataGetter()
-    dataGetter.getGovernmentData(50).then(data => {
-      expect(typeof data).toBe('object')
-      console.log(JSON.stringify(data))
-      done()
-    })
-  })
-
   it('should return the current parliament session', (done) => {
     const dataGetter = new BroadDataGetter()
     dataGetter.getCurrentParliament().then(parliament => {
