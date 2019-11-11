@@ -24,13 +24,13 @@ exports.checkIfUserExists = (req, res) => {
 }
 
 exports.userSignup = (req, res) => {
-  let user = {
+  const user = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     email: req.body.email,
     postalCode: req.body.postalCode,
     categories: { category1: req.body.category1, category2: req.body.category2 },
-    riding: req.body.riding,
+    riding: req.body.riding
 
   }
   if (req.body.password) {
