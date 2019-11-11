@@ -15,8 +15,7 @@ class GovtDataScraper {
     const data = {
       bills: [],
       mps: [],
-      votes: [],
-      voteParticipants: {}
+      votes: []
     }
 
     const currentParliament = await this.getCurrentParliament()
