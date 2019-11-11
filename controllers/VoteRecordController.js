@@ -17,14 +17,16 @@ exports.getVotesByRepresentative = async (req, res) => {
         }
         snapshot.forEach(doc => {
           let { title, text, dateVoted } = doc.data()
-          ;(bill['billTitle'] = title),
+          (bill['billTitle'] = title),
             (bill['billText'] = text),
             (bill['dateVoted'] = dateVoted)
 
           allBillsVotedOn.push(bill)
         })
+        db.close()
       })
       .catch(err => {
+        db.close()
         res.status(400).json({
           message: 'Error retriving bill',
           success: false
