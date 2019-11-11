@@ -11,7 +11,6 @@ import Navbar from './Components/Navbar'
 import Logout from './Components/Logout'
 import UserAccount from './Components/UserAccount'
 import MapWrapper from './Components/Dashboard/MapWrapper'
-import Questionnaire from './Components/Questionnaire'
 import DashboardTabs from './Components/Dashboard/DashboardTabs'
 import Questionnaire from './Components/Questionnaire'
 
