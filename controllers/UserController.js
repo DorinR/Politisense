@@ -52,7 +52,7 @@ exports.userSignup = (req, res) => {
             })
           })
           .catch(err => {
-            console.log('Error getting documents', err)
+            console.error('Error getting documents', err)
           })
       } else {
         res.json({
@@ -138,7 +138,7 @@ exports.updateUser = (req, res) => {
     .select('email', '==', req.body.email)
     .then(snapshot => {
       if (snapshot.empty) {
-        console.log('no user with this email found')
+        console.error('no user with this email found')
       }
       snapshot.forEach(doc => {
         documentToChangeId = doc.id
@@ -167,7 +167,7 @@ exports.setRiding = (req, res) => {
   const postalCode = req.body.postalCode.replace(/\s/g, '').toUpperCase()
   let riding = ''
   let federalArray = []
-  represent.postalCode(postalCode, function (err, data) {
+  represent.postalCode(postalCode, function(err, data) {
     federalArray = data.boundaries_centroid.filter(
       entry => entry.boundary_set_name === 'Federal electoral district'
     )
