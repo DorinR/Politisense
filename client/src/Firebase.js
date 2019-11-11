@@ -29,7 +29,7 @@ class _Firestore {
 var instance = null
 function getInstance () {
   if (!instance) {
-    instance = _Firestore()
+    instance = new _Firestore()
   }
   return instance
 }
