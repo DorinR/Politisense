@@ -1,0 +1,82 @@
+﻿<ArrayOfMemberOfParliament xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>Sean</PersonOfficialFirstName>
+        <PersonOfficialLastName>Casey</PersonOfficialLastName>
+        <ConstituencyName>Charlottetown</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Prince Edward Island</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>2019-10-21T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific>Hon.</PersonShortHonorific>
+        <PersonOfficialFirstName>Wayne</PersonOfficialFirstName>
+        <PersonOfficialLastName>Easter</PersonOfficialLastName>
+        <ConstituencyName>Malpeque</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Prince Edward Island</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>2019-10-21T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific>Hon.</PersonShortHonorific>
+        <PersonOfficialFirstName>Lawrence</PersonOfficialFirstName>
+        <PersonOfficialLastName>MacAulay</PersonOfficialLastName>
+        <ConstituencyName>Cardigan</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Prince Edward Island</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>2019-10-21T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>Robert</PersonOfficialFirstName>
+        <PersonOfficialLastName>Morrissey</PersonOfficialLastName>
+        <ConstituencyName>Egmont</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Prince Edward Island</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>2019-10-21T00:00:00</FromDateTime>
+        <ToDateTime xsi:nil="true"/>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific>Hon.</PersonShortHonorific>
+        <PersonOfficialFirstName>Joe</PersonOfficialFirstName>
+        <PersonOfficialLastName>McGuire</PersonOfficialLastName>
+        <ConstituencyName>Egmont</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Prince Edward Island</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>2006-01-23T00:00:00</FromDateTime>
+        <ToDateTime>2008-10-13T23:59:59</ToDateTime>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific>Hon.</PersonShortHonorific>
+        <PersonOfficialFirstName>Shawn</PersonOfficialFirstName>
+        <PersonOfficialLastName>Murphy</PersonOfficialLastName>
+        <ConstituencyName>Charlottetown</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Prince Edward Island</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>2008-10-14T00:00:00</FromDateTime>
+        <ToDateTime>2011-05-01T23:59:59</ToDateTime>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific/>
+        <PersonOfficialFirstName>George</PersonOfficialFirstName>
+        <PersonOfficialLastName>Proud</PersonOfficialLastName>
+        <ConstituencyName>Hillsborough</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Prince Edward Island</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Liberal</CaucusShortName>
+        <FromDateTime>1997-06-02T00:00:00</FromDateTime>
+        <ToDateTime>2000-11-26T00:00:00</ToDateTime>
+    </MemberOfParliament>
+    <MemberOfParliament>
+        <PersonShortHonorific>Hon.</PersonShortHonorific>
+        <PersonOfficialFirstName>Gail</PersonOfficialFirstName>
+        <PersonOfficialLastName>Shea</PersonOfficialLastName>
+        <ConstituencyName>Egmont</ConstituencyName>
+        <ConstituencyProvinceTerritoryName>Prince Edward Island</ConstituencyProvinceTerritoryName>
+        <CaucusShortName>Conservative</CaucusShortName>
+        <FromDateTime>2011-05-02T00:00:00</FromDateTime>
+        <ToDateTime>2015-10-18T23:59:59</ToDateTime>
+    </MemberOfParliament>
+</ArrayOfMemberOfParliament>
