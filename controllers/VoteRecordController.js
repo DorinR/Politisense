@@ -1,11 +1,11 @@
 import { Firestore } from '../client/src/Firebase'
 
 exports.getVotesByRepresentative = async (req, res) => {
-  let representative = req.params.representative.toLowerCase()
+  const representative = req.params.representative.toLowerCase()
   var allBillsVotedOn = []
-  let db = new Firestore()
+  const db = new Firestore()
 
-  function getSupplementalBillInformation(bill) {
+  function getSupplementalBillInformation (bill) {
     db.Bill()
       .select('number', '==', bill.billNumber)
       .then(snapshot => {
@@ -16,10 +16,10 @@ exports.getVotesByRepresentative = async (req, res) => {
           })
         }
         snapshot.forEach(doc => {
-          let { title, text, dateVoted } = doc.data()
-          (bill['billTitle'] = title),
-            (bill['billText'] = text),
-            (bill['dateVoted'] = dateVoted)
+          const { title, text, dateVoted } = doc.data()
+          bill.billTitle = title
+          bill.billText = text
+          bill.dateVoted = dateVoted
 
           allBillsVotedOn.push(bill)
         })
@@ -32,7 +32,7 @@ exports.getVotesByRepresentative = async (req, res) => {
       })
   }
 
-  function getAllBillsVotedOnByRepresentative(representative) {
+  function getAllBillsVotedOnByRepresentative (representative) {
     allBillsVotedOn = []
     db.VoteRecord()
       .select()
@@ -44,16 +44,16 @@ exports.getVotesByRepresentative = async (req, res) => {
           })
         }
         snapshot.forEach(doc => {
-          let { billNumber, voteId, voteName, voters } = doc.data()
-          let representativeVote = voters[representative]['vote']
+          const { billNumber, voteId, voteName, voters } = doc.data()
+          const representativeVote = voters[representative].vote
           if (representativeVote) {
-            let bill = {
+            const bill = {
               billNumber: billNumber,
               voteId: voteId,
               voteName: voteName,
               voters: voters
             }
-            bill['representativeVote'] = voters[representative]['vote']
+            bill.representativeVote = voters[representative].vote
 
             getSupplementalBillInformation(bill)
           }
