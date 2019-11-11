@@ -36,7 +36,6 @@ class VoteParticipantsXmlParser extends XmlDataParser {
       return {}
     }
 
-    // rather than array, use a key value JSON where the key is the Mp's name
     const votes = {}
     // eslint-disable-next-line no-unused-vars
     for (const participant of participants) {
