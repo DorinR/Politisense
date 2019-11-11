@@ -15,6 +15,12 @@ module.exports = {
     return UserController.getUserByEmail(req, res)
   },
 
+  setRiding: function (req, res) {
+    return UserController.setRiding(req, res)
+  },
+  check: function (req, res) {
+    return UserController.check(req, res)
+  },
   // Representatives
   getRepresentativeByRiding: function (req, res) {
     return RepresentativeController.getRepresentativeByRiding(req, res)

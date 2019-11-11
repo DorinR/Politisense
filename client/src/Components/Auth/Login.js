@@ -102,8 +102,9 @@ export default function Login (props) {
       .then(user => {
         //eslint-disable-next-line no-unused-vars
         const response = fetchUser(user.email).then(res => {
+          console.log(user)
           if (res.data.success) {
-            localStorage.setItem('user', JSON.stringify(user.email))
+            localStorage.setItem('user', JSON.stringify(user))
             setAuthenticated(true)
           } else {
             const newUser = {
@@ -182,7 +183,7 @@ export default function Login (props) {
       loginAPICall(user)
         .then(res => {
           if (res.data.success) {
-            localStorage.setItem('user', JSON.stringify(user.email))
+            localStorage.setItem('user', JSON.stringify(user))
             setAuthenticated(true)
           } else {
             if (res.data.type === 'email') {
