@@ -27,6 +27,7 @@ class _Firestore {
 }
 
 var instance = null
+
 function getInstance() {
   if (!instance) {
     instance = new _Firestore()
