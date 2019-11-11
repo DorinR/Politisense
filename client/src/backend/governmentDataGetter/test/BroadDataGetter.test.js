@@ -1,8 +1,7 @@
 /* eslint-env jest */
 import { BroadDataGetter } from '../BroadDataGetter'
-import { ScrapeRunner } from '../../../scraper/ScrapeRunner'
 
-describe('BroadDataGetter.test', () => {
+describe('BroadDataGetter', () => {
   it('should return some data', (done) => {
     const minutes = 60000
     jest.setTimeout(5 * minutes)
