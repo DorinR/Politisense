@@ -88,6 +88,7 @@ class Firestore {
   BillClassification () {
     return new Reference(this.reference.collection('bill_classification'))
   }
+
   Politician () {
     return new Reference(this.reference.collection('politicians'))
   }
