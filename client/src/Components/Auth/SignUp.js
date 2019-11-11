@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Redirect, Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import axios from 'axios'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -23,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center'
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
     marginTop: theme.spacing(3)
   },
   submit: {
@@ -45,9 +46,84 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function SignUp() {
-  const classes = useStyles()
+export async function signupAPICall (user) {
+  let result = ''
+  await axios.post('http://localhost:5000/api/users/checkIfUserExists', user).then(res => {
+    result = res
+  })
+  return result
+}
 
+export default function SignUp () {
+  const classes = useStyles()
+  const [registered, setRegistered] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
+  const [firstname, setFirstname] = useState('')
+  const [lastname, setLastname] = useState('')
+  const [validForm, setValidForm] = useState(false)
+  const [user, setUser] = useState({})
+  const [errors, setErrors] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    passwordConfirm: ''
+  })
+
+  function checkIfFormIsValid () {
+    if (firstname && lastname && email && password && passwordConfirm) {
+      setValidForm(true)
+    }
+  }
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    const user = {
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      password: password
+    }
+    setUser(user)
+    const nameFormat = /^[a-z ,.'-]+$/i
+    // eslint-disable-next-line no-useless-escape
+    const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+    const passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+    const errors = {}
+    errors.firstname = !user.firstname.match(nameFormat)
+      ? 'Invalid name format'
+      : ''
+    errors.lastname = !user.lastname.match(nameFormat)
+      ? 'Invalid name format'
+      : ''
+    errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
+    errors.password = !user.password.match(passwordFormat)
+      ? 'Invalid password format'
+      : ''
+    errors.passwordConfirm = !(user.password === passwordConfirm)
+      ? 'Passwords do not match'
+      : ''
+    if (errors.email === '' && errors.password === '') {
+      signupAPICall(user).then(res => {
+        if (res.data.success === false) {
+          setRegistered(true)
+        } else {
+          errors.email = 'Already taken'
+          setErrors(errors)
+          return <Redirect to={{ pathname: '/signup', state: { user: '' } }} />
+        }
+      })
+    } else {
+      setErrors(errors)
+    }
+  }
+  if (registered) {
+    // eslint-disable-next-line no-undef
+    localStorage.setItem('user', JSON.stringify(user.email))
+    return <Redirect to={{ pathname: '/question', state: { user: user } }} />
+  }
   return (
     <div>
       <div className={classes.root}>
@@ -62,33 +138,45 @@ export default function SignUp() {
       <Container component='main' maxWidth='xs'>
         <CssBaseline />
         <div className={classes.paper}>
-          <form className={classes.form} noValidate>
+          <form
+            className={classes.form}
+            noValidate
+            onSubmit={handleSubmit}
+            onChange={checkIfFormIsValid}
+          >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  onChange={e => setFirstname(e.target.value)}
                   autoComplete='fname'
-                  name='firstName'
+                  name='firstname'
                   variant='outlined'
                   required
                   fullWidth
                   id='firstName'
                   label='First Name'
+                  error={errors.firstname !== ''}
+                  helperText={errors.firstname}
                   autoFocus
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  onChange={e => setLastname(e.target.value)}
                   variant='outlined'
                   required
                   fullWidth
                   id='lastName'
                   label='Last Name'
-                  name='lastName'
+                  name='lastname'
                   autoComplete='lname'
+                  error={errors.lastname !== ''}
+                  helperText={errors.lastname}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  onChange={e => setEmail(e.target.value)}
                   variant='outlined'
                   required
                   fullWidth
@@ -96,20 +184,13 @@ export default function SignUp() {
                   label='Email Address'
                   name='email'
                   autoComplete='email'
+                  error={errors.email !== ''}
+                  helperText={errors.email}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  id='postal_code'
-                  label='Postal Code'
-                  name='postal_code'
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
+                  onChange={e => setPassword(e.target.value)}
                   variant='outlined'
                   required
                   fullWidth
@@ -118,6 +199,23 @@ export default function SignUp() {
                   type='password'
                   id='password'
                   autoComplete='current-password'
+                  error={errors.password !== ''}
+                  helperText={errors.password}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  onChange={e => setPasswordConfirm(e.target.value)}
+                  variant='outlined'
+                  required
+                  fullWidth
+                  name='passwordConfirm'
+                  label='Confirm Password'
+                  type='password'
+                  id='passwordConfirm'
+                  autoComplete='current-password'
+                  error={errors.passwordConfirm !== ''}
+                  helperText={errors.passwordConfirm}
                 />
               </Grid>
             </Grid>
@@ -127,8 +225,9 @@ export default function SignUp() {
               variant='contained'
               color='primary'
               className={classes.submit}
+              disabled={!validForm}
             >
-              Sign Up
+              CONTINUE WITH SIGN UP
             </Button>
             <Grid container justify='flex-end'>
               <Grid item>
