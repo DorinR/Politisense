@@ -12,7 +12,7 @@ import Logout from './Components/Logout'
 import UserAccount from './Components/UserAccount'
 import Map from './Components/Map'
 import DashboardTabs from './Components/Dashboard/DashboardTabs'
-import QuizFeature from './Components/QuizFeature'
+import Questionnaire from './Components/Questionnaire'
 
 const App = () => {
   const LoginContainer = () => (
@@ -20,7 +20,6 @@ const App = () => {
       <Route exact path='/' render={() => <Redirect to='/login' />} />
       <Route path='/signup' component={SignUp} />
       <Route path='/login' component={Login} />
-      <Route exact path='/question' component={QuizFeature} />
     </div>
   )
   const DefaultContainer = () => (
@@ -45,8 +44,7 @@ const App = () => {
           <Component {...props} />
         ) : (
           <Redirect to='/login' />
-        )
-      }
+        )}
     />
   )
 
@@ -55,7 +53,7 @@ const App = () => {
       <Switch>
         <Route exact path='/(login)' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
-        <Route exact path='/question' component={QuizFeature} />
+        <Route exact path='/question' component={Questionnaire} />
         <Route component={DefaultContainer} />
       </Switch>
     </Router>

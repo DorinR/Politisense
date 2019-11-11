@@ -1,11 +1,11 @@
 import { XmlDataParser } from './XmlDataParser'
 
 class VoteParticipantsXmlParser extends XmlDataParser {
-  get TAG_NAME () {
+  get tagName () {
     return 'VoteParticipant'
   }
 
-  get LIST_TAG_NAME () {
+  get listTagName () {
     return 'List'
   }
 

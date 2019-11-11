@@ -9,11 +9,11 @@ class MpXmlParser extends XmlDataParser {
     this.mustBeACurrentMember = mustBeACurrentMember
   }
 
-  get TAG_NAME () {
+  get tagName () {
     return 'MemberOfParliament'
   }
 
-  get LIST_TAG_NAME () {
+  get listTagName () {
     return 'ArrayOfMemberOfParliament'
   }
 

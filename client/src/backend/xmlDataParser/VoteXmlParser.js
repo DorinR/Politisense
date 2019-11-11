@@ -13,11 +13,11 @@ class VoteXmlParser extends XmlDataParser {
     this.currentParliament = currentParliament
   }
 
-  get TAG_NAME () {
+  get tagName () {
     return 'VoteParticipant'
   }
 
-  get LIST_TAG_NAME () {
+  get listTagName () {
     return 'List'
   }
 

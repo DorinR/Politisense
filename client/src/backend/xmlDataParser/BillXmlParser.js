@@ -7,11 +7,11 @@ class BillXmlParser extends XmlDataParser {
     this.currentParliament = currentParliament
   }
 
-  get TAG_NAME () {
+  get tagName () {
     return 'Bill'
   }
 
-  get LIST_TAG_NAME () {
+  get listTagName () {
     return 'Bills'
   }
 
@@ -26,7 +26,7 @@ class BillXmlParser extends XmlDataParser {
 
     const bill = {}
     try {
-      bill.id = Number(this.getDataInAttribute(this.TAG_NAME, 'id'))
+      bill.id = Number(this.getDataInAttribute(this.tagName, 'id'))
       bill.number = this.getDataInAttribute('BillNumber', 'prefix') + '-' +
         this.getDataInAttribute('BillNumber', 'number')
       bill.title = this.$('BillTitle').find('Title[language=\'en\']').text().trim()

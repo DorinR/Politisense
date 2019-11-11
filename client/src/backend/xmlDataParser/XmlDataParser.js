@@ -25,12 +25,6 @@ class XmlDataParser {
     })
   }
 
-  /**
-   * returns any text within an element and its child elements
-   * @param {string} tag
-   * @returns {string | *}
-   * @param {boolean} allowMissingTag
-   */
   getDataInTag (tag, allowMissingTag = false) {
     if (!this.isTagInXml(tag)) {
       if (allowMissingTag) {
@@ -39,11 +33,9 @@ class XmlDataParser {
         throw new DataFromXmlNotFoundError(`The tag ${tag} does not exist in the xml file.`)
       }
     }
-
     return this.$(tag).eq(0).text()
   }
 
-  // get the value of an attribute within an element
   getDataInAttribute (tag, attribute, allowMissingTag = false) {
     if (!this.isTagInXml(tag)) {
       if (allowMissingTag) {
@@ -61,13 +53,11 @@ class XmlDataParser {
     return xmlDate.substring(0, xmlDate.indexOf('T'))
   }
 
-  // returns the xml tag that holds the desired item
-  get TAG_NAME () {
+  get tagName () {
     throw new TypeError('Abstract Method: Implement and call in class')
   }
 
-  // returns the xml tag that holds the list of the expected item
-  get LIST_TAG_NAME () {
+  get listTagName () {
     throw new TypeError('Abstract Method: Implement and call in class')
   }
 
@@ -89,7 +79,7 @@ class XmlDataParser {
       return []
     }
 
-    const foundData = onlyFromListTag ? this.$(this.LIST_TAG_NAME).find(this.TAG_NAME) : this.$(this.TAG_NAME)
+    const foundData = onlyFromListTag ? this.$(this.listTagName).find(this.tagName) : this.$(this.tagName)
 
     foundData.each((i, data) => {
       const xml = this.$(data).toString()
@@ -107,7 +97,7 @@ class XmlDataParser {
   }
 
   hasListOfData () {
-    return this.isTagInXml(this.LIST_TAG_NAME)
+    return this.isTagInXml(this.listTagName)
   }
 
   hasData () {
