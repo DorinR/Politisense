@@ -45,7 +45,7 @@ class VoteXmlParser extends XmlDataParser {
     }
 
     // async data, added separately
-    vote.voters = {} // TODO: param voters for the list of voters
+    vote.voters = {}
 
     return vote
   }
@@ -82,17 +82,19 @@ class VoteXmlParser extends XmlDataParser {
 
     const linkScraper = new LinkScraper(VoteXmlParser.getVoteParticipantsUrl(voteId, this.currentParliament))
 
-    let voteParticipants = ''
-
-    await linkScraper.perform()
+    const voteParticipants = await linkScraper.perform()
       .then(res => {
         return res.body
       }).then(html => {
-        voteParticipants = html
+        return html
       }).catch(e => {
         console.error(e.message)
         return ''
       })
+
+    if (voteParticipants === '') {
+      return ''
+    }
 
     return new VoteParticipantsXmlParser(voteParticipants).getAllFromXml()
   }

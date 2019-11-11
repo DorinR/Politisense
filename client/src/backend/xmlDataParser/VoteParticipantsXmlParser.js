@@ -36,7 +36,6 @@ class VoteParticipantsXmlParser extends XmlDataParser {
     }
 
     const votes = {}
-    // eslint-disable-next-line no-unused-vars
     participants.forEach(participant => {
       const name = participant.name
       votes[name] = {

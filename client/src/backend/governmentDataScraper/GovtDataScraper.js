@@ -58,17 +58,19 @@ class GovtDataScraper {
     const url = 'https://www.ourcommons.ca/'
     const linkScraper = new LinkScraper(url)
 
-    let htmlWithParliament = ''
-
-    await linkScraper.perform()
+    const htmlWithParliament = await linkScraper.perform()
       .then(res => {
         return res.body
       }).then(html => {
-        htmlWithParliament = html
+        return html
       }).catch(e => {
         console.error(e.message)
         return ''
       })
+
+    if (htmlWithParliament === '') {
+      return ''
+    }
 
     const $ = cheerio.load(htmlWithParliament)
     const currentParliamentText = $('span.subtitle', 'div[aria-labelledby="tabbed-widget-members-work-tab"]').text()

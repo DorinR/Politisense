@@ -65,17 +65,19 @@ class MpXmlParser extends XmlDataParser {
   async getMpImageUrl (mpName) {
     const linkScraper = new LinkScraper(this.getWebPageWithMpImage(mpName))
 
-    let htmlWithMpImage = ''
-
-    await linkScraper.perform()
+    const htmlWithMpImage = await linkScraper.perform()
       .then(res => {
         return res.body
       }).then(html => {
-        htmlWithMpImage = html
+        return html
       }).catch(e => {
         console.error(e.message)
         return ''
       })
+
+    if (htmlWithMpImage === '') {
+      return ''
+    }
 
     const $ = cheerio.load(htmlWithMpImage)
     return 'https://www.ourcommons.ca' + $('img.ce-mip-mp-picture').attr('src')
