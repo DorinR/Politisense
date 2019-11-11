@@ -2,7 +2,7 @@ const fs = require('firebase')
 require('firebase/firestore')
 
 class _Firestore {
-  constructor() {
+  constructor () {
     this.config = {
       apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
       authDomain: 'abdulla-2c3a5.firebaseapp.com',
@@ -18,11 +18,16 @@ class _Firestore {
       this.app = fs.app
     }
     this.db = fs.firestore()
+    this.firebase = fs
+    this.googleProvider = new fs.auth.GoogleAuthProvider()
+    this.facebookProvider = new fs.auth.FacebookAuthProvider()
+    this.twitterProvider = new fs.auth.TwitterAuthProvider()
+    this.microsoftProvider = new fs.auth.OAuthProvider('microsoft.com')
   }
 }
 
 class Reference {
-  constructor(reference) {
+  constructor (reference) {
     this.reference = reference
   }
 
@@ -108,7 +113,7 @@ class Reference {
     }
   }
 
-  insert(model) {
+  insert (model) {
     return new Promise(resolve => {
       this.reference
         .add(model)
@@ -126,21 +131,26 @@ class Firestore {
   constructor () {
     this.firestore = new _Firestore()
     this.reference = this.firestore.db
+    this.googleProvider = this.firestore.googleProvider
+    this.firebase = this.firestore.firebase
+    this.facebookProvider = this.firestore.facebookProvider
+    this.twitterProvider = this.firestore.twitterProvider
+    this.microsoftProvider = this.firestore.microsoftProvider
   }
 
-  Bill() {
+  Bill () {
     return new Reference(this.reference.collection('bills'))
   }
 
-  Politician() {
+  Politician () {
     return new Reference(this.reference.collection('politicians'))
   }
 
-  User() {
+  User () {
     return new Reference(this.reference.collection('users'))
   }
 
-  VoteRecord() {
+  VoteRecord () {
     return new Reference(this.reference.collection('voteRecord'))
   }
 
