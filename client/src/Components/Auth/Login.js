@@ -85,14 +85,10 @@ export default function Login (props) {
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
   const [errors, setErrors] = useState({ email: '', password: '' })
-  const db = new Firestore()
-  const microsoftProvider = db.microsoftProvider
-  const twitterProvider = db.twitterProvider
-  const facebookProvider = db.facebookProvider
-  const googleProvider = db.googleProvider
 
-  function signInWithSocialProviders (_provider) {
-    return db.firebase.auth().signInWithPopup(_provider)
+  function signInWithSocialProviders (_provider, firestore) {
+    const ret = firestore.firebase.auth().signInWithPopup(_provider)
+    return ret
   }
 
   function validateUserFromSocialProviders (type, callback) {
@@ -127,25 +123,26 @@ export default function Login (props) {
 
   function handleSocialLogin (social) {
     return new Promise((resolve, reject) => {
+      const db = new Firestore()
       let provider
       switch (social) {
         case 'facebook':
-          provider = facebookProvider
+          provider = db.facebookProvider
           break
         case 'google':
-          provider = googleProvider
+          provider = db.googleProvider
           break
         case 'twitter':
-          provider = twitterProvider
+          provider = db.twitterProvider
           break
         case 'microsoft':
-          provider = microsoftProvider
+          provider = db.microsoftProvider
           break
         default:
           reject(new Error('no provider found'))
       }
 
-      signInWithSocialProviders(provider)
+      signInWithSocialProviders(provider, db)
         .then(function (res) {
           return res
         })

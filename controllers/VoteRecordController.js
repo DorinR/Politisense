@@ -20,7 +20,6 @@ exports.getVotesByRepresentative = async (req, res) => {
           bill.billTitle = title
           bill.billText = text
           bill.dateVoted = dateVoted
-
           allBillsVotedOn.push(bill)
         })
       })
