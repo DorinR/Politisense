@@ -2,7 +2,7 @@ const fs = require('firebase')
 require('firebase/firestore')
 
 class _Firestore {
-  constructor () {
+  constructor() {
     this.config = {
       apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
       authDomain: 'abdulla-2c3a5.firebaseapp.com',
@@ -35,16 +35,16 @@ function getInstance() {
 }
 
 class Reference {
-  constructor (reference) {
+  constructor(reference) {
     this.reference = reference
   }
 
-  where (attribute, operator, value) {
+  where(attribute, operator, value) {
     this.reference.where(attribute, operator, value)
     return this
   }
 
-  update (model) {
+  update(model) {
     return new Promise((resolve, reject) => {
       this.reference
         .get()
@@ -72,7 +72,7 @@ class Reference {
     })
   }
 
-  delete () {
+  delete() {
     return new Promise((resolve, reject) => {
       this.reference
         .get()
@@ -90,7 +90,7 @@ class Reference {
     })
   }
 
-  select (attribute, operator, value) {
+  select(attribute, operator, value) {
     if (
       typeof attribute === 'undefined' ||
       typeof operator === 'undefined' ||
@@ -121,7 +121,7 @@ class Reference {
     }
   }
 
-  insert (model) {
+  insert(model) {
     return new Promise(resolve => {
       this.reference
         .add(model)
@@ -136,7 +136,7 @@ class Reference {
 }
 
 class Firestore {
-  constructor () {
+  constructor() {
     this.firestore = getInstance()
     this.reference = this.firestore.db
     this.googleProvider = this.firestore.googleProvider
@@ -146,30 +146,32 @@ class Firestore {
     this.microsoftProvider = this.firestore.microsoftProvider
   }
 
-  Bill () {
+  Bill() {
     return new Reference(this.reference.collection('bills'))
   }
 
-  BillClassification () {
+  BillClassification() {
     return new Reference(this.reference.collection('bill_classification'))
   }
 
-  Politician () {
+  Politician() {
     return new Reference(this.reference.collection('politicians'))
   }
 
-  User () {
+  User() {
     return new Reference(this.reference.collection('users'))
   }
 
-  VoteRecord () {
+  VoteRecord() {
     return new Reference(this.reference.collection('voteRecord'))
   }
 
-  async close () {
-    await this.firestore.app.delete()
+  async close() {
+    await this.firestore.app
+      .delete()
       .then(result => {
-        this.firestore.db.terminate()
+        this.firestore.db
+          .terminate()
           .then(result => {})
           .catch(e => {})
       })

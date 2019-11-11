@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import clsx from 'clsx'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
@@ -26,6 +26,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import Fab from '@material-ui/core/Fab'
 import Box from '@material-ui/core/Box'
+import axios from 'axios'
 
 const drawerWidth = 240
 
@@ -106,10 +107,52 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function MiniDrawer ({ children }) {
+export async function fetchUserRiding(userEmail) {
+  let result = ''
+  await axios
+    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+    .then(res => {
+      if (res.data.success) {
+        const riding = res.data.data.riding
+        result = riding
+      }
+    })
+    .catch(err => console.error(err))
+  return result
+}
+
+export async function fetchRepresentative(riding) {
+  let result = ''
+  await axios
+    .get(
+      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+    )
+    .then(res => {
+      if (res.data.success) {
+        const representative = res.data.data.name
+        result = representative
+      }
+    })
+    .catch(err => console.error(err))
+  return result
+}
+
+export default function MiniDrawer({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
+  const [userRepresentative, setUserRepresentative] = React.useState('')
+
+  useEffect(() => {
+    async function getData() {
+      const user = JSON.parse(localStorage.getItem('user'))
+      const { email } = user
+      const riding = await fetchUserRiding(email)
+      const representative = await fetchRepresentative(riding)
+      setUserRepresentative(representative)
+    }
+    getData()
+  }, [])
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -183,20 +226,17 @@ export default function MiniDrawer ({ children }) {
         <Box p={1} />
         <ListItem button onClick={handleDrawerOpen}>
           <ListItemIcon>
-            <PersonIcon
-              className={classes.politisenseIcon}
-
-            />
+            <PersonIcon className={classes.politisenseIcon} />
           </ListItemIcon>
           {open ? (
             <ListItemAvatar>
-              <RepresentativeImage representativeToLoad='Justin Trudeau' />
+              <RepresentativeImage representativeToLoad={userRepresentative} />
             </ListItemAvatar>
           ) : null}
         </ListItem>
         {open ? (
           <ListItem>
-            <RepresentativeInfo representativeToLoad='Justin Trudeau' />
+            <RepresentativeInfo representativeToLoad={userRepresentative} />
           </ListItem>
         ) : null}
         <Divider />
