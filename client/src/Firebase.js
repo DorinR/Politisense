@@ -82,7 +82,7 @@ class Reference {
     })
   }
 
-  select(attribute, operator, value) {
+  select (attribute, operator, value) {
     if (
       typeof attribute === 'undefined' ||
       typeof operator === 'undefined' ||
