@@ -2,7 +2,7 @@ import { Firestore } from '../client/src/Firebase'
 
 exports.getRepresentativeByRiding = (req, res) => {
   const db = new Firestore()
-  const riding = req.params.riding
+  const riding = req.params.riding.toLowerCase()
   db.Politician()
     .select('riding', '==', riding)
     .then(snapshot => {
