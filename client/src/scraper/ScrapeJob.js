@@ -2,7 +2,7 @@ const Scraper = require('./job_actions/LinkScraperAction').LinkScraper
 const ScrapeError = require('./job_actions/LinkScraperAction').ScrapeError
 const ScrapeErrorName = require('./job_actions/LinkScraperAction').ScrapeErrorName
 const Parser = require('./job_actions/TextParserAction').TextParser
-const Processor = require('./job_actions/XmlLinkSelectionAction').XmlLinkSelector
+const Processor = require('./job_actions/SelectionAction').Selector
 const Job = require('./Job').AbstractJob
 
 class ScrapeJob extends Job {
@@ -34,7 +34,7 @@ class ScrapeJob extends Job {
   }
 
   result () {
-    return this.processor.xmlLinks
+    return this.processor.selected
   }
 
   async execute () {

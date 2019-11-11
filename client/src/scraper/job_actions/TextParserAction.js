@@ -21,6 +21,14 @@ class TextParserAction extends JobAction {
     this.load = ParsingLibrary.load
   }
 
+  loadAsXml (content) {
+    return this.load(content, {
+      normalizeWhitespace: true,
+      xmlMode: true,
+      xml: true
+    })
+  }
+
   perform (html, tag, filter) {
     this.tag = (typeof tag === 'undefined') ? this.tag : tag
     this.filter = (typeof filter === 'undefined') ? this.filter : filter
