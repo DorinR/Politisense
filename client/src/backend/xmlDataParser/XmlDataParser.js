@@ -48,7 +48,6 @@ class XmlDataParser {
     return this.$(tag).eq(0).attr(attribute)
   }
 
-  // Takes a datetime string and returns a string that's only a date
   formatXmlDate (xmlDate) {
     return xmlDate.substring(0, xmlDate.indexOf('T'))
   }
@@ -61,17 +60,14 @@ class XmlDataParser {
     throw new TypeError('Abstract Method: Implement and call in class')
   }
 
-  // returns a parser of the same type
   generateNewParser (xml) {
     throw new TypeError('Abstract Method: Implement and call in class')
   }
 
-  // returns the item with its attributes as a JSON object
   xmlToJson () {
     throw new TypeError('Abstract Method: Implement and call in class')
   }
 
-  // returns a list of JSONs that represent the item, null if the xml doesn't match
   getAllFromXml (onlyFromListTag = false) {
     const listOfItems = []
 

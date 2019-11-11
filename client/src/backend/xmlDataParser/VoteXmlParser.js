@@ -26,23 +26,15 @@ class VoteXmlParser extends XmlDataParser {
   }
 
   xmlToJson () {
-    if (!this.isInCurrentParliament()) {
+    if (!this.passesFilters()) {
       return null
     }
 
     const vote = {}
 
     try {
-      // only get votes related to bills
-      const billNumber = this.getDataInTag('BillNumberCode')
-      const name = this.getDataInTag('DecisionDivisionSubject').trim()
-      if (billNumber === '' || !this.isFinalDecision(name)) {
-        return null
-      } else {
-        vote.billNumber = billNumber
-        vote.name = name
-      }
-
+      vote.billNumber = this.getDataInTag('BillNumberCode')
+      vote.name = this.getDataInTag('DecisionDivisionSubject').trim()
       vote.id = Number(this.getDataInTag('DecisionDivisionNumber'))
       vote.yeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
       vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
@@ -57,6 +49,14 @@ class VoteXmlParser extends XmlDataParser {
     return vote
   }
 
+  passesFilters () {
+    return this.isInCurrentParliament() && this.isVoteForBill() && this.isFinalDecision()
+  }
+
+  isVoteForBill () {
+    return this.getDataInTag('BillNumberCode') !== ''
+  }
+
   isInCurrentParliament () {
     if (typeof this.currentParliament === 'undefined') {
       return true
@@ -65,6 +65,11 @@ class VoteXmlParser extends XmlDataParser {
     const parliamentNumber = Number(this.getDataInTag('ParliamentNumber', true))
     const parliamentSession = Number(this.getDataInTag('SessionNumber', true))
     return this.currentParliament.number === parliamentNumber && this.currentParliament.session === parliamentSession
+  }
+
+  isFinalDecision () {
+    const voteSubject = this.getDataInTag('DecisionDivisionSubject').trim()
+    return voteSubject.includes('3rd reading and adoption')
   }
 
   async getVoters (voteId) {
@@ -84,10 +89,6 @@ class VoteXmlParser extends XmlDataParser {
     }
 
     return new VoteParticipantsXmlParser(voteParticipants).getAllFromXml()
-  }
-
-  isFinalDecision (voteSubject) {
-    return voteSubject.includes('3rd reading and adoption')
   }
 }
 

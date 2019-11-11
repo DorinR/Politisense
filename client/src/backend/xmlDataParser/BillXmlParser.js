@@ -40,7 +40,7 @@ class BillXmlParser extends XmlDataParser {
     }
 
     // async data, added separately
-    bill.text = '' // TODO: get the bill text when getting from online
+    bill.text = ''
 
     return bill
   }
