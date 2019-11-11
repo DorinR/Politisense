@@ -1,6 +1,19 @@
 import { XmlDataParser } from './XmlDataParser'
+import { ParliamentNotSetError } from './XmlParserError'
+import { VoteParticipantsXmlParser } from './VoteParticipantsXmlParser'
+import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
 
 class VoteXmlParser extends XmlDataParser {
+  static getVoteParticipantsUrl (voteId, currentParliament) {
+    return `https://www.ourcommons.ca/Parliamentarians/en/HouseVotes/ExportDetailsVotes?
+    output=XML&parliament=${currentParliament.number}&session=${currentParliament.session}&vote=${voteId}`
+  }
+
+  constructor (xml, currentParliament) {
+    super(xml)
+    this.currentParliament = currentParliament
+  }
+
   get tagName () {
     return 'VoteParticipant'
   }
@@ -10,33 +23,80 @@ class VoteXmlParser extends XmlDataParser {
   }
 
   generateNewParser (xml) {
-    return new VoteXmlParser(xml)
+    return new VoteXmlParser(xml, this.currentParliament)
   }
 
   xmlToJson () {
-    const vote = {}
-
-    // only get votes related to bills
-    const billNumber = this.getDataInTag('BillNumberCode')
-    const name = this.getDataInTag('DecisionDivisionSubject').trim()
-    if (billNumber === '' || !this.isFinalDecision(name)) {
+    if (!this.passesFilters()) {
       return null
-    } else {
-      vote.billNumber = billNumber
-      vote.name = name
     }
 
-    vote.id = Number(this.getDataInTag('DecisionDivisionNumber'))
-    vote.yeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
-    vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
-    vote.accepted = (vote.yeas > vote.nays)
-    vote.voters = {}// TODO: param voters for the list of voters
+    const vote = {}
+
+    try {
+      vote.billNumber = this.getDataInTag('BillNumberCode')
+      vote.name = this.getDataInTag('DecisionDivisionSubject').trim()
+      vote.id = Number(this.getDataInTag('DecisionDivisionNumber'))
+      vote.yeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
+      vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
+    } catch (e) {
+      console.debug(e.message)
+      return null
+    }
+
+    // async data, added separately
+    vote.voters = {}
 
     return vote
   }
 
-  isFinalDecision (voteSubject) {
-    return voteSubject.includes('3rd reading')
+  passesFilters () {
+    return this.isInCurrentParliament() && this.isVoteForBill() && this.isFinalDecision()
+  }
+
+  isVoteForBill () {
+    return this.getDataInTag('BillNumberCode', true) !== ''
+  }
+
+  isInCurrentParliament () {
+    if (typeof this.currentParliament === 'undefined') {
+      return true
+    }
+
+    const parliamentNumber = Number(this.getDataInTag('ParliamentNumber', true))
+    const parliamentSession = Number(this.getDataInTag('SessionNumber', true))
+    const parliamentMatches = this.currentParliament.number === parliamentNumber &&
+      this.currentParliament.session === parliamentSession
+    return parliamentMatches
+  }
+
+  isFinalDecision () {
+    const voteSubject = this.getDataInTag('DecisionDivisionSubject', true).trim()
+    return voteSubject.includes('3rd reading and adoption')
+  }
+
+  async getVoters (voteId) {
+    if (typeof this.currentParliament === 'undefined') {
+      throw new ParliamentNotSetError('Must specify what the current parliament is if it is used as a filter.')
+    }
+
+    const linkScraper = new LinkScraper(VoteXmlParser.getVoteParticipantsUrl(voteId, this.currentParliament))
+
+    const voteParticipants = await linkScraper.perform()
+      .then(res => {
+        return res.body
+      }).then(html => {
+        return html
+      }).catch(e => {
+        console.error(e.message)
+        return ''
+      })
+
+    if (voteParticipants === '') {
+      return ''
+    }
+
+    return new VoteParticipantsXmlParser(voteParticipants).getAllFromXml()
   }
 }
 
