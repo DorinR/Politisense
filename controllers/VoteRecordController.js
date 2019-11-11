@@ -32,7 +32,7 @@ exports.getVotesByRepresentative = async (req, res) => {
       })
   }
 
-  async function getAllBillsVotedOnByRepresentative(representative) {
+  function getAllBillsVotedOnByRepresentative(representative) {
     allBillsVotedOn = []
     db.VoteRecord()
       .select()
