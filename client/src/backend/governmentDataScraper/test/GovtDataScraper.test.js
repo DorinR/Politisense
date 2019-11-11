@@ -2,15 +2,6 @@
 import { GovtDataScraper } from '../GovtDataScraper'
 
 describe('GovtDataScraper', () => {
-  it('sasasasa', (done) => {
-    jest.setTimeout(60000 * 10)
-    const dg = new GovtDataScraper()
-    dg.getGovernmentData(5).then(data => {
-      console.log(JSON.stringify(data))
-      done()
-    })
-  })
-
   it('should return the current parliament session', (done) => {
     const dataGetter = new GovtDataScraper()
     dataGetter.getCurrentParliament().then(parliament => {
