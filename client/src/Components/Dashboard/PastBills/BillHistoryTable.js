@@ -33,7 +33,7 @@ const columns = [
   }
 ]
 
-function createData(
+function createData (
   billNumber,
   voteDate,
   billTitle,
@@ -55,7 +55,7 @@ const useStyles = makeStyles({
   }
 })
 
-export async function fetchUserRiding(userEmail) {
+export async function fetchUserRiding (userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -69,7 +69,7 @@ export async function fetchUserRiding(userEmail) {
   return result
 }
 
-export async function fetchRepresentative(riding) {
+export async function fetchRepresentative (riding) {
   let result = ''
   await axios
     .get(
@@ -85,7 +85,7 @@ export async function fetchRepresentative(riding) {
   return result
 }
 
-export async function fetchRepresentativeVotes(representative) {
+export async function fetchRepresentativeVotes (representative) {
   const result = []
   await axios
     .get(
@@ -101,7 +101,7 @@ export async function fetchRepresentativeVotes(representative) {
   return result
 }
 
-function generateTableRows(votes) {
+function generateTableRows (votes) {
   rows = []
   votes.forEach(vote => {
     const {
@@ -123,13 +123,13 @@ function generateTableRows(votes) {
   })
 }
 
-export default function BillHistoryTable() {
+export default function BillHistoryTable () {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
       const riding = await fetchUserRiding(email)

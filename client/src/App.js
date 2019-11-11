@@ -14,8 +14,6 @@ import Map from './Components/Map'
 import DashboardTabs from './Components/Dashboard/DashboardTabs'
 import Questionnaire from './Components/Questionnaire'
 
-
-
 const App = () => {
   const LoginContainer = () => (
     <div className='container'>
@@ -46,8 +44,7 @@ const App = () => {
           <Component {...props} />
         ) : (
           <Redirect to='/login' />
-        )
-      }
+        )}
     />
   )
 

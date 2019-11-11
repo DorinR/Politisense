@@ -71,7 +71,6 @@ export async function fetchUser (email) {
   return result
 }
 
-
 export async function loginAPICall (user) {
   let result = ''
   await axios.post('http://localhost:5000/api/users/login', user).then(res => {
@@ -170,7 +169,7 @@ export default function Login (props) {
   const handleSubmit = e => {
     e.preventDefault()
     const user = { email: email, password: password }
-    //eslint-disable-next-line no-useless-escape
+    // eslint-disable-next-line no-useless-escape
     const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     const errors = {}
     errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
