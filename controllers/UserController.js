@@ -36,7 +36,7 @@ exports.userLogin = (req, res) => {
         return
       }
       let data = {}
-      snapshot.forEach(function(doc) {
+      snapshot.forEach(function (doc) {
         data = doc.data()
       })
       res.json({
@@ -50,7 +50,7 @@ exports.userLogin = (req, res) => {
 }
 
 exports.getUserByEmail = (req, res) => {
-  let userEmail = req.params.userEmail
+  const userEmail = req.params.userEmail
   const db = new Firestore()
   db.User()
     .select('email', '==', userEmail)

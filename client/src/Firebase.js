@@ -25,7 +25,6 @@ function getInstance() {
   }
   return instance
 }
-
 class Reference {
   constructor(reference) {
     this.reference = reference
@@ -96,10 +95,6 @@ class Firestore {
 
   VoteRecord() {
     return new Reference(this.reference.collection('voteRecord'))
-  }
-
-  Riding() {
-    return new Reference(this.reference.collection('ridings'))
   }
 }
 

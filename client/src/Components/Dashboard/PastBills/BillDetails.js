@@ -45,7 +45,7 @@ const DialogContent = withStyles(theme => ({
   }
 }))(MuiDialogContent)
 
-export default function BillDetails(props) {
+export default function BillDetails (props) {
   const [open, setOpen] = React.useState(false)
 
   const handleClickOpen = () => {
@@ -66,7 +66,7 @@ export default function BillDetails(props) {
         open={open}
       >
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          {props.billSummary}
+          {props.billTitle}
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>{props.billText}</Typography>

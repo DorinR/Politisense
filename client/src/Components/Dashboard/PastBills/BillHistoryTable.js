@@ -14,8 +14,8 @@ const columns = [
   { id: 'billNumber', label: 'Bill Number', minWidth: 100 },
   { id: 'voteDate', label: 'Date Voted', minWidth: 100 },
   {
-    id: 'billSummary',
-    label: 'Bill Summary',
+    id: 'billTitle',
+    label: 'Bill Title',
     minWidth: 200,
     align: 'right'
   },
@@ -36,11 +36,11 @@ const columns = [
 function createData(
   billNumber,
   voteDate,
-  billSummary,
+  billTitle,
   representativeVote,
   moreInfo
 ) {
-  return { billNumber, voteDate, billSummary, representativeVote, moreInfo }
+  return { billNumber, voteDate, billTitle, representativeVote, moreInfo }
 }
 
 let rows = []
@@ -61,12 +61,11 @@ export async function fetchUserRiding(userEmail) {
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
-        let riding = res.data.data.riding
+        const riding = res.data.data.riding
         result = riding
       }
     })
     .catch(err => console.log(err))
-  console.log(result)
   return result
 }
 
@@ -78,7 +77,7 @@ export async function fetchRepresentative(riding) {
     )
     .then(res => {
       if (res.data.success) {
-        let representative = res.data.data.representative
+        const representative = res.data.data.name
         result = representative
       }
     })
@@ -87,14 +86,14 @@ export async function fetchRepresentative(riding) {
 }
 
 export async function fetchRepresentativeVotes(representative) {
-  let result = []
+  const result = []
   await axios
     .get(
       `http://localhost:5000/api/voteRecord/getVotesByRepresentative/${representative}`
     )
     .then(res => {
       if (res.data.success) {
-        let votes = res.data.data
+        const votes = res.data.data
         votes.forEach(vote => result.push(vote))
       }
     })
@@ -105,23 +104,22 @@ export async function fetchRepresentativeVotes(representative) {
 function generateTableRows(votes) {
   rows = []
   votes.forEach(vote => {
-    let {
+    const {
       billNumber,
       dateVoted,
       voteName,
       representativeVote,
-      billSummary,
+      billTitle,
       billText
     } = vote
-    let tableRow = createData(
+    const tableRow = createData(
       billNumber,
       dateVoted,
       voteName,
       representativeVote,
-      <BillDetails billSummary={billSummary} billText={billText} />
+      <BillDetails billTitle={billTitle} billText={billText} />
     )
     rows.push(tableRow)
-    console.log(representativeVote)
   })
 }
 
@@ -132,11 +130,11 @@ export default function BillHistoryTable() {
 
   useEffect(() => {
     async function getData() {
-      let user = JSON.parse(localStorage.getItem('user'))
-      let { email } = user
-      let riding = await fetchUserRiding(email)
-      let representative = await fetchRepresentative(riding)
-      let votes = await fetchRepresentativeVotes(representative)
+      const user = JSON.parse(localStorage.getItem('user'))
+      const { email } = user
+      const riding = await fetchUserRiding(email)
+      const representative = await fetchRepresentative(riding)
+      const votes = await fetchRepresentativeVotes(representative)
       generateTableRows(votes)
     }
     getData()
