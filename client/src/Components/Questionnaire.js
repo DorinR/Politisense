@@ -68,7 +68,10 @@ export async function setRiding (postalCode) {
       postalCode: postalCode
     })
     .then(res => {
-      result = res
+      return res
+    })
+    .catch(e => {
+      console.error(e)
     })
   return result
 }

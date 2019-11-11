@@ -147,11 +147,9 @@ export default function Login (props) {
           return res
         })
         .then(res => {
-          db.close()
           resolve(res.user)
         })
         .catch(error => {
-          db.close()
           reject(error)
         })
     })

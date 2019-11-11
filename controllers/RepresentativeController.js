@@ -18,6 +18,5 @@ exports.getRepresentativeByRiding = (req, res) => {
           data: doc.data()
         })
       })
-      db.close()
     })
 }
