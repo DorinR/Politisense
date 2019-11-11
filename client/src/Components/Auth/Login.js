@@ -14,8 +14,7 @@ import { Firestore } from './../../Firebase'
 import {
   FacebookLoginButton,
   GoogleLoginButton,
-  TwitterLoginButton,
-  MicrosoftLoginButton
+  TwitterLoginButton
 } from 'react-social-login-buttons'
 
 const gridStyle = {
@@ -68,7 +67,7 @@ export async function fetchUser (email) {
     .post('http://localhost:5000/api/users/check', { email: email })
     .then(res => {
       result = res
-    })
+    }).catch(err => console.log(err))
   return result
 }
 
@@ -76,7 +75,7 @@ export async function loginAPICall (user) {
   let result = ''
   await axios.post('http://localhost:5000/api/users/login', user).then(res => {
     result = res
-  })
+  }).catch(err => console.log(err))
   return result
 }
 
@@ -97,8 +96,10 @@ export default function Login (props) {
   }
 
   function validateUserFromSocialProviders (type, callback) {
+    //eslint-disable-next-line no-unused-vars
     const user = callback(type)
       .then(user => {
+        //eslint-disable-next-line no-unused-vars
         const response = fetchUser(user.email).then(res => {
           if (res.data.success) {
             localStorage.setItem('user', JSON.stringify(user.email))
@@ -170,6 +171,7 @@ export default function Login (props) {
   const handleSubmit = e => {
     e.preventDefault()
     const user = { email: email, password: password }
+    //eslint-disable-next-line no-useless-escape
     const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     const errors = {}
     errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
@@ -280,35 +282,35 @@ export default function Login (props) {
               </Typography>
               <div className='Wrapper' style={gridStyle}>
                 <Grid container justify='center'>
-                    <Grid item xs={6} className={classes.social}>
-                      <FacebookLoginButton
-                        onClick={() =>
-                          validateUserFromSocialProviders(
-                            'facebook',
-                            handleSocialLogin
-                          )}
-                      />
-                    </Grid>
-                    <Grid item xs={6} className={classes.social}>
-                      <TwitterLoginButton
-                        onClick={() =>
-                          validateUserFromSocialProviders(
-                            'twitter',
-                            handleSocialLogin
-                          )}
-                      />
-                    </Grid>
-                    <Grid item xs={6} className={classes.social}>
-                      <GoogleLoginButton
-                        type='button'
-                        id='test'
-                        onClick={() =>
-                          validateUserFromSocialProviders(
-                            'google',
-                            handleSocialLogin
-                          )}
-                      />
-                    </Grid>
+                  <Grid item xs={6} className={classes.social}>
+                    <FacebookLoginButton
+                      onClick={() =>
+                        validateUserFromSocialProviders(
+                          'facebook',
+                          handleSocialLogin
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={6} className={classes.social}>
+                    <TwitterLoginButton
+                      onClick={() =>
+                        validateUserFromSocialProviders(
+                          'twitter',
+                          handleSocialLogin
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={6} className={classes.social}>
+                    <GoogleLoginButton
+                      type='button'
+                      id='test'
+                      onClick={() =>
+                        validateUserFromSocialProviders(
+                          'google',
+                          handleSocialLogin
+                      )}
+                    />
+                  </Grid>
                 </Grid>
               </div>
             </div>
