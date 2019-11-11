@@ -45,8 +45,7 @@ const App = () => {
           <Component {...props} />
         ) : (
           <Redirect to='/login' />
-        )
-      }
+        )}
     />
   )
 

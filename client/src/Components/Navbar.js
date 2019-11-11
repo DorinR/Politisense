@@ -107,13 +107,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding(userEmail) {
+export async function fetchUserRiding (userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
-        let riding = res.data.data.riding
+        const riding = res.data.data.riding
         result = riding
       }
     })
@@ -122,7 +122,7 @@ export async function fetchUserRiding(userEmail) {
   return result
 }
 
-export async function fetchRepresentative(riding) {
+export async function fetchRepresentative (riding) {
   let result = ''
   await axios
     .get(
@@ -130,7 +130,7 @@ export async function fetchRepresentative(riding) {
     )
     .then(res => {
       if (res.data.success) {
-        let representative = res.data.data.name
+        const representative = res.data.data.name
         result = representative
       }
     })
@@ -138,18 +138,18 @@ export async function fetchRepresentative(riding) {
   return result
 }
 
-export default function MiniDrawer({ children }) {
+export default function MiniDrawer ({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const [userRepresentative, setUserRepresentative] = React.useState('')
 
   useEffect(() => {
-    async function getData() {
-      let user = JSON.parse(localStorage.getItem('user'))
-      let { email } = user
-      let riding = await fetchUserRiding(email)
-      let representative = await fetchRepresentative(riding)
+    async function getData () {
+      const user = JSON.parse(localStorage.getItem('user'))
+      const { email } = user
+      const riding = await fetchUserRiding(email)
+      const representative = await fetchRepresentative(riding)
       setUserRepresentative(representative)
     }
     getData()
