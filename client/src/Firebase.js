@@ -4,7 +4,7 @@ require('firebase/firestore')
 let instance = null
 
 class _Firestore {
-  constructor () {
+  constructor() {
     this.config = {
       apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
       authDomain: 'abdulla-2c3a5.firebaseapp.com',
@@ -24,18 +24,18 @@ class _Firestore {
   }
 }
 
-function getInstance () {
+function getInstance() {
   if (!instance) {
     instance = new _Firestore()
   }
   return instance
 }
 class Reference {
-  constructor (reference) {
+  constructor(reference) {
     this.reference = reference
   }
 
-  select (attribute, operator, value) {
+  select(attribute, operator, value) {
     if (
       typeof attribute === 'undefined' ||
       typeof operator === 'undefined' ||
@@ -66,7 +66,7 @@ class Reference {
     }
   }
 
-  insert (model) {
+  insert(model) {
     return new Promise(resolve => {
       this.reference
         .add(model)
@@ -81,7 +81,7 @@ class Reference {
 }
 
 class Firestore {
-  constructor () {
+  constructor() {
     this.firestore = getInstance()
     this.reference = this.firestore.db
     this.googleProvider = this.firestore.provider
@@ -91,20 +91,20 @@ class Firestore {
     this.microsoftProvider = this.firestore.microsoftProvider
   }
 
-  Bill () {
+  Bill() {
     return new Reference(this.reference.collection('bills'))
   }
 
-  Politician () {
+  Politician() {
     return new Reference(this.reference.collection('politicians'))
   }
 
-  User () {
+  User() {
     return new Reference(this.reference.collection('users'))
   }
 
-  VoteRecord () {
-    return new Reference(this.reference.collection('vote_records'))
+  VoteRecord() {
+    return new Reference(this.reference.collection('voteRecord'))
   }
 }
 
