@@ -23,10 +23,8 @@ exports.getVotesByRepresentative = async (req, res) => {
 
           allBillsVotedOn.push(bill)
         })
-        db.close()
       })
       .catch(err => {
-        db.close()
         res.status(400).json({
           message: 'Error retriving bill',
           success: false

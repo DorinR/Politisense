@@ -32,10 +32,8 @@ export default function RepresentativeImage (props) {
           setName(name)
           setImageUrl(imageUrl)
         })
-        db.close()
       })
       .catch(err => {
-        db.close()
         console.log('Error getting documents', err)
       })
   })
