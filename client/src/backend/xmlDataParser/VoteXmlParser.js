@@ -9,7 +9,7 @@ class VoteXmlParser extends XmlDataParser {
     output=XML&parliament=${currentParliament.number}&session=${currentParliament.session}&vote=${voteId}`
   }
 
-  constructor (xml, currentParliament = undefined) {
+  constructor (xml, currentParliament) {
     super(xml)
     this.currentParliament = currentParliament
   }
@@ -65,7 +65,9 @@ class VoteXmlParser extends XmlDataParser {
 
     const parliamentNumber = Number(this.getDataInTag('ParliamentNumber', true))
     const parliamentSession = Number(this.getDataInTag('SessionNumber', true))
-    return this.currentParliament.number === parliamentNumber && this.currentParliament.session === parliamentSession
+    const parliamentMatches = this.currentParliament.number === parliamentNumber &&
+      this.currentParliament.session === parliamentSession
+    return parliamentMatches
   }
 
   isFinalDecision () {
@@ -81,13 +83,16 @@ class VoteXmlParser extends XmlDataParser {
     const linkScraper = new LinkScraper(VoteXmlParser.getVoteParticipantsUrl(voteId, this.currentParliament))
 
     let voteParticipants = ''
-    try {
-      const res = await linkScraper.perform()
-      voteParticipants = await res.body
-    } catch (e) {
-      console.error(e.message)
-      return ''
-    }
+
+    await linkScraper.perform()
+      .then(res => {
+        return res.body
+      }).then(html => {
+        voteParticipants = html
+      }).catch(e => {
+        console.error(e.message)
+        return ''
+      })
 
     return new VoteParticipantsXmlParser(voteParticipants).getAllFromXml()
   }

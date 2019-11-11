@@ -19,7 +19,6 @@ class VoteParticipantsXmlParser extends XmlDataParser {
     try {
       const name = this.getDataInTag('FirstName') + ' ' + this.getDataInTag('LastName')
       participant.name = name.toLowerCase()
-      // values can be 'Yea', 'Nay', or 'Paired'
       participant.vote = this.getDataInTag('VoteValueName')
       participant.paired = this.getDataInTag('Paired') === '1'
     } catch (e) {

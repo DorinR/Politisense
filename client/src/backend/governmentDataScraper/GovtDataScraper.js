@@ -9,7 +9,7 @@ const Promise = require('bluebird')
 
 class GovtDataScraper {
   async getGovernmentData (scrapeRunnerXmlCount) {
-    const runner = new ScrapeRunner(scrapeRunnerXmlCount, undefined, undefined, undefined)
+    const runner = new ScrapeRunner(scrapeRunnerXmlCount)
     const xmlList = await runner.getXmlContent()
 
     const data = {
@@ -58,16 +58,19 @@ class GovtDataScraper {
     const url = 'https://www.ourcommons.ca/'
     const linkScraper = new LinkScraper(url)
 
-    let html = ''
-    try {
-      const res = await linkScraper.perform()
-      html = await res.body
-    } catch (e) {
-      console.error(e.message)
-      return ''
-    }
+    let htmlWithParliament = ''
 
-    const $ = cheerio.load(html)
+    await linkScraper.perform()
+      .then(res => {
+        return res.body
+      }).then(html => {
+        htmlWithParliament = html
+      }).catch(e => {
+        console.error(e.message)
+        return ''
+      })
+
+    const $ = cheerio.load(htmlWithParliament)
     const currentParliamentText = $('span.subtitle', 'div[aria-labelledby="tabbed-widget-members-work-tab"]').text()
     const parliamentTextAsArray = currentParliamentText.split(', ')
     return { number: parseInt(parliamentTextAsArray[0]), session: parseInt(parliamentTextAsArray[1]) }

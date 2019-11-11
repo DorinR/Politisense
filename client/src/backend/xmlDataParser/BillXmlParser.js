@@ -2,7 +2,7 @@ import { XmlDataParser } from './XmlDataParser'
 import { ParliamentNotSetError } from './XmlParserError'
 
 class BillXmlParser extends XmlDataParser {
-  constructor (xml, filters = undefined, currentParliament = undefined) {
+  constructor (xml, filters, currentParliament) {
     super(xml)
     this.filters = Object.assign({}, BillXmlParser.defaultFilters, filters)
     this.currentParliament = currentParliament
@@ -48,13 +48,18 @@ class BillXmlParser extends XmlDataParser {
 
   getLinkToBillText () {
     let link = ''
-    this.$('Publications').find('Publication').each((i, pub) => {
-      const isRoyalAssent = this.$(pub).find('Title').text().includes('Royal Assent')
-      if (isRoyalAssent) {
-        link = this.$(pub).find('PublicationFile[language=\'en\']').attr('relativePath').replace('//', 'https://www.')
+    const publications = this.$('Publications').find('Publication')
+    publications.each((i, pub) => {
+      const isRoyalAssentText = this.$(pub).find('Title').text().includes('Royal Assent')
+      if (isRoyalAssentText) {
+        link = this.getPublicationUrlPath(pub).replace('//', 'https://www.')
       }
     })
     return link
+  }
+
+  getPublicationUrlPath (publication) {
+    return this.$(publication).find('PublicationFile[language=\'en\']').attr('relativePath')
   }
 
   passesFilters () {
