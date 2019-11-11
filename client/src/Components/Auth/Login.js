@@ -4,17 +4,23 @@ import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faFacebook,
-  faLinkedin,
-  faTwitter,
-  faGoogle
-} from '@fortawesome/free-brands-svg-icons'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import canadaimage from '../../assets/canada.jpg'
 import logo from '../../assets/PolotisenseTentativeLogo.png'
+import axios from 'axios'
+import { Firestore } from './../../Firebase'
+
+import {
+  FacebookLoginButton,
+  GoogleLoginButton,
+  TwitterLoginButton
+} from 'react-social-login-buttons'
+
+const gridStyle = {
+  display: 'flex',
+  justifyContent: 'center'
+}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,48 +55,153 @@ const useStyles = makeStyles(theme => ({
   },
   logo: {
     margin: theme.spacing(15, 0, 2)
+  },
+  quote: {
+    color: '#43D0C4'
   }
 }))
 
-export default function Login() {
-  const classes = useStyles()
+export async function fetchUser (email) {
+  let result = ''
+  await axios
+    .post('http://localhost:5000/api/users/checkIfUserExists', { email: email })
+    .then(res => {
+      result = res
+    }).catch(err => console.log(err))
+  return result
+}
 
-  const [username, setUsername] = useState('')
+export async function loginAPICall (user) {
+  let result = ''
+  await axios.post('http://localhost:5000/api/users/login', user).then(res => {
+    result = res
+  }).catch(err => console.log(err))
+  return result
+}
+
+export default function Login (props) {
+  const classes = useStyles()
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
+  const [errors, setErrors] = useState({ email: '', password: '' })
+  const db = new Firestore()
+  const microsoftProvider = db.microsoftProvider
+  const twitterProvider = db.twitterProvider
+  const facebookProvider = db.facebookProvider
+  const googleProvider = db.googleProvider
 
-  const handleUsernameChange = e => {
-    setUsername(e.target.value)
+  function signInWithSocialProviders (_provider) {
+    return db.firebase.auth().signInWithPopup(_provider)
+  }
+
+  function validateUserFromSocialProviders (type, callback) {
+    callback(type)
+      .then(user => {
+        fetchUser(user.email).then(res => {
+          if (res.data.success) {
+            localStorage.setItem('user', JSON.stringify(user))
+            setAuthenticated(true)
+          } else {
+            const newUser = {
+              firstname: user.displayName.substr(
+                0,
+                user.displayName.indexOf(' ')
+              ),
+              lastname: user.displayName.substr(
+                user.displayName.indexOf(' ') + 1
+              ),
+              email: user.email
+            }
+            props.history.push({
+              pathname: '/question',
+              state: { user: newUser }
+            })
+          }
+        })
+      })
+      .catch(e => {
+        console.log(e)
+      })
+  }
+
+  function handleSocialLogin (social) {
+    return new Promise((resolve, reject) => {
+      let provider
+      switch (social) {
+        case 'facebook':
+          provider = facebookProvider
+          break
+        case 'google':
+          provider = googleProvider
+          break
+        case 'twitter':
+          provider = twitterProvider
+          break
+        case 'microsoft':
+          provider = microsoftProvider
+          break
+        default:
+          reject(new Error('no provider found'))
+      }
+
+      signInWithSocialProviders(provider)
+        .then(function (res) {
+          return res
+        })
+        .then(res => {
+          resolve(res.user)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  }
+
+  const handleEmailChange = e => {
+    setEmail(e.target.value)
   }
 
   const handlePasswordChange = e => {
     setPassword(e.target.value)
   }
 
-  function login(username, password) {
-    const credentials = { email: username, password: password }
-    if (
-      credentials.email === 'ishmammurtaza@gmail.com' &&
-      credentials.password === 'hello123'
-    ) {
-      setAuthenticated(true)
-      window.confirm('successfully logged in')
-      localStorage.setItem('user', JSON.stringify(credentials))
-    } else {
-      window.confirm(
-        'The username and password you entered did not match our records. Please double-check and try again.'
-      )
-    }
-  }
   const handleSubmit = e => {
     e.preventDefault()
-    login(username, password)
-    setUsername('')
-    setPassword('')
+    const user = { email: email, password: password }
+    // eslint-disable-next-line no-useless-escape
+    const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+    const errors = {}
+    errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
+    errors.password =
+      password === '' || password == null ? 'Please enter a password' : ''
+    if (errors.email === '' && errors.password === '') {
+      loginAPICall(user)
+        .then(res => {
+          if (res.data.success) {
+            localStorage.setItem('user', JSON.stringify(user))
+            setAuthenticated(true)
+          } else {
+            if (res.data.type === 'email') {
+              errors.email = res.data.auth
+            }
+            if (res.data.type === 'password') {
+              errors.password = res.data.auth
+            }
+            setErrors(errors)
+          }
+        })
+        .catch(e => console.log(e))
+    } else {
+      setErrors(errors)
+    }
   }
-  return authenticated ? (
-    <Redirect to='/dashboard' />
-  ) : (
+
+  if (authenticated) {
+    return <Redirect to={{ pathname: '/dashboard' }} />
+  }
+
+  return (
     <Grid container component='main' className={classes.root}>
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
@@ -109,8 +220,10 @@ export default function Login() {
                   label='Email Address'
                   name='email'
                   autoComplete='email'
-                  onChange={handleUsernameChange}
-                  value={username}
+                  onChange={handleEmailChange}
+                  value={email}
+                  error={errors.email !== ''}
+                  helperText={errors.email}
                   autoFocus
                 />
                 <TextField
@@ -125,44 +238,9 @@ export default function Login() {
                   autoComplete='current-password'
                   onChange={handlePasswordChange}
                   value={password}
+                  error={errors.password !== ''}
+                  helperText={errors.password}
                 />
-                <Typography
-                  variant='h6'
-                  gutterBottom
-                  style={{ textAlign: 'center' }}
-                >
-                  OR
-                </Typography>
-                <Grid container>
-                  <Grid item xs={3} className={classes.social}>
-                    <FontAwesomeIcon
-                      icon={faFacebook}
-                      size='4x'
-                      color='#455892'
-                    />
-                  </Grid>
-                  <Grid item xs={3} className={classes.social}>
-                    <FontAwesomeIcon
-                      icon={faTwitter}
-                      size='4x'
-                      color='#55ADEC'
-                    />
-                  </Grid>
-                  <Grid item xs={3} className={classes.social}>
-                    <FontAwesomeIcon
-                      icon={faLinkedin}
-                      size='4x'
-                      color='#0274B3'
-                    />
-                  </Grid>
-                  <Grid item xs={3} className={classes.social}>
-                    <FontAwesomeIcon
-                      icon={faGoogle}
-                      size='4x'
-                      color='#E43E2B'
-                    />
-                  </Grid>
-                </Grid>
                 <Button
                   type='submit'
                   fullWidth
@@ -193,6 +271,46 @@ export default function Login() {
                   </Grid>
                 </Grid>
               </form>
+              <Typography
+                variant='h6'
+                gutterBottom
+                style={{ textAlign: 'center' }}
+              >
+                OR
+              </Typography>
+              <div className='Wrapper' style={gridStyle}>
+                <Grid container justify='center'>
+                  <Grid item xs={6} className={classes.social}>
+                    <FacebookLoginButton
+                      onClick={() =>
+                        validateUserFromSocialProviders(
+                          'facebook',
+                          handleSocialLogin
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={6} className={classes.social}>
+                    <TwitterLoginButton
+                      onClick={() =>
+                        validateUserFromSocialProviders(
+                          'twitter',
+                          handleSocialLogin
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={6} className={classes.social}>
+                    <GoogleLoginButton
+                      type='button'
+                      id='test'
+                      onClick={() =>
+                        validateUserFromSocialProviders(
+                          'google',
+                          handleSocialLogin
+                      )}
+                    />
+                  </Grid>
+                </Grid>
+              </div>
             </div>
           </Grid>
         </Grid>

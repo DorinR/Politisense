@@ -16,6 +16,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
 import TextField from '@material-ui/core/TextField'
+import axios from 'axios'
+import { Redirect } from 'react-router'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -60,6 +62,17 @@ function getSteps () {
   return ['Voting Issue', 'Area of Interest', 'Postal Code']
 }
 
+export async function setRiding (postalCode) {
+  let result = await axios
+    .post('http://localhost:5000/api/users/setRiding', {
+      postalCode: postalCode
+    })
+    .then(res => {
+      result = res
+    })
+  return result
+}
+
 export default function HorizontalLinearStepper (props) {
   const classes = useStyles()
   const [activeStep, setActiveStep] = useState(0)
@@ -86,11 +99,30 @@ export default function HorizontalLinearStepper (props) {
           <Card className={classes.card}>
             <CardContent>
               <FormControl component='fieldset' className={classes.formControl}>
-                <FormLabel component='legend'>What issue brings you out to vote?</FormLabel>
-                <RadioGroup aria-label='issue' name='issue' value={category1} onChange={handleChangeCategory1}>
-                  <FormControlLabel value='Economics' control={<Radio />} label='Economics' />
-                  <FormControlLabel value='Social Issues' control={<Radio />} label='Social Issues' />
-                  <FormControlLabel value='Healthcare' control={<Radio />} label='Healthcare' />
+                <FormLabel component='legend'>
+                  What issue brings you out to vote?
+                </FormLabel>
+                <RadioGroup
+                  aria-label='issue'
+                  name='issue'
+                  value={category1}
+                  onChange={handleChangeCategory1}
+                >
+                  <FormControlLabel
+                    value='Economics'
+                    control={<Radio />}
+                    label='Economics'
+                  />
+                  <FormControlLabel
+                    value='Social Issues'
+                    control={<Radio />}
+                    label='Social Issues'
+                  />
+                  <FormControlLabel
+                    value='Healthcare'
+                    control={<Radio />}
+                    label='Healthcare'
+                  />
                 </RadioGroup>
               </FormControl>
             </CardContent>
@@ -101,14 +133,26 @@ export default function HorizontalLinearStepper (props) {
           <Card className={classes.card}>
             <CardContent>
               <FormControl component='fieldset' className={classes.formControl}>
-                <FormLabel component='legend'>What issue would you like to know more about?</FormLabel>
-                <RadioGroup aria-label='issue' name='issue' value={category2} onChange={handleChangeCategory2}>
+                <FormLabel component='legend'>
+                  What issue would you like to know more about?
+                </FormLabel>
+                <RadioGroup
+                  aria-label='issue'
+                  name='issue'
+                  value={category2}
+                  onChange={handleChangeCategory2}
+                >
                   {options &&
-            options.map(option => (
-              option !== category1
-                ? <FormControlLabel value={option} control={<Radio />} label={option} key={option} />
-                : null
-            ))}
+                    options.map(option =>
+                      option !== category1 ? (
+                        <FormControlLabel
+                          value={option}
+                          control={<Radio />}
+                          label={option}
+                          key={option}
+                        />
+                      ) : null
+                    )}
                 </RadioGroup>
               </FormControl>
             </CardContent>
@@ -128,22 +172,44 @@ export default function HorizontalLinearStepper (props) {
               error={errors.postalCode !== ''}
               helperText={errors.postalCode}
             />
-          </form>)
+          </form>
+        )
       default:
         return 'Unknown step'
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault()
-    console.log('successfully completed the questions')
-    props.history.push('/dashboard')
+    if (postalCode) {
+      setRiding(postalCode)
+        .then(res => {
+          if (res.data.success) {
+            const userToSignup = props.location.state.user
+            userToSignup.postalCode = postalCode
+            userToSignup.riding = res.data.data
+            userToSignup.category1 = category1
+            userToSignup.category2 = category2
+            // eslint-disable-next-line no-undef
+            localStorage.setItem('user', JSON.stringify(userToSignup))
+            axios.post('http://localhost:5000/api/users/signup', userToSignup)
+            props.history.push('/dashboard')
+          } else {
+            console.log('Could not fetch riding')
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
   }
 
   const checkValidPostalCode = () => {
     const postalCodeFormat = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/
     const errors = {}
-    errors.postalCode = !postalCode.match(postalCodeFormat) ? 'Invalid postal code' : ''
+    errors.postalCode = !postalCode.match(postalCodeFormat)
+      ? 'Invalid postal code'
+      : ''
     setErrors(errors)
     return errors.postalCode === ''
   }
@@ -173,6 +239,10 @@ export default function HorizontalLinearStepper (props) {
     setPostalCode('')
   }
 
+  if (props.location.state === undefined) {
+    return <Redirect to='/login' />
+  }
+
   return (
     <div className={classes.root}>
       <div>
@@ -180,19 +250,14 @@ export default function HorizontalLinearStepper (props) {
           <AppBar position='static'>
             <Toolbar>
               <Typography variant='h6' className={classes.title}>
-        Questionnaire
+                Questionnaire
               </Typography>
             </Toolbar>
           </AppBar>
         </div>
       </div>
       <div className={classes.pad}>
-        <Grid
-          container
-          direction='row'
-          justify='center'
-          alignItems='center'
-        >
+        <Grid container direction='row' justify='center' alignItems='center'>
           <Grid item xs={8}>
             <Stepper activeStep={activeStep}>
               {steps.map((label, index) => {
@@ -207,39 +272,44 @@ export default function HorizontalLinearStepper (props) {
             </Stepper>
           </Grid>
         </Grid>
-        <Grid
-          container
-          direction='row'
-          justify='center'
-          alignItems='center'
-        >
+        <Grid container direction='row' justify='center' alignItems='center'>
           <Grid item xs={3}>
             <div className={classes.test}>
               {activeStep === steps.length ? (
                 <div>
                   <Typography className={classes.instructions}>
-        Registration completed. You're all set!
+                    Registration completed. You're all set!
                   </Typography>
-                  <Button onClick={handleReset}>
-        Reset
-                  </Button>
-                  <Button
-                    onClick={handleSubmit}
-                    variant='contained'
-                    color='primary'
-                    className={classes.button}
-                  >
-        Confirm information
-                  </Button>
+                  <div className={classes.actions}>
+                    <Button
+                      className={classes.button}
+                      onClick={handleReset}
+                    >Reset
+                    </Button>
+                    <Button
+                      onClick={handleSubmit}
+                      variant='contained'
+                      color='primary'
+                      className={classes.button}
+                    >
+                    Confirm information
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div>
                   <div className={classes.question}>
-                    <div className={classes.instructions}>{getStepContent(activeStep)}</div>
+                    <div className={classes.instructions}>
+                      {getStepContent(activeStep)}
+                    </div>
                   </div>
                   <div className={classes.actions}>
-                    <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-        Back
+                    <Button
+                      disabled={activeStep === 0}
+                      onClick={handleBack}
+                      className={classes.button}
+                    >
+                      Back
                     </Button>
                     <Button
                       variant='contained'
@@ -247,7 +317,7 @@ export default function HorizontalLinearStepper (props) {
                       onClick={handleNext}
                       className={classes.button}
                     >
-        Next
+                      Next
                     </Button>
                   </div>
                 </div>
