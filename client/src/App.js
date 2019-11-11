@@ -8,7 +8,6 @@ import {
 import Login from './Components/Auth/Login'
 import SignUp from './Components/Auth/SignUp'
 import Navbar from './Components/Navbar'
-import Dashboard from './Components/Dashboard/Dashboard'
 import Logout from './Components/Logout'
 import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
 import Map from './Components/Map'
@@ -20,7 +19,7 @@ const App = () => {
       <Route exact path='/' render={() => <Redirect to='/login' />} />
       <Route path='/signup' component={SignUp} />
       <Route path='/login' component={Login} />
-      <Route exact path='/question' component={Quiz_Feature} />
+      <Route exact path='/question' component={QuizFeature} />
     </div>
   )
   const DefaultContainer = () => (
@@ -55,7 +54,7 @@ const App = () => {
       <Switch>
         <Route exact path='/(login)' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
-        <Route exact path='/question' component={Quiz_Feature} />
+        <Route exact path='/question' component={QuizFeature} />
         <Route component={DefaultContainer} />
       </Switch>
     </Router>

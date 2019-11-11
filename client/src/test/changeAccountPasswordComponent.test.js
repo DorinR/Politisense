@@ -5,7 +5,7 @@ chai.should()
 
 describe('ChangeAccountPassword API Calls Tests', () => {
   test('can fetch user data', async () => {
-    let retrievedUser = await fetchUserData('testEmailDoNotDelete@gmail.com')
+    const retrievedUser = await fetchUserData('testEmailDoNotDelete@gmail.com')
     retrievedUser.email.should.equal('testEmailDoNotDelete@gmail.com')
     retrievedUser.password.should.equal('hello123')
     retrievedUser.firstname.should.equal('test')

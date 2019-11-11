@@ -51,13 +51,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserData(userEmail) {
+export async function fetchUserData (userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
-        let user = res.data.data
+        const user = res.data.data
         result = user
       }
     })
@@ -65,10 +65,10 @@ export async function fetchUserData(userEmail) {
   return result
 }
 
-export async function updatePassword(user, newPassword) {
-  user['password'] = newPassword
+export async function updatePassword (user, newPassword) {
+  user.password = newPassword
   axios
-    .post(`http://localhost:5000/api/users/updateUser`, user)
+    .post('http://localhost:5000/api/users/updateUser', user)
     .then(res => {
       if (res.data.success) {
         console.log('password update was successful')
@@ -77,7 +77,7 @@ export async function updatePassword(user, newPassword) {
     .catch(err => console.log(err))
 }
 
-function ChangeAccountPassword(props) {
+function ChangeAccountPassword (props) {
   const classes = useStyles()
   const [changeCompleted, setChangeCompleted] = useState(false)
   const [email, setEmail] = useState('')
@@ -104,19 +104,19 @@ function ChangeAccountPassword(props) {
   })
 
   useEffect(() => {
-    async function getData() {
-      let user = JSON.parse(localStorage.getItem('user'))
-      let { email } = user
+    async function getData () {
+      const user = JSON.parse(localStorage.getItem('user'))
+      const { email } = user
       setEmail(email)
-      let fullUserDetails = await fetchUserData(email)
+      const fullUserDetails = await fetchUserData(email)
       setFetchedUserDetails(fullUserDetails)
-      let { password } = fullUserDetails
+      const { password } = fullUserDetails
       setPreviousPasswordFromDb(password)
     }
     getData()
   }, [])
 
-  function checkEmpty(obj) {
+  function checkEmpty (obj) {
     for (var key in obj) {
       if (obj[key] !== null && obj[key] !== '') {
         return false
@@ -124,7 +124,7 @@ function ChangeAccountPassword(props) {
     }
     return true
   }
-  function checkForm() {
+  function checkForm () {
     if (firstname && lastname && email && password && passwordConfirm) {
       setValidForm(true)
     }
@@ -134,9 +134,9 @@ function ChangeAccountPassword(props) {
     e.preventDefault()
 
     const passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
-    let errors = {}
+    const errors = {}
 
-    let user = {
+    const user = {
       password: password
     }
 

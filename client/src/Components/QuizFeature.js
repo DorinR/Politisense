@@ -5,7 +5,7 @@ import Result from './Quiz/Result'
 import './Quiz/questions_index.css'
 import update from 'react-addons-update'
 
-class Quiz_Feature extends Component {
+class QuizFeature extends Component {
   constructor (props) {
     super(props)
 
@@ -136,4 +136,4 @@ class Quiz_Feature extends Component {
   }
 }
 
-export default Quiz_Feature
+export default QuizFeature
