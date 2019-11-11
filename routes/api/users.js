@@ -14,9 +14,14 @@ router.post('/checkIfUserExists', controller.checkIfUserExists)
 router.post('/signup', controller.userSignup)
 router.post('/login', controller.userLogin)
 
-// @route post api/users/:userEmail/getUser
+// @route get api/users/:userEmail/getUser
 // @desc  get user by email
 // @access Public
 router.get('/:userEmail/getUser', controller.getUserByEmail)
+
+// @route POST api/users/:userEmail/getUser
+// @desc  get user by email
+// @access Public
+router.post('/updateUser', controller.updateUser)
 
 module.exports = router
