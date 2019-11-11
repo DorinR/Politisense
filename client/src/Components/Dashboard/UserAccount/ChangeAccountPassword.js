@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserData(userEmail) {
+export async function fetchUserData (userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -65,7 +65,7 @@ export async function fetchUserData(userEmail) {
   return result
 }
 
-export async function updatePassword(user, newPassword) {
+export async function updatePassword (user, newPassword) {
   user.password = newPassword
   axios
     .post('http://localhost:5000/api/users/updateUser', user)
@@ -77,7 +77,7 @@ export async function updatePassword(user, newPassword) {
     .catch(err => console.log(err))
 }
 
-function ChangeAccountPassword(props) {
+function ChangeAccountPassword (props) {
   const classes = useStyles()
   const [changeCompleted, setChangeCompleted] = useState(false)
   const [email, setEmail] = useState('')
@@ -104,7 +104,7 @@ function ChangeAccountPassword(props) {
   })
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
       setEmail(email)
@@ -116,7 +116,7 @@ function ChangeAccountPassword(props) {
     getData()
   }, [])
 
-  function checkEmpty(obj) {
+  function checkEmpty (obj) {
     for (var key in obj) {
       if (obj[key] !== null && obj[key] !== '') {
         return false
@@ -124,7 +124,7 @@ function ChangeAccountPassword(props) {
     }
     return true
   }
-  function checkForm() {
+  function checkForm () {
     if (firstname && lastname && email && password && passwordConfirm) {
       setValidForm(true)
     }

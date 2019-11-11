@@ -10,7 +10,7 @@ import Box from '@material-ui/core/Box'
 import ViewAccountDetails from './ViewAccountDetails'
 import ChangeAccountPassword from './ChangeAccountPassword'
 
-function TabPanel(props) {
+function TabPanel (props) {
   const { children, value, index, ...other } = props
 
   return (
@@ -33,7 +33,7 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired
 }
 
-function a11yProps(index) {
+function a11yProps (index) {
   return {
     id: `full-width-tab-${index}`,
     'aria-controls': `full-width-tabpanel-${index}`
@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function FullWidthTabs() {
+export default function FullWidthTabs () {
   const classes = useStyles()
   const theme = useTheme()
   const [value, setValue] = React.useState(0)

@@ -25,7 +25,7 @@ exports.checkIfUserExists = (req, res) => {
 }
 
 exports.userSignup = (req, res) => {
-  let user = {
+  const user = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     email: req.body.email,
@@ -167,7 +167,7 @@ exports.setRiding = (req, res) => {
   const postalCode = req.body.postalCode.replace(/\s/g, '').toUpperCase()
   let riding = ''
   let federalArray = []
-  represent.postalCode(postalCode, function(err, data) {
+  represent.postalCode(postalCode, function (err, data) {
     federalArray = data.boundaries_centroid.filter(
       entry => entry.boundary_set_name === 'Federal electoral district'
     )

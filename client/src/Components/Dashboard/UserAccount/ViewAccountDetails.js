@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserData(userEmail) {
+export async function fetchUserData (userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -31,7 +31,7 @@ export async function fetchUserData(userEmail) {
   return result
 }
 
-export default function ViewAccountDetails() {
+export default function ViewAccountDetails () {
   const classes = useStyles()
   const [email, setEmail] = useState('')
   const [firstname, setFirstname] = useState('')
@@ -40,7 +40,7 @@ export default function ViewAccountDetails() {
   const [riding, setRiding] = useState('')
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
       const fullUserDetails = await fetchUserData(email)
