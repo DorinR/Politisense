@@ -3,6 +3,7 @@ import { assert } from 'chai'
 
 import { VoteXmlParser } from '../VoteXmlParser'
 import { VoteParticipantsXmlParser } from '../VoteParticipantsXmlParser'
+import { ParliamentNotSetError } from '../XmlParserError'
 
 const fs = require('fs')
 const path = require('path')
@@ -19,8 +20,25 @@ describe('VoteXmlParser', () => {
     assert.strictEqual(vote.name, '3rd reading and adoption of Bill C-19, An Act for granting to Her Majesty certain sums of money for the federal public administration for the fiscal year ending March 31, 2017')
     assert.strictEqual(vote.yeas, 177)
     assert.strictEqual(vote.nays, 139)
-    assert.isTrue(vote.accepted)
     assert.hasAnyKeys(vote, ['voters'])
+  })
+
+  it('should return false if current parliament not satisfied', () => {
+    const parser = new VoteXmlParser('', { number: 42, session: 1 })
+    assert.isFalse(parser.isInCurrentParliament())
+  })
+
+  it('should get vote participants when given an id', (done) => {
+    const parser = new VoteXmlParser('', { number: 42, session: 1 })
+    parser.getVoters(752).then(voters => {
+      assert.lengthOf(Object.keys(voters), 294, 'there were 294 voters, paired or not')
+      done()
+    })
+  })
+
+  it('should throw error if get voters without parliament', async () => {
+    const parser = new VoteXmlParser('')
+    await expect(parser.getVoters(752)).rejects.toThrow(ParliamentNotSetError)
   })
 })
 
@@ -54,11 +72,18 @@ describe('VoteParticipantsXmlParser', () => {
     assert.isTrue(voters['marilène gill'].paired)
   })
 
-  it('should return an empty JSON if there is no participant data', () => {
+  it('should return empty JSON if no participant data', () => {
     const voteParticipantsXmlWithNoParticipantData = '<?xml version="1.0" encoding="utf-8"?>\n' +
       '<List xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />'
     const parser = new VoteParticipantsXmlParser(voteParticipantsXmlWithNoParticipantData)
     assert.isEmpty(parser.getAllFromXml())
+  })
+
+  it('should get the vote id from the list of participants', () => {
+    const parser = getVoteParticipantsParserForXmlFile('testXml/testVoteParticipants.xml')
+    const voteId = parser.getVoteId()
+
+    assert.strictEqual(voteId, 752)
   })
 })
 
