@@ -11,20 +11,28 @@ class UrlFileReader extends JobAction {
     // eslint-disable-next-line no-undef
     return fetch(this.fp)
       .then((result) => {
-        return result.text()
+        return result.body
       })
       .then((body) => {
         return body
       })
-      .then((body) => {
-        console.log('Done Retrieving xml: ' + this.fp)
-        return body
+      .then((zipped) => {
+        return zipped._outBuffer.toString()
+      })
+      .then(xml => {
+        if (xml.includes('html')) {
+          throw new Error('Content is not XML')
+        }
+        if (xml.includes('Content-Type:')) {
+          xml = xml.body()
+        }
+        console.debug('Done Retrieving XML: ' + this.fp)
+        return xml
       })
       .catch((e) => {
-        console.error(e.message)
-        return this.fp
+        e.message = 'unable to retrieve xml from link: ' + this.fp + '\n' + e.message
+        return null
       })
   }
 }
-
 module.exports.FileReader = UrlFileReader
