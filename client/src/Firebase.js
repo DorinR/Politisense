@@ -1,8 +1,6 @@
 const fs = require('firebase')
 require('firebase/firestore')
 
-let instance = null
-
 class _Firestore {
   constructor() {
     this.config = {
@@ -14,20 +12,69 @@ class _Firestore {
       messagingSenderId: '1084760992823',
       appId: '1:1084760992823:web:c6402249f92d54372ce3b2'
     }
-    fs.initializeApp(this.config)
+    if (!this.app || !fs.app) {
+      this.app = fs.initializeApp(this.config)
+    } else {
+      this.app = fs.app
+    }
     this.db = fs.firestore()
   }
 }
 
-function getInstance() {
-  if (!instance) {
-    instance = new _Firestore()
-  }
-  return instance
-}
 class Reference {
   constructor(reference) {
     this.reference = reference
+  }
+
+  where (attribute, operator, value) {
+    this.reference.where(attribute, operator, value)
+    return this
+  }
+
+  update (model) {
+    return new Promise((resolve, reject) => {
+      this.reference
+        .get()
+        .then(snapshot => {
+          const updates = new Map()
+          snapshot.forEach(document => {
+            const datum = document.data()
+            // eslint-disable-next-line no-unused-vars
+            for (const key of Object.keys(model)) {
+              datum[key] = model[key]
+            }
+            updates.set(document.id, datum)
+          })
+          return updates
+        })
+        .then(updates => {
+          updates.forEach((id, datum) => {
+            this.reference.doc(id).update(datum)
+          })
+          resolve(updates.size)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  }
+
+  delete () {
+    return new Promise((resolve, reject) => {
+      this.reference
+        .get()
+        .then(snapshot => {
+          let count = 0
+          snapshot.forEach(doc => {
+            doc.ref.delete()
+            count++
+          })
+          resolve(count)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
   }
 
   select(attribute, operator, value) {
@@ -76,8 +123,8 @@ class Reference {
 }
 
 class Firestore {
-  constructor() {
-    this.firestore = getInstance()
+  constructor () {
+    this.firestore = new _Firestore()
     this.reference = this.firestore.db
   }
 
@@ -95,6 +142,16 @@ class Firestore {
 
   VoteRecord() {
     return new Reference(this.reference.collection('voteRecord'))
+  }
+
+  async close () {
+    await this.firestore.app.delete()
+      .then(result => {
+        this.firestore.db.terminate()
+          .then(result => {})
+          .catch(e => {})
+      })
+      .catch(e => {})
   }
 }
 
