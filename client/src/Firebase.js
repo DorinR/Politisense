@@ -26,6 +26,14 @@ class _Firestore {
   }
 }
 
+var instance = null
+function getInstance () {
+  if (!instance) {
+    instance = _Firestore()
+  }
+  return instance
+}
+
 class Reference {
   constructor (reference) {
     this.reference = reference
@@ -129,7 +137,7 @@ class Reference {
 
 class Firestore {
   constructor () {
-    this.firestore = new _Firestore()
+    this.firestore = getInstance()
     this.reference = this.firestore.db
     this.googleProvider = this.firestore.googleProvider
     this.firebase = this.firestore.firebase
