@@ -10,9 +10,9 @@ import SignUp from './Components/Auth/SignUp'
 import Navbar from './Components/Navbar'
 import Logout from './Components/Logout'
 import UserAccount from './Components/UserAccount'
-import Map from './Components/Map'
+import MapWrapper from './Components/Dashboard/MapWrapper'
 import DashboardTabs from './Components/Dashboard/DashboardTabs'
-import QuizFeature from './Components/QuizFeature'
+import Questionnaire from './Components/Questionnaire'
 
 const App = () => {
   const LoginContainer = () => (
@@ -20,7 +20,6 @@ const App = () => {
       <Route exact path='/' render={() => <Redirect to='/login' />} />
       <Route path='/signup' component={SignUp} />
       <Route path='/login' component={Login} />
-      <Route exact path='/question' component={QuizFeature} />
     </div>
   )
   const DefaultContainer = () => (
@@ -30,7 +29,7 @@ const App = () => {
           <Route exact path='/' render={() => <Redirect to='/login' />} />
           <PrivateRoute path='/dashboard' component={DashboardTabs} />
           <PrivateRoute path='/logout' component={Logout} />
-          <PrivateRoute path='/map' component={Map} />
+          <PrivateRoute path='/map' component={MapWrapper} />
           <PrivateRoute path='/account' component={UserAccount} />
         </div>
       </Navbar>
@@ -54,7 +53,7 @@ const App = () => {
       <Switch>
         <Route exact path='/(login)' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
-        <Route exact path='/question' component={QuizFeature} />
+        <Route exact path='/question' component={Questionnaire} />
         <Route component={DefaultContainer} />
       </Switch>
     </Router>
