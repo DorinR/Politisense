@@ -34,6 +34,8 @@
     "recharts": "^1.7.1",
     "request": "latest",
     "request-promise": "^4.2.4",
+    "topojson": "^3.0.2",
+    "topojson-client": "^3.1.0",
     "typescript": "^3.6.2",
     "xhr2": "^0.2.0",
     "xmlhttprequest": "latest"
