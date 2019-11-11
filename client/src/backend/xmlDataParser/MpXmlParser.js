@@ -1,11 +1,11 @@
 import { XmlDataParser } from './XmlDataParser'
 
 class MpXmlParser extends XmlDataParser {
-  get TAG_NAME () {
+  get tagName () {
     return 'MemberOfParliament'
   }
 
-  get LIST_TAG_NAME () {
+  get listTagName () {
     return 'ArrayOfMemberOfParliament'
   }
 

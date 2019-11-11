@@ -1,11 +1,11 @@
 import { XmlDataParser } from './XmlDataParser'
 
 class BillXmlParser extends XmlDataParser {
-  get TAG_NAME () {
+  get tagName () {
     return 'Bill'
   }
 
-  get LIST_TAG_NAME () {
+  get listTagName () {
     return 'Bills'
   }
 
@@ -14,14 +14,13 @@ class BillXmlParser extends XmlDataParser {
   }
 
   xmlToJson () {
-    // only store passed bills
     const currentState = this.getDataInAttribute('Events', 'laagCurrentStage')
     if (currentState !== 'RoyalAssentGiven') {
       return null
     }
 
     const bill = {}
-    bill.id = Number(this.getDataInAttribute(this.TAG_NAME, 'id'))
+    bill.id = Number(this.getDataInAttribute(this.tagName, 'id'))
     bill.number = this.getDataInAttribute('BillNumber', 'prefix') + '-' +
       this.getDataInAttribute('BillNumber', 'number')
     bill.title = this.$('BillTitle').find('Title[language=\'en\']').text().trim()
