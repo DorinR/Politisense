@@ -4,7 +4,8 @@ import represent from 'represent'
 exports.checkIfUserExists = (req, res) => {
   const email = req.body.email
   const db = new Firestore()
-  db.User().select('email', '==', email)
+  db.User()
+    .select('email', '==', email)
     .then(snapshot => {
       if (snapshot.empty) {
         res.json({
@@ -24,33 +25,34 @@ exports.checkIfUserExists = (req, res) => {
 }
 
 exports.userSignup = (req, res) => {
-  let user = {
+  const user = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     email: req.body.email,
     postalCode: req.body.postalCode,
-    categories: { category1: req.body.category1, category2: req.body.category2 },
-    riding: req.body.riding,
-
+    categories: {
+      category1: req.body.category1,
+      category2: req.body.category2
+    },
+    riding: req.body.riding
   }
   if (req.body.password) {
     user.password = req.body.password
   }
   const db = new Firestore()
-  db.User().select('email', '==', user.email)
+  db.User()
+    .select('email', '==', user.email)
     .then(snapshot => {
       if (snapshot.empty) {
         db.User()
           .insert(user)
-          .then(
-            () => {
-              res.json({
-                success: true
-              })
-            }
-          )
+          .then(() => {
+            res.json({
+              success: true
+            })
+          })
           .catch(err => {
-            console.log('Error getting documents', err)
+            console.error('Error getting documents', err)
           })
       } else {
         res.json({
@@ -70,7 +72,8 @@ exports.userLogin = (req, res) => {
     password: req.body.password
   }
   let entry = {}
-  db.User().select('email', '==', user.email)
+  db.User()
+    .select('email', '==', user.email)
     .then(snapshot => {
       if (snapshot.empty) {
         res.json({
@@ -107,7 +110,7 @@ exports.getUserByEmail = (req, res) => {
     .select('email', '==', userEmail)
     .then(snapshot => {
       if (snapshot.empty) {
-        res.status(400).json({
+        res.status(404).json({
           message: 'user not found',
           success: false
         })
@@ -127,12 +130,47 @@ exports.getUserByEmail = (req, res) => {
     )
 }
 
+exports.updateUser = (req, res) => {
+  let documentToChangeId = 0
+  const db = new Firestore()
+
+  db.User()
+    .select('email', '==', req.body.email)
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.error('no user with this email found')
+      }
+      snapshot.forEach(doc => {
+        documentToChangeId = doc.id
+      })
+      return db
+        .User()
+        .reference.doc(documentToChangeId)
+        .update({
+          password: req.body.password
+        })
+    })
+    .then(() => {
+      res.json({
+        success: true
+      })
+    })
+    .catch(err => {
+      res.status(404).json({
+        success: false,
+        message: 'getting userID unsuccessfull'
+      })
+    })
+}
+
 exports.setRiding = (req, res) => {
-  const postalCode = (req.body.postalCode).replace(/\s/g, '').toUpperCase()
+  const postalCode = req.body.postalCode.replace(/\s/g, '').toUpperCase()
   let riding = ''
   let federalArray = []
-  represent.postalCode(postalCode, function (err, data) {
-    federalArray = data.boundaries_centroid.filter(entry => entry.boundary_set_name === 'Federal electoral district')
+  represent.postalCode(postalCode, function(err, data) {
+    federalArray = data.boundaries_centroid.filter(
+      entry => entry.boundary_set_name === 'Federal electoral district'
+    )
     let maxid = 0
     let maxobj = {}
     for (let i = 0; i < federalArray.length; i++) {
