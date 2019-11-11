@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Login() {
+export default function Login () {
   const classes = useStyles()
 
   const [username, setUsername] = useState('')
@@ -67,7 +67,7 @@ export default function Login() {
     setPassword(e.target.value)
   }
 
-  function login(username, password) {
+  function login (username, password) {
     const credentials = { email: username, password: password }
     if (
       credentials.email === 'ishmammurtaza@gmail.com' &&

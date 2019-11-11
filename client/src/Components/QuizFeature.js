@@ -6,7 +6,7 @@ import './Quiz/questions_index.css'
 import update from 'react-addons-update'
 
 class QuizFeature extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
@@ -26,7 +26,7 @@ class QuizFeature extends Component {
     this.handleAnswerSelected = this.handleAnswerSelected.bind(this)
   }
 
-  componentWillMount() {
+  componentWillMount () {
     const shuffledAnswerOptions = quizQuestions.map(question =>
       this.shuffleArray(question.answers)
     )
@@ -36,7 +36,7 @@ class QuizFeature extends Component {
     })
   }
 
-  shuffleArray(array) {
+  shuffleArray (array) {
     var currentIndex = array.length
     var temporaryValue
     var randomIndex
@@ -53,7 +53,7 @@ class QuizFeature extends Component {
     return array
   }
 
-  handleAnswerSelected(event) {
+  handleAnswerSelected (event) {
     this.setUserAnswer(event.currentTarget.value)
 
     if (this.state.questionId < quizQuestions.length) {
@@ -63,7 +63,7 @@ class QuizFeature extends Component {
     }
   }
 
-  setUserAnswer(answer) {
+  setUserAnswer (answer) {
     const updatedAnswersCount = update(this.state.answersCount, {
       [answer]: { $apply: currentValue => currentValue + 1 }
     })
@@ -73,7 +73,7 @@ class QuizFeature extends Component {
     })
   }
 
-  setNextQuestion() {
+  setNextQuestion () {
     const counter = this.state.counter + 1
     const questionId = this.state.questionId + 1
 
@@ -86,7 +86,7 @@ class QuizFeature extends Component {
     })
   }
 
-  getResults() {
+  getResults () {
     const answersCount = this.state.answersCount
     const answersCountKeys = Object.keys(answersCount)
     const answersCountValues = answersCountKeys.map(key => answersCount[key])
@@ -95,7 +95,7 @@ class QuizFeature extends Component {
     return answersCountKeys.filter(key => answersCount[key] === maxAnswerCount)
   }
 
-  setResults(result) {
+  setResults (result) {
     console.log(result)
     if (result.length === 1) {
       console.log(result)
@@ -105,7 +105,7 @@ class QuizFeature extends Component {
     }
   }
 
-  renderQuiz() {
+  renderQuiz () {
     return (
       <Quiz
         answer={this.state.answer}
@@ -118,11 +118,11 @@ class QuizFeature extends Component {
     )
   }
 
-  renderResult() {
+  renderResult () {
     return <Result quizResult={this.state.result} />
   }
 
-  render() {
+  render () {
     return (
       <div className='App'>
         <div className='App-header'>
