@@ -23,7 +23,7 @@ class GovtDataScraper {
 
     console.log(`Trying to convert ${xmlList.length} xml files into data`)
 
-    xmlList.foreach(xml => {
+    xmlList.forEach(xml => {
       data.bills = this.addUniqueData(data.bills, this.getPossibleDataFromXmlParser(new BillXmlParser(xml, {
         mustHaveRoyalAssent: true,
         mustBeInCurrentParliament: true
