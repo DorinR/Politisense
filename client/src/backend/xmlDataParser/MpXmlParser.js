@@ -55,7 +55,7 @@ class MpXmlParser extends XmlDataParser {
   }
 
   hasData () {
-    return super.hasData() || this.isTagInXml(this.TAG_NAME + 'Role')
+    return super.hasData() || this.isTagInXml(this.tagName + 'Role')
   }
 
   getWebPageWithMpImage (mpName) {

@@ -101,7 +101,7 @@ class XmlDataParser {
   }
 
   hasData () {
-    return this.isTagInXml(this.TAG_NAME)
+    return this.isTagInXml(this.tagName)
   }
 }
 

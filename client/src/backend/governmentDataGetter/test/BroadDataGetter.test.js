@@ -2,7 +2,7 @@
 import { BroadDataGetter } from '../BroadDataGetter'
 
 describe('BroadDataGetter', () => {
-  it('should return some data', (done) => {
+  xit('should return some data', (done) => {
     const minutes = 60000
     jest.setTimeout(5 * minutes)
 

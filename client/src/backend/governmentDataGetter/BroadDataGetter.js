@@ -3,7 +3,6 @@ import { BillXmlParser } from '../xmlDataParser/BillXmlParser'
 import { MpXmlParser } from '../xmlDataParser/MpXmlParser'
 import { VoteXmlParser } from '../xmlDataParser/VoteXmlParser'
 import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
-import { Firestore } from '../../Firebase'
 
 const cheerio = require('cheerio')
 const Promise = require('bluebird')
@@ -31,12 +30,6 @@ class BroadDataGetter {
       }, currentParliament)), 'id')
       data.mps = this.addUniqueData(data.mps, this.getPossibleDataFromXmlParser(new MpXmlParser(xml, true)), 'name')
       data.votes = this.addUniqueData(data.votes, this.getPossibleDataFromXmlParser(new VoteXmlParser(xml, currentParliament)), 'id')
-      // vote participants is always wanted in a group so getting it is a little different
-      // TODO: remove?
-      // const voteParticipantParser = new VoteParticipantsXmlParser(xml)
-      // if (voteParticipantParser.hasListOfData() && voteParticipantParser.hasData()) {
-      //   data.voteParticipants[voteParticipantParser.getVoteId()] = voteParticipantParser.getAllFromXml()
-      // }
     }
 
     // data post-processing
@@ -46,11 +39,6 @@ class BroadDataGetter {
     await this.addVotersForAllVotes(data.votes, currentParliament)
 
     await this.addImageUrlForAllMps(data.mps)
-
-    // add data to db
-    // let fb = new Firestore()
-    // await this.addDataToDatabase(fb.Politician(), data.mps)
-    // fb = null
 
     console.log('Returning Data')
     return data
