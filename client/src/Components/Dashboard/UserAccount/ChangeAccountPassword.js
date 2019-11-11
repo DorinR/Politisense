@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center'
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '80%', // Fix IE 11 issue.
     marginTop: theme.spacing(3)
   },
   submit: {
@@ -45,13 +45,10 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     margin: theme.spacing(1)
-  },
-  form: {
-    width: '80%'
   }
 }))
 
-export async function fetchUserData (userEmail) {
+export async function fetchUserData(userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -65,7 +62,7 @@ export async function fetchUserData (userEmail) {
   return result
 }
 
-export async function updatePassword (user, newPassword) {
+export async function updatePassword(user, newPassword) {
   user.password = newPassword
   axios
     .post('http://localhost:5000/api/users/updateUser', user)
@@ -77,7 +74,7 @@ export async function updatePassword (user, newPassword) {
     .catch(err => console.log(err))
 }
 
-function ChangeAccountPassword (props) {
+function ChangeAccountPassword(props) {
   const classes = useStyles()
   const [changeCompleted, setChangeCompleted] = useState(false)
   const [email, setEmail] = useState('')
@@ -88,11 +85,11 @@ function ChangeAccountPassword (props) {
   const [previousPasswordFromDb, setPreviousPasswordFromDb] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
-  const [firstname, setFirstname] = useState('')
-  const [lastname, setLastname] = useState('')
+  const [firstname] = useState('')
+  const [lastname] = useState('')
   const [fetchedUserDetails, setFetchedUserDetails] = useState('')
-  const [validForm, setValidForm] = useState(false)
-  const [user, setUser] = useState({})
+  const [setValidForm] = useState(false)
+  const [user] = useState({})
   const [errors, setErrors] = useState({
     firstname: '',
     lastname: '',
@@ -104,7 +101,7 @@ function ChangeAccountPassword (props) {
   })
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
       setEmail(email)
@@ -116,18 +113,13 @@ function ChangeAccountPassword (props) {
     getData()
   }, [])
 
-  function checkEmpty (obj) {
+  function checkEmpty(obj) {
     for (var key in obj) {
       if (obj[key] !== null && obj[key] !== '') {
         return false
       }
     }
     return true
-  }
-  function checkForm () {
-    if (firstname && lastname && email && password && passwordConfirm) {
-      setValidForm(true)
-    }
   }
 
   const handleSubmit = e => {

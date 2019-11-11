@@ -29,7 +29,6 @@ export async function fetchUserData(userEmail) {
 }
 
 export default function ViewAccountDetails() {
-  const classes = useStyles()
   const [email, setEmail] = useState('')
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
@@ -58,7 +57,6 @@ export default function ViewAccountDetails() {
           <Grid item xs={12}>
             <TextField
               name='email'
-              variant='outlined'
               fullWidth
               id='email'
               label='Email'
@@ -72,7 +70,6 @@ export default function ViewAccountDetails() {
           <Grid item xs={12}>
             <TextField
               name='firstname'
-              variant='outlined'
               fullWidth
               id='firstName'
               label='First Name'
