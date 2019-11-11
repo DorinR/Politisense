@@ -4,7 +4,6 @@ const BillController = require('./BillController')
 const VoteRecordController = require('./VoteRecordController')
 
 module.exports = {
-  // User
   userSignup: function (req, res) {
     return UserController.userSignup(req, res)
   },
@@ -18,17 +17,21 @@ module.exports = {
     return UserController.updateUser(req, res)
   },
 
-  // Representatives
+  setRiding: function (req, res) {
+    return UserController.setRiding(req, res)
+  },
+  checkIfUserExists: function (req, res) {
+    return UserController.checkIfUserExists(req, res)
+  },
+
   getRepresentativeByRiding: function (req, res) {
     return RepresentativeController.getRepresentativeByRiding(req, res)
   },
 
-  // Bills
   getBillById: function (req, res) {
     return BillController.getBillById(req, res)
   },
 
-  // Vote Record
   getVotesByRepresentative: function (req, res) {
     return VoteRecordController.getVotesByRepresentative(req, res)
   }
