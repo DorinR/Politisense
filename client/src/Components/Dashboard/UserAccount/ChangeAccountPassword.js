@@ -77,7 +77,7 @@ export async function updatePassword(user, newPassword) {
 function ChangeAccountPassword(props) {
   const classes = useStyles()
   const [changeCompleted, setChangeCompleted] = useState(false)
-  const [email, setEmail] = useState('')
+  const [setEmail] = useState('')
   const [
     userEnteredPreviousPassword,
     setUserEnteredPreviousPassword
@@ -85,10 +85,7 @@ function ChangeAccountPassword(props) {
   const [previousPasswordFromDb, setPreviousPasswordFromDb] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
-  const [firstname] = useState('')
-  const [lastname] = useState('')
   const [fetchedUserDetails, setFetchedUserDetails] = useState('')
-  const [setValidForm] = useState(false)
   const [user] = useState({})
   const [errors, setErrors] = useState({
     firstname: '',
