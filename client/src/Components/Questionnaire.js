@@ -63,7 +63,7 @@ function getSteps () {
 }
 
 export async function setRiding (postalCode) {
-  let result = await axios
+  const result = await axios
     .post('http://localhost:5000/api/users/setRiding', {
       postalCode: postalCode
     })
