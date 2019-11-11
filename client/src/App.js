@@ -9,7 +9,7 @@ import Login from './Components/Auth/Login'
 import SignUp from './Components/Auth/SignUp'
 import Navbar from './Components/Navbar'
 import Logout from './Components/Logout'
-import UserAccount from './Components/UserAccount'
+import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
 import MapWrapper from './Components/Dashboard/MapWrapper'
 import DashboardTabs from './Components/Dashboard/DashboardTabs'
 import Questionnaire from './Components/Questionnaire'
@@ -30,7 +30,7 @@ const App = () => {
           <PrivateRoute path='/dashboard' component={DashboardTabs} />
           <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/map' component={MapWrapper} />
-          <PrivateRoute path='/account' component={UserAccount} />
+          <PrivateRoute path='/account' component={UserAccountTabs} />
         </div>
       </Navbar>
     </div>
