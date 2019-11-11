@@ -8,10 +8,10 @@ import {
 import Login from './Components/Auth/Login'
 import SignUp from './Components/Auth/SignUp'
 import Navbar from './Components/Navbar'
-import Dashboard from './Components/Dashboard/Dashboard'
 import Logout from './Components/Logout'
 import UserAccount from './Components/UserAccount'
 import Map from './Components/Map'
+import DashboardTabs from './Components/Dashboard/DashboardTabs'
 import Questionnaire from './Components/Questionnaire'
 
 const App = () => {
@@ -20,7 +20,6 @@ const App = () => {
       <Route exact path='/' render={() => <Redirect to='/login' />} />
       <Route path='/signup' component={SignUp} />
       <Route path='/login' component={Login} />
-
     </div>
   )
   const DefaultContainer = () => (
@@ -28,7 +27,7 @@ const App = () => {
       <Navbar>
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
-          <PrivateRoute path='/dashboard' component={Dashboard} />
+          <PrivateRoute path='/dashboard' component={DashboardTabs} />
           <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/map' component={Map} />
           <PrivateRoute path='/account' component={UserAccount} />
