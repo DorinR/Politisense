@@ -17,10 +17,8 @@ exports.checkIfUserExists = (req, res) => {
           data: 'its already in db'
         })
       }
-      db.close()
     })
     .catch(err => {
-      db.close()
       console.log('Error getting documents', err)
     })
 }
