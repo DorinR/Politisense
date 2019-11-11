@@ -1,3 +1,5 @@
+import { DataNotFoundError } from './XmlParserError'
+
 const cheerio = require('cheerio')
 
 class XmlDataParser {
@@ -9,12 +11,27 @@ class XmlDataParser {
     })
   }
 
-  getDataInTag (tag) {
-    return this.$(tag).text()
+  getDataInTag (tag, allowMissingTag = false) {
+    if (!this.isTagInXml(tag)) {
+      if (allowMissingTag) {
+        return ''
+      } else {
+        throw new DataNotFoundError(`The tag ${tag} does not exist in the xml file.`)
+      }
+    }
+    return this.$(tag).eq(0).text()
   }
 
-  getDataInAttribute (tag, attribute) {
-    return this.$(tag).attr(attribute)
+  getDataInAttribute (tag, attribute, allowMissingTag = false) {
+    if (!this.isTagInXml(tag)) {
+      if (allowMissingTag) {
+        return ''
+      } else {
+        throw new DataNotFoundError(`The tag ${tag} does not exist in the xml file.`)
+      }
+    }
+
+    return this.$(tag).eq(0).attr(attribute)
   }
 
   formatXmlDate (xmlDate) {
@@ -29,25 +46,24 @@ class XmlDataParser {
     throw new TypeError('Abstract Method: Implement and call in class')
   }
 
-  // returns a parser of the same type
   generateNewParser (xml) {
     throw new TypeError('Abstract Method: Implement and call in class')
   }
 
-  // returns the item with its attributes as a JSON object
   xmlToJson () {
     throw new TypeError('Abstract Method: Implement and call in class')
   }
 
-  // returns a list of JSONs that represent the item, null if the xml doesn't match
-  getAllFromXml () {
+  getAllFromXml (onlyFromListTag = false) {
     const listOfItems = []
 
-    if (this.$(this.listTagName) <= 0) {
-      return null
+    if (onlyFromListTag && !this.hasListOfData()) {
+      return []
     }
 
-    this.$(this.listTagName).find(this.tagName).each((i, data) => {
+    const foundData = onlyFromListTag ? this.$(this.listTagName).find(this.tagName) : this.$(this.tagName)
+
+    foundData.each((i, data) => {
       const xml = this.$(data).toString()
       const parser = this.generateNewParser(xml)
       const item = parser.xmlToJson()
@@ -56,6 +72,18 @@ class XmlDataParser {
       }
     })
     return listOfItems
+  }
+
+  isTagInXml (tag) {
+    return this.$(tag).length > 0
+  }
+
+  hasListOfData () {
+    return this.isTagInXml(this.listTagName)
+  }
+
+  hasData () {
+    return this.isTagInXml(this.tagName)
   }
 }
 
