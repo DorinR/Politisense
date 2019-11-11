@@ -88,8 +88,8 @@ class GovtDataScraper {
       const existingVoteIndex = filteredVotes.findIndex(v => v.billNumber === vote.billNumber)
       if (existingVoteIndex >= 0) {
         const existingVote = filteredVotes[existingVoteIndex]
-        // newer votes have a greater id number
-        filteredVotes[existingVoteIndex] = (vote.id > existingVote.id) ? vote : existingVote
+        const mostRecentVote = (vote.id > existingVote.id) ? vote : existingVote
+        filteredVotes[existingVoteIndex] = mostRecentVote
       } else {
         filteredVotes.push(vote)
       }
