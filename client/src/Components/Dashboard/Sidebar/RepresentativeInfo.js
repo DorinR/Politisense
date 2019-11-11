@@ -42,9 +42,11 @@ export default function RepresentativeInfo (props) {
           setPoliticalParty(politicalParty)
           setYearElected(yearElected)
           setRiding(riding)
+          db.close()
         })
       })
       .catch(err => {
+        db.close()
         console.log('Error getting documents', err)
       })
   })

@@ -85,14 +85,16 @@ export default function Login (props) {
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
   const [errors, setErrors] = useState({ email: '', password: '' })
-  const db = new Firestore()
   const microsoftProvider = db.microsoftProvider
   const twitterProvider = db.twitterProvider
   const facebookProvider = db.facebookProvider
   const googleProvider = db.googleProvider
 
   function signInWithSocialProviders (_provider) {
-    return db.firebase.auth().signInWithPopup(_provider)
+    const fb = new Firestore()
+    const ret = fb.firebase.auth().signInWithPopup(_provider)
+    fb.close()
+    return ret
   }
 
   function validateUserFromSocialProviders (type, callback) {
