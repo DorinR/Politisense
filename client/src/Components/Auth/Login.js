@@ -98,7 +98,7 @@ export default function Login (props) {
   function validateUserFromSocialProviders (type, callback) {
     callback(type)
       .then(user => {
-        const response = fetchUser(user.email).then(res => {
+        fetchUser(user.email).then(res => {
           if (res.data.success) {
             localStorage.setItem('user', JSON.stringify(user))
             setAuthenticated(true)
