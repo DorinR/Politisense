@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import BarPieChart from '../BarPieCharts'
 import BarChart from '../BarChart'
 import DonutChart from '../DonutChart'
-// import {D3Chart} from '../D3Chart'
 export default class BarChartWrapper extends Component {
   componentDidMount () {
     switch (this.props.type) {

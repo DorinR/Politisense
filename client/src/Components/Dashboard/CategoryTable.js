@@ -16,8 +16,7 @@ const useStyles = makeStyles({
     minWidth: 650
   }
 })
-export async function fetchdata (email) {
-}
+
 function createData (name, id, vote) {
   return { name, id, vote }
 }
