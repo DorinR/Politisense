@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
-import RadarChart from './Charts/RadarChart'
+
 const useStyles = makeStyles({
   card: {
     width: 450
@@ -23,7 +23,6 @@ const useStyles = makeStyles({
 })
 export default function SimpleCard ({ children, title }) {
   const classes = useStyles()
-  const bull = <span className={classes.bullet}>•</span>
   return (
     <Card className={classes.card}>
       <CardContent>

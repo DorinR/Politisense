@@ -1,25 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import clsx from 'clsx'
-import CssBaseline from '@material-ui/core/CssBaseline'
 import Typography from '@material-ui/core/Typography'
-import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
-import { D3Chart } from './Charts/D3Chart'
 import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
-import CardMedia from '@material-ui/core/CardMedia'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
 import Collapse from '@material-ui/core/Collapse'
-import Avatar from '@material-ui/core/Avatar'
 import IconButton from '@material-ui/core/IconButton'
 import { red } from '@material-ui/core/colors'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import * as d3 from 'd3'
-import votingRecord from './voting_record.csv'
 import CategoryTable from './CategoryTable'
 import ChartCard from './ChartCard'
 import Tabs from '@material-ui/core/Tabs'
@@ -87,23 +79,12 @@ function a11yProps (index) {
 export default function Dashboard () {
   const classes = useStyles()
   const theme = useTheme()
-  const [data, setData] = useState([])
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
+  const [ setData] = useState([])
   const [expanded, setExpanded] = React.useState(false)
   const [tabValue, setTabValue] = React.useState(0)
 
-  useEffect(() => {
-    getVotingRecord()
-  }, [])
-
   const handleExpandClick = () => {
     setExpanded(!expanded)
-  }
-
-  const getVotingRecord = () => {
-    d3.csv(votingRecord).then(data => {
-      setData(data)
-    })
   }
 
   const handleChange = (event, newValue) => {

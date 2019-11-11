@@ -138,8 +138,6 @@ function createDonut (element, fData) {
   const tF = ['Liberal', 'Conservative', 'NDP', 'People', 'Green', 'BQ'].map(function (d) {
     return { type: d, freq: d3.sum(fData.map(function (t) { return t.freq[d] })) }
   })
-  var pC = pieChart(tF) // create the pie-chart.
-  var leg = legend(tF) // create the legend.
 }
 
 export default class DonutChart {

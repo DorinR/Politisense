@@ -12,7 +12,7 @@ var freqData = [
 function dashboard (element, fData) {
   const barColor = '#84c5f1'
   function segColor (c) { return { yes: '#43D0C4', no: '#de425b', abstain: '#f68155' }[c] }
-  // compute total for each state.
+
   fData.forEach(function (d) { d.total = d.freq.yes + d.freq.no + d.freq.abstain })
 
   function histoGram (fD) {
@@ -65,7 +65,7 @@ function dashboard (element, fData) {
 
     function mouseover (d) { // utility function to be called on mouseover.
       // filter for selected state.
-      var st = fData.filter(function (s) { return s.State == d[0] })[0]
+      var st = fData.filter(function (s) { return s.State === d[0] })[0]
       var nD = d3.keys(st.freq).map(function (s) { return { type: s, freq: st.freq[s] } })
 
       // call update functions of pie-chart and legend.

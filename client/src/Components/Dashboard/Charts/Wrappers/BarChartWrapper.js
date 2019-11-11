@@ -8,10 +8,8 @@ export default class BarChartWrapper extends Component {
     switch (this.props.type) {
       case 'bar-pie':
         return new BarPieChart(this.refs.chart)
-        break
       case 'bar':
         return new BarChart(this.refs.chart)
-        break
       default: return new DonutChart(this.refs.chart)
     }
   }

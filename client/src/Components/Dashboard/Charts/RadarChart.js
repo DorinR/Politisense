@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Radar, Pie} from 'react-chartjs-2';
+import {Radar} from 'react-chartjs-2';
 class RadarChart extends Component{
     constructor(props){
         super(props);

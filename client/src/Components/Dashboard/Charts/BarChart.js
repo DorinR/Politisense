@@ -1,5 +1,4 @@
 import * as d3 from 'd3'
-import React from 'react'
 const url = 'https://udemy-react-d3.firebaseio.com/tallest_men.json'
 const MARGIN = { TOP: 10, BOTTOM: 50, LEFT: 70, RIGHT: 10 }
 const WIDTH = 800 - MARGIN.LEFT - MARGIN.RIGHT
