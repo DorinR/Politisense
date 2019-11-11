@@ -68,7 +68,7 @@ export async function fetchUser(email) {
     .then(res => {
       result = res
     })
-    .catch(err => console.log(err))
+    .catch(err => console.error(err))
   return result
 }
 
@@ -79,7 +79,7 @@ export async function loginAPICall(user) {
     .then(res => {
       result = res
     })
-    .catch(err => console.log(err))
+    .catch(err => console.error(err))
   return result
 }
 

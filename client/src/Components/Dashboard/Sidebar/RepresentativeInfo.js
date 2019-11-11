@@ -17,6 +17,9 @@ const useStyles = makeStyles(theme => ({
     color: '#41aaa8',
     fontStyle: 'italic',
     fontWeight: 'bold'
+  },
+  customTextFormatting: {
+    textTransform: 'capitalize'
   }
 }))
 
@@ -53,7 +56,7 @@ export default function RepresentativeInfo (props) {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>NAME</Typography>
-          {name}
+          <span className={classes.customTextFormatting}>{name}</span>
         </CardContent>
       </Card>
       <Box m={1} />
@@ -62,14 +65,14 @@ export default function RepresentativeInfo (props) {
           <Typography className={classes.customHeadingText}>
             POLITICAL PARTY
           </Typography>
-          {politicalParty}
+          <span className={classes.customTextFormatting}>{politicalParty}</span>
         </CardContent>
       </Card>
       <Box m={1} />
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>RIDING</Typography>
-          {riding}
+          <span className={classes.customTextFormatting}>{riding}</span>
         </CardContent>
       </Card>
       <Box m={1} />
