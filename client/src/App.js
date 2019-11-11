@@ -20,6 +20,7 @@ const App = () => {
       <Route exact path='/' render={() => <Redirect to='/login' />} />
       <Route path='/signup' component={SignUp} />
       <Route path='/login' component={Login} />
+      <Route exact path='/question' component={Quiz_Feature} />
     </div>
   )
   const DefaultContainer = () => (
@@ -54,6 +55,7 @@ const App = () => {
       <Switch>
         <Route exact path='/(login)' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
+        <Route exact path='/question' component={Quiz_Feature} />
         <Route component={DefaultContainer} />
       </Switch>
     </Router>
