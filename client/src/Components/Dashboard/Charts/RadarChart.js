@@ -51,4 +51,4 @@ class RadarChart extends Component{
         )
     }
 }
-export default RadarChart;
+export default RadarChart
