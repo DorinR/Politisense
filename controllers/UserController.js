@@ -1,7 +1,7 @@
 import { Firestore } from '../client/src/Firebase'
 import represent from 'represent'
 
-exports.check = (req, res) => {
+exports.checkIfUserExists = (req, res) => {
   const email = req.body.email
   const db = new Firestore()
   db.User().select('email', '==', email)
@@ -10,7 +10,6 @@ exports.check = (req, res) => {
         res.json({
           success: false,
           data: 'doesnt exist'
-
         })
       } else {
         res.json({
@@ -25,26 +24,17 @@ exports.check = (req, res) => {
 }
 
 exports.userSignup = (req, res) => {
-  let user = {}
+  let user = {
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    email: req.body.email,
+    postalCode: req.body.postalCode,
+    categories: { category1: req.body.category1, category2: req.body.category2 },
+    riding: req.body.riding,
+
+  }
   if (req.body.password) {
-    user = {
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      email: req.body.email,
-      postalCode: req.body.postalCode,
-      categories: { category1: req.body.category1, category2: req.body.category2 },
-      riding: req.body.riding,
-      password: req.body.password
-    }
-  } else {
-    user = {
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      postalCode: req.body.postalCode,
-      categories: { category1: req.body.category1, category2: req.body.category2 },
-      riding: req.body.riding,
-      email: req.body.email
-    }
+    user.password = req.body.password
   }
   const db = new Firestore()
   db.User().select('email', '==', user.email)
@@ -75,7 +65,6 @@ exports.userSignup = (req, res) => {
 }
 exports.userLogin = (req, res) => {
   const db = new Firestore()
-  console.log(req.body.email)
   const user = {
     email: req.body.email,
     password: req.body.password
