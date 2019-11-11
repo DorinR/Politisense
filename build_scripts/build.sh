@@ -45,12 +45,12 @@ do
 done
 }
 build () {
-	style_errors=0;
-	cd ../client
+	cd client
 	npm install
 	process_flags $@
-	npm test
-	npm build run
-	return $style_errors		
+	npm test -- --detectOpenHandles --forceExit
+	echo "run build"
+	npm run build
 }
 build $@
+

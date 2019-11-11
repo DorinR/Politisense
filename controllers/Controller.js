@@ -5,13 +5,13 @@ const VoteRecordController = require('./VoteRecordController')
 
 module.exports = {
   // User
-  userSignup: function(req, res) {
+  userSignup: function (req, res) {
     return UserController.userSignup(req, res)
   },
-  userLogin: function(req, res) {
+  userLogin: function (req, res) {
     return UserController.userLogin(req, res)
   },
-  getUserByEmail: function(req, res) {
+  getUserByEmail: function (req, res) {
     return UserController.getUserByEmail(req, res)
   },
   updateUser: function(req, res) {
@@ -19,17 +19,17 @@ module.exports = {
   },
 
   // Representatives
-  getRepresentativeByRiding: function(req, res) {
+  getRepresentativeByRiding: function (req, res) {
     return RepresentativeController.getRepresentativeByRiding(req, res)
   },
 
   // Bills
-  getBillById: function(req, res) {
+  getBillById: function (req, res) {
     return BillController.getBillById(req, res)
   },
 
   // Vote Record
-  getVotesByRepresentative: function(req, res) {
+  getVotesByRepresentative: function (req, res) {
     return VoteRecordController.getVotesByRepresentative(req, res)
   }
 }

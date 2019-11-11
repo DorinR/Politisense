@@ -11,7 +11,7 @@ import BillHistoryTable from './PastBills/BillHistoryTable'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import BarChartIcon from '@material-ui/icons/BarChart'
 
-function TabPanel(props) {
+function TabPanel (props) {
   const { children, value, index, ...other } = props
 
   return (
@@ -34,7 +34,7 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired
 }
 
-function a11yProps(index) {
+function a11yProps (index) {
   return {
     id: `scrollable-force-tab-${index}`,
     'aria-controls': `scrollable-force-tabpanel-${index}`
@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function DashboardTabs() {
+export default function DashboardTabs () {
   const classes = useStyles()
   const [value, setValue] = React.useState(0)
 
