@@ -5,7 +5,7 @@ exports.getVotesByRepresentative = async (req, res) => {
   var allBillsVotedOn = []
   const db = new Firestore()
 
-  function getSupplementalBillInformation (bill) {
+  function getSupplementalBillInformation(bill) {
     db.Bill()
       .select('number', '==', bill.billNumber)
       .then(snapshot => {
@@ -17,9 +17,9 @@ exports.getVotesByRepresentative = async (req, res) => {
         }
         snapshot.forEach(doc => {
           const { title, text, dateVoted } = doc.data()
-          ;(bill.billTitle = title),
-          (bill.billText = text),
-          (bill.dateVoted = dateVoted)
+          bill.billTitle = title
+          bill.billText = text
+          bill.dateVoted = dateVoted
 
           allBillsVotedOn.push(bill)
         })
@@ -32,7 +32,7 @@ exports.getVotesByRepresentative = async (req, res) => {
       })
   }
 
-  function getAllBillsVotedOnByRepresentative (representative) {
+  function getAllBillsVotedOnByRepresentative(representative) {
     allBillsVotedOn = []
     db.VoteRecord()
       .select()
