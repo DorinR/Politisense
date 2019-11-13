@@ -7,7 +7,9 @@ fix_style () {
 }
 verbose_style_errors () {
 	style_errors=$(npx standard -v | wc -l)
+	style_errors=$((style_errors-1))
 	npx standard -v
+
 }
 quiet_style_errors () {
 	style_errors=$(npx standard -v | wc -l)
@@ -35,6 +37,7 @@ do
 	if [ "$flag" = "--strict" ]
 	then
 		echo "Strict style rules enabled, build will fail by style errors"
+		echo "excludes parsing errors from the linter"
 		strict=1
 	fi
 	if [ "$flag" = "--fix" ]
