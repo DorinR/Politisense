@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-env node */
 import React from 'react'
 import {
   BrowserRouter as Router,
@@ -40,11 +42,7 @@ const App = () => {
     <Route
       {...rest}
       render={props =>
-        localStorage.getItem('user') ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to='/login' />
-        )}
+        localStorage.getItem('user') ? (<Component {...props} />) : (<Redirect to='/login' />)}
     />
   )
 

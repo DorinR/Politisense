@@ -29,6 +29,7 @@ exports.getVotesByRepresentative = async (req, res) => {
           message: 'Error retriving bill',
           success: false
         })
+        console.error(err)
       })
   }
 
@@ -70,6 +71,7 @@ exports.getVotesByRepresentative = async (req, res) => {
           message: 'Error retriving bill',
           success: false
         })
+        console.error(err)
       })
   }
   getAllBillsVotedOnByRepresentative(representative)

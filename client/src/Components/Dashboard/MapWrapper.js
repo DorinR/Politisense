@@ -11,6 +11,7 @@ const headerStyle = {
 }
 export default class ChartWrapper extends Component {
   componentDidMount () {
+    // eslint-disable-next-line no-new
     new CanadaMap(this.refs.chart)
   }
 

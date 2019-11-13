@@ -20,7 +20,7 @@ exports.checkIfUserExists = (req, res) => {
       }
     })
     .catch(err => {
-      console.log('Error getting documents', err)
+      console.erro('Error getting documents', err)
     })
 }
 
@@ -122,12 +122,13 @@ exports.getUserByEmail = (req, res) => {
         })
       })
     })
-    .catch(err =>
+    .catch(err => {
       res.status(404).json({
         message: 'UserController.js',
         success: false
       })
-    )
+      console.error(err)
+    })
 }
 
 exports.updateUser = (req, res) => {
@@ -160,6 +161,7 @@ exports.updateUser = (req, res) => {
         success: false,
         message: 'getting userID unsuccessfull'
       })
+      console.error(err)
     })
 }
 
@@ -167,7 +169,13 @@ exports.setRiding = (req, res) => {
   const postalCode = req.body.postalCode.replace(/\s/g, '').toUpperCase()
   let riding = ''
   let federalArray = []
-  represent.postalCode(postalCode, function(err, data) {
+  represent.postalCode(postalCode, function (err, data) {
+    if (err) {
+      res.json({
+        success: false
+      })
+      return
+    }
     federalArray = data.boundaries_centroid.filter(
       entry => entry.boundary_set_name === 'Federal electoral district'
     )
