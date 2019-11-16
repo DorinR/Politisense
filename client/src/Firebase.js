@@ -1,8 +1,7 @@
+import { Model } from './models/Model'
+
 const fs = require('firebase')
 require('firebase/firestore')
-
-import { Model } from '../../models/Model'
-
 
 class _Firestore {
   constructor () {

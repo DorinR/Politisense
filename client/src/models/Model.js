@@ -3,4 +3,4 @@ class Model {
   constructor () {}
 }
 
-module.exports.Model = Model
+export { Model }
