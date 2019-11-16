@@ -58,14 +58,25 @@ class MpXmlParser extends XmlDataParser {
     return super.hasData() || this.isTagInXml(this.tagName + 'Role')
   }
 
-  getWebPageWithMpImage (mpName) {
+  async getMpImageUrl (mpName) {
+    const htmlWithMpImage = await this._getHtmlWithMpImage(this._getWebPageWithMpImage(mpName))
+
+    if (htmlWithMpImage === '') {
+      return ''
+    }
+
+    const $ = cheerio.load(htmlWithMpImage)
+    return 'https://www.ourcommons.ca' + $('img.ce-mip-mp-picture').attr('src')
+  }
+
+  _getWebPageWithMpImage (mpName) {
     return `https://www.ourcommons.ca/Members/en/search?searchText=${mpName}&parliament=all`
   }
 
-  async getMpImageUrl (mpName) {
-    const linkScraper = new LinkScraper(this.getWebPageWithMpImage(mpName))
+  async _getHtmlWithMpImage (link) {
+    const linkScraper = new LinkScraper(link)
 
-    const htmlWithMpImage = await linkScraper.perform()
+    return linkScraper.perform()
       .then(res => {
         return res.body
       }).then(html => {
@@ -74,13 +85,6 @@ class MpXmlParser extends XmlDataParser {
         console.error(e.message)
         return ''
       })
-
-    if (htmlWithMpImage === '') {
-      return ''
-    }
-
-    const $ = cheerio.load(htmlWithMpImage)
-    return 'https://www.ourcommons.ca' + $('img.ce-mip-mp-picture').attr('src')
   }
 }
 
