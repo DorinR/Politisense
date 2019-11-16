@@ -25,7 +25,7 @@ class UrlFileReader extends JobAction {
       })
       .catch((e) => {
         e.message = 'unable to retrieve xml from link: ' + this.fp + '\n' + e.message
-        console.debug(e)
+        console.debug(e.message)
         return null
       })
   }

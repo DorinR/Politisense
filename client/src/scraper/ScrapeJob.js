@@ -29,54 +29,104 @@ class ScrapeJob extends Job {
     return this.processor.perform(links)
   }
 
-  createNewJob (url, manager) {
-    return new ScrapeJob(url, manager)
+  requeueLinks(urls) {
+    const newJobs = super.createNewJobs(urls)
+    this.queueCallback(newJobs)
+    this.done = true
+    return this.result()
+  }
+
+  requestbody(req) {
+    return req.body
+  }
+
+  createNewJob (url, callback) {
+    return new ScrapeJob(url, callback, this.tlds)
   }
 
   result () {
     return this.processor.selected
   }
 
+  throwOnUnexpected(e, reject) {
+    if (e.name !== ScrapeErrorName) {
+      console.debug(e.message)
+      reject(e)
+    }
+  }
+
+  requeueOnFailedConnection(e, reject) {
+    const error = new ScrapeError()
+    const link = this.scraper.url
+    const connectionError = this.connectionErrorName(e.message)
+    if(connectionError) {
+      error.message = 'ERROR: Connection failure ' + connectionError + ', requeuing job: ' + link
+      this.queueCallback([new ScrapeJob(link, this.manager, this.tlds)])
+      console.debug(error.message)
+      reject(error)
+    }
+  }
+
+  connectionErrorName(message) {
+    if (message.includes('ESOCKETTIMEDOUT')) {
+      return 'ESOCKETTIMEDOUT'
+    }
+    if (message.includes('ETIMEDOUT')) {
+      return 'ETIMEDOUT'
+    }
+    if (message.includes('ECONNRESET')) {
+      return 'ECONNRESET'
+    }
+    if (message.includes('EPIPE')) {
+      return 'EPIPE'
+    }
+    return null
+  }
+
+  rejectMalformedLink(e, reject) {
+    const error = new ScrapeError()
+    const link = this.scraper.url
+    if (this.scraper.url.includes('https://')) {
+      error.message = 'ERROR: Malformed link passed to scraper: ' + link
+      console.debug(error.message)
+      reject(error)
+    }
+  }
+
+  reconditionPartialLinks(e, reject) {
+    const error = new ScrapeError()
+    let link = this.scraper.url
+    if (this.scraper.url.startsWith('//')) {
+      link = 'https:' + this.scraper.url
+      this.queueCallback([new ScrapeJob(link, this.queueCallback, this.tlds)])
+      error.message = 'Re-enqueuing link as: ' + link
+    } else if (this.scraper.url.startsWith('/')) {
+      this.tlds.forEach(tld => {
+        const newLink = tld + link
+        this.queueCallback([new ScrapeJob(newLink, this.queueCallback, this.tlds)])
+        error.message = ''
+      })
+    }
+    reject(error)
+  }
+
+  handleError(e, reject) {
+    this.done = true
+    this.throwOnUnexpected(e, reject)
+    this.requeueOnFailedConnection(e, reject)
+    this.reconditionPartialLinks(e, reject)
+  }
+
   async execute () {
     return new Promise((resolve, reject) => {
       this.scraper.perform()
-        .then((html) => {
-          return this.parse(html.body)
-        })
-        .then((links) => {
-          return this.process(links)
-        })
-        .then((urls) => {
-          this.manager.enqueueJobsCb(super.createNewJobs(urls))
-          this.done = true
-          resolve(this.result())
-        })
-        .catch((e) => {
-          let link = this.scraper.url
-          this.done = true
-          if (e.name !== ScrapeErrorName) {
-            if(e.message.includes('ESOCKETTIMEDOUT') || e.message.includes('ETIMEDOUT') || e.message.includes('ECONNRESET')) {
-              this.manager.enqueueJobsCb([new ScrapeJob(link, this.manager, this.tlds)])
-            }
-            console.debug(e.message)
-            reject(e)
-          }
-          const error = new ScrapeError('Malformed link passed to scraper: ' + link + '\n' + e.message)
-          if (this.scraper.url.includes('https://')) {
-            console.debug(error.message)
-            reject(error)
-          }
-          if (this.scraper.url.startsWith('//')) {
-            link = 'https:' + this.scraper.url
-            this.manager.enqueueJobsCb([new ScrapeJob(link, this.manager, this.tlds)])
-            error.message = 're-enqueuing link as: ' + link
-          } else if (this.scraper.url.startsWith('/')) {
-            this.tlds.forEach(tld => {
-              const newLink = tld + link
-              this.manager.enqueueJobsCb([new ScrapeJob(newLink, this.manager, this.tlds)])
-            })
-          }
-          reject(error)
+        .then(this.requestbody.bind(this))
+        .then(this.parse.bind(this))
+        .then(this.process.bind(this))
+        .then(this.requeueLinks.bind(this))
+        .then(resolve)
+        .catch(e => {
+          this.handleError(e, reject)
         })
     })
   }

@@ -39,7 +39,7 @@ class LinkScraperAction extends JobAction {
         headers: LinkScraperAction.headers()
       })
         .then((html) => {
-          console.debug('Done Scraping: ' + this.url)
+          console.debug('INFO: Done Scraping: ' + this.url)
           resolve(html)
         })
         .catch((e) => {
