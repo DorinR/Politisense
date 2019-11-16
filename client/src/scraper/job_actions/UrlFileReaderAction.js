@@ -11,9 +11,12 @@ class UrlFileReader extends JobAction {
     // eslint-disable-next-line no-undef
     return fetch(this.fp)
       .then((result) => {
-        return result.body()
+        return result.text()
       })
       .then((body) => {
+        if (body.includes('<!DOCTYPE html>') || body.includes('<!doctype html>')) {
+          throw Error('Content not xml')
+        }
         return body
       })
       .then(xml => {
@@ -22,6 +25,7 @@ class UrlFileReader extends JobAction {
       })
       .catch((e) => {
         e.message = 'unable to retrieve xml from link: ' + this.fp + '\n' + e.message
+        console.debug(e)
         return null
       })
   }

@@ -47,11 +47,12 @@ class ScrapeJobManager {
 
   xmlContent (xmlLinks) {
     const xmlContentList = []
-    xmlLinks.forEach((link) => {
+    xmlLinks.forEach(async (link) => {
       const r = new Reader(link)
       try {
         const xml = r.perform()
         xmlContentList.push(xml)
+        await this.hold(25)
       } catch (e) {
         console.error(e.message)
       }

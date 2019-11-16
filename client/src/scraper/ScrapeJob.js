@@ -55,10 +55,15 @@ class ScrapeJob extends Job {
           let link = this.scraper.url
           this.done = true
           if (e.name !== ScrapeErrorName) {
+            if(e.message.includes('ESOCKETTIMEDOUT') || e.message.includes('ETIMEDOUT') || e.message.includes('ECONNRESET')) {
+              this.manager.enqueueJobsCb([new ScrapeJob(link, this.manager, this.tlds)])
+            }
+            console.debug(e.message)
             reject(e)
           }
           const error = new ScrapeError('Malformed link passed to scraper: ' + link + '\n' + e.message)
           if (this.scraper.url.includes('https://')) {
+            console.debug(error.message)
             reject(error)
           }
           if (this.scraper.url.startsWith('//')) {
