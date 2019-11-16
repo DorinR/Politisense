@@ -11,13 +11,7 @@ class UrlFileReader extends JobAction {
     // eslint-disable-next-line no-undef
     return fetch(this.fp)
       .then((result) => {
-        return result.body
-      })
-      .then((body) => {
-        return body
-      })
-      .then((zipped) => {
-        return zipped._outBuffer.toString()
+        return result.text()
       })
       .then(xml => {
         if (xml.includes('html')) {

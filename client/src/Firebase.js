@@ -39,11 +39,15 @@ function getInstance () {
 class Reference {
   constructor (reference) {
     this.reference = reference
-    this.modelsOnly = false;
+    this.modelsOnly = false
+    this.query = null
   }
 
   where (attribute, operator, value) {
-    this.reference.where(attribute, operator, value)
+    if (!this.query) {
+      this.query = this.reference.where(attribute, operator, value)
+    }
+    this.query = this.query.where(attribute, operator, value)
     return this
   }
 
@@ -98,12 +102,24 @@ class Reference {
 
   select (attribute, operator, value) {
     if (
-      typeof attribute === 'undefined' ||
+      (typeof attribute === 'undefined' ||
       typeof operator === 'undefined' ||
-      typeof value === 'undefined'
+      typeof value === 'undefined') &&
+      !this.query
     ) {
       return new Promise((resolve, reject) => {
         this.reference
+          .get()
+          .then(snapshot => {
+            resolve(snapshot)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    } else if (this.query) {
+      return new Promise((resolve, reject) => {
+        this.query
           .get()
           .then(snapshot => {
             resolve(snapshot)

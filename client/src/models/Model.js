@@ -1,4 +1,4 @@
-//ABC for Firebase
+// ABC for Firebase
 class Model {
   constructor () {}
 }

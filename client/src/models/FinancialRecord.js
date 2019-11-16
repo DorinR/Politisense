@@ -3,7 +3,7 @@ const Model = require('./Model').Model
 
 class FinancialRecord extends Model {
   constructor (memberID, parentCategory, category, amount, year, quarter) {
-    super ()
+    super()
     Condition.parameter(memberID).isType(Number)
     Condition.parameter(parentCategory).isType(String)
     Condition.parameter(category).isType(String)
@@ -19,3 +19,5 @@ class FinancialRecord extends Model {
     this.quarter = quarter
   }
 }
+
+module.exports.FinancialRecord = FinancialRecord
