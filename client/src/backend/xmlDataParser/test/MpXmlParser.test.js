@@ -35,11 +35,32 @@ describe('MpXmlParser', () => {
 
   it('should get the image url of the mp', (done) => {
     const parser = getMpParserForXmlFile('testXml/testMp.xml')
-    const mp = parser.xmlToJson()
+    jest.spyOn(parser, '_getHtmlWithMpImage').mockImplementation(async () => {
+      return '<img alt="" class="ce-mip-mp-picture visible-lg visible-md img-fluid" src="/Content/Parliamentarians/Images/OfficialMPPhotos/42/TrudeauJustin_LIB.jpg">'
+    })
 
-    parser.getMpImageUrl(mp.name).then(url => {
+    const mpName = 'justin trudeau'
+
+    parser.getMpImageUrl(mpName).then(url => {
+      expect(parser._getHtmlWithMpImage).toHaveBeenCalledTimes(1)
+      expect(parser._getHtmlWithMpImage).toHaveBeenCalledWith(parser._getWebPageWithMpImage(mpName))
       expect(url).not.toBeNull()
-      expect(url).toBe('https://www.ourcommons.ca/Content/Parliamentarians/Images/OfficialMPPhotos/42/WilsonRaybouldJody_Lib.jpg')
+      expect(url).toBe('https://www.ourcommons.ca/Content/Parliamentarians/Images/OfficialMPPhotos/42/TrudeauJustin_LIB.jpg')
+      done()
+    })
+  })
+
+  it('should return empty if mp image not found', (done) => {
+    const parser = getMpParserForXmlFile('testXml/testMp.xml')
+    jest.spyOn(parser, '_getHtmlWithMpImage').mockImplementation(async () => {
+      return ''
+    })
+
+    const mpName = 'justin trudeau'
+
+    parser.getMpImageUrl(mpName).then(url => {
+      expect(parser._getHtmlWithMpImage).toHaveBeenCalledWith(parser._getWebPageWithMpImage(mpName))
+      expect(url).toBe('')
       done()
     })
   })
