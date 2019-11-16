@@ -1,6 +1,9 @@
 const fs = require('firebase')
 require('firebase/firestore')
 
+import { Model } from '../../models/Model'
+
+
 class _Firestore {
   constructor () {
     this.config = {
@@ -37,6 +40,7 @@ function getInstance () {
 class Reference {
   constructor (reference) {
     this.reference = reference
+    this.modelsOnly = false;
   }
 
   where (attribute, operator, value) {
@@ -45,6 +49,9 @@ class Reference {
   }
 
   update (model) {
+    if (this.modelsOnly && typeof model !== typeof new Model()) {
+      throw new Error('Error: Only a model can be updated in firebase')
+    }
     return new Promise((resolve, reject) => {
       this.reference
         .get()
@@ -122,6 +129,9 @@ class Reference {
   }
 
   insert (model) {
+    if (this.modelsOnly && typeof model !== typeof new Model()) {
+      throw new Error('Error: Only a model can be inserted in firebase')
+    }
     return new Promise(resolve => {
       this.reference
         .add(model)

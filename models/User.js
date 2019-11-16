@@ -1,7 +1,9 @@
 const Condition = require('./Condition').Condition
+const Model = require('./Model').Model
 
-class User {
+class User extends Model {
   constructor (email, firstname, lastname, password, postalCode, riding, categories) {
+    super()
     Condition.parameter(email).isType(String)
     Condition.parameter(firstname).isType(String)
     Condition.parameter(lastname).isType(String)
