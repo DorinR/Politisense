@@ -14,7 +14,7 @@ class UrlFileReader extends JobAction {
         return result.text()
       })
       .then((body) => {
-        if (body.includes('<!DOCTYPE html>') || body.includes('<!doctype html>')) {
+        if (body.toLowerCase().includes('<!doctype html>')) {
           throw Error('Content not xml')
         }
         return body
