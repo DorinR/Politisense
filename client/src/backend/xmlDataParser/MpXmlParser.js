@@ -1,5 +1,4 @@
 import { XmlDataParser } from './XmlDataParser'
-import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
 
 const cheerio = require('cheerio')
 
@@ -59,8 +58,7 @@ class MpXmlParser extends XmlDataParser {
   }
 
   async getMpImageUrl (mpName) {
-    const htmlWithMpImage = await this._getHtmlWithMpImage(this._getWebPageWithMpImage(mpName))
-
+    const htmlWithMpImage = await this._getHtmlFromLink(this._getWebPageWithMpImage(mpName))
     if (htmlWithMpImage === '') {
       return ''
     }
@@ -71,20 +69,6 @@ class MpXmlParser extends XmlDataParser {
 
   _getWebPageWithMpImage (mpName) {
     return `https://www.ourcommons.ca/Members/en/search?searchText=${mpName}&parliament=all`
-  }
-
-  async _getHtmlWithMpImage (link) {
-    const linkScraper = new LinkScraper(link)
-
-    return linkScraper.perform()
-      .then(res => {
-        return res.body
-      }).then(html => {
-        return html
-      }).catch(e => {
-        console.error(e.message)
-        return ''
-      })
   }
 }
 
