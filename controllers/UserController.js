@@ -20,7 +20,7 @@ exports.checkIfUserExists = (req, res) => {
       }
     })
     .catch(err => {
-      console.erro('Error getting documents', err)
+      console.error('Error getting documents', err)
     })
 }
 
