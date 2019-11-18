@@ -31,18 +31,4 @@ describe('GovtDataScraper', () => {
     expect(filteredVotes).toHaveLength(2)
     expect(filteredVotes).toEqual(expect.arrayContaining([{ id: 8, billNumber: 111 }, { id: 16, billNumber: 222 }]))
   })
-
-  it('aaa', async () => {
-    const ret = await new ExpendituresScraper('https://www.ourcommons.ca/PublicDisclosure/MemberExpenditures.aspx?FormatType=XML')
-      .createExpenditureRecords()
-      .then(promises => {
-        Promise.all(promises)
-          .then(records => {
-            records.forEach(record => {
-              console.log(record[0])
-            })
-            expect(true).toBe(true)
-          })
-      })
-  }, 60000)
 })

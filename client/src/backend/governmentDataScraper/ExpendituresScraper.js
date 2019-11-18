@@ -58,7 +58,6 @@ class ExpendituresScraper {
   }
 
   findCategories (report) {
-    console.debug('INFO: Parsing for expense categories..')
     const categories = report.children.find((elem) => {
       return elem.name === 'ExpenditureCategories'
     })
@@ -128,7 +127,7 @@ class ExpendituresScraper {
   }
 
   createFinancialRecord (id, date, category) {
-    const year = this.computeQuarter(date)
+    const year = this.computeYear(date)
     const quarter = this.computeQuarter(date)
     const name = this.getCategoryName(category)
     const parent = category.parent
