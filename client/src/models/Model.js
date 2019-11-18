@@ -1,6 +1,8 @@
 //ABC for Firebase
 class Model {
-  constructor () {}
+  constructor () {
+    this.name = 'Model'
+  }
 }
 
 export { Model }
