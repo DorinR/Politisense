@@ -55,6 +55,9 @@ class Reference {
     if (this.modelsOnly && typeof model !== typeof new Model()) {
       throw new Error('Error: Only a model can be updated in firebase')
     }
+    if(typeof model === typeof new Model()) {
+      model = JSON.parse(JSON.stringify(model))
+    }
     return new Promise((resolve, reject) => {
       this.reference
         .get()
@@ -147,6 +150,10 @@ class Reference {
     if (this.modelsOnly && typeof model !== typeof new Model()) {
       throw new Error('Error: Only a model can be inserted in firebase')
     }
+    if(typeof model === typeof new Model()) {
+      model = JSON.parse(JSON.stringify(model))
+    }
+
     return new Promise(resolve => {
       this.reference
         .add(model)
