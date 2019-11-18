@@ -1,22 +1,25 @@
 #!/bin/bash
+style_errors=0
+strict=0
+verbose=0
 fix_style () {
 	npx standard --fix
 }
 verbose_style_errors () {
+	style_errors=$(npx standard -v | wc -l)
+	style_errors=$((style_errors-1))
 	npx standard -v
+
 }
 quiet_style_errors () {
-	for line in $((npx standard -v) 2>&1)
-	do
-		let style_errors=style_errors+1
-	done
-	echo "There are $style_errors style errors in this file"
+	style_errors=$(npx standard -v | wc -l)
+	echo "There are: $style_errors style errors in this file"
 }
 style_error_logging () {
-	if [ "$1" = "--verbose" ]
+	if [ $verbose -eq 1 ]
 	then
 		verbose_style_errors
-	elif [ "$1" = "--quiet" ]
+	elif [ $verbose -eq 0 ]
 	then
 		quiet_style_errors
 	fi
@@ -33,24 +36,50 @@ for flag in $flag_list
 do
 	if [ "$flag" = "--strict" ]
 	then
-		echo "Strict style rules enabled, build will fail by style errors"		
+		echo "Strict style rules enabled, build will fail by style errors"
+		echo "excludes parsing errors from the linter"
+		strict=1
 	fi
-	style_error_logging $flag
 	if [ "$flag" = "--fix" ]
 	then
-		style_errors=0
 		echo "Fixing style errors..."
 		fix_style
 	fi
+	if [ "$flag" = "--verbose" ]
+	then
+	  echo "verbose logging enabled"
+	  verbose=1
+	fi
 done
+	style_error_logging
+if [ $style_errors -gt 0 ]
+then
+	return 1
+fi
+	return 0
 }
+
+run_tests () {
+  valid="$(CI=true npm test -- --forceExit --coverage --no-watch | grep -c 'failed')"
+  if [ $valid != 0 ]
+  then
+    return 1
+  fi
+  return 0
+}
+
 build () {
 	cd client
-	npm install
 	process_flags $@
-	npm test -- --detectOpenHandles --forceExit
-	echo "run build"
+	if [[ $style_errors != 0 && $strict -eq 1 ]]
+	then
+	  return 1
+	fi
+	npm install
+	if run_tests
+	then
+	  return 1
+	fi
 	npm run build
 }
 build $@
-
