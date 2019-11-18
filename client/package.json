@@ -70,12 +70,12 @@
     "chai-as-promised": "^7.1.1",
     "cheerio": "^1.0.0-rc.3",
     "concurrently": "^4.1.2",
-    "node-fetch": "latest",
-    "nodemon": "^1.19.3",
     "jest": "24.8.0",
     "mocha": "^6.2.0",
+    "node-fetch": "latest",
+    "nodemon": "^1.19.3",
     "request-promise": "^4.2.4",
-    "standard": "^14.1.0"
+    "standard": "^14.3.1"
   },
   "proxy": "http://localhost:5000"
 }
