@@ -1,3 +1,4 @@
+/* eslint-env jest */
 import { fetchUserData } from '../Components/Dashboard/UserAccount/ChangeAccountPassword'
 
 const chai = require('chai')
