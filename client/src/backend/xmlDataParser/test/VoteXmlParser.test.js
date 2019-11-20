@@ -51,17 +51,23 @@ describe('VoteXmlParser', () => {
 
 describe('VoteParticipantsXmlParser', () => {
   it('should return dictionary of voters for bill C-47', () => {
-    const parser = getVoteParticipantsParserForXmlFile('testXml/testVoteParticipants.xml')
+    const yeaVoter = { firstName: 'Voter', lastName: 'One', vote: 'Yea' }
+    const nayVoter = { firstName: 'Michael', lastName: 'Chong', vote: 'Nay' }
+    const pairedVoter = { firstName: 'Jean-Yves', lastName: 'Duclos', vote: 'Paired', paired: true }
+    const pairedVoterWithVote = { firstName: 'Marilène', lastName: 'Gill', vote: 'Nay', paired: true }
+
+    const xml = genVotersXml([yeaVoter, nayVoter, pairedVoter, pairedVoterWithVote])
+    const parser = new VoteParticipantsXmlParser(xml)
     const voters = parser.getAllFromXml()
     assert.typeOf(voters, 'object', 'we get an dictionary object mapping Mps with there votes, not a list')
 
-    assert.lengthOf(Object.keys(voters), 294, 'there were 294 voters, paired or not')
+    assert.lengthOf(Object.keys(voters), 4)
     const yeaVoters = Object.keys(voters).filter(key => voters[key].vote === 'Yea')
-    assert.lengthOf(Object.keys(yeaVoters), 167, '167 members voted Yea')
+    assert.lengthOf(Object.keys(yeaVoters), 1)
     const nayVoters = Object.keys(voters).filter(key => voters[key].vote === 'Nay')
-    assert.lengthOf(Object.keys(nayVoters), 126, '126 members voted Nay')
+    assert.lengthOf(Object.keys(nayVoters), 2)
     const pairedVoters = Object.keys(voters).filter(key => voters[key].paired === true)
-    assert.lengthOf(Object.keys(pairedVoters), 2, '2 members did a paired vote')
+    assert.lengthOf(Object.keys(pairedVoters), 2)
 
     // check case of normal vote
     assert.hasAnyKeys(voters, ['michael chong'], 'Michael Chong is a voter')
@@ -87,7 +93,9 @@ describe('VoteParticipantsXmlParser', () => {
   })
 
   it('should get the vote id from the list of participants', () => {
-    const parser = getVoteParticipantsParserForXmlFile('testXml/testVoteParticipants.xml')
+    const votersXmlWithId = { voteNumber: 752 }
+    const xml = genVotersXml([votersXmlWithId])
+    const parser = new VoteParticipantsXmlParser(xml)
     const voteId = parser.getVoteId()
 
     assert.strictEqual(voteId, 752)
@@ -98,12 +106,6 @@ function getVoteParserForXmlFile (xmlFilePath) {
   const pathToXml = path.resolve(__dirname, xmlFilePath)
   const xml = fs.readFileSync(pathToXml)
   return new VoteXmlParser(xml)
-}
-
-function getVoteParticipantsParserForXmlFile (xmlFilePath) {
-  const pathToXml = path.resolve(__dirname, xmlFilePath)
-  const xml = fs.readFileSync(pathToXml)
-  return new VoteParticipantsXmlParser(xml)
 }
 
 function genVotersXml (votersList) {
