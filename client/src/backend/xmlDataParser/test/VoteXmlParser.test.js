@@ -5,19 +5,27 @@ import { VoteXmlParser } from '../VoteXmlParser'
 import { VoteParticipantsXmlParser } from '../VoteParticipantsXmlParser'
 import { ParliamentNotSetError } from '../XmlParserError'
 
-const fs = require('fs')
-const path = require('path')
-
 describe('VoteXmlParser', () => {
   it('should return a final vote for bill C-19', () => {
-    const parser = getVoteParserForXmlFile('testXml/testVote.xml')
+    const nonFinalVote = { billNumber: 'C-19', name: '2nd Reading' }
+    const nonBillVote = { name: '3rd reading and adoption of Bill C-17' }
+    const finalBillVote = {
+      id: 95,
+      billNumber: 'C-19',
+      name: '3rd reading and adoption of Bill C-19',
+      yeas: 177,
+      nays: 139
+    }
+
+    const xml = genVoteXml([{}, nonFinalVote, nonBillVote, finalBillVote])
+    const parser = new VoteXmlParser(xml)
     const votes = parser.getAllFromXml()
     assert.lengthOf(votes, 1, 'only 1 final vote for a bill')
 
     const vote = votes[0]
     assert.strictEqual(vote.id, 95)
     assert.strictEqual(vote.billNumber, 'C-19')
-    assert.strictEqual(vote.name, '3rd reading and adoption of Bill C-19, An Act for granting to Her Majesty certain sums of money for the federal public administration for the fiscal year ending March 31, 2017')
+    assert.strictEqual(vote.name, '3rd reading and adoption of Bill C-19')
     assert.strictEqual(vote.yeas, 177)
     assert.strictEqual(vote.nays, 139)
     assert.hasAnyKeys(vote, ['voters'])
@@ -102,10 +110,25 @@ describe('VoteParticipantsXmlParser', () => {
   })
 })
 
-function getVoteParserForXmlFile (xmlFilePath) {
-  const pathToXml = path.resolve(__dirname, xmlFilePath)
-  const xml = fs.readFileSync(pathToXml)
-  return new VoteXmlParser(xml)
+function genVoteXml (voteList) {
+  let xml = '<List>'
+  voteList.forEach((vote, i) => {
+    const billNumberCode = (typeof vote.billNumber !== 'undefined')
+      ? `<BillNumberCode>${vote.billNumber}</BillNumberCode>` : '<BillNumberCode />'
+
+    const voteXml = `<VoteParticipant>
+        <ParliamentNumber>${vote.parliamentNumber || 42}</ParliamentNumber>
+        <SessionNumber>${vote.sessionNumber || 1}</SessionNumber>
+        <DecisionDivisionNumber>${vote.id || i}</DecisionDivisionNumber>
+        <DecisionDivisionSubject>${vote.name || 'Vote Subject Name'}</DecisionDivisionSubject>
+        <DecisionDivisionNumberOfYeas>${vote.yeas || 0}</DecisionDivisionNumberOfYeas>
+        <DecisionDivisionNumberOfNays>${vote.nays || 0}</DecisionDivisionNumberOfNays>
+        ${billNumberCode}
+    </VoteParticipant>`
+    xml += voteXml
+  })
+  xml += '</List>'
+  return xml
 }
 
 function genVotersXml (votersList) {
