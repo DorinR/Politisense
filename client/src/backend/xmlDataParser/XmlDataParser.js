@@ -87,7 +87,7 @@ class XmlDataParser {
     return this.isTagInXml(this.tagName)
   }
 
-  async _getHtmlFromLink (link) {
+  _getHtmlFromLink (link) {
     const linkScraper = new LinkScraper(link)
 
     return linkScraper.perform()
