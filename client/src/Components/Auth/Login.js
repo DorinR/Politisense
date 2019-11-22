@@ -100,6 +100,7 @@ export default function Login (props) {
       .then(user => {
         fetchUser(user.email).then(res => {
           if (res.data.success) {
+            // eslint-disable-next-line no-undef
             localStorage.setItem('user', JSON.stringify(user))
             setAuthenticated(true)
           } else {
@@ -180,6 +181,7 @@ export default function Login (props) {
       loginAPICall(user)
         .then(res => {
           if (res.data.success) {
+            // eslint-disable-next-line no-undef
             localStorage.setItem('user', JSON.stringify(user))
             setAuthenticated(true)
           } else {
@@ -283,20 +285,13 @@ export default function Login (props) {
                 <Grid container justify='center'>
                   <Grid item xs={6} className={classes.social}>
                     <FacebookLoginButton
-                      onClick={() =>
-                        validateUserFromSocialProviders(
-                          'facebook',
-                          handleSocialLogin
-                        )}
+                      onClick={() => { validateUserFromSocialProviders('facebook', handleSocialLogin) }}
                     />
                   </Grid>
                   <Grid item xs={6} className={classes.social}>
                     <TwitterLoginButton
                       onClick={() =>
-                        validateUserFromSocialProviders(
-                          'twitter',
-                          handleSocialLogin
-                        )}
+                        validateUserFromSocialProviders('twitter', handleSocialLogin)}
                     />
                   </Grid>
                   <Grid item xs={6} className={classes.social}>
@@ -304,10 +299,7 @@ export default function Login (props) {
                       type='button'
                       id='test'
                       onClick={() =>
-                        validateUserFromSocialProviders(
-                          'google',
-                          handleSocialLogin
-                        )}
+                        validateUserFromSocialProviders('google', handleSocialLogin)}
                     />
                   </Grid>
                 </Grid>

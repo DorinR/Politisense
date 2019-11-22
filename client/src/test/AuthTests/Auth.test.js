@@ -1,3 +1,4 @@
+/* eslint-env jest */
 import { fetchUser, loginAPICall } from '../../Components/Auth/Login'
 import { signupAPICall } from '../../Components/Auth/SignUp'
 import { setRiding } from '../../Components/Questionnaire'
