@@ -28,6 +28,7 @@ export default function ViewAccountDetails () {
 
   useEffect(() => {
     async function getData () {
+      // eslint-disable-next-line no-undef
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
       const fullUserDetails = await fetchUserData(email)
