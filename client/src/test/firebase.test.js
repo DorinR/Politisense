@@ -23,12 +23,12 @@ describe('All firebase tests', () => {
   })
 
   test('can filter records (legacy)', () => {
-    fb.Bill().select('id', '==', '2').should.eventually.be.a('object')
+    fb.Bill().select('id', '==', 8062279).should.eventually.be.a('object')
   })
 
   test('can filter records (use this)', () => {
     fb.Bill()
-      .where('id', '==', '2')
+      .where('id', '==', 8062279)
       .select().should.eventually.be.a('object')
   })
 
