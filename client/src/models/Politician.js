@@ -1,7 +1,9 @@
 const Condition = require('./Condition').Condition
+const Model = require('./Model').Model
 
-class Politician {
+class Politician extends Model {
   constructor (name, party, riding, yearElected, imageUrl) {
+    super()
     Condition.parameter(name).isType(String)
     Condition.parameter(party).isType(String)
     Condition.parameter(riding).isType(String)
