@@ -11,6 +11,10 @@ class BillClassification extends Model {
     this.bill = billId
     this.category = classification
   }
+
+  static deserialise (json) {
+    return Model.deserialise(json, new BillClassification("","", ""))
+  }
 }
 
 class TfIdfClassification extends Model {
@@ -21,6 +25,10 @@ class TfIdfClassification extends Model {
 
     this.bill = billId
     this.raw = rawTfIdf
+  }
+
+  static deserialise (json) {
+    return Model.deserialise(json, new TfIdfClassification("",{}))
   }
 }
 

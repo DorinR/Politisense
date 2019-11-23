@@ -19,6 +19,10 @@ class VoteRecord extends Model {
     this.nays = nays
     this.assent = Boolean(yeas > nays)
   }
+
+  static deserialise (json) {
+    return Model.deserialise(json, new VoteRecord("", 0, 0, 0, 0, 0))
+  }
 }
 
 export { VoteRecord }
