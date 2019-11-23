@@ -13,7 +13,7 @@ class BillClassification extends Model {
   }
 
   static deserialise (json) {
-    return Model.deserialise(json, new BillClassification("","", ""))
+    return Model.deserialise(json, new BillClassification('', '', ''))
   }
 }
 
@@ -28,7 +28,7 @@ class TfIdfClassification extends Model {
   }
 
   static deserialise (json) {
-    return Model.deserialise(json, new TfIdfClassification("",{}))
+    return Model.deserialise(json, new TfIdfClassification('', {}))
   }
 }
 

@@ -55,7 +55,7 @@ class Reference {
     if (this.modelsOnly && typeof model !== typeof new Model()) {
       throw new Error('Error: Only a model can be updated in firebase')
     }
-    if(typeof model === typeof new Model()) {
+    if (typeof model === typeof new Model()) {
       model = Model.serialise(model)
     }
     return new Promise((resolve, reject) => {
@@ -121,28 +121,27 @@ class Reference {
     if ((typeof attribute !== 'undefined' &&
          typeof operator !== 'undefined' &&
          typeof value !== 'undefined') &&
-         this.query === null)
-    {
+         this.query === null) {
       ref = this.reference.where(attribute, operator, value).get
     } else if (this.query !== null) {
       ref = this.query.get
     }
     return new Promise((resolve, reject) => {
-        ref()
-          .then(snapshot => {
-            resolve(snapshot)
-          })
-          .catch(err => {
-            reject(err)
-          })
-      })
+      ref()
+        .then(snapshot => {
+          resolve(snapshot)
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
   }
 
   insert (model) {
     if (this.modelsOnly && typeof model !== typeof new Model()) {
       throw new Error('Error: Only a model can be inserted in firebase')
     }
-    if(typeof model === typeof new Model()) {
+    if (typeof model === typeof new Model()) {
       model = Model.serialise(model)
     }
 

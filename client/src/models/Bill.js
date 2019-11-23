@@ -22,7 +22,7 @@ class Bill extends Model {
   }
 
   static deserialise (json) {
-    return Model.deserialise(json, new Bill(1, "", "", "", "", "", ""))
+    return Model.deserialise(json, new Bill(1, '', '', '', '', '', ''))
   }
 }
 

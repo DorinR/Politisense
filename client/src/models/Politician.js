@@ -18,7 +18,7 @@ class Politician extends Model {
   }
 
   static deserialise (json) {
-    return Model.deserialise(json, new Politician("", "", "", 0, ""))
+    return Model.deserialise(json, new Politician('', '', '', 0, ''))
   }
 }
 

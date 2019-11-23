@@ -22,7 +22,7 @@ class User extends Model {
   }
 
   static deserialise (json) {
-    return Model.deserialise(json, new User("", "", "", "", "", "", {}))
+    return Model.deserialise(json, new User('', '', '', '', '', '', {}))
   }
 }
 

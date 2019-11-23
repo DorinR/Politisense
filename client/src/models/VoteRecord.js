@@ -21,7 +21,7 @@ class VoteRecord extends Model {
   }
 
   static deserialise (json) {
-    return Model.deserialise(json, new VoteRecord("", 0, 0, 0, 0, 0))
+    return Model.deserialise(json, new VoteRecord('', 0, 0, 0, 0, 0))
   }
 }
 
