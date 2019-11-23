@@ -56,7 +56,7 @@ class Reference {
       throw new Error('Error: Only a model can be updated in firebase')
     }
     if(typeof model === typeof new Model()) {
-      model = JSON.parse(JSON.stringify(model))
+      model = Model.serialise(model)
     }
     return new Promise((resolve, reject) => {
       this.reference
@@ -66,9 +66,9 @@ class Reference {
           snapshot.forEach(document => {
             const datum = document.data()
             // eslint-disable-next-line no-unused-vars
-            for (const key of Object.keys(model)) {
+            Object.keys(model).forEach(key => {
               datum[key] = model[key]
-            }
+            })
             updates.set(document.id, datum)
           })
           return updates
@@ -143,7 +143,7 @@ class Reference {
       throw new Error('Error: Only a model can be inserted in firebase')
     }
     if(typeof model === typeof new Model()) {
-      model = JSON.parse(JSON.stringify(model))
+      model = Model.serialise(model)
     }
 
     return new Promise(resolve => {
