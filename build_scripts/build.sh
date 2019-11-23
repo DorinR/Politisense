@@ -60,6 +60,7 @@ fi
 }
 
 run_tests () {
+  npm run server
   valid="$(CI=true npm test -- --forceExit --coverage --no-watch | grep -c 'failed')"
   if [ $valid != 0 ]
   then
