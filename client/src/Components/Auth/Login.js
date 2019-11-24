@@ -182,7 +182,7 @@ export default function Login (props) {
         .then(res => {
           if (res.data.success) {
             // eslint-disable-next-line no-undef
-            localStorage.setItem('user', JSON.stringify(user))
+            localStorage.setItem('user', JSON.stringify(user.email))
             setAuthenticated(true)
           } else {
             if (res.data.type === 'email') {

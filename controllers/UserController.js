@@ -1,5 +1,6 @@
 import { Firestore } from '../client/src/Firebase'
 import represent from 'represent'
+let bcrypt = require('bcryptjs');
 
 exports.checkIfUserExists = (req, res) => {
   const email = req.body.email
@@ -39,6 +40,10 @@ exports.userSignup = (req, res) => {
   if (req.body.password) {
     user.password = req.body.password
   }
+  let salt = bcrypt.genSaltSync(10)
+  let hash = bcrypt.hashSync(user.password, salt)
+  user.password = hash
+
   const db = new Firestore()
   db.User()
     .select('email', '==', user.email)
@@ -84,7 +89,7 @@ exports.userLogin = (req, res) => {
       }
       snapshot.forEach(doc => {
         entry = doc.data()
-        if (entry.password === user.password) {
+        if (bcrypt.compareSync(user.password, entry.password)) {
           res.json({
             success: true,
             auth: 'Successful login'
