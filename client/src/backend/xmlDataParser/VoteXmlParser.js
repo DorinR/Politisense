@@ -25,27 +25,14 @@ class VoteXmlParser extends XmlDataParser {
     return new VoteXmlParser(xml, this.currentParliament)
   }
 
-  xmlToJson () {
-    if (!this.passesFilters()) {
-      return null
-    }
-
+  buildJson () {
     const vote = {}
-
-    try {
-      vote.billNumber = this.getDataInTag('BillNumberCode')
-      vote.name = this.getDataInTag('DecisionDivisionSubject').trim()
-      vote.id = Number(this.getDataInTag('DecisionDivisionNumber'))
-      vote.yeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
-      vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
-    } catch (e) {
-      console.debug(e.message)
-      return null
-    }
-
-    // async data, added separately
+    vote.billNumber = this.getDataInTag('BillNumberCode')
+    vote.name = this.getDataInTag('DecisionDivisionSubject').trim()
+    vote.id = Number(this.getDataInTag('DecisionDivisionNumber'))
+    vote.yeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
+    vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
     vote.voters = {}
-
     return vote
   }
 

@@ -20,29 +20,17 @@ class BillXmlParser extends XmlDataParser {
     return new BillXmlParser(xml, this.filters, this.currentParliament)
   }
 
-  xmlToJson () {
-    if (!this.passesFilters()) {
-      return null
-    }
-
+  buildJson () {
     const bill = {}
-    try {
-      bill.id = Number(this.getDataInAttribute(this.tagName, 'id'))
-      bill.number = this.getDataInAttribute('BillNumber', 'prefix') + '-' +
-        this.getDataInAttribute('BillNumber', 'number')
-      bill.title = this.$('BillTitle').find('Title[language=\'en\']').text().trim()
-      const sponsorName = this.$('SponsorAffiliation').find('FirstName').text() + ' ' + this.$('SponsorAffiliation').find('LastName').text()
-      bill.sponsorName = sponsorName.toLowerCase()
-      bill.link = this.getLinkToBillText()
-      bill.dateVoted = this.formatXmlDate(this.getDataInTag('BillIntroducedDate'))
-    } catch (e) {
-      console.debug(e.message)
-      return null
-    }
-
-    // async data, added separately
+    bill.id = Number(this.getDataInAttribute(this.tagName, 'id'))
+    bill.number = this.getDataInAttribute('BillNumber', 'prefix') + '-' +
+      this.getDataInAttribute('BillNumber', 'number')
+    bill.title = this.$('BillTitle').find('Title[language=\'en\']').text().trim()
+    const sponsorName = this.$('SponsorAffiliation').find('FirstName').text() + ' ' + this.$('SponsorAffiliation').find('LastName').text()
+    bill.sponsorName = sponsorName.toLowerCase()
+    bill.link = this.getLinkToBillText()
+    bill.dateVoted = this.formatXmlDate(this.getDataInTag('BillIntroducedDate'))
     bill.text = ''
-
     return bill
   }
 

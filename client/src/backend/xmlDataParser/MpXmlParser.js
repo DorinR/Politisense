@@ -20,27 +20,14 @@ class MpXmlParser extends XmlDataParser {
     return new MpXmlParser(xml, this.mustBeACurrentMember)
   }
 
-  xmlToJson () {
-    if (!this.passesFilters()) {
-      return null
-    }
-
+  buildJson () {
     const mp = {}
-
-    try {
-      const name = this.getDataInTag('PersonOfficialFirstName') + ' ' + this.getDataInTag('PersonOfficialLastName')
-      mp.name = name.toLowerCase()
-      mp.politicalParty = this.getDataInTag('CaucusShortName').toLowerCase()
-      mp.riding = this.getDataInTag('ConstituencyName').toLowerCase()
-      mp.yearElected = Number(this.getDataInTag('FromDateTime').substring(0, 4))
-    } catch (e) {
-      console.debug(e.message)
-      return null
-    }
-
-    // async data, added separately
+    const name = this.getDataInTag('PersonOfficialFirstName') + ' ' + this.getDataInTag('PersonOfficialLastName')
+    mp.name = name.toLowerCase()
+    mp.party = this.getDataInTag('CaucusShortName').toLowerCase()
+    mp.riding = this.getDataInTag('ConstituencyName').toLowerCase()
+    mp.yearElected = Number(this.getDataInTag('FromDateTime').substring(0, 4))
     mp.imageUrl = ''
-
     return mp
   }
 
