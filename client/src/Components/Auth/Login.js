@@ -91,7 +91,7 @@ export default function Login (props) {
   const [errors, setErrors] = useState({ email: '', password: '' })
 
   function signInWithSocialProviders (_provider, firestore) {
-    const ret = firestore.firebase.auth().signInWithPopup(_provider)
+    const ret = firestore.auth.signInWithPopup(_provider)
     return ret
   }
 

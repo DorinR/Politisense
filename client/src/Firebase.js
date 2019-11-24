@@ -19,6 +19,7 @@ class _Firestore {
     }
     this.db = fs.firestore()
     this.firebase = fs
+    this.auth = fs.auth()
     this.googleProvider = new fs.auth.GoogleAuthProvider()
     this.facebookProvider = new fs.auth.FacebookAuthProvider()
     this.twitterProvider = new fs.auth.TwitterAuthProvider()
@@ -139,6 +140,7 @@ class Firestore {
   constructor () {
     this.firestore = getInstance()
     this.reference = this.firestore.db
+    this.auth = this.firestore.auth
     this.googleProvider = this.firestore.googleProvider
     this.firebase = this.firestore.firebase
     this.facebookProvider = this.firestore.facebookProvider
