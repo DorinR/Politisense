@@ -1,7 +1,9 @@
 const Condition = require('./Condition').Condition
+const Model = require('./Model').Model
 
-class Bill {
+class Bill extends Model {
   constructor (id, number, title, text, link, dateVoted, sponsorName) {
+    super()
     Condition.parameter(id).isType(Number)
     Condition.parameter(number).isType(String)
     Condition.parameter(title).isType(String)
@@ -17,6 +19,10 @@ class Bill {
     this.link = link
     this.dateVoted = dateVoted
     this.sponsorName = sponsorName
+  }
+
+  static deserialise (json) {
+    return Model.deserialise(json, new Bill(1, '', '', '', '', '', ''))
   }
 }
 

@@ -1,7 +1,9 @@
 const Condition = require('./Condition').Condition
+const Model = require('./Model').Model
 
-class Politician {
+class Politician extends Model {
   constructor (name, party, riding, yearElected, imageUrl) {
+    super()
     Condition.parameter(name).isType(String)
     Condition.parameter(party).isType(String)
     Condition.parameter(riding).isType(String)
@@ -13,6 +15,10 @@ class Politician {
     this.riding = riding
     this.yearElected = yearElected
     this.imageUrl = imageUrl
+  }
+
+  static deserialise (json) {
+    return Model.deserialise(json, new Politician('', '', '', 0, ''))
   }
 }
 
