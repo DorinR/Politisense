@@ -1,4 +1,6 @@
 import { XmlDataParser } from './XmlDataParser'
+import { Politician } from '../../models/Politician'
+import { Model } from '../../models/Model'
 
 const cheerio = require('cheerio')
 
@@ -21,14 +23,12 @@ class MpXmlParser extends XmlDataParser {
   }
 
   buildJson () {
-    const mp = {}
     const name = this.getDataInTag('PersonOfficialFirstName') + ' ' + this.getDataInTag('PersonOfficialLastName')
-    mp.name = name.toLowerCase()
-    mp.party = this.getDataInTag('CaucusShortName').toLowerCase()
-    mp.riding = this.getDataInTag('ConstituencyName').toLowerCase()
-    mp.yearElected = Number(this.getDataInTag('FromDateTime').substring(0, 4))
-    mp.imageUrl = ''
-    return mp
+    const mp = Politician.builder(name.toLowerCase())
+    mp.withParty(this.getDataInTag('CaucusShortName').toLowerCase())
+    mp.withRiding(this.getDataInTag('ConstituencyName').toLowerCase())
+    mp.withYearElected(Number(this.getDataInTag('FromDateTime').substring(0, 4)))
+    return Model.serialise(mp.build())
   }
 
   passesFilters () {
