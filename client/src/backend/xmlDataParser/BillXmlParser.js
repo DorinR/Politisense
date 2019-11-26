@@ -1,5 +1,7 @@
 import { XmlDataParser } from './XmlDataParser'
 import { ParliamentNotSetError } from './XmlParserError'
+import { Bill } from '../../models/Bill'
+import { Model } from '../../models/Model'
 
 class BillXmlParser extends XmlDataParser {
   constructor (xml, filters, currentParliament) {
@@ -21,17 +23,16 @@ class BillXmlParser extends XmlDataParser {
   }
 
   buildJson () {
-    const bill = {}
-    bill.id = Number(this.getDataInAttribute(this.tagName, 'id'))
-    bill.number = this.getDataInAttribute('BillNumber', 'prefix') + '-' +
-      this.getDataInAttribute('BillNumber', 'number')
-    bill.title = this.$('BillTitle').find('Title[language=\'en\']').text().trim()
-    const sponsorName = this.$('SponsorAffiliation').find('FirstName').text() + ' ' + this.$('SponsorAffiliation').find('LastName').text()
-    bill.sponsorName = sponsorName.toLowerCase()
-    bill.link = this.getLinkToBillText()
-    bill.dateVoted = this.formatXmlDate(this.getDataInTag('BillIntroducedDate'))
-    bill.text = ''
-    return bill
+    const bill = Bill.builder(Number(this.getDataInAttribute(this.tagName, 'id')))
+    bill.withNumber(this.getDataInAttribute('BillNumber', 'prefix') + '-' +
+      this.getDataInAttribute('BillNumber', 'number'))
+    bill.withTitle(this.$('BillTitle').find('Title[language=\'en\']').text().trim())
+    const sponsorName = this.$('SponsorAffiliation').find('FirstName').text() + ' ' +
+      this.$('SponsorAffiliation').find('LastName').text()
+    bill.withSponsorName(sponsorName.toLowerCase())
+    bill.withLink(this.getLinkToBillText())
+    bill.withDateVoted(this.formatXmlDate(this.getDataInTag('BillIntroducedDate')))
+    return Model.serialise(bill.build())
   }
 
   getLinkToBillText () {
