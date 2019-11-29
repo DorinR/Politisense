@@ -43,7 +43,7 @@ class LinkScraperAction extends JobAction {
     })
   }
 
-  logResult(resp) {
+  logResult (resp) {
     console.debug('Done Scraping: ' + this.url)
     return resp
   }

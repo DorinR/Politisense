@@ -7,10 +7,9 @@ describe('All Scraper Request Tests', () => {
   let mockFn
   beforeAll(() => {
     mockFn = async (options) => {
-      if(options.uri === 'https://www.google.ca/') {
-        return {body: ''}
-      }
-      else {
+      if (options.uri === 'https://www.google.ca/') {
+        return { body: '' }
+      } else {
         throw new Error()
       }
     }

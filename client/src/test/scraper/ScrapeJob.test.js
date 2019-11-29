@@ -5,22 +5,22 @@ import { ScrapeRunner } from '../../scraper/ScrapeRunner'
 const chai = require('chai')
 const Assert = chai.assert
 describe('All Job tests', () => {
-
   let mockFn
   let manager
   beforeAll(() => {
     mockFn = async (options) => {
-      if(options.uri === 'https://www.google.ca/') {
-        return {body: '<!DOCTYPE html>' +
+      if (options.uri === 'https://www.google.ca/') {
+        return {
+          body: '<!DOCTYPE html>' +
             '<html>' +
             '<head>' +
             '</head>' +
             '<body>' +
-            '<a href=\"https://www.google.ca\">google</a>' +
+            '<a href="https://www.google.ca">google</a>' +
             '</body>' +
-            '<\html>'}
-      }
-      else {
+            '</html>'
+        }
+      } else {
         throw new Error()
       }
     }
