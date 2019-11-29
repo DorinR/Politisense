@@ -7,7 +7,6 @@ fix_style () {
 }
 verbose_style_errors () {
 	style_errors=$(npx standard -v | wc -l)
-	style_errors=$((style_errors-1))
 	npx standard -v
 
 }
