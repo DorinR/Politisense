@@ -7,9 +7,7 @@ const assert = chai.assert
 chai.should()
 const chaiPromise = require('chai-as-promised')
 chai.use(chaiPromise)
-
 describe('All Processor Tests', () => {
-
   let mockFn
   beforeAll(() => {
     mockFn = async (options) => {
