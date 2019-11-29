@@ -1,12 +1,11 @@
 import { XmlDataParser } from './XmlDataParser'
 import { ParliamentNotSetError } from './XmlParserError'
 import { VoteParticipantsXmlParser } from './VoteParticipantsXmlParser'
-import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
 
 class VoteXmlParser extends XmlDataParser {
   static getVoteParticipantsUrl (voteId, currentParliament) {
-    return `https://www.ourcommons.ca/Parliamentarians/en/HouseVotes/ExportDetailsVotes?
-    output=XML&parliament=${currentParliament.number}&session=${currentParliament.session}&vote=${voteId}`
+    return 'https://www.ourcommons.ca/Parliamentarians/en/HouseVotes/ExportDetailsVotes?' +
+    `output=XML&parliament=${currentParliament.number}&session=${currentParliament.session}&vote=${voteId}`
   }
 
   constructor (xml, currentParliament) {
@@ -80,18 +79,7 @@ class VoteXmlParser extends XmlDataParser {
       throw new ParliamentNotSetError('Must specify what the current parliament is if it is used as a filter.')
     }
 
-    const linkScraper = new LinkScraper(VoteXmlParser.getVoteParticipantsUrl(voteId, this.currentParliament))
-
-    const voteParticipants = await linkScraper.perform()
-      .then(res => {
-        return res.body
-      }).then(html => {
-        return html
-      }).catch(e => {
-        console.error(e.message)
-        return ''
-      })
-
+    const voteParticipants = await this._getHtmlFromLink(VoteXmlParser.getVoteParticipantsUrl(voteId, this.currentParliament))
     if (voteParticipants === '') {
       return ''
     }

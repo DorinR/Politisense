@@ -1,4 +1,5 @@
 import { DataNotFoundError } from './XmlParserError'
+import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
 
 const cheerio = require('cheerio')
 
@@ -84,6 +85,20 @@ class XmlDataParser {
 
   hasData () {
     return this.isTagInXml(this.tagName)
+  }
+
+  _getHtmlFromLink (link) {
+    const linkScraper = new LinkScraper(link)
+
+    return linkScraper.perform()
+      .then(res => {
+        return res.body
+      }).then(html => {
+        return html
+      }).catch(e => {
+        console.error(e.message)
+        return ''
+      })
   }
 }
 
