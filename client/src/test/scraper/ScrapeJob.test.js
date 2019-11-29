@@ -1,5 +1,4 @@
 /* eslint-env jest */
-
 import { ScrapeJob } from '../../scraper/ScrapeJob'
 import { ScrapeRunner } from '../../scraper/ScrapeRunner'
 const chai = require('chai')
