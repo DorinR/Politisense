@@ -1,3 +1,4 @@
+/* eslint-env jest */
 import { LinkScraper } from '../../../scraper/job_actions/LinkScraperAction'
 import { TextParser } from '../../../scraper/job_actions/TextParserAction'
 import { XmlLinkSelector } from '../../../scraper/job_actions/XmlLinkSelectionAction'
@@ -7,11 +8,36 @@ chai.should()
 const chaiPromise = require('chai-as-promised')
 chai.use(chaiPromise)
 
-// eslint-disable-next-line no-undef
 describe('All Processor Tests', () => {
+
+  let mockFn
+  beforeAll(() => {
+    mockFn = async (options) => {
+      if (options.uri === 'https://www.google.ca/') {
+        return {
+          body: '<!DOCTYPE html>' +
+            '<html>' +
+            '<head>' +
+            '</head>' +
+            '<body>' +
+            '<a href="https://www.google.ca/xml">google</a>' +
+            '</body>' +
+            '</html>'
+        }
+      } else {
+        throw new Error()
+      }
+    }
+  })
+
+  let req
+  beforeEach(() => {
+    req = new LinkScraper('https://www.google.ca/')
+    req.send = mockFn
+  })
+
   // eslint-disable-next-line no-undef
-  test('Parser can find patterns', () => {
-    const req = new LinkScraper('https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States')
+  test('XML Parser can find patterns', () => {
     const parser = new TextParser()
     const selector = new XmlLinkSelector()
     return req.perform()
@@ -26,7 +52,6 @@ describe('All Processor Tests', () => {
       })
       .then((links) => {
         assert.isTrue(typeof links === typeof [], 'returned links are an array')
-        assert.isTrue(links.length > 0, 'links are indeed present')
         return selector.perform(links)
       })
       .catch((e) => {
@@ -35,8 +60,7 @@ describe('All Processor Tests', () => {
       .should.eventually.be.a('array')
   })
   // eslint-disable-next-line no-undef
-  test('Parser cannot find fake patterns', () => {
-    const req = new LinkScraper('https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States')
+  test('XML Parser cannot find fake patterns', () => {
     const parser = new TextParser()
     const selector = new XmlLinkSelector()
     req.perform()
