@@ -61,11 +61,10 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function checkEmailFormat(email){
+export function checkEmailFormat (email) {
   const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   return email.match(emailFormat)
 }
-
 
 export async function fetchUser (email) {
   let result = ''
@@ -173,7 +172,6 @@ export default function Login (props) {
   const handlePasswordChange = e => {
     setPassword(e.target.value)
   }
-
 
   const handleSubmit = e => {
     e.preventDefault()
