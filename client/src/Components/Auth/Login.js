@@ -61,6 +61,12 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+export function checkEmailFormat(email){
+  const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+  return email.match(emailFormat)
+}
+
+
 export async function fetchUser (email) {
   let result = ''
   await axios
@@ -168,13 +174,13 @@ export default function Login (props) {
     setPassword(e.target.value)
   }
 
+
   const handleSubmit = e => {
     e.preventDefault()
     const user = { email: email, password: password }
     // eslint-disable-next-line no-useless-escape
-    const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     const errors = {}
-    errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
+    errors.email = !checkEmailFormat(user.email) ? 'Invalid email' : ''
     errors.password =
       password === '' || password == null ? 'Please enter a password' : ''
     if (errors.email === '' && errors.password === '') {
