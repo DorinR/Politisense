@@ -1,33 +1,47 @@
+/* eslint-env jest */
 import { LinkScraper } from '../../../scraper/job_actions/LinkScraperAction'
 const chai = require('chai')
-chai.should()
-const chaiPromise = require('chai-as-promised')
-chai.use(chaiPromise)
+const Assert = chai.assert
 
-// eslint-disable-next-line no-undef
 describe('All Scraper Request Tests', () => {
+  let mockFn
+  beforeAll(() => {
+    mockFn = async (options) => {
+      if(options.uri === 'https://www.google.ca/') {
+        return {body: ''}
+      }
+      else {
+        throw new Error()
+      }
+    }
+  })
+
   // eslint-disable-next-line no-undef
-  test('Valid URL returns html', () => {
-    const req = new LinkScraper('https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States')
-    req.perform()
+  test('Valid URL returns html', async (done) => {
+    const req = new LinkScraper('https://www.google.ca/')
+    req.send = mockFn
+    const ret = await req.perform()
       .then((html) => {
         return html.body
       })
       .catch((e) => {
         return null
       })
-      .should.eventually.be.a('string')
+    Assert.equal(typeof ret, typeof '')
+    done()
   })
   // eslint-disable-next-line no-undef
-  test('Invalid URL invokes fail function', () => {
+  test('Invalid URL invokes fail function', async (done) => {
     const req = new LinkScraper('')
-    req.perform()
+    req.send = mockFn
+    const didThrow = await req.perform()
       .then((html) => {
-        return html.body
+        return false
       })
       .catch((e) => {
-        throw e
+        return true
       })
-      .should.eventually.throw().notify(chai.done)
+    Assert.equal(didThrow, true)
+    done()
   })
 })
