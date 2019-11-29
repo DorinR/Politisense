@@ -28,7 +28,7 @@ import Fab from '@material-ui/core/Fab'
 import Box from '@material-ui/core/Box'
 import axios from 'axios'
 
-const drawerWidth = 240
+const drawerWidth = 330
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -144,6 +144,7 @@ export default function MiniDrawer ({ children }) {
   const [userRepresentative, setUserRepresentative] = React.useState('')
 
   useEffect(() => {
+    handleDrawerOpen()
     async function getData () {
       // eslint-disable-next-line no-undef
       const user = JSON.parse(localStorage.getItem('user'))

@@ -5,9 +5,9 @@ const Firestore = require('../../../Firebase').Firestore
 
 const useStyles = makeStyles(theme => ({
   bigAvatar: {
-    margin: 1,
-    width: 120,
-    height: 120,
+    marginLeft: 26,
+    width: 150,
+    height: 150,
     border: '3px solid #41aaa8'
   }
 }))
