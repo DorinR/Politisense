@@ -1,7 +1,5 @@
 /* eslint-env jest */
-import { fetchUser, checkEmailFormat } from '../../Components/Auth/Login'
-import { signupAPICall } from '../../Components/Auth/SignUp'
-import { setRiding } from '../../Components/Questionnaire'
+import { checkEmailFormat } from '../../Components/Auth/Login'
 
 const chai = require('chai')
 chai.should()

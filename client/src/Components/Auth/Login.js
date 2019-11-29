@@ -62,6 +62,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export function checkEmailFormat (email) {
+  /* eslint-disable */
   const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   return email.match(emailFormat)
 }
