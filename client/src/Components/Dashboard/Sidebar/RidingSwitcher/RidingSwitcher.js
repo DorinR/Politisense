@@ -34,18 +34,32 @@ const MenuProps = {
     },
 };
 
-const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
+// hardcoded data for the list of ridings
+const ridings = [
+    'north okanagan—shuswap',
+    'cloverdale—langley city',
+    'gaspésie—les îles-de-la-madeleine',
+    'edmonton manning',
+    'portneuf—jacques-cartier',
+    'delta',
+    'st. catharines',
+    'bruce—grey—owen sound',
+    'papineau',
 ];
+
+// Function that returns a list of all ridings
+export async function fetchAllRidings() {
+    let ridings = []
+    // axios call here to endpoint that returns list of ridings
+    return ridings
+}
+
+// Function that sets new riding
+// Input: userEmail, newRiding
+// Output: whether or not the update was successful
+export async function setNewRiding(userEmail, newRiding) {
+    // axios call that updates the user in the DB
+}
 
 function getStyles(name, personName, theme) {
     return {
@@ -63,21 +77,20 @@ export default function RidingSwitcher() {
 
     const handleChange = event => {
         setPersonName(event.target.value);
+        // investigate if there is a better alternative for the below
+        window.location.reload(false);
     };
 
     return (
         <div>
             <FormControl className={classes.formControl}>
                 <Select
-                    labelId="demo-mutiple-name-label"
-                    id="demo-mutiple-name"
-                    multiple
                     value={personName}
                     onChange={handleChange}
                     input={<Input />}
                     MenuProps={MenuProps}
                 >
-                    {names.map(name => (
+                    {ridings.map(name => (
                         <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
                             {name}
                         </MenuItem>
