@@ -60,7 +60,7 @@ fi
 
 run_tests () {
   valid="$(CI=true npm test -- --forceExit --coverage --no-watch | grep -c 'failed')"
-  if [ $valid != 0 ]
+  if [ "$valid" -eq "0" ]
   then
     return 1
   fi
