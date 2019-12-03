@@ -7,7 +7,6 @@ fix_style () {
 }
 verbose_style_errors () {
 	style_errors=$(npx standard -v | wc -l)
-	style_errors=$((style_errors-1))
 	npx standard -v
 
 }
@@ -61,7 +60,7 @@ fi
 
 run_tests () {
   valid="$(CI=true npm test -- --forceExit --coverage --no-watch | grep -c 'failed')"
-  if [ $valid != 0 ]
+  if [ "$valid" -eq "0" ]
   then
     return 1
   fi
