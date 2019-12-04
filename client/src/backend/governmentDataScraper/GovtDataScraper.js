@@ -56,18 +56,7 @@ class GovtDataScraper {
 
   async getCurrentParliament () {
     const url = 'https://www.ourcommons.ca/'
-    const linkScraper = new LinkScraper(url)
-
-    const htmlWithParliament = await linkScraper.perform()
-      .then(res => {
-        return res.body
-      }).then(html => {
-        return html
-      }).catch(e => {
-        console.error(e.message)
-        return ''
-      })
-
+    const htmlWithParliament = await this.getHtmlWithParliament(url)
     if (htmlWithParliament === '') {
       return ''
     }
@@ -76,6 +65,20 @@ class GovtDataScraper {
     const currentParliamentText = $('span.subtitle', 'div[aria-labelledby="tabbed-widget-members-work-tab"]').text()
     const parliamentTextAsArray = currentParliamentText.split(', ')
     return { number: parseInt(parliamentTextAsArray[0]), session: parseInt(parliamentTextAsArray[1]) }
+  }
+
+  async getHtmlWithParliament (link) {
+    const linkScraper = new LinkScraper(link)
+
+    return linkScraper.perform()
+      .then(res => {
+        return res.body
+      }).then(html => {
+        return html
+      }).catch(e => {
+        console.error(e.message)
+        return ''
+      })
   }
 
   filterVotesBasedOnGatheredBills (votes, billNumberList) {

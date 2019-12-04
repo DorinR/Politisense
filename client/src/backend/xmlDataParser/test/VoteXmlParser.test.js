@@ -29,9 +29,16 @@ describe('VoteXmlParser', () => {
   })
 
   it('should get vote participants when given an id', (done) => {
-    const parser = new VoteXmlParser('', { number: 42, session: 1 })
+    const parliament = { number: 42, session: 1 }
+    const parser = new VoteXmlParser('', parliament)
+    jest.spyOn(parser, '_getHtmlFromLink').mockImplementation(async () => {
+      return genVotersXml([{}, {}, {}])
+    })
+
     parser.getVoters(752).then(voters => {
-      assert.lengthOf(Object.keys(voters), 294, 'there were 294 voters, paired or not')
+      expect(parser._getHtmlFromLink).toHaveBeenCalledTimes(1)
+      expect(parser._getHtmlFromLink).toHaveBeenCalledWith(VoteXmlParser.getVoteParticipantsUrl(752, parliament))
+      assert.lengthOf(Object.keys(voters), 3)
       done()
     })
   })
@@ -97,4 +104,22 @@ function getVoteParticipantsParserForXmlFile (xmlFilePath) {
   const pathToXml = path.resolve(__dirname, xmlFilePath)
   const xml = fs.readFileSync(pathToXml)
   return new VoteParticipantsXmlParser(xml)
+}
+
+function genVotersXml (votersList) {
+  let xml = '<List>'
+  votersList.forEach((voter, i) => {
+    const voterXml = `<VoteParticipant>
+        <ParliamentNumber>${voter.parliamentNumber || 42}</ParliamentNumber>
+        <SessionNumber>${voter.sessionNumber || 1}</SessionNumber>
+        <DecisionDivisionNumber>${voter.voteNumber || 752}</DecisionDivisionNumber>
+        <VoteValueName>${voter.vote || 'Nay'}</VoteValueName>
+        <FirstName>${voter.firstName || 'FirstName' + i}</FirstName>
+        <LastName>${voter.lastName || 'LastName' + i}</LastName>
+        <Paired>${voter.paired ? 1 : 0}</Paired>
+    </VoteParticipant>`
+    xml += voterXml
+  })
+  xml += '</List>'
+  return xml
 }
