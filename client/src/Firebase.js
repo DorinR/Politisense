@@ -39,7 +39,7 @@ function getInstance () {
 class Reference {
   constructor (reference) {
     this.reference = reference
-    this.modelsOnly = false;
+    this.modelsOnly = false
   }
 
   where (attribute, operator, value) {
