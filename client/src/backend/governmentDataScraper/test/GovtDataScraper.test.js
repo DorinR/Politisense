@@ -1,6 +1,5 @@
 /* eslint-env jest */
 import { GovtDataScraper } from '../GovtDataScraper'
-import { ExpendituresScraper } from '../ExpendituresScraper'
 
 describe('GovtDataScraper', () => {
   it('should return the current parliament session', (done) => {

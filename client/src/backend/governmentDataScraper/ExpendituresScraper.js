@@ -142,7 +142,7 @@ class ExpendituresScraper {
       .select()
       .then(snapshot => {
         if (snapshot.empty || snapshot.size !== 1) {
-          throw Error('ERROR: Riding: ${riding} not found')
+          throw Error(`ERROR: Riding: ${riding} not found`)
         }
         let id = ''
         snapshot.forEach(doc => {
