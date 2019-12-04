@@ -29,14 +29,14 @@ class ScrapeJob extends Job {
     return this.processor.perform(links)
   }
 
-  requeueLinks(urls) {
+  requeueLinks (urls) {
     const newJobs = super.createNewJobs(urls)
     this.queueCallback(newJobs)
     this.done = true
     return this.result()
   }
 
-  requestbody(req) {
+  requestbody (req) {
     return req.body
   }
 
@@ -48,18 +48,18 @@ class ScrapeJob extends Job {
     return this.processor.selected
   }
 
-  throwOnUnexpected(e, reject) {
+  throwOnUnexpected (e, reject) {
     if (e.name !== ScrapeErrorName) {
       console.debug(e.message)
       reject(e)
     }
   }
 
-  requeueOnFailedConnection(e, reject) {
+  requeueOnFailedConnection (e, reject) {
     const error = new ScrapeError()
     const link = this.scraper.url
     const connectionError = this.connectionErrorName(e.message)
-    if(connectionError) {
+    if (connectionError) {
       error.message = 'ERROR: Connection failure ' + connectionError + ', requeuing job: ' + link
       this.queueCallback([new ScrapeJob(link, this.manager, this.tlds)])
       console.debug(error.message)
@@ -67,7 +67,7 @@ class ScrapeJob extends Job {
     }
   }
 
-  connectionErrorName(message) {
+  connectionErrorName (message) {
     if (message.includes('ESOCKETTIMEDOUT')) {
       return 'ESOCKETTIMEDOUT'
     }
@@ -83,7 +83,7 @@ class ScrapeJob extends Job {
     return null
   }
 
-  rejectMalformedLink(e, reject) {
+  rejectMalformedLink (e, reject) {
     const error = new ScrapeError()
     const link = this.scraper.url
     if (this.scraper.url.includes('https://')) {
@@ -93,7 +93,7 @@ class ScrapeJob extends Job {
     }
   }
 
-  reconditionPartialLinks(e, reject) {
+  reconditionPartialLinks (e, reject) {
     const error = new ScrapeError()
     let link = this.scraper.url
     if (this.scraper.url.startsWith('//')) {
@@ -110,7 +110,7 @@ class ScrapeJob extends Job {
     reject(error)
   }
 
-  handleError(e, reject) {
+  handleError (e, reject) {
     this.done = true
     this.throwOnUnexpected(e, reject)
     this.requeueOnFailedConnection(e, reject)

@@ -11,7 +11,7 @@ class ScrapeJobManager {
     this.topLevelDomains = typeof topLevelDomains === 'undefined' ? ['https://www.ourcommons.ca/', 'https://www.parl.ca/'] : topLevelDomains
     this.jobs = []
     this.activeJobCount = 0
-    this.shouldQueue = true;
+    this.shouldQueue = true
   }
 
   async getXmlContent () {
@@ -54,7 +54,7 @@ class ScrapeJobManager {
   }
 
   enqueueJobsCb (jobs) {
-    if(!this.shouldQueue) {
+    if (!this.shouldQueue) {
       this.logOutstandingJobs()
       return
     }
@@ -87,7 +87,7 @@ class ScrapeJobManager {
       })
   }
 
-  filterXmlLinks(xmls) {
+  filterXmlLinks (xmls) {
     if (xmls.length > 0) {
       xmls.forEach(xml => {
         this.xmlSet.add(xml)
@@ -95,13 +95,14 @@ class ScrapeJobManager {
       this.xmlLinkProgress()
     }
   }
-  logUnexpectedError(e) {
+
+  logUnexpectedError (e) {
     if (e.name !== 'ScrapeError') {
       console.error(e.message)
     }
   }
 
-  pruneCompletedJobs() {
+  pruneCompletedJobs () {
     let currentIndex = 0
     while (currentIndex < this.jobs.length) {
       if (this.jobs[currentIndex].done === true) {
@@ -147,7 +148,7 @@ class ScrapeJobManager {
     }
   }
 
-  logOutstandingJobs() {
+  logOutstandingJobs () {
     console.log('INFO: Waiting for ' + this.activeJobCount + ' jobs to complete before processing xml links...')
   }
 
@@ -204,12 +205,11 @@ class ScrapeRunner {
           Promise
             .all(promises)
             .then(xmls => {
-                  resolve(xmls.filter(xml => xml !== null))
+              resolve(xmls.filter(xml => xml !== null))
             })
             .catch(reject)
         })
         .catch(reject)
-
     })
   }
 }
