@@ -34,7 +34,6 @@ describe('All Processor Tests', () => {
     req.send = mockFn
   })
 
-  // eslint-disable-next-line no-undef
   test('XML Parser can find patterns', () => {
     const parser = new TextParser()
     const selector = new XmlLinkSelector()
@@ -57,7 +56,7 @@ describe('All Processor Tests', () => {
       })
       .should.eventually.be.a('array')
   })
-  // eslint-disable-next-line no-undef
+
   test('XML Parser cannot find fake patterns', () => {
     const parser = new TextParser()
     const selector = new XmlLinkSelector()

@@ -15,7 +15,6 @@ describe('All Scraper Request Tests', () => {
     }
   })
 
-  // eslint-disable-next-line no-undef
   test('Valid URL returns html', async (done) => {
     const req = new LinkScraper('https://www.google.ca/')
     req.send = mockFn
@@ -29,7 +28,7 @@ describe('All Scraper Request Tests', () => {
     Assert.equal(typeof ret, typeof '')
     done()
   })
-  // eslint-disable-next-line no-undef
+
   test('Invalid URL invokes fail function', async (done) => {
     const req = new LinkScraper('')
     req.send = mockFn

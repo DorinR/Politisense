@@ -16,6 +16,7 @@ describe('All Parser Tests', () => {
             '</head>' +
             '<body>' +
             '<a href="https://www.google.ca/xml">google</a>' +
+            '<a href="https://www.google.ca/xml">google1</a>' +
             '</body>' +
             '</html>'
         }
@@ -45,6 +46,7 @@ describe('All Parser Tests', () => {
       })
       .then((links) => {
         Assert.isTrue(typeof links === typeof [], 'returned links are an array')
+        Assert.equal(links.length, 2)
         return true
       })
       .catch((e) => {
