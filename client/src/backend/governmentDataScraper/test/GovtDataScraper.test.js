@@ -4,14 +4,22 @@ import { ExpendituresScraper } from '../ExpendituresScraper'
 
 describe('GovtDataScraper', () => {
   it('should return the current parliament session', (done) => {
-    const dataGetter = new GovtDataScraper()
-    dataGetter.getCurrentParliament().then(parliament => {
-      expect(typeof parliament.number).toBe('number')
-      expect(typeof parliament.session).toBe('number')
-      // A parliament session is either 1, 2 or 3
-      expect(parliament.session).toBeLessThanOrEqual(3)
-      expect(parliament.session).toBeGreaterThanOrEqual(1)
-      console.log(JSON.stringify(parliament))
+    const govtDataScraper = new GovtDataScraper()
+    jest.spyOn(govtDataScraper, 'getHtmlWithParliament').mockImplementation(async () => {
+      return `
+<div class="panel-collapse collapse work-section" aria-labelledby="tabbed-widget-members-work-tab">
+<article>
+    <div class="tabbed-widget-content-wrapper">
+        <span class="subtitle">42nd Parliament, 1st Session</span>
+    </div>
+</article>
+</div>
+`
+    })
+
+    govtDataScraper.getCurrentParliament().then(parliament => {
+      expect(parliament.number).toBe(42)
+      expect(parliament.session).toBe(1)
       done()
     })
   })
