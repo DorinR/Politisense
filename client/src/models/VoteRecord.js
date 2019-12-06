@@ -1,7 +1,9 @@
 const Condition = require('./Condition').Condition
+const Model = require('./Model').Model
 
-class VoteRecord {
+class VoteRecord extends Model {
   constructor (billNumber, id, name, voters, yeas, nays) {
+    super()
     Condition.parameter(billNumber).isType(String)
     Condition.parameter(id).isType(Number)
     Condition.parameter(yeas).isType(Number)
