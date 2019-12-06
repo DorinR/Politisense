@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function RepresentativeInfo (props) {
+export default function RepresentativeInfo(props) {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -72,9 +72,8 @@ export default function RepresentativeInfo (props) {
       <Box m={1} />
       <Card>
         <CardContent className={classes.customCardContent}>
-            <Typography className={classes.customHeadingText}>RIDING</Typography>
-            <RidingSwitcher/>
-            <span className={classes.customTextFormatting}>{riding}</span>
+          <Typography className={classes.customHeadingText}>RIDING</Typography>
+          <RidingSwitcher riding={riding} />
         </CardContent>
       </Card>
       <Box m={1} />

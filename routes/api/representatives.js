@@ -7,4 +7,9 @@ const controller = require('../../controllers/Controller')
 // @access Public
 router.get('/:riding/getRepresentative', controller.getRepresentativeByRiding)
 
+// @route post api/getAllRepresentatives
+// @desc  get all representatives currently stored in DB
+// @access Public
+router.get('/getAllRepresentatives', controller.getAllRepresentatives)
+
 module.exports = router
