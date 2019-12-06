@@ -20,6 +20,10 @@ class User extends Model {
     this.riding = riding
     this.categories = categories
   }
+
+  static deserialise (json) {
+    return Model.deserialise(json, new User('', '', '', '', '', '', {}))
+  }
 }
 
 export { User }
