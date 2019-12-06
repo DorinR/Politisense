@@ -153,7 +153,6 @@ class Reference {
     if (typeof model === typeof new Model()) {
       model = JSON.parse(JSON.stringify(model))
     }
-
     return new Promise(resolve => {
       this.reference
         .add(model)
