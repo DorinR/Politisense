@@ -144,7 +144,6 @@ class Reference {
     if (typeof model === typeof new Model()) {
       model = Model.serialise(model)
     }
-
     return new Promise(resolve => {
       this.reference
         .add(model)
