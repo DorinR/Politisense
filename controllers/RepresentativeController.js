@@ -22,7 +22,7 @@ exports.getRepresentativeByRiding = (req, res) => {
 }
 
 exports.getAllRepresentatives = (req, res) => {
-  let representativesAccumulator = []
+  const representativesAccumulator = []
   const db = new Firestore()
   db.Politician()
     .select()

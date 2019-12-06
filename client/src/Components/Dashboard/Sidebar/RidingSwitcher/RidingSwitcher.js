@@ -40,17 +40,17 @@ var dropdownRidings = []
 
 // Parameters: list of ridings to be added to ridings dropdown
 // Return: none
-async function populateDropdownRidings(ridings) {
-  let ridingsToAddToDropdown = await ridings
+async function populateDropdownRidings (ridings) {
+  const ridingsToAddToDropdown = await ridings
   dropdownRidings = ridingsToAddToDropdown
 }
 
 // Parameters: none
 // Return: list of Representatives objects
-async function fetchAllRepresentatives() {
+async function fetchAllRepresentatives () {
   let representatives = []
   await axios
-    .get(`http://localhost:5000/api/representatives/getAllRepresentatives`)
+    .get('http://localhost:5000/api/representatives/getAllRepresentatives')
     .then(res => {
       if (res.data.success) {
         representatives = res.data.data
@@ -62,8 +62,8 @@ async function fetchAllRepresentatives() {
 
 // Parameters: list of representatives objects
 // Return: list of ridings
-export function getAllRidings(representatives) {
-  let ridings = []
+export function getAllRidings (representatives) {
+  const ridings = []
   representatives.forEach(rep => {
     ridings.push(rep.riding)
   })
@@ -72,17 +72,17 @@ export function getAllRidings(representatives) {
 
 // Parameters: email of user, new riding for that user.
 // Return: none
-export async function updateUserRiding(email, newRiding) {
+export async function updateUserRiding (email, newRiding) {
   console.log(`email of user to update: ${email}`)
   console.log(`update riding to ${newRiding}`)
-  let updateObject = {
+  const updateObject = {
     email: email,
     riding: newRiding
   }
-  axios.put(`http://localhost:5000/api/users/updateUserRiding`, updateObject)
+  axios.put('http://localhost:5000/api/users/updateUserRiding', updateObject)
 }
 
-function getStyles(name, personName, theme) {
+function getStyles (name, personName, theme) {
   return {
     fontWeight:
       personName.indexOf(name) === -1
@@ -91,7 +91,7 @@ function getStyles(name, personName, theme) {
   }
 }
 
-export default function RidingSwitcher(props) {
+export default function RidingSwitcher (props) {
   const classes = useStyles()
   const theme = useTheme()
   const [riding, setRiding] = React.useState([])
@@ -110,7 +110,7 @@ export default function RidingSwitcher(props) {
   }, [props.riding])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const representatives = await fetchAllRepresentatives()
       const allRidings = getAllRidings(representatives)
       populateDropdownRidings(allRidings)

@@ -39,8 +39,8 @@ describe('Sidebar Tests', () => {
         yearElected: 2019
       }
     ]
-    let ridings = getAllRidings(representatives)
-    let expectedRidings = [
+    const ridings = getAllRidings(representatives)
+    const expectedRidings = [
       'cloverdale—langley city',
       'edmonton manning',
       'gaspésie—les îles-de-la-madeleine',

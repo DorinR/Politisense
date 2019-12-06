@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function RepresentativeInfo(props) {
+export default function RepresentativeInfo (props) {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
