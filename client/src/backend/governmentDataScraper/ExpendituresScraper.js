@@ -36,7 +36,7 @@ class ExpendituresScraper {
       memberExpenditures.push({
         date: this.findDateInReport(report),
         riding: this.findRidingInReport(report),
-        content: this.findCategories(report),
+        content: this.createContent(report),
         categories: []
       })
     })
@@ -57,7 +57,7 @@ class ExpendituresScraper {
     return constituency.attribs['name-en']
   }
 
-  findCategories (report) {
+  createContent (report) {
     const categories = report.children.find((elem) => {
       return elem.name === 'ExpenditureCategories'
     })

@@ -1,8 +1,6 @@
 /* eslint-env jest */
 import { ExpendituresScraper } from '../ExpendituresScraper'
 import { FinancialRecord } from '../../../models/FinancialRecord'
-import retrieveAndStoreExpenditureData from '../ExpendituresRunner'
-import { Firestore } from '../../../Firebase'
 const chai = require('chai')
 const Assert = chai.assert
 
@@ -31,17 +29,4 @@ describe('All Expenditures Tests', () => {
       Assert.equal(id, expenditure.member)
     })
   })
-
-  xit('run to append financial records to firebase', async () => {
-    await retrieveAndStoreExpenditureData()
-    await new Firestore()
-      .FinancialRecord()
-      .select()
-      .then(snapshot => {
-        snapshot.forEach(record => {
-          console.log(record.data().member)
-        })
-        console.log(snapshot.size)
-      })
-  }, 60000)
 })
