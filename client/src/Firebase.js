@@ -166,6 +166,10 @@ class Firestore {
     return new Reference(this.reference.collection('voteRecord'))
   }
 
+  Ridings () {
+    return new Reference(this.reference.collection('ridings'))
+  }
+
   async close () {
     await this.firestore.app
       .delete()
