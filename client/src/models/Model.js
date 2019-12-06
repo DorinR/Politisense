@@ -5,6 +5,9 @@ class Model {
   }
 
   static deserialise (json, proto) {
+    if (Object.keys(json).length !== Object.keys(proto).length) {
+      throw new TypeError('ERROR: malformed json does not contain correct number of attributes')
+    }
     Object.keys(json).forEach(key => {
       if (!Object.keys(proto).includes(key)) {
         throw new TypeError('ERROR: malformed json does not contain correct attribute:' + key)
