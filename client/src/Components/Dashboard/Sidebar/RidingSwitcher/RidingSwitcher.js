@@ -42,7 +42,6 @@ var dropdownRidings = []
 // Return: none
 async function populateDropdownRidings(ridings) {
   let ridingsToAddToDropdown = await ridings
-  ridingsToAddToDropdown.sort()
   dropdownRidings = ridingsToAddToDropdown
 }
 
@@ -61,15 +60,14 @@ async function fetchAllRepresentatives() {
   return representatives
 }
 
-// Parameters: none
+// Parameters: list of representatives objects
 // Return: list of ridings
-export async function getAllRidings() {
-  const representatives = await fetchAllRepresentatives()
+export function getAllRidings(representatives) {
   let ridings = []
   representatives.forEach(rep => {
     ridings.push(rep.riding)
   })
-  return ridings
+  return ridings.sort()
 }
 
 // Parameters: email of user, new riding for that user.
@@ -104,7 +102,6 @@ export default function RidingSwitcher(props) {
     console.log('event.target.value', event.target)
     setRiding(event.target.value)
     updateUserRiding(email, event.target.value)
-    // investigate if there is a better alternative for the below
     window.location.reload(false)
   }
 
@@ -113,8 +110,12 @@ export default function RidingSwitcher(props) {
   }, [props.riding])
 
   useEffect(() => {
-    const allRidings = getAllRidings()
-    populateDropdownRidings(allRidings)
+    async function getData() {
+      const representatives = await fetchAllRepresentatives()
+      const allRidings = getAllRidings(representatives)
+      populateDropdownRidings(allRidings)
+    }
+    getData()
   }, [])
 
   return (
