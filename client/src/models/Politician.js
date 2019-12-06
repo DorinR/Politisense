@@ -16,7 +16,7 @@ class Politician extends Model {
     this.yearElected = yearElected
     this.imageUrl = imageUrl
   }
-  
+
   static deserialise (json) {
     return Model.deserialise(json, new Politician('', '', '', 0, ''))
   }
