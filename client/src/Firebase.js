@@ -1,3 +1,5 @@
+import { Model } from './models/Model'
+
 const fs = require('firebase')
 require('firebase/firestore')
 
@@ -37,6 +39,7 @@ function getInstance () {
 class Reference {
   constructor (reference) {
     this.reference = reference
+    this.modelsOnly = false
   }
 
   where (attribute, operator, value) {
@@ -45,6 +48,9 @@ class Reference {
   }
 
   update (model) {
+    if (this.modelsOnly && typeof model !== typeof new Model()) {
+      throw new Error('Error: Only a model can be updated in firebase')
+    }
     return new Promise((resolve, reject) => {
       this.reference
         .get()
@@ -122,6 +128,9 @@ class Reference {
   }
 
   insert (model) {
+    if (this.modelsOnly && typeof model !== typeof new Model()) {
+      throw new Error('Error: Only a model can be inserted in firebase')
+    }
     return new Promise(resolve => {
       this.reference
         .add(model)
@@ -164,6 +173,10 @@ class Firestore {
 
   VoteRecord () {
     return new Reference(this.reference.collection('voteRecord'))
+  }
+
+  FinancialRecord () {
+    return new Reference(this.reference.collection('financialRecord'))
   }
 
   async close () {
