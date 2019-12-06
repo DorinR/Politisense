@@ -27,3 +27,5 @@ yarn-error.log*
 # vscode settings file
 .vscode
 
+/client/package-lock.json
+package-lock.json
