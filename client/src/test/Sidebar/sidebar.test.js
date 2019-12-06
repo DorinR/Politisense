@@ -1,3 +1,4 @@
+/* global describe, test */
 import { getAllRidings } from '../../Components/Dashboard/Sidebar/RidingSwitcher/RidingSwitcher'
 
 const chai = require('chai')
