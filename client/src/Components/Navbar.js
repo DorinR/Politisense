@@ -146,12 +146,14 @@ export default function MiniDrawer ({ children }) {
   useEffect(() => {
     handleDrawerOpen()
     async function getData () {
-      // eslint-disable-next-line no-undef
+      /* eslint-disable */
       const user = JSON.parse(localStorage.getItem('user'))
-      const { email } = user
-      const riding = await fetchUserRiding(email)
-      const representative = await fetchRepresentative(riding)
-      setUserRepresentative(representative)
+      if (user) {
+        const { email } = user
+        const riding = await fetchUserRiding(email)
+        const representative = await fetchRepresentative(riding)
+        setUserRepresentative(representative)
+      }
     }
     getData()
   }, [])
