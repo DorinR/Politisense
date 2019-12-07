@@ -35,7 +35,7 @@ class TextParserAction extends JobAction {
     const $ = this.load(html)
     const tagList = []
     $(this.tag).each((i, elem) => {
-      tagList[i - 1] = this.filter(elem)
+      tagList[i] = this.filter(elem)
     })
     return tagList
   }

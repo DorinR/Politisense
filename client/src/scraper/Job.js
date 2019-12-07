@@ -1,8 +1,8 @@
 
 class Job {
-  constructor (url, manager, topLevelDomains) {
+  constructor (url, callback, topLevelDomains) {
     this.url = url
-    this.manager = manager
+    this.queueCallback = callback
     this.tlds = typeof topLevelDomains === 'undefined' ? ['https://www.ourcommons.ca', 'https://www.parl.ca'] : topLevelDomains
     this.initialiseJobComponents()
     this.done = false
@@ -15,7 +15,7 @@ class Job {
   createNewJobs (urls) {
     const newJobs = []
     urls.forEach((url) => {
-      newJobs.push(this.createNewJob(url, this.manager))
+      newJobs.push(this.createNewJob(url, this.queueCallback))
     })
     return newJobs
   }
