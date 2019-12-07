@@ -28,5 +28,5 @@ describe('All Expenditures Tests', () => {
       Assert.equal(typeof expenditure, typeof fr)
       Assert.equal(id, expenditure.member)
     })
-  })
+  }, 60000)
 })
