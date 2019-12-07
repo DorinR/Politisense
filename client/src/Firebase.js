@@ -56,7 +56,7 @@ class Reference {
       throw new Error('Error: Only a model can be updated in firebase')
     }
     if (typeof model === typeof new Model()) {
-      model = JSON.parse(JSON.stringify(model))
+      model = Model.serialise(model)
     }
     return new Promise((resolve, reject) => {
       this.reference
@@ -66,9 +66,9 @@ class Reference {
           snapshot.forEach(document => {
             const datum = document.data()
             // eslint-disable-next-line no-unused-vars
-            for (const key of Object.keys(model)) {
+            Object.keys(model).forEach(key => {
               datum[key] = model[key]
-            }
+            })
             updates.set(document.id, datum)
           })
           return updates
@@ -86,15 +86,28 @@ class Reference {
   }
 
   delete () {
+    let ref = this.reference
+    if (this.query) {
+      ref = this.query
+    }
+
     return new Promise((resolve, reject) => {
-      this.reference
-        .get()
-        .then(snapshot => {
+      ref.get()
+        .then(async snapshot => {
           let count = 0
+          const snapshotArray = []
           snapshot.forEach(doc => {
-            doc.ref.delete()
-            count++
+            snapshotArray.push(doc.ref)
           })
+          await Promise.all(
+            snapshotArray.map(ref => {
+              return ref.delete()
+                .then(resp => {
+                  count++
+                })
+            })
+          )
+
           resolve(count)
         })
         .catch(e => {
@@ -104,46 +117,24 @@ class Reference {
   }
 
   select (attribute, operator, value) {
-    if (
-      (typeof attribute === 'undefined' ||
-      typeof operator === 'undefined' ||
-      typeof value === 'undefined') &&
-      !this.query
-    ) {
-      return new Promise((resolve, reject) => {
-        this.reference
-          .get()
-          .then(snapshot => {
-            resolve(snapshot)
-          })
-          .catch(err => {
-            reject(err)
-          })
-      })
-    } else if (this.query) {
-      return new Promise((resolve, reject) => {
-        this.query
-          .get()
-          .then(snapshot => {
-            resolve(snapshot)
-          })
-          .catch(err => {
-            reject(err)
-          })
-      })
-    } else {
-      return new Promise((resolve, reject) => {
-        this.reference
-          .where(attribute, operator, value)
-          .get()
-          .then(snapshot => {
-            resolve(snapshot)
-          })
-          .catch(err => {
-            reject(err)
-          })
-      })
+    let ref = this.reference.get
+    if ((typeof attribute !== 'undefined' &&
+         typeof operator !== 'undefined' &&
+         typeof value !== 'undefined') &&
+         this.query === null) {
+      ref = this.reference.where(attribute, operator, value).get
+    } else if (this.query !== null) {
+      ref = this.query.get
     }
+    return new Promise((resolve, reject) => {
+      ref()
+        .then(snapshot => {
+          resolve(snapshot)
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
   }
 
   insert (model) {
@@ -151,7 +142,7 @@ class Reference {
       throw new Error('Error: Only a model can be inserted in firebase')
     }
     if (typeof model === typeof new Model()) {
-      model = JSON.parse(JSON.stringify(model))
+      model = Model.serialise(model)
     }
     return new Promise(resolve => {
       this.reference
@@ -183,6 +174,10 @@ class Firestore {
 
   BillClassification () {
     return new Reference(this.reference.collection('bill_classification'))
+  }
+
+  TfIdfClassification () {
+    return new Reference(this.reference.collection('tf_idf_bill'))
   }
 
   Politician () {

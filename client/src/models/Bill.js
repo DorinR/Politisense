@@ -20,6 +20,10 @@ class Bill extends Model {
     this.dateVoted = dateVoted
     this.sponsorName = sponsorName
   }
+
+  static deserialise (json) {
+    return Model.deserialise(json, new Bill(1, '', '', '', '', '', ''))
+  }
 }
 
 export { Bill }
