@@ -74,8 +74,6 @@ export function getAllRidings (representatives) {
 // Parameters: email of user, new riding for that user.
 // Return: none
 export async function updateUserRiding (email, newRiding) {
-  console.log(`email of user to update: ${email}`)
-  console.log(`update riding to ${newRiding}`)
   const updateObject = {
     email: email,
     riding: newRiding
@@ -100,7 +98,6 @@ export default function RidingSwitcher (props) {
   const handleChange = event => {
     const user = JSON.parse(localStorage.getItem('user'))
     const { email } = user
-    console.log('event.target.value', event.target)
     setRiding(event.target.value)
     updateUserRiding(email, event.target.value)
     setTimeout(() => {
