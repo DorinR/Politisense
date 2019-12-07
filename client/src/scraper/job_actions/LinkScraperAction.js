@@ -1,4 +1,4 @@
-const RequestLibrary = require('request-promise')
+const requestFn = require('request-promise')
 const JobAction = require('./JobAction').AbstractJobAction
 
 const ScrapeErrorName = 'ScrapeError'
@@ -8,10 +8,7 @@ class ScrapeError extends Error {
     super()
     this.message = message
     this.name = ScrapeErrorName
-  }
-
-  static doThrow (e) {
-    throw new ScrapeError(e.message)
+    this.send = requestFn
   }
 }
 
@@ -31,23 +28,27 @@ class LinkScraperAction extends JobAction {
   async perform (url) {
     this.url = (typeof url === 'undefined') ? this.url : url
     return new Promise((resolve, reject) => {
-      RequestLibrary({
+      this.send({
         uri: this.url,
         timeout: 60000,
         followAllRedirects: true,
         resolveWithFullResponse: true,
         headers: LinkScraperAction.headers()
       })
-        .then((html) => {
-          console.debug('INFO: Done Scraping: ' + this.url)
-          resolve(html)
-        })
+        .then(this.logResult.bind(this))
+        .then(resolve)
         .catch((e) => {
           reject(new ScrapeError('could not scrape page: ' + e.message))
         })
     })
   }
+
+  logResult (resp) {
+    console.debug('Done Scraping: ' + this.url)
+    return resp
+  }
 }
+
 module.exports.LinkScraper = LinkScraperAction
 module.exports.ScrapeError = ScrapeError
 module.exports.ScrapeErrorName = ScrapeErrorName
