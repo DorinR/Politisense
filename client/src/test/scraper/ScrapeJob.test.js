@@ -29,7 +29,7 @@ describe('All Job tests', () => {
 
   test('Job succeeds on good link', async (done) => {
     const url = 'https://www.google.ca/'
-    const exc = new ScrapeJob(url, manager, [])
+    const exc = new ScrapeJob(url, () => {}, [])
     exc.scraper.send = mockFn
     const didScrape = await exc.execute()
       .then(res => {
@@ -45,7 +45,7 @@ describe('All Job tests', () => {
 
   test('Job throws on bad link', async (done) => {
     const url = 'https://'
-    const exc = new ScrapeJob(url, manager, [])
+    const exc = new ScrapeJob(url, () => {}, [])
     exc.scraper.send = mockFn
     const didScrape = await exc.execute()
       .then(res => {

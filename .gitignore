@@ -11,6 +11,8 @@ client/node_modules/
 
 # production
 /build
+/build/static
+/build/static/js
 
 # misc
 .DS_Store
