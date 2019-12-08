@@ -20,6 +20,41 @@ class Politician extends Model {
   static deserialise (json) {
     return Model.deserialise(json, new Politician('', '', '', 0, ''))
   }
+
+  static builder (name) {
+    return new PoliticianBuilder(name)
+  }
+}
+
+class PoliticianBuilder {
+  constructor (name) {
+    this.name = name
+    this.imageUrl = ''
+  }
+
+  withParty (party) {
+    this.party = party
+    return this
+  }
+
+  withRiding (riding) {
+    this.riding = riding
+    return this
+  }
+
+  withYearElected (yearElected) {
+    this.yearElected = yearElected
+    return this
+  }
+
+  withImageUrl (imageUrl) {
+    this.imageUrl = imageUrl
+    return this
+  }
+
+  build () {
+    return new Politician(this.name, this.party, this.riding, this.yearElected, this.imageUrl)
+  }
 }
 
 export { Politician }

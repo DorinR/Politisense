@@ -9,7 +9,7 @@ describe('MpXmlParser', () => {
       firstName: 'Jody',
       lastName: 'Wilson-Raybould',
       riding: 'Vancouver Granville',
-      politicalParty: 'Independent',
+      party: 'Independent',
       fromDate: '2015-10-19T00:00:00'
     }
     const xml = genMpXml([mpXmlParams])
@@ -18,7 +18,7 @@ describe('MpXmlParser', () => {
     const mp = parser.xmlToJson()
 
     assert.strictEqual(mp.name, 'jody wilson-raybould')
-    assert.strictEqual(mp.politicalParty, 'independent')
+    assert.strictEqual(mp.party, 'independent')
     assert.strictEqual(mp.riding, 'vancouver granville')
     assert.strictEqual(mp.yearElected, 2015)
     assert.hasAnyKeys(mp, ['imageUrl'])
@@ -94,7 +94,7 @@ function genMpXml (mpList) {
         <PersonOfficialFirstName>${mp.firstName || 'FirstName' + i}</PersonOfficialFirstName>
         <PersonOfficialLastName>${mp.lastName || 'LastName' + i}</PersonOfficialLastName>
         <ConstituencyName>${mp.riding || 'RidingName'}</ConstituencyName>
-        <CaucusShortName>${mp.politicalParty || 'PoliticalParty'}</CaucusShortName>
+        <CaucusShortName>${mp.party || 'PoliticalParty'}</CaucusShortName>
         <FromDateTime>${mp.fromDate || '2019-10-21T00:00:00'}</FromDateTime>
         ${toDate}
     </MemberOfParliament>`

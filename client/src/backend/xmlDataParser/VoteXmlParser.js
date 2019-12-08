@@ -1,6 +1,8 @@
 import { XmlDataParser } from './XmlDataParser'
 import { ParliamentNotSetError } from './XmlParserError'
 import { VoteParticipantsXmlParser } from './VoteParticipantsXmlParser'
+import { VoteRecord } from '../../models/VoteRecord'
+import { Model } from '../../models/Model'
 
 class VoteXmlParser extends XmlDataParser {
   static getVoteParticipantsUrl (voteId, currentParliament) {
@@ -25,28 +27,13 @@ class VoteXmlParser extends XmlDataParser {
     return new VoteXmlParser(xml, this.currentParliament)
   }
 
-  xmlToJson () {
-    if (!this.passesFilters()) {
-      return null
-    }
-
-    const vote = {}
-
-    try {
-      vote.billNumber = this.getDataInTag('BillNumberCode')
-      vote.name = this.getDataInTag('DecisionDivisionSubject').trim()
-      vote.id = Number(this.getDataInTag('DecisionDivisionNumber'))
-      vote.yeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
-      vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
-    } catch (e) {
-      console.debug(e.message)
-      return null
-    }
-
-    // async data, added separately
-    vote.voters = {}
-
-    return vote
+  buildJson () {
+    const vote = VoteRecord.builder(Number(this.getDataInTag('DecisionDivisionNumber')))
+    vote.withBillNumber(this.getDataInTag('BillNumberCode'))
+    vote.withName(this.getDataInTag('DecisionDivisionSubject').trim())
+    vote.withYeas(Number(this.getDataInTag('DecisionDivisionNumberOfYeas')))
+    vote.withNays(Number(this.getDataInTag('DecisionDivisionNumberOfNays')))
+    return Model.serialise(vote.build())
   }
 
   passesFilters () {

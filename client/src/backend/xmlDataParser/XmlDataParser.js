@@ -51,8 +51,28 @@ class XmlDataParser {
     throw new TypeError('Abstract Method: Implement and call in class')
   }
 
-  xmlToJson () {
+  passesFilters () {
+    return true
+  }
+
+  buildJson () {
     throw new TypeError('Abstract Method: Implement and call in class')
+  }
+
+  xmlToJson () {
+    if (!this.passesFilters()) {
+      return null
+    }
+
+    let json = {}
+    try {
+      json = this.buildJson()
+    } catch (e) {
+      console.debug(e.message)
+      return null
+    }
+
+    return json
   }
 
   getAllFromXml (onlyFromListTag = false) {
