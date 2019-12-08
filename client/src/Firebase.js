@@ -90,7 +90,6 @@ class Reference {
     if (this.query) {
       ref = this.query
     }
-
     return new Promise((resolve, reject) => {
       ref.get()
         .then(async snapshot => {
@@ -105,9 +104,7 @@ class Reference {
                 .then(resp => {
                   count++
                 })
-            })
-          )
-
+            }))
           resolve(count)
         })
         .catch(e => {
@@ -117,14 +114,15 @@ class Reference {
   }
 
   select (attribute, operator, value) {
-    let ref = this.reference.get
-    if ((typeof attribute !== 'undefined' &&
-         typeof operator !== 'undefined' &&
-         typeof value !== 'undefined') &&
-         this.query === null) {
-      ref = this.reference.where(attribute, operator, value).get
+    let ref = this.reference.get.bind(this.reference)
+    if (typeof attribute !== 'undefined' &&
+        typeof operator !== 'undefined' &&
+        typeof value !== 'undefined' &&
+        this.query === null) {
+      const query = this.reference.where(attribute, operator, value)
+      ref = query.get.bind(query)
     } else if (this.query !== null) {
-      ref = this.query.get
+      ref = this.query.get.bind(this.query)
     }
     return new Promise((resolve, reject) => {
       ref()

@@ -23,6 +23,46 @@ class VoteRecord extends Model {
   static deserialise (json) {
     return Model.deserialise(json, new VoteRecord('', 0, 0, 0, 0, 0))
   }
+
+  static builder (id) {
+    return new VoteRecordBuilder(id)
+  }
+}
+
+class VoteRecordBuilder {
+  constructor (id) {
+    this.id = id
+    this.voters = {}
+  }
+
+  withBillNumber (billNumber) {
+    this.billNumber = billNumber
+    return this
+  }
+
+  withName (name) {
+    this.name = name
+    return this
+  }
+
+  withVoters (voters) {
+    this.voters = voters
+    return this
+  }
+
+  withYeas (yeas) {
+    this.yeas = yeas
+    return this
+  }
+
+  withNays (nays) {
+    this.nays = nays
+    return this
+  }
+
+  build () {
+    return new VoteRecord(this.billNumber, this.id, this.name, this.voters, this.yeas, this.nays)
+  }
 }
 
 export { VoteRecord }

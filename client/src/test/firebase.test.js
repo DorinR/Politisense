@@ -7,11 +7,11 @@ chai.use(chaiPromise)
 /* eslint-env jest */
 describe('All firebase tests', () => {
   let fb
-  beforeEach(() => {
+  beforeAll(() => {
     fb = new Firestore()
   })
 
-  afterEach(async () => {
+  afterAll(async () => {
     await fb.close()
   })
 

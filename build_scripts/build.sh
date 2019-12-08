@@ -51,31 +51,29 @@ do
 	fi
 done
 	style_error_logging
-if [ $style_errors -gt 0 ]
-then
-	return 1
-fi
-	return 0
 }
-
+test_results=1
 run_tests () {
-  valid="$(CI=true npm test -- --forceExit --coverage --no-watch | grep -c 'failed')"
-  if [ "$valid" -eq "0" ]
+  CI=true npm test -- --no-watch --force-exit
+  valid=$?
+  if [ "$valid" != "0" ]
   then
-    return 1
+    test_results=1
+  else
+    test_results=0
   fi
-  return 0
 }
 
 build () {
 	cd client
 	process_flags $@
-	if [[ $style_errors != 0 && $strict -eq 1 ]]
+	if [[ $style_errors -gt 0 && $strict -eq 1 ]]
 	then
 	  return 1
 	fi
 	npm install
-	if run_tests
+	run_tests
+	if [ $test_results -eq 1 ]
 	then
 	  return 1
 	fi
