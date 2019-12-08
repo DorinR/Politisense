@@ -110,30 +110,30 @@ const useStyles = makeStyles(theme => ({
 export async function fetchUserRiding (userEmail) {
   let result = ''
   await axios
-      .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
-      .then(res => {
-        if (res.data.success) {
-          const riding = res.data.data.riding
-          result = riding
-        }
-      })
-      .catch(err => console.error(err))
+    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+    .then(res => {
+      if (res.data.success) {
+        const riding = res.data.data.riding
+        result = riding
+      }
+    })
+    .catch(err => console.error(err))
   return result
 }
 
 export async function fetchRepresentative (riding) {
   let result = ''
   await axios
-      .get(
+    .get(
           `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-      )
-      .then(res => {
-        if (res.data.success) {
-          const representative = res.data.data.name
-          result = representative
-        }
-      })
-      .catch(err => console.error(err))
+    )
+    .then(res => {
+      if (res.data.success) {
+        const representative = res.data.data.name
+        result = representative
+      }
+    })
+    .catch(err => console.error(err))
   return result
 }
 

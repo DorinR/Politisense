@@ -1,6 +1,6 @@
 import { Firestore } from '../client/src/Firebase'
 import represent from 'represent'
-let bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs')
 
 exports.checkIfUserExists = (req, res) => {
   const email = req.body.email
@@ -40,8 +40,8 @@ exports.userSignup = (req, res) => {
   if (req.body.password) {
     user.password = req.body.password
   }
-  let salt = bcrypt.genSaltSync(10)
-  let hash = bcrypt.hashSync(user.password, salt)
+  const salt = bcrypt.genSaltSync(10)
+  const hash = bcrypt.hashSync(user.password, salt)
   user.password = hash
 
   const db = new Firestore()
