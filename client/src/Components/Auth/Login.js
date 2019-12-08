@@ -14,7 +14,8 @@ import { Firestore } from './../../Firebase'
 import {
   FacebookLoginButton,
   GoogleLoginButton,
-  TwitterLoginButton
+  TwitterLoginButton,
+  MicrosoftLoginButton
 } from 'react-social-login-buttons'
 
 const gridStyle = {
@@ -162,6 +163,7 @@ export default function Login (props) {
 
   const handleEmailChange = e => {
     setEmail(e.target.value)
+    console.log(props.location.pathname)
   }
 
   const handlePasswordChange = e => {
@@ -300,6 +302,14 @@ export default function Login (props) {
                       id='test'
                       onClick={() =>
                         validateUserFromSocialProviders('google', handleSocialLogin)}
+                    />
+                  </Grid>
+                  <Grid item xs={6} className={classes.social}>
+                    <MicrosoftLoginButton
+                        type='button'
+                        id='test'
+                        onClick={() =>
+                            validateUserFromSocialProviders('microsoft', handleSocialLogin)}
                     />
                   </Grid>
                 </Grid>
