@@ -3,10 +3,10 @@ import represent from 'represent'
 import ridingCodes from '../client/src/Components/Dashboard/Sidebar/RidingShape/RidingCodes'
 
 exports.saveRidingCodesToFirestore = (req, res) => {
-  let ridingCodesLowerCase = []
+  const ridingCodesLowerCase = []
   ridingCodes.forEach(ridingObject => {
-    let { code, nameEnglish, nameFrench, population } = ridingObject
-    let lowerCaseRidingObject = {
+    const { code, nameEnglish, nameFrench, population } = ridingObject
+    const lowerCaseRidingObject = {
       code: code,
       nameEnglish: nameEnglish.toLowerCase(),
       nameFrench: nameFrench.toLowerCase(),
@@ -16,7 +16,7 @@ exports.saveRidingCodesToFirestore = (req, res) => {
   })
 
   const db = new Firestore()
-  let allPromisesForInsertions = []
+  const allPromisesForInsertions = []
   ridingCodesLowerCase.forEach(ridingObject => {
     allPromisesForInsertions.push(db.Ridings().insert(ridingObject))
   })

@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding(userEmail) {
+export async function fetchUserRiding (userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -40,10 +40,10 @@ export async function fetchUserRiding(userEmail) {
   return result
 }
 
-export async function fetchRidingCode(riding) {
+export async function fetchRidingCode (riding) {
   let ridingCode = 0
   await axios
-    .get(`http://localhost:5000/api/ridings/getRidingCode`, {
+    .get('http://localhost:5000/api/ridings/getRidingCode', {
       riding
     })
     .then(
@@ -62,7 +62,7 @@ export async function fetchRidingCode(riding) {
   return ridingCode
 }
 
-export default function RepresentativeInfo(props) {
+export default function RepresentativeInfo (props) {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -93,7 +93,7 @@ export default function RepresentativeInfo(props) {
   })
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
       const riding = await fetchUserRiding(email)

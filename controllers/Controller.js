@@ -6,54 +6,54 @@ const RidingController = require('./RidingController')
 
 module.exports = {
   // User
-  userSignup: function(req, res) {
+  userSignup: function (req, res) {
     return UserController.userSignup(req, res)
   },
-  userLogin: function(req, res) {
+  userLogin: function (req, res) {
     return UserController.userLogin(req, res)
   },
-  getUserByEmail: function(req, res) {
+  getUserByEmail: function (req, res) {
     return UserController.getUserByEmail(req, res)
   },
-  updateUser: function(req, res) {
+  updateUser: function (req, res) {
     return UserController.updateUser(req, res)
   },
-  setRiding: function(req, res) {
+  setRiding: function (req, res) {
     return UserController.setRiding(req, res)
   },
-  updateUserRiding: function(req, res) {
+  updateUserRiding: function (req, res) {
     return UserController.updateUserRiding(req, res)
   },
-  checkIfUserExists: function(req, res) {
+  checkIfUserExists: function (req, res) {
     return UserController.checkIfUserExists(req, res)
   },
 
   // Representative
-  getRepresentativeByRiding: function(req, res) {
+  getRepresentativeByRiding: function (req, res) {
     return RepresentativeController.getRepresentativeByRiding(req, res)
   },
-  getAllRepresentatives: function(req, res) {
+  getAllRepresentatives: function (req, res) {
     return RepresentativeController.getAllRepresentatives(req, res)
   },
 
   // Bill
-  getBillById: function(req, res) {
+  getBillById: function (req, res) {
     return BillController.getBillById(req, res)
   },
 
   // Vote Record
-  getVotesByRepresentative: function(req, res) {
+  getVotesByRepresentative: function (req, res) {
     return VoteRecordController.getVotesByRepresentative(req, res)
   },
 
   // Riding
-  getRidingCode: function(req, res) {
+  getRidingCode: function (req, res) {
     return RidingController.getRidingCode(req, res)
   },
-  saveRidingCodesToFirestore: function(req, res) {
+  saveRidingCodesToFirestore: function (req, res) {
     return RidingController.saveRidingCodesToFirestore(req, res)
   },
-  getRidingSimpleShape: function(req, res) {
+  getRidingSimpleShape: function (req, res) {
     return RidingController.getRidingSimpleShape(req, res)
   }
 }

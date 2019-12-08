@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchRidingShape(ridingCode) {
+export async function fetchRidingShape (ridingCode) {
   console.log('calling api with this riding code: ', ridingCode)
   let ridingShape = ''
   await axios
@@ -44,12 +44,12 @@ export async function fetchRidingShape(ridingCode) {
   return ridingShape
 }
 
-export default function RepresentativeInfo(props) {
+export default function RepresentativeInfo (props) {
   const classes = useStyles()
   const [ridingShape, setRidingShape] = useState('')
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const ridingShape = await fetchRidingShape(props.ridingCode)
       setRidingShape(ridingShape)
     }
