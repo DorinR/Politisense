@@ -20,12 +20,18 @@ module.exports = {
   setRiding: function (req, res) {
     return UserController.setRiding(req, res)
   },
+  updateUserRiding: function (req, res) {
+    return UserController.updateUserRiding(req, res)
+  },
   checkIfUserExists: function (req, res) {
     return UserController.checkIfUserExists(req, res)
   },
 
   getRepresentativeByRiding: function (req, res) {
     return RepresentativeController.getRepresentativeByRiding(req, res)
+  },
+  getAllRepresentatives: function (req, res) {
+    return RepresentativeController.getAllRepresentatives(req, res)
   },
 
   getBillById: function (req, res) {

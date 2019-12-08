@@ -194,3 +194,39 @@ exports.setRiding = (req, res) => {
     })
   })
 }
+
+exports.updateUserRiding = (req, res) => {
+  const email = req.body.email
+  const riding = req.body.riding
+  let targetUserId
+
+  const db = new Firestore()
+  db.User()
+    .select('email', '==', email)
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.error('No user with this email found')
+      }
+      snapshot.forEach(doc => {
+        targetUserId = doc.id
+      })
+      return db
+        .User()
+        .reference.doc(targetUserId)
+        .update({
+          riding: riding
+        })
+    })
+    .then(() => {
+      res.status(200).json({
+        success: true
+      })
+    })
+    .catch(err => {
+      res.status(404).json({
+        success: false,
+        message: 'Error updating user riding'
+      })
+      console.error(err)
+    })
+}
