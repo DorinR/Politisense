@@ -1,5 +1,5 @@
 const Classifier = require('./Classifier').Classifier
-const FireStore = require('../Firebase').FireStore
+const FireStore = require('../Firebase').Firestore
 const Reader = require('../scraper/job_actions/UrlFileReaderAction').FileReader
 const Scraper = require('../scraper/job_actions/LinkScraperAction').LinkScraper
 const ScrapeError = require('../scraper/job_actions/LinkScraperAction').ScrapeError

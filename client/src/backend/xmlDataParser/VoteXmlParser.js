@@ -1,12 +1,13 @@
 import { XmlDataParser } from './XmlDataParser'
 import { ParliamentNotSetError } from './XmlParserError'
 import { VoteParticipantsXmlParser } from './VoteParticipantsXmlParser'
-import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
+import { VoteRecord } from '../../models/VoteRecord'
+import { Model } from '../../models/Model'
 
 class VoteXmlParser extends XmlDataParser {
   static getVoteParticipantsUrl (voteId, currentParliament) {
-    return `https://www.ourcommons.ca/Parliamentarians/en/HouseVotes/ExportDetailsVotes?
-    output=XML&parliament=${currentParliament.number}&session=${currentParliament.session}&vote=${voteId}`
+    return 'https://www.ourcommons.ca/Parliamentarians/en/HouseVotes/ExportDetailsVotes?' +
+    `output=XML&parliament=${currentParliament.number}&session=${currentParliament.session}&vote=${voteId}`
   }
 
   constructor (xml, currentParliament) {
@@ -26,28 +27,13 @@ class VoteXmlParser extends XmlDataParser {
     return new VoteXmlParser(xml, this.currentParliament)
   }
 
-  xmlToJson () {
-    if (!this.passesFilters()) {
-      return null
-    }
-
-    const vote = {}
-
-    try {
-      vote.billNumber = this.getDataInTag('BillNumberCode')
-      vote.name = this.getDataInTag('DecisionDivisionSubject').trim()
-      vote.id = Number(this.getDataInTag('DecisionDivisionNumber'))
-      vote.yeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
-      vote.nays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
-    } catch (e) {
-      console.debug(e.message)
-      return null
-    }
-
-    // async data, added separately
-    vote.voters = {}
-
-    return vote
+  buildJson () {
+    const vote = VoteRecord.builder(Number(this.getDataInTag('DecisionDivisionNumber')))
+    vote.withBillNumber(this.getDataInTag('BillNumberCode'))
+    vote.withName(this.getDataInTag('DecisionDivisionSubject').trim())
+    vote.withYeas(Number(this.getDataInTag('DecisionDivisionNumberOfYeas')))
+    vote.withNays(Number(this.getDataInTag('DecisionDivisionNumberOfNays')))
+    return Model.serialise(vote.build())
   }
 
   passesFilters () {
@@ -80,18 +66,7 @@ class VoteXmlParser extends XmlDataParser {
       throw new ParliamentNotSetError('Must specify what the current parliament is if it is used as a filter.')
     }
 
-    const linkScraper = new LinkScraper(VoteXmlParser.getVoteParticipantsUrl(voteId, this.currentParliament))
-
-    const voteParticipants = await linkScraper.perform()
-      .then(res => {
-        return res.body
-      }).then(html => {
-        return html
-      }).catch(e => {
-        console.error(e.message)
-        return ''
-      })
-
+    const voteParticipants = await this._getHtmlFromLink(VoteXmlParser.getVoteParticipantsUrl(voteId, this.currentParliament))
     if (voteParticipants === '') {
       return ''
     }

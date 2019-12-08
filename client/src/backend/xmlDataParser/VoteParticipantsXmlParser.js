@@ -13,19 +13,12 @@ class VoteParticipantsXmlParser extends XmlDataParser {
     return new VoteParticipantsXmlParser(xml)
   }
 
-  xmlToJson () {
+  buildJson () {
     const participant = {}
-
-    try {
-      const name = this.getDataInTag('FirstName') + ' ' + this.getDataInTag('LastName')
-      participant.name = name.toLowerCase()
-      participant.vote = this.getDataInTag('VoteValueName')
-      participant.paired = this.getDataInTag('Paired') === '1'
-    } catch (e) {
-      console.debug(e.message)
-      return null
-    }
-
+    const name = this.getDataInTag('FirstName') + ' ' + this.getDataInTag('LastName')
+    participant.name = name.toLowerCase()
+    participant.vote = this.getDataInTag('VoteValueName')
+    participant.paired = this.getDataInTag('Paired') === '1'
     return participant
   }
 
