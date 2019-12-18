@@ -11,6 +11,8 @@ client/node_modules/
 
 # production
 /build
+/build/static
+/build/static/js
 
 # misc
 .DS_Store
@@ -27,3 +29,5 @@ yarn-error.log*
 # vscode settings file
 .vscode
 
+/client/package-lock.json
+package-lock.json

@@ -5,19 +5,27 @@ import { VoteXmlParser } from '../VoteXmlParser'
 import { VoteParticipantsXmlParser } from '../VoteParticipantsXmlParser'
 import { ParliamentNotSetError } from '../XmlParserError'
 
-const fs = require('fs')
-const path = require('path')
-
 describe('VoteXmlParser', () => {
   it('should return a final vote for bill C-19', () => {
-    const parser = getVoteParserForXmlFile('testXml/testVote.xml')
+    const nonFinalVote = { billNumber: 'C-19', name: '2nd Reading' }
+    const nonBillVote = { name: '3rd reading and adoption of Bill C-17' }
+    const finalBillVote = {
+      id: 95,
+      billNumber: 'C-19',
+      name: '3rd reading and adoption of Bill C-19',
+      yeas: 177,
+      nays: 139
+    }
+
+    const xml = genVoteXml([{}, nonFinalVote, nonBillVote, finalBillVote])
+    const parser = new VoteXmlParser(xml)
     const votes = parser.getAllFromXml()
     assert.lengthOf(votes, 1, 'only 1 final vote for a bill')
 
     const vote = votes[0]
     assert.strictEqual(vote.id, 95)
     assert.strictEqual(vote.billNumber, 'C-19')
-    assert.strictEqual(vote.name, '3rd reading and adoption of Bill C-19, An Act for granting to Her Majesty certain sums of money for the federal public administration for the fiscal year ending March 31, 2017')
+    assert.strictEqual(vote.name, '3rd reading and adoption of Bill C-19')
     assert.strictEqual(vote.yeas, 177)
     assert.strictEqual(vote.nays, 139)
     assert.hasAnyKeys(vote, ['voters'])
@@ -29,9 +37,16 @@ describe('VoteXmlParser', () => {
   })
 
   it('should get vote participants when given an id', (done) => {
-    const parser = new VoteXmlParser('', { number: 42, session: 1 })
+    const parliament = { number: 42, session: 1 }
+    const parser = new VoteXmlParser('', parliament)
+    jest.spyOn(parser, '_getHtmlFromLink').mockImplementation(async () => {
+      return genVotersXml([{}, {}, {}])
+    })
+
     parser.getVoters(752).then(voters => {
-      assert.lengthOf(Object.keys(voters), 294, 'there were 294 voters, paired or not')
+      expect(parser._getHtmlFromLink).toHaveBeenCalledTimes(1)
+      expect(parser._getHtmlFromLink).toHaveBeenCalledWith(VoteXmlParser.getVoteParticipantsUrl(752, parliament))
+      assert.lengthOf(Object.keys(voters), 3)
       done()
     })
   })
@@ -44,17 +59,23 @@ describe('VoteXmlParser', () => {
 
 describe('VoteParticipantsXmlParser', () => {
   it('should return dictionary of voters for bill C-47', () => {
-    const parser = getVoteParticipantsParserForXmlFile('testXml/testVoteParticipants.xml')
+    const yeaVoter = { firstName: 'Voter', lastName: 'One', vote: 'Yea' }
+    const nayVoter = { firstName: 'Michael', lastName: 'Chong', vote: 'Nay' }
+    const pairedVoter = { firstName: 'Jean-Yves', lastName: 'Duclos', vote: 'Paired', paired: true }
+    const pairedVoterWithVote = { firstName: 'Marilène', lastName: 'Gill', vote: 'Nay', paired: true }
+
+    const xml = genVotersXml([yeaVoter, nayVoter, pairedVoter, pairedVoterWithVote])
+    const parser = new VoteParticipantsXmlParser(xml)
     const voters = parser.getAllFromXml()
     assert.typeOf(voters, 'object', 'we get an dictionary object mapping Mps with there votes, not a list')
 
-    assert.lengthOf(Object.keys(voters), 294, 'there were 294 voters, paired or not')
+    assert.lengthOf(Object.keys(voters), 4)
     const yeaVoters = Object.keys(voters).filter(key => voters[key].vote === 'Yea')
-    assert.lengthOf(Object.keys(yeaVoters), 167, '167 members voted Yea')
+    assert.lengthOf(Object.keys(yeaVoters), 1)
     const nayVoters = Object.keys(voters).filter(key => voters[key].vote === 'Nay')
-    assert.lengthOf(Object.keys(nayVoters), 126, '126 members voted Nay')
+    assert.lengthOf(Object.keys(nayVoters), 2)
     const pairedVoters = Object.keys(voters).filter(key => voters[key].paired === true)
-    assert.lengthOf(Object.keys(pairedVoters), 2, '2 members did a paired vote')
+    assert.lengthOf(Object.keys(pairedVoters), 2)
 
     // check case of normal vote
     assert.hasAnyKeys(voters, ['michael chong'], 'Michael Chong is a voter')
@@ -80,21 +101,50 @@ describe('VoteParticipantsXmlParser', () => {
   })
 
   it('should get the vote id from the list of participants', () => {
-    const parser = getVoteParticipantsParserForXmlFile('testXml/testVoteParticipants.xml')
+    const votersXmlWithId = { voteNumber: 752 }
+    const xml = genVotersXml([votersXmlWithId])
+    const parser = new VoteParticipantsXmlParser(xml)
     const voteId = parser.getVoteId()
 
     assert.strictEqual(voteId, 752)
   })
 })
 
-function getVoteParserForXmlFile (xmlFilePath) {
-  const pathToXml = path.resolve(__dirname, xmlFilePath)
-  const xml = fs.readFileSync(pathToXml)
-  return new VoteXmlParser(xml)
+function genVoteXml (voteList) {
+  let xml = '<List>'
+  voteList.forEach((vote, i) => {
+    const billNumberCode = (typeof vote.billNumber !== 'undefined')
+      ? `<BillNumberCode>${vote.billNumber}</BillNumberCode>` : '<BillNumberCode />'
+
+    const voteXml = `<VoteParticipant>
+        <ParliamentNumber>${vote.parliamentNumber || 42}</ParliamentNumber>
+        <SessionNumber>${vote.sessionNumber || 1}</SessionNumber>
+        <DecisionDivisionNumber>${vote.id || i}</DecisionDivisionNumber>
+        <DecisionDivisionSubject>${vote.name || 'Vote Subject Name'}</DecisionDivisionSubject>
+        <DecisionDivisionNumberOfYeas>${vote.yeas || 0}</DecisionDivisionNumberOfYeas>
+        <DecisionDivisionNumberOfNays>${vote.nays || 0}</DecisionDivisionNumberOfNays>
+        ${billNumberCode}
+    </VoteParticipant>`
+    xml += voteXml
+  })
+  xml += '</List>'
+  return xml
 }
 
-function getVoteParticipantsParserForXmlFile (xmlFilePath) {
-  const pathToXml = path.resolve(__dirname, xmlFilePath)
-  const xml = fs.readFileSync(pathToXml)
-  return new VoteParticipantsXmlParser(xml)
+function genVotersXml (votersList) {
+  let xml = '<List>'
+  votersList.forEach((voter, i) => {
+    const voterXml = `<VoteParticipant>
+        <ParliamentNumber>${voter.parliamentNumber || 42}</ParliamentNumber>
+        <SessionNumber>${voter.sessionNumber || 1}</SessionNumber>
+        <DecisionDivisionNumber>${voter.voteNumber || 752}</DecisionDivisionNumber>
+        <VoteValueName>${voter.vote || 'Nay'}</VoteValueName>
+        <FirstName>${voter.firstName || 'FirstName' + i}</FirstName>
+        <LastName>${voter.lastName || 'LastName' + i}</LastName>
+        <Paired>${voter.paired ? 1 : 0}</Paired>
+    </VoteParticipant>`
+    xml += voterXml
+  })
+  xml += '</List>'
+  return xml
 }

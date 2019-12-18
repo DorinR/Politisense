@@ -1,4 +1,5 @@
 import { DataNotFoundError } from './XmlParserError'
+import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
 
 const cheerio = require('cheerio')
 
@@ -50,8 +51,28 @@ class XmlDataParser {
     throw new TypeError('Abstract Method: Implement and call in class')
   }
 
-  xmlToJson () {
+  passesFilters () {
+    return true
+  }
+
+  buildJson () {
     throw new TypeError('Abstract Method: Implement and call in class')
+  }
+
+  xmlToJson () {
+    if (!this.passesFilters()) {
+      return null
+    }
+
+    let json = {}
+    try {
+      json = this.buildJson()
+    } catch (e) {
+      console.debug(e.message)
+      return null
+    }
+
+    return json
   }
 
   getAllFromXml (onlyFromListTag = false) {
@@ -84,6 +105,20 @@ class XmlDataParser {
 
   hasData () {
     return this.isTagInXml(this.tagName)
+  }
+
+  _getHtmlFromLink (link) {
+    const linkScraper = new LinkScraper(link)
+
+    return linkScraper.perform()
+      .then(res => {
+        return res.body
+      }).then(html => {
+        return html
+      }).catch(e => {
+        console.error(e.message)
+        return ''
+      })
   }
 }
 

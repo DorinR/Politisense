@@ -3,6 +3,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Box from '@material-ui/core/Box'
+import RidingSwitcher from './RidingSwitcher/RidingSwitcher'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 const Firestore = require('../../../Firebase').Firestore
@@ -72,7 +73,7 @@ export default function RepresentativeInfo (props) {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>RIDING</Typography>
-          <span className={classes.customTextFormatting}>{riding}</span>
+          <RidingSwitcher riding={riding} />
         </CardContent>
       </Card>
       <Box m={1} />

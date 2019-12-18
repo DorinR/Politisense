@@ -20,3 +20,34 @@ exports.getRepresentativeByRiding = (req, res) => {
       })
     })
 }
+
+exports.getAllRepresentatives = (req, res) => {
+  const representativesAccumulator = []
+  const db = new Firestore()
+  db.Politician()
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        res.status(400).json({
+          message: 'No Representatives Found in Database',
+          success: false
+        })
+      }
+      snapshot.forEach(doc => {
+        representativesAccumulator.push(doc.data())
+      })
+
+      if (!representativesAccumulator.empty) {
+        res.status(200).json({
+          data: representativesAccumulator,
+          success: true
+        })
+      }
+    })
+    .catch(err => {
+      res.status(400).json({
+        data: representativesAccumulator,
+        success: false
+      })
+    })
+}
