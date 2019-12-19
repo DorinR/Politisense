@@ -8,11 +8,10 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Dashboard from "./Dashboard";
 import BillHistoryTable from "./PastBills/BillHistoryTable";
-import BudgetVisuals from "./Budget/BudgetVisuals";
+import BudgetData from "./Budget/BudgetData";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
-import BarChartWrapper from "./Charts/Wrappers/BarChartWrapper";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -93,7 +92,7 @@ export default function DashboardTabs() {
           <BillHistoryTable />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <BarChartWrapper type="bar-pie" />
+          <BudgetData />
         </TabPanel>
       </div>
     </Box>
