@@ -1,6 +1,6 @@
-const Queue = require('./utilities/Queue').Queue
+const Queue = require('./utilities/UniqueJobQueue').UniqueJobQueue
 const ScrapeJob = require('./ScrapeJob').ScrapeJob
-const Reader = require('./job_actions/UrlFileReaderAction').FileReader
+const Reader = require('./job_actions/XmlFileRetrieverAction').FileReader
 class ScrapeJobManager {
   constructor (count, wait, startingUrl, topLevelDomains) {
     this.linkQueue = new Queue()
