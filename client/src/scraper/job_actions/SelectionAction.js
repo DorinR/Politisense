@@ -8,7 +8,7 @@ class SelectionAction extends JobAction {
     this.selector = selector
   }
 
-  perform (raw) {
+  async perform (raw) {
     raw.forEach((item) => {
       if (typeof item === 'undefined') {
         return

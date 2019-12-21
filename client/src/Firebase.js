@@ -1,4 +1,4 @@
-import { Model } from './models/Model'
+const Model = require('./models/Model').Model
 
 const fs = require('firebase')
 require('firebase/firestore')
@@ -52,10 +52,12 @@ class Reference {
   }
 
   update (model) {
-    if (this.modelsOnly && typeof model !== typeof new Model()) {
+    if (this.modelsOnly && !(model instanceof Model)) {
       throw new Error('Error: Only a model can be updated in firebase')
+    } else if (!this.modelsOnly && !(model instanceof Model)) {
+      console.warn('WARNING: Using non models for firestore is deprecated. Use Models instead.')
     }
-    if (typeof model === typeof new Model()) {
+    if (model instanceof Model) {
       model = Model.serialise(model)
     }
     return new Promise((resolve, reject) => {
@@ -119,6 +121,7 @@ class Reference {
         typeof operator !== 'undefined' &&
         typeof value !== 'undefined' &&
         this.query === null) {
+      console.warn('WARNING: using select with parameters is a deprecated behaviour. Use where(..).select() instead.')
       const query = this.reference.where(attribute, operator, value)
       ref = query.get.bind(query)
     } else if (this.query !== null) {
@@ -136,10 +139,12 @@ class Reference {
   }
 
   insert (model) {
-    if (this.modelsOnly && typeof model !== typeof new Model()) {
+    if (this.modelsOnly && typeof !(model instanceof Model)) {
       throw new Error('Error: Only a model can be inserted in firebase')
+    } else if (!this.modelsOnly && !(model instanceof Model)) {
+      console.warn('WARNING: Using non models for firestore is deprecated. Use Models instead.')
     }
-    if (typeof model === typeof new Model()) {
+    if (model instanceof Model) {
       model = Model.serialise(model)
     }
     return new Promise(resolve => {
@@ -207,5 +212,5 @@ class Firestore {
   }
 }
 
-export { Firestore }
-export { Reference }
+module.exports.Firestore = Firestore
+module.exports.Reference = Reference
