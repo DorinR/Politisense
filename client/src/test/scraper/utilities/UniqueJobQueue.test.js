@@ -8,23 +8,23 @@ const expect = require('chai').expect
 describe('UniqueJobQueue.js', () => {
   test('UniqueJobQueue::enqueue() adds one job to queue', () => {
     const q = new Queue()
-    q.enqueue(new ScrapeJob('', ()=>{}, []))
+    q.enqueue(new ScrapeJob('', () => {}, []))
     assert.equal(q.size(), 1, 'There should only be one Job in the queue')
   })
 
   test('UniqueJobQueue::dequeue() removes one job from queue', () => {
     const q = new Queue()
-    q.enqueue(new ScrapeJob('', ()=>{}, []))
-    q.enqueue(new ScrapeJob('a', ()=>{}, []))
+    q.enqueue(new ScrapeJob('', () => {}, []))
+    q.enqueue(new ScrapeJob('a', () => {}, []))
     q.dequeue()
     assert.equal(q.size(), 1, 'There should only be one Job in the queue')
   })
 
   test('UniqueJobQueue::enqueue() throws when enqueuing same job', () => {
     const q = new Queue()
-    q.enqueue(new ScrapeJob('', ()=>{}, []))
+    q.enqueue(new ScrapeJob('', () => {}, []))
     const testFn = () => {
-      q.enqueue(new ScrapeJob('', ()=>{}, []))
+      q.enqueue(new ScrapeJob('', () => {}, []))
     }
     expect(testFn).to.throw()
   })
