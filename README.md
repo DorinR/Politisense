@@ -1,5 +1,4 @@
 # Politisense
-
 ### Problem We Are Seeking To Solve
 
 Lack of civic engagement in politics. <br />
