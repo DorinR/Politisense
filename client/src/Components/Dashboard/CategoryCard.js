@@ -49,6 +49,9 @@ const useStyles = makeStyles(theme => ({
     expandOpen: {
         transform: 'rotate(180deg)',
     },
+    avatar: {
+        backgroundColor: red[500],
+    },
     table: {
         // minWidth: 650,
     }
@@ -57,8 +60,6 @@ const useStyles = makeStyles(theme => ({
 function createData(name, vote) {
     return { name, vote };
 }
-
-
 
 export default function CategoryCard(props) {
     const classes = useStyles();

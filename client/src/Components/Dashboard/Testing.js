@@ -77,7 +77,6 @@ const useStyles = makeStyles(theme => ({
 
 function TabPanel (props) {
     const { children, value, index, ...other } = props
-
     return (
         <Typography
             component='div'
@@ -97,12 +96,11 @@ TabPanel.propTypes = {
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired
 }
-
-
+// when i remove a category i need to delete from my categories as well as adding that attribute in the options
 export default function Testing (props) {
     const classes = useStyles()
     const theme = useTheme()
-    const [categoryList, setCategoryList]= React.useState(['Economics','Human Rights','Criminal'])
+    const [categoryList, setCategoryList]= React.useState([])
     const [expanded, setExpanded] = React.useState(false)
     const [tabValue, setTabValue] = React.useState(0)
     const [open, setOpen] = React.useState(false)
@@ -110,12 +108,12 @@ export default function Testing (props) {
     const [checked, setChecked] = React.useState(true)
     const [newCategory, setNewCategory]= React.useState('')
 
-     const addNewCategory = () => {
-         if(newCategory != ''){
-             categoryList.concat(newCategory)
-             console.log(categoryList)
-         }
-    }
+    //  const addNewCategory = () => {
+    //      if(newCategory != ''){
+    //          categoryList.concat(newCategory)
+    //          console.log(categoryList)
+    //      }
+    // }
 
     const handleExpandClick = () => {
         setExpanded(!expanded)
@@ -132,6 +130,14 @@ export default function Testing (props) {
         const copyCategoryArray = Object.assign([],categoryList)
          copyCategoryArray.splice(index,1)
          setCategoryList(copyCategoryArray)
+         console.log(categoryList)
+    }
+
+    const addEvent = (newValue) => {
+        const copyCategoryArray = Object.assign([],categoryList)
+        copyCategoryArray.push(newValue)
+        setCategoryList(copyCategoryArray)
+        console.log(copyCategoryArray)
     }
 
     const handleClickListItem = () => {
@@ -139,37 +145,24 @@ export default function Testing (props) {
     };
 
     const handleClose = newValue => {
-        setOpen(false);
-
-        console.log("im insdie the handleClose method")
-        if (newValue) {
-            console.log("new Value from the handle Close Method"+ newValue)
-            setValue(newValue);
-            setNewCategory(newValue)
-            addNewCategory()
+        if(newValue){
+            addEvent(newValue)
         }
-    };
-
-    const handleCheckBoxChange = event => {
-        setChecked(event.target.checked);
-    };
+        setOpen(false);
+    }
 
     useEffect(()=>{
-        if(value != ""){
 
-            addNewCategory()
-        }
     },[value])
-
 
     return (
         <div className={classes.container}>
             <Grid container spacing={2}>
                 {categoryList.map((category, index)=>{
                   return (
-
-                      <Grid item xs={3}>
+                      <Grid item xs={3} key={index}>
                             <CategoryCard
+                            key={index}
                             id={index}
                             title={category}
                             delete ={deleteEvent.bind(this,index)}
@@ -196,12 +189,11 @@ export default function Testing (props) {
                                                 classes={{
                                                     paper: classes.paper,
                                                 }}
-                                                id="ringtone-menu"
                                                 keepMounted
                                                 open={open}
-                                                newCategory = {addNewCategory.bind(this)}
                                                 onClose={handleClose}
                                                 value={value}
+                                                existedCategories={categoryList}
                                             />
                                     </div>
                                 </CardContent>
