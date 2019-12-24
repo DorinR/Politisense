@@ -58,7 +58,7 @@ export function ConfirmationDialogRaw(props) {
             open={open}
             {...other}
         >
-            <DialogTitle id="confirmation-dialog-title">Phone Ringtone</DialogTitle>
+            <DialogTitle id="confirmation-dialog-title">Select Category</DialogTitle>
             <DialogContent dividers>
                 <RadioGroup
                     ref={radioGroupRef}
