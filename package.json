@@ -29,6 +29,7 @@
     "@babel/cli": "^7.6.2",
     "@babel/core": "^7.6.2",
     "concurrently": "^4.1.2",
+    "fg-loadcss": "^2.1.0",
     "nodemon": "^1.19.3"
   },
   "scripts": {
