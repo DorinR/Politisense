@@ -26,6 +26,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import GavelIcon from '@material-ui/icons/Gavel';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBalanceScale, faHandshake } from '@fortawesome/free-solid-svg-icons';
 import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles(theme => ({
@@ -46,23 +49,35 @@ const useStyles = makeStyles(theme => ({
     expandOpen: {
         transform: 'rotate(180deg)',
     },
-    avatar: {
-        backgroundColor: red[500],
-    },
     table: {
         // minWidth: 650,
     }
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
+function createData(name, vote) {
+    return { name, vote };
 }
+
+
 
 export default function CategoryCard(props) {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
     const [id,setId]= React.useState(0)
     const [title,setTitle]= React.useState('')
+
+    function setCardLogo(){
+        switch(title) {
+            case 'Economics':
+                return <TrendingUpIcon color="primary" />
+            case 'Criminal':
+                return <GavelIcon color="primary" />
+            case 'Human Rights':
+                return <FontAwesomeIcon icon={faBalanceScale} color="#43D0C4" size="lg" />
+            default:
+                return <IndeterminateCheckBoxIcon color="primary" />;
+        }
+    }
 
     React.useEffect(() => {
         setId(props.id)
@@ -77,19 +92,15 @@ export default function CategoryCard(props) {
         setExpanded(!expanded);
     };
     const rows = [
-        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-        createData('Eclair', 262, 16.0, 24, 6.0),
-        createData('Cupcake', 305, 3.7, 67, 4.3),
-        createData('Gingerbread', 356, 16.0, 49, 3.9),
+        createData('Bill 101', 'Yes'),
+        createData('Bill 102', 'No'),
+        createData('Bill 103', 'Abstain'),
     ];
 
     return (
                 <Card className={classes.card}>
                     <CardHeader
-                        avatar={
-                            <TrendingUpIcon color="primary" />
-                        }
+                        avatar={setCardLogo()}
                         action={
                             <IconButton aria-label="settings" onClick={props.delete}>
                                 <IndeterminateCheckBoxIcon color='primary'/>
@@ -101,11 +112,8 @@ export default function CategoryCard(props) {
                         <Table className={classes.table} size="small" aria-label="a dense table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Dessert (100g serving)</TableCell>
-                                    <TableCell align="right">Calories</TableCell>
-                                    <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                                    <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                                    <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                                    <TableCell>Bill Name</TableCell>
+                                    <TableCell align="right">Vote</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -114,17 +122,11 @@ export default function CategoryCard(props) {
                                         <TableCell component="th" scope="row">
                                             {row.name}
                                         </TableCell>
-                                        <TableCell align="right">{row.calories}</TableCell>
-                                        <TableCell align="right">{row.fat}</TableCell>
-                                        <TableCell align="right">{row.carbs}</TableCell>
-                                        <TableCell align="right">{row.protein}</TableCell>
+                                        <TableCell align="right">{row.vote}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            Description
-                        </Typography>
                     </CardContent>
                     <CardActions disableSpacing>
                         <IconButton>
@@ -134,7 +136,7 @@ export default function CategoryCard(props) {
                             <PieChartIcon color="primary" />
                         </IconButton>
                         <IconButton>
-                            <Icon className="fas fa-handshake" color="primary" />
+                            <FontAwesomeIcon icon={faHandshake} color="#43D0C4" />
                         </IconButton>
                     </CardActions>
                 </Card>

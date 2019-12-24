@@ -41,6 +41,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles(theme => ({
     card: {
+        backgroundColor: '#43D0C4'
     },
     container: {
         margin: '20px',
@@ -180,15 +181,17 @@ export default function Testing (props) {
                     <Card className={classes.card}>
                             <CardActionArea>
                                 <CardContent>
-                                    <Typography gutterBottom variant="h5" component="h2">
-                                        Add New Category
-                                    </Typography>
+                                    <div onClick={handleClickListItem}>
+                                        <Typography gutterBottom variant="h5" component="h2" align="center" style={{ color: 'white' }}>
+                                            Add New Category
+                                        </Typography>
+                                        <div align='center'>
+                                            <AddIcon color='white' fontSize="large" style={{ color: 'white', fontSize: 100 }}/>
+                                        </div>
+                                    </div>
                                     <div className={classes.root}>
-                                          <Tooltip title="Add" aria-label="add" onClick={handleClickListItem} >
-                                              <Fab color="primary" className={classes.fab}>
-                                                 <AddIcon />
-                                              </Fab>
-                                          </Tooltip>
+                                          {/*<Tooltip title="Add" aria-label="add" >*/}
+                                          {/*</Tooltip>*/}
                                             <ConfirmationDialogRaw
                                                 classes={{
                                                     paper: classes.paper,
