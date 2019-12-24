@@ -5,7 +5,7 @@ const chai = require('chai')
 chai.should()
 
 describe('Sidebar Tests', () => {
-  test('Testing that function can extract ridings from representative objects and return them in alphabetical order', () => {
+  test('CategoryGrid that function can extract ridings from representative objects and return them in alphabetical order', () => {
     const representatives = [
       {
         imageUrl:

@@ -28,7 +28,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import GavelIcon from '@material-ui/icons/Gavel';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBalanceScale, faHandshake } from '@fortawesome/free-solid-svg-icons';
+import { faBalanceScale, faHandshake, faPrayingHands } from '@fortawesome/free-solid-svg-icons';
 import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles(theme => ({
@@ -73,6 +73,8 @@ export default function CategoryCard(props) {
                 return <TrendingUpIcon color="primary" />
             case 'Criminal':
                 return <GavelIcon color="primary" />
+            case 'Religion':
+                return <FontAwesomeIcon icon={faPrayingHands} color="#43D0C4" size="lg" />
             case 'Human Rights':
                 return <FontAwesomeIcon icon={faBalanceScale} color="#43D0C4" size="lg" />
             default:

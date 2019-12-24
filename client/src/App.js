@@ -16,7 +16,7 @@ import MapWrapper from './Components/Dashboard/MapWrapper'
 import DashboardTabs from './Components/Dashboard/DashboardTabs'
 import Questionnaire from './Components/Questionnaire'
 import CategoryCard from './Components/Dashboard/CategoryCard'
-import Testing from "./Components/Dashboard/Testing";
+import CategoryGrid from "./Components/Dashboard/CategoryGrid";
 
 const App = () => {
   const LoginContainer = () => (
@@ -55,7 +55,7 @@ const App = () => {
         <Route exact path='/signup' component={LoginContainer} />
         <Route exact path='/question' component={Questionnaire} />
         <Route exact path='/test' component={CategoryCard} />
-        <Route exact path='/testing' component={Testing} />
+        <Route exact path='/testing' component={CategoryGrid} />
           <Route component={DefaultContainer} />
       </Switch>
     </Router>

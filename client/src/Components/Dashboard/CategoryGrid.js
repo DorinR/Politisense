@@ -97,7 +97,7 @@ TabPanel.propTypes = {
     value: PropTypes.any.isRequired
 }
 // when i remove a category i need to delete from my categories as well as adding that attribute in the options
-export default function Testing (props) {
+export default function CategoryGrid (props) {
     const classes = useStyles()
     const theme = useTheme()
     const [categoryList, setCategoryList]= React.useState([])
@@ -226,7 +226,7 @@ export default function Testing (props) {
             <Grid container spacing={2}>
                 {categoryList.map((category, index)=>{
                   return (
-                      <Grid item xs={3} key={index}>
+                      <Grid item xs={4} key={index}>
                             <CategoryCard
                             key={index}
                             id={index}
@@ -236,7 +236,7 @@ export default function Testing (props) {
                           </Grid>
                           )
                 })}
-                {counter < 3 ? <Grid item md={3}>
+                {counter < 3 ? <Grid item md={4}>
                     <Card className={classes.card}>
                     <CardActionArea>
                     <CardContent>
@@ -249,8 +249,6 @@ export default function Testing (props) {
                     </div>
                     </div>
                     <div className={classes.root}>
-                    {/*<Tooltip title="Add" aria-label="add" >*/}
-                    {/*</Tooltip>*/}
                     <ConfirmationDialogRaw
                     classes={{
                     paper: classes.paper,
