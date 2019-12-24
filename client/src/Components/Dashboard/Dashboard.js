@@ -20,6 +20,7 @@ import PropTypes from 'prop-types'
 import SwipeableViews from 'react-swipeable-views'
 import Box from '@material-ui/core/Box'
 import RadarChart from './Charts/RadarChart'
+import Testing from "./Testing";
 const useStyles = makeStyles(theme => ({
   card: {
   },
@@ -96,69 +97,7 @@ export default function Dashboard () {
 
   return (
     <div className={classes.container}>
-      <Grid container spacing={2}>
-        <Grid item xs={8}>
-          <Card className={classes.card}>
-            <CardHeader />
-            <BarChartWrapper type='bar-pie' />
-            <CardContent>
-              <Typography variant='body2' color='textSecondary' component='p'>
-                                Voting record of your MP.
-              </Typography>
-            </CardContent>
-            <CardActions disableSpacing>
-              <IconButton
-                className={clsx(classes.expand, {
-                  [classes.expandOpen]: expanded
-                })}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-                aria-label='show more'
-              >
-                <ExpandMoreIcon />
-              </IconButton>
-            </CardActions>
-            <Collapse in={expanded} timeout='auto' unmountOnExit>
-              <CardContent>
-
-                <Tabs
-                  value={tabValue}
-                  onChange={handleChange}
-                  indicatorColor='primary'
-                  textColor='primary'
-                  variant='fullWidth'
-                  aria-label='full width tabs example'
-                >
-                  <Tab label='Healthcare' {...a11yProps(0)} />
-                  <Tab label='Economics' {...a11yProps(1)} />
-                </Tabs>
-                <SwipeableViews
-                  axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                  index={tabValue}
-                  onChangeIndex={handleChangeIndex}
-                >
-                  <TabPanel value={tabValue} index={0} dir={theme.direction}>
-                    <CategoryTable />
-                  </TabPanel>
-                  <TabPanel value={tabValue} index={1} dir={theme.direction}>
-                    <CategoryTable />
-                  </TabPanel>
-                </SwipeableViews>
-              </CardContent>
-            </Collapse>
-          </Card>
-        </Grid>
-        <Grid item xs={1}>
-          <Grid container spacing={2}>
-            <Grid item={12}>
-              <ChartCard title='MP Voting Distribution'> <RadarChart /> </ChartCard>
-            </Grid>
-            <Grid item={12}>
-              <ChartCard title='Bipartisan Index'> <BarChartWrapper /> </ChartCard>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+      <Testing/>
     </div>
   )
 }
