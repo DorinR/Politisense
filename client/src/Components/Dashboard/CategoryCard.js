@@ -30,7 +30,7 @@ import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles(theme => ({
     card: {
-        maxWidth: 345,
+        // maxWidth: 345,
     },
     media: {
         height: 0,
@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: red[500],
     },
     table: {
-        minWidth: 650,
+        // minWidth: 650,
     }
 }));
 
@@ -58,11 +58,15 @@ function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
 }
 
-export default function RecipeReviewCard() {
+export default function CategoryCard(props) {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
+    const [id,setId]= React.useState(0)
+    const [title,setTitle]= React.useState('')
 
     React.useEffect(() => {
+        setId(props.id)
+        setTitle(props.title)
         loadCSS(
             'https://use.fontawesome.com/releases/v5.1.0/css/all.css',
             document.querySelector('#font-awesome-css'),
@@ -72,7 +76,6 @@ export default function RecipeReviewCard() {
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
-
     const rows = [
         createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
         createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
@@ -82,58 +85,59 @@ export default function RecipeReviewCard() {
     ];
 
     return (
-        <Card className={classes.card}>
-            <CardHeader
-                avatar={
-                    <TrendingUpIcon color="primary" />
-                }
-                action={
-                    <IconButton aria-label="settings">
-                        <IndeterminateCheckBoxIcon color='primary'/>
-                    </IconButton>
-                }
-                title="Economics"
-            />
-            <CardContent>
-                    <Table className={classes.table} size="small" aria-label="a dense table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Dessert (100g serving)</TableCell>
-                                <TableCell align="right">Calories</TableCell>
-                                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                                <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.map(row => (
-                                <TableRow key={row.name}>
-                                    <TableCell component="th" scope="row">
-                                        {row.name}
-                                    </TableCell>
-                                    <TableCell align="right">{row.calories}</TableCell>
-                                    <TableCell align="right">{row.fat}</TableCell>
-                                    <TableCell align="right">{row.carbs}</TableCell>
-                                    <TableCell align="right">{row.protein}</TableCell>
+                <Card className={classes.card}>
+                    <CardHeader
+                        avatar={
+                            <TrendingUpIcon color="primary" />
+                        }
+                        action={
+                            <IconButton aria-label="settings" onClick={props.delete}>
+                                <IndeterminateCheckBoxIcon color='primary'/>
+                            </IconButton>
+                        }
+                        title={title}
+                    />
+                    <CardContent>
+                        <Table className={classes.table} size="small" aria-label="a dense table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Dessert (100g serving)</TableCell>
+                                    <TableCell align="right">Calories</TableCell>
+                                    <TableCell align="right">Fat&nbsp;(g)</TableCell>
+                                    <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+                                    <TableCell align="right">Protein&nbsp;(g)</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                <Typography variant="body2" color="textSecondary" component="p">
-                    Description
-                </Typography>
-            </CardContent>
-            <CardActions disableSpacing>
-                <IconButton>
-                    <CompareArrowsIcon color="primary"/>
-                </IconButton>
-                <IconButton>
-                    <PieChartIcon color="primary" />
-                </IconButton>
-                <IconButton>
-                    <Icon className="fas fa-handshake" color="primary" />
-                </IconButton>
-            </CardActions>
-        </Card>
+                            </TableHead>
+                            <TableBody>
+                                {rows.map(row => (
+                                    <TableRow key={row.name}>
+                                        <TableCell component="th" scope="row">
+                                            {row.name}
+                                        </TableCell>
+                                        <TableCell align="right">{row.calories}</TableCell>
+                                        <TableCell align="right">{row.fat}</TableCell>
+                                        <TableCell align="right">{row.carbs}</TableCell>
+                                        <TableCell align="right">{row.protein}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                            Description
+                        </Typography>
+                    </CardContent>
+                    <CardActions disableSpacing>
+                        <IconButton>
+                            <CompareArrowsIcon color="primary"/>
+                        </IconButton>
+                        <IconButton>
+                            <PieChartIcon color="primary" />
+                        </IconButton>
+                        <IconButton>
+                            <Icon className="fas fa-handshake" color="primary" />
+                        </IconButton>
+                    </CardActions>
+                </Card>
+
     );
 }
