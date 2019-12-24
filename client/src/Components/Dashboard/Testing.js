@@ -107,6 +107,8 @@ export default function Testing (props) {
     const [value, setValue] = React.useState('')
     const [checked, setChecked] = React.useState(true)
     const [newCategory, setNewCategory]= React.useState('')
+    const [counter, setCounter]= React.useState(0)
+
 
     //  const addNewCategory = () => {
     //      if(newCategory != ''){
@@ -130,6 +132,8 @@ export default function Testing (props) {
         const copyCategoryArray = Object.assign([],categoryList)
          copyCategoryArray.splice(index,1)
          setCategoryList(copyCategoryArray)
+         setCounter(counter-1)
+
          console.log(categoryList)
     }
 
@@ -137,7 +141,7 @@ export default function Testing (props) {
         const copyCategoryArray = Object.assign([],categoryList)
         copyCategoryArray.push(newValue)
         setCategoryList(copyCategoryArray)
-        console.log(copyCategoryArray)
+        setCounter(counter+1)
     }
 
     const handleClickListItem = () => {
@@ -170,36 +174,38 @@ export default function Testing (props) {
                           </Grid>
                           )
                 })}
-                <Grid item md={3}>
+                {counter < 3 ? <Grid item md={3}>
                     <Card className={classes.card}>
-                            <CardActionArea>
-                                <CardContent>
-                                    <div onClick={handleClickListItem}>
-                                        <Typography gutterBottom variant="h5" component="h2" align="center" style={{ color: 'white' }}>
-                                            Add New Category
-                                        </Typography>
-                                        <div align='center'>
-                                            <AddIcon color='white' fontSize="large" style={{ color: 'white', fontSize: 100 }}/>
-                                        </div>
-                                    </div>
-                                    <div className={classes.root}>
-                                          {/*<Tooltip title="Add" aria-label="add" >*/}
-                                          {/*</Tooltip>*/}
-                                            <ConfirmationDialogRaw
-                                                classes={{
-                                                    paper: classes.paper,
-                                                }}
-                                                keepMounted
-                                                open={open}
-                                                onClose={handleClose}
-                                                value={value}
-                                                existedCategories={categoryList}
-                                            />
-                                    </div>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                </Grid>
+                    <CardActionArea>
+                    <CardContent>
+                    <div onClick={handleClickListItem}>
+                    <Typography gutterBottom variant="h5" component="h2" align="center" style={{ color: 'white' }}>
+                    Add New Category
+                    </Typography>
+                    <div align='center'>
+                    <AddIcon color='white' fontSize="large" style={{ color: 'white', fontSize: 100 }}/>
+                    </div>
+                    </div>
+                    <div className={classes.root}>
+                    {/*<Tooltip title="Add" aria-label="add" >*/}
+                    {/*</Tooltip>*/}
+                    <ConfirmationDialogRaw
+                    classes={{
+                    paper: classes.paper,
+                }}
+                    keepMounted
+                    open={open}
+                    onClose={handleClose}
+                    value={value}
+                    existedCategories={categoryList}
+                    />
+                    </div>
+                    </CardContent>
+                    </CardActionArea>
+                    </Card>
+                    </Grid>
+                    : <div/>
+                }
             </Grid>
 
         </div>
