@@ -38,6 +38,7 @@ import {ConfirmationDialogRaw} from "./CategoryForm";
 import Tooltip from '@material-ui/core/Tooltip';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteCategoryDialog from "./DeleteCategoryDialog";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -96,7 +97,6 @@ TabPanel.propTypes = {
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired
 }
-// when i remove a category i need to delete from my categories as well as adding that attribute in the options
 export default function CategoryGrid (props) {
     const classes = useStyles()
     const theme = useTheme()
@@ -108,33 +108,23 @@ export default function CategoryGrid (props) {
     const [checked, setChecked] = React.useState(true)
     const [newCategory, setNewCategory]= React.useState('')
     const [counter, setCounter]= React.useState(0)
-
-
-    //  const addNewCategory = () => {
-    //      if(newCategory != ''){
-    //          categoryList.concat(newCategory)
-    //          console.log(categoryList)
-    //      }
-    // }
+    const [openDeleteDialog, setOpenDeleteDialog] =React.useState(false)
 
     const handleExpandClick = () => {
         setExpanded(!expanded)
     }
-
     const handleChange = (event, newValue) => {
         setTabValue(newValue)
     }
-
     const handleChangeIndex = index => {
         setTabValue(index)
     }
      const deleteEvent = (index) => {
-        const copyCategoryArray = Object.assign([],categoryList)
+         const copyCategoryArray = Object.assign([],categoryList)
          copyCategoryArray.splice(index,1)
+         console.log(copyCategoryArray)
          setCategoryList(copyCategoryArray)
          setCounter(counter-1)
-
-         console.log(categoryList)
     }
 
     const addEvent = (newValue) => {
@@ -146,18 +136,17 @@ export default function CategoryGrid (props) {
 
     const handleClickListItem = () => {
         setOpen(true);
-    };
+    }
 
     const handleClose = newValue => {
         if(newValue){
             addEvent(newValue)
         }
-        setOpen(false);
+        setOpen(false)
     }
 
     useEffect(()=>{
-
-    },[value])
+    },[value,categoryList])
     {/*<Grid container spacing={2}>*/}
     {/*  <Grid item xs={8}>*/}
     {/*    <Card className={classes.card}>*/}
@@ -228,44 +217,38 @@ export default function CategoryGrid (props) {
                   return (
                       <Grid item xs={4} key={index}>
                             <CategoryCard
-                            key={index}
                             id={index}
                             title={category}
-                            delete ={deleteEvent.bind(this,index)}
+                            delete ={deleteEvent}
                             />
-                          </Grid>
-                          )
-                })}
-                {counter < 3 ? <Grid item md={4}>
-                    <Card className={classes.card}>
-                    <CardActionArea>
-                    <CardContent>
-                    <div onClick={handleClickListItem}>
-                    <Typography gutterBottom variant="h5" component="h2" align="center" style={{ color: 'white' }}>
-                    Add New Category
-                    </Typography>
-                    <div align='center'>
-                    <AddIcon color='white' fontSize="large" style={{ color: 'white', fontSize: 100 }}/>
-                    </div>
-                    </div>
-                    <div className={classes.root}>
-                    <ConfirmationDialogRaw
-                    classes={{
-                    paper: classes.paper,
-                }}
-                    keepMounted
-                    open={open}
-                    onClose={handleClose}
-                    value={value}
-                    existedCategories={categoryList}
-                    />
-                    </div>
-                    </CardContent>
-                    </CardActionArea>
-                    </Card>
+                      </Grid>
+                  )})}
+                {counter < 3 ?
+                    <Grid item md={4}>
+                        <Card className={classes.card}>
+                            <CardActionArea>
+                                <CardContent>
+                                    <div onClick={handleClickListItem}>
+                                        <Typography gutterBottom variant="h5" component="h2" align="center" style={{ color: 'white' }}>
+                                        Add New Category </Typography>
+                                        <div align='center'>
+                                            <AddIcon color='white' fontSize="large" style={{ color: 'white', fontSize: 100 }}/>
+                                        </div>
+                                    </div>
+                                    <ConfirmationDialogRaw
+                                    classes={{
+                                    paper: classes.paper,}}
+                                    keepMounted
+                                    open={open}
+                                    onClose={handleClose}
+                                    value={value}
+                                    existedCategories={categoryList}
+                                    />
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
                     </Grid>
-                    : <div/>
-                }
+                    : <div/>}
             </Grid>
         </div>
     )
