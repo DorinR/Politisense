@@ -13,6 +13,7 @@ const allCategories = ['Human Rights', 'Criminal','Economics', 'Religion']
 
 export function ConfirmationDialogRaw(props) {
     const { onClose, value: valueProp, open, ...other } = props
+    console.log(valueProp)
     const [value, setValue] = React.useState(valueProp)
     const [options, setOptions]= React.useState(allCategories)
     const radioGroupRef = React.useRef(null)
@@ -31,7 +32,7 @@ export function ConfirmationDialogRaw(props) {
 
     const handleEntering = () => {
         if (radioGroupRef.current != null) {
-            radioGroupRef.current.focus();
+            radioGroupRef.current.focus()
         }
     };
 

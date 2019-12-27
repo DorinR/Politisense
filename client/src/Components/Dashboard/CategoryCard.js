@@ -34,6 +34,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import DeleteCategoryDialog from "./DeleteCategoryDialog";
+import {ConfirmationDialogRaw} from "./CategoryForm";
+import Grid from "@material-ui/core/Grid";
+import ChartCard from "./ChartCard";
+import RadarChart from "./Charts/RadarChart";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -71,6 +77,19 @@ export default function CategoryCard(props) {
     const [open, setOpen] = React.useState(false);
     const [id,setId]= React.useState(0)
     const [title,setTitle]= React.useState('')
+    const [openDeleteDialog,setOpenDeleteDialog] = React.useState(false)
+    const [confimedDeletion, setConfimedDeletion] = React.useState(false)
+
+
+    const handleDeleteDialogClose= (newValue,index) =>{
+        console.log('the newValue of the card is '+newValue)
+        console.log('the index of the card is '+index)
+
+        if(newValue == true){
+            props.delete(index)
+        }
+        setOpenDeleteDialog(false)
+    }
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -80,6 +99,10 @@ export default function CategoryCard(props) {
         setOpen(false);
     };
 
+
+    const handleDelete =()=>{
+        setOpenDeleteDialog(true)
+    }
     function setCardLogo(){
         switch(title) {
             case 'Economics':
@@ -96,12 +119,12 @@ export default function CategoryCard(props) {
     }
 
     React.useEffect(() => {
-        setId(props.id)
-        setTitle(props.title)
+        // setId(props.id)
+        // setTitle(props.title)
         loadCSS(
             'https://use.fontawesome.com/releases/v5.1.0/css/all.css',
             document.querySelector('#font-awesome-css'),
-        );
+        )
     }, []);
 
     const handleExpandClick = () => {
@@ -119,13 +142,25 @@ export default function CategoryCard(props) {
                     <CardHeader
                         avatar={setCardLogo()}
                         action={
-                            <IconButton aria-label="settings" onClick={props.delete}>
+                            <div>
+                            <IconButton aria-label="settings" onClick={()=>setOpenDeleteDialog(true)}>
                                 <IndeterminateCheckBoxIcon color='primary'/>
                             </IconButton>
+                            </div>
                         }
-                        title={title}
+                        title={props.title}
+                    />
+                    <DeleteCategoryDialog
+                        classes={{
+                            paper: classes.paper,}}
+                        keepMounted
+                        open={openDeleteDialog}
+                        index = {props.id}
+                        onClose={handleDeleteDialogClose}
+                        value = {confimedDeletion}
                     />
                     <CardContent>
+                         <ChartCard title='MP Voting Distribution'> <RadarChart /> </ChartCard>
                         <Table className={classes.table} size="small" aria-label="a dense table">
                             <TableHead>
                                 <TableRow>
