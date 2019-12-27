@@ -5,7 +5,7 @@ const controller = require('../../controllers/Controller')
 // @route post api/ridings/getRidingCode
 // @desc get riding code corresponding to the riding name passed in
 // @access Public
-router.get('/getRidingCode', controller.getRidingCode)
+router.get('/getRidingCode/:riding', controller.getRidingCode)
 
 // @route post api/ridings/:ridingCode/getRidingSimpleShape
 // @desc get the simple shape coordinates for the riding shape

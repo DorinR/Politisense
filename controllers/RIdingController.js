@@ -41,7 +41,8 @@ exports.saveRidingCodesToFirestore = (req, res) => {
 }
 
 exports.getRidingCode = (req, res) => {
-  const targetRiding = req.body.riding
+  const targetRiding = req.params.riding.replace(/—/g, '--')
+
   const db = new Firestore()
   db.Ridings()
     .select('nameEnglish', '==', targetRiding)
@@ -79,4 +80,6 @@ exports.getRidingCode = (req, res) => {
 
 exports.getRidingSimpleShape = (req, res) => {
   console.log('getRidingSimpleShape endpoint hit!')
+  const ridingCode = req.params.ridingCode
+  console.log('getting shape for riding number:', ridingCode, '...')
 }

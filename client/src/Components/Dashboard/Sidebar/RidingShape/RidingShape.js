@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import svgify from 'geojson-svgify'
-import { render } from 'react-dom'
-import { ReactSVG } from 'react-svg'
-import lachine from './lachine.svg'
-import geojson2svg, { Renderer } from 'geojson-to-svg'
 import RidingCodeHelper from './RidingCodeHelper'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-var geo2json = require('geo2svg')
 var mapshaper = require('mapshaper')
 
 const useStyles = makeStyles(theme => ({
