@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import ListItemText from '@material-ui/core/ListItemText'
+import { makeStyles } from '@material-ui/core/styles'
+import svgify from 'geojson-svgify'
+import { render } from 'react-dom'
+import { ReactSVG } from 'react-svg'
+import lachine from './lachine.svg'
+import geojson2svg, { Renderer } from 'geojson-to-svg'
+import RidingCodeHelper from './RidingCodeHelper'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
-import { makeStyles } from '@material-ui/core/styles'
-import { Typography } from '@material-ui/core'
-import axios from 'axios'
+var geo2json = require('geo2svg')
+var mapshaper = require('mapshaper')
 
 const useStyles = makeStyles(theme => ({
   customCardContent: {
@@ -19,49 +24,49 @@ const useStyles = makeStyles(theme => ({
   },
   customTextFormatting: {
     textTransform: 'capitalize'
+  },
+  customRidingShape: {
+    width: '50%'
   }
 }))
 
-export async function fetchRidingShape (ridingCode) {
-  console.log('calling api with this riding code: ', ridingCode)
-  let ridingShape = ''
-  await axios
-    .get(`http://localhost:5000/api/ridings/${ridingCode}/getSimpleShape`)
-    .then(
-      res => {
-        if (res.data.success) {
-          ridingShape = res.data.data.coordinates
-          console.log('data from reply:', res.data)
-        }
-      },
-      error => {
-        console.error(error)
-      }
-    )
-    .catch(err => {
-      console.error(err)
-    })
-  return ridingShape
+export function restructureData(data) {
+  let templateData = {
+    type: 'Feature',
+    properties: {
+      color: '#DD2C00',
+      weight: 15,
+      direction: 0,
+      opacity: 0.4,
+      markupType: 'highlight'
+    },
+    geometry: data
+  }
+  return templateData
 }
 
-export default function RepresentativeInfo (props) {
+export default function RidingShape(props) {
   const classes = useStyles()
-  const [ridingShape, setRidingShape] = useState('')
+  const [svgData, setSvgData] = React.useState('')
 
   useEffect(() => {
-    async function getData () {
-      const ridingShape = await fetchRidingShape(props.ridingCode)
-      setRidingShape(ridingShape)
+    if (props.ridingShapeCoordinates) {
+      const input = props.ridingShapeCoordinates
+      console.log('incoming shape data:', input)
+
+      let cmd = '-i point.json -o svg-data=* format=SVG'
+      mapshaper.applyCommands(cmd, { 'point.json': input }, function(err, out) {
+        var svg = out['point.svg']
+        console.log(svg)
+        setSvgData(svg)
+      })
     }
-    getData()
-  }, [props.ridingCode])
+  }, [props.ridingShapeCoordinates])
 
   return (
-    <Card>
-      <CardContent className={classes.customCardContent}>
-        {props.ridingCode}
-        {ridingShape}
-      </CardContent>
-    </Card>
+    <img
+      src={`data:image/svg+xml;utf8,${svgData}`}
+      className={classes.customRidingShape}
+    />
   )
 }

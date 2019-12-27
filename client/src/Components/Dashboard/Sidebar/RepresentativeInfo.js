@@ -4,7 +4,7 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Box from '@material-ui/core/Box'
 import RidingSwitcher from './RidingSwitcher/RidingSwitcher'
-import RidingShape from './RidingShape/RidingShape'
+import RidingShapeContainer from './RidingShape/RidingShapeContainer'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import axios from 'axios'
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding (userEmail) {
+export async function fetchUserRiding(userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -40,29 +40,24 @@ export async function fetchUserRiding (userEmail) {
   return result
 }
 
-export async function fetchRidingCode (riding) {
+export async function fetchRidingCode(riding) {
   let ridingCode = 0
+
   await axios
-    .get('http://localhost:5000/api/ridings/getRidingCode', {
-      riding
-    })
-    .then(
-      res => {
-        if (res.data.success) {
-          ridingCode = res.data.data.code
-        }
-      },
-      error => {
-        console.error(error)
+    .get(`http://localhost:5000/api/ridings/getRidingCode/${encodeURI(riding)}`)
+    .then(res => {
+      if (res.data.success) {
+        ridingCode = res.data.data.code
       }
-    )
+    })
     .catch(err => {
       console.error(err)
     })
+
   return ridingCode
 }
 
-export default function RepresentativeInfo (props) {
+export default function RepresentativeInfo(props) {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -93,7 +88,7 @@ export default function RepresentativeInfo (props) {
   })
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
       const riding = await fetchUserRiding(email)
@@ -128,7 +123,7 @@ export default function RepresentativeInfo (props) {
         </CardContent>
       </Card>
       <Box m={1} />
-      <RidingShape ridingCode={ridingCode} />
+      <RidingShapeContainer ridingCode={ridingCode} />
       <Box m={1} />
       <Card>
         <CardContent className={classes.customCardContent}>
