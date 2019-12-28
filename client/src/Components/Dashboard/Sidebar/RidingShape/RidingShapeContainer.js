@@ -3,6 +3,7 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import { makeStyles } from '@material-ui/core/styles'
 import RidingShape from './RidingShape'
+import Box from '@material-ui/core/Box'
 
 const useStyles = makeStyles(theme => ({
   customCardContent: {
@@ -66,13 +67,13 @@ export default function RidingShapeContainer(props) {
   }, [props.ridingCode])
 
   return (
-    <Card>
-      <CardContent className={classes.customCardContent}>
-        <RidingShape
-          ridingShapeCoordinates={ridingShape}
-          politicalParty={props.politicalParty}
-        />
-      </CardContent>
-    </Card>
+    <div>
+      <Box mx='auto' />
+      <RidingShape
+        ridingShapeCoordinates={ridingShape}
+        politicalParty={props.politicalParty}
+      />
+      <Box mx='auto' />
+    </div>
   )
 }

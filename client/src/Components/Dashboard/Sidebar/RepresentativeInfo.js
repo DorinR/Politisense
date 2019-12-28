@@ -120,13 +120,14 @@ export default function RepresentativeInfo(props) {
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>RIDING</Typography>
           <RidingSwitcher riding={riding} />
+          <Box m={1} />
+          <RidingShapeContainer
+            ridingCode={ridingCode}
+            politicalParty={politicalParty}
+          />
+          <Box m={1} />
         </CardContent>
       </Card>
-      <Box m={1} />
-      <RidingShapeContainer
-        ridingCode={ridingCode}
-        politicalParty={politicalParty}
-      />
       <Box m={1} />
       <Card>
         <CardContent className={classes.customCardContent}>

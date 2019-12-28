@@ -37,6 +37,19 @@ export function restructureData(data) {
   return templateData
 }
 
+export function getPartyColor(party) {
+  var politicalPartyColors = {}
+  politicalPartyColors['bloc québécois'] = '%23355888'
+  politicalPartyColors['liberal'] = '%23D71921'
+  politicalPartyColors['conservative'] = '%230C499C'
+  politicalPartyColors['green party'] = '%233D9B35'
+  politicalPartyColors['independent'] = '%2378D7CE'
+  politicalPartyColors['liberal'] = '%23D71921'
+  politicalPartyColors['ndp'] = '%23EF7E52'
+
+  return politicalPartyColors[party]
+}
+
 export default function RidingShape(props) {
   const classes = useStyles()
   const [svgData, setSvgData] = React.useState('')
@@ -44,16 +57,7 @@ export default function RidingShape(props) {
   useEffect(() => {
     if (props.ridingShapeCoordinates && props.politicalParty) {
       // get color for given party
-      const politicalParty = props.politicalParty
-      var politicalPartyColors = {}
-      politicalPartyColors['bloc québécois'] = '%23355888'
-      politicalPartyColors['liberal'] = '%23D71921'
-      politicalPartyColors['conservative'] = '%230C499C'
-      politicalPartyColors['green party'] = '%233D9B35'
-      politicalPartyColors['independent'] = '%2378D7CE'
-      politicalPartyColors['liberal'] = '%23D71921'
-      politicalPartyColors['ndp'] = '%23EF7E52'
-      const thisPartyColor = politicalPartyColors[politicalParty]
+      const thisPartyColor = getPartyColor(props.politicalParty)
 
       // convert geoJSON data to svg shape and set fill color to the party color
       const input = props.ridingShapeCoordinates
