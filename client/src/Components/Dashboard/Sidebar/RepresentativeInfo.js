@@ -123,7 +123,10 @@ export default function RepresentativeInfo(props) {
         </CardContent>
       </Card>
       <Box m={1} />
-      <RidingShapeContainer ridingCode={ridingCode} />
+      <RidingShapeContainer
+        ridingCode={ridingCode}
+        politicalParty={politicalParty}
+      />
       <Box m={1} />
       <Card>
         <CardContent className={classes.customCardContent}>

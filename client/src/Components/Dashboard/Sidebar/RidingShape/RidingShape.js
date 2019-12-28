@@ -42,18 +42,37 @@ export default function RidingShape(props) {
   const [svgData, setSvgData] = React.useState('')
 
   useEffect(() => {
-    if (props.ridingShapeCoordinates) {
-      const input = props.ridingShapeCoordinates
-      console.log('incoming shape data:', input)
+    if (props.ridingShapeCoordinates && props.politicalParty) {
+      // get color for given party
+      const politicalParty = props.politicalParty
+      var politicalPartyColors = {}
+      politicalPartyColors['bloc québécois'] = '%23355888'
+      politicalPartyColors['liberal'] = '%23D71921'
+      politicalPartyColors['conservative'] = '%230C499C'
+      politicalPartyColors['green party'] = '%233D9B35'
+      politicalPartyColors['independent'] = '%2378D7CE'
+      politicalPartyColors['liberal'] = '%23D71921'
+      politicalPartyColors['ndp'] = '%23EF7E52'
+      const thisPartyColor = politicalPartyColors[politicalParty]
 
+      // convert geoJSON data to svg shape and set fill color to the party color
+      const input = props.ridingShapeCoordinates
       let cmd = '-i point.json -o svg-data=* format=SVG'
       mapshaper.applyCommands(cmd, { 'point.json': input }, function(err, out) {
         var svg = out['point.svg']
         console.log(svg)
-        setSvgData(svg)
+        let position = svg.indexOf('<path') + 5
+        let partyColor = ` fill="${thisPartyColor}"`
+        let coloredSvg = [
+          svg.slice(0, position),
+          partyColor,
+          svg.slice(position)
+        ].join('')
+        console.log(coloredSvg)
+        setSvgData(coloredSvg)
       })
     }
-  }, [props.ridingShapeCoordinates])
+  }, [props.ridingShapeCoordinates, props.politicalParty])
 
   return (
     <img

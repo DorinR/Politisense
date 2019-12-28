@@ -68,7 +68,10 @@ export default function RidingShapeContainer(props) {
   return (
     <Card>
       <CardContent className={classes.customCardContent}>
-        <RidingShape ridingShapeCoordinates={ridingShape} />
+        <RidingShape
+          ridingShapeCoordinates={ridingShape}
+          politicalParty={props.politicalParty}
+        />
       </CardContent>
     </Card>
   )
