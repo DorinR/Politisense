@@ -40,6 +40,7 @@ import {ConfirmationDialogRaw} from "./CategoryForm";
 import Grid from "@material-ui/core/Grid";
 import ChartCard from "./ChartCard";
 import RadarChart from "./Charts/RadarChart";
+import BarChartWrapper from "./Charts/Wrappers/BarChartWrapper";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -74,6 +75,7 @@ function createData(name, vote) {
 export default function CategoryCard(props) {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
+    const [openCompare, setOpenCompare] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const [id,setId]= React.useState(0)
     const [title,setTitle]= React.useState('')
@@ -90,6 +92,15 @@ export default function CategoryCard(props) {
         }
         setOpenDeleteDialog(false)
     }
+
+    const handleClickOpenCompare = () => {
+        setOpenCompare(true);
+    };
+
+    const handleCloseCompare = () => {
+        setOpenCompare(false);
+    };
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -120,7 +131,7 @@ export default function CategoryCard(props) {
 
     React.useEffect(() => {
         // setId(props.id)
-        // setTitle(props.title)
+         setTitle(props.title)
         loadCSS(
             'https://use.fontawesome.com/releases/v5.1.0/css/all.css',
             document.querySelector('#font-awesome-css'),
@@ -181,7 +192,7 @@ export default function CategoryCard(props) {
                         </Table>
                     </CardContent>
                     <CardActions disableSpacing>
-                        <IconButton>
+                        <IconButton onClick={handleClickOpenCompare}>
                             <CompareArrowsIcon color="primary"/>
                         </IconButton>
                         <IconButton>
@@ -193,24 +204,34 @@ export default function CategoryCard(props) {
                     </CardActions>
                 </Card>
             <Dialog
+                open={openCompare}
+                onClose={handleCloseCompare}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Head to Head"}</DialogTitle>
+                <DialogContent>
+                    <h1>Head to head chart goes here</h1>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseCompare} color="primary" autoFocus>
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+                <DialogTitle id="alert-dialog-title">{"Bipartisan Index"}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Let Google help apps determine location. This means sending anonymous location data to
-                        Google, even when no apps are running.
-                    </DialogContentText>
+                    <ChartCard title='Bipartisan Index'> <BarChartWrapper /> </ChartCard>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Disagree
-                    </Button>
                     <Button onClick={handleClose} color="primary" autoFocus>
-                        Agree
+                        Close
                     </Button>
                 </DialogActions>
             </Dialog>
