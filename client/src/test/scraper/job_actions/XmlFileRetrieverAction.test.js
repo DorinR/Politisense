@@ -54,7 +54,7 @@ describe('PDFParseAction.js', () => {
   it('PDFParseAction::perform() returns null on html returned', async (done) => {
     const underTest = new FileReader('https://www.i.do/not/wantthis/html/file/from/the/web/')
     underTest.send = mockSend
-    const didGetXml = await underTest.perform()
+    const wasNull = await underTest.perform()
       .then(res => {
         Assert.equal(res, null, 'Should be null')
         return true
@@ -62,14 +62,14 @@ describe('PDFParseAction.js', () => {
       .catch(e => {
         return false
       })
-    Assert.equal(didGetXml, true)
+    Assert.equal(wasNull, true)
     done()
   })
 
   it('PDFParseAction::perform() returns null on error', async (done) => {
     const underTest = new FileReader('https://www.i.want/this/to/throw')
     underTest.send = mockSend
-    const didGetXml = await underTest.perform()
+    const wasNull = await underTest.perform()
       .then(res => {
         Assert.equal(res, null, 'Should be null')
         return true
@@ -77,7 +77,7 @@ describe('PDFParseAction.js', () => {
       .catch(e => {
         return false
       })
-    Assert.equal(didGetXml, true)
+    Assert.equal(wasNull, true)
     done()
   })
 })
