@@ -1,4 +1,5 @@
 import { Condition } from './Condition'
+
 const Model = require('./Model').Model
 
 class FinancialRecord extends Model {
@@ -7,9 +8,15 @@ class FinancialRecord extends Model {
     Condition.parameter(memberID).isType(String)
     Condition.parameter(parentCategory).isType(String)
     Condition.parameter(category).isType(String)
-    Condition.parameter(amount).isType(Number)
-    Condition.parameter(year).isType(Number)
-    Condition.parameter(quarter).isType(Number)
+    Condition.parameter(amount)
+      .isType(Number)
+      .isMoreThanOrEqual(0)
+    Condition.parameter(year)
+      .isType(Number)
+      .isMoreThan(0)
+    Condition.parameter(quarter)
+      .isType(Number)
+      .isMoreThan(0)
 
     this.member = memberID
     this.parent = parentCategory
