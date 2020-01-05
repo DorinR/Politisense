@@ -98,7 +98,7 @@ class ExpendituresScraper {
     }
     subcat.children.forEach(cat => {
       if (cat.name === 'Category') {
-        cat.parent = category.name
+        cat.parent = this.getCategoryName(category)
         report.categories.push(cat)
       }
     })
@@ -117,8 +117,15 @@ class ExpendituresScraper {
         await this.retrievePolitician(record.riding)
           .then(id => {
             record.categories.forEach(cat => {
-              const fr = this.createFinancialRecord(id, record.date, cat)
-              financialRecords.push(fr)
+              let fr = null
+              try {
+                fr = this.createFinancialRecord(id, record.date, cat)
+                financialRecords.push(fr)
+              } catch (e) {
+                console.debug('DEBUG: ' + e.message)
+              }
+
+
             })
           })
           .catch(console.error)
@@ -131,7 +138,13 @@ class ExpendituresScraper {
     const quarter = this.computeQuarter(date)
     const name = this.getCategoryName(category)
     const parent = category.parent
-    const amount = this.getCategorySpendingAmount(category)
+    let amount = this.getCategorySpendingAmount(category)
+
+    if(isNaN(amount)) {
+      console.warn(`Financial Record ${name} for member ${id} has a non-numeric value. Value will be set to zero.`)
+      amount = 0
+    }
+
     return new FinancialRecord(id, parent, name, amount, year, quarter)
   }
 
