@@ -1,6 +1,7 @@
 import { FileReader } from '../../scraper/job_actions/UrlFileReaderAction'
 import { FinancialRecord } from '../../models/FinancialRecord'
 import { Firestore as FireStore } from '../../Firebase'
+
 const cheerio = require('cheerio')
 
 class ExpendituresScraper {

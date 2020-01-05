@@ -13,10 +13,10 @@ class FinancialRecord extends Model {
       .isMoreThanOrEqual(0)
     Condition.parameter(year)
       .isType(Number)
-      .isMoreThan(0)
+      .isMoreThanOrEqual(0)
     Condition.parameter(quarter)
       .isType(Number)
-      .isMoreThan(0)
+      .isMoreThanOrEqual(0)
 
     this.member = memberID
     this.parent = parentCategory
