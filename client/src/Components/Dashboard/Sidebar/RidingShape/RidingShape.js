@@ -44,7 +44,6 @@ export function getPartyColor(party) {
   politicalPartyColors['conservative'] = '%230C499C'
   politicalPartyColors['green party'] = '%233D9B35'
   politicalPartyColors['independent'] = '%2378D7CE'
-  politicalPartyColors['liberal'] = '%23D71921'
   politicalPartyColors['ndp'] = '%23EF7E52'
 
   return politicalPartyColors[party]
