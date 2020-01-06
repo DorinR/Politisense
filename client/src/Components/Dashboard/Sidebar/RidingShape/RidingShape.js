@@ -64,7 +64,6 @@ export default function RidingShape(props) {
       let cmd = '-i point.json -o svg-data=* format=SVG'
       mapshaper.applyCommands(cmd, { 'point.json': input }, function(err, out) {
         var svg = out['point.svg']
-        console.log(svg)
         let position = svg.indexOf('<path') + 5
         let partyColor = ` fill="${thisPartyColor}"`
         let coloredSvg = [
@@ -72,7 +71,6 @@ export default function RidingShape(props) {
           partyColor,
           svg.slice(position)
         ].join('')
-        console.log(coloredSvg)
         setSvgData(coloredSvg)
       })
     }
