@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 var mapshaper = require('mapshaper')
 
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function restructureData (data) {
+export function restructureData(data) {
   const templateData = {
     type: 'Feature',
     properties: {
@@ -37,7 +37,7 @@ export function restructureData (data) {
   return templateData
 }
 
-export function getPartyColor (party) {
+export function getPartyColor(party) {
   var politicalPartyColors = {}
   politicalPartyColors['bloc québécois'] = '%23355888'
   politicalPartyColors.liberal = '%23D71921'
@@ -49,7 +49,7 @@ export function getPartyColor (party) {
   return politicalPartyColors[party]
 }
 
-export default function RidingShape (props) {
+export default function RidingShape(props) {
   const classes = useStyles()
   const [svgData, setSvgData] = React.useState('')
 
@@ -61,7 +61,10 @@ export default function RidingShape (props) {
       // convert geoJSON data to svg shape and set fill color to the party color
       const input = props.ridingShapeCoordinates
       const cmd = '-i point.json -o svg-data=* format=SVG'
-      mapshaper.applyCommands(cmd, { 'point.json': input }, function (err, out) {
+      mapshaper.applyCommands(cmd, { 'point.json': input }, function(err, out) {
+        if (err) {
+          console.error(err)
+        }
         var svg = out['point.svg']
         const position = svg.indexOf('<path') + 5
         const partyColor = ` fill="${thisPartyColor}"`
