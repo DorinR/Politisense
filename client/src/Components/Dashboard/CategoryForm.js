@@ -9,7 +9,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-const allCategories = ['Human Rights', 'Criminal','Economics', 'Religion']
+const allCategories = ['Human Rights', 'Criminal','Economics', 'Religion','Trade','Business']
 
 export function ConfirmationDialogRaw(props) {
     const { onClose, value: valueProp, open, ...other } = props
@@ -62,8 +62,8 @@ export function ConfirmationDialogRaw(props) {
             <DialogContent dividers>
                 <RadioGroup
                     ref={radioGroupRef}
-                    aria-label="ringtone"
-                    name="ringtone"
+                    aria-label="category"
+                    name="cateogory"
                     value={value}
                     onChange={handleChange}
                 >

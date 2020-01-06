@@ -39,6 +39,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteCategoryDialog from "./DeleteCategoryDialog";
+import axios from "axios";
+import {fetchUserRiding} from "../Navbar";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -97,6 +99,7 @@ TabPanel.propTypes = {
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired
 }
+
 export default function CategoryGrid (props) {
     const classes = useStyles()
     const theme = useTheme()
@@ -109,6 +112,37 @@ export default function CategoryGrid (props) {
     const [newCategory, setNewCategory]= React.useState('')
     const [counter, setCounter]= React.useState(0)
     const [openDeleteDialog, setOpenDeleteDialog] =React.useState(false)
+    const [userRepresentative, setUserRepresentative] = React.useState('')
+
+    useEffect(() => {
+        async function getData () {
+            /* eslint-disable */
+            const user = JSON.parse(localStorage.getItem('user'))
+            if (user) {
+                const { email } = user
+                const riding = await fetchUserRiding(email)
+                const representative = await fetchRepresentative(riding)
+                setUserRepresentative(representative)
+            }
+        }
+        getData()
+    }, [])
+
+    async function fetchRepresentative (riding) {
+        let result = ''
+        await axios
+            .get(
+                `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+            )
+            .then(res => {
+                if (res.data.success) {
+                    const representative = res.data.data.name
+                    result = representative
+                }
+            })
+            .catch(err => console.error(err))
+        return result
+    }
 
     const handleExpandClick = () => {
         setExpanded(!expanded)
@@ -158,6 +192,7 @@ export default function CategoryGrid (props) {
                             id={index}
                             title={category}
                             delete ={deleteEvent}
+                            representative={userRepresentative}
                             />
                       </Grid>
                   )})}

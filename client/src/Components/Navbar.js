@@ -153,6 +153,7 @@ export default function MiniDrawer ({ children }) {
         const riding = await fetchUserRiding(email)
         const representative = await fetchRepresentative(riding)
         setUserRepresentative(representative)
+
       }
     }
     getData()

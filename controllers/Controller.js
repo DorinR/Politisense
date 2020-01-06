@@ -38,6 +38,14 @@ module.exports = {
     return BillController.getBillById(req, res)
   },
 
+  getBillsBySponsor : function(req, res){
+    return BillController.getBillsBySponsor(req, res)
+  },
+
+  filterBillsByCategory : function(req, res){
+    return BillController.filterBillsByCategory(req, res)
+  },
+
   getVotesByRepresentative: function (req, res) {
     return VoteRecordController.getVotesByRepresentative(req, res)
   }

@@ -18,8 +18,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
+import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import PieChartIcon from '@material-ui/icons/PieChart';
-import { loadCSS } from 'fg-loadcss';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -41,6 +41,7 @@ import Grid from "@material-ui/core/Grid";
 import ChartCard from "./ChartCard";
 import RadarChart from "./Charts/RadarChart";
 import BarChartWrapper from "./Charts/Wrappers/BarChartWrapper";
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -75,12 +76,14 @@ function createData(name, vote) {
 export default function CategoryCard(props) {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
+    const [sponsor, setSponsor] = React.useState("");
     const [openCompare, setOpenCompare] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const [id,setId]= React.useState(0)
     const [title,setTitle]= React.useState('')
     const [openDeleteDialog,setOpenDeleteDialog] = React.useState(false)
     const [confimedDeletion, setConfimedDeletion] = React.useState(false)
+    const [rows, setRows] = React.useState([])
 
 
     const handleDeleteDialogClose= (newValue,index) =>{
@@ -118,6 +121,10 @@ export default function CategoryCard(props) {
         switch(title) {
             case 'Economics':
                 return <TrendingUpIcon color="primary" />
+            case 'Trade':
+                return <TrendingUpIcon color="primary" />
+            case 'Business':
+                return <BusinessCenterIcon color="primary" />
             case 'Criminal':
                 return <GavelIcon color="primary" />
             case 'Religion':
@@ -130,22 +137,31 @@ export default function CategoryCard(props) {
     }
 
     React.useEffect(() => {
+        setSponsor(props.representative)
+        populateTable()
         // setId(props.id)
          setTitle(props.title)
-        loadCSS(
-            'https://use.fontawesome.com/releases/v5.1.0/css/all.css',
-            document.querySelector('#font-awesome-css'),
-        )
     }, []);
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
-    const rows = [
-        createData('Bill 101', 'Yes'),
-        createData('Bill 102', 'No'),
-        createData('Bill 103', 'Abstain'),
-    ];
+
+
+   async function populateTable(){
+       await axios
+           .post('http://localhost:5000/api/bills/getBillsBySponsor', {sponsor: props.representative})
+           .then(res => {
+               console.log(res.data)
+           })
+           .catch(err => console.error(err))
+
+        setRows([
+            createData('Bill 101', 'Yes'),
+            createData('Bill 102', 'No'),
+            createData('Bill 103', 'Abstain'),
+        ]);
+    }
 
     return (
         <div>
