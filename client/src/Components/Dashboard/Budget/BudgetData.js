@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ListItemText from "@material-ui/core/ListItemText";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -23,40 +23,59 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function RepresentativeInfo(props) {
+export default function BudgetData() {
   const classes = useStyles();
-  const [id] = useState("");
-  const user = JSON.parse(localStorage.getItem("user"));
-  console.log("TEST 123");
-  console.log(user);
-  console.log("TEST 234");
+  const [amount] = useState("");
+  const [category] = useState("");
+  const [member] = useState("");
+  const [parent] = useState("");
+  const [quarter] = useState("");
+  const [repID, setRepID] = useState("");
 
   useEffect(() => {
     const db = new Firestore();
     db.Politician()
+      .where("name", "==", "peter schiefke")
       .select()
       .then(snapshot => {
-        console.log("Inside Snapshot");
         if (snapshot.empty) {
           console.log("No matching documents.");
           return;
         }
         snapshot.forEach(doc => {
-          console.log(doc.id);
+          setRepID(doc.id);
+        });
+      })
+      .catch(err => {
+        console.log("Error getting documents", err);
+      });
+    console.log(repID);
+    db.FinancialRecord()
+      .where("member", "==", repID)
+      .select()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          console.log("No matching documents.");
+          return;
+        }
+        snapshot.forEach(doc => {
+          // attributesAccumulator.push(doc.data());
+          console.log(doc.data());
         });
       })
       .catch(err => {
         console.log("Error getting documents", err);
       });
   });
+
+  // }, []);
   return (
     <ListItemText>
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            MEMBER ID
+            Member: {member}
           </Typography>
-          <span className={classes.customTextFormatting}>{id}</span>
         </CardContent>
       </Card>
       <Box m={1} />
