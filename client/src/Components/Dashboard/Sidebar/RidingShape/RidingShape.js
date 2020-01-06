@@ -22,8 +22,8 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function restructureData(data) {
-  let templateData = {
+export function restructureData (data) {
+  const templateData = {
     type: 'Feature',
     properties: {
       color: '#DD2C00',
@@ -37,19 +37,19 @@ export function restructureData(data) {
   return templateData
 }
 
-export function getPartyColor(party) {
+export function getPartyColor (party) {
   var politicalPartyColors = {}
   politicalPartyColors['bloc québécois'] = '%23355888'
-  politicalPartyColors['liberal'] = '%23D71921'
-  politicalPartyColors['conservative'] = '%230C499C'
+  politicalPartyColors.liberal = '%23D71921'
+  politicalPartyColors.conservative = '%230C499C'
   politicalPartyColors['green party'] = '%233D9B35'
-  politicalPartyColors['independent'] = '%2378D7CE'
-  politicalPartyColors['ndp'] = '%23EF7E52'
+  politicalPartyColors.independent = '%2378D7CE'
+  politicalPartyColors.ndp = '%23EF7E52'
 
   return politicalPartyColors[party]
 }
 
-export default function RidingShape(props) {
+export default function RidingShape (props) {
   const classes = useStyles()
   const [svgData, setSvgData] = React.useState('')
 
@@ -60,12 +60,12 @@ export default function RidingShape(props) {
 
       // convert geoJSON data to svg shape and set fill color to the party color
       const input = props.ridingShapeCoordinates
-      let cmd = '-i point.json -o svg-data=* format=SVG'
-      mapshaper.applyCommands(cmd, { 'point.json': input }, function(err, out) {
+      const cmd = '-i point.json -o svg-data=* format=SVG'
+      mapshaper.applyCommands(cmd, { 'point.json': input }, function (err, out) {
         var svg = out['point.svg']
-        let position = svg.indexOf('<path') + 5
-        let partyColor = ` fill="${thisPartyColor}"`
-        let coloredSvg = [
+        const position = svg.indexOf('<path') + 5
+        const partyColor = ` fill="${thisPartyColor}"`
+        const coloredSvg = [
           svg.slice(0, position),
           partyColor,
           svg.slice(position)
