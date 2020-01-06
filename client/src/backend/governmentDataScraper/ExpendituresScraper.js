@@ -125,8 +125,6 @@ class ExpendituresScraper {
               } catch (e) {
                 console.debug('DEBUG: ' + e.message)
               }
-
-
             })
           })
           .catch(console.error)
@@ -141,7 +139,7 @@ class ExpendituresScraper {
     const parent = category.parent
     let amount = this.getCategorySpendingAmount(category)
 
-    if(isNaN(amount)) {
+    if (isNaN(amount)) {
       console.warn(`Financial Record ${name} for member ${id} has a non-numeric value. Value will be set to zero.`)
       amount = 0
     }

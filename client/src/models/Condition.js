@@ -1,14 +1,13 @@
 class ModelError extends TypeError {
   constructor (params) {
     super()
-    if(params.type) {
+    if (params.type) {
       this.message = `Condition violated in model: Type of ${params.param} is not ${typeof params.type({})}`
     } else if (params.value && params.condition) {
       this.message = `Condition violated in model: Value of ${params.param} ${params.condition} ${params.value}`
     } else {
       this.message = `Condition violated in model for attribute ${params.param}`
     }
-
   }
 }
 
@@ -31,8 +30,8 @@ class Condition {
     return this
   }
 
-  isValue(value) {
-    if(this.param !== value) {
+  isValue (value) {
+    if (this.param !== value) {
       throw new ModelError({
         param: this.param,
         value: value,
@@ -42,11 +41,11 @@ class Condition {
     return this
   }
 
-  isMoreThan(value) {
-    if(typeof this.param !== typeof Number(0) || typeof value !== typeof Number(0)) {
+  isMoreThan (value) {
+    if (typeof this.param !== typeof Number(0) || typeof value !== typeof Number(0)) {
       throw new TypeError('Cannot use function on non numeric Parameters')
     }
-    if(this.param <= value) {
+    if (this.param <= value) {
       throw new ModelError({
         param: this.param,
         value: value,
@@ -56,11 +55,11 @@ class Condition {
     return this
   }
 
-  isMoreThanOrEqual(value) {
-    if(typeof this.param !== typeof Number(0) || typeof value !== typeof Number(0)) {
+  isMoreThanOrEqual (value) {
+    if (typeof this.param !== typeof Number(0) || typeof value !== typeof Number(0)) {
       throw new TypeError('Cannot use function on non numeric Parameters')
     }
-    if(this.param < value) {
+    if (this.param < value) {
       throw new ModelError({
         param: this.param,
         value: value,
@@ -70,11 +69,11 @@ class Condition {
     return this
   }
 
-  isLessThan(value) {
-    if(typeof this.param !== typeof Number(0) || typeof value !== typeof Number(0)) {
+  isLessThan (value) {
+    if (typeof this.param !== typeof Number(0) || typeof value !== typeof Number(0)) {
       throw new TypeError('Cannot use function on non numeric Parameters')
     }
-    if(this.param >= value) {
+    if (this.param >= value) {
       throw new ModelError({
         param: this.param,
         value: value,
@@ -84,11 +83,11 @@ class Condition {
     return this
   }
 
-  isLessThanOrEqual(value) {
-    if(typeof this.param !== typeof Number(0) || typeof value !== typeof Number(0)) {
+  isLessThanOrEqual (value) {
+    if (typeof this.param !== typeof Number(0) || typeof value !== typeof Number(0)) {
       throw new TypeError('Cannot use function on non numeric Parameters')
     }
-    if(this.param > value) {
+    if (this.param > value) {
       throw new ModelError({
         param: this.param,
         value: value,
@@ -98,11 +97,11 @@ class Condition {
     return this
   }
 
-  contains(value) {
-    if(typeof this.param !== typeof String('') || typeof value !== typeof String('')) {
+  contains (value) {
+    if (typeof this.param !== typeof String('') || typeof value !== typeof String('')) {
       throw new TypeError('Cannot use function on non string Parameters')
     }
-    if(!this.param.includes(value)) {
+    if (!this.param.includes(value)) {
       throw new ModelError({
         param: this.param,
         value: value,
@@ -111,7 +110,6 @@ class Condition {
     }
     return this
   }
-
 }
 
 module.exports.Condition = Condition
