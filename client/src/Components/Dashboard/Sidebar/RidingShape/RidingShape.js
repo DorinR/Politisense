@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import RidingCodeHelper from './RidingCodeHelper'
 var mapshaper = require('mapshaper')
 
 const useStyles = makeStyles(theme => ({
@@ -18,7 +17,8 @@ const useStyles = makeStyles(theme => ({
     textTransform: 'capitalize'
   },
   customRidingShape: {
-    width: '50%'
+    width: '50%',
+    maxHeight: '100%'
   }
 }))
 

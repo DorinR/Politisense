@@ -1,25 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import { makeStyles } from '@material-ui/core/styles'
 import RidingShape from './RidingShape'
 import Box from '@material-ui/core/Box'
-
-const useStyles = makeStyles(theme => ({
-  customCardContent: {
-    padding: 5,
-    paddingBottom: '5px!important',
-    backgroundColor: '#f7f7f7'
-  },
-  customHeadingText: {
-    color: '#41aaa8',
-    fontStyle: 'italic',
-    fontWeight: 'bold'
-  },
-  customTextFormatting: {
-    textTransform: 'capitalize'
-  }
-}))
 
 export async function fetchRidingShape(ridingCode) {
   console.log('calling api with this riding code: ', ridingCode)
@@ -34,26 +15,7 @@ export async function fetchRidingShape(ridingCode) {
   }
 }
 
-export function reformatGeoJson(geoJsonFile) {
-  let type = geoJsonFile.type
-  let coordinates = geoJsonFile.coordinates
-  const reformattedGeoJson = {
-    type: 'FeatureCollection',
-    features: [
-      {
-        type: 'Feature',
-        geometry: {
-          type: type,
-          coordinates: coordinates
-        }
-      }
-    ]
-  }
-  return reformattedGeoJson
-}
-
 export default function RidingShapeContainer(props) {
-  const classes = useStyles()
   const [ridingShape, setRidingShape] = useState('')
 
   useEffect(() => {
