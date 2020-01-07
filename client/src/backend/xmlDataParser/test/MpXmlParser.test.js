@@ -3,38 +3,44 @@ import { assert } from 'chai'
 
 import { MpXmlParser } from '../MpXmlParser'
 
-const fs = require('fs')
-const path = require('path')
-
 describe('MpXmlParser', () => {
   it('should return mp info from xml', () => {
-    const parser = getMpParserForXmlFile('testXml/testMp.xml', true)
-
+    const mpXmlParams = {
+      firstName: 'Jody',
+      lastName: 'Wilson-Raybould',
+      riding: 'Vancouver Granville',
+      party: 'Independent',
+      fromDate: '2015-10-19T00:00:00'
+    }
+    const xml = genMpXml([mpXmlParams])
+    const parser = new MpXmlParser(xml, true)
     assert.isTrue(parser.hasData())
-    assert.isFalse(parser.hasListOfData())
-
     const mp = parser.xmlToJson()
 
     assert.strictEqual(mp.name, 'jody wilson-raybould')
-    assert.strictEqual(mp.politicalParty, 'independent')
+    assert.strictEqual(mp.party, 'independent')
     assert.strictEqual(mp.riding, 'vancouver granville')
     assert.strictEqual(mp.yearElected, 2015)
     assert.hasAnyKeys(mp, ['imageUrl'])
   })
 
   it('should get all mps in the list of mps in the xml', () => {
-    const parser = getMpParserForXmlFile('testXml/testMp_List.xml')
-
+    const xml = genMpXml([{}, {}, {}, { toDate: '2000-11-26T00:00:00' }])
+    let parser = new MpXmlParser(xml)
     assert.isTrue(parser.hasData())
     assert.isTrue(parser.hasListOfData())
 
     const mps = parser.getAllFromXml()
+    assert.strictEqual(mps.length, 4)
 
-    assert.strictEqual(mps.length, 8)
+    // case where filter only for current mps
+    parser = new MpXmlParser(xml, true)
+    const mpsOnlyCurrent = parser.getAllFromXml()
+    assert.strictEqual(mpsOnlyCurrent.length, 3)
   })
 
   it('should get the image url of the mp', (done) => {
-    const parser = getMpParserForXmlFile('testXml/testMp.xml')
+    const parser = new MpXmlParser('')
     jest.spyOn(parser, '_getHtmlFromLink').mockImplementation(async () => {
       return '<img alt="" class="ce-mip-mp-picture visible-lg visible-md img-fluid" src="/Content/Parliamentarians/Images/OfficialMPPhotos/42/TrudeauJustin_LIB.jpg">'
     })
@@ -51,7 +57,7 @@ describe('MpXmlParser', () => {
   })
 
   it('should return empty if mp image not found', (done) => {
-    const parser = getMpParserForXmlFile('testXml/testMp.xml')
+    const parser = new MpXmlParser('')
     jest.spyOn(parser, '_getHtmlFromLink').mockImplementation(async () => {
       return ''
     })
@@ -66,13 +72,34 @@ describe('MpXmlParser', () => {
   })
 
   it('should return true if is a current mp', () => {
-    const parser = getMpParserForXmlFile('testXml/testMp.xml')
+    const currentMp = { toDate: undefined }
+    let xml = genMpXml([currentMp])
+    let parser = new MpXmlParser(xml)
     assert.isTrue(parser.isACurrentMember())
+
+    const nonCurrentMp = { toDate: '2000-11-26T00:00:00' }
+    xml = genMpXml([nonCurrentMp])
+    parser = new MpXmlParser(xml)
+    assert.isFalse(parser.isACurrentMember())
   })
 })
 
-function getMpParserForXmlFile (xmlFilePath, mustBeACurrentMember = false) {
-  const pathToXml = path.resolve(__dirname, xmlFilePath)
-  const xml = fs.readFileSync(pathToXml)
-  return new MpXmlParser(xml, mustBeACurrentMember)
+function genMpXml (mpList) {
+  let xml = '<ArrayOfMemberOfParliament>'
+  mpList.forEach((mp, i) => {
+    const toDate = (typeof mp.toDate !== 'undefined')
+      ? `<ToDateTime>${mp.toDate}</ToDateTime>` : '<ToDateTime xsi:nil="true"/>'
+
+    const mpXml = `<MemberOfParliament>
+        <PersonOfficialFirstName>${mp.firstName || 'FirstName' + i}</PersonOfficialFirstName>
+        <PersonOfficialLastName>${mp.lastName || 'LastName' + i}</PersonOfficialLastName>
+        <ConstituencyName>${mp.riding || 'RidingName'}</ConstituencyName>
+        <CaucusShortName>${mp.party || 'PoliticalParty'}</CaucusShortName>
+        <FromDateTime>${mp.fromDate || '2019-10-21T00:00:00'}</FromDateTime>
+        ${toDate}
+    </MemberOfParliament>`
+    xml += mpXml
+  })
+  xml += '</ArrayOfMemberOfParliament>'
+  return xml
 }
