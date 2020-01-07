@@ -4,7 +4,7 @@ const fs = require('firebase')
 require('firebase/firestore')
 
 class _Firestore {
-  constructor() {
+  constructor () {
     this.config = {
       apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
       authDomain: 'abdulla-2c3a5.firebaseapp.com',
@@ -29,7 +29,7 @@ class _Firestore {
 }
 
 var instance = null
-function getInstance() {
+function getInstance () {
   if (!instance) {
     instance = new _Firestore()
   }
@@ -37,13 +37,13 @@ function getInstance() {
 }
 
 class Reference {
-  constructor(reference) {
+  constructor (reference) {
     this.reference = reference
     this.modelsOnly = false
     this.query = null
   }
 
-  where(attribute, operator, value) {
+  where (attribute, operator, value) {
     if (!this.query) {
       this.query = this.reference.where(attribute, operator, value)
     }
@@ -51,7 +51,7 @@ class Reference {
     return this
   }
 
-  update(model) {
+  update (model) {
     if (this.modelsOnly && typeof model !== typeof new Model()) {
       throw new Error('Error: Only a model can be updated in firebase')
     }
@@ -85,7 +85,7 @@ class Reference {
     })
   }
 
-  delete() {
+  delete () {
     let ref = this.reference
     if (this.query) {
       ref = this.query
@@ -114,7 +114,7 @@ class Reference {
     })
   }
 
-  select(attribute, operator, value) {
+  select (attribute, operator, value) {
     let ref = this.reference.get.bind(this.reference)
     if (
       typeof attribute !== 'undefined' &&
@@ -138,7 +138,7 @@ class Reference {
     })
   }
 
-  insert(model) {
+  insert (model) {
     if (this.modelsOnly && typeof model !== typeof new Model()) {
       throw new Error('Error: Only a model can be inserted in firebase')
     }
@@ -159,7 +159,7 @@ class Reference {
 }
 
 class Firestore {
-  constructor() {
+  constructor () {
     this.firestore = getInstance()
     this.reference = this.firestore.db
     this.googleProvider = this.firestore.googleProvider
@@ -169,39 +169,39 @@ class Firestore {
     this.microsoftProvider = this.firestore.microsoftProvider
   }
 
-  Bill() {
+  Bill () {
     return new Reference(this.reference.collection('bills'))
   }
 
-  BillClassification() {
+  BillClassification () {
     return new Reference(this.reference.collection('bill_classification'))
   }
 
-  TfIdfClassification() {
+  TfIdfClassification () {
     return new Reference(this.reference.collection('tf_idf_bill'))
   }
 
-  Politician() {
+  Politician () {
     return new Reference(this.reference.collection('politicians'))
   }
 
-  User() {
+  User () {
     return new Reference(this.reference.collection('users'))
   }
 
-  VoteRecord() {
+  VoteRecord () {
     return new Reference(this.reference.collection('voteRecord'))
   }
 
-  Ridings() {
+  Ridings () {
     return new Reference(this.reference.collection('ridings'))
   }
 
-  FinancialRecord() {
+  FinancialRecord () {
     return new Reference(this.reference.collection('financialRecord'))
   }
 
-  async close() {
+  async close () {
     await this.firestore.app
       .delete()
       .then(result => {

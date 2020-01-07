@@ -1,9 +1,9 @@
-/*global fetch*/
+/* global fetch */
 import React, { useState, useEffect } from 'react'
 import RidingShape from './RidingShape'
 import Box from '@material-ui/core/Box'
 
-export async function fetchRidingShape(ridingCode) {
+export async function fetchRidingShape (ridingCode) {
   console.log('calling api with this riding code: ', ridingCode)
   try {
     const response = await fetch(
@@ -16,11 +16,11 @@ export async function fetchRidingShape(ridingCode) {
   }
 }
 
-export default function RidingShapeContainer(props) {
+export default function RidingShapeContainer (props) {
   const [ridingShape, setRidingShape] = useState('')
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const ridingShape = await fetchRidingShape(props.ridingCode)
       setRidingShape(ridingShape)
     }

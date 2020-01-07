@@ -1,4 +1,3 @@
-/*global localstorage*/
 import React, { useState, useEffect } from 'react'
 import ListItemText from '@material-ui/core/ListItemText'
 import Card from '@material-ui/core/Card'
@@ -27,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding(userEmail) {
+export async function fetchUserRiding (userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -41,7 +40,7 @@ export async function fetchUserRiding(userEmail) {
   return result
 }
 
-export async function fetchRidingCode(riding) {
+export async function fetchRidingCode (riding) {
   let ridingCode = 0
 
   await axios
@@ -58,7 +57,7 @@ export async function fetchRidingCode(riding) {
   return ridingCode
 }
 
-export default function RepresentativeInfo(props) {
+export default function RepresentativeInfo (props) {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -89,7 +88,8 @@ export default function RepresentativeInfo(props) {
   })
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
+      // eslint-disable-next-line
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
       const riding = await fetchUserRiding(email)
