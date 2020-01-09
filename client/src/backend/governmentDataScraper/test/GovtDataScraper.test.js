@@ -2,6 +2,14 @@
 import { GovtDataScraper } from '../GovtDataScraper'
 
 describe('GovtDataScraper', () => {
+  xit('should return data', (done) => {
+    const scap = new GovtDataScraper({ number: 42, session: 1 })
+    scap.getGovernmentData(5).then(res => {
+      console.log(JSON.stringify(res))
+      done()
+    })
+  }, 99999999)
+
   it('should return the current parliament session', (done) => {
     const govtDataScraper = new GovtDataScraper()
     jest.spyOn(govtDataScraper, 'getHtmlWithParliament').mockImplementation(async () => {

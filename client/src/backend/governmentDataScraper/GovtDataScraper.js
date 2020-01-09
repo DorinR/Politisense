@@ -8,6 +8,10 @@ const cheerio = require('cheerio')
 const Promise = require('bluebird')
 
 class GovtDataScraper {
+  constructor (currentParliament) {
+    this.currentParliament = currentParliament
+  }
+
   async getGovernmentData (scrapeRunnerXmlCount) {
     const runner = new ScrapeRunner(scrapeRunnerXmlCount)
     const xmlList = await runner.getXmlContent()
@@ -18,7 +22,9 @@ class GovtDataScraper {
       votes: []
     }
 
-    const currentParliament = await this.getCurrentParliament()
+    if (this.currentParliament === undefined) {
+      this.currentParliament = await this.getCurrentParliament()
+    }
 
     console.log(`Trying to convert ${xmlList.length} xml files into data`)
 
@@ -26,13 +32,13 @@ class GovtDataScraper {
       data.bills = this.addUniqueData(data.bills, this.getPossibleDataFromXmlParser(new BillXmlParser(xml, {
         mustHaveRoyalAssent: true,
         mustBeInCurrentParliament: true
-      }, currentParliament)), 'id')
+      }, this.currentParliament)), 'id')
       data.mps = this.addUniqueData(data.mps, this.getPossibleDataFromXmlParser(new MpXmlParser(xml, true)), 'name')
-      data.votes = this.addUniqueData(data.votes, this.getPossibleDataFromXmlParser(new VoteXmlParser(xml, currentParliament)), 'id')
+      data.votes = this.addUniqueData(data.votes, this.getPossibleDataFromXmlParser(new VoteXmlParser(xml, this.currentParliament)), 'id')
     })
 
     const billNumberList = data.bills.map(bill => bill.number)
-    await this.cleanUpVotes(data.votes, billNumberList, currentParliament)
+    data.votes = await this.cleanUpVotes(data.votes, billNumberList, this.currentParliament)
     await this.addImageUrlForAllMps(data.mps)
 
     console.log('Returning Data')
@@ -128,6 +134,7 @@ class GovtDataScraper {
     votes = this.filterVotesBasedOnGatheredBills(votes, billNumberList)
     votes = this.removeMultipleBillVotes(votes)
     await this.addVotersForAllVotes(votes, currentParliament)
+    return votes
   }
 
   async addDataToDatabase (dbDoc, dataList) {

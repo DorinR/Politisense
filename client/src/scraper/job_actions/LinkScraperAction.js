@@ -16,6 +16,7 @@ class LinkScraperAction extends JobAction {
   constructor (url) {
     super()
     this.url = url
+    this.send = requestFn
   }
 
   static headers () {
