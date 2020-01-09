@@ -190,6 +190,10 @@ class Firestore {
     return new Reference(this.reference.collection('voteRecord'))
   }
 
+  Vote () {
+    return new Reference(this.reference.collection('votes'))
+  }
+
   FinancialRecord () {
     return new Reference(this.reference.collection('financialRecord'))
   }
