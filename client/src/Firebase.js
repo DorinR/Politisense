@@ -174,24 +174,28 @@ class Firestore {
     return new Reference(this.reference.collection('bill_classification'))
   }
 
-  TfIdfClassification () {
-    return new Reference(this.reference.collection('tf_idf_bill'))
+  FinancialRecord () {
+    return new Reference(this.reference.collection('financialRecord'))
   }
 
   Politician () {
     return new Reference(this.reference.collection('politicians'))
   }
 
+  TfIdfClassification () {
+    return new Reference(this.reference.collection('tf_idf_bill'))
+  }
+
   User () {
     return new Reference(this.reference.collection('users'))
   }
 
-  VoteRecord () {
-    return new Reference(this.reference.collection('voteRecord'))
+  Vote () {
+    return new Reference(this.reference.collection('votes'))
   }
 
-  FinancialRecord () {
-    return new Reference(this.reference.collection('financialRecord'))
+  VoteRecord () {
+    return new Reference(this.reference.collection('voteRecord'))
   }
 
   async close () {
