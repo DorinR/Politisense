@@ -65,4 +65,4 @@ class VoteRecordBuilder {
   }
 }
 
-export { VoteRecord }
+module.exports.VoteRecord = VoteRecord

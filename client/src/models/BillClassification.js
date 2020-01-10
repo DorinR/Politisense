@@ -33,5 +33,5 @@ class TfIdfClassification extends Model {
   }
 }
 
-export { BillClassification }
-export { TfIdfClassification }
+module.exports.BillClassification = BillClassification
+module.exports.TfIdfClassification = TfIdfClassification

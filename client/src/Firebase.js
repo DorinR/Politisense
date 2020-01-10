@@ -1,5 +1,4 @@
 const Model = require('./models/Model').Model
-
 const fs = require('firebase')
 require('firebase/firestore')
 
@@ -58,26 +57,21 @@ class Reference {
     if (typeof model === typeof new Model()) {
       model = Model.serialise(model)
     }
+    let ref = this.reference
+    if (this.query) {
+      ref = this.query
+    }
     return new Promise((resolve, reject) => {
-      this.reference
-        .get()
+      ref.get()
         .then(snapshot => {
-          const updates = new Map()
-          snapshot.forEach(document => {
-            const datum = document.data()
-            // eslint-disable-next-line no-unused-vars
-            Object.keys(model).forEach(key => {
-              datum[key] = model[key]
-            })
-            updates.set(document.id, datum)
+          const promises = []
+          snapshot.forEach(doc => {
+            promises.push(doc.ref.update(model))
           })
-          return updates
+          return Promise.all(promises)
         })
-        .then(updates => {
-          updates.forEach((id, datum) => {
-            this.reference.doc(id).update(datum)
-          })
-          resolve(updates.size)
+        .then(() => {
+          resolve(true)
         })
         .catch(e => {
           reject(e)

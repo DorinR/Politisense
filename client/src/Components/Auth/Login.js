@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Redirect, Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
@@ -9,13 +9,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import canadaimage from '../../assets/canada.jpg'
 import logo from '../../assets/PolotisenseTentativeLogo.png'
 import axios from 'axios'
-import { Firestore } from './../../Firebase'
+import { FacebookLoginButton, GoogleLoginButton, TwitterLoginButton } from 'react-social-login-buttons'
 
-import {
-  FacebookLoginButton,
-  GoogleLoginButton,
-  TwitterLoginButton
-} from 'react-social-login-buttons'
+const Firestore = require('../../Firebase').Firestore
 
 const gridStyle = {
   display: 'flex',
