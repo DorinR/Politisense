@@ -9,6 +9,7 @@ class BillClassification extends Model {
     Condition.parameter(classification).isType(String)
 
     this.bill = billId
+    this.raw = rawId
     this.category = classification
   }
 
