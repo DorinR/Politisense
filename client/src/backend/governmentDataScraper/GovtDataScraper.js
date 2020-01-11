@@ -3,6 +3,7 @@ import { BillXmlParser } from '../xmlDataParser/BillXmlParser'
 import { MpXmlParser } from '../xmlDataParser/MpXmlParser'
 import { VoteXmlParser } from '../xmlDataParser/VoteXmlParser'
 import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
+import { Firestore } from '../../Firebase'
 
 const cheerio = require('cheerio')
 const Promise = require('bluebird')
@@ -35,6 +36,7 @@ class GovtDataScraper {
     await this.cleanUpVotes(data.votes, billNumberList, currentParliament)
     await this.addImageUrlForAllMps(data.mps)
 
+    await this.standardiseRidingHyphens()
     console.log('Returning Data')
     return data
   }
@@ -140,6 +142,80 @@ class GovtDataScraper {
         })
       })
     }, { concurrency: 10 })
+  }
+
+  standardiseRidingHyphens () {
+    return Promise.all([
+      this.updatePoliticianHyphens(),
+      this.updateRidingHyphens()
+    ])
+  }
+
+  updatePoliticianHyphens () {
+    // EM DASH and double hyphens are satan
+    return new Firestore()
+      .Politician()
+      .select()
+      .then(snapshot => {
+        const promises = []
+        snapshot.forEach(mp => {
+          const riding = mp.data().riding
+          if (riding.includes('\u2014')) {
+            promises.push(mp.ref.update({
+              riding: riding.replace('\u2014', '-')
+            }))
+          } else if (riding.includes('--')) {
+            promises.push(mp.ref.update({
+              riding: riding.replace(/--/gi, '-')
+            }))
+          }
+        })
+        console.log(`updating ${promises.length} politician ridings`)
+        return promises
+      })
+      .then(promises => {
+        Promise.all(promises)
+      })
+      .catch(console.error)
+  }
+
+  updateRidingHyphens () {
+    return new Firestore()
+      .Riding()
+      .select()
+      .then(snapshot => {
+        const promises = []
+        snapshot.forEach(rd => {
+          let english = rd.data().nameEnglish
+          let french = rd.data().nameFrench
+          if (english.includes('\u2014')) {
+            promises.push(rd.ref.update({
+              nameEnglish: english.replace(/\u2014/g, '-')
+            }))
+          } else if (english.includes('--')) {
+            english = english.replace(/--/gi, '-')
+            promises.push(rd.ref.update({
+              nameEnglish: english
+            }))
+          }
+          if (french.includes('\u2014')) {
+            promises.push(rd.ref.update({
+              nameFrench: french.replace(/\u2014/g, '-')
+            }))
+          } else if (french.includes('--')) {
+            french = french.replace(/--/gi, '-')
+            promises.push(rd.ref.update({
+              nameFrench: french
+            }))
+          }
+        })
+        console.log(`updating ${promises.length} riding name entries`)
+        return promises
+      })
+      .then(promises => {
+        Promise.all(promises)
+      })
+      .catch(console.error)
   }
 }
 
