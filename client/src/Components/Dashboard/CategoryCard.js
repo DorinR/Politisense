@@ -1,256 +1,105 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
-import TrendingUpIcon from '@material-ui/icons/TrendingUp';
-import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
-import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { makeStyles } from '@material-ui/core/styles'
+import AppBar from '@material-ui/core/AppBar'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
+import CategoryDashboard from './CategoryDashboard'
+import BillHistoryTable from './PastBills/BillHistoryTable'
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
+import BarChartIcon from '@material-ui/icons/BarChart'
 import PieChartIcon from '@material-ui/icons/PieChart';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import GavelIcon from '@material-ui/icons/Gavel';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBalanceScale, faHandshake, faPrayingHands } from '@fortawesome/free-solid-svg-icons';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import DeleteCategoryDialog from "./DeleteCategoryDialog";
-import {ConfirmationDialogRaw} from "./CategoryForm";
-import Grid from "@material-ui/core/Grid";
-import ChartCard from "./ChartCard";
-import RadarChart from "./Charts/RadarChart";
-import BarChartWrapper from "./Charts/Wrappers/BarChartWrapper";
-import axios from "axios";
 
-const useStyles = makeStyles(theme => ({
-    card: {
-        // maxWidth: 345,
-    },
-    media: {
-        height: 0,
-        paddingTop: '56.25%', // 16:9
-    },
-    expand: {
-        transform: 'rotate(0deg)',
-        marginLeft: 'auto',
-        transition: theme.transitions.create('transform', {
-            duration: theme.transitions.duration.shortest,
-        }),
-    },
-    expandOpen: {
-        transform: 'rotate(180deg)',
-    },
-    avatar: {
-        backgroundColor: red[500],
-    },
-    table: {
-        // minWidth: 650,
-    }
-}));
+import IconButton from "@material-ui/core/IconButton";
+import GeneralDashboard from "./GeneralDashboard";
 
-function createData(name, vote) {
-    return { name, vote };
+function TabPanel (props) {
+    const { children, value, index, ...other } = props
+
+    return (
+        <Typography
+            component='div'
+            role='tabpanel'
+            hidden={value !== index}
+            id={`scrollable-force-tabpanel-${index}`}
+            aria-labelledby={`scrollable-force-tab-${index}`}
+            {...other}
+        >
+            <Box p={3}>{children}</Box>
+        </Typography>
+    )
 }
 
-export default function CategoryCard(props) {
-    const classes = useStyles();
-    const [expanded, setExpanded] = React.useState(false);
-    const [sponsor, setSponsor] = React.useState("");
-    const [openCompare, setOpenCompare] = React.useState(false);
-    const [open, setOpen] = React.useState(false);
-    const [id,setId]= React.useState(0)
-    const [title,setTitle]= React.useState('')
-    const [openDeleteDialog,setOpenDeleteDialog] = React.useState(false)
-    const [confimedDeletion, setConfimedDeletion] = React.useState(false)
-    const [rows, setRows] = React.useState([])
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired
+}
 
-
-    const handleDeleteDialogClose= (newValue,index) =>{
-        console.log('the newValue of the card is '+newValue)
-        console.log('the index of the card is '+index)
-
-        if(newValue == true){
-            props.delete(index)
-        }
-        setOpenDeleteDialog(false)
+function a11yProps (index) {
+    return {
+        id: `scrollable-force-tab-${index}`,
+        'aria-controls': `scrollable-force-tabpanel-${index}`
     }
+}
 
-    const handleClickOpenCompare = () => {
-        setOpenCompare(true);
-    };
-
-    const handleCloseCompare = () => {
-        setOpenCompare(false);
-    };
-
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-
-    const handleDelete =()=>{
-        setOpenDeleteDialog(true)
+const useStyles = makeStyles(theme => ({
+    root: {
+        flexGrow: 1,
+        width: '100%'
     }
-    function setCardLogo(){
-        switch(title) {
-            case 'Economics':
-                return <TrendingUpIcon color="primary" />
-            case 'Trade':
-                return <TrendingUpIcon color="primary" />
-            case 'Business':
-                return <BusinessCenterIcon color="primary" />
-            case 'Criminal':
-                return <GavelIcon color="primary" />
-            case 'Religion':
-                return <FontAwesomeIcon icon={faPrayingHands} color="#43D0C4" size="lg" />
-            case 'Human Rights':
-                return <FontAwesomeIcon icon={faBalanceScale} color="#43D0C4" size="lg" />
-            default:
-                return <IndeterminateCheckBoxIcon color="primary" />;
-        }
-    }
+}))
 
-    React.useEffect(() => {
-        setSponsor(props.representative)
-        populateTable()
-        // setId(props.id)
-        setTitle(props.title)
-    }, []);
+export default function DashboardTabs () {
+    const classes = useStyles()
+    const [value, setValue] = React.useState(0)
 
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
-
-
-    async function populateTable(){
-        await axios
-            .post('http://localhost:5000/api/bills/getBillsBySponsor', {sponsor: props.representative})
-            .then(res => {
-                console.log(res.data)
-            })
-            .catch(err => console.error(err))
-
-        setRows([
-            createData('Bill 101', 'Yes'),
-            createData('Bill 102', 'No'),
-            createData('Bill 103', 'Abstain'),
-        ]);
+    const handleChange = (event, newValue) => {
+        setValue(newValue)
     }
 
     return (
-        <div>
-            <Card className={classes.card}>
-                <CardHeader
-                    avatar={setCardLogo()}
-                    action={
-                        <div>
-                            <IconButton aria-label="settings" onClick={()=>setOpenDeleteDialog(true)}>
-                                <IndeterminateCheckBoxIcon color='primary'/>
-                            </IconButton>
-                        </div>
-                    }
-                    title={props.title}
-                />
-                <DeleteCategoryDialog
-                    classes={{
-                        paper: classes.paper,}}
-                    keepMounted
-                    open={openDeleteDialog}
-                    index = {props.id}
-                    onClose={handleDeleteDialogClose}
-                    value = {confimedDeletion}
-                />
-                <CardContent>
-                    <ChartCard title='MP Voting Distribution'> <RadarChart /> </ChartCard>
-                    <Table className={classes.table} size="small" aria-label="a dense table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Bill Name</TableCell>
-                                <TableCell align="right">Vote</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.map(row => (
-                                <TableRow key={row.name}>
-                                    <TableCell component="th" scope="row">
-                                        {row.name}
-                                    </TableCell>
-                                    <TableCell align="right">{row.vote}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-                <CardActions disableSpacing>
-                    <IconButton onClick={handleClickOpenCompare}>
-                        <CompareArrowsIcon color="primary"/>
-                    </IconButton>
-                    <IconButton>
-                        <PieChartIcon color="primary" />
-                    </IconButton>
-                    <IconButton onClick={handleClickOpen}>
-                        <FontAwesomeIcon icon={faHandshake} color="#43D0C4" />
-                    </IconButton>
-                </CardActions>
-            </Card>
-            <Dialog
-                open={openCompare}
-                onClose={handleCloseCompare}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">{"Head to Head"}</DialogTitle>
-                <DialogContent>
-                    <h1>Head to head chart goes here</h1>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseCompare} color="primary" autoFocus>
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">{"Bipartisan Index"}</DialogTitle>
-                <DialogContent>
-                    <ChartCard title='Bipartisan Index'> <BarChartWrapper /> </ChartCard>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary" autoFocus>
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
-    );
-}   
+        <Box p={5}>
+            <div className={classes.root}>
+                <AppBar position='static' color='default'>
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        variant='scrollable'
+                        scrollButtons='on'
+                        indicatorColor='primary'
+                        textColor='primary'
+                        aria-label='scrollable force tabs example'
+                    >
+                        <Tab
+                            label='General'
+                            icon={<BarChartIcon/>}
+                            {...a11yProps(0)}
+                        />
+                        <Tab
+                            label='Categories'
+                            icon={<PieChartIcon />}
+                            {...a11yProps(1)}
+                        />
+                        <Tab
+                            label='Voting History'
+                            icon={<AccountBalanceIcon />}
+                            {...a11yProps(2)}
+                        />
+                    </Tabs>
+                </AppBar>
+                <TabPanel value={value} index={0}>
+                    <GeneralDashboard />
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                    <CategoryDashboard />
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                    <BillHistoryTable />
+                </TabPanel>
+            </div>
+        </Box>
+    )
+}
