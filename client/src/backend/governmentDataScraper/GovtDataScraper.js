@@ -42,7 +42,7 @@ class GovtDataScraper {
     return data
   }
 
-  async createVotes() {
+  async createVotes () {
     const db = new Firestore()
     const mps = {}
     await db.Politician()
@@ -52,7 +52,6 @@ class GovtDataScraper {
           mps[doc.data().name] = doc.id
         })
       })
-
 
     const votes = []
     await db.VoteRecord()
@@ -68,7 +67,6 @@ class GovtDataScraper {
             } catch (e) {
               console.warn(`Member of parliament, ${name}, in vote not found in records.`)
             }
-
           })
         })
       })
@@ -78,7 +76,7 @@ class GovtDataScraper {
     })
   }
 
-  async modifyVoteRecords() {
+  async modifyVoteRecords () {
     const bills = {}
     const db = new Firestore()
 
@@ -105,12 +103,16 @@ class GovtDataScraper {
             const data = doc.data()
             if (Object.keys(bills).includes(data.billNumber)) {
               doc.ref.update(
-                { bill: bills[data.billNumber],
-                  voters: null})
+                {
+                  bill: bills[data.billNumber],
+                  voters: null
+                })
             } else {
               doc.ref.update(
-                { bill: '',
-                  voters: null })
+                {
+                  bill: '',
+                  voters: null
+                })
             }
           })
         )

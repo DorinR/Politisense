@@ -1,8 +1,8 @@
 import React from 'react'
-import CategoryGrid from "./CategoryGrid";
+import CategoryGrid from './CategoryGrid'
 
 export default function CategoryDashboard () {
-    return (
-        <CategoryGrid/>
-    )
+  return (
+    <CategoryGrid />
+  )
 }

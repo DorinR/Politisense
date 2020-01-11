@@ -1,5 +1,5 @@
-const Condition = require ('./Condition').Condition
-const Model = require ('./Model').Model
+const Condition = require('./Condition').Condition
+const Model = require('./Model').Model
 
 class Vote extends Model {
   constructor (memberId, voteId, vote, paired) {
@@ -9,10 +9,10 @@ class Vote extends Model {
     Condition.parameter(vote).isType(Boolean)
     Condition.parameter(paired).isType(Boolean)
 
-    this.member = memberId;
-    this.vote = voteId;
-    this.yea = vote;
-    this.paired = paired;
+    this.member = memberId
+    this.vote = voteId
+    this.yea = vote
+    this.paired = paired
   }
 
   static deserialise (json) {
