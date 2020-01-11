@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Redirect, Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
@@ -94,18 +94,19 @@ export default function SignUp () {
     const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     const passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
     const errors = {}
+    const nameError = 'Invalid name format, Please use only letters or hyphens'
     errors.firstname = !user.firstname.match(nameFormat)
-      ? 'Invalid name format'
+      ? nameError
       : ''
     errors.lastname = !user.lastname.match(nameFormat)
-      ? 'Invalid name format'
+      ? nameError
       : ''
     errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
     errors.password = !user.password.match(passwordFormat)
-      ? 'Invalid password format'
+      ? 'Invalid password format, please use at least 8 characters, comprised of alphanumeric characters'
       : ''
     errors.passwordConfirm = !(user.password === passwordConfirm)
-      ? 'Passwords do not match'
+      ? 'Passwords do not match, please re-enter confirmation password'
       : ''
     if (errors.email === '' && errors.password === '') {
       signupAPICall(user).then(res => {
