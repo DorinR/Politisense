@@ -19,6 +19,7 @@ exports.getRepresentativeByRiding = (req, res) => {
         })
       })
     })
+    .catch(console.error)
 }
 
 exports.getAllRepresentatives = (req, res) => {

@@ -24,7 +24,7 @@ exports.checkIfUserExists = (req, res) => {
     })
 }
 
-exports.userSignup = (req, res) => {
+exports.userSignup = async (req, res) => {
   const user = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
@@ -40,11 +40,11 @@ exports.userSignup = (req, res) => {
     user.password = req.body.password
   }
   const db = new Firestore()
-  db.User()
+  await db.User()
     .select('email', '==', user.email)
-    .then(snapshot => {
+    .then(async snapshot => {
       if (snapshot.empty) {
-        db.User()
+        await db.User()
           .insert(user)
           .then(() => {
             res.json({
@@ -159,38 +159,40 @@ exports.updateUser = (req, res) => {
     .catch(err => {
       res.status(404).json({
         success: false,
-        message: 'getting userID unsuccessfull'
+        message: 'getting userID unsuccessful'
       })
       console.error(err)
     })
 }
 
 exports.setRiding = (req, res) => {
-  const postalCode = req.body.postalCode.replace(/\s/g, '').toUpperCase()
-  let riding = ''
-  let federalArray = []
-  represent.postalCode(postalCode, function (err, data) {
+  let postalCode = req.body.postalCode
+  postalCode = postalCode.replace(/\s/g, '').toUpperCase()
+  let ridingName = ''
+  represent.postalCode(postalCode + '/?sets=federal-electoral-districts', async (err, data) => {
     if (err) {
       res.json({
         success: false
       })
       return
     }
-    federalArray = data.boundaries_centroid.filter(
-      entry => entry.boundary_set_name === 'Federal electoral district'
-    )
-    let maxid = 0
-    let maxobj = {}
-    for (let i = 0; i < federalArray.length; i++) {
-      if (federalArray[i].external_id > maxid) {
-        maxid = federalArray[i].external_id
-        maxobj = federalArray[i]
-      }
-    }
-    riding = maxobj.name
+    const id = data.boundaries_centroid[0].external_id
+    ridingName = await new Firestore().Riding()
+      .where('code', '==', Number(id))
+      .select()
+      .then(snapshot => {
+        let name = ''
+        snapshot.forEach(doc => {
+          name = doc.data().nameEnglish
+          name = name.replace(/--+/g, '-') // double dash is evil
+        })
+        return name
+      })
+      .catch(console.error)
+    console.log(ridingName)
     res.json({
       success: true,
-      data: riding
+      data: ridingName
     })
   })
 }
@@ -202,7 +204,8 @@ exports.updateUserRiding = (req, res) => {
 
   const db = new Firestore()
   db.User()
-    .select('email', '==', email)
+    .where('email', '==', email)
+    .select()
     .then(snapshot => {
       if (snapshot.empty) {
         console.error('No user with this email found')
