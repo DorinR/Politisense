@@ -54,7 +54,7 @@ done
 }
 test_results=1
 run_tests () {
-  CI=true npm test -- --no-watch --force-exit
+  CI=false npm test -- --no-watch --force-exit
   valid=$?
   if [ "$valid" != "0" ]
   then
