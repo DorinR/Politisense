@@ -108,7 +108,11 @@ export default function SignUp () {
     errors.passwordConfirm = !(user.password === passwordConfirm)
       ? 'Passwords do not match, please re-enter confirmation password'
       : ''
-    if (errors.email === '' && errors.password === '') {
+    if (errors.firstname !== '' &&
+        errors.lastname !== '' &&
+        errors.email !== '' &&
+        errors.password !== '' &&
+        errors.passwordConfirm !== '') {
       signupAPICall(user).then(res => {
         if (res.data.success === false) {
           setRegistered(true)
