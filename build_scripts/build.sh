@@ -77,7 +77,6 @@ build () {
 	then
 	  return 1
 	fi
-	process.env.CI = false
-	npm run build
+	CI=false npm run build
 }
 build $@
