@@ -23,7 +23,7 @@ export function ConfirmationDialogRaw (props) {
       setValue(valueProp)
     }
     removalExistedCategoriesFromOptions(props.existedCategories)
-  }, [valueProp, open])
+  }, [valueProp, open, props.existedCategories])
 
   const removalExistedCategoriesFromOptions = (existedCategories) => {
     setOptions(allCategories.filter((el) => !existedCategories.includes(el)))

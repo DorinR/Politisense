@@ -28,7 +28,6 @@ import DeleteCategoryDialog from './DeleteCategoryDialog'
 import ChartCard from './ChartCard'
 import RadarChart from './Charts/RadarChart'
 import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
-import axios from 'axios'
 
 const useStyles = makeStyles(theme => ({
   media: {
@@ -115,7 +114,7 @@ export default function CategoryCard (props) {
     populateTable()
     // setId(props.id)
     setTitle(props.title)
-  },[])
+  }, [props.title])
 
   async function populateTable () {
     setRows([
@@ -146,6 +145,7 @@ export default function CategoryCard (props) {
           index={props.id}
           onClose={handleDeleteDialogClose}
           value={confimedDeletion}
+          categoryName={props.title}
         />
         <CardContent>
           <ChartCard title='MP Voting Distribution'> <RadarChart /> </ChartCard>

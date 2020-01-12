@@ -34,4 +34,11 @@ router.put('/updateUserRiding', controller.updateUserRiding)
 // @access Public
 router.post('/getUserInterests', controller.getUserInterests)
 
+// @route POST api/users/:userEmail/getUser
+// @desc  get user by email
+// @access Public
+router.post('/updateUserCategory', controller.updateUserCategory)
+
+
+
 module.exports = router
