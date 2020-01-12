@@ -30,12 +30,12 @@ router.post('/updateUser', controller.updateUser)
 router.put('/updateUserRiding', controller.updateUserRiding)
 
 // @route POST api/users/getUserInterests
-// @desc  get user by email
+// @desc  get user categories by email
 // @access Public
 router.post('/getUserInterests', controller.getUserInterests)
 
 // @route POST api/users/:userEmail/getUser
-// @desc  get user by email
+// @desc  updating us categories
 // @access Public
 router.post('/updateUserCategory', controller.updateUserCategory)
 
