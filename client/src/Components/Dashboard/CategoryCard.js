@@ -114,7 +114,7 @@ export default function CategoryCard (props) {
     populateTable()
     // setId(props.id)
     setTitle(props.title)
-  },[props.title])
+  }, [props.title])
 
   async function populateTable () {
     setRows([
