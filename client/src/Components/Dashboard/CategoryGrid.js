@@ -101,7 +101,10 @@ export default function CategoryGrid () {
         const { email } = user
         const riding = await fetchUserRiding(email)
         const representative = await fetchRepresentative(riding)
-        let test = await getUserInterests().then(res => setCategoryList(res))
+        let test = await getUserInterests().then(res => {
+          setCategoryList(res)
+          setCounter(res.length)
+        })
         setUserRepresentative(representative)
       }
     }
@@ -126,22 +129,18 @@ export default function CategoryGrid () {
   const deleteEvent = (index) => {
     const copyCategoryArray = Object.assign([], categoryList)
     copyCategoryArray.splice(index, 1)
-    console.log(copyCategoryArray)
     setCategoryList(copyCategoryArray)
-    updateUserCategory(copyCategoryArray).then(res=> {
-      console.log("IM HERE INSIDE THE DELETE EVENT")
-      setCounter(counter - 1)
-    })
+    updateUserCategory(copyCategoryArray)
+    setCounter(counter - 1)
+
   }
 
   const addEvent = (newValue) => {
     const copyCategoryArray = Object.assign([], categoryList)
     copyCategoryArray.push(newValue)
     setCategoryList(copyCategoryArray)
-    updateUserCategory(copyCategoryArray).then(res=>{
-      console.log("IM HERE INSIDE THE ADDIING EVENT")
-      setCounter(counter + 1)
-    })
+    updateUserCategory(copyCategoryArray)
+    setCounter(counter + 1)
   }
 
   const handleClickListItem = () => {
@@ -161,11 +160,10 @@ export default function CategoryGrid () {
       await axios
           .post('http://localhost:5000/api/users/getUserInterests', {email:user.email})
           .then(res => {
-            console.log(res.data)
           })
           .catch(err => console.error(err))
     }
-  }, [value, categoryList])
+  }, [value, categoryList,counter])
 
   return (
     <div className={classes.container}>
@@ -216,13 +214,10 @@ export async function updateUserCategory (categoryList) {
   let result = ''
   const user = JSON.parse(localStorage.getItem('user'))
   const { email } = user
-  console.log('email is '+ email)
-  console.log('inside the updateUserCategory')
   await axios
       .post('http://localhost:5000/api/users/updateUserCategory', { email: email, categoryList: categoryList})
       .then(res => {
         result = res
-        console.log('inside the axios call')
       })
       .catch(err => console.error(err))
   return result
