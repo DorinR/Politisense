@@ -26,6 +26,9 @@ module.exports = {
   checkIfUserExists: function (req, res) {
     return UserController.checkIfUserExists(req, res)
   },
+  getUserInterests: function (req, res) {
+    return UserController.getUserInterests(req, res)
+  },
 
   getRepresentativeByRiding: function (req, res) {
     return RepresentativeController.getRepresentativeByRiding(req, res)

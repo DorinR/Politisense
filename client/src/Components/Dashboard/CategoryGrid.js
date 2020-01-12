@@ -73,6 +73,7 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired
 }
 
+
 export default function CategoryGrid () {
   const classes = useStyles()
   const [categoryList, setCategoryList] = React.useState([])
@@ -81,14 +82,26 @@ export default function CategoryGrid () {
   const [counter, setCounter] = React.useState(0)
   const [userRepresentative, setUserRepresentative] = React.useState('')
 
+  async function getUserInterests(){
+    let result = []
+    let user = JSON.parse(localStorage.getItem('user'))
+    await axios
+        .post('http://localhost:5000/api/users/getUserInterests', {email:user.email})
+        .then(res => {
+          result = res.data.data.categories
+        })
+        .catch(err => console.error(err))
+    return result
+  }
+
   useEffect(() => {
     async function getData () {
-
       const user = JSON.parse(localStorage.getItem('user'))
       if (user) {
         const { email } = user
         const riding = await fetchUserRiding(email)
         const representative = await fetchRepresentative(riding)
+        let test = await getUserInterests().then(res => setCategoryList(res))
         setUserRepresentative(representative)
       }
     }
@@ -137,6 +150,15 @@ export default function CategoryGrid () {
   }
 
   useEffect(() => {
+    async function getUserInterests(){
+      let user = JSON.parse(localStorage.getItem('user'))
+      await axios
+          .post('http://localhost:5000/api/users/getUserInterests', {email:user.email})
+          .then(res => {
+            console.log(res.data)
+          })
+          .catch(err => console.error(err))
+    }
   }, [value, categoryList])
 
   return (

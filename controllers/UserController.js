@@ -25,6 +25,30 @@ exports.checkIfUserExists = (req, res) => {
     })
 }
 
+exports.getUserInterests = (req, res) => {
+  const email = req.body.email
+  const db = new Firestore()
+  db.User()
+      .select('email', '==', email)
+      .then(snapshot => {
+        if (snapshot.empty) {
+          res.json({
+            success: false,
+            data: 'doesnt exist'
+          })
+        }
+        snapshot.forEach(doc => {
+          res.json({
+            success: true,
+            data: doc.data()
+          })
+        })
+      })
+      .catch(err => {
+        console.error('Error getting documents', err)
+      })
+}
+
 exports.userSignup = (req, res) => {
   const user = {
     firstname: req.body.firstname,
