@@ -235,3 +235,37 @@ exports.updateUserRiding = (req, res) => {
       console.error(err)
     })
 }
+
+exports.updateUserCategory = (req, res) => {
+  const categoryList = req.body.categoryList
+  let documentToChangeId = 0
+  const db = new Firestore()
+  db.User()
+      .select('email', '==', req.body.email)
+      .then(snapshot => {
+        if (snapshot.empty) {
+          console.error('no user with this email found')
+        }
+        snapshot.forEach(doc => {
+          documentToChangeId = doc.id
+        })
+        return db
+            .User()
+            .reference.doc(documentToChangeId)
+            .update({
+              categories: categoryList
+            })
+      })
+      .then(() => {
+        res.json({
+          success: true
+        })
+      })
+      .catch(err => {
+        res.status(404).json({
+          success: false,
+          message: 'getting userID unsuccessfull'
+        })
+        console.error(err)
+      })
+}

@@ -29,4 +29,11 @@ router.post('/updateUser', controller.updateUser)
 // @access Public
 router.put('/updateUserRiding', controller.updateUserRiding)
 
+// @route POST api/users/:userEmail/getUser
+// @desc  get user by email
+// @access Public
+router.post('/updateUserCategory', controller.updateUserCategory)
+
+
+
 module.exports = router

@@ -71,6 +71,7 @@ export default function CategoryCard (props) {
 
     if (newValue === true) {
       props.delete(index)
+
     }
     setOpenDeleteDialog(false)
   }
@@ -145,6 +146,7 @@ export default function CategoryCard (props) {
           index={props.id}
           onClose={handleDeleteDialogClose}
           value={confimedDeletion}
+          categoryName={props.title}
         />
         <CardContent>
           <ChartCard title='MP Voting Distribution'> <RadarChart /> </ChartCard>

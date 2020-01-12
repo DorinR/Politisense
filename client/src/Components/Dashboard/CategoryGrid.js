@@ -115,14 +115,20 @@ export default function CategoryGrid () {
     copyCategoryArray.splice(index, 1)
     console.log(copyCategoryArray)
     setCategoryList(copyCategoryArray)
-    setCounter(counter - 1)
+    updateUserCategory(copyCategoryArray).then(res=> {
+      console.log("IM HERE INSIDE THE DELETE EVENT")
+      setCounter(counter - 1)
+    })
   }
 
   const addEvent = (newValue) => {
     const copyCategoryArray = Object.assign([], categoryList)
     copyCategoryArray.push(newValue)
     setCategoryList(copyCategoryArray)
-    setCounter(counter + 1)
+    updateUserCategory(copyCategoryArray).then(res=>{
+      console.log("IM HERE INSIDE THE ADDIING EVENT")
+      setCounter(counter + 1)
+    })
   }
 
   const handleClickListItem = () => {
@@ -183,4 +189,19 @@ export default function CategoryGrid () {
       </Grid>
     </div>
   )
+}
+export async function updateUserCategory (categoryList) {
+  let result = ''
+  const user = JSON.parse(localStorage.getItem('user'))
+  const { email } = user
+  console.log('email is '+ email)
+  console.log('inside the updateUserCategory')
+  await axios
+      .post('http://localhost:5000/api/users/updateUserCategory', { email: email, categoryList: categoryList})
+      .then(res => {
+        result = res
+        console.log('inside the axios call')
+      })
+      .catch(err => console.error(err))
+  return result
 }
