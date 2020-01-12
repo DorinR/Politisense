@@ -26,4 +26,4 @@ class User extends Model {
   }
 }
 
-export { User }
+module.exports.User = User
