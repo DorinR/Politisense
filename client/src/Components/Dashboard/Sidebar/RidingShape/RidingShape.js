@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { fallbackSvg } from './fallbackSvg'
 const mapshaper = require('mapshaper-with-patch')
 
 const useStyles = makeStyles(theme => ({
@@ -65,7 +66,16 @@ export default function RidingShape (props) {
         if (err) {
           console.error(err)
         }
-        var svg = out['point.svg']
+        var svg = ''
+        try {
+          svg = out['point.svg']
+        } catch (err) {
+          console.error(
+            'Problematic GeoJSON file, unable to convert to SVG format'
+          )
+          svg = fallbackSvg
+        }
+
         const position = svg.indexOf('<path') + 5
         const partyColor = ` fill="${thisPartyColor}"`
         const coloredSvg = [
