@@ -46,5 +46,5 @@ module.exports = {
 
   updateUserCategory: function (req, res) {
     return UserController.updateUserCategory(req, res)
-  },
+  }
 }

@@ -29,24 +29,24 @@ exports.getUserInterests = (req, res) => {
   const email = req.body.email
   const db = new Firestore()
   db.User()
-      .select('email', '==', email)
-      .then(snapshot => {
-        if (snapshot.empty) {
-          res.json({
-            success: false,
-            data: 'doesnt exist'
-          })
-        }
-        snapshot.forEach(doc => {
-          res.json({
-            success: true,
-            data: doc.data()
-          })
+    .select('email', '==', email)
+    .then(snapshot => {
+      if (snapshot.empty) {
+        res.json({
+          success: false,
+          data: 'doesnt exist'
+        })
+      }
+      snapshot.forEach(doc => {
+        res.json({
+          success: true,
+          data: doc.data()
         })
       })
-      .catch(err => {
-        console.error('Error getting documents', err)
-      })
+    })
+    .catch(err => {
+      console.error('Error getting documents', err)
+    })
 }
 
 exports.userSignup = (req, res) => {
@@ -264,31 +264,31 @@ exports.updateUserCategory = (req, res) => {
   let documentToChangeId = 0
   const db = new Firestore()
   db.User()
-      .select('email', '==', req.body.email)
-      .then(snapshot => {
-        if (snapshot.empty) {
-          console.error('no user with this email found')
-        }
-        snapshot.forEach(doc => {
-          documentToChangeId = doc.id
-        })
-        return db
-            .User()
-            .reference.doc(documentToChangeId)
-            .update({
-              categories: categoryList
-            })
+    .select('email', '==', req.body.email)
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.error('no user with this email found')
+      }
+      snapshot.forEach(doc => {
+        documentToChangeId = doc.id
       })
-      .then(() => {
-        res.json({
-          success: true
+      return db
+        .User()
+        .reference.doc(documentToChangeId)
+        .update({
+          categories: categoryList
         })
+    })
+    .then(() => {
+      res.json({
+        success: true
       })
-      .catch(err => {
-        res.status(404).json({
-          success: false,
-          message: 'getting userID unsuccessfull'
-        })
-        console.error(err)
+    })
+    .catch(err => {
+      res.status(404).json({
+        success: false,
+        message: 'getting userID unsuccessfull'
       })
+      console.error(err)
+    })
 }

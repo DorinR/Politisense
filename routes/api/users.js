@@ -39,6 +39,4 @@ router.post('/getUserInterests', controller.getUserInterests)
 // @access Public
 router.post('/updateUserCategory', controller.updateUserCategory)
 
-
-
 module.exports = router

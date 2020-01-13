@@ -9,7 +9,7 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import Radio from '@material-ui/core/Radio'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 
-const allCategories = ['Human Rights', 'Criminal', 'Economics', 'Religion', 'Trade', 'Business','Social Issues','Healthcare']
+const allCategories = ['Human Rights', 'Criminal', 'Economics', 'Religion', 'Trade', 'Business', 'Social Issues', 'Healthcare']
 
 export function ConfirmationDialogRaw (props) {
   const { onClose, value: valueProp, open, ...other } = props
