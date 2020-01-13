@@ -81,7 +81,7 @@ export default function HorizontalLinearStepper (props) {
   const [activeStep, setActiveStep] = useState(0)
   const steps = getSteps()
   // eslint-disable-next-line no-unused-vars
-  const [options, setOptions] = useState(['Economics', 'Social Issues', 'Healthcare'])
+  const [options, setOptions] = useState(['Economics', 'Social Issues','Trade', 'Healthcare','Human Rights','Business','Religion','Criminal'])
   const [category1, setCatergory1] = useState('Economics')
   const [category2, setCatergory2] = useState('')
   const [errors, setErrors] = useState({ postalCode: '' })
@@ -94,7 +94,7 @@ export default function HorizontalLinearStepper (props) {
   const handleChangeCategory2 = event => {
     setCatergory2(event.target.value)
   }
-
+//['Economics', 'Social Issues','Trade', 'Healthcare','Human Rights','Business','Religion','Criminal']
   function getStepContent (step) {
     switch (step) {
       case 0:
@@ -125,6 +125,31 @@ export default function HorizontalLinearStepper (props) {
                     value='Healthcare'
                     control={<Radio />}
                     label='Healthcare'
+                  />
+                  <FormControlLabel
+                      value='Trade'
+                      control={<Radio />}
+                      label='Trade'
+                  />
+                  <FormControlLabel
+                      value='Human Rights'
+                      control={<Radio />}
+                      label='Human Rights'
+                  />
+                  <FormControlLabel
+                      value='Business'
+                      control={<Radio />}
+                      label='Business'
+                  />
+                  <FormControlLabel
+                      value='Religion'
+                      control={<Radio />}
+                      label='Religion'
+                  />
+                  <FormControlLabel
+                      value='Criminal'
+                      control={<Radio />}
+                      label='Criminal'
                   />
                 </RadioGroup>
               </FormControl>
