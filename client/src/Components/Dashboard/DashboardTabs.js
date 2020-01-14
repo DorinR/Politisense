@@ -12,6 +12,7 @@ import BudgetData from "./Budget/BudgetData";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
+import UpdateFinancialRecord from "./Budget/UpdateFinancialRecord";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -93,6 +94,7 @@ export default function DashboardTabs() {
         </TabPanel>
         <TabPanel value={value} index={2}>
           <BudgetData />
+          <UpdateFinancialRecord />
         </TabPanel>
       </div>
     </Box>
