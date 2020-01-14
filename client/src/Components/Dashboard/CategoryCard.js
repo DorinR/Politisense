@@ -28,6 +28,7 @@ import DeleteCategoryDialog from './DeleteCategoryDialog'
 import ChartCard from './ChartCard'
 import RadarChart from './Charts/RadarChart'
 import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
+import axios from 'axios'
 
 const useStyles = makeStyles(theme => ({
   media: {
@@ -117,6 +118,13 @@ export default function CategoryCard (props) {
   }, [props.title])
 
   async function populateTable () {
+    await axios
+        .post('http://localhost:5000/api/bills/getBillsByCategoryForRep', {representative: props.representative, category: 'trade'})
+        .then(res => {
+          console.log(res.data)
+        })
+        .catch(err => console.error(err))
+
     setRows([
       createData('Bill 101', 'Yes'),
       createData('Bill 102', 'No'),

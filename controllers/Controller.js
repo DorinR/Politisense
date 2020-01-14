@@ -39,7 +39,9 @@ module.exports = {
   getBillById: function (req, res) {
     return BillController.getBillById(req, res)
   },
-
+  getBillsByCategoryForRep: function (req, res) {
+    return BillController.getBillsByCategoryForRep(req, res)
+  },
   getVotesByRepresentative: function (req, res) {
     return VoteRecordController.getVotesByRepresentative(req, res)
   },

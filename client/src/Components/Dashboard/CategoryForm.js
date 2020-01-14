@@ -13,7 +13,6 @@ const allCategories = ['Human Rights', 'Criminal', 'Economics', 'Religion', 'Tra
 
 export function ConfirmationDialogRaw (props) {
   const { onClose, value: valueProp, open, ...other } = props
-  console.log(valueProp)
   const [value, setValue] = React.useState(valueProp)
   const [options, setOptions] = React.useState(allCategories)
   const radioGroupRef = React.useRef(null)
