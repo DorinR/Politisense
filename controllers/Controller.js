@@ -16,7 +16,6 @@ module.exports = {
   updateUser: function (req, res) {
     return UserController.updateUser(req, res)
   },
-
   setRiding: function (req, res) {
     return UserController.setRiding(req, res)
   },
@@ -25,6 +24,9 @@ module.exports = {
   },
   checkIfUserExists: function (req, res) {
     return UserController.checkIfUserExists(req, res)
+  },
+  getUserInterests: function (req, res) {
+    return UserController.getUserInterests(req, res)
   },
 
   getRepresentativeByRiding: function (req, res) {
@@ -40,5 +42,9 @@ module.exports = {
 
   getVotesByRepresentative: function (req, res) {
     return VoteRecordController.getVotesByRepresentative(req, res)
+  },
+
+  updateUserCategory: function (req, res) {
+    return UserController.updateUserCategory(req, res)
   }
 }
