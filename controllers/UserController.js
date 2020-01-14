@@ -1,5 +1,6 @@
 import { Firestore } from '../client/src/Firebase'
 import represent from 'represent'
+const bcrypt = require('bcryptjs')
 
 exports.checkIfUserExists = (req, res) => {
   const email = req.body.email
@@ -24,21 +25,48 @@ exports.checkIfUserExists = (req, res) => {
     })
 }
 
+exports.getUserInterests = (req, res) => {
+  const email = req.body.email
+  const db = new Firestore()
+  db.User()
+    .select('email', '==', email)
+    .then(snapshot => {
+      if (snapshot.empty) {
+        res.json({
+          success: false,
+          data: 'doesnt exist'
+        })
+      }
+      snapshot.forEach(doc => {
+        res.json({
+          success: true,
+          data: doc.data()
+        })
+      })
+    })
+    .catch(err => {
+      console.error('Error getting documents', err)
+    })
+}
+
 exports.userSignup = (req, res) => {
   const user = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     email: req.body.email,
     postalCode: req.body.postalCode,
-    categories: {
-      category1: req.body.category1,
-      category2: req.body.category2
-    },
+    categories: [
+      req.body.category1, req.body.category2
+    ],
     riding: req.body.riding
   }
   if (req.body.password) {
     user.password = req.body.password
   }
+  const salt = bcrypt.genSaltSync(10)
+  const hash = bcrypt.hashSync(user.password, salt)
+  user.password = hash
+
   const db = new Firestore()
   db.User()
     .select('email', '==', user.email)
@@ -84,7 +112,7 @@ exports.userLogin = (req, res) => {
       }
       snapshot.forEach(doc => {
         entry = doc.data()
-        if (entry.password === user.password) {
+        if (bcrypt.compareSync(user.password, entry.password)) {
           res.json({
             success: true,
             auth: 'Successful login'
@@ -226,6 +254,40 @@ exports.updateUserRiding = (req, res) => {
       res.status(404).json({
         success: false,
         message: 'Error updating user riding'
+      })
+      console.error(err)
+    })
+}
+
+exports.updateUserCategory = (req, res) => {
+  const categoryList = req.body.categoryList
+  let documentToChangeId = 0
+  const db = new Firestore()
+  db.User()
+    .select('email', '==', req.body.email)
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.error('no user with this email found')
+      }
+      snapshot.forEach(doc => {
+        documentToChangeId = doc.id
+      })
+      return db
+        .User()
+        .reference.doc(documentToChangeId)
+        .update({
+          categories: categoryList
+        })
+    })
+    .then(() => {
+      res.json({
+        success: true
+      })
+    })
+    .catch(err => {
+      res.status(404).json({
+        success: false,
+        message: 'getting userID unsuccessfull'
       })
       console.error(err)
     })
