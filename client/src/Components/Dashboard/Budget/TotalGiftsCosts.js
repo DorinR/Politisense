@@ -54,12 +54,13 @@ export async function fetchRepresentative(riding) {
   return result;
 }
 
-export default function UpdateTravelCosts() {
+export default function TotalOfficeCosts() {
   const classes = useStyles();
   const [member] = useState("");
-  const [amount, setAmount] = useState("");
+  const [total, setTotal] = useState(0);
   const [repID, setRepID] = useState("");
   const [userRepresentative, setUserRepresentative] = useState("");
+  let totalAmount = 0;
 
   useEffect(() => {
     const db = new Firestore();
@@ -93,7 +94,7 @@ export default function UpdateTravelCosts() {
       });
     db.FinancialRecord()
       .where("member", "==", repID)
-      .where("parent", "==", "3-Travel")
+      .where("category", "==", "5-Gifts")
       .select()
       .then(snapshot => {
         if (snapshot.empty) {
@@ -101,10 +102,9 @@ export default function UpdateTravelCosts() {
           return;
         }
         snapshot.forEach(doc => {
-          console.log(doc.data());
-          // const { amount } = doc.data();
-          // setAmount(amount);
-          // console.log(amount);
+          totalAmount = doc.data().amount;
+          setTotal(totalAmount);
+          console.log("gifts");
         });
       })
       .catch(err => {
@@ -117,7 +117,7 @@ export default function UpdateTravelCosts() {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Member: {member}
+            Total Gifts Costs: {total}
           </Typography>
         </CardContent>
       </Card>

@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.19.1",
     "babel": "^6.23.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -20,7 +20,7 @@
     "react-bootstrap": "^1.0.0-beta.16",
     "react-chartjs-2": "^2.8.0",
     "react-d3-radar": "^1.0.0-rc6",
-    "react-swipeable-views": "^0.13.3",
+    "react-swipeable-views": "^0.13.4",
     "represent": "^0.2.2",
     "request": "^2.88.0",
     "typeface-roboto": "^0.0.75"

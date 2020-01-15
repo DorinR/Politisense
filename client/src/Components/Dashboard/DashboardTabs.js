@@ -12,7 +12,13 @@ import BudgetData from "./Budget/BudgetData";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
-import UpdateFinancialRecord from "./Budget/UpdateFinancialRecord";
+import TotalTravelCosts from "./Budget/TotalTravelCosts";
+import TotalOfficeCosts from "./Budget/TotalOfficeCosts";
+import TotalPrintingCosts from "./Budget/TotalPrintingCosts";
+import TotalHospitalityCosts from "./Budget/TotalHospitalityCosts";
+import TotalGiftsCosts from "./Budget/TotalGiftsCosts";
+import TotalEmployeeCosts from "./Budget/TotalEmployeeCosts";
+import TotalAdvertisingCosts from "./Budget/TotalAdvertisingCosts";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -94,7 +100,13 @@ export default function DashboardTabs() {
         </TabPanel>
         <TabPanel value={value} index={2}>
           <BudgetData />
-          <UpdateFinancialRecord />
+          <TotalEmployeeCosts />
+          <TotalAdvertisingCosts />
+          <TotalGiftsCosts />
+          <TotalHospitalityCosts />
+          <TotalTravelCosts />
+          <TotalOfficeCosts />
+          <TotalPrintingCosts />
         </TabPanel>
       </div>
     </Box>

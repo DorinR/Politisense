@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import ListItemText from "@material-ui/core/ListItemText";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -54,15 +54,13 @@ export async function fetchRepresentative(riding) {
   return result;
 }
 
-export default function BudgetData() {
+export default function TotalPrintingCosts() {
   const classes = useStyles();
-  const [amount] = useState("");
-  const [category] = useState("");
   const [member] = useState("");
-  const [parent] = useState("");
-  const [quarter] = useState("");
+  const [total, setTotal] = useState(0);
   const [repID, setRepID] = useState("");
   const [userRepresentative, setUserRepresentative] = useState("");
+  let totalAmount = 0;
 
   useEffect(() => {
     const db = new Firestore();
@@ -96,6 +94,7 @@ export default function BudgetData() {
       });
     db.FinancialRecord()
       .where("member", "==", repID)
+      .where("parent", "==", "7-Printing")
       .select()
       .then(snapshot => {
         if (snapshot.empty) {
@@ -103,7 +102,9 @@ export default function BudgetData() {
           return;
         }
         snapshot.forEach(doc => {
-          // console.log(doc.data());
+          totalAmount += doc.data().amount;
+          setTotal(totalAmount);
+          console.log("printing");
         });
       })
       .catch(err => {
@@ -116,7 +117,7 @@ export default function BudgetData() {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Member: {member}
+            Total Printing Costs: {total}
           </Typography>
         </CardContent>
       </Card>
