@@ -7,10 +7,6 @@ class ParseError extends Error {
     this.message = msg
     this.name = 'ParseError'
   }
-
-  static doThrow (e) {
-    throw new ParseError(e.message)
-  }
 }
 
 class TextParserAction extends JobAction {
@@ -19,9 +15,13 @@ class TextParserAction extends JobAction {
     this.tag = ''
     this.filter = function () {}
     this.load = ParsingLibrary.load
+    this.initialised = false
   }
 
   loadAsXml (content) {
+    if (!content) {
+      throw new ParseError('ERROR: need to pass non-null content to load function')
+    }
     return this.load(content, {
       normalizeWhitespace: true,
       xmlMode: true,
@@ -29,10 +29,13 @@ class TextParserAction extends JobAction {
     })
   }
 
-  perform (html, tag, filter) {
+  perform (content, tag, filter) {
+    if (!content || !tag || !filter) {
+      throw new ParseError('ERROR: need to pass content, a searchable tag and a filter function')
+    }
     this.tag = (typeof tag === 'undefined') ? this.tag : tag
     this.filter = (typeof filter === 'undefined') ? this.filter : filter
-    const $ = this.load(html)
+    const $ = this.load(content)
     const tagList = []
     $(this.tag).each((i, elem) => {
       tagList[i] = this.filter(elem)
