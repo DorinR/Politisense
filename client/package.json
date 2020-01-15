@@ -42,7 +42,8 @@
     "topojson-client": "^3.1.0",
     "typescript": "^3.6.2",
     "xhr2": "^0.2.0",
-    "xmlhttprequest": "latest"
+    "xmlhttprequest": "latest",
+    "pdfreader": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
