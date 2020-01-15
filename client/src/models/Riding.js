@@ -2,7 +2,7 @@ import { Condition } from './Condition'
 const Model = require('./Model').Model
 
 class Riding extends Model {
-  constructor(code, nameEnglish, nameFrench, population) {
+  constructor (code, nameEnglish, nameFrench, population) {
     super()
     Condition.parameter(code).isType(Number)
     Condition.parameter(nameEnglish).isType(String)
@@ -15,7 +15,7 @@ class Riding extends Model {
     this.population = population
   }
 
-  static deserialise(json) {
+  static deserialise (json) {
     return Model.deserialise(json, new Riding('', '', '', ''))
   }
 }

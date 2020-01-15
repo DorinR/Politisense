@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function restructureData(data) {
+export function restructureData (data) {
   const templateData = {
     type: 'Feature',
     properties: {
@@ -39,7 +39,7 @@ export function restructureData(data) {
   return templateData
 }
 
-export default function RidingShape(props) {
+export default function RidingShape (props) {
   const classes = useStyles()
   const [svgData, setSvgData] = React.useState('')
 
@@ -51,7 +51,7 @@ export default function RidingShape(props) {
       // convert geoJSON data to svg shape and set fill color to the party color
       const input = props.ridingShapeCoordinates
       const cmd = '-i point.json -o svg-data=* format=SVG'
-      mapshaper.applyCommands(cmd, { 'point.json': input }, function(err, out) {
+      mapshaper.applyCommands(cmd, { 'point.json': input }, function (err, out) {
         if (err) {
           console.error(err)
         }
