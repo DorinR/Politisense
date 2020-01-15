@@ -7,17 +7,4 @@ const controller = require('../../controllers/Controller')
 // @access Public
 router.get('/getRidingCode/:riding', controller.getRidingCode)
 
-// @route post api/ridings/:ridingCode/getRidingSimpleShape
-// @desc get the simple shape coordinates for the riding shape
-// @access Public
-router.get('/:ridingCode/getRidingSimpleShape', controller.getRidingSimpleShape)
-
-// @route post api/saveRidingCodesToFirestore
-// @desc save unique riding identification codes to firestore
-// @access Public
-router.post(
-  '/saveRidingCodesToFirestore',
-  controller.saveRidingCodesToFirestore
-)
-
 module.exports = router

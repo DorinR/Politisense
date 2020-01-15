@@ -26,7 +26,7 @@
     "jsonwebtoken": "^8.5.1",
     "leaflet": "^1.6.0",
     "linked-list": "^2.1.0",
-    "mapshaper-with-patch": "^0.4.152",
+    "mapshaper-with-patch": "^0.4.154",
     "natural": "^0.6.3",
     "node-fetch": "^2.6.0",
     "notistack": "^0.9.5",
