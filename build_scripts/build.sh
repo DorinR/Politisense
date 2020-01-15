@@ -54,7 +54,7 @@ done
 }
 test_results=1
 run_tests () {
-  CI=true npm test -- --no-watch --force-exit
+  CI=true npm test -- --no-watch --force-exit --coverage
   valid=$?
   if [ "$valid" != "0" ]
   then

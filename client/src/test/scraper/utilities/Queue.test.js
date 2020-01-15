@@ -5,7 +5,7 @@ import { ScrapeJob } from '../../../scraper/ScrapeJob'
 const assert = require('chai').assert
 const expect = require('chai').expect
 
-describe('UniqueJobQueue.js', () => {
+describe('Queue.js', () => {
   test('Queue::enqueue() adds one job to queue', () => {
     const q = new Queue()
     q.enqueue(new ScrapeJob())
