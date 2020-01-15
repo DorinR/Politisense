@@ -1,5 +1,4 @@
-import { Model } from './models/Model'
-
+const Model = require('./models/Model').Model
 const fs = require('firebase')
 require('firebase/firestore')
 
@@ -58,26 +57,22 @@ class Reference {
     if (typeof model === typeof new Model()) {
       model = Model.serialise(model)
     }
+    let ref = this.reference
+    if (this.query) {
+      ref = this.query
+    }
     return new Promise((resolve, reject) => {
-      this.reference
+      ref
         .get()
         .then(snapshot => {
-          const updates = new Map()
-          snapshot.forEach(document => {
-            const datum = document.data()
-            // eslint-disable-next-line no-unused-vars
-            Object.keys(model).forEach(key => {
-              datum[key] = model[key]
-            })
-            updates.set(document.id, datum)
+          const promises = []
+          snapshot.forEach(doc => {
+            promises.push(doc.ref.update(model))
           })
-          return updates
+          return Promise.all(promises)
         })
-        .then(updates => {
-          updates.forEach((id, datum) => {
-            this.reference.doc(id).update(datum)
-          })
-          resolve(updates.size)
+        .then(() => {
+          resolve(true)
         })
         .catch(e => {
           reject(e)
@@ -156,6 +151,68 @@ class Reference {
         })
     })
   }
+
+  async innerJoin (key, reference, refKey) {
+    const left = {}
+    const right = {}
+
+    const fetch = (snapshot, container, suffix) => {
+      snapshot.forEach(doc => {
+        const data = doc.data()
+        data[`_id${suffix}`] = doc.id
+        container[doc.id] = data
+      })
+    }
+
+    await this.select().then(snapshot => {
+      fetch(snapshot, left, `_${this.reference.id}`)
+    })
+    await reference.select().then(snapshot => {
+      fetch(snapshot, right, `_${reference.reference.id}`)
+    })
+
+    if (key === '_id') {
+      key = `${key}_${this.reference.id}`
+    }
+    if (refKey === '_id') {
+      refKey = `${refKey}_${reference.reference.id}`
+    }
+
+    const join = []
+
+    Object.keys(left).forEach(leftKey => {
+      const leftDoc = left[leftKey]
+      const leftKeys = Object.keys(leftDoc)
+      if (!leftKeys.includes(key) && key !== `_id_${this.reference.id}`) {
+        throw new Error(
+          `Current collection: ${this.reference.id} does not contain items with key: ${key} `
+        )
+      }
+      Object.keys(right).forEach(rightKey => {
+        const rightDoc = right[rightKey]
+        const rightKeys = Object.keys(rightDoc)
+        if (
+          !rightKeys.includes(refKey) &&
+          refKey !== `_id_${reference.reference.id}`
+        ) {
+          throw new Error(
+            `Current collection: ${reference.reference.id} does not contain items with key: ${refKey} `
+          )
+        }
+        if (leftDoc[key] === rightDoc[refKey]) {
+          const joined = {}
+          leftKeys.forEach(k => {
+            joined[k] = leftDoc[k]
+          })
+          rightKeys.forEach(k => {
+            joined[k] = rightDoc[k]
+          })
+          join.push(joined)
+        }
+      })
+    })
+    return join
+  }
 }
 
 class Firestore {
@@ -197,6 +254,10 @@ class Firestore {
     return new Reference(this.reference.collection('ridings'))
   }
 
+  Vote () {
+    return new Reference(this.reference.collection('votes'))
+  }
+
   FinancialRecord () {
     return new Reference(this.reference.collection('financialRecord'))
   }
@@ -214,5 +275,5 @@ class Firestore {
   }
 }
 
-export { Firestore }
-export { Reference }
+module.exports.Firestore = Firestore
+module.exports.Reference = Reference
