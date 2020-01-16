@@ -26,36 +26,29 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding (userEmail) {
-  let result = ''
-  await axios
+export async function fetchUserRiding(userEmail) {
+  return await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
-        const riding = res.data.data.riding
-        result = riding
-      }
-    })
-    .catch(err => console.error(err))
-  return result
-}
-
-export async function fetchRidingCode (riding) {
-  let ridingCode = 0
-
-  await axios
-    .get(`http://localhost:5000/api/ridings/getRidingCode/${encodeURI(riding)}`)
-    .then(res => {
-      if (res.data.success) {
-        ridingCode = res.data.data.code
+        return res.data.data.riding
       }
     })
     .catch(console.error)
-
-  return ridingCode
 }
 
-export default function RepresentativeInfo (props) {
+export async function fetchRidingCode(riding) {
+  return await axios
+    .get(`http://localhost:5000/api/ridings/getRidingCode/${encodeURI(riding)}`)
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data.code
+      }
+    })
+    .catch(console.error)
+}
+
+export default function RepresentativeInfo(props) {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -86,7 +79,7 @@ export default function RepresentativeInfo (props) {
   })
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       // eslint-disable-next-line
       const { email } = JSON.parse(localStorage.getItem('user'))
       const riding = await fetchUserRiding(email)
