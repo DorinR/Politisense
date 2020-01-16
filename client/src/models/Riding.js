@@ -16,7 +16,7 @@ class Riding extends Model {
   }
 
   static deserialise (json) {
-    return Model.deserialise(json, new Riding('', '', '', ''))
+    return Model.deserialise(json, new Riding(0, '', '', 0))
   }
 }
 
