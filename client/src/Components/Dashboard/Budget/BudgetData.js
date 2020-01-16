@@ -114,11 +114,7 @@ export default function BudgetData() {
   return (
     <ListItemText>
       <Card>
-        <CardContent className={classes.customCardContent}>
-          <Typography className={classes.customHeadingText}>
-            Member: {member}
-          </Typography>
-        </CardContent>
+        <CardContent className={classes.customCardContent}></CardContent>
       </Card>
       <Box m={1} />
     </ListItemText>

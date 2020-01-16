@@ -19,6 +19,13 @@ import TotalHospitalityCosts from "./Budget/TotalHospitalityCosts";
 import TotalGiftsCosts from "./Budget/TotalGiftsCosts";
 import TotalEmployeeCosts from "./Budget/TotalEmployeeCosts";
 import TotalAdvertisingCosts from "./Budget/TotalAdvertisingCosts";
+import AverageAdvertising from "./Budget/AverageAdvertising";
+import AverageEmployee from "./Budget/AverageEmployee";
+import AverageGifts from "./Budget/AverageGifts";
+import AverageHospitality from "./Budget/AverageHospitality";
+import AverageTravel from "./Budget/AverageTravel";
+import AverageOffice from "./Budget/AverageOffice";
+import AveragePrinting from "./Budget/AveragePrinting";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -101,12 +108,19 @@ export default function DashboardTabs() {
         <TabPanel value={value} index={2}>
           <BudgetData />
           <TotalEmployeeCosts />
+          <AverageEmployee />
           <TotalAdvertisingCosts />
+          <AverageAdvertising />
           <TotalGiftsCosts />
+          <AverageGifts />
           <TotalHospitalityCosts />
+          <AverageHospitality />
           <TotalTravelCosts />
+          <AverageTravel />
           <TotalOfficeCosts />
+          <AverageOffice />
           <TotalPrintingCosts />
+          <AveragePrinting />
         </TabPanel>
       </div>
     </Box>

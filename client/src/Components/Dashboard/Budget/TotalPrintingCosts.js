@@ -81,8 +81,6 @@ export async function fetchPrintingSpending(repID) {
       }
       snapshot.forEach(doc => {
         printingSpendingItems.push(doc.data());
-        console.log("doc.data().amount :", doc.data().amount);
-        console.log("doc.data() : ", doc.data());
       });
     })
     .catch(err => {
@@ -96,7 +94,6 @@ export function computeTotalPrintingSpending(spendingItems) {
   spendingItems.forEach(item => {
     total += item.amount;
   });
-  console.log("total : ", total);
   return total;
 }
 
@@ -138,7 +135,7 @@ export default function TotalPrintingCosts() {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Total Printing Costs: {total}
+            Printing Costs: {Math.round(total)}
           </Typography>
         </CardContent>
       </Card>

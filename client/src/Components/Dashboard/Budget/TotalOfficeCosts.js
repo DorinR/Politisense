@@ -81,8 +81,6 @@ export async function fetchOfficeSpending(repID) {
       }
       snapshot.forEach(doc => {
         officeSpendingItems.push(doc.data());
-        console.log("doc.data().amount :", doc.data().amount);
-        console.log("doc.data() : ", doc.data());
       });
     })
     .catch(err => {
@@ -96,7 +94,6 @@ export function computeTotalOfficeSpending(spendingItems) {
   spendingItems.forEach(item => {
     total += item.amount;
   });
-  console.log("total : ", total);
   return total;
 }
 
@@ -136,7 +133,7 @@ export default function TotalOfficeCosts() {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Total Office Costs: {total}
+            Office Costs: {Math.round(total)}
           </Typography>
         </CardContent>
       </Card>

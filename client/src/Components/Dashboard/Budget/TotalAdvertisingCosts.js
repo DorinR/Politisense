@@ -117,7 +117,7 @@ export default function TotalOfficeCosts() {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Total Advertising Costs: {total}
+            Advertising Costs: {Math.round(total)}
           </Typography>
         </CardContent>
       </Card>

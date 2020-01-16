@@ -80,8 +80,6 @@ export async function fetchTravelSpending(repID) {
       }
       snapshot.forEach(doc => {
         travelSpendingItems.push(doc.data());
-        console.log("doc.data().amount :", doc.data().amount);
-        console.log("doc.data() : ", doc.data());
       });
     })
     .catch(err => {
@@ -95,7 +93,6 @@ export function computeTotalTravelSpending(spendingItems) {
   spendingItems.forEach(item => {
     total += item.amount;
   });
-  console.log("total : ", total);
   return total;
 }
 
@@ -135,7 +132,7 @@ export default function TotaltravelCosts() {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Total Travel Costs: {total}
+            Travel Costs: {Math.round(total)}
           </Typography>
         </CardContent>
       </Card>
