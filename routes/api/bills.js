@@ -7,4 +7,6 @@ const controller = require('../../controllers/Controller')
 // @access Public
 router.get('/getBillById', controller.getBillById)
 
+router.get('/:head/getAllBillsByHead', controller.getAllBillsByHead)
+
 module.exports = router
