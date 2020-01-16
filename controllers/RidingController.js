@@ -5,7 +5,8 @@ exports.getRidingCode = (req, res) => {
 
   const db = new Firestore()
   db.Ridings()
-    .select('nameEnglish', '==', targetRiding)
+    .where('nameEnglish', '==', targetRiding)
+    .select()
     .then(snapshot => {
       if (snapshot.empty) {
         res.status(404).json({
