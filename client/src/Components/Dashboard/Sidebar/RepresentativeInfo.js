@@ -26,8 +26,8 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding(userEmail) {
-  return await axios
+export async function fetchUserRiding (userEmail) {
+  return axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
@@ -37,8 +37,8 @@ export async function fetchUserRiding(userEmail) {
     .catch(console.error)
 }
 
-export async function fetchRidingCode(riding) {
-  return await axios
+export async function fetchRidingCode (riding) {
+  return axios
     .get(`http://localhost:5000/api/ridings/getRidingCode/${encodeURI(riding)}`)
     .then(res => {
       if (res.data.success) {
@@ -48,7 +48,7 @@ export async function fetchRidingCode(riding) {
     .catch(console.error)
 }
 
-export default function RepresentativeInfo(props) {
+export default function RepresentativeInfo (props) {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -79,7 +79,7 @@ export default function RepresentativeInfo(props) {
   })
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       // eslint-disable-next-line
       const { email } = JSON.parse(localStorage.getItem('user'))
       const riding = await fetchUserRiding(email)
