@@ -16,6 +16,7 @@
     "cheerio": "^1.0.0-rc.3",
     "config": "^3.2.3",
     "cors": "^2.8.5",
+    "dom-helpers": "^3.2.0",
     "eslint": "^6.8.0",
     "express": "^4.17.1",
     "express-validator": "^6.2.0",
@@ -28,6 +29,7 @@
     "node-fetch": "^2.6.0",
     "notistack": "^0.9.5",
     "parse-svg": "0.0.0",
+    "pdfreader": "latest",
     "react": "^16.9.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-addons-update": "^15.6.2",
@@ -49,8 +51,7 @@
     "topojson-client": "^3.1.0",
     "typescript": "^3.6.2",
     "xhr2": "^0.2.0",
-    "xmlhttprequest": "latest",
-    "pdfreader": "latest"
+    "xmlhttprequest": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
