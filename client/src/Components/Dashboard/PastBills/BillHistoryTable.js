@@ -11,19 +11,13 @@ import BillDetails from './BillDetails'
 import axios from 'axios'
 
 const columns = [
-  { id: 'billNumber', label: 'Bill Number', minWidth: 100 },
-  { id: 'voteDate', label: 'Date Voted', minWidth: 100 },
+  { id: 'number', label: 'Bill Number', minWidth: 120 },
+  { id: 'dateVoted', label: 'Date Voted', minWidth: 120 },
   {
-    id: 'billTitle',
+    id: 'title',
     label: 'Bill Title',
     minWidth: 200,
-    align: 'right'
-  },
-  {
-    id: 'representativeVote',
-    label: 'Representative Vote',
-    minWidth: 50,
-    align: 'right'
+    align: 'left'
   },
   {
     id: 'moreInfo',
@@ -33,14 +27,8 @@ const columns = [
   }
 ]
 
-function createData (
-  billNumber,
-  voteDate,
-  billTitle,
-  representativeVote,
-  moreInfo
-) {
-  return { billNumber, voteDate, billTitle, representativeVote, moreInfo }
+function createData(number, dateVoted, title, moreInfo) {
+  return { number, dateVoted, title, moreInfo }
 }
 
 let rows = []
@@ -55,7 +43,7 @@ const useStyles = makeStyles({
   }
 })
 
-export async function fetchUserRiding (userEmail) {
+export async function fetchUserRiding(userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -69,7 +57,7 @@ export async function fetchUserRiding (userEmail) {
   return result
 }
 
-export async function fetchRepresentative (riding) {
+export async function fetchRepresentative(riding) {
   let result = ''
   await axios
     .get(
@@ -85,7 +73,7 @@ export async function fetchRepresentative (riding) {
   return result
 }
 
-export async function fetchRepresentativeVotes (representative) {
+export async function fetchRepresentativeVotes(representative) {
   const result = []
   await axios
     .get(
@@ -101,42 +89,46 @@ export async function fetchRepresentativeVotes (representative) {
   return result
 }
 
-function generateTableRows (votes) {
+export async function fetchAllBills() {
+  return await axios
+    .get('http://localhost:5000/api/bills/getAllBills')
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+    .catch(console.error)
+}
+
+function generateTableRows(bills) {
   rows = []
-  votes.forEach(vote => {
-    const {
-      billNumber,
-      dateVoted,
-      voteName,
-      representativeVote,
-      billTitle,
-      billText
-    } = vote
+  bills.forEach(vote => {
+    const { number, dateVoted, title, sponsorName, link } = vote
     const tableRow = createData(
-      billNumber,
+      number,
       dateVoted,
-      voteName,
-      representativeVote,
-      <BillDetails billTitle={billTitle} billText={billText} />
+      title,
+      <BillDetails title={title} sponsor={sponsorName} linkToFullText={link} />
     )
     rows.push(tableRow)
   })
 }
 
-export default function BillHistoryTable () {
+export default function BillHistoryTable() {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       // eslint-disable-next-line no-undef
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
       const riding = await fetchUserRiding(email)
       const representative = await fetchRepresentative(riding)
-      const votes = await fetchRepresentativeVotes(representative)
-      generateTableRows(votes)
+      const bills = await fetchAllBills()
+      console.log('BILLS RECIEVED IN FRONT-END', bills)
+      generateTableRows(bills)
     }
     getData()
   })
@@ -160,8 +152,7 @@ export default function BillHistoryTable () {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
+                  style={{ minWidth: column.minWidth }}>
                   {column.label}
                 </TableCell>
               ))}
