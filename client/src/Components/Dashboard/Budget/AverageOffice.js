@@ -52,7 +52,7 @@ export function computeTotalOfficeSpending(spendingItems) {
   spendingItems.forEach(item => {
     total += item.amount;
   });
-  return total / spendingItems.length;
+  return (total / spendingItems.length) * 9;
 }
 
 export default function TotalOfficeCosts() {

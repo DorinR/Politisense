@@ -52,7 +52,7 @@ export function computeTotalTravelSpending(spendingItems) {
   spendingItems.forEach(item => {
     total += item.amount;
   });
-  return total / spendingItems.length;
+  return (total / spendingItems.length) * 7;
 }
 
 export default function TotalTravelCosts() {

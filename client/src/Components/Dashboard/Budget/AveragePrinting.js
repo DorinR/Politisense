@@ -52,7 +52,7 @@ export function computeTotalPrintingSpending(spendingItems) {
   spendingItems.forEach(item => {
     total += item.amount;
   });
-  return total / spendingItems.length;
+  return (total / spendingItems.length) * 3;
 }
 
 export default function TotalPrintingCosts() {
