@@ -49,5 +49,6 @@ exports.getAllRepresentatives = (req, res) => {
         data: representativesAccumulator,
         success: false
       })
+      console.log(err)
     })
 }

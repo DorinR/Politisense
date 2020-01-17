@@ -6,10 +6,12 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
-import Dashboard from './Dashboard'
+import CategoryDashboard from './CategoryDashboard'
 import BillHistoryTable from './PastBills/BillHistoryTable'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import BarChartIcon from '@material-ui/icons/BarChart'
+import PieChartIcon from '@material-ui/icons/PieChart'
+import GeneralDashboard from './GeneralDashboard'
 
 function TabPanel (props) {
   const { children, value, index, ...other } = props
@@ -44,8 +46,7 @@ function a11yProps (index) {
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.palette.background.paper
+    width: '100%'
   }
 }))
 
@@ -71,21 +72,29 @@ export default function DashboardTabs () {
             aria-label='scrollable force tabs example'
           >
             <Tab
-              label='Visualization'
+              label='General'
               icon={<BarChartIcon />}
               {...a11yProps(0)}
             />
             <Tab
+              label='Categories'
+              icon={<PieChartIcon />}
+              {...a11yProps(1)}
+            />
+            <Tab
               label='Voting History'
               icon={<AccountBalanceIcon />}
-              {...a11yProps(1)}
+              {...a11yProps(2)}
             />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
-          <Dashboard />
+          <GeneralDashboard />
         </TabPanel>
         <TabPanel value={value} index={1}>
+          <CategoryDashboard />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
           <BillHistoryTable />
         </TabPanel>
       </div>
