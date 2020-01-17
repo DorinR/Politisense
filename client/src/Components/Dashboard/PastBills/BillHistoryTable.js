@@ -27,7 +27,7 @@ const columns = [
   }
 ]
 
-function createData(number, dateVoted, title, moreInfo) {
+function createData (number, dateVoted, title, moreInfo) {
   return { number, dateVoted, title, moreInfo }
 }
 
@@ -43,7 +43,7 @@ const useStyles = makeStyles({
   }
 })
 
-export async function fetchUserRiding(userEmail) {
+export async function fetchUserRiding (userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -57,7 +57,7 @@ export async function fetchUserRiding(userEmail) {
   return result
 }
 
-export async function fetchRepresentative(riding) {
+export async function fetchRepresentative (riding) {
   let result = ''
   await axios
     .get(
@@ -73,7 +73,7 @@ export async function fetchRepresentative(riding) {
   return result
 }
 
-export async function fetchRepresentativeVotes(representative) {
+export async function fetchRepresentativeVotes (representative) {
   const result = []
   await axios
     .get(
@@ -89,8 +89,8 @@ export async function fetchRepresentativeVotes(representative) {
   return result
 }
 
-export async function fetchAllBills() {
-  return await axios
+export function fetchAllBills () {
+  return axios
     .get('http://localhost:5000/api/bills/getAllBills')
     .then(res => {
       if (res.data.success) {
@@ -100,7 +100,7 @@ export async function fetchAllBills() {
     .catch(console.error)
 }
 
-function generateTableRows(bills) {
+function generateTableRows (bills) {
   rows = []
   bills.forEach(vote => {
     const { number, dateVoted, title, sponsorName, link } = vote
@@ -114,20 +114,20 @@ function generateTableRows(bills) {
   })
 }
 
-export default function BillHistoryTable() {
+export default function BillHistoryTable () {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       // eslint-disable-next-line no-undef
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
       const riding = await fetchUserRiding(email)
+      // eslint-disable-next-line
       const representative = await fetchRepresentative(riding)
       const bills = await fetchAllBills()
-      console.log('BILLS RECIEVED IN FRONT-END', bills)
       generateTableRows(bills)
     }
     getData()
@@ -152,7 +152,8 @@ export default function BillHistoryTable() {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}>
+                  style={{ minWidth: column.minWidth }}
+                >
                   {column.label}
                 </TableCell>
               ))}
