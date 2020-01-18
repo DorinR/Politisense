@@ -66,7 +66,7 @@ function createDonut (element, fData) {
   }
 
   // function to handle legend.
-  function legend (lD) {
+  function legend (lD){
     const leg = {}
 
     // create table for legend.

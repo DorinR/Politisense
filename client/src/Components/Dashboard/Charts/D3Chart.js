@@ -4,24 +4,43 @@ import axios from "axios";
 import {fetchRepresentative, fetchUserRiding} from '../../../Components/Navbar'
 export default class D3Chart {
     constructor(element) {
-        const user = JSON.parse(localStorage.getItem('user'))
-        if (user) {
-            const { email } = user
-            const riding =  fetchUserRiding(email)
-            const representative =  fetchRepresentative(riding)
+        // console.log("data from props from data1 "+ data1[0].voteRecord.yea)
+        // console.log("data from props from data2 "+ data2[0].voteRecord.yea)
+        //
+        // let realData =[]
+        // let yeaCounter = 0
+        // let nayCounter = 0
+        // let abstainCounter =0
+        // let totalcounter =0
+        // data1.forEach(element=>totalcounter++)
+        // console.log(totalcounter)
+        // data1.forEach(element=> {
+        //
+        //         if(element.voteRecord.yea == true){
+        //             yeaCounter++
+        //             console.log(element)
+        //         }else if(element.voteRecord.yea == false){
+        //             nayCounter++
+        //         }else {
+        //             abstainCounter++
+        //         }
+        //
+        //
+        // })
+        //
+        // console.log('the total yeas '+ yeaCounter)
+        // console.log('the total nays '+ nayCounter)
+        // console.log('the total abs '+ abstainCounter)
 
-        }
-
-        const data = [
-            {name: "USA", value: 60},
-            {name: "UK", value: 20},
-            {name: "Canada", value: 30},
-            {name: "Maxico", value: 15},
-            {name: "Japan", value: 10},
+        let totalYesNoVotes = [
+            { index: 0, name: "Yeas", value: 23 },
+            { index: 1, name: "Nays", value: 33 },
+            { index: 2, name: "Abstain", value: 30}
         ]
+
         let text = ""
-        const width = 200
-        const height = 200
+        const width = 150
+        const height = 150
         const thickness = 40
         const duration = 750
         const padding = 10
@@ -62,7 +81,7 @@ export default class D3Chart {
             .attr('transform','translate('+(width/2)+','+(height/2)+')')
 
         let arcs = g.selectAll('arc')
-            .data(createPie(data))
+            .data(createPie(totalYesNoVotes))
             .enter()
             .append('g')
             .attr('class','arc')
@@ -142,7 +161,7 @@ export default class D3Chart {
             .style('margin-left','200px')
 
         let keys = legend.selectAll('.key')
-            .data(data)
+            .data(totalYesNoVotes)
             .enter().append('div')
             .attr('class', 'key')
             .style('display', 'flex')
