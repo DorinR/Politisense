@@ -28,6 +28,7 @@ import DeleteCategoryDialog from './DeleteCategoryDialog'
 import ChartCard from './ChartCard'
 import RadarChart from './Charts/RadarChart'
 import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
+import axios from 'axios'
 
 const useStyles = makeStyles(theme => ({
   media: {
@@ -116,12 +117,21 @@ export default function CategoryCard (props) {
     setTitle(props.title)
   }, [props.title])
 
-  async function populateTable () {
+  async function populateTable(){
+    console.log(props.representative)
+    let head = props.representative
+    await axios
+        .get(`http://localhost:5000/api/bills/${head}/getVotedBillsByMP`)
+        .then(res => {
+          console.log(res.data)
+        })
+        .catch(err => console.error(err))
+
     setRows([
       createData('Bill 101', 'Yes'),
       createData('Bill 102', 'No'),
-      createData('Bill 103', 'Abstain')
-    ])
+      createData('Bill 103', 'Abstain'),
+    ]);
   }
 
   return (

@@ -27,7 +27,6 @@ export default function RepresentativeImage (props) {
           return
         }
         snapshot.forEach(doc => {
-          console.log(doc.id, '=>', doc.data())
           const { name, imageUrl } = doc.data()
           setName(name)
           setImageUrl(imageUrl)
