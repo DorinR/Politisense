@@ -2,49 +2,57 @@ const UserController = require('./UserController')
 const RepresentativeController = require('./RepresentativeController')
 const BillController = require('./BillController')
 const VoteRecordController = require('./VoteRecordController')
+const RidingController = require('./RidingController')
 
 module.exports = {
-  userSignup: function (req, res) {
+  userSignup: function(req, res) {
     return UserController.userSignup(req, res)
   },
-  userLogin: function (req, res) {
+  userLogin: function(req, res) {
     return UserController.userLogin(req, res)
   },
-  getUserByEmail: function (req, res) {
+  getUserByEmail: function(req, res) {
     return UserController.getUserByEmail(req, res)
   },
-  updateUser: function (req, res) {
+  updateUser: function(req, res) {
     return UserController.updateUser(req, res)
   },
-  setRiding: function (req, res) {
+  setRiding: function(req, res) {
     return UserController.setRiding(req, res)
   },
-  updateUserRiding: function (req, res) {
+  updateUserRiding: function(req, res) {
     return UserController.updateUserRiding(req, res)
   },
-  checkIfUserExists: function (req, res) {
+  checkIfUserExists: function(req, res) {
     return UserController.checkIfUserExists(req, res)
   },
-  getUserInterests: function (req, res) {
+  getUserInterests: function(req, res) {
     return UserController.getUserInterests(req, res)
   },
 
-  getRepresentativeByRiding: function (req, res) {
+  getRepresentativeByRiding: function(req, res) {
     return RepresentativeController.getRepresentativeByRiding(req, res)
   },
-  getAllRepresentatives: function (req, res) {
+  getAllRepresentatives: function(req, res) {
     return RepresentativeController.getAllRepresentatives(req, res)
   },
 
-  getBillById: function (req, res) {
+  getBillById: function(req, res) {
     return BillController.getBillById(req, res)
   },
 
-  getVotesByRepresentative: function (req, res) {
+  getVotesByRepresentative: function(req, res) {
     return VoteRecordController.getVotesByRepresentative(req, res)
   },
 
-  updateUserCategory: function (req, res) {
+  updateUserCategory: function(req, res) {
     return UserController.updateUserCategory(req, res)
+  },
+
+  getRidingCode: function(req, res) {
+    return RidingController.getRidingCode(req, res)
+  },
+  getRidingPopulation: function(req, res) {
+    return RidingController.getRidingPopulation(req, res)
   }
 }

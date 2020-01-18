@@ -3,7 +3,7 @@ const fs = require('firebase')
 require('firebase/firestore')
 
 class _Firestore {
-  constructor () {
+  constructor() {
     this.config = {
       apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
       authDomain: 'abdulla-2c3a5.firebaseapp.com',
@@ -28,7 +28,7 @@ class _Firestore {
 }
 
 var instance = null
-function getInstance () {
+function getInstance() {
   if (!instance) {
     instance = new _Firestore()
   }
@@ -36,13 +36,13 @@ function getInstance () {
 }
 
 class Reference {
-  constructor (reference) {
+  constructor(reference) {
     this.reference = reference
     this.modelsOnly = false
     this.query = null
   }
 
-  where (attribute, operator, value) {
+  where(attribute, operator, value) {
     if (!this.query) {
       this.query = this.reference.where(attribute, operator, value)
     }
@@ -50,11 +50,13 @@ class Reference {
     return this
   }
 
-  update (model) {
+  update(model) {
     if (this.modelsOnly && !(model instanceof Model)) {
       throw new Error('Error: Only a model can be updated in firebase')
     } else if (!this.modelsOnly && !(model instanceof Model)) {
-      console.warn('WARNING: Using non models for firestore is deprecated. Use Models instead.')
+      console.warn(
+        'WARNING: Using non models for firestore is deprecated. Use Models instead.'
+      )
     }
     if (model instanceof Model) {
       model = Model.serialise(model)
@@ -64,7 +66,8 @@ class Reference {
       ref = this.query
     }
     return new Promise((resolve, reject) => {
-      ref.get()
+      ref
+        .get()
         .then(snapshot => {
           const promises = []
           snapshot.forEach(doc => {
@@ -81,13 +84,14 @@ class Reference {
     })
   }
 
-  delete () {
+  delete() {
     let ref = this.reference
     if (this.query) {
       ref = this.query
     }
     return new Promise((resolve, reject) => {
-      ref.get()
+      ref
+        .get()
         .then(async snapshot => {
           let count = 0
           const snapshotArray = []
@@ -96,11 +100,11 @@ class Reference {
           })
           await Promise.all(
             snapshotArray.map(ref => {
-              return ref.delete()
-                .then(resp => {
-                  count++
-                })
-            }))
+              return ref.delete().then(resp => {
+                count++
+              })
+            })
+          )
           resolve(count)
         })
         .catch(e => {
@@ -109,13 +113,17 @@ class Reference {
     })
   }
 
-  select (attribute, operator, value) {
+  select(attribute, operator, value) {
     let ref = this.reference.get.bind(this.reference)
-    if (typeof attribute !== 'undefined' &&
-        typeof operator !== 'undefined' &&
-        typeof value !== 'undefined' &&
-        this.query === null) {
-      console.warn('WARNING: using select with parameters is a deprecated behaviour. Use where(..).select() instead.')
+    if (
+      typeof attribute !== 'undefined' &&
+      typeof operator !== 'undefined' &&
+      typeof value !== 'undefined' &&
+      this.query === null
+    ) {
+      console.warn(
+        'WARNING: using select with parameters is a deprecated behaviour. Use where(..).select() instead.'
+      )
       const query = this.reference.where(attribute, operator, value)
       ref = query.get.bind(query)
     } else if (this.query !== null) {
@@ -132,11 +140,13 @@ class Reference {
     })
   }
 
-  insert (model) {
+  insert(model) {
     if (this.modelsOnly && typeof !(model instanceof Model)) {
       throw new Error('Error: Only a model can be inserted in firebase')
     } else if (!this.modelsOnly && !(model instanceof Model)) {
-      console.warn('WARNING: Using non models for firestore is deprecated. Use Models instead.')
+      console.warn(
+        'WARNING: Using non models for firestore is deprecated. Use Models instead.'
+      )
     }
     if (model instanceof Model) {
       model = Model.serialise(model)
@@ -153,7 +163,7 @@ class Reference {
     })
   }
 
-  async innerJoin (key, reference, refKey) {
+  async innerJoin(key, reference, refKey) {
     const left = {}
     const right = {}
 
@@ -165,10 +175,12 @@ class Reference {
       })
     }
 
-    await this.select()
-      .then(snapshot => { fetch(snapshot, left, `_${this.reference.id}`) })
-    await reference.select()
-      .then(snapshot => { fetch(snapshot, right, `_${reference.reference.id}`) })
+    await this.select().then(snapshot => {
+      fetch(snapshot, left, `_${this.reference.id}`)
+    })
+    await reference.select().then(snapshot => {
+      fetch(snapshot, right, `_${reference.reference.id}`)
+    })
 
     if (key === '_id') {
       key = `${key}_${this.reference.id}`
@@ -183,13 +195,20 @@ class Reference {
       const leftDoc = left[leftKey]
       const leftKeys = Object.keys(leftDoc)
       if (!leftKeys.includes(key) && key !== `_id_${this.reference.id}`) {
-        throw new Error(`Current collection: ${this.reference.id} does not contain items with key: ${key} `)
+        throw new Error(
+          `Current collection: ${this.reference.id} does not contain items with key: ${key} `
+        )
       }
       Object.keys(right).forEach(rightKey => {
         const rightDoc = right[rightKey]
         const rightKeys = Object.keys(rightDoc)
-        if (!rightKeys.includes(refKey) && refKey !== `_id_${reference.reference.id}`) {
-          throw new Error(`Current collection: ${reference.reference.id} does not contain items with key: ${refKey} `)
+        if (
+          !rightKeys.includes(refKey) &&
+          refKey !== `_id_${reference.reference.id}`
+        ) {
+          throw new Error(
+            `Current collection: ${reference.reference.id} does not contain items with key: ${refKey} `
+          )
         }
         if (leftDoc[key] === rightDoc[refKey]) {
           const joined = {}
@@ -208,7 +227,7 @@ class Reference {
 }
 
 class Firestore {
-  constructor () {
+  constructor() {
     this.firestore = getInstance()
     this.reference = this.firestore.db
     this.googleProvider = this.firestore.googleProvider
@@ -218,39 +237,43 @@ class Firestore {
     this.microsoftProvider = this.firestore.microsoftProvider
   }
 
-  Bill () {
+  Bill() {
     return new Reference(this.reference.collection('bills'))
   }
 
-  BillClassification () {
+  BillClassification() {
     return new Reference(this.reference.collection('bill_classification'))
   }
 
-  TfIdfClassification () {
+  TfIdfClassification() {
     return new Reference(this.reference.collection('tf_idf_bill'))
   }
 
-  Politician () {
+  Politician() {
     return new Reference(this.reference.collection('politicians'))
   }
 
-  User () {
+  User() {
     return new Reference(this.reference.collection('users'))
   }
 
-  VoteRecord () {
+  VoteRecord() {
     return new Reference(this.reference.collection('voteRecord'))
   }
 
-  Vote () {
+  Ridings() {
+    return new Reference(this.reference.collection('ridings'))
+  }
+
+  Vote() {
     return new Reference(this.reference.collection('votes'))
   }
 
-  FinancialRecord () {
+  FinancialRecord() {
     return new Reference(this.reference.collection('financialRecord'))
   }
 
-  async close () {
+  async close() {
     await this.firestore.app
       .delete()
       .then(result => {

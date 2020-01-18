@@ -6,6 +6,7 @@ import Box from '@material-ui/core/Box'
 import RidingSwitcher from './RidingSwitcher/RidingSwitcher'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
+import RidingPopulation from './RidingPopulation/RidingPopulation'
 const Firestore = require('../../../Firebase').Firestore
 
 const useStyles = makeStyles(theme => ({
@@ -24,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function RepresentativeInfo (props) {
+export default function RepresentativeInfo(props) {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -74,6 +75,15 @@ export default function RepresentativeInfo (props) {
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>RIDING</Typography>
           <RidingSwitcher riding={riding} />
+        </CardContent>
+      </Card>
+      <Box m={1} />
+      <Card>
+        <CardContent className={classes.customCardContent}>
+          <Typography className={classes.customHeadingText}>
+            RIDING POPULATION
+          </Typography>
+          <RidingPopulation riding={riding} />
         </CardContent>
       </Card>
       <Box m={1} />
