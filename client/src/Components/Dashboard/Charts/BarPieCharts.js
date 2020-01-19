@@ -1,17 +1,8 @@
 import * as d3 from 'd3'
 
-var freqData = [
-  { State: 'HealthCare', freq: { yes: 4786, no: 1319, abstain: 249 } },
-  { State: 'Economics', freq: { yes: 1101, no: 412, abstain: 674 } },
-  { State: 'Education', freq: { yes: 932, no: 2149, abstain: 418 } },
-  { State: 'Politics', freq: { yes: 832, no: 1152, abstain: 1862 } },
-  { State: 'HumanRights', freq: { yes: 4481, no: 3304, abstain: 948 } },
-  { State: 'ForeginPolicies', freq: { yes: 1619, no: 167, abstain: 1063 } }
-]
-
 function dashboard (element, fData) {
+
   const barColor = '#84c5f1'
-  function segColor (c) { return { yes: '#43D0C4', no: '#de425b', abstain: '#f68155' }[c] }
 
   fData.forEach(function (d) { d.total = d.freq.yes + d.freq.no + d.freq.abstain })
 
@@ -65,8 +56,8 @@ function dashboard (element, fData) {
 
     function mouseover (d) { // utility function to be called on mouseover.
       // filter for selected state.
-      var st = fData.filter(function (s) { return s.State === d[0] })[0]
-      var nD = d3.keys(st.freq).map(function (s) { return { type: s, freq: st.freq[s] } })
+      let st = fData.filter(function (s) { return s.State === d[0] })[0]
+      let nD = d3.keys(st.freq).map(function (s) { return { type: s, freq: st.freq[s] } })
 
       // call update functions of pie-chart and legend.
       pC.update(nD)
@@ -103,7 +94,9 @@ function dashboard (element, fData) {
 
   // function to handle pieChart.
   function pieChart (pD) {
-    var pC = {}; var pieDim = { w: 200, h: 300 }
+
+    let pC = {}
+    let pieDim = { w: 200, h: 300 }
     pieDim.r = Math.min(pieDim.w, pieDim.h) / 2
 
     // create svg for pie chart.
@@ -189,7 +182,7 @@ function dashboard (element, fData) {
     // Utility function to be used to update the legend.
     leg.update = function (nD) {
       // update the data attached to the row elements.
-      var l = legend.select('tbody').selectAll('tr').data(nD)
+      let l = legend.select('tbody').selectAll('tr').data(nD)
 
       // update the frequencies.
       l.select('.legendFreq').text(function (d) { return d3.format(',')(d.freq) })
@@ -206,19 +199,52 @@ function dashboard (element, fData) {
   }
 
   // calculate total frequency by segment for all state.
-  var tF = ['yes', 'no', 'abstain'].map(function (d) {
+  let tF = ['yes', 'no', 'abstain'].map(function (d) {
     return { type: d, freq: d3.sum(fData.map(function (t) { return t.freq[d] })) }
   })
 
   // calculate total frequency by state for all segment.
-  var sF = fData.map(function (d) { return [d.State, d.total] })
+  let sF = fData.map(function (d) { return [d.State, d.total] })
 
-  var hG = histoGram(sF) // create the histogram.
-  var pC = pieChart(tF) // create the pie-chart.
-  var leg = legend(tF) // create the legend.
+  let hG = histoGram(sF) // create the histogram.
+  let pC = pieChart(tF) // create the pie-chart.
+  let leg = legend(tF) // create the legend.
 }
 export default class BarPieChart {
-  constructor (element) {
-    dashboard(element, freqData)
+
+  constructor (element,data,categories) {
+    createData(categories,data).then(results => {
+      dashboard(element, results)
+    })
+
   }
 }
+ async  function createData(categories,data){
+  let dataArray = []
+  let yesCounter =0
+  let noCounter=0
+  let absatainCounter =0
+  let temp = {}
+
+  categories.forEach(category => {
+    data.forEach(bill=>{
+
+      if(bill.billData.category.trim().localeCompare(category.toLowerCase().trim()) == 0){
+        if(bill.voteRecord.yea == true){
+          yesCounter++
+        }else if(bill.voteRecord.yea == false){
+          noCounter++
+        }else{
+          absatainCounter++
+        }
+      }
+    })
+  temp = {State: category, freq: { yes: yesCounter, no: noCounter, abstain: absatainCounter }}
+  console.log(temp)
+    dataArray.push(temp)
+  })
+
+   return dataArray
+}
+
+function segColor (c) { return { yes: '#43D0C4', no: '#de425b', abstain: '#f68155' }[c] }

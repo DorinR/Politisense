@@ -7,7 +7,7 @@ export default class BarChartWrapper extends Component {
   componentDidMount () {
     switch (this.props.type) {
       case 'bar-pie':
-        return new BarPieChart(this.refs.chart)
+        return new BarPieChart(this.refs.chart,this.props.data,this.props.categories)
       case 'bar':
         return new BarChart(this.refs.chart)
       default: return new D3Chart(this.refs.chart,this.props.data,this.props.categoryType)
