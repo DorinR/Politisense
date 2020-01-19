@@ -13,6 +13,7 @@ import { ConfirmationDialogRaw } from './CategoryForm'
 import AddIcon from '@material-ui/icons/Add'
 import axios from 'axios'
 import { fetchUserRiding } from '../Navbar'
+import CircularProgress from "@material-ui/core/CircularProgress";
 /* eslint-disable */
 
 const useStyles = makeStyles(theme => ({
@@ -54,16 +55,16 @@ const useStyles = makeStyles(theme => ({
 function TabPanel (props) {
   const { children, value, index, ...other } = props
   return (
-    <Typography
-      component='div'
-      role='tabpanel'
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      <Box p={3}>{children}</Box>
-    </Typography>
+      <Typography
+          component='div'
+          role='tabpanel'
+          hidden={value !== index}
+          id={`full-width-tabpanel-${index}`}
+          aria-labelledby={`full-width-tab-${index}`}
+          {...other}
+      >
+        <Box p={3}>{children}</Box>
+      </Typography>
   )
 }
 
@@ -81,6 +82,7 @@ export default function CategoryGrid () {
   const [value] = React.useState('')
   const [counter, setCounter] = React.useState(0)
   const [userRepresentative, setUserRepresentative] = React.useState('')
+  const [representativeData, setRepresentativeData] = React.useState([])
 
   async function getUserInterests(){
     let result = []
@@ -95,34 +97,57 @@ export default function CategoryGrid () {
   }
 
   useEffect(() => {
+    async function getAllBillsByRep (head) {
+      let result = []
+      await axios
+          .get(`http://localhost:5000/api/bills/${head}/getVotedBillsByMP`)
+          .then(res => {
+            if (res.data.success) {
+              result= res.data.data
+              setRepresentativeData(result)
+            }
+          })
+          .catch(err => console.error(err))
+      return result
+    }
+
     async function getData () {
       const user = JSON.parse(localStorage.getItem('user'))
       if (user) {
         const { email } = user
         const riding = await fetchUserRiding(email)
         const representative = await fetchRepresentative(riding)
+        if(representative.length != 0 ){
+          setUserRepresentative(representative)
+        }
         let test = await getUserInterests().then(res => {
           setCategoryList(res)
           setCounter(res.length)
         })
-        setUserRepresentative(representative)
+
       }
     }
     getData()
-  }, [])
+    if(userRepresentative){
+      getAllBillsByRep(userRepresentative) .then(result => {
+        setRepresentativeData(result)
+      })
+    }
+
+  }, [userRepresentative])
 
   async function fetchRepresentative (riding) {
     let result = ''
     await axios
-      .get(
-                `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-      )
-      .then(res => {
-        if (res.data.success) {
-          result = res.data.data.name
-        }
-      })
-      .catch(err => console.error(err))
+        .get(
+            `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+        )
+        .then(res => {
+          if (res.data.success) {
+            result = res.data.data.name
+          }
+        })
+        .catch(err => console.error(err))
     return result
   }
 
@@ -166,48 +191,52 @@ export default function CategoryGrid () {
   }, [value, categoryList,counter])
 
   return (
-    <div className={classes.container}>
-      <Grid container spacing={2}>
-        {categoryList.map((category, index) => {
-          return (
-            <Grid item xs={4} key={index}>
-              <CategoryCard
-                id={index}
-                title={category}
-                delete={deleteEvent}
-                representative={userRepresentative}
-              />
-            </Grid>
-          )
-        })}
-        {counter < 3
-          ? <Grid item md={4}>
-            <Card className={classes.card}>
-              <CardActionArea>
-                <CardContent>
-                  <div onClick={handleClickListItem}>
-                    <Typography gutterBottom variant='h5' component='h2' align='center' style={{ color: 'white' }}>
-                                            Add New Category
-                    </Typography>
-                    <div align='center'>
-                      <AddIcon color='white' fontSize='large' style={{ color: 'white', fontSize: 100 }} />
-                    </div>
-                  </div>
-                  <ConfirmationDialogRaw
-                    classes={{ paper: classes.paper }}
-                    keepMounted
-                    open={open}
-                    onClose={handleClose}
-                    value={value}
-                    existedCategories={categoryList}
-                  />
-                </CardContent>
-              </CardActionArea>
-            </Card>
-            </Grid>
-          : <div />}
-      </Grid>
-    </div>
+      <div className={classes.container}>
+        <Grid container spacing={2}>
+          {
+            representativeData.length != 0 ?
+                categoryList.map((category, index) => {
+                  return (
+                      <Grid item xs={4} key={index}>
+                        <CategoryCard
+                            id={index}
+                            title={category}
+                            delete={deleteEvent}
+                            representative={representativeData}
+                            data={(representativeData.length != 0) ? representativeData : []}
+                        />
+                      </Grid>
+                  )
+                }) : <CircularProgress />
+          }
+          {(counter < 3 && representativeData.length > 0)
+              ? <Grid item md={4}>
+                <Card className={classes.card}>
+                  <CardActionArea>
+                    <CardContent>
+                      <div onClick={handleClickListItem}>
+                        <Typography gutterBottom variant='h5' component='h2' align='center' style={{ color: 'white' }}>
+                          Add New Category
+                        </Typography>
+                        <div align='center'>
+                          <AddIcon color='white' fontSize='large' style={{ color: 'white', fontSize: 100 }} />
+                        </div>
+                      </div>
+                      <ConfirmationDialogRaw
+                          classes={{ paper: classes.paper }}
+                          keepMounted
+                          open={open}
+                          onClose={handleClose}
+                          value={value}
+                          existedCategories={categoryList}
+                      />
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+              : <div />}
+        </Grid>
+      </div>
   )
 }
 export async function updateUserCategory (categoryList) {

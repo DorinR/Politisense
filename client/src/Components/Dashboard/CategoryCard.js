@@ -29,6 +29,7 @@ import ChartCard from './ChartCard'
 import RadarChart from './Charts/RadarChart'
 import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
 import axios from 'axios'
+import BillDialog from "./BillDialog";
 
 const useStyles = makeStyles(theme => ({
   media: {
@@ -49,12 +50,12 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: red[500]
   },
   table: {
-    // minWidth: 650,
+    maxHeight: '10px',
   }
 }))
 
-function createData (name, vote) {
-  return { name, vote }
+function createData (name, vote, sponsor, date, desc, link, details) {
+  return { name, vote, sponsor, date, desc, link , details}
 }
 
 export default function CategoryCard (props) {
@@ -65,11 +66,9 @@ export default function CategoryCard (props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
   const [confimedDeletion] = React.useState(false)
   const [rows, setRows] = React.useState([])
+  const [billOpen, setBillOpen] = React.useState(false)
 
   const handleDeleteDialogClose = (newValue, index) => {
-    console.log('the newValue of the card is ' + newValue)
-    console.log('the index of the card is ' + index)
-
     if (newValue === true) {
       props.delete(index)
     }
@@ -84,6 +83,14 @@ export default function CategoryCard (props) {
     setOpenCompare(false)
   }
 
+  const handleBillClickOpen = () => {
+    setBillOpen(true)
+  }
+
+  const handleBillClose = () => {
+    setBillOpen(false)
+  }
+
   const handleClickOpen = () => {
     setOpen(true)
   }
@@ -92,136 +99,155 @@ export default function CategoryCard (props) {
     setOpen(false)
   }
 
-  function setCardLogo () {
+  function setCardLogo() {
     switch (title) {
       case 'Economics':
-        return <TrendingUpIcon color='primary' />
+        return <TrendingUpIcon color='primary'/>
       case 'Trade':
-        return <TrendingUpIcon color='primary' />
+        return <TrendingUpIcon color='primary'/>
       case 'Business':
-        return <BusinessCenterIcon color='primary' />
+        return <BusinessCenterIcon color='primary'/>
       case 'Criminal':
-        return <GavelIcon color='primary' />
+        return <GavelIcon color='primary'/>
       case 'Religion':
-        return <FontAwesomeIcon icon={faPrayingHands} color='#43D0C4' size='lg' />
+        return <FontAwesomeIcon icon={faPrayingHands} color='#43D0C4' size='lg'/>
       case 'Human Rights':
-        return <FontAwesomeIcon icon={faBalanceScale} color='#43D0C4' size='lg' />
+        return <FontAwesomeIcon icon={faBalanceScale} color='#43D0C4' size='lg'/>
       default:
-        return <IndeterminateCheckBoxIcon color='primary' />
+        return <IndeterminateCheckBoxIcon color='primary'/>
     }
   }
 
   React.useEffect(() => {
-    populateTable()
+    populateTable(props.representative)
     // setId(props.id)
     setTitle(props.title)
   }, [props.title])
 
-  async function populateTable(){
-    console.log(props.representative)
-    let head = props.representative
-    await axios
-        .get(`http://localhost:5000/api/bills/${head}/getVotedBillsByMP`)
-        .then(res => {
-          console.log(res.data)
-        })
-        .catch(err => console.error(err))
-
-    setRows([
-      createData('Bill 101', 'Yes'),
-      createData('Bill 102', 'No'),
-      createData('Bill 103', 'Abstain'),
-    ]);
+  function openDialog(row){
+    console.log(row)
   }
 
-  return (
-    <div>
-      <Card className={classes.card}>
-        <CardHeader
-          avatar={setCardLogo()}
-          action={
-            <div>
-              <IconButton aria-label='settings' onClick={() => setOpenDeleteDialog(true)}>
-                <IndeterminateCheckBoxIcon color='primary' />
+  async function populateTable(data) {
+    let bills = data
+    let filteredBills = []
+    for (let i = 0; i < bills.length; i++) {
+      if (bills[i].billData.category.trim().localeCompare(props.title.toLowerCase().trim()) === 0) {
+        filteredBills.push(bills[i])
+      }
+    }
+    console.log(filteredBills)
+    let tableData = []
+    for (let i = 0; i < filteredBills.length; i++) {
+      let vote = ''
+      if(filteredBills[i].voteRecord.paired){
+        vote = 'abstain'
+      } else if(filteredBills[i].voteRecord.yea){
+        vote = 'yea'
+      } else{
+        vote = 'nay'
+      }
+      tableData.push(createData(filteredBills[i].voteRecord.billNumber, vote, filteredBills[i].billData.sponsorName,
+          filteredBills[i].billData.dateVoted, filteredBills[i].voteRecord.name, filteredBills[i].billData.link))
+    }
+    if(filteredBills.length > 0){
+      setRows(tableData);
+    }
+    }
+
+    return (
+        <div>
+          <Card className={classes.card}>
+            <CardHeader
+                avatar={setCardLogo()}
+                action={
+                  <div>
+                    <IconButton aria-label='settings' onClick={() => setOpenDeleteDialog(true)}>
+                      <IndeterminateCheckBoxIcon color='primary'/>
+                    </IconButton>
+                  </div>
+                }
+                title={props.title}
+            />
+            <DeleteCategoryDialog
+                classes={{paper: classes.paper}}
+                keepMounted
+                open={openDeleteDialog}
+                index={props.id}
+                onClose={handleDeleteDialogClose}
+                value={confimedDeletion}
+                categoryName={props.title}
+            />
+            <CardContent>
+              <ChartCard title='MP Voting Distribution'> <RadarChart/> </ChartCard>
+              {rows.length > 0 ? (
+              <Table className={classes.table} size='small' >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Bill Name</TableCell>
+                    <TableCell align='right'>Vote</TableCell>
+                    <TableCell align='right'>Bill Details</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map(row => (
+                      <TableRow key={row.name} >
+                        <TableCell component='th' scope='row'>
+                          {row.name}
+                        </TableCell>
+                        <TableCell align='right'>{row.vote}</TableCell>
+                        <TableCell align='right'><Button variant="contained" color="primary" onClick={handleBillClickOpen}>
+                          VIEW
+                        </Button></TableCell>
+                      </TableRow>
+                  ))}
+                </TableBody>
+              </Table>) : <p>no data for this category</p>}
+            </CardContent>
+            <CardActions disableSpacing>
+              <IconButton onClick={handleClickOpenCompare}>
+                <CompareArrowsIcon color='primary'/>
               </IconButton>
-            </div>
-          }
-          title={props.title}
-        />
-        <DeleteCategoryDialog
-          classes={{ paper: classes.paper }}
-          keepMounted
-          open={openDeleteDialog}
-          index={props.id}
-          onClose={handleDeleteDialogClose}
-          value={confimedDeletion}
-          categoryName={props.title}
-        />
-        <CardContent>
-          <ChartCard title='MP Voting Distribution'> <RadarChart /> </ChartCard>
-          <Table className={classes.table} size='small' aria-label='a dense table'>
-            <TableHead>
-              <TableRow>
-                <TableCell>Bill Name</TableCell>
-                <TableCell align='right'>Vote</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map(row => (
-                <TableRow key={row.name}>
-                  <TableCell component='th' scope='row'>
-                    {row.name}
-                  </TableCell>
-                  <TableCell align='right'>{row.vote}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-        <CardActions disableSpacing>
-          <IconButton onClick={handleClickOpenCompare}>
-            <CompareArrowsIcon color='primary' />
-          </IconButton>
-          <IconButton>
-            <PieChartIcon color='primary' />
-          </IconButton>
-          <IconButton onClick={handleClickOpen}>
-            <FontAwesomeIcon icon={faHandshake} color='#43D0C4' />
-          </IconButton>
-        </CardActions>
-      </Card>
-      <Dialog
-        open={openCompare}
-        onClose={handleCloseCompare}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
-        <DialogTitle id='alert-dialog-title'>Head to Head</DialogTitle>
-        <DialogContent>
-          <h1>Head to head chart goes here</h1>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseCompare} color='primary' autoFocus>
-                        Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
-        <DialogTitle id='alert-dialog-title'>Bipartisan Index</DialogTitle>
-        <DialogContent>
-          <ChartCard title='Bipartisan Index'> <BarChartWrapper /> </ChartCard>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color='primary' autoFocus>
-                        Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  )
-}
+              <IconButton>
+                <PieChartIcon color='primary'/>
+              </IconButton>
+              <IconButton onClick={handleClickOpen}>
+                <FontAwesomeIcon icon={faHandshake} color='#43D0C4'/>
+              </IconButton>
+            </CardActions>
+          </Card>
+          <Dialog
+              open={openCompare}
+              onClose={handleCloseCompare}
+              aria-labelledby='alert-dialog-title'
+              aria-describedby='alert-dialog-description'
+          >
+            <DialogTitle id='alert-dialog-title'>Head to Head</DialogTitle>
+            <DialogContent>
+              <h1>Head to head chart goes here</h1>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseCompare} color='primary' autoFocus>
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby='alert-dialog-title'
+              aria-describedby='alert-dialog-description'
+          >
+            <DialogTitle id='alert-dialog-title'>Bipartisan Index</DialogTitle>
+            <DialogContent>
+              <ChartCard title='Bipartisan Index'> <BarChartWrapper/> </ChartCard>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color='primary' autoFocus>
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+    )
+  }
