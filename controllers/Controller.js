@@ -46,5 +46,9 @@ module.exports = {
 
   updateUserCategory: function (req, res) {
     return UserController.updateUserCategory(req, res)
+  },
+  getAllBillsByRep: function (req, res) {
+    return BillController.getAllBillsByRep(req, res)
   }
+
 }
