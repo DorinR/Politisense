@@ -64,7 +64,8 @@ class Reference {
       ref = this.query
     }
     return new Promise((resolve, reject) => {
-      ref.get()
+      ref
+        .get()
         .then(snapshot => {
           const promises = []
           snapshot.forEach(doc => {
@@ -87,7 +88,8 @@ class Reference {
       ref = this.query
     }
     return new Promise((resolve, reject) => {
-      ref.get()
+      ref
+        .get()
         .then(async snapshot => {
           let count = 0
           const snapshotArray = []
@@ -96,11 +98,11 @@ class Reference {
           })
           await Promise.all(
             snapshotArray.map(ref => {
-              return ref.delete()
-                .then(resp => {
-                  count++
-                })
-            }))
+              return ref.delete().then(resp => {
+                count++
+              })
+            })
+          )
           resolve(count)
         })
         .catch(e => {
@@ -165,10 +167,12 @@ class Reference {
       })
     }
 
-    await this.select()
-      .then(snapshot => { fetch(snapshot, left, `_${this.reference.id}`) })
-    await reference.select()
-      .then(snapshot => { fetch(snapshot, right, `_${reference.reference.id}`) })
+    await this.select().then(snapshot => {
+      fetch(snapshot, left, `_${this.reference.id}`)
+    })
+    await reference.select().then(snapshot => {
+      fetch(snapshot, right, `_${reference.reference.id}`)
+    })
 
     if (key === '_id') {
       key = `${key}_${this.reference.id}`
@@ -183,13 +187,20 @@ class Reference {
       const leftDoc = left[leftKey]
       const leftKeys = Object.keys(leftDoc)
       if (!leftKeys.includes(key) && key !== `_id_${this.reference.id}`) {
-        throw new Error(`Current collection: ${this.reference.id} does not contain items with key: ${key} `)
+        throw new Error(
+          `Current collection: ${this.reference.id} does not contain items with key: ${key} `
+        )
       }
       Object.keys(right).forEach(rightKey => {
         const rightDoc = right[rightKey]
         const rightKeys = Object.keys(rightDoc)
-        if (!rightKeys.includes(refKey) && refKey !== `_id_${reference.reference.id}`) {
-          throw new Error(`Current collection: ${reference.reference.id} does not contain items with key: ${refKey} `)
+        if (
+          !rightKeys.includes(refKey) &&
+          refKey !== `_id_${reference.reference.id}`
+        ) {
+          throw new Error(
+            `Current collection: ${reference.reference.id} does not contain items with key: ${refKey} `
+          )
         }
         if (leftDoc[key] === rightDoc[refKey]) {
           const joined = {}
@@ -240,6 +251,10 @@ class Firestore {
 
   User () {
     return new Reference(this.reference.collection('users'))
+  }
+
+  Ridings () {
+    return new Reference(this.reference.collection('ridings'))
   }
 
   Vote () {
