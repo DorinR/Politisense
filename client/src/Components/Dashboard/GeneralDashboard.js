@@ -28,7 +28,7 @@ export default function CategoryDashboard () {
             <ChartCard title='MP Voting Distribution'> <RadarChart /> </ChartCard>
           </Grid>
           <Grid item={12}>
-            <ChartCard title='Bipartisan Index'> <BarChartWrapper /> </ChartCard>
+            {/*<ChartCard title='Bipartisan Index'> <BarChartWrapper /> </ChartCard>*/}
           </Grid>
         </Grid>
       </Grid>

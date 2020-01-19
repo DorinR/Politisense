@@ -148,7 +148,12 @@ export default function CategoryCard (props) {
           categoryName={props.title}
         />
         <CardContent>
-          <ChartCard title='MP Voting Distribution'> <RadarChart /> </ChartCard>
+          <ChartCard title='MP Voting Distribution'>
+            { props.title.length != 0 ?
+                <ChartCard title='Bipartisan Index'> <BarChartWrapper data={props.data} categoryType={props.title}/> </ChartCard>
+                : "title is empty!!"
+            }
+          </ChartCard>
           <Table className={classes.table} size='small' aria-label='a dense table'>
             <TableHead>
               <TableRow>
@@ -204,7 +209,10 @@ export default function CategoryCard (props) {
       >
         <DialogTitle id='alert-dialog-title'>Bipartisan Index</DialogTitle>
         <DialogContent>
-          <ChartCard title='Bipartisan Index'> <BarChartWrapper /> </ChartCard>
+          { props.title.length != 0 ?
+              <ChartCard title='Bipartisan Index'> <BarChartWrapper data={props.data} categoryType={props.title}/> </ChartCard>
+              : "title is empty!!"
+          }
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color='primary' autoFocus>
