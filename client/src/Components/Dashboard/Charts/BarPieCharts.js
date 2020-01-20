@@ -219,27 +219,26 @@ export default class BarPieChart {
 
   }
 }
- async  function createData(categories,data){
+ export async function createData(categories,data){
   let dataArray = []
   let yesCounter =0
   let noCounter=0
-  let absatainCounter =0
+  let abtsainCounter =0
   let temp = {}
 
   categories.forEach(category => {
     data.forEach(bill=>{
-
       if(bill.billData.category.trim().localeCompare(category.toLowerCase().trim()) == 0){
         if(bill.voteRecord.yea == true){
           yesCounter++
         }else if(bill.voteRecord.yea == false){
           noCounter++
         }else{
-          absatainCounter++
+          abtsainCounter++
         }
       }
     })
-  temp = {State: category, freq: { yes: yesCounter, no: noCounter, abstain: absatainCounter }}
+  temp = {State: category, freq: { yes: yesCounter, no: noCounter, abstain: abtsainCounter }}
   console.log(temp)
     dataArray.push(temp)
   })

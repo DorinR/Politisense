@@ -1,13 +1,17 @@
 /* eslint-env node */
 import React, { Component } from 'react'
-import { Radar } from 'react-chartjs-2'
-
+// import { Radar } from 'react-chartjs-2'
+import Radar from 'react-d3-radar'
+function organizingDataFromBackend (){}
 class RadarChart extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      chartData: props.chartData
+      chartData: props.chartData,
+      labels: props.categoryList
     }
+  console.log("LABELS ARE"+ this.state.labels)
+
   }
 
   render () {
@@ -15,7 +19,7 @@ class RadarChart extends Component {
       <div className='chart'>
         <Radar
           data={{
-            labels: ['Economics', 'Social Issues', 'Health Care'],
+            labels: this.labels,
             datasets: [
               {
                 label: 'Trend',

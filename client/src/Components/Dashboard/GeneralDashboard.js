@@ -6,7 +6,7 @@ import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import ChartCard from './ChartCard'
-import RadarChart from './Charts/RadarChart'
+import Radar from 'react-d3-radar'
 import axios from "axios";
 import {fetchUserRiding} from "../Navbar";
 
@@ -14,6 +14,7 @@ export default function CategoryDashboard () {
     const [categoryList, setCategoryList] = React.useState([])
     const [userRepresentative, setUserRepresentative] = React.useState('')
     const [representativeData, setRepresentativeData] = React.useState([])
+    const [radarData, setRadarData] = React.useState([])
 
     useEffect(() => {
 
@@ -40,7 +41,6 @@ export default function CategoryDashboard () {
                 const riding = await fetchUserRiding(email)
                 const representative = await fetchRepresentative(riding)
                 if(representative.length != 0 ){
-                    console.log("inside the get data inside the if statement to set the user rep")
                     setUserRepresentative(representative)
                 }
             }
@@ -50,14 +50,31 @@ export default function CategoryDashboard () {
             getAllBillsByRep(userRepresentative).then(results => {
 
                  getAllCategoriesByRep(results).then(result =>
-                    {if(result.length != 0){setCategoryList(result)}}
+                    {
+                        if(result.length != 0){
+                            setCategoryList(result)
+                        }
+                    }
                 )
+
                 // if(categories.length != 0){setCategoryList(categories)}
                 console.log('the bills are now from the generalDashboard are  '+results)
             })
         }
 
-    }, [userRepresentative])
+        if(categoryList.length != 0 && representativeData.length !=0){
+            console.log("im here")
+            createDataSetRadar(categoryList,representativeData).then(testing => {
+                console.log(testing)
+                if(testing.length != 0){
+                    setRadarData(testing)
+                    console.log("testing "+ testing)
+                }
+            })
+
+        }
+
+    }, [userRepresentative,categoryList])
 
     async function fetchRepresentative (riding) {
         let result = ''
@@ -83,7 +100,7 @@ export default function CategoryDashboard () {
               representativeData.length != 0 && categoryList.length != 0 ?
                   <Card>
                   <CardHeader />
-                  <BarChartWrapper type='bar-pie' data = {representativeData} categories={categoryList}/>
+                      <BarChartWrapper type='bar-pie' data = {representativeData} categories={categoryList}/>
                   <CardContent>
                       <Typography variant='body2' color='textSecondary' component='p'>
                           Voting record of your MP.
@@ -93,16 +110,47 @@ export default function CategoryDashboard () {
                   : "Waiting !!"}
 
       </Grid>
-      <Grid item xs={1}>
-        <Grid container spacing={2}>
-          <Grid item={12}>
-            <ChartCard title='MP Voting Distribution'> <RadarChart /> </ChartCard>
-          </Grid>
-          <Grid item={12}>
-            {/*<ChartCard title='Bipartisan Index'> <BarChartWrapper /> </ChartCard>*/}
-          </Grid>
-        </Grid>
-      </Grid>
+
+        {radarData.length !== 0 && categoryList.length !==0 ?
+
+            <Grid item xs={1}>
+            <Grid container spacing={2}>
+                <Grid item={12}>
+                    <ChartCard title='MP Voting Distribution'>
+                        <Radar
+                        width={500}
+                        height={500}
+                        padding={70}
+                        domainMax={35}
+                        highlighted={null}
+                        onHover={(point) => {
+                            if (point) {
+                                console.log('hovered over a data point');
+                            } else {
+                                console.log('not over anything');
+                            }
+                        }}
+                        data={{
+                            variables: [
+                                {key: 'trade', label: 'trade'},
+                                {key: 'criminal', label: 'criminal'},
+                                {key: 'business', label: 'business'},
+                            ],
+                            sets: [
+                                {
+                                    values: radarData
+                                    ,
+                                },
+                            ],
+                        }}
+                    /> </ChartCard>
+                </Grid>
+                <Grid item={12}>
+                    <ChartCard title='Bipartisan Index'> <BarChartWrapper type={"donut"}/> </ChartCard>
+                </Grid>
+            </Grid>
+        </Grid> : "STILL LOADING"}
+
     </Grid>
   )
 }
@@ -111,11 +159,10 @@ async function getAllCategoriesByRep(bills) {
     let categories = []
     let uniqueCategories= []
     if(bills.length != 0 ){
+
         for( let x = 0; x < bills.length; x++) {
-            console.log(" inside the FOR LOOP "+ bills[x].billData)
             if(bills[x].billData.category.localeCompare('') != 0){
                 categories.push(bills[x].billData.category)
-                console.log("IM HERE INSIDE GET ALL CATEGORIES BY REP")
             }
         }
         if(categories.length != 0 ){
@@ -126,6 +173,37 @@ async function getAllCategoriesByRep(bills) {
             }
         }
     }
-    // console.log("the unique categories list is "+ un)
     return uniqueCategories
+}
+
+// data = {variables: [{key: 'category', label: 'category}],
+// sets: [{values: {'category1':values, }]
+export async function createDataSetRadar(categories,data){
+    let dataArray = []
+    let totalvotes = 0
+    let temp = {}
+    let dataSetRadar= {}
+    console.log("im here !!!!!!!!" )
+    categories.forEach(category => {
+        data.forEach(bill=>{
+            if(bill.billData.category.trim().localeCompare(category.toLowerCase().trim()) == 0){
+                totalvotes++
+            }
+        })
+        let categorySmallLetter =category.toLowerCase().trim()
+        temp = { category : categorySmallLetter,value : totalvotes }
+        console.log(temp)
+        dataArray.push(temp)
+    })
+    console.log(dataArray)
+
+    dataArray.forEach(category => {
+        if (category.category){
+            dataSetRadar[category.category] = category.value
+        }
+    })
+    console.log(dataSetRadar)
+
+
+    return dataSetRadar
 }
