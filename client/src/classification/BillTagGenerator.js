@@ -42,11 +42,14 @@ class BillTagGenerator {
             rawId: raw.id
           })
         })
+        console.log(`INFO: successfully retrieved ${classifications.length} raw classifications`)
         return classifications
       })
+      .catch(console.error)
   }
 
   filterRawByThreshold (tfidfs) {
+    console.log('INFO: filtering out low quality terms...')
     const filtered = []
     tfidfs.forEach(tfidf => {
       const valuableTerms = { terms: {}, rawId: tfidf.rawId }
@@ -68,6 +71,7 @@ class BillTagGenerator {
   }
 
   loadVocabularies () {
+    console.log('INFO: loading vocabularies...')
     const dir = './vocabularies/'
     this.throwIfDoesNotExist(dir)
     let filenames = this.getFilesFromDirectory(dir)
@@ -119,6 +123,7 @@ class BillTagGenerator {
   }
 
   tagBills (classifications, vocabs) {
+    console.log('INFO: creating bill tags from classifications and vocabularies...')
     const billTags = []
     classifications.forEach(({ bill, classification }) => {
       vocabs.forEach(({ tag, words }) => {
@@ -136,6 +141,7 @@ class BillTagGenerator {
         }
       })
     })
+    console.log(`INFO: successfully created ${billTags.length} bill tags.`)
     return billTags
   }
 
@@ -146,7 +152,7 @@ class BillTagGenerator {
           .BillClassification()
           .insert(tag)
           .then(() => {
-            console.debug(`INFO: Bill tag: ${tag.category}, for bill: ${tag.bill}, was successfully inserted into firestore`)
+            console.log(`INFO: Bill tag: ${tag.category}, for bill: ${tag.bill}, was successfully inserted into firestore`)
           })
           .catch(console.error)
       })
@@ -155,8 +161,3 @@ class BillTagGenerator {
 }
 
 module.exports.BillTagGenerator = BillTagGenerator
-
-new BillTagGenerator(0.1, 1.25, true)
-  .createTags()
-  .then()
-  .catch(console.error)
