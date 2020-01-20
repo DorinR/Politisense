@@ -20,6 +20,10 @@ const useStyles = makeStyles(theme => ({
   card: {
     backgroundColor: '#43D0C4'
   },
+  test :{
+    left: '50%',
+    top: '50%'
+  },
   container: {
     margin: '20px',
     marginTop: '30px'
@@ -207,7 +211,12 @@ export default function CategoryGrid () {
                         />
                       </Grid>
                   )
-                }) : <CircularProgress />
+                }) : <div style={{
+                  position: 'absolute',
+                  left: '50%',
+                  top: '50%',
+                  transform: 'translate(-50%, -50%)'
+                }}><CircularProgress /></div>
           }
           {(counter < 3 && representativeData.length > 0)
               ? <Grid item md={4}>

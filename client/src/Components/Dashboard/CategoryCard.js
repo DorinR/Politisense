@@ -30,6 +30,7 @@ import RadarChart from './Charts/RadarChart'
 import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
 import axios from 'axios'
 import BillDialog from "./BillDialog";
+import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles(theme => ({
   media: {
@@ -54,8 +55,8 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function createData (name, vote, sponsor, date, desc, link, details) {
-  return { name, vote, sponsor, date, desc, link , details}
+function createData (name, vote, sponsor, date, desc, link) {
+  return { name, vote, sponsor, date, desc, link}
 }
 
 export default function CategoryCard (props) {
@@ -66,6 +67,7 @@ export default function CategoryCard (props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
   const [confimedDeletion] = React.useState(false)
   const [rows, setRows] = React.useState([])
+  const [billInfo, setBillInfo] = React.useState([])
   const [billOpen, setBillOpen] = React.useState(false)
 
   const handleDeleteDialogClose = (newValue, index) => {
@@ -83,7 +85,8 @@ export default function CategoryCard (props) {
     setOpenCompare(false)
   }
 
-  const handleBillClickOpen = () => {
+  const handleBillClickOpen = (row) => {
+    setBillInfo(row)
     setBillOpen(true)
   }
 
@@ -120,13 +123,8 @@ export default function CategoryCard (props) {
 
   React.useEffect(() => {
     populateTable(props.representative)
-    // setId(props.id)
     setTitle(props.title)
   }, [props.title])
-
-  function openDialog(row){
-    console.log(row)
-  }
 
   async function populateTable(data) {
     let bills = data
@@ -136,7 +134,6 @@ export default function CategoryCard (props) {
         filteredBills.push(bills[i])
       }
     }
-    console.log(filteredBills)
     let tableData = []
     for (let i = 0; i < filteredBills.length; i++) {
       let vote = ''
@@ -186,23 +183,19 @@ export default function CategoryCard (props) {
                   <TableRow>
                     <TableCell>Bill Name</TableCell>
                     <TableCell align='right'>Vote</TableCell>
-                    <TableCell align='right'>Bill Details</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {rows.map(row => (
                       <TableRow key={row.name} >
                         <TableCell component='th' scope='row'>
-                          {row.name}
+                          <Button color="primary" onClick={() => handleBillClickOpen(row)}>{row.name}</Button>
                         </TableCell>
                         <TableCell align='right'>{row.vote}</TableCell>
-                        <TableCell align='right'><Button variant="contained" color="primary" onClick={handleBillClickOpen}>
-                          VIEW
-                        </Button></TableCell>
                       </TableRow>
                   ))}
                 </TableBody>
-              </Table>) : <p>no data for this category</p>}
+              </Table>) : <p>No data for this category</p>}
             </CardContent>
             <CardActions disableSpacing>
               <IconButton onClick={handleClickOpenCompare}>
@@ -216,6 +209,7 @@ export default function CategoryCard (props) {
               </IconButton>
             </CardActions>
           </Card>
+          <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose}/>
           <Dialog
               open={openCompare}
               onClose={handleCloseCompare}
