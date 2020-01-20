@@ -6,7 +6,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import axios from "axios";
-const Firestore = require("../../../Firebase").Firestore;
+const Firestore = require("../../../../Firebase").Firestore;
 
 const useStyles = makeStyles(theme => ({
   customCardContent: {
@@ -24,13 +24,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export async function fetchGiftsSpending() {
+export async function fetchPrintingSpending() {
   const db = new Firestore();
-  const giftsSpendingItems = [];
+  const printingSpendingItems = [];
 
   await db
     .FinancialRecord()
-    .where("category", "==", "5-Gifts")
+    .where("parent", "==", "7-Printing")
     .select()
     .then(snapshot => {
       if (snapshot.empty) {
@@ -38,32 +38,32 @@ export async function fetchGiftsSpending() {
         return;
       }
       snapshot.forEach(doc => {
-        giftsSpendingItems.push(doc.data());
+        printingSpendingItems.push(doc.data());
       });
     })
     .catch(err => {
       console.log("Error getting documents", err);
     });
-  return giftsSpendingItems;
+  return printingSpendingItems;
 }
 
-export function computeTotalGiftsSpending(spendingItems) {
+export function computeTotalPrintingSpending(spendingItems) {
   let total = 0;
   spendingItems.forEach(item => {
     total += item.amount;
   });
-  return total / spendingItems.length;
+  return (total / spendingItems.length) * 3;
 }
 
-export default function TotalGiftsCosts() {
+export default function TotalPrintingCosts() {
   const classes = useStyles();
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
     async function getData() {
-      const giftsSpendingItems = await fetchGiftsSpending();
+      const printingSpendingItems = await fetchPrintingSpending();
       // add up all the spending items and assign that total to the "Total" variable
-      setTotal(computeTotalGiftsSpending(giftsSpendingItems));
+      setTotal(computeTotalPrintingSpending(printingSpendingItems));
     }
     getData();
   });
@@ -73,7 +73,7 @@ export default function TotalGiftsCosts() {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Average Gifts Costs: {Math.round(total)}
+            Average Printing Costs: {Math.round(total)}
           </Typography>
         </CardContent>
       </Card>

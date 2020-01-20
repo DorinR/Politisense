@@ -6,7 +6,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import axios from "axios";
-const Firestore = require("../../../Firebase").Firestore;
+const Firestore = require("../../../../Firebase").Firestore;
 
 const useStyles = makeStyles(theme => ({
   customCardContent: {
@@ -24,13 +24,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export async function fetchOfficeSpending() {
+export async function fetchHospitalitySpending() {
   const db = new Firestore();
-  const officeSpendingItems = [];
+  const hospitalitySpendingItems = [];
 
   await db
     .FinancialRecord()
-    .where("parent", "==", "8-Offices")
+    .where("category", "==", "4-Hospitality")
     .select()
     .then(snapshot => {
       if (snapshot.empty) {
@@ -38,32 +38,32 @@ export async function fetchOfficeSpending() {
         return;
       }
       snapshot.forEach(doc => {
-        officeSpendingItems.push(doc.data());
+        hospitalitySpendingItems.push(doc.data());
       });
     })
     .catch(err => {
       console.log("Error getting documents", err);
     });
-  return officeSpendingItems;
+  return hospitalitySpendingItems;
 }
 
-export function computeTotalOfficeSpending(spendingItems) {
+export function computeTotalHospitalitySpending(spendingItems) {
   let total = 0;
   spendingItems.forEach(item => {
     total += item.amount;
   });
-  return (total / spendingItems.length) * 9;
+  return total / spendingItems.length;
 }
 
-export default function TotalOfficeCosts() {
+export default function TotalHospitalityCosts() {
   const classes = useStyles();
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
     async function getData() {
-      const officeSpendingItems = await fetchOfficeSpending();
+      const hospitalitySpendingItems = await fetchHospitalitySpending();
       // add up all the spending items and assign that total to the "Total" variable
-      setTotal(computeTotalOfficeSpending(officeSpendingItems));
+      setTotal(computeTotalHospitalitySpending(hospitalitySpendingItems));
     }
     getData();
   });
@@ -73,7 +73,7 @@ export default function TotalOfficeCosts() {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Average Office Costs: {Math.round(total)}
+            Average Hospitality Costs: {Math.round(total)}
           </Typography>
         </CardContent>
       </Card>

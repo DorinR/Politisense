@@ -6,7 +6,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import axios from "axios";
-const Firestore = require("../../../Firebase").Firestore;
+const Firestore = require("../../../../Firebase").Firestore;
 
 const useStyles = makeStyles(theme => ({
   customCardContent: {
@@ -24,13 +24,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export async function fetchTravelSpending() {
+export async function fetchAdvertisingSpending() {
   const db = new Firestore();
-  const travelSpendingItems = [];
+  const advertisingSpendingItems = [];
 
   await db
     .FinancialRecord()
-    .where("parent", "==", "3-Travel")
+    .where("category", "==", "6-Advertising")
     .select()
     .then(snapshot => {
       if (snapshot.empty) {
@@ -38,32 +38,32 @@ export async function fetchTravelSpending() {
         return;
       }
       snapshot.forEach(doc => {
-        travelSpendingItems.push(doc.data());
+        advertisingSpendingItems.push(doc.data());
       });
     })
     .catch(err => {
       console.log("Error getting documents", err);
     });
-  return travelSpendingItems;
+  return advertisingSpendingItems;
 }
 
-export function computeTotalTravelSpending(spendingItems) {
+export function computeTotalAdvertisingSpending(spendingItems) {
   let total = 0;
   spendingItems.forEach(item => {
     total += item.amount;
   });
-  return (total / spendingItems.length) * 7;
+  return total / spendingItems.length;
 }
 
-export default function TotalTravelCosts() {
+export default function TotalAdvertisingCosts() {
   const classes = useStyles();
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
     async function getData() {
-      const travelSpendingItems = await fetchTravelSpending();
+      const advertisingSpendingItems = await fetchAdvertisingSpending();
       // add up all the spending items and assign that total to the "Total" variable
-      setTotal(computeTotalTravelSpending(travelSpendingItems));
+      setTotal(computeTotalAdvertisingSpending(advertisingSpendingItems));
     }
     getData();
   });
@@ -73,7 +73,7 @@ export default function TotalTravelCosts() {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Average Travel Costs: {Math.round(total)}
+            Average Advertising Costs: {Math.round(total)}
           </Typography>
         </CardContent>
       </Card>
