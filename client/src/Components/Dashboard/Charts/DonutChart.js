@@ -1,12 +1,15 @@
 import * as d3 from 'd3'
-var freqData = [
-  { State: 'Yes Votes', freq: { Liberal: 2000, Conservative: 1319, NDP: 249, People: 100, Green: 200, BQ: 100 } }
-]
+
+function segColor (c) { return { Liberal: '#D31F25', Conservative: '#1B447A', NDP: '#CD793E', People: '#243570', Green: '#439B3B', BQ: '#00A7EC' }[c] }
+// var freqData = [
+//   { freq: { Liberal: 27, Conservative: 0, NDP: 0, People: 0, Green: 0, BQ: 0 } }]
 function createDonut (element, fData) {
-  function segColor (c) { return { Liberal: '#D31F25', Conservative: '#1B447A', NDP: '#CD793E', People: '#243570', Green: '#439B3B', BQ: '#00A7EC' }[c] }
+
   function pieChart (pD) {
-    var pC = {}
-    var pieDim = { w: 200, h: 200 }
+
+    let pC = {}
+    let pieDim = { w: 200, h: 200 }
+
     pieDim.r = Math.min(pieDim.w, pieDim.h) / 2
 
     // create svg for pie chart.
@@ -21,6 +24,7 @@ function createDonut (element, fData) {
 
     // create a function to compute the pie slice angles.
     const pie = d3.pie().value(function (d) {
+      console.log(d.freq)
       return d.freq
     })
 
@@ -30,6 +34,7 @@ function createDonut (element, fData) {
         this._current = d
       })
       .style('fill', function (d) {
+
         return segColor(d.data.type)
       })
       .on('mouseover', mouseover).on('mouseout', mouseout)
@@ -139,7 +144,70 @@ function createDonut (element, fData) {
 }
 
 export default class DonutChart {
-  constructor (element) {
-    createDonut(element, freqData)
+//mpsVotes
+  constructor (element,billsSponsors,mpsVotes) {
+
+
+    createDataForDonutChart(billsSponsors,mpsVotes).then(result => {
+      let freqData = [
+        { State: 'Yes Votes', freq: result}]
+      createDonut(element, freqData)
+    })
+
+
+
   }
 }
+export async function createDataForDonutChart(billsSponsors,mpsVotes) {
+  let liberalCounter = 0
+  let conservativeCounter = 0
+  let ndpCounter = 0
+  let peopleCounter = 0
+  let greenCounter = 0
+  let bqCounter = 0
+  let parties={}
+  console.log(billsSponsors)
+  console.log(mpsVotes)
+
+  if(billsSponsors.length != 0 && mpsVotes.length != 0 ){
+    for(let i = 0; i< mpsVotes.length; i++){
+      for(let j=0; j<billsSponsors.length; j++){
+        console.log("mpsVotes[i].billData.sponsorName "+ mpsVotes[i].billData.sponsorName)
+        console.log("billsSponsors[j].sponsorName "+ billsSponsors[j].name)
+
+        if(mpsVotes[i].billData.sponsorName.trim().localeCompare(billsSponsors[j].name.toLowerCase().trim()) == 0
+
+        && mpsVotes[i].voteRecord.yea == true
+        ){
+
+          if (billsSponsors[j].politicalParty == 'liberal'){
+            liberalCounter++
+          }else if(billsSponsors[j].politicalParty == 'conservative'){
+            console.log("found conservative")
+            conservativeCounter++
+          }else if(billsSponsors[j].politicalParty == 'bloc québécois'){
+            bqCounter++
+          }else if(billsSponsors[j].politicalParty == 'ndp'){
+            ndpCounter++
+          }else if(billsSponsors[j].politicalParty == 'green'){
+            greenCounter++
+          }else if(billsSponsors[j].politicalParty=='people'){
+            peopleCounter++
+          }
+        }
+      }
+    }
+    //
+   parties= {"Liberal": liberalCounter, "Conservative": conservativeCounter, "NDP": ndpCounter, "People": peopleCounter, "Green": greenCounter, "BQ": bqCounter}
+    console.log('parties'+ parties.Conservative)
+    return parties
+  }
+
+  if(liberalCounter != 0){
+    console.log(liberalCounter)
+  }
+
+}
+
+
+
