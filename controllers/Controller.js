@@ -47,10 +47,10 @@ module.exports = {
     return BillController.getBillById(req, res)
   },
 
-    // Bill
-    getVotedBillsByMP: function (req, res) {
-        return BillController.getVotedBillsByMP(req, res)
-    },
+  // Bill
+  getVotedBillsByMP: function (req, res) {
+    return BillController.getVotedBillsByMP(req, res)
+  },
 
   // Vote Record
   getVotesByRepresentative: function (req, res) {

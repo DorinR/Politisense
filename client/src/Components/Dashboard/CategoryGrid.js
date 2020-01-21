@@ -13,16 +13,12 @@ import { ConfirmationDialogRaw } from './CategoryForm'
 import AddIcon from '@material-ui/icons/Add'
 import axios from 'axios'
 import { fetchUserRiding } from '../Navbar'
-import CircularProgress from "@material-ui/core/CircularProgress";
+import CircularProgress from '@material-ui/core/CircularProgress'
 /* eslint-disable */
 
 const useStyles = makeStyles(theme => ({
   card: {
     backgroundColor: '#43D0C4'
-  },
-  test :{
-    left: '50%',
-    top: '50%'
   },
   container: {
     margin: '20px',
@@ -124,7 +120,7 @@ export default function CategoryGrid () {
         if(representative.length != 0 ){
           setUserRepresentative(representative)
         }
-        let test = await getUserInterests().then(res => {
+        let interests = await getUserInterests().then(res => {
           setCategoryList(res)
           setCounter(res.length)
         })
