@@ -190,17 +190,6 @@ export default function CategoryGrid () {
     setOpen(false)
   }
 
-  // useEffect(() => {
-  //   async function getUserInterests(){
-  //     let user = JSON.parse(localStorage.getItem('user'))
-  //     await axios
-  //         .post('http://localhost:5000/api/users/getUserInterests', {email:user.email})
-  //         .then(res => {
-  //         })
-  //         .catch(err => console.error(err))
-  //   }
-  // }, [value, categoryList,counter])
-
   return (
     <div className={classes.container}>
       <Grid container spacing={2}>

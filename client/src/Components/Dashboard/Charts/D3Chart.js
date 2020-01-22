@@ -30,35 +30,6 @@ export default class D3Chart {
             })
         }
 
-
-
-
-
-
-        // let yeaCounter = 0
-        // let nayCounter = 0
-        // let abstainCounter =0
-        // let totalcounter =0
-        // data1.forEach(element=>totalcounter++)
-        // console.log(totalcounter)
-        // data1.forEach(element=> {
-        //
-        //         if(element.voteRecord.yea == true){
-        //             yeaCounter++
-        //             console.log(element)
-        //         }else if(element.voteRecord.yea == false){
-        //             nayCounter++
-        //         }else {
-        //             abstainCounter++
-        //         }
-        //
-        //
-        // })
-        //
-        // console.log('the total yeas '+ yeaCounter)
-        // console.log('the total nays '+ nayCounter)
-        // console.log('the total abs '+ abstainCounter)
-
         let totalYesNoVotes = [
             { index: 0, name: "Yeas", value: yeaCounter },
             { index: 1, name: "Nays", value: nayCounter },
@@ -88,7 +59,7 @@ export default class D3Chart {
         // creates a path for each element
         const createArc = d3
             .arc()
-            .innerRadius(0)
+            .innerRadius(radius-20)
             .outerRadius(radius)
 
         const colors = d3.scaleOrdinal(d3.schemeCategory10)

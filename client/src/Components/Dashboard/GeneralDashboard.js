@@ -15,6 +15,14 @@ export default function CategoryDashboard () {
     const [userRepresentative, setUserRepresentative] = React.useState('')
     const [representativeData, setRepresentativeData] = React.useState([])
     const [radarData, setRadarData] = React.useState([])
+    const [categoryListLoaded, setCategoryListLoaded] = React.useState(false)
+    const [repDataLoaded, setRepDataLoaded] = React.useState(false)
+
+    console.log(categoryList)
+    console.log(userRepresentative)
+    console.log(representativeData)
+    console.log(radarData)
+
 
     useEffect(() => {
 
@@ -28,6 +36,7 @@ export default function CategoryDashboard () {
                         console.log(res.data.data)
                         result= res.data.data
                         setRepresentativeData(result)
+                        setRepDataLoaded(true)
                     }
                 })
                 .catch(err => console.error(err))
@@ -53,6 +62,7 @@ export default function CategoryDashboard () {
                     {
                         if(result.length != 0){
                             setCategoryList(result)
+                            setCategoryListLoaded(true)
                         }
                     }
                 )
@@ -62,7 +72,9 @@ export default function CategoryDashboard () {
             })
         }
 
-        if(categoryList.length != 0 && representativeData.length !=0){
+        console.log(categoryList.length != 0, representativeData.length != 0)
+
+        if(categoryListLoaded && repDataLoaded){
             console.log("im here")
             createDataSetRadar(categoryList,representativeData).then(testing => {
                 console.log(testing)
@@ -74,7 +86,7 @@ export default function CategoryDashboard () {
 
         }
 
-    }, [userRepresentative])
+    }, [userRepresentative, repDataLoaded, categoryListLoaded])
 
     async function fetchRepresentative (riding) {
         let result = ''

@@ -72,8 +72,6 @@ export default function CategoryCard (props) {
 
     if (newValue === true) {
        props.delete(index)
-
-
     }
     setOpenDeleteDialog(false)
   }
