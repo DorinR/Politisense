@@ -74,7 +74,7 @@ export default function CategoryDashboard () {
 
         }
 
-    }, [userRepresentative,categoryList])
+    }, [userRepresentative])
 
     async function fetchRepresentative (riding) {
         let result = ''

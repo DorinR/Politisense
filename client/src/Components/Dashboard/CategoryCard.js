@@ -61,6 +61,7 @@ export default function CategoryCard (props) {
   const [openCompare, setOpenCompare] = React.useState(false)
   const [open, setOpen] = React.useState(false)
   const [title, setTitle] = React.useState('')
+  const [data, setData] = React.useState([])
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
   const [confimedDeletion] = React.useState(false)
   const [rows, setRows] = React.useState([])
@@ -70,7 +71,9 @@ export default function CategoryCard (props) {
     console.log('the index of the card is ' + index)
 
     if (newValue === true) {
-      props.delete(index)
+       props.delete(index)
+
+
     }
     setOpenDeleteDialog(false)
   }
@@ -114,7 +117,8 @@ export default function CategoryCard (props) {
     populateTable()
     // setId(props.id)
     setTitle(props.title)
-  }, [props.title])
+    setData(props.data)
+  }, [props.title, props.data])
 
   async function populateTable () {
     setRows([
@@ -149,8 +153,10 @@ export default function CategoryCard (props) {
         />
         <CardContent>
           <ChartCard title='MP Voting Distribution'>
-            { props.title.length != 0 ?
-                <ChartCard title='Bipartisan Index'> <BarChartWrapper data={props.data} categoryType={props.title}/> </ChartCard>
+            { data.length ?
+                <ChartCard title='Bipartisan Index' id={'charts'} className ={'charts'}>
+                  <BarChartWrapper data={data} categoryType={props.title}/>
+                </ChartCard>
                 : "title is empty!!"
             }
           </ChartCard>

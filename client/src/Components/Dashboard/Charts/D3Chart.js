@@ -6,18 +6,13 @@ export default class D3Chart {
     constructor(element,data,categoryType) {
 
         console.log('DATA IS!!!'+ data)
-        console.log('current catgeory type is '+ categoryType.toLowerCase().trim())
+        console.log('current catgeory from D3Chart type is '+ categoryType.toLowerCase().trim())
         // console.log("data from props from data1 "+ data1[0].voteRecord.yea)
         // console.log("data from props from data2 "+ data2[0].voteRecord.yea)
 
-        let test = []
-        if(data.length != 0){
-            for(let i =0; i<data.length; i++){
-                if(data[i].billData.category.trim().localeCompare(categoryType.toLowerCase().trim()) == 0){
-                    test.push(data[i])
-                    console.log('im inside the if statement')
-                }
-            }}
+        let test = data.filter(element => element.billData.category === categoryType.toLowerCase());
+
+        console.log('test.length', test.length)
         let realData =[]
         let yeaCounter = 0
         let nayCounter = 0

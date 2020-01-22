@@ -83,6 +83,8 @@ export default function CategoryGrid () {
   const [userRepresentative, setUserRepresentative] = React.useState('')
   const [representativeData, setRepresentativeData] = React.useState([])
 
+  const [reset, setReset] = React.useState(false)
+
   async function getUserInterests(){
     let result = []
     let user = JSON.parse(localStorage.getItem('user'))
@@ -115,6 +117,7 @@ export default function CategoryGrid () {
 
     async function getData () {
       const user = JSON.parse(localStorage.getItem('user'))
+      console.log('user===', user);
       if (user) {
         const { email } = user
         const riding = await fetchUserRiding(email)
@@ -136,7 +139,7 @@ export default function CategoryGrid () {
       })
     }
 
-  }, [userRepresentative])
+  }, [userRepresentative, reset])
 
   async function fetchRepresentative (riding) {
     let result = ''
@@ -154,11 +157,17 @@ export default function CategoryGrid () {
   }
 
   const deleteEvent = (index) => {
+    console.log('deleting index===', index)
+
     const copyCategoryArray = Object.assign([], categoryList)
     copyCategoryArray.splice(index, 1)
+    console.log("categoryList 2 = "+copyCategoryArray)
     setCategoryList(copyCategoryArray)
     updateUserCategory(copyCategoryArray)
     setCounter(counter - 1)
+
+    setRepresentativeData([])
+    setReset(!reset)
 
   }
 
@@ -181,16 +190,16 @@ export default function CategoryGrid () {
     setOpen(false)
   }
 
-  useEffect(() => {
-    async function getUserInterests(){
-      let user = JSON.parse(localStorage.getItem('user'))
-      await axios
-          .post('http://localhost:5000/api/users/getUserInterests', {email:user.email})
-          .then(res => {
-          })
-          .catch(err => console.error(err))
-    }
-  }, [value, categoryList,counter])
+  // useEffect(() => {
+  //   async function getUserInterests(){
+  //     let user = JSON.parse(localStorage.getItem('user'))
+  //     await axios
+  //         .post('http://localhost:5000/api/users/getUserInterests', {email:user.email})
+  //         .then(res => {
+  //         })
+  //         .catch(err => console.error(err))
+  //   }
+  // }, [value, categoryList,counter])
 
   return (
     <div className={classes.container}>
@@ -198,8 +207,11 @@ export default function CategoryGrid () {
 
 
         {
-          representativeData.length != 0 ?
+          representativeData.length && categoryList.length?
               categoryList.map((category, index) => {
+                console.log('CategoryCard rendered')
+                console.log('current category index=====', index)
+                console.log('current category=====', category)
                 return (
                     <Grid item xs={4} key={index}>
                       <CategoryCard
@@ -207,7 +219,7 @@ export default function CategoryGrid () {
                           title={category}
                           delete={deleteEvent}
                           representative={userRepresentative}
-                          data={(representativeData.length != 0) ? representativeData : []}
+                          data={representativeData}
                       />
                     </Grid>
                 )
