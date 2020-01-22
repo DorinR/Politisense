@@ -6,7 +6,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import axios from "axios";
-const Firestore = require("../../../Firebase").Firestore;
+const Firestore = require("../../../../Firebase").Firestore;
 
 const useStyles = makeStyles(theme => ({
   customCardContent: {
@@ -100,8 +100,6 @@ export function computeTotalPrintingSpending(spendingItems) {
 export default function TotalPrintingCosts() {
   const classes = useStyles();
   const [total, setTotal] = useState(0);
-  const [repID, setRepID] = useState("");
-  const [userRepresentative, setUserRepresentative] = useState("");
 
   useEffect(() => {
     async function getData() {

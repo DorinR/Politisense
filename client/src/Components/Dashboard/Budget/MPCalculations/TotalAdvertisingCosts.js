@@ -54,62 +54,78 @@ export async function fetchRepresentative(riding) {
   return result;
 }
 
-export default function TotalOfficeCosts() {
+export async function fetchRepId(representative) {
+  const db = new Firestore();
+  const ref = await db
+    .Politician()
+    .where("name", "==", representative)
+    .select()
+    .catch(console.error);
+  const documentId = ref.docs[0].id;
+  return documentId;
+}
+
+export async function fetchAdvertisingSpending(repID) {
+  const db = new Firestore();
+  const advertisingSpendingItems = [];
+
+  await db
+    .FinancialRecord()
+    .where("member", "==", repID)
+    .where("category", "==", "6-Advertising")
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.log("No matching documents.");
+        return;
+      }
+      snapshot.forEach(doc => {
+        advertisingSpendingItems.push(doc.data());
+      });
+    })
+    .catch(err => {
+      console.log("Error getting documents", err);
+    });
+  return advertisingSpendingItems;
+}
+
+export function computeTotalAdvertisingSpending(spendingItems) {
+  let total = 0;
+  spendingItems.forEach(item => {
+    total += item.amount;
+  });
+  return total;
+}
+
+export default function TotalAdvertisingCosts() {
   const classes = useStyles();
-  const [member] = useState("");
   const [total, setTotal] = useState(0);
-  const [repID, setRepID] = useState("");
-  const [userRepresentative, setUserRepresentative] = useState("");
-  let totalAmount = 0;
 
   useEffect(() => {
-    const db = new Firestore();
-
     async function getData() {
       /* eslint-disable */
       const user = JSON.parse(localStorage.getItem("user"));
       if (user) {
         const { email } = user;
+        // get riding
         const riding = await fetchUserRiding(email);
+
+        // get representative for that riding
         const representative = await fetchRepresentative(riding);
-        setUserRepresentative(representative);
-        localStorage.setItem("rep", JSON.stringify(representative));
+
+        // get the ID of that representative
+        const representativeId = await fetchRepId(representative);
+
+        // get all the individual spending records for this politician
+        const advertisingSpendingItems = await fetchAdvertisingSpending(
+          representativeId
+        );
+
+        // add up all the spending items and assign that total to the "Total" variable
+        setTotal(computeTotalAdvertisingSpending(advertisingSpendingItems));
       }
     }
     getData();
-    db.Politician()
-      .where("name", "==", userRepresentative)
-      .select()
-      .then(snapshot => {
-        if (snapshot.empty) {
-          console.log("No matching documents.");
-          return;
-        }
-        snapshot.forEach(doc => {
-          setRepID(doc.id);
-        });
-      })
-      .catch(err => {
-        console.log("Error getting documents", err);
-      });
-    db.FinancialRecord()
-      .where("member", "==", repID)
-      .where("category", "==", "6-Advertising")
-      .select()
-      .then(snapshot => {
-        if (snapshot.empty) {
-          console.log("No matching documents.");
-          return;
-        }
-        snapshot.forEach(doc => {
-          totalAmount = doc.data().amount;
-          setTotal(totalAmount);
-          console.log("advertising");
-        });
-      })
-      .catch(err => {
-        console.log("Error getting documents", err);
-      });
   });
 
   return (

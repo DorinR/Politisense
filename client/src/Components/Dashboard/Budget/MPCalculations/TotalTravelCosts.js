@@ -99,8 +99,6 @@ export function computeTotalTravelSpending(spendingItems) {
 export default function TotaltravelCosts() {
   const classes = useStyles();
   const [total, setTotal] = useState(0);
-  const [repID, setRepID] = useState("");
-  const [userRepresentative, setUserRepresentative] = useState("");
 
   useEffect(() => {
     async function getData() {

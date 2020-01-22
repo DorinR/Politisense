@@ -6,7 +6,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import axios from "axios";
-const Firestore = require("../../../Firebase").Firestore;
+const Firestore = require("../../../../Firebase").Firestore;
 
 const useStyles = makeStyles(theme => ({
   customCardContent: {
@@ -97,7 +97,7 @@ export function computeTotalEmployeeSpending(spendingItems) {
   return total;
 }
 
-export default function TotalOfficeCosts() {
+export default function TotalEmployeeCosts() {
   const classes = useStyles();
   const [total, setTotal] = useState(0);
   const [repID, setRepID] = useState("");
