@@ -14,7 +14,7 @@ In order to test the application on your computer, please follow the following s
 3. cd into `/client` and once again run from the command line: `npm install`
 4. Return to the root directory with `cd ..`
 5. To start the application run: `npm run dev`
-6. Open your browser and navigate to `localhost:5000`
+6. Open your browser and navigate to `localhost:3000`
 
 # Tech Stack
 Front-end: React with Material-UI
