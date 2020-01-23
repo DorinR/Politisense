@@ -19,23 +19,22 @@ const useStyles = makeStyles({
     backgroundColor: '#43D0C4'
   }
 })
-
+export function capitalizedName (sponsor) {
+  if (sponsor && isNaN(sponsor)) {
+    let name = sponsor
+    name = name.toLowerCase()
+      .split(' ')
+      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+      .join(' ')
+    return name
+  }
+  return null
+}
 export default function BillDialog (props) {
   const classes = useStyles()
   const { onClose, selectedValue, open } = props
   const handleClose = () => {
     onClose(selectedValue)
-  }
-
-  function capitalizedName () {
-    if (props.billInfo.sponsor) {
-      let name = props.billInfo.sponsor
-      name = name.toLowerCase()
-        .split(' ')
-        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-        .join(' ')
-      return name
-    }
   }
 
   return (
@@ -76,7 +75,7 @@ export default function BillDialog (props) {
               <PersonIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText>Sponsored by {capitalizedName()}</ListItemText>
+          <ListItemText>Sponsored by {capitalizedName(props.billInfo.sponsor)}</ListItemText>
         </ListItem>
         <ListItem>
           <ListItemAvatar>

@@ -46,8 +46,34 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function createData (name, vote, sponsor, date, desc, link) {
+export function createData (name, vote, sponsor, date, desc, link) {
   return { name, vote, sponsor, date, desc, link }
+}
+
+export async function populateTable (data, title) {
+  const bills = data
+  const filteredBills = []
+  for (let i = 0; i < bills.length; i++) {
+    if (bills[i].billData.category.trim().localeCompare(title.toLowerCase().trim()) === 0) {
+      filteredBills.push(bills[i])
+    }
+  }
+  const tableData = []
+  for (let i = 0; i < filteredBills.length; i++) {
+    let vote = ''
+    if (filteredBills[i].voteRecord.paired) {
+      vote = 'abstain'
+    } else if (filteredBills[i].voteRecord.yea) {
+      vote = 'yea'
+    } else {
+      vote = 'nay'
+    }
+    tableData.push(createData(filteredBills[i].voteRecord.billNumber, vote, filteredBills[i].billData.sponsorName,
+      filteredBills[i].billData.dateVoted, filteredBills[i].voteRecord.name, filteredBills[i].billData.link))
+  }
+  if (filteredBills.length > 0) {
+    return tableData
+  }
 }
 
 export default function CategoryCard (props) {
@@ -62,6 +88,7 @@ export default function CategoryCard (props) {
   const handleDeleteDialogClose = (newValue, index) => {
     if (newValue === true) {
       props.delete(index)
+      setRows([])
     }
     setOpenDeleteDialog(false)
   }
@@ -94,35 +121,11 @@ export default function CategoryCard (props) {
   }
 
   React.useEffect(() => {
-    populateTable(props.representative)
+    populateTable(props.representative, props.title).then(rows => {
+      setRows(rows)
+    })
     setTitle(props.title)
   }, [props.title, props.representative])
-
-  async function populateTable (data) {
-    const bills = data
-    const filteredBills = []
-    for (let i = 0; i < bills.length; i++) {
-      if (bills[i].billData.category.trim().localeCompare(props.title.toLowerCase().trim()) === 0) {
-        filteredBills.push(bills[i])
-      }
-    }
-    const tableData = []
-    for (let i = 0; i < filteredBills.length; i++) {
-      let vote = ''
-      if (filteredBills[i].voteRecord.paired) {
-        vote = 'abstain'
-      } else if (filteredBills[i].voteRecord.yea) {
-        vote = 'yea'
-      } else {
-        vote = 'nay'
-      }
-      tableData.push(createData(filteredBills[i].voteRecord.billNumber, vote, filteredBills[i].billData.sponsorName,
-        filteredBills[i].billData.dateVoted, filteredBills[i].voteRecord.name, filteredBills[i].billData.link))
-    }
-    if (filteredBills.length > 0) {
-      setRows(tableData)
-    }
-  }
 
   return (
     <div>
@@ -149,7 +152,7 @@ export default function CategoryCard (props) {
         />
         <CardContent>
           <ChartCard title='MP Voting Distribution'> <RadarChart /> </ChartCard>
-          {rows.length > 0 ? (
+          {(rows && rows.length > 0) ? (
             <TableContainer className={classes.container}>
               <Table className={classes.table} size='small' stickyHeader>
                 <TableHead>
@@ -164,7 +167,7 @@ export default function CategoryCard (props) {
                       <TableCell component='th' scope='row'>
                         <Button color='primary' onClick={() => handleBillClickOpen(row)}><Typography>{row.name}</Typography></Button>
                       </TableCell>
-                      <TableCell align='right'>{row.vote === 'yea' ? <Typography color='secondary'>Yea</Typography> : <Typography color='error'>Nay</Typography>}</TableCell>
+                      <TableCell align='right'>{row.vote === 'yea' ? <Typography>Yea</Typography> : <Typography>Nay</Typography>}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
