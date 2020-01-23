@@ -15,7 +15,17 @@ exports.getAllBills = async (req, res) => {
         })
       }
       snapshot.forEach(doc => {
-        allBills.push(doc.data())
+        let { dateVoted, link, number, sponsorName, title } = doc.data()
+        let bill = {
+          id: doc.id,
+          dateVoted,
+          link,
+          number,
+          sponsorName,
+          title
+        }
+
+        allBills.push(bill)
       })
       res.status(200).json({
         success: true,

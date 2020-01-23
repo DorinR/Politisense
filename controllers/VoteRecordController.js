@@ -5,7 +5,7 @@ exports.getVotesByRepresentative = async (req, res) => {
   var allBillsVotedOn = []
   const db = new Firestore()
 
-  function getSupplementalBillInformation (bill) {
+  function getSupplementalBillInformation(bill) {
     db.Bill()
       .select('number', '==', bill.billNumber)
       .then(snapshot => {
@@ -33,7 +33,7 @@ exports.getVotesByRepresentative = async (req, res) => {
       })
   }
 
-  function getAllBillsVotedOnByRepresentative (representative) {
+  function getAllBillsVotedOnByRepresentative(representative) {
     allBillsVotedOn = []
     db.VoteRecord()
       .select()
@@ -75,4 +75,40 @@ exports.getVotesByRepresentative = async (req, res) => {
       })
   }
   getAllBillsVotedOnByRepresentative(representative)
+}
+
+exports.getAllVoteRecords = async (req, res) => {
+  const db = new Firestore()
+  const voteRecords = []
+  db.VoteRecord()
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        res.status(404).json({
+          success: true,
+          message: 'No vote records currently stored in firestore'
+        })
+      }
+
+      snapshot.forEach(doc => {
+        let { bill, billNumber } = doc.data()
+        let voteRecord = {
+          id: doc.id,
+          bill,
+          billNumber
+        }
+        voteRecords.push(voteRecord)
+      })
+
+      res.status(200).json({
+        success: true,
+        data: voteRecords
+      })
+    })
+    .catch(err => {
+      res.status(400).json({
+        success: false,
+        message: err
+      })
+    })
 }
