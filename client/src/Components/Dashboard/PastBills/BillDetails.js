@@ -7,6 +7,7 @@ import MuiDialogContent from '@material-ui/core/DialogContent'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import Typography from '@material-ui/core/Typography'
+import Link from '@material-ui/core/Link'
 
 const styles = theme => ({
   root: {
@@ -30,8 +31,7 @@ const DialogTitle = withStyles(styles)(props => {
         <IconButton
           aria-label='close'
           className={classes.closeButton}
-          onClick={onClose}
-        >
+          onClick={onClose}>
           <CloseIcon />
         </IconButton>
       ) : null}
@@ -45,7 +45,7 @@ const DialogContent = withStyles(theme => ({
   }
 }))(MuiDialogContent)
 
-export default function BillDetails (props) {
+export default function BillDetails(props) {
   const [open, setOpen] = React.useState(false)
 
   const handleClickOpen = () => {
@@ -63,16 +63,28 @@ export default function BillDetails (props) {
       <Dialog
         onClose={handleClose}
         aria-labelledby='customized-dialog-title'
-        open={open}
-      >
+        open={open}>
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          {props.title}
+          <Typography gutterBottom color='primary'>
+            Bill Title
+          </Typography>
+          <Typography gutterBottom color='inherit'>
+            {props.title}
+          </Typography>
         </DialogTitle>
         <DialogContent dividers>
-          <Typography gutterBottom>{props.sponsor}</Typography>
+          <Typography gutterBottom color='primary'>
+            Bill Sponsor
+          </Typography>
+          <Typography gutterBottom color='inherit'>
+            {props.sponsor}
+          </Typography>
         </DialogContent>
-        <DialogContent dividers>
-          <Typography gutterBottom>{props.linkToFullText}</Typography>
+        <DialogContent>
+          <Typography color='primary'>Full Bill Text</Typography>
+          <Link href={props.linkToFullText} color='inherit' target='_blank'>
+            {props.linkToFullText}
+          </Link>
         </DialogContent>
       </Dialog>
     </div>

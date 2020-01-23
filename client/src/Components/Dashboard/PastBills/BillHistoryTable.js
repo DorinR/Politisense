@@ -39,7 +39,7 @@ const useStyles = makeStyles({
     width: '100%'
   },
   tableWrapper: {
-    maxHeight: 440,
+    maxHeight: 450,
     overflow: 'auto'
   }
 })
@@ -170,24 +170,15 @@ function getRepresentativeVote(billNumber, voteRecords, votesByRepresentative) {
       targetVoteRecord = voteRecord
     }
   })
-  // console.log('1 - target vote record:', targetVoteRecord)
-  // console.log('2 - target bill id: ', targetVoteRecord.bill)
-  let voteOnBill = false
   let targetBillVote = null
   votesByRepresentative.forEach(vote => {
-    // console.log('Vote by representative: ', vote)
     if (vote.vote === targetVoteRecord.id) {
       targetBillVote = vote.yea
     }
   })
-  // console.log('3 - target bill vote:', targetBillVote)
-  console.log('targetBillVote:', targetBillVote)
-  let vote = ''
+  let vote = 'Nay'
   if (targetBillVote) {
     vote = 'Yea'
-  }
-  if (!targetBillVote) {
-    vote = 'Nay'
   }
   if (targetBillVote == null) {
     vote = 'Unknown'
@@ -223,7 +214,6 @@ export default function BillHistoryTable() {
       fullBills.forEach(bill => {
         console.log(bill)
       })
-
       generateTableRows(bills)
     }
     getData()
