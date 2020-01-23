@@ -21,4 +21,4 @@ class Model {
   }
 }
 
-export { Model }
+module.exports.Model = Model

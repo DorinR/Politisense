@@ -4,6 +4,7 @@ import { MpXmlParser } from '../xmlDataParser/MpXmlParser'
 import { VoteXmlParser } from '../xmlDataParser/VoteXmlParser'
 import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
 import { Firestore } from '../../Firebase'
+import { Vote } from '../../models/Vote'
 
 const cheerio = require('cheerio')
 const Promise = require('bluebird')
@@ -37,8 +38,87 @@ class GovtDataScraper {
     await this.addImageUrlForAllMps(data.mps)
 
     await this.standardiseRidingHyphens()
+    await this.createVotes()
+    await this.modifyVoteRecords()
     console.log('Returning Data')
     return data
+  }
+
+  async createVotes () {
+    const db = new Firestore()
+    const mps = {}
+    await db.Politician()
+      .select()
+      .then(documents => {
+        documents.forEach(doc => {
+          mps[doc.data().name] = doc.id
+        })
+      })
+
+    const votes = []
+    await db.VoteRecord()
+      .select()
+      .then(documents => {
+        documents.forEach(doc => {
+          const id = doc.id
+          const voters = doc.data().voters
+          Object.keys(voters).forEach((name) => {
+            const voter = voters[name]
+            try {
+              votes.push(new Vote(mps[name], id, voter.vote === 'Yea', voter.paired))
+            } catch (e) {
+              console.warn(`Member of parliament, ${name}, in vote not found in records.`)
+            }
+          })
+        })
+      })
+    votes.forEach((v) => {
+      db.Vote()
+        .insert(v)
+    })
+  }
+
+  async modifyVoteRecords () {
+    const bills = {}
+    const db = new Firestore()
+
+    await db.Bill()
+      .select()
+      .then(documents => {
+        documents.forEach(doc => {
+          bills[doc.data().number.toString()] = doc.id
+        })
+      })
+
+    await db.VoteRecord()
+      .select()
+      .then(documents => {
+        const docs = []
+        documents.forEach(doc => {
+          docs.push(doc)
+        })
+        return docs
+      })
+      .then(async docs => {
+        await Promise.all(
+          docs.map(doc => {
+            const data = doc.data()
+            if (Object.keys(bills).includes(data.billNumber)) {
+              doc.ref.update(
+                {
+                  bill: bills[data.billNumber],
+                  voters: null
+                })
+            } else {
+              doc.ref.update(
+                {
+                  bill: '',
+                  voters: null
+                })
+            }
+          })
+        )
+      })
   }
 
   getPossibleDataFromXmlParser (xmlParser) {

@@ -8,7 +8,8 @@ const Job = require('./Job').AbstractJob
 class ScrapeJob extends Job {
   // eslint-disable-next-line no-useless-constructor
   constructor (url, manager, topLevelDomains) {
-    super(url, manager, topLevelDomains)
+    super(url, manager)
+    this.tlds = typeof topLevelDomains === 'undefined' ? ['https://www.ourcommons.ca', 'https://www.parl.ca'] : topLevelDomains
   }
 
   initialiseJobComponents () {
@@ -32,11 +33,10 @@ class ScrapeJob extends Job {
   requeueLinks (urls) {
     const newJobs = super.createNewJobs(urls)
     this.queueCallback(newJobs)
-    this.done = true
     return this.result()
   }
 
-  requestbody (req) {
+  requestBody (req) {
     return req.body
   }
 
@@ -58,32 +58,16 @@ class ScrapeJob extends Job {
   requeueOnFailedConnection (e, reject) {
     const error = new ScrapeError()
     const link = this.scraper.url
-    const connectionError = this.connectionErrorName(e.message)
+    const connectionError = Job.connectionErrorName(e.message)
     if (connectionError) {
       error.message = 'ERROR: Connection failure ' + connectionError + ', requeuing job: ' + link
-      this.queueCallback([new ScrapeJob(link, this.manager, this.tlds)])
+      this.queueCallback([new ScrapeJob(link, this.queueCallback, this.tlds)])
       console.debug(error.message)
       reject(error)
     }
   }
 
-  connectionErrorName (message) {
-    if (message.includes('ESOCKETTIMEDOUT')) {
-      return 'ESOCKETTIMEDOUT'
-    }
-    if (message.includes('ETIMEDOUT')) {
-      return 'ETIMEDOUT'
-    }
-    if (message.includes('ECONNRESET')) {
-      return 'ECONNRESET'
-    }
-    if (message.includes('EPIPE')) {
-      return 'EPIPE'
-    }
-    return null
-  }
-
-  rejectMalformedLink (e, reject) {
+  throwOnMalformedLink (e, reject) {
     const error = new ScrapeError()
     const link = this.scraper.url
     if (this.scraper.url.includes('https://')) {
@@ -113,6 +97,7 @@ class ScrapeJob extends Job {
   handleError (e, reject) {
     this.done = true
     this.throwOnUnexpected(e, reject)
+    this.throwOnMalformedLink(e, reject)
     this.requeueOnFailedConnection(e, reject)
     this.reconditionPartialLinks(e, reject)
   }
@@ -120,7 +105,7 @@ class ScrapeJob extends Job {
   async execute () {
     return new Promise((resolve, reject) => {
       this.scraper.perform()
-        .then(this.requestbody.bind(this))
+        .then(this.requestBody.bind(this))
         .then(this.parse.bind(this))
         .then(this.process.bind(this))
         .then(this.requeueLinks.bind(this))

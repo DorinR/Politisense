@@ -46,9 +46,11 @@ exports.getAllRepresentatives = (req, res) => {
       }
     })
     .catch(err => {
+      console.error(err)
       res.status(400).json({
         data: representativesAccumulator,
         success: false
       })
+      console.log(err)
     })
 }

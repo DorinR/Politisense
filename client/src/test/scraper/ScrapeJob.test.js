@@ -1,13 +1,16 @@
 /* eslint-env jest */
 import { ScrapeJob } from '../../scraper/ScrapeJob'
-import { ScrapeRunner } from '../../scraper/ScrapeRunner'
+import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
+import { Selector } from '../../scraper/job_actions/SelectionAction'
+import { TextParser } from '../../scraper/job_actions/TextParserAction'
+
 const chai = require('chai')
 const Assert = chai.assert
-describe('All Job tests', () => {
-  let mockFn
-  let manager
+
+describe('ScrapeJob.js', () => {
+  let mockSend
   beforeAll(() => {
-    mockFn = async (options) => {
+    mockSend = async (options) => {
       if (options.uri === 'https://www.google.ca/') {
         return {
           body: '<!DOCTYPE html>' +
@@ -16,6 +19,7 @@ describe('All Job tests', () => {
             '</head>' +
             '<body>' +
             '<a href="https://www.google.ca">google</a>' +
+            '<a href="https://www.google.ca/xml">google</a>' +
             '</body>' +
             '</html>'
         }
@@ -23,16 +27,17 @@ describe('All Job tests', () => {
         throw new Error()
       }
     }
-    manager = new ScrapeRunner()
-    manager.enqueueJobsCb = () => {}
   })
 
-  test('Job succeeds on good link', async (done) => {
+  it('ScrapeJob::execute() returns xml links on success', async (done) => {
     const url = 'https://www.google.ca/'
     const exc = new ScrapeJob(url, () => {}, [])
-    exc.scraper.send = mockFn
+    exc.scraper.send = mockSend
     const didScrape = await exc.execute()
       .then(res => {
+        Assert.equal(typeof res, typeof [])
+        Assert.equal(res.length, 1)
+        Assert(res[0].includes('xml'))
         return true
       })
       .catch(e => {
@@ -43,13 +48,12 @@ describe('All Job tests', () => {
     done()
   }, 10000)
 
-  test('Job throws on bad link', async (done) => {
+  it('ScrapeJob::execute() throws on initial bad link', async (done) => {
     const url = 'https://'
     const exc = new ScrapeJob(url, () => {}, [])
-    exc.scraper.send = mockFn
+    exc.scraper.send = mockSend
     const didScrape = await exc.execute()
       .then(res => {
-        console.log(res)
         return true
       })
       .catch(e => {
@@ -58,4 +62,16 @@ describe('All Job tests', () => {
     Assert.equal(didScrape, false)
     done()
   }, 10000)
+
+  it('ScrapeJob::initialiseJobComponents() adds a scraper, parser, processor', async (done) => {
+    const url = 'https://www.google.ca/'
+    const exc = new ScrapeJob(url, () => {}, [])
+    Assert.notEqual(exc.scraper, null)
+    Assert(exc.scraper instanceof LinkScraper)
+    Assert.notEqual(exc.processor, null)
+    Assert(exc.processor instanceof Selector)
+    Assert.notEqual(exc.parser, null)
+    Assert(exc.parser instanceof TextParser)
+    done()
+  }, 1000)
 })

@@ -1,6 +1,7 @@
 /* eslint-env jest */
 import { ExpendituresScraper } from '../ExpendituresScraper'
 import { FinancialRecord } from '../../../models/FinancialRecord'
+
 const chai = require('chai')
 const Assert = chai.assert
 
@@ -16,6 +17,9 @@ describe('All Expenditures Tests', () => {
     underTest = new ExpendituresScraper('www.testurl.com')
     underTest.reader.perform = async () => {
       return testExpenditure
+    }
+    underTest.retrievePolitician = async (riding) => {
+      return 'someStringId'
     }
   })
 
