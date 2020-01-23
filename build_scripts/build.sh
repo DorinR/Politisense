@@ -77,6 +77,6 @@ build () {
 	then
 	  return 1
 	fi
-	CI=false npm run build
+	npm run build
 }
 build $@
