@@ -55,3 +55,29 @@ exports.getAllBillsByRep = (req, res) =>  {
 
       })
 }
+//getAllBillsBySponsorName
+
+exports.getAllBillsBySponsorName = (req, res) =>  {
+  console.log('getAllBillsBySponsorName endpoint was successfully callled')
+  let records = []
+  const db = new Firestore()
+  let billClassification = db.BillClassification()
+  let votes = db.Vote()
+  let sponsor = req.params.head.toLowerCase()
+  console.log('iM HERE !!!!!!!! '+sponsor)
+
+
+
+  db.Bill().where('sponsorName','==',sponsor).innerJoin('_id',billClassification,'bill').then(result=>{
+
+    result.forEach(bill=>{
+      records.push(bill)
+    })
+    res.json({
+      success: true,
+      data: records
+    })
+
+  })
+
+}

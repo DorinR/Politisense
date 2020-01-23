@@ -148,12 +148,8 @@ export default function CategoryDashboard () {
               representativeData.length != 0 && categoryList.length != 0 ?
                   <Card>
                   <CardHeader />
-                      <BarChartWrapper type='bar-pie' data = {representativeData} categories={categoryList}/>
-                  {/*<CardContent>*/}
-                  {/*    <Typography variant='body2' color='textSecondary' component='p'>*/}
-                  {/*        Voting record of your MP.*/}
-                  {/*    </Typography>*/}
-                  {/*</CardContent>*/}
+                      <BarChartWrapper type='bar-pie' data = {representativeData} categories={categoryList} rep ={userRepresentative}/>
+
               </Card>
                   : "Waiting !!"}
 

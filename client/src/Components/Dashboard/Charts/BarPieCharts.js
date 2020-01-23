@@ -1,5 +1,6 @@
 import * as d3 from 'd3'
-
+// the number of bills that mp has issue on
+// the distribution of bills for that category
 function dashboard (element, fData) {
 
   const barColor = '#84c5f1'
@@ -213,9 +214,9 @@ function dashboard (element, fData) {
 }
 export default class BarPieChart {
 
-  constructor (element,data,categories) {
-    console.log(data,categories)
-    createData(categories,data).then(results => {
+  constructor (element,data,categories,rep) {
+    console.log(data,categories,rep)
+    createData(categories,data,rep).then(results => {
       dashboard(element, results)
     })
 
@@ -231,7 +232,7 @@ console.log(categories,data)
     let noCounter=0
     let abtsainCounter =0
     data.forEach(bill=>{
-      if(bill.billData.category === (category.toLowerCase())){
+      if(bill.billData.category === (category.toLowerCase()) ){
         switch (bill.voteRecord.yea) {
           case true :
             yesCounter++

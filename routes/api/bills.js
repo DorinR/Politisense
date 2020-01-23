@@ -13,4 +13,6 @@ router.get('/getBillById', controller.getBillById)
 // @access Public
 router.get('/:head/getAllBillsByRep', controller.getAllBillsByRep)
 
+
+router.get('/:head/getAllBillsBySponsorName', controller.getAllBillsBySponsorName)
 module.exports = router
