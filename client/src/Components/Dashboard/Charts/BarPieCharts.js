@@ -214,9 +214,9 @@ function dashboard (element, fData) {
 }
 export default class BarPieChart {
 
-  constructor (element,data,categories,rep) {
-    console.log(data,categories,rep)
-    createData(categories,data,rep).then(results => {
+  constructor (element,data,categories) {
+    console.log(data,categories)
+    createData(categories,data).then(results => {
       dashboard(element, results)
     })
 
@@ -231,18 +231,11 @@ console.log(categories,data)
     let yesCounter =0
     let noCounter=0
     let abtsainCounter =0
+
     data.forEach(bill=>{
-      if(bill.billData.category === (category.toLowerCase()) ){
-        switch (bill.voteRecord.yea) {
-          case true :
-            yesCounter++
-            break
-          case false:
-            noCounter++
-            break
-          default: abtsainCounter++
-          break
-        }
+      if(bill.billsClassified.category === (category.toLowerCase()) ){
+        yesCounter= yesCounter+ bill.voteRecord.yeas
+        noCounter= yesCounter+ bill.voteRecord.nays
       }
     })
   temp = {State: category, freq: { yes: yesCounter, no: noCounter, abstain: abtsainCounter }}

@@ -9,7 +9,7 @@ import axios from "axios";
 import {fetchUserRiding} from "../Navbar";
 
 export default function CategoryDashboard () {
-    const [categoryList, setCategoryList] = React.useState([])
+    const [categoryList, setCategoryList] = React.useState(['economics','healthcare','human rights','business','religion','criminal','trade'])
     const [userRepresentative, setUserRepresentative] = React.useState('')
     const [representativeData, setRepresentativeData] = React.useState([])
     const [radarData, setRadarData] = React.useState([])
@@ -17,13 +17,20 @@ export default function CategoryDashboard () {
     const [repDataLoaded, setRepDataLoaded] = React.useState(false)
     const [donutData, setDonutData] = React.useState([])
     const [reps, setReps] = React.useState([])
-
+    const [userRepIssuedBills,setUserRepIssuedBills] = React.useState([])
     const [dataUpdatedDonut, setDataUpdatedDonut] = React.useState(false)
     console.log(categoryList)
     console.log(userRepresentative)
     console.log(representativeData)
     console.log(radarData)
-
+//Economics
+// // Healthcare
+// // Trade
+// // Human Rights
+// // Business
+// // Religion
+// // Criminal
+    // ['Economics','Healthcare','Human Rights','Business','Religion','Criminal']
 
     useEffect(() => {
         async function getDataForDonut(){
@@ -75,7 +82,23 @@ export default function CategoryDashboard () {
                 .catch(err => console.error(err))
             return result
         }
-
+        ///:head/getAllBillsBySponsorName
+        async function getAllBillsBySponsorName (head) {
+            console.log("im insdie the getAllBillsBySponsorName and the head "+head )
+            let result = []
+            await axios
+                .get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
+                .then(res => {
+                    if (res.data.success) {
+                        console.log(res.data.data)
+                        result= res.data.data
+                        console.log(res.data.data.length)
+                        // setUserRepIssuedBills(result)
+                    }
+                })
+                .catch(err => console.error(err))
+            return result
+        }
         async function getData () {
             const user = JSON.parse(localStorage.getItem('user'))
             if (user) {
@@ -84,6 +107,8 @@ export default function CategoryDashboard () {
                 const allRepresentatives = await getAllReps()
                 setReps(allRepresentatives)
                 const representative = await fetchRepresentative(riding)
+                const issuedBillByUserRep = await getAllBillsBySponsorName(representative)
+                setUserRepIssuedBills(issuedBillByUserRep)
                 if(representative.length != 0 ){
                     setUserRepresentative(representative)
                 }
@@ -93,20 +118,21 @@ export default function CategoryDashboard () {
         if(userRepresentative){
             getAllBillsByRep(userRepresentative).then(results => {
 
-                 getAllCategoriesByRep(results).then(result =>
-                    {
-                        if(result.length != 0){
-                            setCategoryList(result)
-                            setCategoryListLoaded(true)
-                        }
-                    }
-                )
+                 console.log(results)
+                //  getAllCategoriesByRep(results).then(result =>
+                //     {
+                //         if(result.length != 0){
+                //             setCategoryList(result)
+                //             setCategoryListLoaded(true)
+                //         }
+                //     }
+                // )
             })
         }
 
         console.log(categoryList.length != 0, representativeData.length != 0)
 
-        if(categoryListLoaded && repDataLoaded){
+        if(categoryList && repDataLoaded){
             createDataSetRadar(categoryList,representativeData).then(testing => {
                 console.log(testing)
                 if(testing.length != 0){
@@ -124,7 +150,7 @@ export default function CategoryDashboard () {
 
 
 
-    }, [userRepresentative, repDataLoaded, categoryListLoaded])
+    }, [userRepresentative, repDataLoaded])
 
     async function fetchRepresentative (riding) {
         let result = ''
@@ -145,10 +171,10 @@ export default function CategoryDashboard () {
     <Grid container spacing={1}>
       <Grid item xs={12}>
           {
-              representativeData.length != 0 && categoryList.length != 0 ?
+              userRepIssuedBills.length != 0 && categoryList.length != 0 ?
                   <Card>
                   <CardHeader />
-                      <BarChartWrapper type='bar-pie' data = {representativeData} categories={categoryList} rep ={userRepresentative}/>
+                      <BarChartWrapper type='bar-pie' data = {userRepIssuedBills} categories={categoryList}/>
 
               </Card>
                   : "Waiting !!"}
@@ -179,6 +205,10 @@ export default function CategoryDashboard () {
                                 {key: 'trade', label: 'trade'},
                                 {key: 'criminal', label: 'criminal'},
                                 {key: 'business', label: 'business'},
+                                {key: 'Economics', label: 'economics'},
+                                {key: 'Healthcare', label: 'healthcare'},
+                                {key: 'Religion', label: 'religion'},
+                                {key: 'Human Rights', label: 'human rights'}
                             ],
                             sets: [
                                 {
@@ -200,26 +230,26 @@ export default function CategoryDashboard () {
   )
 }
 
-export async function getAllCategoriesByRep(bills) {
-    let categories = []
-    let uniqueCategories= []
-    if(bills.length != 0 ){
-
-        for( let x = 0; x < bills.length; x++) {
-            if(bills[x].billData.category.localeCompare('') != 0){
-                categories.push(bills[x].billData.category)
-            }
-        }
-        if(categories.length != 0 ){
-            for( let i = 0; i < categories.length; i++){
-                if(uniqueCategories.indexOf(categories[i]) === -1) {
-                    uniqueCategories.push(categories[i]);
-                }
-            }
-        }
-    }
-    return uniqueCategories
-}
+// export async function getAllCategoriesByRep(bills) {
+//     let categories = []
+//     let uniqueCategories= []
+//     if(bills.length != 0 ){
+//
+//         for( let x = 0; x < bills.length; x++) {
+//             if(bills[x].billData.category.localeCompare('') != 0){
+//                 categories.push(bills[x].billData.category)
+//             }
+//         }
+//         if(categories.length != 0 ){
+//             for( let i = 0; i < categories.length; i++){
+//                 if(uniqueCategories.indexOf(categories[i]) === -1) {
+//                     uniqueCategories.push(categories[i]);
+//                 }
+//             }
+//         }
+//     }
+//     return uniqueCategories
+// }
 
 export async function createDataSetRadar(categories,data){
     let dataArray = []

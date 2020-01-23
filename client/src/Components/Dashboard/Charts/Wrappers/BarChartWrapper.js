@@ -12,7 +12,7 @@ export default class BarChartWrapper extends Component {
   console.log('Barchartwrapper rendered')
     switch (this.props.type) {
       case 'bar-pie':
-        return new BarPieChart(this.refs.chart,this.props.data,this.props.categories,this.props.rep)
+        return new BarPieChart(this.refs.chart,this.props.data,this.props.categories)
       case 'bar':
         return new BarChart(this.refs.chart)
       case 'donut':

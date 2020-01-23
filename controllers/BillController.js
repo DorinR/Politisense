@@ -61,23 +61,82 @@ exports.getAllBillsBySponsorName = (req, res) =>  {
   console.log('getAllBillsBySponsorName endpoint was successfully callled')
   let records = []
   const db = new Firestore()
+  let voteRecord = db.VoteRecord()
   let billClassification = db.BillClassification()
   let votes = db.Vote()
   let sponsor = req.params.head.toLowerCase()
   console.log('iM HERE !!!!!!!! '+sponsor)
 
 
+  let billsWithClassification = []
+  let billsTotalVotes = []
+  let finalArray =[]
+  let data1 = []
+  // db.Bill().select('sponsorName','==',sponsor).then(snapshot=>{
+  //   if (snapshot.empty) {
+  //     res.status(400).json({
+  //       message: 'Rep Not Found',
+  //       success: false
+  //     })
+  //   }
+  //   snapshot.forEach(doc => {
+  //     data1.push(doc.data)
+  //   })
+  //   res.json({
+  //     success: true,
+  //     data: data1
+  // })
 
+  // })
   db.Bill().where('sponsorName','==',sponsor).innerJoin('_id',billClassification,'bill').then(result=>{
-
-    result.forEach(bill=>{
-      records.push(bill)
+    if (result.empty) {
+      res.status(400).json({
+        message: 'Rep Not Found',
+        success: false
+      })
+    }
+    result.forEach(doc => {
+      data1.push(doc)
     })
     res.json({
       success: true,
-      data: records
+      data: data1
     })
 
   })
+
+  //   result.forEach(bill=>{
+  //     billsWithClassification.push(bill)
+  //   })
+  //
+  //     db.Bill().where('sponsorName','==',sponsor).innerJoin('_id',voteRecord,'bill').then(data => {
+  //         data.forEach(bill=>{
+  //           billsTotalVotes.push(bill)
+  //       })
+  //
+  //       if(billClassification.length != 0 && billsTotalVotes.length !=0 ){
+  //         for(let i= 0; i<billsWithClassification.length; i++){
+  //
+  //           for(let j= 0; j<billsTotalVotes.length; j++){
+  //
+  //             if(billsWithClassification[i].bill == billsTotalVotes[j].bill){
+  //               let temp = {billsClassified: billsWithClassification[i],voteRecord: billsTotalVotes[j]}
+  //               console.log("temp is " +temp)
+  //               finalArray.push(temp)
+  //             }
+  //           }}
+  //
+  //         res.json({
+  //           success: true,
+  //           data: finalArray
+  //         })
+  //       }
+  //
+  //
+  //
+  //     })
+  //
+  //
+  // })
 
 }
