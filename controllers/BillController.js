@@ -15,8 +15,8 @@ exports.getAllBills = async (req, res) => {
         })
       }
       snapshot.forEach(doc => {
-        let { dateVoted, link, number, sponsorName, title } = doc.data()
-        let bill = {
+        const { dateVoted, link, number, sponsorName, title } = doc.data()
+        const bill = {
           id: doc.id,
           dateVoted,
           link,

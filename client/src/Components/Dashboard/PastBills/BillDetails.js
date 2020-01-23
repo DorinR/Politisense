@@ -31,7 +31,8 @@ const DialogTitle = withStyles(styles)(props => {
         <IconButton
           aria-label='close'
           className={classes.closeButton}
-          onClick={onClose}>
+          onClick={onClose}
+        >
           <CloseIcon />
         </IconButton>
       ) : null}
@@ -45,7 +46,7 @@ const DialogContent = withStyles(theme => ({
   }
 }))(MuiDialogContent)
 
-export default function BillDetails(props) {
+export default function BillDetails (props) {
   const [open, setOpen] = React.useState(false)
 
   const handleClickOpen = () => {
@@ -63,7 +64,8 @@ export default function BillDetails(props) {
       <Dialog
         onClose={handleClose}
         aria-labelledby='customized-dialog-title'
-        open={open}>
+        open={open}
+      >
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
           <Typography gutterBottom color='primary'>
             Bill Title

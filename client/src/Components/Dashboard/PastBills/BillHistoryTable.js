@@ -28,7 +28,7 @@ const columns = [
   }
 ]
 
-function createData(number, dateVoted, title, vote, moreInfo) {
+function createData (number, dateVoted, title, vote, moreInfo) {
   return { number, dateVoted, title, vote, moreInfo }
 }
 
@@ -44,7 +44,7 @@ const useStyles = makeStyles({
   }
 })
 
-export async function fetchUserRiding(userEmail) {
+export async function fetchUserRiding (userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -58,7 +58,7 @@ export async function fetchUserRiding(userEmail) {
   return result
 }
 
-export async function fetchRepresentative(riding) {
+export async function fetchRepresentative (riding) {
   let result = ''
   await axios
     .get(
@@ -74,7 +74,7 @@ export async function fetchRepresentative(riding) {
   return result
 }
 
-export async function fetchRepresentatieVotes(representative) {
+export async function fetchRepresentatieVotes (representative) {
   const result = []
   await axios
     .get(
@@ -90,7 +90,7 @@ export async function fetchRepresentatieVotes(representative) {
   return result
 }
 
-export function fetchAllBills() {
+export function fetchAllBills () {
   return axios
     .get('http://localhost:5000/api/bills/getAllBills')
     .then(res => {
@@ -101,7 +101,7 @@ export function fetchAllBills() {
     .catch(console.error)
 }
 
-export async function fetchRepresentativeId(representative) {
+export async function fetchRepresentativeId (representative) {
   return axios
     .get(
       `http://localhost:5000/api/representatives/${representative}/getRepresentativeId`
@@ -114,7 +114,7 @@ export async function fetchRepresentativeId(representative) {
     .catch(console.error)
 }
 
-export async function fetchRepresentativeVotes(representativeId) {
+export async function fetchRepresentativeVotes (representativeId) {
   return axios
     .get(
       `http://localhost:5000/api/votes/${representativeId}/getAllVotesByRepresentative`
@@ -126,7 +126,7 @@ export async function fetchRepresentativeVotes(representativeId) {
     })
 }
 
-export async function fetchAllVoteRecords() {
+export async function fetchAllVoteRecords () {
   return axios
     .get('http://localhost:5000/api/voteRecord/getAllVoteRecords')
     .then(res => {
@@ -136,7 +136,7 @@ export async function fetchAllVoteRecords() {
     })
 }
 
-function generateTableRows(bills) {
+function generateTableRows (bills) {
   rows = []
   bills.forEach(bill => {
     const { number, dateVoted, title, sponsorName, link, vote } = bill
@@ -151,7 +151,7 @@ function generateTableRows(bills) {
   })
 }
 
-function assembleBillObjects(bills, voteRecords, votesByRepresentative) {
+function assembleBillObjects (bills, voteRecords, votesByRepresentative) {
   bills.forEach(bill => {
     bill.vote = getRepresentativeVote(
       bill.id,
@@ -163,10 +163,10 @@ function assembleBillObjects(bills, voteRecords, votesByRepresentative) {
   return bills
 }
 
-function getRepresentativeVote(billNumber, voteRecords, votesByRepresentative) {
+function getRepresentativeVote (billNumber, voteRecords, votesByRepresentative) {
   let targetVoteRecord = {}
   voteRecords.forEach(voteRecord => {
-    if (voteRecord.bill == billNumber) {
+    if (voteRecord.bill === billNumber) {
       targetVoteRecord = voteRecord
     }
   })
@@ -187,13 +187,13 @@ function getRepresentativeVote(billNumber, voteRecords, votesByRepresentative) {
   return vote
 }
 
-export default function BillHistoryTable() {
+export default function BillHistoryTable () {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       // eslint-disable-next-line no-undef
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
@@ -238,7 +238,8 @@ export default function BillHistoryTable() {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}>
+                  style={{ minWidth: column.minWidth }}
+                >
                   {column.label}
                 </TableCell>
               ))}
