@@ -35,6 +35,7 @@ export default function CategoryDashboard () {
                     if (res.data.success) {
                         console.log(res.data.data)
                         result= res.data.data
+                        console.log(res.data.data.length)
                         setRepresentativeData(result)
                         setRepDataLoaded(true)
                     }
@@ -66,16 +67,12 @@ export default function CategoryDashboard () {
                         }
                     }
                 )
-
-                // if(categories.length != 0){setCategoryList(categories)}
-                console.log('the bills are now from the generalDashboard are  '+results)
             })
         }
 
         console.log(categoryList.length != 0, representativeData.length != 0)
 
         if(categoryListLoaded && repDataLoaded){
-            console.log("im here")
             createDataSetRadar(categoryList,representativeData).then(testing => {
                 console.log(testing)
                 if(testing.length != 0){
@@ -103,21 +100,19 @@ export default function CategoryDashboard () {
         return result
     }
 
-
-
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={8}>
+    <Grid container spacing={1}>
+      <Grid item xs={12}>
           {
               representativeData.length != 0 && categoryList.length != 0 ?
                   <Card>
                   <CardHeader />
                       <BarChartWrapper type='bar-pie' data = {representativeData} categories={categoryList}/>
-                  <CardContent>
-                      <Typography variant='body2' color='textSecondary' component='p'>
-                          Voting record of your MP.
-                      </Typography>
-                  </CardContent>
+                  {/*<CardContent>*/}
+                  {/*    <Typography variant='body2' color='textSecondary' component='p'>*/}
+                  {/*        Voting record of your MP.*/}
+                  {/*    </Typography>*/}
+                  {/*</CardContent>*/}
               </Card>
                   : "Waiting !!"}
 
@@ -125,16 +120,16 @@ export default function CategoryDashboard () {
 
         {radarData.length !== 0 && categoryList.length !==0 ?
 
-            <Grid item xs={1}>
+            <Grid item xs={12}>
             <Grid container spacing={2}>
-                <Grid item={12}>
+                <Grid item xs={6}>
                     <ChartCard title='MP Voting Distribution'>
                         <Radar
                         width={500}
                         height={500}
                         padding={70}
                         domainMax={35}
-                        highlighted={null}
+                        highlighted={true}
                         onHover={(point) => {
                             if (point) {
                                 console.log('hovered over a data point');
@@ -157,7 +152,7 @@ export default function CategoryDashboard () {
                         }}
                     /> </ChartCard>
                 </Grid>
-                <Grid item={12}>
+                <Grid item item xs={6}>
                     <ChartCard title='Bipartisan Index'> <BarChartWrapper type={"donut"}/> </ChartCard>
                 </Grid>
             </Grid>
@@ -167,7 +162,7 @@ export default function CategoryDashboard () {
   )
 }
 
-async function getAllCategoriesByRep(bills) {
+export async function getAllCategoriesByRep(bills) {
     let categories = []
     let uniqueCategories= []
     if(bills.length != 0 ){
@@ -188,17 +183,47 @@ async function getAllCategoriesByRep(bills) {
     return uniqueCategories
 }
 
-// data = {variables: [{key: 'category', label: 'category}],
-// sets: [{values: {'category1':values, }]
 export async function createDataSetRadar(categories,data){
     let dataArray = []
-    let totalvotes = 0
     let temp = {}
     let dataSetRadar= {}
-    console.log("im here !!!!!!!!" )
+    console.log("im here !!!!!!!!",data.length )
+
     categories.forEach(category => {
+        let totalvotes = 0
         data.forEach(bill=>{
-            if(bill.billData.category.trim().localeCompare(category.toLowerCase().trim()) == 0){
+            if(bill.billData.category === category.toLowerCase()){
+                totalvotes++
+            }
+        })
+        let categorySmallLetter =category.toLowerCase().trim()
+        temp = { category : categorySmallLetter,value : totalvotes }
+        console.log(temp)
+        dataArray.push(temp)
+    })
+    console.log(dataArray)
+
+    dataArray.forEach(category => {
+        if (category.category){
+            dataSetRadar[category.category] = category.value
+        }
+    })
+    console.log(dataSetRadar)
+
+
+    return dataSetRadar
+}
+
+export async function createDataSetDonut(categories,data){
+    let dataArray = []
+    let temp = {}
+    let dataSetRadar= {}
+    console.log("im here !!!!!!!!",data.length )
+
+    categories.forEach(category => {
+        let totalvotes = 0
+        data.forEach(bill=>{
+            if(bill.billData.category === category.toLowerCase()){
                 totalvotes++
             }
         })

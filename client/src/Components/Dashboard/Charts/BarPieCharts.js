@@ -7,10 +7,11 @@ function dashboard (element, fData) {
   fData.forEach(function (d) { d.total = d.freq.yes + d.freq.no + d.freq.abstain })
 
   function histoGram (fD) {
+
     const hG = {}
-    const hGDim = { t: 60, r: 0, b: 30, l: 0 }
-    hGDim.w = 500 - hGDim.l - hGDim.r
-    hGDim.h = 350 - hGDim.t - hGDim.b
+    const hGDim = { t: 60, r: 0, b: 30, l: 60 }
+    hGDim.w = 550 - hGDim.l - hGDim.r
+    hGDim.h = 400 - hGDim.t - hGDim.b
 
     // create svg for histogram.
     const hGsvg = d3.select(element).append('svg')
@@ -96,7 +97,7 @@ function dashboard (element, fData) {
   function pieChart (pD) {
 
     let pC = {}
-    let pieDim = { w: 200, h: 300 }
+    let pieDim = { w: 250, h: 300 }
     pieDim.r = Math.min(pieDim.w, pieDim.h) / 2
 
     // create svg for pie chart.
@@ -205,7 +206,7 @@ function dashboard (element, fData) {
 
   // calculate total frequency by state for all segment.
   let sF = fData.map(function (d) { return [d.State, d.total] })
-
+  console.log(sF)
   let hG = histoGram(sF) // create the histogram.
   let pC = pieChart(tF) // create the pie-chart.
   let leg = legend(tF) // create the legend.
@@ -213,6 +214,7 @@ function dashboard (element, fData) {
 export default class BarPieChart {
 
   constructor (element,data,categories) {
+    console.log(data,categories)
     createData(categories,data).then(results => {
       dashboard(element, results)
     })
@@ -221,20 +223,24 @@ export default class BarPieChart {
 }
  export async function createData(categories,data){
   let dataArray = []
-  let yesCounter =0
-  let noCounter=0
-  let abtsainCounter =0
-  let temp = {}
 
+  let temp = {}
+console.log(categories,data)
   categories.forEach(category => {
+    let yesCounter =0
+    let noCounter=0
+    let abtsainCounter =0
     data.forEach(bill=>{
-      if(bill.billData.category.trim().localeCompare(category.toLowerCase().trim()) == 0){
-        if(bill.voteRecord.yea == true){
-          yesCounter++
-        }else if(bill.voteRecord.yea == false){
-          noCounter++
-        }else{
-          abtsainCounter++
+      if(bill.billData.category === (category.toLowerCase())){
+        switch (bill.voteRecord.yea) {
+          case true :
+            yesCounter++
+            break
+          case false:
+            noCounter++
+            break
+          default: abtsainCounter++
+          break
         }
       }
     })
