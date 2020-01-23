@@ -2,8 +2,7 @@ import * as d3 from 'd3'
 import axios from "axios";
 
 function segColor (c) { return { Liberal: '#D31F25', Conservative: '#1B447A', NDP: '#CD793E', People: '#243570', Green: '#439B3B', BQ: '#00A7EC' }[c] }
-// var freqData = [
-//   { freq: { Liberal: 27, Conservative: 0, NDP: 0, People: 0, Green: 0, BQ: 0 } }]
+
 function createDonut (element, fData) {
 
   function pieChart (pD) {
@@ -144,74 +143,15 @@ function createDonut (element, fData) {
   legend(tF)
 }
 
-export default class DonutChart {
-//mpsVotes
-  constructor(element,data) {
 
-console.log("inside the donut")
-    // createDataForDonutChart(billsSponsors, mpsVotes).then(result => {
+export default class DonutChart {
+
+  constructor(element,data) {
       let freqData = [
         {State: 'Yes Votes', freq: data[0]}]
       createDonut(element, freqData)
-    // })
-
-
   }
 }
 
-
-// export async function createDataSetDonut(sponsors,mpdata){
-//
-//   let liberalCounter =0
-//   let conservativeCounter = 0
-//   let ndpCounter = 0
-//   let peopleCounter = 0
-//   let greenCounter = 0
-//   let bqCounter = 0
-//   let parties ={}
-//
-//   console.log(mpdata)
-//   if( mpdata.length ){
-//     mpdata.forEach(bill => {
-//       if(bill.billData.yea === true) {
-//         console.log('im inside the if statement ')
-//         sponsors.forEach(sponsor => {
-//           console.log(sponsor.name, bill.billData)
-//           if(sponsor.name === bill.billData.sponsorName)
-//             switch (sponsor.politicalParty) {
-//               case'liberal':
-//                 console.log("im here in liberal ")
-//                 liberalCounter++
-//                 break
-//               case 'conservative':
-//                 conservativeCounter++
-//                 break
-//               case 'ndp':
-//                 ndpCounter++
-//                 break
-//               case 'bloc québécois':
-//                 bqCounter++
-//                 break
-//               case 'green':
-//                 greenCounter++
-//                 break
-//               case 'people':
-//                 peopleCounter++
-//                 break
-//               default:
-//                 return 'nothing'
-//             }
-//         })
-//       }
-//     })
-//   }
-//
-//   parties= {"Liberal": 100, "Conservative": 200, "NDP": 300, "People": 400, "Green": 500, "BQ": 33}
-//   // setDatad
-//   return parties
-//
-//   console.log(parties)
-//
-// }
 
 

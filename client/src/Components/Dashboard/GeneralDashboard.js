@@ -3,8 +3,6 @@ import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
-import CardContent from '@material-ui/core/CardContent'
-import Typography from '@material-ui/core/Typography'
 import ChartCard from './ChartCard'
 import Radar from 'react-d3-radar'
 import axios from "axios";
@@ -195,14 +193,13 @@ export default function CategoryDashboard () {
                         }}
                     /> </ChartCard>
                 </Grid>
+                {donutData.length?
+                    <Grid item item xs={6}>
+                        <ChartCard title='Bipartisan Index'> <BarChartWrapper type={"donut"} data = {donutData}/> </ChartCard>
+                    </Grid>
+                    :"not ready yet!"}
             </Grid>
         </Grid> : "STILL LOADING"}
-        {donutData.length?
-            <Grid item item xs={6}>
-                <ChartCard title='Bipartisan Index'> <BarChartWrapper type={"donut"} data = {donutData}/> </ChartCard>
-            </Grid>
-        :"not ready yet!"}
-
     </Grid>
   )
 }
