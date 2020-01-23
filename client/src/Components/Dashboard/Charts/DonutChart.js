@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import axios from "axios";
 
 function segColor (c) { return { Liberal: '#D31F25', Conservative: '#1B447A', NDP: '#CD793E', People: '#243570', Green: '#439B3B', BQ: '#00A7EC' }[c] }
 // var freqData = [
@@ -145,69 +146,72 @@ function createDonut (element, fData) {
 
 export default class DonutChart {
 //mpsVotes
-  constructor (element,billsSponsors,mpsVotes) {
+  constructor(element,data) {
 
-
-    createDataForDonutChart(billsSponsors,mpsVotes).then(result => {
+console.log("inside the donut")
+    // createDataForDonutChart(billsSponsors, mpsVotes).then(result => {
       let freqData = [
-        { State: 'Yes Votes', freq: result}]
+        {State: 'Yes Votes', freq: data[0]}]
       createDonut(element, freqData)
-    })
-
+    // })
 
 
   }
 }
-export async function createDataForDonutChart(billsSponsors,mpsVotes) {
-  let liberalCounter = 0
-  let conservativeCounter = 0
-  let ndpCounter = 0
-  let peopleCounter = 0
-  let greenCounter = 0
-  let bqCounter = 0
-  let parties={}
-  console.log(billsSponsors)
-  console.log(mpsVotes)
 
-  if(billsSponsors.length != 0 && mpsVotes.length != 0 ){
-    for(let i = 0; i< mpsVotes.length; i++){
-      for(let j=0; j<billsSponsors.length; j++){
-        console.log("mpsVotes[i].billData.sponsorName "+ mpsVotes[i].billData.sponsorName)
-        console.log("billsSponsors[j].sponsorName "+ billsSponsors[j].name)
 
-        if(mpsVotes[i].billData.sponsorName.trim().localeCompare(billsSponsors[j].name.toLowerCase().trim()) == 0
-
-        && mpsVotes[i].voteRecord.yea == true
-        ){
-
-          if (billsSponsors[j].politicalParty == 'liberal'){
-            liberalCounter++
-          }else if(billsSponsors[j].politicalParty == 'conservative'){
-            console.log("found conservative")
-            conservativeCounter++
-          }else if(billsSponsors[j].politicalParty == 'bloc québécois'){
-            bqCounter++
-          }else if(billsSponsors[j].politicalParty == 'ndp'){
-            ndpCounter++
-          }else if(billsSponsors[j].politicalParty == 'green'){
-            greenCounter++
-          }else if(billsSponsors[j].politicalParty=='people'){
-            peopleCounter++
-          }
-        }
-      }
-    }
-    //
-   parties= {"Liberal": liberalCounter, "Conservative": conservativeCounter, "NDP": ndpCounter, "People": peopleCounter, "Green": greenCounter, "BQ": bqCounter}
-    console.log('parties'+ parties.Conservative)
-    return parties
-  }
-
-  if(liberalCounter != 0){
-    console.log(liberalCounter)
-  }
-
-}
-
+// export async function createDataSetDonut(sponsors,mpdata){
+//
+//   let liberalCounter =0
+//   let conservativeCounter = 0
+//   let ndpCounter = 0
+//   let peopleCounter = 0
+//   let greenCounter = 0
+//   let bqCounter = 0
+//   let parties ={}
+//
+//   console.log(mpdata)
+//   if( mpdata.length ){
+//     mpdata.forEach(bill => {
+//       if(bill.billData.yea === true) {
+//         console.log('im inside the if statement ')
+//         sponsors.forEach(sponsor => {
+//           console.log(sponsor.name, bill.billData)
+//           if(sponsor.name === bill.billData.sponsorName)
+//             switch (sponsor.politicalParty) {
+//               case'liberal':
+//                 console.log("im here in liberal ")
+//                 liberalCounter++
+//                 break
+//               case 'conservative':
+//                 conservativeCounter++
+//                 break
+//               case 'ndp':
+//                 ndpCounter++
+//                 break
+//               case 'bloc québécois':
+//                 bqCounter++
+//                 break
+//               case 'green':
+//                 greenCounter++
+//                 break
+//               case 'people':
+//                 peopleCounter++
+//                 break
+//               default:
+//                 return 'nothing'
+//             }
+//         })
+//       }
+//     })
+//   }
+//
+//   parties= {"Liberal": 100, "Conservative": 200, "NDP": 300, "People": 400, "Green": 500, "BQ": 33}
+//   // setDatad
+//   return parties
+//
+//   console.log(parties)
+//
+// }
 
 

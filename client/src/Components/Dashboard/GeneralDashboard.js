@@ -17,7 +17,10 @@ export default function CategoryDashboard () {
     const [radarData, setRadarData] = React.useState([])
     const [categoryListLoaded, setCategoryListLoaded] = React.useState(false)
     const [repDataLoaded, setRepDataLoaded] = React.useState(false)
+    const [donutData, setDonutData] = React.useState([])
+    const [reps, setReps] = React.useState([])
 
+    const [dataUpdatedDonut, setDataUpdatedDonut] = React.useState(false)
     console.log(categoryList)
     console.log(userRepresentative)
     console.log(representativeData)
@@ -25,6 +28,37 @@ export default function CategoryDashboard () {
 
 
     useEffect(() => {
+        async function getDataForDonut(){
+
+            console.log(reps,representativeData)
+
+            if(reps.length && representativeData.length){
+
+                let data =  await createDataSetDonut(reps,representativeData)
+                console.log(data)
+                setDonutData([data])
+                setDataUpdatedDonut(true)
+
+            }
+
+
+        }
+        async function getAllReps () {
+            console.log("im insdie the getAllRep")
+            let result = []
+            await axios
+                .get(`http://localhost:5000/api/representatives/getAllRepresentatives`)
+                .then(res => {
+                    if (res.data.success) {
+                        console.log(res.data.data)
+                        result= res.data.data
+                        console.log(res.data.data.length)
+                        // setDonutData(result)
+                    }
+                })
+                .catch(err => console.error(err))
+            return result
+        }
 
         async function getAllBillsByRep (head) {
             console.log("im insdie the GETALLBILLS and the head "+head )
@@ -49,6 +83,8 @@ export default function CategoryDashboard () {
             if (user) {
                 const { email } = user
                 const riding = await fetchUserRiding(email)
+                const allRepresentatives = await getAllReps()
+                setReps(allRepresentatives)
                 const representative = await fetchRepresentative(riding)
                 if(representative.length != 0 ){
                     setUserRepresentative(representative)
@@ -80,8 +116,15 @@ export default function CategoryDashboard () {
                     console.log("testing "+ testing)
                 }
             })
+            console.log('inside the if statament 112 getting inside the getDaTA for donut',representativeData)
 
         }
+
+        if(reps.length && repDataLoaded ){
+            getDataForDonut()
+        }
+
+
 
     }, [userRepresentative, repDataLoaded, categoryListLoaded])
 
@@ -152,11 +195,13 @@ export default function CategoryDashboard () {
                         }}
                     /> </ChartCard>
                 </Grid>
-                <Grid item item xs={6}>
-                    <ChartCard title='Bipartisan Index'> <BarChartWrapper type={"donut"}/> </ChartCard>
-                </Grid>
             </Grid>
         </Grid> : "STILL LOADING"}
+        {donutData.length?
+            <Grid item item xs={6}>
+                <ChartCard title='Bipartisan Index'> <BarChartWrapper type={"donut"} data = {donutData}/> </ChartCard>
+            </Grid>
+        :"not ready yet!"}
 
     </Grid>
   )
@@ -187,8 +232,6 @@ export async function createDataSetRadar(categories,data){
     let dataArray = []
     let temp = {}
     let dataSetRadar= {}
-    console.log("im here !!!!!!!!",data.length )
-
     categories.forEach(category => {
         let totalvotes = 0
         data.forEach(bill=>{
@@ -214,33 +257,61 @@ export async function createDataSetRadar(categories,data){
     return dataSetRadar
 }
 
-export async function createDataSetDonut(categories,data){
-    let dataArray = []
-    let temp = {}
-    let dataSetRadar= {}
-    console.log("im here !!!!!!!!",data.length )
+export async function createDataSetDonut(sponsors,mpdata){
 
-    categories.forEach(category => {
-        let totalvotes = 0
-        data.forEach(bill=>{
-            if(bill.billData.category === category.toLowerCase()){
-                totalvotes++
+    let liberalCounter =0
+    let conservativeCounter = 0
+    let ndpCounter = 0
+    let peopleCounter = 0
+    let greenCounter = 0
+    let bqCounter = 0
+    let parties ={}
+
+    console.log(mpdata)
+    console.log(sponsors)
+    if( mpdata.length ){
+        mpdata.forEach(bill => {
+            if(bill.voteRecord.yea === true) {
+                console.log('im inside the if statement ')
+                sponsors.forEach(sponsor => {
+                    console.log(sponsor.name, bill.billData)
+                    if(sponsor.name === bill.billData.sponsorName){
+                        console.log("im here!!!!1 inside ifff code line 278")
+                        switch (sponsor.politicalParty) {
+                            case'liberal':
+                                console.log("im here in liberal ")
+                                liberalCounter++
+                                break
+                            case 'conservative':
+                                conservativeCounter++
+                                break
+                            case 'ndp':
+                                ndpCounter++
+                                break
+                            case 'bloc québécois':
+                                bqCounter++
+                                break
+                            case 'green':
+                                greenCounter++
+                                break
+                            case 'people':
+                                peopleCounter++
+                                break
+                            default:
+                                return 'nothing'
+                        }
+                    }
+
+                })
             }
         })
-        let categorySmallLetter =category.toLowerCase().trim()
-        temp = { category : categorySmallLetter,value : totalvotes }
-        console.log(temp)
-        dataArray.push(temp)
-    })
-    console.log(dataArray)
+    }
 
-    dataArray.forEach(category => {
-        if (category.category){
-            dataSetRadar[category.category] = category.value
-        }
-    })
-    console.log(dataSetRadar)
+    parties= {"Liberal": liberalCounter, "Conservative": conservativeCounter, "NDP": ndpCounter, "People": peopleCounter, "Green": greenCounter, "BQ": bqCounter}
+    // setDatad
+    console.log(parties)
+
+    return parties
 
 
-    return dataSetRadar
 }
