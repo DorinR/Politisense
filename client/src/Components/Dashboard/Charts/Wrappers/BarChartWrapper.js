@@ -1,32 +1,25 @@
-import React, { Component } from 'react'
-import BarPieChart from '../BarPieCharts'
-import BarChart from '../BarChart'
-import DonutChart from '../DonutChart'
-import D3BudgetChart from '../../Budget/Charts/D3BudgetChart.js'
+import React, { Component } from "react";
+import BarPieChart from "../BarPieCharts";
+import BarChart from "../BarChart";
+import DonutChart from "../DonutChart";
 
 export default class BarChartWrapper extends Component {
   componentDidMount() {
     switch (this.props.type) {
-      case 'bar-pie':
-        return new BarPieChart(this.refs.chart)
-      case 'bar':
-        return new BarChart(this.refs.chart)
-      case 'bullet':
-        return new D3BudgetChart(
-          this.refs.chart,
-          this.props.average,
-          this.props.mpValue
-        )
+      case "bar-pie":
+        return new BarPieChart(this.refs.chart);
+      case "bar":
+        return new BarChart(this.refs.chart);
       default:
-        return new DonutChart(this.refs.chart)
+        return new DonutChart(this.refs.chart);
     }
   }
 
   render() {
     return (
       <div>
-        <div ref='chart' />
+        <div ref="chart" />
       </div>
-    )
+    );
   }
 }

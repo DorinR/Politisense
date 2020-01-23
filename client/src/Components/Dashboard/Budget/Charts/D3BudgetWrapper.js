@@ -1,6 +1,5 @@
 import BarPieChart from "../BarPieCharts";
 import BarChart from "../BarChart";
-import D3Chart from "../D3BudgetChart";
 
 export default class BarChartWrapper extends Component {
   componentDidMount() {
@@ -10,11 +9,7 @@ export default class BarChartWrapper extends Component {
       case "bar":
         return new BarChart(this.refs.chart);
       default:
-        return new D3BudgetChart(
-          this.refs.chart,
-          this.props.data,
-          this.props.categoryType
-        );
+        return new DonutChart(this.refs.chart);
     }
   }
 }
