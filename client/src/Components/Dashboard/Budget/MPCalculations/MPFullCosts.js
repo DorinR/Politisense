@@ -10,10 +10,10 @@ const useStyles = makeStyles(theme => ({
   customCardContent: {
     padding: 5,
     paddingBottom: "5px!important",
-    backgroundColor: "#ffa500"
+    backgroundColor: "#f7f7f7"
   },
   customHeadingText: {
-    color: "#ffffff",
+    color: "#41aaa8",
     fontStyle: "italic",
     fontWeight: "bold"
   },
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TotalemployeeCosts(props) {
+export default function MPFullCosts(props) {
   const classes = useStyles();
 
   return (
@@ -30,7 +30,7 @@ export default function TotalemployeeCosts(props) {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Average Employee Costs: {Math.round(props.data)}
+            MP Total Costs: {Math.round(props.data)}
           </Typography>
         </CardContent>
       </Card>

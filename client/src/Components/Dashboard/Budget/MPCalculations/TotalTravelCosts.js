@@ -5,8 +5,6 @@ import CardContent from "@material-ui/core/CardContent";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-import axios from "axios";
-const Firestore = require("../../../../Firebase").Firestore;
 
 const useStyles = makeStyles(theme => ({
   customCardContent: {
@@ -24,113 +22,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export async function fetchUserRiding(userEmail) {
-  let result = "";
-  await axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
-    .then(res => {
-      if (res.data.success) {
-        const riding = res.data.data.riding;
-        result = riding;
-      }
-    })
-    .catch(err => console.error(err));
-  return result;
-}
-
-export async function fetchRepresentative(riding) {
-  let result = "";
-  await axios
-    .get(
-      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-    )
-    .then(res => {
-      if (res.data.success) {
-        const representative = res.data.data.name;
-        result = representative;
-      }
-    })
-    .catch(err => console.error(err));
-  return result;
-}
-export async function fetchRepId(representative) {
-  const db = new Firestore();
-  const ref = await db
-    .Politician()
-    .where("name", "==", representative)
-    .select()
-    .catch(console.error);
-  const documentId = ref.docs[0].id;
-  return documentId;
-}
-
-export async function fetchTravelSpending(repID) {
-  const db = new Firestore();
-  const travelSpendingItems = [];
-
-  await db
-    .FinancialRecord()
-    .where("member", "==", repID)
-    .where("parent", "==", "3-Travel")
-    .select()
-    .then(snapshot => {
-      if (snapshot.empty) {
-        console.log("No matching documents.");
-        return;
-      }
-      snapshot.forEach(doc => {
-        travelSpendingItems.push(doc.data());
-      });
-    })
-    .catch(err => {
-      console.log("Error getting documents", err);
-    });
-  return travelSpendingItems;
-}
-
-export function computeTotalTravelSpending(spendingItems) {
-  let total = 0;
-  spendingItems.forEach(item => {
-    total += item.amount;
-  });
-  return total;
-}
-
-export default function TotaltravelCosts() {
+export default function TotaltravelCosts(props) {
   const classes = useStyles();
-  const [total, setTotal] = useState(0);
-
-  useEffect(() => {
-    async function getData() {
-      /* eslint-disable */
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (user) {
-        const { email } = user;
-        // get riding
-        const riding = await fetchUserRiding(email);
-
-        // get representative for that riding
-        const representative = await fetchRepresentative(riding);
-
-        // get the ID of that representative
-        const representativeId = await fetchRepId(representative);
-
-        // get all the individual spending records for this politician
-        const travelSpendingItems = await fetchTravelSpending(representativeId);
-
-        // add up all the spending items and assign that total to the "Total" variable
-        setTotal(computeTotalTravelSpending(travelSpendingItems));
-      }
-    }
-    getData();
-  });
 
   return (
     <ListItemText>
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Travel Costs: {Math.round(total)}
+            Travel Costs: {Math.round(props.data)}
           </Typography>
         </CardContent>
       </Card>

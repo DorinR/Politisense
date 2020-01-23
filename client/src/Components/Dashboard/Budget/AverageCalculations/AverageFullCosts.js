@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TotalemployeeCosts(props) {
+export default function AverageFullCosts(props) {
   const classes = useStyles();
 
   return (
@@ -30,7 +30,7 @@ export default function TotalemployeeCosts(props) {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Average Employee Costs: {Math.round(props.data)}
+            Average Full Costs: {Math.round(props.data)}
           </Typography>
         </CardContent>
       </Card>
