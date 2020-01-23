@@ -1,5 +1,6 @@
 import { Firestore } from '../client/src/Firebase'
 import represent from 'represent'
+
 const bcrypt = require('bcryptjs')
 
 exports.checkIfUserExists = (req, res) => {
@@ -49,7 +50,7 @@ exports.getUserInterests = (req, res) => {
     })
 }
 
-exports.userSignup = (req, res) => {
+exports.userSignup = async (req, res) => {
   const user = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
