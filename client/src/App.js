@@ -15,7 +15,7 @@ import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
 import MapWrapper from './Components/Dashboard/MapWrapper'
 import DashboardTabs from './Components/Dashboard/DashboardTabs'
 import Questionnaire from './Components/Questionnaire'
-
+import HeadToHeadComparison from "./Components/Dashboard/HeadToHeadComparison";
 const App = () => {
   const LoginContainer = () => (
     <div className='container'>
@@ -33,6 +33,8 @@ const App = () => {
           <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/map' component={MapWrapper} />
           <PrivateRoute path='/account' component={UserAccountTabs} />
+          <PrivateRoute path='/headToHeadComparison' component={HeadToHeadComparison} />
+
         </div>
       </Navbar>
     </div>
@@ -52,7 +54,9 @@ const App = () => {
         <Route exact path='/(login)' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
         <Route exact path='/question' component={Questionnaire} />
-        <Route component={DefaultContainer} />
+        <Route exact path='/testing1' component={HeadToHeadComparison} />
+
+          <Route component={DefaultContainer} />
       </Switch>
     </Router>
   )
