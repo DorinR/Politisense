@@ -1,6 +1,8 @@
 import { Firestore } from '../client/src/Firebase'
 import represent from 'represent'
 
+const bcrypt = require('bcryptjs')
+
 exports.checkIfUserExists = (req, res) => {
   const email = req.body.email
   const db = new Firestore()
@@ -24,27 +26,54 @@ exports.checkIfUserExists = (req, res) => {
     })
 }
 
-exports.userSignup = (req, res) => {
+exports.getUserInterests = (req, res) => {
+  const email = req.body.email
+  const db = new Firestore()
+  db.User()
+    .select('email', '==', email)
+    .then(snapshot => {
+      if (snapshot.empty) {
+        res.json({
+          success: false,
+          data: 'doesnt exist'
+        })
+      }
+      snapshot.forEach(doc => {
+        res.json({
+          success: true,
+          data: doc.data()
+        })
+      })
+    })
+    .catch(err => {
+      console.error('Error getting documents', err)
+    })
+}
+
+exports.userSignup = async (req, res) => {
   const user = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     email: req.body.email,
     postalCode: req.body.postalCode,
-    categories: {
-      category1: req.body.category1,
-      category2: req.body.category2
-    },
+    categories: [
+      req.body.category1, req.body.category2
+    ],
     riding: req.body.riding
   }
   if (req.body.password) {
     user.password = req.body.password
   }
+  const salt = bcrypt.genSaltSync(10)
+  const hash = bcrypt.hashSync(user.password, salt)
+  user.password = hash
+
   const db = new Firestore()
-  db.User()
+  await db.User()
     .select('email', '==', user.email)
-    .then(snapshot => {
+    .then(async snapshot => {
       if (snapshot.empty) {
-        db.User()
+        await db.User()
           .insert(user)
           .then(() => {
             res.json({
@@ -84,7 +113,7 @@ exports.userLogin = (req, res) => {
       }
       snapshot.forEach(doc => {
         entry = doc.data()
-        if (entry.password === user.password) {
+        if (bcrypt.compareSync(user.password, entry.password)) {
           res.json({
             success: true,
             auth: 'Successful login'
@@ -159,38 +188,40 @@ exports.updateUser = (req, res) => {
     .catch(err => {
       res.status(404).json({
         success: false,
-        message: 'getting userID unsuccessfull'
+        message: 'getting userID unsuccessful'
       })
       console.error(err)
     })
 }
 
 exports.setRiding = (req, res) => {
-  const postalCode = req.body.postalCode.replace(/\s/g, '').toUpperCase()
-  let riding = ''
-  let federalArray = []
-  represent.postalCode(postalCode, function (err, data) {
+  let postalCode = req.body.postalCode
+  postalCode = postalCode.replace(/\s/g, '').toUpperCase()
+  let ridingName = ''
+  represent.postalCode(postalCode + '/?sets=federal-electoral-districts', async (err, data) => {
     if (err) {
       res.json({
         success: false
       })
       return
     }
-    federalArray = data.boundaries_centroid.filter(
-      entry => entry.boundary_set_name === 'Federal electoral district'
-    )
-    let maxid = 0
-    let maxobj = {}
-    for (let i = 0; i < federalArray.length; i++) {
-      if (federalArray[i].external_id > maxid) {
-        maxid = federalArray[i].external_id
-        maxobj = federalArray[i]
-      }
-    }
-    riding = maxobj.name
+    const id = data.boundaries_centroid[0].external_id
+    ridingName = await new Firestore().Riding()
+      .where('code', '==', Number(id))
+      .select()
+      .then(snapshot => {
+        let name = ''
+        snapshot.forEach(doc => {
+          name = doc.data().nameEnglish
+          name = name.replace(/--+/g, '-') // double dash is evil
+        })
+        return name
+      })
+      .catch(console.error)
+    console.log(ridingName)
     res.json({
       success: true,
-      data: riding
+      data: ridingName
     })
   })
 }
@@ -202,7 +233,8 @@ exports.updateUserRiding = (req, res) => {
 
   const db = new Firestore()
   db.User()
-    .select('email', '==', email)
+    .where('email', '==', email)
+    .select()
     .then(snapshot => {
       if (snapshot.empty) {
         console.error('No user with this email found')
@@ -226,6 +258,40 @@ exports.updateUserRiding = (req, res) => {
       res.status(404).json({
         success: false,
         message: 'Error updating user riding'
+      })
+      console.error(err)
+    })
+}
+
+exports.updateUserCategory = (req, res) => {
+  const categoryList = req.body.categoryList
+  let documentToChangeId = 0
+  const db = new Firestore()
+  db.User()
+    .select('email', '==', req.body.email)
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.error('no user with this email found')
+      }
+      snapshot.forEach(doc => {
+        documentToChangeId = doc.id
+      })
+      return db
+        .User()
+        .reference.doc(documentToChangeId)
+        .update({
+          categories: categoryList
+        })
+    })
+    .then(() => {
+      res.json({
+        success: true
+      })
+    })
+    .catch(err => {
+      res.status(404).json({
+        success: false,
+        message: 'getting userID unsuccessfull'
       })
       console.error(err)
     })
