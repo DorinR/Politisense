@@ -7,6 +7,7 @@ import RidingSwitcher from './RidingSwitcher/RidingSwitcher'
 import RidingShapeContainer from './RidingShape/RidingShapeContainer'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
+import RidingPopulation from './RidingPopulation/RidingPopulation'
 import axios from 'axios'
 const Firestore = require('../../../Firebase').Firestore
 
@@ -119,6 +120,15 @@ export default function RepresentativeInfo (props) {
             politicalParty={politicalParty}
           />
           <Box m={1} />
+        </CardContent>
+      </Card>
+      <Box m={1} />
+      <Card>
+        <CardContent className={classes.customCardContent}>
+          <Typography className={classes.customHeadingText}>
+            RIDING POPULATION
+          </Typography>
+          <RidingPopulation riding={riding} />
         </CardContent>
       </Card>
       <Box m={1} />
