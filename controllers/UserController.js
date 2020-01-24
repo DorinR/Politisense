@@ -55,9 +55,7 @@ exports.userSignup = (req, res) => {
     lastname: req.body.lastname,
     email: req.body.email,
     postalCode: req.body.postalCode,
-    categories: [
-      req.body.category1, req.body.category2
-    ],
+    categories: [req.body.category1, req.body.category2],
     riding: req.body.riding
   }
   if (req.body.password) {
@@ -193,11 +191,11 @@ exports.updateUser = (req, res) => {
     })
 }
 
-exports.setRiding = (req, res) => {
+exports.setRiding = async (req, res) => {
+  console.log('setRiding endpoint called!')
   const postalCode = req.body.postalCode.replace(/\s/g, '').toUpperCase()
-  let riding = ''
   let federalArray = []
-  represent.postalCode(postalCode, function (err, data) {
+  represent.postalCode(postalCode, async function (err, data) {
     if (err) {
       res.json({
         success: false
@@ -215,11 +213,32 @@ exports.setRiding = (req, res) => {
         maxobj = federalArray[i]
       }
     }
-    riding = maxobj.name
-    res.json({
-      success: true,
-      data: riding
-    })
+    console.log(maxobj)
+    const db = new Firestore()
+    await db
+      .Ridings()
+      .where('code', '==', parseInt(maxobj.external_id))
+      .select()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          res.status(404).json({
+            success: false,
+            message: 'riding not found'
+          })
+        }
+        snapshot.forEach(doc => {
+          res.status(200).json({
+            success: true,
+            data: doc.data().nameEnglish
+          })
+        })
+      })
+      .catch(err => {
+        res.status(400).json({
+          success: false,
+          data: err
+        })
+      })
   })
 }
 
