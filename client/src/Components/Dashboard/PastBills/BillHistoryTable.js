@@ -211,10 +211,7 @@ export default function BillHistoryTable () {
         voteRecords,
         votesByRepresentative
       )
-      fullBills.forEach(bill => {
-        console.log(bill)
-      })
-      generateTableRows(bills)
+      generateTableRows(fullBills)
     }
     getData()
   })
