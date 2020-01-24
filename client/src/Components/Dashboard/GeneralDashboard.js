@@ -21,11 +21,12 @@ const useStyles = makeStyles({
     margin: '0 2px',
     transform: 'scale(0.8)',
   },
-  title: {
-    fontSize: 14,
-  },
   pos: {
     marginBottom: 12,
+  },
+  title: {
+    fontSize: 18,
+    textAlign: 'center'
   },
 });
 
@@ -42,33 +43,24 @@ export default function CategoryDashboard () {
   const [reps, setReps] = React.useState([])
   const [userRepIssuedBills, setUserRepIssuedBills] = React.useState([])
   const [dataUpdatedDonut, setDataUpdatedDonut] = React.useState(false)
-  console.log(categoryList)
-  console.log(userRepresentative)
-  console.log(representativeData)
-  console.log(radarData)
+
 
   useEffect(() => {
     async function getDataForDonut () {
-      console.log(reps, representativeData)
 
       if (reps.length && representativeData.length) {
         const data = await createDataSetDonut(reps, representativeData)
-        console.log(data)
         setDonutData([data])
         setDataUpdatedDonut(true)
       }
     }
     async function getAllReps () {
-      console.log('im insdie the getAllRep')
       let result = []
       await axios
         .get('http://localhost:5000/api/representatives/getAllRepresentatives')
         .then(res => {
           if (res.data.success) {
-            console.log(res.data.data)
             result = res.data.data
-            console.log(res.data.data.length)
-            // setDonutData(result)
           }
         })
         .catch(err => console.error(err))
@@ -81,9 +73,7 @@ export default function CategoryDashboard () {
         .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
         .then(res => {
           if (res.data.success) {
-            console.log(res.data.data)
             result = res.data.data
-            console.log(res.data.data.length)
             setRepresentativeData(result)
             setRepDataLoaded(true)
           }
@@ -126,7 +116,6 @@ export default function CategoryDashboard () {
       })
     }
 
-    console.log(categoryList.length !== 0, representativeData.length !== 0, userRepresentative)
 
     if (categoryList && repDataLoaded) {
       createDataSetRadar(categoryList, representativeData).then(testing => {
@@ -163,9 +152,8 @@ export default function CategoryDashboard () {
           userRepIssuedBills.length !== 0 && categoryList.length !== 0
             ?
               (<Card>
-
                     <CardContent>
-                      <Typography variant="h7" color='textSecondary' component="p">
+                      <Typography className={classes.title}>
                         The Distribution of Sponsored Bills
                       </Typography>
                       <BarChartWrapper type='bar-pie' data={userRepIssuedBills} categories={categoryList} />
@@ -195,9 +183,7 @@ export default function CategoryDashboard () {
                   highlighted
                   onHover={(point) => {
                     if (point) {
-                      console.log('hovered over a data point')
                     } else {
-                      console.log('not over anything')
                     }
                   }}
                   data={{
@@ -275,19 +261,13 @@ export async function createDataSetDonut (sponsors, mpdata) {
   let bqCounter = 0
   let parties = {}
 
-  console.log(mpdata)
-  console.log(sponsors)
   if (mpdata.length) {
     mpdata.forEach(bill => {
       if (bill.voteRecord.yea === true) {
-        console.log('im inside the if statement ')
         sponsors.forEach(sponsor => {
-          console.log(sponsor.name, bill.billData)
           if (sponsor.name === bill.billData.sponsorName) {
-            console.log('im here!!!!1 inside ifff code line 278')
             switch (sponsor.politicalParty) {
               case 'liberal':
-                console.log('im here in liberal ')
                 liberalCounter++
                 break
               case 'conservative':
@@ -315,8 +295,5 @@ export async function createDataSetDonut (sponsors, mpdata) {
   }
 
   parties = { Liberal: liberalCounter, Conservative: conservativeCounter, NDP: ndpCounter, People: peopleCounter, Green: greenCounter, BQ: bqCounter }
-  // setDatad
-  console.log(parties)
-
   return parties
 }
