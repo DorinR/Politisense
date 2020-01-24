@@ -56,8 +56,6 @@ exports.getAllRepresentatives = (req, res) => {
 }
 
 exports.getRepresentativeId = async (req, res) => {
-  console.log('getRepresentativeId endpoint hit!')
-  console.log('value received:', req.params.representative)
   const db = new Firestore()
   await db
     .Politician()
