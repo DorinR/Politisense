@@ -71,4 +71,4 @@ class BillBuilder {
   }
 }
 
-export { Bill }
+module.exports.Bill = Bill

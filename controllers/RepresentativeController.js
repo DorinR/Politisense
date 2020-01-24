@@ -19,6 +19,7 @@ exports.getRepresentativeByRiding = (req, res) => {
         })
       })
     })
+    .catch(console.error)
 }
 
 exports.getAllRepresentatives = (req, res) => {
@@ -50,5 +51,6 @@ exports.getAllRepresentatives = (req, res) => {
         data: representativesAccumulator,
         success: false
       })
+      console.log(err)
     })
 }
