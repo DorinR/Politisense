@@ -10,6 +10,8 @@ import CategoryDashboard from './CategoryDashboard'
 import BillHistoryTable from './PastBills/BillHistoryTable'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import BarChartIcon from '@material-ui/icons/BarChart'
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
+import BudgetContainer from './Budget/BudgetContainer'
 import PieChartIcon from '@material-ui/icons/PieChart'
 import GeneralDashboard from './GeneralDashboard'
 
@@ -71,21 +73,14 @@ export default function DashboardTabs () {
             textColor='primary'
             aria-label='scrollable force tabs example'
           >
-            <Tab
-              label='General'
-              icon={<BarChartIcon />}
-              {...a11yProps(0)}
-            />
-            <Tab
-              label='Categories'
-              icon={<PieChartIcon />}
-              {...a11yProps(1)}
-            />
+            <Tab label='General' icon={<BarChartIcon />} {...a11yProps(0)} />
+            <Tab label='Categories' icon={<PieChartIcon />} {...a11yProps(1)} />
             <Tab
               label='Voting History'
               icon={<AccountBalanceIcon />}
               {...a11yProps(2)}
             />
+            <Tab label='Budget' icon={<AttachMoneyIcon />} {...a11yProps(3)} />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
@@ -96,6 +91,9 @@ export default function DashboardTabs () {
         </TabPanel>
         <TabPanel value={value} index={2}>
           <BillHistoryTable />
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          <BudgetContainer />
         </TabPanel>
       </div>
     </Box>

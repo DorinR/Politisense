@@ -38,7 +38,7 @@ module.exports = {
   getAllRepresentatives: function (req, res) {
     return RepresentativeController.getAllRepresentatives(req, res)
   },
-
+  
   getRepresentativeId: function (req, res) {
     return RepresentativeController.getRepresentativeId(req, res)
   },

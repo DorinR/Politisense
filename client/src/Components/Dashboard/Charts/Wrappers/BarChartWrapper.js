@@ -15,7 +15,6 @@ export default class BarChartWrapper extends Component {
       case 'donut':
         return new DonutChart(this.refs.chart, this.props.data)
         // return new DonutChart(this.refs.chart,this.props.billsSponsors,this.props.mpsVotes)
-
       default: return new D3Chart(this.refs.chart, this.props.data, this.props.categoryType)
     }
   }
