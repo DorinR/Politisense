@@ -1,4 +1,4 @@
-/* eslint-disable */
+/*eslint eqeqeq:0*/
 import React, { useState, useEffect } from 'react'
 import ListItemText from '@material-ui/core/ListItemText'
 import Card from '@material-ui/core/Card'
