@@ -1,7 +1,42 @@
 import { Firestore } from '../client/src/Firebase'
 
-exports.getBillById = (req, res) => {
-  console.log('getBillById endpoint was successfully callled')
+exports.getAllBills = async (req, res) => {
+  const db = new Firestore()
+  const allBills = []
+  await db
+    .Bill()
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        res.status(400).json({
+          success: false,
+          message: 'No Bills Currently Stored'
+        })
+      }
+      snapshot.forEach(doc => {
+        const { dateVoted, link, number, sponsorName, title } = doc.data()
+        const bill = {
+          id: doc.id,
+          dateVoted,
+          link,
+          number,
+          sponsorName,
+          title
+        }
+
+        allBills.push(bill)
+      })
+      res.status(200).json({
+        success: true,
+        data: allBills
+      })
+    })
+    .catch(err => {
+      res.status(400).json({
+        success: false,
+        message: err
+      })
+    })
 }
 
 exports.getVotedBillsByMP = (req, res) => {

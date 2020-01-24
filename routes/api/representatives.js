@@ -12,4 +12,12 @@ router.get('/:riding/getRepresentative', controller.getRepresentativeByRiding)
 // @access Public
 router.get('/getAllRepresentatives', controller.getAllRepresentatives)
 
+// @route post api/:representative/getRepresentativeId
+// @desc get id of representative
+// @access Public
+router.get(
+  '/:representative/getRepresentativeId',
+  controller.getRepresentativeId
+)
+
 module.exports = router

@@ -210,7 +210,7 @@ export default function HorizontalLinearStepper (props) {
     e.preventDefault()
     if (postalCode) {
       setRiding(postalCode)
-        .then(res => {
+        .then(async res => {
           if (res.data.success) {
             const userToSignup = props.location.state.user
             userToSignup.postalCode = postalCode
@@ -219,7 +219,7 @@ export default function HorizontalLinearStepper (props) {
             userToSignup.category2 = category2
             // eslint-disable-next-line no-undef
             localStorage.setItem('user', JSON.stringify(userToSignup))
-            axios.post('http://localhost:5000/api/users/signup', userToSignup)
+            await axios.post('http://localhost:5000/api/users/signup', userToSignup)
             props.history.push('/dashboard')
           } else {
             console.log('Could not fetch riding')

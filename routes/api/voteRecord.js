@@ -10,4 +10,6 @@ router.get(
   controller.getVotesByRepresentative
 )
 
+router.get('/getAllVoteRecords', controller.getAllVoteRecords)
+
 module.exports = router

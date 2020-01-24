@@ -54,7 +54,9 @@ class Reference {
     if (this.modelsOnly && !(model instanceof Model)) {
       throw new Error('Error: Only a model can be updated in firebase')
     } else if (!this.modelsOnly && !(model instanceof Model)) {
-      console.warn('WARNING: Using non models for firestore is deprecated. Use Models instead.')
+      console.warn(
+        'WARNING: Using non models for firestore is deprecated. Use Models instead.'
+      )
     }
     if (model instanceof Model) {
       model = Model.serialise(model)
@@ -113,11 +115,15 @@ class Reference {
 
   select (attribute, operator, value) {
     let ref = this.reference.get.bind(this.reference)
-    if (typeof attribute !== 'undefined' &&
-        typeof operator !== 'undefined' &&
-        typeof value !== 'undefined' &&
-        this.query === null) {
-      console.warn('WARNING: using select with parameters is a deprecated behaviour. Use where(..).select() instead.')
+    if (
+      typeof attribute !== 'undefined' &&
+      typeof operator !== 'undefined' &&
+      typeof value !== 'undefined' &&
+      this.query === null
+    ) {
+      console.warn(
+        'WARNING: using select with parameters is a deprecated behaviour. Use where(..).select() instead.'
+      )
       const query = this.reference.where(attribute, operator, value)
       ref = query.get.bind(query)
     } else if (this.query !== null) {
@@ -138,7 +144,9 @@ class Reference {
     if (this.modelsOnly && typeof !(model instanceof Model)) {
       throw new Error('Error: Only a model can be inserted in firebase')
     } else if (!this.modelsOnly && !(model instanceof Model)) {
-      console.warn('WARNING: Using non models for firestore is deprecated. Use Models instead.')
+      console.warn(
+        'WARNING: Using non models for firestore is deprecated. Use Models instead.'
+      )
     }
     if (model instanceof Model) {
       model = Model.serialise(model)
@@ -247,6 +255,10 @@ class Firestore {
 
   User () {
     return new Reference(this.reference.collection('users'))
+  }
+
+  Riding () {
+    return new Reference(this.reference.collection('ridings'))
   }
 
   VoteRecord () {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import { makeStyles } from '@material-ui/core/styles'
+
 const Firestore = require('../../../Firebase').Firestore
 
 const useStyles = makeStyles(theme => ({
