@@ -4,13 +4,12 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.19.2",
     "babel": "^6.23.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
-    "britecharts": "^2.13.2",
-    "chart.js": "^2.9.2",
-    "config": "^3.2.3",
+    "chart.js": "^2.9.3",
+    "config": "^3.2.5",
     "cors": "^2.8.5",
     "d3": "^5.12.0",
     "eslint-plugin-import": "^2.20.0",
@@ -21,20 +20,20 @@
     "geojson-svgify": "^0.5.0",
     "jsonwebtoken": "^8.5.1",
     "mapshaper-with-patch": "^0.4.155",
-    "react-bootstrap": "^1.0.0-beta.12",
+    "react-bootstrap": "^1.0.0-beta.16",
     "react-chartjs-2": "^2.8.0",
     "react-d3-radar": "^1.0.0-rc6",
-    "react-swipeable-views": "^0.13.3",
+    "react-swipeable-views": "^0.13.5",
     "represent": "^0.2.2",
     "request": "^2.88.0",
     "svgson": "^4.0.0",
     "typeface-roboto": "^0.0.75"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.2",
-    "@babel/core": "^7.6.2",
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
     "concurrently": "^4.1.2",
-    "nodemon": "^1.19.3"
+    "nodemon": "^1.19.4"
   },
   "scripts": {
     "start": "node -r esm server.js",

@@ -147,24 +147,25 @@ export default function MiniDrawer ({ children }) {
     handleDrawerOpen()
     async function getData () {
       /* eslint-disable */
-      const user = JSON.parse(localStorage.getItem('user'))
+      const user = JSON.parse(localStorage.getItem("user"));
       if (user) {
-        const { email } = user
-        const riding = await fetchUserRiding(email)
-        const representative = await fetchRepresentative(riding)
-        setUserRepresentative(representative)
+        const { email } = user;
+        const riding = await fetchUserRiding(email);
+        const representative = await fetchRepresentative(riding);
+        setUserRepresentative(representative);
+        localStorage.setItem("rep", JSON.stringify(representative));
       }
     }
-    getData()
-  }, [])
+    getData();
+  }, []);
 
   const handleDrawerOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleDrawerClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   return (
       <div className={classes.root}>
