@@ -1,12 +1,12 @@
 import * as d3 from 'd3'
-var freqData = [
-  { State: 'Yes Votes', freq: { Liberal: 2000, Conservative: 1319, NDP: 249, People: 100, Green: 200, BQ: 100 } }
-]
+
+function segColor (c) { return { Liberal: '#D31F25', Conservative: '#1B447A', NDP: '#CD793E', People: '#243570', Green: '#439B3B', BQ: '#00A7EC' }[c] }
+
 function createDonut (element, fData) {
-  function segColor (c) { return { Liberal: '#D31F25', Conservative: '#1B447A', NDP: '#CD793E', People: '#243570', Green: '#439B3B', BQ: '#00A7EC' }[c] }
   function pieChart (pD) {
-    var pC = {}
-    var pieDim = { w: 200, h: 200 }
+    const pC = {}
+    const pieDim = { w: 200, h: 200 }
+
     pieDim.r = Math.min(pieDim.w, pieDim.h) / 2
 
     // create svg for pie chart.
@@ -21,6 +21,7 @@ function createDonut (element, fData) {
 
     // create a function to compute the pie slice angles.
     const pie = d3.pie().value(function (d) {
+      console.log(d.freq)
       return d.freq
     })
 
@@ -121,9 +122,8 @@ function createDonut (element, fData) {
         return getLegend(d, nD)
       })
     }
-
     function getLegend (d, aD) { // Utility function to compute percentage.
-      return d3.format('%')(d.freq / d3.sum(aD.map(function (v) {
+      return d3.format('.0%')(d.freq / d3.sum(aD.map(function (v) {
         return v.freq
       })))
     }
@@ -139,7 +139,9 @@ function createDonut (element, fData) {
 }
 
 export default class DonutChart {
-  constructor (element) {
+  constructor (element, data) {
+    const freqData = [
+      { State: 'Yes Votes', freq: data[0] }]
     createDonut(element, freqData)
   }
 }
