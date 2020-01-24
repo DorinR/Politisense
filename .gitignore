@@ -32,5 +32,4 @@ yarn-error.log*
 /client/package-lock.json
 package-lock.json
 /client/build/
-/client/coverage/lcov-report/
 /client/coverage/

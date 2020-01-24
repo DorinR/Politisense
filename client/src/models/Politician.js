@@ -57,4 +57,4 @@ class PoliticianBuilder {
   }
 }
 
-export { Politician }
+module.exports.Politician = Politician

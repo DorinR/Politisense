@@ -9,6 +9,7 @@ class BillClassification extends Model {
     Condition.parameter(classification).isType(String)
 
     this.bill = billId
+    this.raw = rawId
     this.category = classification
   }
 
@@ -32,5 +33,5 @@ class TfIdfClassification extends Model {
   }
 }
 
-export { BillClassification }
-export { TfIdfClassification }
+module.exports.BillClassification = BillClassification
+module.exports.TfIdfClassification = TfIdfClassification
