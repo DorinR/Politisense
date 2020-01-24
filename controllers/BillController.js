@@ -34,18 +34,32 @@ exports.getAllBillsByHead = (req, res) => {
             bills
               .innerJoin('_id', billClassification, 'bill')
               .then(billTable => {
-                for (let i = 0; i < result.length; i++) {
-                  for (let j = 0; j < billTable.length; j++) {
-                    if (result[i].bill === billTable[j].bill) {
-                      const temp = {
-                        voteRecord: result[i],
-                        billData: billTable[j]
-                      }
-                      console.log(temp)
-                      finalArray.push(temp)
-                    }
-                  }
-                }
+
+                  reesult.forEach(data =>{
+                      billTable.forEach(bill=> {
+                          if(data.bill === bill.bill){
+                              const temp = {
+                                          voteRecord: data,
+                                          billData: bill
+                                        }
+                                    finalArray.push(temp)
+
+                          }
+                      })
+                  })
+
+                // for (let i = 0; i < result.length; i++) {
+                //   for (let j = 0; j < billTable.length; j++) {
+                //     if (result[i].bill === billTable[j].bill) {
+                //       const temp = {
+                //         voteRecord: result[i],
+                //         billData: billTable[j]
+                //       }
+                //       console.log(temp)
+                //       finalArray.push(temp)
+                //     }
+                //   }
+                // }
                 res.json({
                   success: true,
                   data: finalArray
