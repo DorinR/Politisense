@@ -12,7 +12,7 @@ describe('Sidebar Tests', () => {
           'https://www.ourcommons.ca/Content/Parliamentarians/Images/OfficialMPPhotos/42/ArnoldMel_CPC.jpg',
         name: 'mel arnold',
         politicalParty: 'conservative',
-        riding: 'north okanagan—shuswap',
+        riding: 'north okanagan-shuswap',
         yearElected: 2019
       },
       {
@@ -20,7 +20,7 @@ describe('Sidebar Tests', () => {
           'https://www.ourcommons.ca/Content/Parliamentarians/Images/OfficialMPPhotos/Silhouette.jpg',
         name: 'tamara jansen',
         politicalParty: 'conservative',
-        riding: 'cloverdale—langley city',
+        riding: 'cloverdale-langley city',
         yearElected: 2019
       },
       {
@@ -28,7 +28,7 @@ describe('Sidebar Tests', () => {
           'https://www.ourcommons.ca/Content/Parliamentarians/Images/OfficialMPPhotos/42/LebouthillierDiane_Lib.jpg',
         name: 'diane lebouthillier',
         politicalParty: 'liberal',
-        riding: 'gaspésie—les îles-de-la-madeleine',
+        riding: 'gaspésie-les îles-de-la-madeleine',
         yearElected: 2019
       },
       {
@@ -42,10 +42,10 @@ describe('Sidebar Tests', () => {
     ]
     const ridings = getAllRidings(representatives)
     const expectedRidings = [
-      'cloverdale—langley city',
+      'cloverdale-langley city',
       'edmonton manning',
-      'gaspésie—les îles-de-la-madeleine',
-      'north okanagan—shuswap'
+      'gaspésie-les îles-de-la-madeleine',
+      'north okanagan-shuswap'
     ]
 
     for (let i = 0; i < ridings.length; i++) {
