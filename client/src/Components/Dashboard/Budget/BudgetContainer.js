@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState, useEffect } from 'react'
 import ListItemText from '@material-ui/core/ListItemText'
 import Card from '@material-ui/core/Card'
@@ -7,7 +6,8 @@ import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import axios from 'axios'
-import * as Firestore from 'firebase';
+// eslint-disable-next-line
+import { Firestore } from '../../../Firebase';
 import TotalEmployeeCosts from './MPCalculations/TotalEmployeeCosts'
 import TotalAdvertisingCosts from './MPCalculations/TotalAdvertisingCosts'
 import TotalGiftsCosts from './MPCalculations/TotalGiftsCosts'
