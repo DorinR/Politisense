@@ -3,14 +3,10 @@ import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
-import CardActions from '@material-ui/core/CardActions'
 import IconButton from '@material-ui/core/IconButton'
-import { red } from '@material-ui/core/colors'
 import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox'
 import TrendingUpIcon from '@material-ui/icons/TrendingUp'
-import CompareArrowsIcon from '@material-ui/icons/CompareArrows'
 import BusinessCenterIcon from '@material-ui/icons/BusinessCenter'
-import PieChartIcon from '@material-ui/icons/PieChart'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
@@ -18,14 +14,12 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import GavelIcon from '@material-ui/icons/Gavel'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBalanceScale, faHandshake, faPrayingHands } from '@fortawesome/free-solid-svg-icons'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
+import { faBalanceScale, faPrayingHands } from '@fortawesome/free-solid-svg-icons'
 import Button from '@material-ui/core/Button'
 import DeleteCategoryDialog from './DeleteCategoryDialog'
-import ChartCard from './ChartCard'
+import Typography from '@material-ui/core/Typography'
+import TableContainer from '@material-ui/core/TableContainer'
+import BillDialog from './BillDialog'
 import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
 
 const useStyles = makeStyles(theme => ({
@@ -43,51 +37,65 @@ const useStyles = makeStyles(theme => ({
   expandOpen: {
     transform: 'rotate(180deg)'
   },
-  avatar: {
-    backgroundColor: red[500]
-  },
-  table: {
+  container: {
+    maxHeight: 200
   }
 }))
 
-function createData (name, vote) {
-  return { name, vote }
+export function createData (name, vote, sponsor, date, desc, link) {
+  return { name, vote, sponsor, date, desc, link }
+}
+
+export async function populateTable (data, title) {
+  const bills = data
+  const filteredBills = []
+  for (let i = 0; i < bills.length; i++) {
+    if (bills[i].billData.category.trim().localeCompare(title.toLowerCase().trim()) === 0) {
+      filteredBills.push(bills[i])
+    }
+  }
+  const tableData = []
+  for (let i = 0; i < filteredBills.length; i++) {
+    let vote = ''
+    if (filteredBills[i].voteRecord.paired) {
+      vote = 'abstain'
+    } else if (filteredBills[i].voteRecord.yea) {
+      vote = 'yea'
+    } else {
+      vote = 'nay'
+    }
+    tableData.push(createData(filteredBills[i].voteRecord.billNumber, vote, filteredBills[i].billData.sponsorName,
+      filteredBills[i].billData.dateVoted, filteredBills[i].voteRecord.name, filteredBills[i].billData.link))
+  }
+  if (filteredBills.length > 0) {
+    return tableData
+  }
 }
 
 export default function CategoryCard (props) {
   const classes = useStyles()
-  const [openCompare, setOpenCompare] = React.useState(false)
-  const [open, setOpen] = React.useState(false)
   const [title, setTitle] = React.useState('')
   const [data, setData] = React.useState([])
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
   const [confimedDeletion] = React.useState(false)
   const [rows, setRows] = React.useState([])
+  const [billInfo, setBillInfo] = React.useState([])
+  const [billOpen, setBillOpen] = React.useState(false)
 
   const handleDeleteDialogClose = (newValue, index) => {
-    console.log('the newValue of the card is ' + newValue)
-    console.log('the index of the card is ' + index)
-
     if (newValue === true) {
       props.delete(index)
+      setRows([])
     }
     setOpenDeleteDialog(false)
   }
-
-  const handleClickOpenCompare = () => {
-    setOpenCompare(true)
+  const handleBillClickOpen = (row) => {
+    setBillInfo(row)
+    setBillOpen(true)
   }
 
-  const handleCloseCompare = () => {
-    setOpenCompare(false)
-  }
-
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
+  const handleBillClose = () => {
+    setBillOpen(false)
   }
 
   function setCardLogo () {
@@ -110,18 +118,12 @@ export default function CategoryCard (props) {
   }
 
   React.useEffect(() => {
-    populateTable()
+    populateTable(props.representative, props.title).then(rows => {
+      setRows(rows)
+    })
     setTitle(props.title)
     setData(props.data)
-  }, [props.title, props.data])
-
-  async function populateTable () {
-    setRows([
-      createData('Bill 101', 'Yes'),
-      createData('Bill 102', 'No'),
-      createData('Bill 103', 'Abstain')
-    ])
-  }
+  }, [props.title, props.data, props.representative])
 
   return (
     <div>
@@ -149,73 +151,31 @@ export default function CategoryCard (props) {
         <CardContent>
           {data.length
             ? <BarChartWrapper data={data} categoryType={props.title} />
-
             : 'title is empty!!'}
-          <Table className={classes.table} size='small' aria-label='a dense table'>
-            <TableHead>
-              <TableRow>
-                <TableCell>Bill Name</TableCell>
-                <TableCell align='right'>Vote</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map(row => (
-                <TableRow key={row.name}>
-                  <TableCell component='th' scope='row'>
-                    {row.name}
-                  </TableCell>
-                  <TableCell align='right'>{row.vote}</TableCell>
+          <TableContainer className={classes.container}>
+            <Table className={classes.table} size='small' aria-label='a dense table'>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Bill Name</TableCell>
+                  <TableCell align='right'>Vote</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              {(rows && rows.length) > 0 ? (
+                <TableBody stickyHeader>
+                  {rows.map(row => (
+                    <TableRow key={row.name}>
+                      <TableCell component='th' scope='row'>
+                        <Button color='primary' onClick={() => handleBillClickOpen(row)}><Typography>{row.name}</Typography></Button>
+                      </TableCell>
+                      <TableCell align='right'>{row.vote === 'yea' ? <Typography>Yea</Typography> : <Typography>Nay</Typography>}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>) : ''}
+            </Table>
+          </TableContainer>
         </CardContent>
-        <CardActions disableSpacing>
-          <IconButton onClick={handleClickOpenCompare}>
-            <CompareArrowsIcon color='primary' />
-          </IconButton>
-          <IconButton>
-            <PieChartIcon color='primary' />
-          </IconButton>
-          <IconButton onClick={handleClickOpen}>
-            <FontAwesomeIcon icon={faHandshake} color='#43D0C4' />
-          </IconButton>
-        </CardActions>
       </Card>
-      <Dialog
-        open={openCompare}
-        onClose={handleCloseCompare}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
-        <DialogTitle id='alert-dialog-title'>Head to Head</DialogTitle>
-        <DialogContent>
-          <h1>Head to head chart goes here</h1>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseCompare} color='primary' autoFocus>
-                        Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
-        <DialogTitle id='alert-dialog-title'>Bipartisan Index</DialogTitle>
-        <DialogContent>
-          {props.title.length !== 0
-            ? <ChartCard title='Bipartisan Index'> <BarChartWrapper data={props.data} categoryType={props.title} /> </ChartCard>
-            : 'title is empty!!'}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color='primary' autoFocus>
-                        Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
     </div>
   )
 }
