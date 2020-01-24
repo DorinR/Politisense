@@ -279,10 +279,10 @@ class Firestore {
       .then(result => {
         this.firestore.db
           .terminate()
-          .then(result => {})
-          .catch(e => {})
+          .then(result => { })
+          .catch(e => { })
       })
-      .catch(e => {})
+      .catch(e => { })
   }
 }
 

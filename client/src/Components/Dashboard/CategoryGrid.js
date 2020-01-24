@@ -81,6 +81,9 @@ export default function CategoryGrid () {
   const [value] = React.useState('')
   const [counter, setCounter] = React.useState(0)
   const [userRepresentative, setUserRepresentative] = React.useState('')
+  const [representativeData, setRepresentativeData] = React.useState([])
+
+  const [reset, setReset] = React.useState(false)
 
   async function getUserInterests(){
     let result = []
@@ -95,21 +98,47 @@ export default function CategoryGrid () {
   }
 
   useEffect(() => {
+
+    async function getAllBillsByRep (head) {
+      console.log("im insdie the GETALLBILLS and the head "+head )
+      let result = []
+      await axios
+          .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
+          .then(res => {
+            if (res.data.success) {
+              console.log(res.data.data)
+              result= res.data.data
+              setRepresentativeData(result)
+            }
+          })
+          .catch(err => console.error(err))
+      return result
+    }
+
     async function getData () {
       const user = JSON.parse(localStorage.getItem('user'))
+      console.log('user===', user);
       if (user) {
         const { email } = user
         const riding = await fetchUserRiding(email)
         const representative = await fetchRepresentative(riding)
+        if(representative.length != 0 ){
+          setUserRepresentative(representative)
+        }
         let test = await getUserInterests().then(res => {
           setCategoryList(res)
           setCounter(res.length)
         })
-        setUserRepresentative(representative)
+
       }
     }
     getData()
-  }, [])
+    if(userRepresentative){
+      getAllBillsByRep(userRepresentative) .then(result => {
+      })
+    }
+
+  }, [userRepresentative, reset])
 
   async function fetchRepresentative (riding) {
     let result = ''
@@ -127,11 +156,15 @@ export default function CategoryGrid () {
   }
 
   const deleteEvent = (index) => {
+    console.log('deleting index===', index)
+
     const copyCategoryArray = Object.assign([], categoryList)
     copyCategoryArray.splice(index, 1)
     setCategoryList(copyCategoryArray)
     updateUserCategory(copyCategoryArray)
     setCounter(counter - 1)
+    setRepresentativeData([])
+    setReset(!reset)
 
   }
 
@@ -154,32 +187,27 @@ export default function CategoryGrid () {
     setOpen(false)
   }
 
-  useEffect(() => {
-    async function getUserInterests(){
-      let user = JSON.parse(localStorage.getItem('user'))
-      await axios
-          .post('http://localhost:5000/api/users/getUserInterests', {email:user.email})
-          .then(res => {
-          })
-          .catch(err => console.error(err))
-    }
-  }, [value, categoryList,counter])
-
   return (
     <div className={classes.container}>
       <Grid container spacing={2}>
-        {categoryList.map((category, index) => {
-          return (
-            <Grid item xs={4} key={index}>
-              <CategoryCard
-                id={index}
-                title={category}
-                delete={deleteEvent}
-                representative={userRepresentative}
-              />
-            </Grid>
-          )
-        })}
+
+
+        {
+          representativeData.length && categoryList.length?
+              categoryList.map((category, index) => {
+                return (
+                    <Grid item xs={4} key={index}>
+                      <CategoryCard
+                          id={index}
+                          title={category}
+                          delete={deleteEvent}
+                          representative={userRepresentative}
+                          data={representativeData}
+                      />
+                    </Grid>
+                )
+              }) : ""
+        }
         {counter < 3
           ? <Grid item md={4}>
             <Card className={classes.card}>
