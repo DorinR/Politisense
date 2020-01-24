@@ -11,20 +11,15 @@ import BillDetails from './BillDetails'
 import axios from 'axios'
 
 const columns = [
-  { id: 'billNumber', label: 'Bill Number', minWidth: 100 },
-  { id: 'voteDate', label: 'Date Voted', minWidth: 100 },
+  { id: 'number', label: 'Bill Number', minWidth: 120 },
+  { id: 'dateVoted', label: 'Date Voted', minWidth: 120 },
   {
-    id: 'billTitle',
+    id: 'title',
     label: 'Bill Title',
     minWidth: 200,
-    align: 'right'
+    align: 'left'
   },
-  {
-    id: 'representativeVote',
-    label: 'Representative Vote',
-    minWidth: 50,
-    align: 'right'
-  },
+  { id: 'vote', label: 'Vote', minWidth: 80 },
   {
     id: 'moreInfo',
     label: 'Details',
@@ -33,14 +28,8 @@ const columns = [
   }
 ]
 
-function createData (
-  billNumber,
-  voteDate,
-  billTitle,
-  representativeVote,
-  moreInfo
-) {
-  return { billNumber, voteDate, billTitle, representativeVote, moreInfo }
+function createData (number, dateVoted, title, vote, moreInfo) {
+  return { number, dateVoted, title, vote, moreInfo }
 }
 
 let rows = []
@@ -50,7 +39,7 @@ const useStyles = makeStyles({
     width: '100%'
   },
   tableWrapper: {
-    maxHeight: 440,
+    maxHeight: 450,
     overflow: 'auto'
   }
 })
@@ -85,7 +74,7 @@ export async function fetchRepresentative (riding) {
   return result
 }
 
-export async function fetchRepresentativeVotes (representative) {
+export async function fetchRepresentatieVotes (representative) {
   const result = []
   await axios
     .get(
@@ -101,26 +90,101 @@ export async function fetchRepresentativeVotes (representative) {
   return result
 }
 
-function generateTableRows (votes) {
+export function fetchAllBills () {
+  return axios
+    .get('http://localhost:5000/api/bills/getAllBills')
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+    .catch(console.error)
+}
+
+export async function fetchRepresentativeId (representative) {
+  return axios
+    .get(
+      `http://localhost:5000/api/representatives/${representative}/getRepresentativeId`
+    )
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+    .catch(console.error)
+}
+
+export async function fetchRepresentativeVotes (representativeId) {
+  return axios
+    .get(
+      `http://localhost:5000/api/votes/${representativeId}/getAllVotesByRepresentative`
+    )
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+}
+
+export async function fetchAllVoteRecords () {
+  return axios
+    .get('http://localhost:5000/api/voteRecord/getAllVoteRecords')
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+}
+
+function generateTableRows (bills) {
   rows = []
-  votes.forEach(vote => {
-    const {
-      billNumber,
-      dateVoted,
-      voteName,
-      representativeVote,
-      billTitle,
-      billText
-    } = vote
+  bills.forEach(bill => {
+    const { number, dateVoted, title, sponsorName, link, vote } = bill
     const tableRow = createData(
-      billNumber,
+      number,
       dateVoted,
-      voteName,
-      representativeVote,
-      <BillDetails billTitle={billTitle} billText={billText} />
+      title,
+      vote,
+      <BillDetails title={title} sponsor={sponsorName} linkToFullText={link} />
     )
     rows.push(tableRow)
   })
+}
+
+function assembleBillObjects (bills, voteRecords, votesByRepresentative) {
+  bills.forEach(bill => {
+    bill.vote = getRepresentativeVote(
+      bill.id,
+      voteRecords,
+      votesByRepresentative
+    )
+  })
+
+  return bills
+}
+
+function getRepresentativeVote (billNumber, voteRecords, votesByRepresentative) {
+  let targetVoteRecord = {}
+  voteRecords.forEach(voteRecord => {
+    if (voteRecord.bill === billNumber) {
+      targetVoteRecord = voteRecord
+    }
+  })
+  let targetBillVote = null
+  votesByRepresentative.forEach(vote => {
+    if (vote.vote === targetVoteRecord.id) {
+      targetBillVote = vote.yea
+    }
+  })
+  let vote = 'Nay'
+  if (targetBillVote) {
+    vote = 'Yea'
+  }
+  if (targetBillVote == null) {
+    vote = 'Unknown'
+  }
+
+  return vote
 }
 
 export default function BillHistoryTable () {
@@ -134,9 +198,20 @@ export default function BillHistoryTable () {
       const user = JSON.parse(localStorage.getItem('user'))
       const { email } = user
       const riding = await fetchUserRiding(email)
+      // eslint-disable-next-line
       const representative = await fetchRepresentative(riding)
-      const votes = await fetchRepresentativeVotes(representative)
-      generateTableRows(votes)
+      const representativeId = await fetchRepresentativeId(representative)
+      const votesByRepresentative = await fetchRepresentativeVotes(
+        representativeId
+      )
+      const bills = await fetchAllBills()
+      const voteRecords = await fetchAllVoteRecords()
+      const fullBills = assembleBillObjects(
+        bills,
+        voteRecords,
+        votesByRepresentative
+      )
+      generateTableRows(fullBills)
     }
     getData()
   })
