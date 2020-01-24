@@ -123,8 +123,7 @@ export default function CategoryCard (props) {
     })
     setTitle(props.title)
     setData(props.data)
-  }, [props.title,props.data, props.representative])
-
+  }, [props.title, props.data, props.representative])
 
   return (
     <div>
@@ -154,15 +153,15 @@ export default function CategoryCard (props) {
             ? <BarChartWrapper data={data} categoryType={props.title} />
             : 'title is empty!!'}
           <TableContainer className={classes.container}>
-          <Table className={classes.table} size='small' aria-label='a dense table'>
-            <TableHead>
-              <TableRow>
-                <TableCell>Bill Name</TableCell>
-                <TableCell align='right'>Vote</TableCell>
-              </TableRow>
-            </TableHead>
-            {(rows && rows.length) > 0 ? (
-                <TableBody stickyHeader >
+            <Table className={classes.table} size='small' aria-label='a dense table'>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Bill Name</TableCell>
+                  <TableCell align='right'>Vote</TableCell>
+                </TableRow>
+              </TableHead>
+              {(rows && rows.length) > 0 ? (
+                <TableBody stickyHeader>
                   {rows.map(row => (
                     <TableRow key={row.name}>
                       <TableCell component='th' scope='row'>
@@ -172,7 +171,7 @@ export default function CategoryCard (props) {
                     </TableRow>
                   ))}
                 </TableBody>) : ''}
-          </Table>
+            </Table>
           </TableContainer>
         </CardContent>
       </Card>
