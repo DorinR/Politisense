@@ -2,15 +2,36 @@
 import React, { useEffect } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
+import Typography from '@material-ui/core/Typography';
 import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
 import ChartCard from './ChartCard'
 import Radar from 'react-d3-radar'
 import axios from 'axios'
 import { fetchUserRiding } from '../Navbar'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import { makeStyles } from '@material-ui/core/styles';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from "@material-ui/core/CardHeader";
+const useStyles = makeStyles({
+  card: {
+    minWidth: 275,
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+});
+
 
 export default function CategoryDashboard () {
+  const classes = useStyles();
   const [categoryList, setCategoryList] = React.useState(['economics', 'healthcare', 'human rights', 'business', 'religion', 'criminal', 'trade'])
   const [userRepresentative, setUserRepresentative] = React.useState('')
   const [representativeData, setRepresentativeData] = React.useState([])
@@ -25,14 +46,6 @@ export default function CategoryDashboard () {
   console.log(userRepresentative)
   console.log(representativeData)
   console.log(radarData)
-  // Economics
-  // // Healthcare
-  // // Trade
-  // // Human Rights
-  // // Business
-  // // Religion
-  // // Criminal
-  // ['Economics','Healthcare','Human Rights','Business','Religion','Criminal']
 
   useEffect(() => {
     async function getDataForDonut () {
@@ -63,7 +76,6 @@ export default function CategoryDashboard () {
     }
 
     async function getAllBillsByRep (head) {
-      console.log('im insdie the GETALLBILLS and the head ' + head)
       let result = []
       await axios
         .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
@@ -79,18 +91,13 @@ export default function CategoryDashboard () {
         .catch(err => console.error(err))
       return result
     }
-    /// :head/getAllBillsBySponsorName
     async function getAllBillsBySponsorName (head) {
-      console.log('im insdie the getAllBillsBySponsorName and the head ' + head)
       let result = []
       await axios
         .get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
         .then(res => {
           if (res.data.success) {
-            console.log(res.data.data)
             result = res.data.data
-            console.log(res.data.data.length)
-            // setUserRepIssuedBills(result)
           }
         })
         .catch(err => console.error(err))
@@ -105,8 +112,6 @@ export default function CategoryDashboard () {
         const allRepresentatives = await getAllReps()
         setUserRepresentative(representative)
         setReps(allRepresentatives)
-        // const representative = await fetchRepresentative(riding)
-        console.log('representative ' + representative)
         const issuedBillByUserRep = await getAllBillsBySponsorName(representative)
         setUserRepIssuedBills(issuedBillByUserRep)
         if (representative.length !== 0) {
@@ -118,7 +123,6 @@ export default function CategoryDashboard () {
 
     if (userRepresentative) {
       getAllBillsByRep(userRepresentative).then(results => {
-        console.log(results)
       })
     }
 
@@ -126,10 +130,8 @@ export default function CategoryDashboard () {
 
     if (categoryList && repDataLoaded) {
       createDataSetRadar(categoryList, representativeData).then(testing => {
-        console.log(testing)
         if (testing.length !== 0) {
           setRadarData(testing)
-          console.log('testing ' + testing)
         }
       })
     }
@@ -159,11 +161,21 @@ export default function CategoryDashboard () {
       <Grid item xs={12}>
         {
           userRepIssuedBills.length !== 0 && categoryList.length !== 0
-            ? <Card>
-              <CardHeader />
-              <BarChartWrapper type='bar-pie' data={userRepIssuedBills} categories={categoryList} />
+            ?
+              (<Card>
 
-            </Card>
+                    <CardContent>
+                      <Typography variant="h7" color='textSecondary' component="p">
+                        The Distribution of Sponsored Bills
+                      </Typography>
+                      <BarChartWrapper type='bar-pie' data={userRepIssuedBills} categories={categoryList} />
+                      <Typography variant="h7" color='textSecondary' component="p">
+                        The Distribution of Issued Bills By The Representative Among Different Categories
+                      </Typography>
+                    </CardContent>
+             </Card>
+              )
+
             : ''
         }
 
