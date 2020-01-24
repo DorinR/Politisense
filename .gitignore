@@ -31,5 +31,6 @@ yarn-error.log*
 
 /client/package-lock.json
 package-lock.json
-/client/build/
 /client/coverage/
+/client/build/
+

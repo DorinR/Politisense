@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import { makeStyles } from '@material-ui/core/styles'
+
 const Firestore = require('../../../Firebase').Firestore
 
 const useStyles = makeStyles(theme => ({
@@ -27,7 +28,6 @@ export default function RepresentativeImage (props) {
           return
         }
         snapshot.forEach(doc => {
-          console.log(doc.id, '=>', doc.data())
           const { name, imageUrl } = doc.data()
           setName(name)
           setImageUrl(imageUrl)
