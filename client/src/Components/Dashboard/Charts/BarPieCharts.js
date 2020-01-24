@@ -2,13 +2,11 @@ import * as d3 from 'd3'
 // the number of bills that mp has issue on
 // the distribution of bills for that category
 function dashboard (element, fData) {
-
   const barColor = '#84c5f1'
 
   fData.forEach(function (d) { d.total = d.freq.total })
 
   function histoGram (fD) {
-
     const hG = {}
     const hGDim = { t: 60, r: 0, b: 30, l: 60 }
     hGDim.w = 550 - hGDim.l - hGDim.r
@@ -58,8 +56,8 @@ function dashboard (element, fData) {
 
     function mouseover (d) { // utility function to be called on mouseover.
       // filter for selected state.
-      let st = fData.filter(function (s) { return s.State === d[0] })[0]
-      let nD = d3.keys(st.freq).map(function (s) { return { type: s, freq: st.freq[s] } })
+      const st = fData.filter(function (s) { return s.State === d[0] })[0]
+      const nD = d3.keys(st.freq).map(function (s) { return { type: s, freq: st.freq[s] } })
 
       // call update functions of pie-chart and legend.
       pC.update(nD)
@@ -96,9 +94,8 @@ function dashboard (element, fData) {
 
   // function to handle pieChart.
   function pieChart (pD) {
-
-    let pC = {}
-    let pieDim = { w: 250, h: 300 }
+    const pC = {}
+    const pieDim = { w: 250, h: 300 }
     pieDim.r = Math.min(pieDim.w, pieDim.h) / 2
 
     // create svg for pie chart.
@@ -184,7 +181,7 @@ function dashboard (element, fData) {
     // Utility function to be used to update the legend.
     leg.update = function (nD) {
       // update the data attached to the row elements.
-      let l = legend.select('tbody').selectAll('tr').data(nD)
+      const l = legend.select('tbody').selectAll('tr').data(nD)
 
       // update the frequencies.
       l.select('.legendFreq').text(function (d) { return d3.format(',')(d.freq) })
@@ -201,52 +198,49 @@ function dashboard (element, fData) {
   }
 
   // calculate total frequency by segment for all state.
-  let tF = ['yes', 'no', 'abstain'].map(function (d) {
+  const tF = ['yes', 'no', 'abstain'].map(function (d) {
     return { type: d, freq: d3.sum(fData.map(function (t) { return t.freq[d] })) }
   })
 
   // calculate total frequency by state for all segment.
-  let sF = fData.map(function (d) { return [d.State, d.total] })
+  const sF = fData.map(function (d) { return [d.State, d.total] })
   console.log(sF)
-  let hG = histoGram(sF) // create the histogram.
-  let pC = pieChart(tF) // create the pie-chart.
-  let leg = legend(tF) // create the legend.
+  const hG = histoGram(sF) // create the histogram.
+  const pC = pieChart(tF) // create the pie-chart.
+  const leg = legend(tF) // create the legend.
 }
 export default class BarPieChart {
-
-  constructor (element,data,categories) {
-    console.log(data,categories)
-    createData(categories,data).then(results => {
+  constructor (element, data, categories) {
+    console.log(data, categories)
+    createData(categories, data).then(results => {
       dashboard(element, results)
     })
-
   }
 }
- export async function createData(categories,data){
-  let dataArray = []
+export async function createData (categories, data) {
+  const dataArray = []
 
   let temp = {}
-console.log(categories,data)
+  console.log(categories, data)
   categories.forEach(category => {
-    let yesCounter =0
-    let noCounter=0
-    let abtsainCounter =0
+    let yesCounter = 0
+    let noCounter = 0
+    const abtsainCounter = 0
 
-    let totalBills= 0
-    data.forEach(bill=>{
-
-      if(bill.billsClassified.category === (category.toLowerCase()) ){
+    let totalBills = 0
+    data.forEach(bill => {
+      if (bill.billsClassified.category === (category.toLowerCase())) {
         totalBills++
-        yesCounter= yesCounter+ bill.voteRecord.yeas
-        noCounter= yesCounter+ bill.voteRecord.nays
+        yesCounter = yesCounter + bill.voteRecord.yeas
+        noCounter = yesCounter + bill.voteRecord.nays
       }
     })
-  temp = {State: category, freq: { yes: yesCounter, no: noCounter, abstain: abtsainCounter, total: totalBills }}
-  console.log(temp)
+    temp = { State: category, freq: { yes: yesCounter, no: noCounter, abstain: abtsainCounter, total: totalBills } }
+    console.log(temp)
     dataArray.push(temp)
   })
 
-   return dataArray
+  return dataArray
 }
 
 function segColor (c) { return { yes: '#43D0C4', no: '#de425b', abstain: '#f68155' }[c] }

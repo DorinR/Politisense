@@ -50,9 +50,7 @@ module.exports = {
   getAllBillsByRep: function (req, res) {
     return BillController.getAllBillsByRep(req, res)
   },
-  //getAllBillsBySponsorName
   getAllBillsBySponsorName: function (req, res) {
     return BillController.getAllBillsBySponsorName(req, res)
   }
-
 }

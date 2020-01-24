@@ -1,14 +1,11 @@
 import * as d3 from 'd3'
-import axios from "axios";
 
 function segColor (c) { return { Liberal: '#D31F25', Conservative: '#1B447A', NDP: '#CD793E', People: '#243570', Green: '#439B3B', BQ: '#00A7EC' }[c] }
 
 function createDonut (element, fData) {
-
   function pieChart (pD) {
-
-    let pC = {}
-    let pieDim = { w: 200, h: 200 }
+    const pC = {}
+    const pieDim = { w: 200, h: 200 }
 
     pieDim.r = Math.min(pieDim.w, pieDim.h) / 2
 
@@ -34,7 +31,6 @@ function createDonut (element, fData) {
         this._current = d
       })
       .style('fill', function (d) {
-
         return segColor(d.data.type)
       })
       .on('mouseover', mouseover).on('mouseout', mouseout)
@@ -126,9 +122,8 @@ function createDonut (element, fData) {
         return getLegend(d, nD)
       })
     }
-
     function getLegend (d, aD) { // Utility function to compute percentage.
-      return d3.format('%')(d.freq / d3.sum(aD.map(function (v) {
+      return d3.format('.0%')(d.freq / d3.sum(aD.map(function (v) {
         return v.freq
       })))
     }
@@ -143,15 +138,10 @@ function createDonut (element, fData) {
   legend(tF)
 }
 
-
 export default class DonutChart {
-
-  constructor(element,data) {
-      let freqData = [
-        {State: 'Yes Votes', freq: data[0]}]
-      createDonut(element, freqData)
+  constructor (element, data) {
+    const freqData = [
+      { State: 'Yes Votes', freq: data[0] }]
+    createDonut(element, freqData)
   }
 }
-
-
-

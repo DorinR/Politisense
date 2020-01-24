@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
@@ -55,91 +56,13 @@ const useStyles = makeStyles({
   }
 })
 
-// export async function fetchUserRiding (userEmail) {
-//   let result = ''
-//   await axios
-//     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
-//     .then(res => {
-//       if (res.data.success) {
-//         const riding = res.data.data.riding
-//         result = riding
-//       }
-//     })
-//     .catch(err => console.log(err))
-//   return result
-// }
-//
-// export async function fetchRepresentative (riding) {
-//   let result = ''
-//   await axios
-//     .get(
-//       `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-//     )
-//     .then(res => {
-//       if (res.data.success) {
-//         const representative = res.data.data.name
-//         result = representative
-//       }
-//     })
-//     .catch(err => console.log(err))
-//   return result
-// }
-//
-// export async function fetchRepresentativeVotes (representative) {
-//   const result = []
-//   await axios
-//     .get(
-//       `http://localhost:5000/api/voteRecord/getVotesByRepresentative/${representative}`
-//     )
-//     .then(res => {
-//       if (res.data.success) {
-//         const votes = res.data.data
-//         votes.forEach(vote => result.push(vote))
-//       }
-//     })
-//     .catch(err => console.log(err))
-//   return result
-// }
-//
-// function generateTableRows (votes) {
-//   rows = []
-//   votes.forEach(vote => {
-//     const {
-//       billNumber,
-//       dateVoted,
-//       voteName,
-//       representativeVote,
-//       billTitle,
-//       billText
-//     } = vote
-//     const tableRow = createData(
-//       billNumber,
-//       dateVoted,
-//       voteName,
-//       representativeVote,
-//       <BillDetails billTitle={billTitle} billText={billText} />
-//     )
-//     rows.push(tableRow)
-//   })
-// }
+
 
 export default function BillHistoryTable () {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
-  // useEffect(() => {
-  //   async function getData () {
-  //     // eslint-disable-next-line no-undef
-  //     const user = JSON.parse(localStorage.getItem('user'))
-  //     const { email } = user
-  //     const riding = await fetchUserRiding(email)
-  //     const representative = await fetchRepresentative(riding)
-  //     const votes = await fetchRepresentativeVotes(representative)
-  //     generateTableRows(votes)
-  //   }
-  //   getData()
-  // })
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)

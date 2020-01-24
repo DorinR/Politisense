@@ -26,7 +26,6 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import Button from '@material-ui/core/Button'
 import DeleteCategoryDialog from './DeleteCategoryDialog'
 import ChartCard from './ChartCard'
-import RadarChart from './Charts/RadarChart'
 import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
 
 const useStyles = makeStyles(theme => ({
@@ -48,7 +47,6 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: red[500]
   },
   table: {
-    // minWidth: 650,
   }
 }))
 
@@ -71,7 +69,7 @@ export default function CategoryCard (props) {
     console.log('the index of the card is ' + index)
 
     if (newValue === true) {
-       props.delete(index)
+      props.delete(index)
     }
     setOpenDeleteDialog(false)
   }
@@ -113,7 +111,6 @@ export default function CategoryCard (props) {
 
   React.useEffect(() => {
     populateTable()
-    // setId(props.id)
     setTitle(props.title)
     setData(props.data)
   }, [props.title, props.data])
@@ -150,14 +147,10 @@ export default function CategoryCard (props) {
           categoryName={props.title}
         />
         <CardContent>
-          <ChartCard title='MP Voting Distribution'>
-            { data.length ?
-                <ChartCard title='Bipartisan Index' id={'charts'} className ={'charts'}>
-                  <BarChartWrapper data={data} categoryType={props.title}/>
-                </ChartCard>
-                : "title is empty!!"
-            }
-          </ChartCard>
+          {data.length
+            ? <BarChartWrapper data={data} categoryType={props.title} />
+
+            : 'title is empty!!'}
           <Table className={classes.table} size='small' aria-label='a dense table'>
             <TableHead>
               <TableRow>
@@ -213,10 +206,9 @@ export default function CategoryCard (props) {
       >
         <DialogTitle id='alert-dialog-title'>Bipartisan Index</DialogTitle>
         <DialogContent>
-          { props.title.length != 0 ?
-              <ChartCard title='Bipartisan Index'> <BarChartWrapper data={props.data} categoryType={props.title}/> </ChartCard>
-              : "title is empty!!"
-          }
+          {props.title.length !== 0
+            ? <ChartCard title='Bipartisan Index'> <BarChartWrapper data={props.data} categoryType={props.title} /> </ChartCard>
+            : 'title is empty!!'}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color='primary' autoFocus>
