@@ -1,7 +1,6 @@
 import { Firestore } from '../client/src/Firebase'
 
 exports.getAllBills = async (req, res) => {
-  console.log('getAllBills endpoint called!')
   const db = new Firestore()
   const allBills = []
   await db
