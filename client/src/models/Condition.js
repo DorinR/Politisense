@@ -4,7 +4,7 @@ class ModelError extends TypeError {
     if (params.type) {
       this.message = `Condition violated in model: Type of ${params.param} is not ${typeof params.type({})}`
     } else if (params.value && params.condition) {
-      this.message = `Condition violated in model: Value of ${params.param} ${params.condition} ${params.value}`
+      this.message = `Condition violated in model: Passed value: ${params.param}, expected (passed value) ${params.condition} ${params.value}`
     } else {
       this.message = `Condition violated in model for attribute ${params.param}`
     }
@@ -35,7 +35,7 @@ class Condition {
       throw new ModelError({
         param: this.param,
         value: value,
-        condition: '=='
+        condition: '!='
       })
     }
     return this
@@ -63,7 +63,7 @@ class Condition {
       throw new ModelError({
         param: this.param,
         value: value,
-        condition: '>'
+        condition: '>='
       })
     }
     return this
@@ -91,7 +91,7 @@ class Condition {
       throw new ModelError({
         param: this.param,
         value: value,
-        condition: '<'
+        condition: '<='
       })
     }
     return this
