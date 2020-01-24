@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import Component from 'react'
 import BarPieChart from '../BarPieCharts'
 import BarChart from '../BarChart'
 import DonutChart from '../DonutChart'
@@ -13,13 +13,5 @@ export default class BarChartWrapper extends Component {
       default:
         return new DonutChart(this.refs.chart)
     }
-  }
-
-  render () {
-    return (
-      <div>
-        <div ref='chart' />
-      </div>
-    )
   }
 }
