@@ -1,15 +1,17 @@
-import BarPieChart from "../BarPieCharts";
-import BarChart from "../BarChart";
+import Component from 'react'
+import BarPieChart from '../BarPieCharts'
+import BarChart from '../BarChart'
+import DonutChart from '../DonutChart'
 
 export default class BarChartWrapper extends Component {
-  componentDidMount() {
+  componentDidMount () {
     switch (this.props.type) {
-      case "bar-pie":
-        return new BarPieChart(this.refs.chart);
-      case "bar":
-        return new BarChart(this.refs.chart);
+      case 'bar-pie':
+        return new BarPieChart(this.refs.chart)
+      case 'bar':
+        return new BarChart(this.refs.chart)
       default:
-        return new DonutChart(this.refs.chart);
+        return new DonutChart(this.refs.chart)
     }
   }
 }
