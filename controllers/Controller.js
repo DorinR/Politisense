@@ -55,5 +55,13 @@ module.exports = {
   // Riding
   getRidingCode: function (req, res) {
     return RidingController.getRidingCode(req, res)
+  },
+
+  getAllBillsByHead: function (req,res){
+    return BillController.getAllBillsByHead(req,res)
+  },
+  //getRepresentativesInfo
+  getRepresentativesInfo: function (req,res){
+    return RepresentativeController.getRepresentativesInfo(req,res)
   }
 }
