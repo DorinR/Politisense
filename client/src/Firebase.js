@@ -253,7 +253,7 @@ class Firestore {
     return new Reference(this.reference.collection('users'))
   }
 
-  Ridings () {
+  Riding () {
     return new Reference(this.reference.collection('ridings'))
   }
 

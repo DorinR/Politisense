@@ -4,7 +4,7 @@ exports.getRidingCode = (req, res) => {
   const targetRiding = req.params.riding.replace(/—/g, '--')
 
   const db = new Firestore()
-  db.Ridings()
+  db.Riding()
     .where('nameEnglish', '==', targetRiding)
     .select()
     .then(snapshot => {
