@@ -17,7 +17,7 @@ export default function CategoryDashboard () {
           <BarChartWrapper type='bar-pie' />
           <CardContent>
             <Typography variant='body2' color='textSecondary' component='p'>
-                Voting record of your MP.
+              Voting record of your MP.
             </Typography>
           </CardContent>
         </Card>
@@ -25,10 +25,16 @@ export default function CategoryDashboard () {
       <Grid item xs={1}>
         <Grid container spacing={2}>
           <Grid item={12}>
-            <ChartCard title='MP Voting Distribution'> <RadarChart /> </ChartCard>
+            <ChartCard title='MP Voting Distribution'>
+              {' '}
+              <RadarChart />{' '}
+            </ChartCard>
           </Grid>
           <Grid item={12}>
-            <ChartCard title='Bipartisan Index'> <BarChartWrapper /> </ChartCard>
+            <ChartCard title='Bipartisan Index'>
+              {' '}
+              <BarChartWrapper />{' '}
+            </ChartCard>
           </Grid>
         </Grid>
       </Grid>

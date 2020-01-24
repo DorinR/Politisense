@@ -6,6 +6,7 @@ import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import axios from 'axios'
+// eslint-disable-line no-use-before-define
 import { Firestore } from '../../../Firebase'
 import TotalEmployeeCosts from './MPCalculations/TotalEmployeeCosts'
 import TotalAdvertisingCosts from './MPCalculations/TotalAdvertisingCosts'
