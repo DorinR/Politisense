@@ -55,8 +55,11 @@ module.exports = {
     return VoteRecordController.getVotesByRepresentative(req, res)
   },
 
-  // Riding
   getRidingCode: function (req, res) {
     return RidingController.getRidingCode(req, res)
+  },
+
+  getRidingPopulation: function (req, res) {
+    return RidingController.getRidingPopulation(req, res)
   }
 }
