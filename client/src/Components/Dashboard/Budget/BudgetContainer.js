@@ -6,8 +6,6 @@ import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import axios from 'axios'
-// eslint-disable-next-line
-import { Firestore } from '../../../Firebase';
 import TotalEmployeeCosts from './MPCalculations/TotalEmployeeCosts'
 import TotalAdvertisingCosts from './MPCalculations/TotalAdvertisingCosts'
 import TotalGiftsCosts from './MPCalculations/TotalGiftsCosts'
@@ -29,6 +27,8 @@ import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import CircularProgress from '@material-ui/core/CircularProgress'
+
+const Firestore = require('../../../Firebase').Firestore
 
 const useStyles = makeStyles(theme => ({
   customCardContent: {
