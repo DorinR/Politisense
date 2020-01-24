@@ -32,7 +32,7 @@ exports.getRidingCode = (req, res) => {
 exports.getRidingPopulation = (req, res) => {
   const targetRiding = req.params.riding
   const db = new Firestore()
-  db.Ridings()
+  db.Riding()
     .where('nameEnglish', '==', targetRiding)
     .select()
     .then(snapshot => {
