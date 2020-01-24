@@ -30,7 +30,10 @@ export default function TotalAdvertisingCosts(props) {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Average Advertising Costs: {Math.round(props.data)}
+            Average:{" "}
+            {Math.round(props.data)
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
           </Typography>
         </CardContent>
       </Card>

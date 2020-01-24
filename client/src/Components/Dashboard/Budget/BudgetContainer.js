@@ -24,6 +24,10 @@ import AverageOffice from "./AverageCalculations/AverageOffice";
 import AveragePrinting from "./AverageCalculations/AveragePrinting";
 import AverageTravel from "./AverageCalculations/AverageTravel";
 import AverageFullCosts from "./AverageCalculations/AverageFullCosts";
+import Table from "@material-ui/core/Table";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
 const useStyles = makeStyles(theme => ({
   customCardContent: {
@@ -680,47 +684,131 @@ export default function BudgetContainer() {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            <BarChartWrapper
+            {/* <BarChartWrapper
               type={"bullet"}
               average={totalEmployeeCost}
               mpValue={totalEmployeeCost}
-            />
-            <MPFullCosts
-              data={
-                totalEmployeeCost +
-                totalAdvertisingCost +
-                totalGiftsCost +
-                totalHospitalityCost +
-                totalTravelCost +
-                totalOfficeCost +
-                totalPrintingCost
-              }
-            />
-            <AverageFullCosts
-              data={
-                averageEmployee +
-                averageAdvertising +
-                averageGifts +
-                averageHospitality +
-                averageTravel +
-                averageOffice +
-                averagePrinting
-              }
-            />
-            <TotalEmployeeCosts data={totalEmployeeCost} />
-            <AverageEmployee data={averageEmployee} />
-            <TotalAdvertisingCosts data={totalAdvertisingCost} />
-            <AverageAdvertising data={averageAdvertising} />
-            <TotalGiftsCosts data={totalGiftsCost} />
-            <AverageGifts data={averageGifts} />
-            <TotalHospitalityCosts data={totalHospitalityCost} />
-            <AverageHospitality data={averageHospitality} />
-            <TotalTravelCosts data={totalTravelCost} />
-            <AverageTravel data={averageTravel} />
-            <TotalOfficeCosts data={totalOfficeCost} />
-            <AverageOffice data={averageOffice} />
-            <TotalPrintingCosts data={totalPrintingCost} />
-            <AveragePrinting data={averagePrinting} />
+            /> */}
+            <Table className={classes.table} aria-label="simple table">
+              <TableHead>
+                <Typography variant="body1" color="textPrimary">
+                  {" "}
+                  TOTAL COSTS{" "}
+                </Typography>
+                <TableRow>
+                  <TableCell align="center">
+                    <MPFullCosts
+                      data={
+                        totalEmployeeCost +
+                        totalAdvertisingCost +
+                        totalGiftsCost +
+                        totalHospitalityCost +
+                        totalTravelCost +
+                        totalOfficeCost +
+                        totalPrintingCost
+                      }
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    <AverageFullCosts
+                      data={
+                        averageEmployee +
+                        averageAdvertising +
+                        averageGifts +
+                        averageHospitality +
+                        averageTravel +
+                        averageOffice +
+                        averagePrinting
+                      }
+                    />
+                  </TableCell>
+                </TableRow>
+                <Typography variant="body1" color="textPrimary">
+                  {" "}
+                  EMPLOYEE COSTS{" "}
+                </Typography>
+                <TableRow>
+                  <TableCell align="center">
+                    <TotalEmployeeCosts data={totalEmployeeCost} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <AverageEmployee data={averageEmployee} />
+                  </TableCell>
+                </TableRow>
+                <Typography variant="body1" color="textPrimary">
+                  {" "}
+                  ADVERTISING COSTS{" "}
+                </Typography>
+                <TableRow>
+                  <TableCell align="center">
+                    <TotalAdvertisingCosts data={totalAdvertisingCost} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <AverageAdvertising data={averageAdvertising} />
+                  </TableCell>
+                </TableRow>
+                <Typography variant="body1" color="textPrimary">
+                  {" "}
+                  GIFTS COSTS{" "}
+                </Typography>
+                <TableRow>
+                  <TableCell align="center">
+                    <TotalGiftsCosts data={totalGiftsCost} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <AverageGifts data={averageGifts} />
+                  </TableCell>
+                </TableRow>
+                <Typography variant="body1" color="textPrimary">
+                  {" "}
+                  HOSPITALITY COSTS{" "}
+                </Typography>
+                <TableRow>
+                  <TableCell align="center">
+                    <TotalHospitalityCosts data={totalHospitalityCost} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <AverageHospitality data={averageHospitality} />
+                  </TableCell>
+                </TableRow>
+                <Typography variant="body1" color="textPrimary">
+                  {" "}
+                  TRAVEL COSTS{" "}
+                </Typography>
+                <TableRow>
+                  <TableCell align="center">
+                    <TotalTravelCosts data={totalTravelCost} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <AverageTravel data={averageTravel} />
+                  </TableCell>
+                </TableRow>
+                <Typography variant="body1" color="textPrimary">
+                  {" "}
+                  OFFICE COSTS{" "}
+                </Typography>
+                <TableRow>
+                  <TableCell align="center">
+                    <TotalOfficeCosts data={totalOfficeCost} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <AverageOffice data={averageOffice} />
+                  </TableCell>
+                </TableRow>
+                <Typography variant="body1" color="textPrimary">
+                  {" "}
+                  PRINTING COSTS{" "}
+                </Typography>
+                <TableRow>
+                  <TableCell align="center">
+                    <TotalPrintingCosts data={totalPrintingCost} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <AveragePrinting data={averagePrinting} />
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+            </Table>
           </Typography>
         </CardContent>
       </Card>

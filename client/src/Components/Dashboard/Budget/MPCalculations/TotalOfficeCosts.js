@@ -30,7 +30,9 @@ export default function TotalOfficeCosts(props) {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>
-            Office Costs: {Math.round(props.data)}
+            {Math.round(props.data)
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
           </Typography>
         </CardContent>
       </Card>
