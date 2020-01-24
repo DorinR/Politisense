@@ -3,7 +3,7 @@ import { Firestore } from '../client/src/Firebase'
 exports.getRidingCode = (req, res) => {
   const targetRiding = req.params.riding
   const db = new Firestore()
-  db.Ridings()
+  db.Riding()
     .where('nameEnglish', '==', targetRiding)
     .select()
     .then(snapshot => {
@@ -32,7 +32,7 @@ exports.getRidingCode = (req, res) => {
 exports.getRidingPopulation = (req, res) => {
   const targetRiding = req.params.riding
   const db = new Firestore()
-  db.Ridings()
+  db.Riding()
     .where('nameEnglish', '==', targetRiding)
     .select()
     .then(snapshot => {
