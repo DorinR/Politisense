@@ -17,7 +17,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBalanceScale, faPrayingHands } from '@fortawesome/free-solid-svg-icons'
 import Button from '@material-ui/core/Button'
 import DeleteCategoryDialog from './DeleteCategoryDialog'
-import ChartCard from './ChartCard'
 import Typography from '@material-ui/core/Typography'
 import TableContainer from '@material-ui/core/TableContainer'
 import BillDialog from './BillDialog'
@@ -123,7 +122,8 @@ export default function CategoryCard (props) {
       setRows(rows)
     })
     setTitle(props.title)
-  }, [props.title, props.representative])
+    setData(props.data)
+  }, [props.title,props.data, props.representative])
 
 
   return (
@@ -153,6 +153,7 @@ export default function CategoryCard (props) {
           {data.length
             ? <BarChartWrapper data={data} categoryType={props.title} />
             : 'title is empty!!'}
+          <TableContainer className={classes.container}>
           <Table className={classes.table} size='small' aria-label='a dense table'>
             <TableHead>
               <TableRow>
@@ -160,7 +161,8 @@ export default function CategoryCard (props) {
                 <TableCell align='right'>Vote</TableCell>
               </TableRow>
             </TableHead>
-                <TableBody>
+            {(rows && rows.length) > 0 ? (
+                <TableBody stickyHeader >
                   {rows.map(row => (
                     <TableRow key={row.name}>
                       <TableCell component='th' scope='row'>
@@ -169,8 +171,9 @@ export default function CategoryCard (props) {
                       <TableCell align='right'>{row.vote === 'yea' ? <Typography>Yea</Typography> : <Typography>Nay</Typography>}</TableCell>
                     </TableRow>
                   ))}
-                </TableBody>
+                </TableBody>) : ''}
           </Table>
+          </TableContainer>
         </CardContent>
       </Card>
       <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
