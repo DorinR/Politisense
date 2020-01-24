@@ -27,7 +27,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import Fab from '@material-ui/core/Fab'
 import Box from '@material-ui/core/Box'
 import axios from 'axios'
-
+import CompareArrowsIcon from '@material-ui/icons/CompareArrows'
 const drawerWidth = 330
 
 const useStyles = makeStyles(theme => ({
@@ -259,6 +259,14 @@ export default function MiniDrawer ({ children }) {
                   <DashboardIcon className={classes.politisenseIcon} />
                 </ListItemIcon>
                 Dashboard
+              </ListItem>
+            </Link>
+            <Link to='/headToHeadComparison' className={classes.routerLink}>
+              <ListItem button>
+                <ListItemIcon>
+                  <CompareArrowsIcon className={classes.politisenseIcon} />
+                </ListItemIcon>
+                Head VS Head
               </ListItem>
             </Link>
             <Link to='/logout' className={classes.routerLink}>

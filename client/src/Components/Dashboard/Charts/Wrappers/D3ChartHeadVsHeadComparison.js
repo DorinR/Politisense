@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import SimilaritiesPieChart from "../SimilaritiesPieChart"
+import SimilaritiesPieChart from '../SimilaritiesPieChart'
 
 export default class D3ChartHeadVsHeadComparison extends Component {
-    componentDidMount () {
-        return  new SimilaritiesPieChart(this.refs.chart,this.props.data)
-    }
+  componentDidMount () {
+    return new SimilaritiesPieChart(this.refs.chart, this.props.data)
+  }
 
-    render () {
-        return (
-            <div>
-                <div ref='chart' />
-            </div>
-        )
-    }
+  render () {
+    return (
+      <div>
+        <div ref='chart' />
+      </div>
+    )
+  }
 }

@@ -9,9 +9,10 @@ var freqData = [
   { State: 'ForeginPolicies', freq: { yes: 1619, no: 167, abstain: 1063 } }
 ]
 
+function segColor (c) { return { yes: '#43D0C4', no: '#de425b', abstain: '#f68155' }[c] }
+
 function dashboard (element, fData) {
   const barColor = '#84c5f1'
-  function segColor (c) { return { yes: '#43D0C4', no: '#de425b', abstain: '#f68155' }[c] }
 
   fData.forEach(function (d) { d.total = d.freq.yes + d.freq.no + d.freq.abstain })
 

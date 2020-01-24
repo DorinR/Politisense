@@ -1,24 +1,17 @@
-import React, {useEffect, useState} from 'react'
-import Grid from '@material-ui/core/Grid'
+/* eslint-disable */
+import React, { useState } from 'react'
 import D3ChartHeadVsHeadComparison from './Charts/Wrappers/D3ChartHeadVsHeadComparison'
 import ChartCard from './ChartCard'
 
-
 export default function D3ChartHeadVsHeadContainer (props) {
-    const [dataSet, setDataSet] = useState(props.data)
+  const [dataSet, setDataSet] = useState(props.data)
 
+  return (
+    <div>
+      <ChartCard title='Comparing between Representatives on How much  do they agree based on common bills and vote records'>
+        <D3ChartHeadVsHeadComparison data={dataSet} />
+      </ChartCard>
+    </div>
 
-
-    return (
-        <div>
-            <Grid container spacing={4} direction="row">
-                <ChartCard title='Similarities'> <D3ChartHeadVsHeadComparison data={dataSet} /> </ChartCard>
-            </Grid>
-
-        </div>
-
-    )
-
-
-
+  )
 }

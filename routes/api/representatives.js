@@ -14,6 +14,4 @@ router.get('/getAllRepresentatives', controller.getAllRepresentatives)
 
 router.get('/:name/getRepresentativesInfo', controller.getRepresentativesInfo)
 
-
-
 module.exports = router

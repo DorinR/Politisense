@@ -7,7 +7,7 @@ const controller = require('../../controllers/Controller')
 // @access Public
 router.get('/getBillById', controller.getBillById)
 
-///${head}/getAllBillsByHead
+/// ${head}/getAllBillsByHead
 // @route post api/representatives/:riding/getRepresentative
 // @desc  get representative by riding
 // @access Public

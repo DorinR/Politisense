@@ -38,10 +38,12 @@ export async function fetchUserRiding (userEmail) {
 }
 
 export async function fetchRidingCode (riding) {
+  console.log(riding)
   return axios
     .get(`http://localhost:5000/api/ridings/getRidingCode/${encodeURI(riding)}`)
     .then(res => {
       if (res.data.success) {
+        console.log(res.data.data.code)
         return res.data.data.code
       }
     })
