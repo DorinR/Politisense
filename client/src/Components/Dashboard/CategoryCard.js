@@ -18,10 +18,10 @@ import { faBalanceScale, faPrayingHands } from '@fortawesome/free-solid-svg-icon
 import Button from '@material-ui/core/Button'
 import DeleteCategoryDialog from './DeleteCategoryDialog'
 import ChartCard from './ChartCard'
-import RadarChart from './Charts/RadarChart'
 import Typography from '@material-ui/core/Typography'
 import TableContainer from '@material-ui/core/TableContainer'
 import BillDialog from './BillDialog'
+import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
 
 const useStyles = makeStyles(theme => ({
   media: {
@@ -40,9 +40,6 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     maxHeight: 200
-  },
-  yea: {
-    backgroundColor: '#43D0C4'
   }
 }))
 
@@ -79,6 +76,7 @@ export async function populateTable (data, title) {
 export default function CategoryCard (props) {
   const classes = useStyles()
   const [title, setTitle] = React.useState('')
+  const [data, setData] = React.useState([])
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
   const [confimedDeletion] = React.useState(false)
   const [rows, setRows] = React.useState([])
@@ -127,6 +125,7 @@ export default function CategoryCard (props) {
     setTitle(props.title)
   }, [props.title, props.representative])
 
+
   return (
     <div>
       <Card className={classes.card}>
@@ -151,16 +150,16 @@ export default function CategoryCard (props) {
           categoryName={props.title}
         />
         <CardContent>
-          <ChartCard title='MP Voting Distribution'> <RadarChart /> </ChartCard>
-          {(rows && rows.length > 0) ? (
-            <TableContainer className={classes.container}>
-              <Table className={classes.table} size='small' stickyHeader>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Bill Name</TableCell>
-                    <TableCell align='right'>Vote</TableCell>
-                  </TableRow>
-                </TableHead>
+          {data.length
+            ? <BarChartWrapper data={data} categoryType={props.title} />
+            : 'title is empty!!'}
+          <Table className={classes.table} size='small' aria-label='a dense table'>
+            <TableHead>
+              <TableRow>
+                <TableCell>Bill Name</TableCell>
+                <TableCell align='right'>Vote</TableCell>
+              </TableRow>
+            </TableHead>
                 <TableBody>
                   {rows.map(row => (
                     <TableRow key={row.name}>
@@ -171,8 +170,7 @@ export default function CategoryCard (props) {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
-            </TableContainer>) : <p>No data for this category</p>}
+          </Table>
         </CardContent>
       </Card>
       <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
