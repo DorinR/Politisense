@@ -31,10 +31,6 @@ module.exports = {
   getUserInterests: function (req, res) {
     return UserController.getUserInterests(req, res)
   },
-  updateUserCategory: function (req, res) {
-    return UserController.updateUserCategory(req, res)
-  },
-
   // Representative
   getRepresentativeByRiding: function (req, res) {
     return RepresentativeController.getRepresentativeByRiding(req, res)
@@ -42,6 +38,7 @@ module.exports = {
   getAllRepresentatives: function (req, res) {
     return RepresentativeController.getAllRepresentatives(req, res)
   },
+  
   getRepresentativeId: function (req, res) {
     return RepresentativeController.getRepresentativeId(req, res)
   },
@@ -62,6 +59,16 @@ module.exports = {
 
   getAllVoteRecords: function (req, res) {
     return VoteRecordController.getAllVoteRecords(req, res)
+  },
+
+  updateUserCategory: function (req, res) {
+    return UserController.updateUserCategory(req, res)
+  },
+  getAllBillsByRep: function (req, res) {
+    return BillController.getAllBillsByRep(req, res)
+  },
+  getAllBillsBySponsorName: function (req, res) {
+    return BillController.getAllBillsBySponsorName(req, res)
   },
 
   getAllVotesByRepresentative: function (req, res) {
