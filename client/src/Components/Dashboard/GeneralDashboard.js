@@ -7,6 +7,7 @@ import ChartCard from './ChartCard'
 import Radar from 'react-d3-radar'
 import axios from "axios";
 import {fetchUserRiding} from "../Navbar";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 export default function CategoryDashboard () {
     const [categoryList, setCategoryList] = React.useState(['economics','healthcare','human rights','business','religion','criminal','trade'])
@@ -104,9 +105,12 @@ export default function CategoryDashboard () {
             if (user) {
                 const { email } = user
                 const riding = await fetchUserRiding(email)
-                const allRepresentatives = await getAllReps()
-                setReps(allRepresentatives)
                 const representative = await fetchRepresentative(riding)
+                const allRepresentatives = await getAllReps()
+                setUserRepresentative(representative)
+                setReps(allRepresentatives)
+                // const representative = await fetchRepresentative(riding)
+                console.log("representative " + representative)
                 const issuedBillByUserRep = await getAllBillsBySponsorName(representative)
                 setUserRepIssuedBills(issuedBillByUserRep)
                 if(representative.length != 0 ){
@@ -115,22 +119,15 @@ export default function CategoryDashboard () {
             }
         }
         getData()
+
         if(userRepresentative){
             getAllBillsByRep(userRepresentative).then(results => {
 
                  console.log(results)
-                //  getAllCategoriesByRep(results).then(result =>
-                //     {
-                //         if(result.length != 0){
-                //             setCategoryList(result)
-                //             setCategoryListLoaded(true)
-                //         }
-                //     }
-                // )
             })
         }
 
-        console.log(categoryList.length != 0, representativeData.length != 0)
+        console.log(categoryList.length != 0, representativeData.length != 0,userRepresentative)
 
         if(categoryList && repDataLoaded){
             createDataSetRadar(categoryList,representativeData).then(testing => {
@@ -140,8 +137,6 @@ export default function CategoryDashboard () {
                     console.log("testing "+ testing)
                 }
             })
-            console.log('inside the if statament 112 getting inside the getDaTA for donut',representativeData)
-
         }
 
         if(reps.length && repDataLoaded ){
@@ -177,7 +172,7 @@ export default function CategoryDashboard () {
                       <BarChartWrapper type='bar-pie' data = {userRepIssuedBills} categories={categoryList}/>
 
               </Card>
-                  : "Waiting !!"}
+                  : ""}
 
       </Grid>
 
@@ -223,9 +218,15 @@ export default function CategoryDashboard () {
                     <Grid item item xs={6}>
                         <ChartCard title='Bipartisan Index'> <BarChartWrapper type={"donut"} data = {donutData}/> </ChartCard>
                     </Grid>
-                    :"not ready yet!"}
+                    :""}
             </Grid>
-        </Grid> : "STILL LOADING"}
+        </Grid> : <div style={{
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                zIndex: '-2',
+                transform: 'translate(-50%, -50%)'
+            }}><CircularProgress /></div>}
     </Grid>
   )
 }

@@ -95,48 +95,43 @@ exports.getAllBillsBySponsorName = (req, res) =>  {
         success: false
       })
     }
-    result.forEach(doc => {
-      data1.push(doc)
-    })
-    res.json({
-      success: true,
-      data: data1
+      result.forEach(bill=>{
+        billsWithClassification.push(bill)
+      })
+
+
+        db.Bill().where('sponsorName','==',sponsor).innerJoin('_id',voteRecord,'bill').then(data => {
+            data.forEach(bill=>{
+              billsTotalVotes.push(bill)
+          })
+
+          if(billClassification.length != 0 && billsTotalVotes.length !=0 ){
+            for(let i= 0; i<billsWithClassification.length; i++){
+
+              for(let j= 0; j<billsTotalVotes.length; j++){
+
+                if(billsWithClassification[i].bill == billsTotalVotes[j].bill){
+
+                  let temp = {billsClassified: billsWithClassification[i],voteRecord: billsTotalVotes[j]}
+                  console.log("temp is " +temp)
+                  finalArray.push(temp)
+                }
+              }}
+
+            res.json({
+              success: true,
+              data: finalArray
+            })
+          }
+
+
+
+        })
+
+
     })
 
-  })
 
-  //   result.forEach(bill=>{
-  //     billsWithClassification.push(bill)
-  //   })
-  //
-  //     db.Bill().where('sponsorName','==',sponsor).innerJoin('_id',voteRecord,'bill').then(data => {
-  //         data.forEach(bill=>{
-  //           billsTotalVotes.push(bill)
-  //       })
-  //
-  //       if(billClassification.length != 0 && billsTotalVotes.length !=0 ){
-  //         for(let i= 0; i<billsWithClassification.length; i++){
-  //
-  //           for(let j= 0; j<billsTotalVotes.length; j++){
-  //
-  //             if(billsWithClassification[i].bill == billsTotalVotes[j].bill){
-  //               let temp = {billsClassified: billsWithClassification[i],voteRecord: billsTotalVotes[j]}
-  //               console.log("temp is " +temp)
-  //               finalArray.push(temp)
-  //             }
-  //           }}
-  //
-  //         res.json({
-  //           success: true,
-  //           data: finalArray
-  //         })
-  //       }
-  //
-  //
-  //
-  //     })
-  //
-  //
-  // })
+
 
 }

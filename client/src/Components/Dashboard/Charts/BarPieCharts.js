@@ -5,7 +5,7 @@ function dashboard (element, fData) {
 
   const barColor = '#84c5f1'
 
-  fData.forEach(function (d) { d.total = d.freq.yes + d.freq.no + d.freq.abstain })
+  fData.forEach(function (d) { d.total = d.freq.total })
 
   function histoGram (fD) {
 
@@ -232,13 +232,16 @@ console.log(categories,data)
     let noCounter=0
     let abtsainCounter =0
 
+    let totalBills= 0
     data.forEach(bill=>{
+
       if(bill.billsClassified.category === (category.toLowerCase()) ){
+        totalBills++
         yesCounter= yesCounter+ bill.voteRecord.yeas
         noCounter= yesCounter+ bill.voteRecord.nays
       }
     })
-  temp = {State: category, freq: { yes: yesCounter, no: noCounter, abstain: abtsainCounter }}
+  temp = {State: category, freq: { yes: yesCounter, no: noCounter, abstain: abtsainCounter, total: totalBills }}
   console.log(temp)
     dataArray.push(temp)
   })
