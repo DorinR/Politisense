@@ -38,7 +38,7 @@ module.exports = {
   getAllRepresentatives: function (req, res) {
     return RepresentativeController.getAllRepresentatives(req, res)
   },
-  
+
   getRepresentativeId: function (req, res) {
     return RepresentativeController.getRepresentativeId(req, res)
   },
@@ -50,6 +50,11 @@ module.exports = {
   // Bill
   getBillById: function (req, res) {
     return BillController.getBillById(req, res)
+  },
+
+  // Bill
+  getVotedBillsByMP: function (req, res) {
+    return BillController.getVotedBillsByMP(req, res)
   },
 
   // Vote Record
