@@ -1,200 +1,280 @@
-const Classifier = require('./Classifier').Classifier
-const FireStore = require('../Firebase').Firestore
-const Reader = require('../scraper/job_actions/UrlFileReaderAction').FileReader
-const Scraper = require('../scraper/job_actions/LinkScraperAction').LinkScraper
+const Firestore = require('../Firebase').Firestore
 const ScrapeError = require('../scraper/job_actions/LinkScraperAction').ScrapeError
-const Parser = require('../scraper/job_actions/TextParserAction').TextParser
-const Selector = require('../scraper/job_actions/SelectionAction').Selector
+const PDFParseError = require('./PDFRetrievalJob').PDFParseError
+const BillFinder = require('./BillPDFFinderJob').BillPDFFinderJob
+const BillParser = require('./PDFRetrievalJob').PDFRetrievalJob
+const Queue = require('../scraper/utilities/Queue').Queue
+const proc = require('child_process')
+const fs = require('fs')
 
 class ClassificationManager {
   constructor () {
-    this.classifier = new Classifier()
-    this.documentCount = 0
-    this.onDone = () => {}
+    this.billLinksRemaining = 0
+    this.billsToParse = 0
+    this.finderQueue = new Queue()
+    this.parserQueue = new Queue()
+    this.jobs = []
+    this.classifierPath = 'classifier.py'
   }
 
-  getCurrentClassifications () {
-    return this.classifier.getAllTermsByDocuments()
-  }
-
-  load () {
-    return new Promise(resolve => {
-      new FireStore().BillClassification()
-        .select()
-        .then(query => {
-          let i = 0
-          query.forEach((doc) => {
-            if (i++ === query.size - 1) {
-              console.debug(doc.data())
-              this.classifier.load(doc.state)
-            }
-          })
-        })
-        .catch(e => {
-          console.error(e.message)
-        })
+  static hold (ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms)
     })
   }
 
-  save () {
-    const state = this.classifier.save()
-    console.debug(state)
-    new FireStore().BillClassification()
-      .insert({ state: state })
-      .catch(e => {
-        console.error(e.message)
-      })
+  async createFromBillLinks () {
+    const content = await this.fetchBillData()
+    this.createFinderJobs(content)
+    this.findPDFLinks()
+    const billContent = await this.parsePDFContent()
+    this.finderQueue = null
+    this.parserQueue = null
+    this.jobs = null
+    return this.addBillsToClassifier(billContent)
   }
 
-  parseForLinks (html) {
-    const parser = new Parser()
-    const $ = parser.load(html)
-    return parser.perform(html, 'a', (elem) => {
-      return $(elem).attr('href')
-    })
+  async fetchBillData () {
+    const content = await new Firestore().Bill()
+      .select()
+      .then(this.getBillLinks.bind(this))
+      .catch(console.error)
+    console.log(`INFO: ${content.length} bills have been retrieved`)
+    return content
   }
 
-  selectXmlFileFromLinks (links) {
-    const groupSelector = new Selector('/Content/Bills/')
-    groupSelector.perform(links)
-    const xmlSelector = new Selector('xml')
-    xmlSelector.perform(groupSelector.selected)
-    return xmlSelector.selected[0]
-  }
-
-  retrieveXmlFile (fp) {
-    const filepath = 'https://www.parl.ca' + fp.slice(0, fp.length)
-    return new Reader(filepath).perform()
-  }
-
-  getInitialDomNodes (xml) {
-    const parser = new Parser()
-    const $ = parser.loadAsXml(xml)
-    const startingNodes = $('Bill')[0] ? $('Bill')[0].children : null
-    if (!startingNodes) {
-      throw new ScrapeError('cannot scrape bill')
-    }
-    const nodes = []
-    startingNodes.forEach(node => {
-      nodes.push(node)
-    })
-    return startingNodes
-  }
-
-  getAllContent (nodes) {
-    let contentString = ''
-    while (nodes.length > 0) {
-      const node = nodes[0]
-      if (node && node.children && node.children.length > 0) {
-        node.children.forEach(node => {
-          nodes.push(node)
-        })
-      } else if (node.type === 'text') {
-        contentString += node.data + ' '
-      }
-      nodes.shift()
-    }
-    return contentString
-  }
-
-  async fetch (document) {
-    return new Promise((resolve, reject) => {
-      const contents = document.data()
-      new Scraper(contents.link).perform()
-        .then(html => {
-          return this.parseForLinks(html)
-        })
-        .then(links => {
-          return this.selectXmlFileFromLinks(links)
-        })
-        .then(filepath => {
-          return this.retrieveXmlFile(filepath)
-        })
-        .then(xml => {
-          return this.getInitialDomNodes(xml)
-        })
-        .then(nodes => {
-          return this.getAllContent(nodes)
-        })
-        .then(content => {
-          return {
-            name: contents.name,
-            content: content
-          }
-        })
-        .then(result => {
-          this.classifier.addDocument(result.name, result.content)
-          if (--this.documentCount === 0) {
-            this.onDone()
-          }
-          resolve(result)
-        })
-        .catch(e => {
-          if (--this.documentCount === 0) {
-            this.onDone()
-          }
-          reject(e)
-        })
-    })
-  }
-
-  fetchDocuments (documents) {
+  getBillLinks (documents) {
+    const data = []
+    this.billLinksRemaining = documents.size
     documents.forEach(doc => {
-      this.fetchDocument(doc)
-        .catch(e => {
-          console.error(e.message)
-        })
+      data.push({
+        id: doc.id,
+        link: doc.data().link
+      })
+    })
+    return data
+  }
+
+  createFinderJobs (data) {
+    data.forEach(datum => {
+      this.finderQueue.enqueue(new BillFinder(datum.link, datum.id, this.finderQueueCb.bind(this)))
     })
   }
 
-  async fetchDocument (document) {
-    return new Promise((resolve, reject) => {
-      this.fetch(document)
-        .then(result => {
-          resolve(result)
-        })
-        .catch(e => {
-          reject(e)
-        })
+  finderQueueCb (newJobs) {
+    newJobs.forEach(job => {
+      console.log(`INFO: Re-enqueuing finder job: ${job.url}`)
+      this.finderQueue.enqueue(job)
     })
   }
 
-  async fetchDocumentData () {
+  findPDFLinks () {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async resolve => {
+      while (this.billLinksRemaining > 0) {
+        let job = null
+        try {
+          job = this.finderQueue.dequeue()
+          this.jobs.push(job)
+        } catch (e) {
+          console.debug(`INFO: waiting for ${this.billLinksRemaining} bills to be retrieved`)
+          this.pruneCompletedJobs()
+          await ClassificationManager.hold(10000)
+          continue
+        }
+        job.execute()
+          .then(this.enqueueBillContent.bind(this))
+          .catch(this.handleScrapeErrors.bind(this))
+          .finally(() => {
+            job.done = true
+          })
+      }
+      console.log('--------------------------------------------------------------------------------------------------------')
+      console.log('INFO: All bills finished being retrieved')
+      console.log('--------------------------------------------------------------------------------------------------------')
+      resolve(true)
+    })
+  }
+
+  enqueueBillContent (content) {
+    console.log(`INFO: waiting for ${--this.billLinksRemaining} bills to finish retrieval`)
+    console.log(`INFO: waiting for ${++this.billsToParse} bills to be parsed`)
+    this.parserQueue.enqueue(new BillParser(content.link, content.id, this.parserQueueCb.bind(this)))
+  }
+
+  parserQueueCb (newJobs) {
+    newJobs.forEach(job => {
+      console.log(`INFO: Re-enqueuing parser job: ${job.url}`)
+      this.parserQueue.enqueue(job)
+    })
+  }
+
+  handleScrapeErrors (e) {
+    if (e.name !== new ScrapeError().name ||
+      (e.message && e.message.includes('Malformed'))) {
+      console.log(`INFO: waiting for ${--this.billLinksRemaining} bills to finish retrieval`)
+      console.error(e.message)
+    }
+  }
+
+  pruneCompletedJobs () {
+    let currentIndex = 0
+    while (currentIndex < this.jobs.length) {
+      if (this.jobs[currentIndex].done === true) {
+        this.jobs.splice(currentIndex)
+      } else {
+        currentIndex++
+      }
+    }
+  }
+
+  parsePDFContent () {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async resolve => {
+      const content = []
+      while (this.billLinksRemaining > 0 || this.billsToParse > 0) {
+        let job = null
+        try {
+          job = this.parserQueue.dequeue()
+          this.jobs.push(job)
+        } catch (e) {
+          console.debug(`INFO: waiting for ${this.billsToParse} bills to be parsed`)
+          this.pruneCompletedJobs()
+          await ClassificationManager.hold(10000)
+          continue
+        }
+        job.execute()
+          .then(this.logRetrievalSuccess.bind(this))
+          .then(content.push.bind(content))
+          .catch(this.handleParseErrors.bind(this))
+          .finally(() => {
+            job.done = true
+          })
+      }
+      console.log('--------------------------------------------------------------------------------------------------------')
+      console.log('INFO: All bills finished being parsed')
+      console.log('--------------------------------------------------------------------------------------------------------')
+      resolve(content)
+    })
+  }
+
+  handleParseErrors (e) {
+    if (e.name === new PDFParseError().name) {
+      console.warn(`WARN: ${e.message}`)
+    } else if (e.name !== new ScrapeError().name) {
+      console.log(`INFO: waiting for ${--this.billsToParse} bills to be parsed`)
+      console.error(`ERROR: could not parse a PDF for bill ${e.bill}: ${e.message}`)
+      console.error(e.stack)
+    }
+  }
+
+  logRetrievalSuccess (content) {
+    console.debug(`INFO: waiting for ${--this.billsToParse} bills to be parsed`)
+    console.log(`INFO: done getting bill PDF for: ${content.name}`)
+    return content
+  }
+
+  addBillsToClassifier (billContents) {
+    const { execString, paths, bills } = this.createExternalClassifierParameters(billContents)
+    return this.runExternalClassifier(execString, paths, bills)
+  }
+
+  createExternalClassifierParameters (billContents) {
+    let execString = 'python3.7 ' + this.classifierPath
+    const paths = []
+    const bills = []
+    billContents.forEach((billContent, i) => {
+      const path = this.createTempFile(i, billContent)
+      paths.push(path)
+      bills.push(billContent.name)
+      execString += ' ' + path
+    })
+    return { execString, paths, bills }
+  }
+
+  createTempFile (index, content) {
+    const path = `${index}.json`
+    const out = JSON.stringify(content)
+    fs.writeFileSync(path, out)
+    return path
+  }
+
+  runExternalClassifier (execString, paths, bills) {
     return new Promise((resolve, reject) => {
-      new FireStore().Bill()
-        .select()
-        .then(documents => {
-          this.documentCount = documents.size
-          this.fetchDocuments(documents)
-        })
-        .catch(e => {
-          reject(e)
-        })
+      const child = proc.exec(execString)
+      child.stdout.pipe(process.stdout)
+      child.stderr.pipe(process.stderr)
+      child.on('exit', (code) => {
+        if (code === 0) {
+          console.log('--------------------------------------------------------------------------------------------------------')
+          console.log('INFO: successfully classified data')
+          console.log('--------------------------------------------------------------------------------------------------------')
+          const raws = this.readClassificationFile('classifications.json')
+          const models = this.addToModels(raws, bills)
+          this.deleteTempFiles(paths)
+          resolve(models)
+        }
+        reject(new Error('ERROR: exited with nonzero status'))
+      })
+    })
+  }
+
+  readClassificationFile (path) {
+    const file = fs.readFileSync(path)
+    return JSON.parse(file.toString())
+  }
+
+  addToModels (raws, bills) {
+    const classifiedBills = []
+    bills.forEach(id => {
+      classifiedBills.push({
+        bill: id,
+        raw: raws[id]
+      })
+    })
+    return classifiedBills
+  }
+
+  deleteTempFiles (files) {
+    fs.unlinkSync('classifications.json')
+    files.forEach(path => {
+      console.debug(`INFO: deleting temporary file: ${path} on completion`)
+      fs.unlinkSync(path)
     })
   }
 }
 
 class ClassificationRunner {
-  constructor () {
+  constructor (path) {
     this.manager = new ClassificationManager()
+    if (path) {
+      this.manager.classifierPath = path
+    }
   }
 
-  createBillClassificationsFromFirestore (onDone) {
-    this.manager.onDone = onDone
-    return this.manager.fetchDocumentData()
-  }
-
-  initialiseFromFirestore () {
-    return this.manager.load()
-  }
-
-  save () {
-    this.manager.save()
-  }
-
-  getClassifications () {
-    return this.manager.getCurrentClassifications()
+  async createBillClassificationsFromFirestore () {
+    const ret = await this.manager.createFromBillLinks()
+    console.log('--------------------------------------------------------------------------------------------------------')
+    console.log('INFO: Finished Fetching Bill Data and classification')
+    console.log('--------------------------------------------------------------------------------------------------------')
+    return ret
   }
 }
 
 module.exports.ClassificationRunner = ClassificationRunner
+
+new Firestore().TfIdfClassification()
+  .delete()
+  .then(async resp => {
+    console.log(`Deleted ${resp} documents`)
+    const test = new ClassificationRunner()
+    const classifications = await test.createBillClassificationsFromFirestore()
+    console.log(`Attempting to store ${classifications.length} raw bill classifications`)
+    await Promise.all(
+      classifications.map(raw => {
+        return new Firestore()
+          .TfIdfClassification()
+          .insert(raw)
+      })
+    )
+  })

@@ -81,7 +81,7 @@ export default function HorizontalLinearStepper (props) {
   const [activeStep, setActiveStep] = useState(0)
   const steps = getSteps()
   // eslint-disable-next-line no-unused-vars
-  const [options, setOptions] = useState(['Economics', 'Social Issues', 'Healthcare'])
+  const [options, setOptions] = useState(['Economics', 'Social Issues', 'Trade', 'Healthcare', 'Human Rights', 'Business', 'Religion', 'Criminal'])
   const [category1, setCatergory1] = useState('Economics')
   const [category2, setCatergory2] = useState('')
   const [errors, setErrors] = useState({ postalCode: '' })
@@ -94,7 +94,6 @@ export default function HorizontalLinearStepper (props) {
   const handleChangeCategory2 = event => {
     setCatergory2(event.target.value)
   }
-
   function getStepContent (step) {
     switch (step) {
       case 0:
@@ -125,6 +124,31 @@ export default function HorizontalLinearStepper (props) {
                     value='Healthcare'
                     control={<Radio />}
                     label='Healthcare'
+                  />
+                  <FormControlLabel
+                    value='Trade'
+                    control={<Radio />}
+                    label='Trade'
+                  />
+                  <FormControlLabel
+                    value='Human Rights'
+                    control={<Radio />}
+                    label='Human Rights'
+                  />
+                  <FormControlLabel
+                    value='Business'
+                    control={<Radio />}
+                    label='Business'
+                  />
+                  <FormControlLabel
+                    value='Religion'
+                    control={<Radio />}
+                    label='Religion'
+                  />
+                  <FormControlLabel
+                    value='Criminal'
+                    control={<Radio />}
+                    label='Criminal'
                   />
                 </RadioGroup>
               </FormControl>
@@ -186,7 +210,7 @@ export default function HorizontalLinearStepper (props) {
     e.preventDefault()
     if (postalCode) {
       setRiding(postalCode)
-        .then(res => {
+        .then(async res => {
           if (res.data.success) {
             const userToSignup = props.location.state.user
             userToSignup.postalCode = postalCode
@@ -195,7 +219,7 @@ export default function HorizontalLinearStepper (props) {
             userToSignup.category2 = category2
             // eslint-disable-next-line no-undef
             localStorage.setItem('user', JSON.stringify(userToSignup))
-            axios.post('http://localhost:5000/api/users/signup', userToSignup)
+            await axios.post('http://localhost:5000/api/users/signup', userToSignup)
             props.history.push('/dashboard')
           } else {
             console.log('Could not fetch riding')
