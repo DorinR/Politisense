@@ -15,6 +15,7 @@ app.use(express.json({ extended: false })) // allows us to get the data from the
 app.get('/', (req, res) => res.send('API Running'))
 
 // define our routes (these link to the endpoints in routes/api/...)
+app.use('/api/votes', require('./routes/api/votes'))
 app.use('/api/users', require('./routes/api/users'))
 app.use('/api/representatives', require('./routes/api/representatives'))
 app.use('/api/voteRecord', require('./routes/api/voteRecord'))
