@@ -5,6 +5,7 @@ const VoteRecordController = require('./VoteRecordController')
 const VoteController = require('./VoteController')
 const RidingController = require('./RidingController')
 
+
 module.exports = {
   // User
   userSignup: function (req, res) {
@@ -42,6 +43,8 @@ module.exports = {
   getAllRepresentatives: function (req, res) {
     return RepresentativeController.getAllRepresentatives(req, res)
   },
+
+
   getRepresentativeId: function (req, res) {
     return RepresentativeController.getRepresentativeId(req, res)
   },
@@ -49,7 +52,7 @@ module.exports = {
   getAllBills: function (req, res) {
     return BillController.getAllBills(req, res)
   },
-
+  
   // Bill
   getBillById: function (req, res) {
     return BillController.getBillById(req, res)
@@ -64,10 +67,14 @@ module.exports = {
     return VoteRecordController.getAllVoteRecords(req, res)
   },
 
+  updateUserCategory: function (req, res) {
+    return UserController.updateUserCategory(req, res)
+  },
+
   getAllVotesByRepresentative: function (req, res) {
     return VoteController.getAllVotesByRepresentative(req, res)
   },
-
+  
   // Riding
   getRidingCode: function (req, res) {
     return RidingController.getRidingCode(req, res)
