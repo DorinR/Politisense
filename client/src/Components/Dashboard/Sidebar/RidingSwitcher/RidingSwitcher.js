@@ -66,7 +66,7 @@ async function fetchAllRepresentatives () {
 export function getAllRidings (representatives) {
   const ridings = []
   representatives.forEach(rep => {
-    ridings.push(rep.riding)
+    ridings.push(rep.riding.replace(/\u2013|\u2014/g, '-'))
   })
   return ridings.sort()
 }
