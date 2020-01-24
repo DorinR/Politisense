@@ -2,7 +2,7 @@ import { Firestore } from '../client/src/Firebase'
 
 exports.getVotesByRepresentative = async (req, res) => {
   const representative = req.params.representative.toLowerCase()
-  var allBillsVotedOn = []
+  let allBillsVotedOn = []
   const db = new Firestore()
 
   function getSupplementalBillInformation (bill) {

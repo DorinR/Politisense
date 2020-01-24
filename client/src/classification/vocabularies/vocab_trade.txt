@@ -1,0 +1,13 @@
+good
+goods
+export
+exports
+import
+imports
+trade
+trades
+tariff
+tariffs
+quota
+quotas
+customs
