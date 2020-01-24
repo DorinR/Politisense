@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles';
 import HeadInfo from "./HeadInfo";
 import axios from "axios";
-import TESTING from "./TESTING";
+import D3ChartHeadVsHeadContainer from "./D3ChartHeadVsHeadContainer";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -113,7 +113,7 @@ export default function HeadToHeadComparison (props) {
             <Grid container  alignItems="center">
                 <Grid item={1} xs={12}>
                     { dataSet.length ?
-                        <TESTING data={dataSet}/>
+                        <D3ChartHeadVsHeadContainer data={dataSet}/>
                         : "   DO  NOTHING!!"}
                 </Grid>
             </Grid>
