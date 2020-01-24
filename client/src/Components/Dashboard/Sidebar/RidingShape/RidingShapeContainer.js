@@ -4,7 +4,6 @@ import RidingShape from './RidingShape'
 import Box from '@material-ui/core/Box'
 
 export async function fetchRidingShape (ridingCode) {
-  console.log('calling api with this riding code: ', ridingCode)
   try {
     const response = await fetch(
       `https://represent.opennorth.ca/boundaries/federal-electoral-districts/${ridingCode}/simple_shape`,

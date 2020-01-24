@@ -14,6 +14,8 @@ router.get('/getAllBills', controller.getAllBills)
 router.get('/:head/getAllBillsByHead', controller.getAllBillsByHead)
 
 
+router.get('/:head/getVotedBillsByMP', controller.getVotedBillsByMP)
+
 // @route post api/bills/getAllBillsByRep
 // @desc  get bill by bill ID
 // @access Public
