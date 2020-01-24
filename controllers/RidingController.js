@@ -1,7 +1,7 @@
 import { Firestore } from '../client/src/Firebase'
 
 exports.getRidingCode = (req, res) => {
-  const targetRiding = req.params.riding.replace(/—/g, '--')
+  const targetRiding = req.params.riding
   const db = new Firestore()
   db.Ridings()
     .where('nameEnglish', '==', targetRiding)
@@ -30,7 +30,7 @@ exports.getRidingCode = (req, res) => {
 }
 
 exports.getRidingPopulation = (req, res) => {
-  const targetRiding = req.params.riding.replace(/—/g, '--')
+  const targetRiding = req.params.riding
   const db = new Firestore()
   db.Ridings()
     .where('nameEnglish', '==', targetRiding)
