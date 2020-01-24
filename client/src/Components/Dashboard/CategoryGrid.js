@@ -135,7 +135,6 @@ export default function CategoryGrid () {
     getData()
     if(userRepresentative){
       getAllBillsByRep(userRepresentative) .then(result => {
-        console.log('then promise and the result is '+result)
       })
     }
 
@@ -161,11 +160,9 @@ export default function CategoryGrid () {
 
     const copyCategoryArray = Object.assign([], categoryList)
     copyCategoryArray.splice(index, 1)
-    console.log("categoryList 2 = "+copyCategoryArray)
     setCategoryList(copyCategoryArray)
     updateUserCategory(copyCategoryArray)
     setCounter(counter - 1)
-
     setRepresentativeData([])
     setReset(!reset)
 
@@ -198,9 +195,6 @@ export default function CategoryGrid () {
         {
           representativeData.length && categoryList.length?
               categoryList.map((category, index) => {
-                console.log('CategoryCard rendered')
-                console.log('current category index=====', index)
-                console.log('current category=====', category)
                 return (
                     <Grid item xs={4} key={index}>
                       <CategoryCard
@@ -212,7 +206,7 @@ export default function CategoryGrid () {
                       />
                     </Grid>
                 )
-              }) : "NOT READY YET!"
+              }) : ""
         }
         {counter < 3
           ? <Grid item md={4}>
