@@ -3,3 +3,5 @@ node_js:
   - 12.13.0
 cache: npm
 script: build_scripts/build.sh --strict --verbose
+notifications:
+  slack: politisense:k2bIRplLC1Cmjd4vZPrRlKsl
