@@ -34,8 +34,7 @@ exports.getAllBillsByHead = (req, res) => {
             bills
               .innerJoin('_id', billClassification, 'bill')
               .then(billTable => {
-
-                  reesult.forEach(data =>{
+                  result.forEach(data =>{
                       billTable.forEach(bill=> {
                           if(data.bill === bill.bill){
                               const temp = {
@@ -57,7 +56,6 @@ exports.getAllBillsByHead = (req, res) => {
 }
 
 exports.getAllBillsByRep = (req, res) => {
-
   const db = new Firestore()
   const votes = db.Vote()
   const representative = req.params.head.toLowerCase()
@@ -92,7 +90,7 @@ exports.getAllBillsByRep = (req, res) => {
               .innerJoin('_id', billClassification, 'bill')
               .then(billTable => {
 
-                  reesult.forEach(data =>{
+                  result.forEach(data =>{
                       billTable.forEach(bill=> {
                           if(data.bill === bill.bill){
                               const temp = {
