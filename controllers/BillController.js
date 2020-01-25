@@ -34,17 +34,17 @@ exports.getAllBillsByHead = (req, res) => {
             bills
               .innerJoin('_id', billClassification, 'bill')
               .then(billTable => {
-                  result.forEach(data =>{
-                      billTable.forEach(bill=> {
-                          if(data.bill === bill.bill){
-                              const temp = {
-                                          voteRecord: data,
-                                          billData: bill
-                                        }
-                                    finalArray.push(temp)
-                          }
-                      })
+                result.forEach(data => {
+                  billTable.forEach(bill => {
+                    if (data.bill === bill.bill) {
+                      const temp = {
+                        voteRecord: data,
+                        billData: bill
+                      }
+                      finalArray.push(temp)
+                    }
                   })
+                })
                 res.json({
                   success: true,
                   data: finalArray
@@ -89,18 +89,17 @@ exports.getAllBillsByRep = (req, res) => {
             bills
               .innerJoin('_id', billClassification, 'bill')
               .then(billTable => {
-
-                  result.forEach(data =>{
-                      billTable.forEach(bill=> {
-                          if(data.bill === bill.bill){
-                              const temp = {
-                                          voteRecord: data,
-                                          billData: bill
-                                        }
-                                    finalArray.push(temp)
-                          }
-                      })
+                result.forEach(data => {
+                  billTable.forEach(bill => {
+                    if (data.bill === bill.bill) {
+                      const temp = {
+                        voteRecord: data,
+                        billData: bill
+                      }
+                      finalArray.push(temp)
+                    }
                   })
+                })
 
                 res.json({
                   success: true,

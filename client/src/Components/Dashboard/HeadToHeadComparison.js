@@ -5,6 +5,7 @@ import HeadInfo from './HeadInfo'
 import axios from 'axios'
 import D3ChartHeadVsHeadContainer from './D3ChartHeadVsHeadContainer'
 import Card from '@material-ui/core/Card'
+import Grow from '@material-ui/core/Grow';
 
 export default function HeadToHeadComparison (props) {
   const [head1, setHead1] = useState('')
@@ -69,6 +70,7 @@ export default function HeadToHeadComparison (props) {
     if (head1 !== '' && head2 !== '') {
       getBills()
     }
+
   }, [head1, head2])
 
   return (
@@ -91,9 +93,15 @@ export default function HeadToHeadComparison (props) {
           alignItems='center'
         >
           {dataSet.length
-            ? <Card>
-              <D3ChartHeadVsHeadContainer data={dataSet} />
-              </Card>
+            ?  <Grow
+                  in={dataSet.length}
+              >
+                <Card>
+                  <D3ChartHeadVsHeadContainer data={dataSet} />
+                </Card>
+
+          </Grow>
+
             : ''}
         </Grid>
         <Grid item={1}>

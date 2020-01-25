@@ -17,7 +17,6 @@ import DashboardTabs from './Components/Dashboard/DashboardTabs'
 import Questionnaire from './Components/Questionnaire'
 import HeadToHeadComparison from './Components/Dashboard/HeadToHeadComparison'
 
-
 const App = () => {
   const LoginContainer = () => (
     <div className='container'>

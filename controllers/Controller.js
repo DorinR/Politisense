@@ -79,7 +79,7 @@ module.exports = {
   getAllVotesByRepresentative: function (req, res) {
     return VoteController.getAllVotesByRepresentative(req, res)
   },
-  
+
   getRidingCode: function (req, res) {
     return RidingController.getRidingCode(req, res)
   },
