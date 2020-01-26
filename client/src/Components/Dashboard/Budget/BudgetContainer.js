@@ -1,51 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import ListItemText from '@material-ui/core/ListItemText'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
 import Box from '@material-ui/core/Box'
-import { makeStyles } from '@material-ui/core/styles'
-import { Typography } from '@material-ui/core'
 import axios from 'axios'
-import TotalEmployeeCosts from './MPCalculations/TotalEmployeeCosts'
-import TotalAdvertisingCosts from './MPCalculations/TotalAdvertisingCosts'
-import TotalGiftsCosts from './MPCalculations/TotalGiftsCosts'
-import TotalHospitalityCosts from './MPCalculations/TotalHospitalityCosts'
-import TotalOfficeCosts from './MPCalculations/TotalOfficeCosts'
-import TotalPrintingCosts from './MPCalculations/TotalPrintingCosts'
-import TotalTravelCosts from './MPCalculations/TotalTravelCosts'
-import MPFullCosts from './MPCalculations/MPFullCosts'
-import AverageAdvertising from './AverageCalculations/AverageAdvertising'
-import AverageEmployee from './AverageCalculations/AverageEmployee'
-import AverageGifts from './AverageCalculations/AverageGifts'
-import AverageHospitality from './AverageCalculations/AverageHospitality'
-import AverageOffice from './AverageCalculations/AverageOffice'
-import AveragePrinting from './AverageCalculations/AveragePrinting'
-import AverageTravel from './AverageCalculations/AverageTravel'
-import AverageFullCosts from './AverageCalculations/AverageFullCosts'
-import Table from '@material-ui/core/Table'
-import TableCell from '@material-ui/core/TableCell'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import BarChartWrapper from "../Charts/Wrappers/BarChartWrapper";
-
+import BarChartWrapper from '../Charts/Wrappers/BarChartWrapper'
 const Firestore = require('../../../Firebase').Firestore
-
-const useStyles = makeStyles(theme => ({
-  customCardContent: {
-    padding: 5,
-    paddingBottom: '5px!important',
-    backgroundColor: '#f7f7f7'
-  },
-  customHeadingText: {
-    color: '#41aaa8',
-    fontStyle: 'italic',
-    fontWeight: 'bold'
-  },
-  customTextFormatting: {
-    textTransform: 'capitalize'
-  }
-}))
 
 export async function fetchUserRiding (userEmail) {
   let result = ''
@@ -558,35 +517,16 @@ export function computeTotalHospitalitySpending (spendingItems) {
 // =========== TOTAL BUDGET COSTS ============
 
 export default function BudgetContainer () {
-  const classes = useStyles()
-
-  // MPs
-  const [totalEmployeeCost, setTotalEmployeeCost] = useState(0)
-  const [totalAdvertisingCost, setTotalAdvertisingCost] = useState(0)
-  const [totalGiftsCost, setTotalGiftsCost] = useState(0)
-  const [totalHospitalityCost, setTotalHospitalityCost] = useState(0)
-  const [totalOfficeCost, setTotalOfficeCost] = useState(0)
-  const [totalPrintingCost, setTotalPrintingCost] = useState(0)
-  const [totalTravelCost, setTotalTravelCost] = useState(0)
-
-  // Average
-  const [averageEmployee, setAverageEmployee] = useState(0)
-  const [averageAdvertising, setAverageAdvertising] = useState(0)
-  const [averageGifts, setAverageGifts] = useState(0)
-  const [averageHospitality, setAverageHospitality] = useState(0)
-  const [averageOffice, setAverageOffice] = useState(0)
-  const [averagePrinting, setAveragePrinting] = useState(0)
-  const [averageTravel, setAverageTravel] = useState(0)
-  //budget data
-  const [budgetData, setBudgetData]= useState([])
+  // budget data
+  const [budgetData, setBudgetData] = useState([])
 
   useEffect(() => {
     async function getData () {
-      let mp ={
+      const mp = {
         label: '',
         values: []
       }
-      let avg= {
+      const avg = {
         label: 'Average Among MPs',
         values: []
       }
@@ -643,27 +583,13 @@ export default function BudgetContainer () {
         }
 
         // MPs
-
         let totalEmployees =computeTotalEmployeeSpending(employeeSpendingItems)
-        setTotalEmployeeCost(totalEmployees);
-
         let ads =  computeTotalAdvertisingSpending(advertisingSpendingItems)
-        setTotalAdvertisingCost(ads);
-
         let gifts = computeTotalGiftsSpending(giftsSpendingItems)
-        setTotalGiftsCost(gifts);
-
         let hospitality = computeTotalHospitalitySpending(hospitalitySpendingItems)
-        setTotalHospitalityCost(hospitality);
-
         let office= computeTotalOfficeSpending(officeSpendingItems)
-        setTotalOfficeCost(office);
-
         let printing = computeTotalPrintingSpending(printingSpendingItems)
-        setTotalPrintingCost(printing);
-
         let travel = computeTotalTravelSpending(travelSpendingItems)
-        setTotalTravelCost(travel);
 
         mp.values[0]= Math.round(totalEmployees)
         mp.values[1]= Math.round(ads)
@@ -676,27 +602,12 @@ export default function BudgetContainer () {
 
         //Average
         let avgEmp =computeAverageEmployeeSpending(avgEmployeeSpendingItems)
-
-        setAverageEmployee(avgEmp)
-
         let avgAds = computeAverageAdvertisingSpending(avgAdvertisingSpendingItems)
-
-        setAverageAdvertising(avgAds);
-
         let avgGifts = computeAverageGiftsSpending(avgGiftsSpendingItems)
-        setAverageGifts(avgGifts);
-
         let avgHosp= computeAverageHospitalitySpending(avgHospitalitySpendingItems)
-        setAverageHospitality(avgHosp);
-
         let avgOffice = computeAverageOfficeSpending(avgOfficeSpendingItems)
-        setAverageOffice(avgOffice);
-
         let avgPrint = computeAveragePrintingSpending(avgPrintingSpendingItems)
-        setAveragePrinting(avgPrint);
-
         let avgTravel = computeAverageTravelSpending(avgTravelSpendingItems)
-        setAverageTravel(avgTravel);
 
         avg.values[0]=  Math.round(avgEmp)
         avg.values[1]=  Math.round(avgAds)
