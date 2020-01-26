@@ -34,7 +34,7 @@ class GovtDataScraper {
     })
 
     const billNumberList = data.bills.map(bill => bill.number)
-    await this.cleanUpVotes(data.votes, billNumberList, currentParliament)
+    data.votes = await this.cleanUpVotes(data.votes, billNumberList, currentParliament)
     await this.addImageUrlForAllMps(data.mps)
 
     await this.standardiseRidingHyphens()
@@ -210,6 +210,7 @@ class GovtDataScraper {
     votes = this.filterVotesBasedOnGatheredBills(votes, billNumberList)
     votes = this.removeMultipleBillVotes(votes)
     await this.addVotersForAllVotes(votes, currentParliament)
+    return votes
   }
 
   async addDataToDatabase (dbDoc, dataList) {
