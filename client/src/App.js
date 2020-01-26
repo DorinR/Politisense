@@ -16,7 +16,7 @@ import MapWrapper from './Components/Dashboard/MapWrapper'
 import DashboardTabs from './Components/Dashboard/DashboardTabs'
 import Questionnaire from './Components/Questionnaire'
 import BarChartWrapper from './Components/Dashboard/Charts/Wrappers/BarChartWrapper'
-
+import TestContainer from "./Components/TestContainer";
 const App = () => {
   const LoginContainer = () => (
     <div className='container'>
@@ -53,9 +53,10 @@ const App = () => {
         <Route exact path='/(login)' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
         <Route exact path='/question' component={Questionnaire} />
-        <Route exact path='/testing' component={BarChartWrapper} />
+        <Route exact path='/testing' component={TestContainer} />
 
-        <Route component={DefaultContainer} />
+
+          <Route component={DefaultContainer} />
       </Switch>
     </Router>
   )
