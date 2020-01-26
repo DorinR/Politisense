@@ -46,7 +46,9 @@ async function fetchAllRepresentatives () {
       }
     })
     .catch(err => console.error(err))
-  return representatives
+  return representatives.sort((mp1, mp2) => {
+    return mp1.name.localeCompare(mp2.name)
+  })
 }
 
 function getStyles (name, personName, theme) {
@@ -93,13 +95,13 @@ export default function MpsSwitcher (props) {
           input={<Input />}
           MenuProps={MenuProps}
         >
-          {dropdownMps.map(riding => (
+          {dropdownMps.map(mp => (
             <MenuItem
-              key={riding.name}
-              value={riding.name}
-              style={getStyles(riding.name, riding.name, theme)}
+              key={mp.name}
+              value={mp.name}
+              style={getStyles(mp.name, mp.name, theme)}
             >
-              {riding.name}
+              {mp.name}
             </MenuItem>
           ))}
         </Select>
