@@ -27,6 +27,7 @@ import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import BarChartWrapper from "../Charts/Wrappers/BarChartWrapper";
 
 const Firestore = require('../../../Firebase').Firestore
 
@@ -576,9 +577,19 @@ export default function BudgetContainer () {
   const [averageOffice, setAverageOffice] = useState(0)
   const [averagePrinting, setAveragePrinting] = useState(0)
   const [averageTravel, setAverageTravel] = useState(0)
+  //budget data
+  const [budgetData, setBudgetData]= useState([])
 
   useEffect(() => {
     async function getData () {
+      let mp ={
+        label: '',
+        values: []
+      }
+      let avg= {
+        label: 'Average Among MPs',
+        values: []
+      }
       /* eslint-disable */
       const user = JSON.parse(localStorage.getItem("user"));
       if (user) {
@@ -586,6 +597,7 @@ export default function BudgetContainer () {
         const { email } = user;
         const riding = await fetchUserRiding(email);
         const representative = await fetchRepresentative(riding);
+        mp.label =representative
         const representativeId = await fetchRepresentativeId(representative);
 
         // per MP items
@@ -631,203 +643,94 @@ export default function BudgetContainer () {
         }
 
         // MPs
-        setTotalEmployeeCost(
-          computeTotalEmployeeSpending(employeeSpendingItems)
-        );
 
-        setTotalAdvertisingCost(
-          computeTotalAdvertisingSpending(advertisingSpendingItems)
-        );
+        let totalEmployees =computeTotalEmployeeSpending(employeeSpendingItems)
+        setTotalEmployeeCost(totalEmployees);
 
-        setTotalGiftsCost(computeTotalGiftsSpending(giftsSpendingItems));
+        let ads =  computeTotalAdvertisingSpending(advertisingSpendingItems)
+        setTotalAdvertisingCost(ads);
 
-        setTotalHospitalityCost(
-          computeTotalHospitalitySpending(hospitalitySpendingItems)
-        );
+        let gifts = computeTotalGiftsSpending(giftsSpendingItems)
+        setTotalGiftsCost(gifts);
 
-        setTotalOfficeCost(computeTotalOfficeSpending(officeSpendingItems));
+        let hospitality = computeTotalHospitalitySpending(hospitalitySpendingItems)
+        setTotalHospitalityCost(hospitality);
 
-        setTotalPrintingCost(
-          computeTotalPrintingSpending(printingSpendingItems)
-        );
+        let office= computeTotalOfficeSpending(officeSpendingItems)
+        setTotalOfficeCost(office);
 
-        setTotalTravelCost(computeTotalTravelSpending(travelSpendingItems));
+        let printing = computeTotalPrintingSpending(printingSpendingItems)
+        setTotalPrintingCost(printing);
+
+        let travel = computeTotalTravelSpending(travelSpendingItems)
+        setTotalTravelCost(travel);
+
+        mp.values[0]= Math.round(totalEmployees)
+        mp.values[1]= Math.round(ads)
+        mp.values[2]= Math.round(gifts)
+        mp.values[3]=  Math.round(hospitality)
+        mp.values[4]=  Math.round(office)
+        mp.values[5]=  Math.round(printing)
+        mp.values[6]=  Math.round(travel)
+
 
         //Average
-        setAverageEmployee(
-          computeAverageEmployeeSpending(avgEmployeeSpendingItems)
-        );
+        let avgEmp =computeAverageEmployeeSpending(avgEmployeeSpendingItems)
 
-        setAverageAdvertising(
-          computeAverageAdvertisingSpending(avgAdvertisingSpendingItems)
-        );
+        setAverageEmployee(avgEmp)
 
-        setAverageGifts(computeAverageGiftsSpending(avgGiftsSpendingItems));
+        let avgAds = computeAverageAdvertisingSpending(avgAdvertisingSpendingItems)
 
-        setAverageHospitality(
-          computeAverageHospitalitySpending(avgHospitalitySpendingItems)
-        );
+        setAverageAdvertising(avgAds);
 
-        setAverageOffice(computeAverageOfficeSpending(avgOfficeSpendingItems));
+        let avgGifts = computeAverageGiftsSpending(avgGiftsSpendingItems)
+        setAverageGifts(avgGifts);
 
-        setAveragePrinting(
-          computeAveragePrintingSpending(avgPrintingSpendingItems)
-        );
+        let avgHosp= computeAverageHospitalitySpending(avgHospitalitySpendingItems)
+        setAverageHospitality(avgHosp);
 
-        setAverageTravel(computeAverageTravelSpending(avgTravelSpendingItems));
+        let avgOffice = computeAverageOfficeSpending(avgOfficeSpendingItems)
+        setAverageOffice(avgOffice);
+
+        let avgPrint = computeAveragePrintingSpending(avgPrintingSpendingItems)
+        setAveragePrinting(avgPrint);
+
+        let avgTravel = computeAverageTravelSpending(avgTravelSpendingItems)
+        setAverageTravel(avgTravel);
+
+        avg.values[0]=  Math.round(avgEmp)
+        avg.values[1]=  Math.round(avgAds)
+        avg.values[2]= Math.round( avgGifts)
+        avg.values[3]= Math.round( avgHosp)
+        avg.values[4]=  Math.round(avgOffice)
+        avg.values[5]=  Math.round(avgPrint)
+        avg.values[6]=  Math.round(avgTravel)
       }
+      setBudgetData([mp,avg])
     }
     getData();
-  });
+  },[budgetData]);
 
   return (
-    <ListItemText>
-      {/* <BarChartWrapper
-              type={"bullet"}
-              average={totalEmployeeCost}
-              mpValue={totalEmployeeCost}
-            /> */}
-      {totalEmployeeCost == 0 ? (
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)"
-          }}
-        >
-          <CircularProgress />
-        </div>
-      ) : (
-          <Card>
-            <CardContent className={classes.customCardContent}>
-              <Typography className={classes.customHeadingText}>
-                <Table className={classes.table} aria-label="simple table">
-                  <TableHead>
-                    <Typography variant="body1" color="textPrimary">
-                      {" "}
-                      TOTAL COSTS{" "}
-                    </Typography>
-                    <TableRow>
-                      <TableCell align="center">
-                        <MPFullCosts
-                          data={
-                            totalEmployeeCost +
-                            totalAdvertisingCost +
-                            totalGiftsCost +
-                            totalHospitalityCost +
-                            totalTravelCost +
-                            totalOfficeCost +
-                            totalPrintingCost
-                          }
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        <AverageFullCosts
-                          data={
-                            averageEmployee +
-                            averageAdvertising +
-                            averageGifts +
-                            averageHospitality +
-                            averageTravel +
-                            averageOffice +
-                            averagePrinting
-                          }
-                        />
-                      </TableCell>
-                    </TableRow>
-                    <Typography variant="body1" color="textPrimary">
-                      {" "}
-                      EMPLOYEE COSTS{" "}
-                    </Typography>
-                    <TableRow>
-                      <TableCell align="center">
-                        <TotalEmployeeCosts data={totalEmployeeCost} />
-                      </TableCell>
-                      <TableCell align="center">
-                        <AverageEmployee data={averageEmployee} />
-                      </TableCell>
-                    </TableRow>
-                    <Typography variant="body1" color="textPrimary">
-                      {" "}
-                      ADVERTISING COSTS{" "}
-                    </Typography>
-                    <TableRow>
-                      <TableCell align="center">
-                        <TotalAdvertisingCosts data={totalAdvertisingCost} />
-                      </TableCell>
-                      <TableCell align="center">
-                        <AverageAdvertising data={averageAdvertising} />
-                      </TableCell>
-                    </TableRow>
-                    <Typography variant="body1" color="textPrimary">
-                      {" "}
-                      GIFTS COSTS{" "}
-                    </Typography>
-                    <TableRow>
-                      <TableCell align="center">
-                        <TotalGiftsCosts data={totalGiftsCost} />
-                      </TableCell>
-                      <TableCell align="center">
-                        <AverageGifts data={averageGifts} />
-                      </TableCell>
-                    </TableRow>
-                    <Typography variant="body1" color="textPrimary">
-                      {" "}
-                      HOSPITALITY COSTS{" "}
-                    </Typography>
-                    <TableRow>
-                      <TableCell align="center">
-                        <TotalHospitalityCosts data={totalHospitalityCost} />
-                      </TableCell>
-                      <TableCell align="center">
-                        <AverageHospitality data={averageHospitality} />
-                      </TableCell>
-                    </TableRow>
-                    <Typography variant="body1" color="textPrimary">
-                      {" "}
-                      TRAVEL COSTS{" "}
-                    </Typography>
-                    <TableRow>
-                      <TableCell align="center">
-                        <TotalTravelCosts data={totalTravelCost} />
-                      </TableCell>
-                      <TableCell align="center">
-                        <AverageTravel data={averageTravel} />
-                      </TableCell>
-                    </TableRow>
-                    <Typography variant="body1" color="textPrimary">
-                      {" "}
-                      OFFICE COSTS{" "}
-                    </Typography>
-                    <TableRow>
-                      <TableCell align="center">
-                        <TotalOfficeCosts data={totalOfficeCost} />
-                      </TableCell>
-                      <TableCell align="center">
-                        <AverageOffice data={averageOffice} />
-                      </TableCell>
-                    </TableRow>
-                    <Typography variant="body1" color="textPrimary">
-                      {" "}
-                      PRINTING COSTS{" "}
-                    </Typography>
-                    <TableRow>
-                      <TableCell align="center">
-                        <TotalPrintingCosts data={totalPrintingCost} />
-                      </TableCell>
-                      <TableCell align="center">
-                        <AveragePrinting data={averagePrinting} />
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                </Table>
-              </Typography>
-            </CardContent>
-          </Card>
-        )}
+      <ListItemText>
+        {budgetData.length == 0 ? (
+                <div
+                    style={{
+                      position: "absolute",
+                      left: "50%",
+                      top: "50%",
+                      transform: "translate(-50%, -50%)"
+                    }}
+                >
+                  <CircularProgress />
+                </div>
+            ) :
 
-      <Box m={1} />
-    </ListItemText>
+            <BarChartWrapper type={'budget'} data ={budgetData}/>
+
+        }
+
+        <Box m={1} />
+      </ListItemText>
   );
 }
