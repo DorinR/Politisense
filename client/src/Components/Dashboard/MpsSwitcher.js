@@ -11,7 +11,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(0),
-    minWidth: 200,
+    minWidth: 250,
     maxWidth: 500
   },
   chips: {

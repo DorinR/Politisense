@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
-import CardActions from '@material-ui/core/CardActions'
+import Skeleton from '@material-ui/lab/Skeleton';
 import CardContent from '@material-ui/core/CardContent'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import RepresentativeImage from './Sidebar/RepresentativeImage'
@@ -11,25 +11,40 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
-import HelpIcon from '@material-ui/icons/Help'
-import LinkIcon from '@material-ui/icons/Link'
 import PersonIcon from '@material-ui/icons/Person'
 import { fetchRidingCode } from './Sidebar/RepresentativeInfo'
 import axios from 'axios'
 import Box from '@material-ui/core/Box'
 import RidingShapeContainer from './Sidebar/RidingShape/RidingShapeContainer'
 import { getAllBillsByHead } from '../Dashboard/HeadToHeadComparison'
+import Grid from '@material-ui/core/Grid';
+import FlagIcon from '@material-ui/icons/Flag';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
+import MapIcon from '@material-ui/icons/Map';
 
 const useStyles = makeStyles({
   card: {
-    width: 300
+    width: 250,
+  },
+  avatar: {
+    backgroundColor: '#43D0C4'
   }
 })
-const gridStyle = {
-  display: 'block',
-  justifyContent: 'center'
 
+ function capitalize (str) {
+  if (str && isNaN(str)) {
+    let res = str
+    res = res.toLowerCase()
+        .split(' ')
+        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+        .join(' ')
+    return res
+  }
+  return null
 }
+
 export default function HeadInfo (props) {
   const { updateHead, ...other } = props
   const classes = useStyles()
@@ -39,11 +54,11 @@ export default function HeadInfo (props) {
   const [yearElected, setYearElected] = useState(0)
   const [totalBills, setTotalBills] = useState(0)
   const [ridingCode, setRidingCode] = useState('')
+  const [skeleton] = useState([1,2,3,4,5])
 
   const updateNameFromSwitcher = (newName) => {
     setName(newName)
     updateHead(newName)
-    console.log('New Name' + newName)
   }
 
   useEffect(() => {
@@ -60,7 +75,7 @@ export default function HeadInfo (props) {
         const total = await calculateTotalVotesBills(bills)
         setTotalBills(total)
         setRiding(riding.riding)
-        const test = riding.riding
+          const test = riding.riding
         setYearElected(riding.yearElected)
         setPoliticalParty(riding.politicalParty)
         const ridingCode = await fetchRidingCode(test)
@@ -71,44 +86,50 @@ export default function HeadInfo (props) {
   }, [name, riding, politicalParty, yearElected])
 
   return (
-    <Card className={classes.card}>
-      <div className='contents' style={gridStyle}>
-        <ListItemAvatar>
-          <RepresentativeImage representativeToLoad={name} />
-        </ListItemAvatar>
+      <Grid container spacing={2}>
+        <Grid item>
+          <MpsSwitcher functionUpdate={updateNameFromSwitcher} />
+        </Grid>
+        <Grid item>
+    <Card className={classes.card} >
         <CardContent>
-          <List>
+          <Grid container justify="center" style={{paddingLeft: '12px'}}>
+            <Grid item xs={12}>
+              <RepresentativeImage align="center" representativeToLoad={name}/>
+            </Grid>
+          </Grid>
+          {ridingCode ? (<List>
             <ListItem>
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
                   <PersonIcon />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText>{name}</ListItemText>
+              <ListItemText>{capitalize(name)}</ListItemText>
             </ListItem>
             <ListItem>
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  <HelpIcon />
+                  <FlagIcon />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText>{politicalParty}</ListItemText>
+              <ListItemText>{capitalize(politicalParty)}</ListItemText>
             </ListItem>
             <ListItem>
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  <LinkIcon />
+                  <LocationOnIcon/>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText>
-                {riding}
+                {capitalize(riding)}
               </ListItemText>
             </ListItem>
 
             <ListItem>
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  <PersonIcon />
+                  <CalendarTodayIcon />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText>Elected in {yearElected}</ListItemText>
@@ -116,26 +137,34 @@ export default function HeadInfo (props) {
             <ListItem>
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  <PersonIcon />
+                  <FormatListNumberedIcon />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText> Total Voted Bills: {totalBills}</ListItemText>
             </ListItem>
             <ListItem>
+              <ListItemAvatar>
+                <Avatar className={classes.avatar}>
+                  <MapIcon />
+                </Avatar>
+              </ListItemAvatar>
               <Box m={1} />
               <RidingShapeContainer
-                ridingCode={ridingCode}
-                politicalParty={politicalParty}
+                  ridingCode={ridingCode}
+                  politicalParty={politicalParty}
               />
               <Box m={1} />
             </ListItem>
-          </List>
+          </List>) :
+              <Grid item style={{paddingTop: '10px'}}>
+                {skeleton.map((skeleton) => {
+                  return <Skeleton animation={false}/>;
+                })}
+              </Grid>}
         </CardContent>
-        <CardActions>
-          <MpsSwitcher functionUpdate={updateNameFromSwitcher} />
-        </CardActions>
-      </div>
     </Card>
+        </Grid>
+      </Grid>
   )
 }
 async function calculateTotalVotesBills (bills) {
