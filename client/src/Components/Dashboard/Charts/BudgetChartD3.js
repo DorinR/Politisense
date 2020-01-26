@@ -30,7 +30,6 @@ export default class BudgetChartD3 {
     }
 
     const chartHeight = barHeight * zippedData.length + gapBetweenGroups * budgetData.labels.length
-    // d3.min(zippedData)
     const x = d3.scaleLinear()
       .domain([0, d3.max(zippedData)])
       .range([90, chartWidth])
