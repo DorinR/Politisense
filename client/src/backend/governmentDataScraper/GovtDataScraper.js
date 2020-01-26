@@ -36,10 +36,6 @@ class GovtDataScraper {
     const billNumberList = data.bills.map(bill => bill.number)
     await this.cleanUpVotes(data.votes, billNumberList, currentParliament)
     await this.addImageUrlForAllMps(data.mps)
-
-    await this.standardiseRidingHyphens()
-    await this.createVotes()
-    await this.modifyVoteRecords()
     console.log('Returning Data')
     return data
   }
