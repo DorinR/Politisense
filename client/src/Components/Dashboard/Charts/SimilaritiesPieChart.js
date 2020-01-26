@@ -42,10 +42,8 @@ export default class SimilaritiesPieChart {
 
       const progress = 0
 
-      console.log(vis.data[1])
       const timeout = setTimeout(function () {
         clearTimeout(timeout)
-        console.log(vis.data[0].upper)
         path = path.data(pie(vis.data[0].upper))
         path.transition().duration(duration).attrTween('d', function (a) {
           const i = d3.interpolate(this._current, a)

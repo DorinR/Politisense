@@ -23,7 +23,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import MapIcon from '@material-ui/icons/Map';
-
+import AssignmentIcon from '@material-ui/icons/Assignment';
 const useStyles = makeStyles({
   card: {
     width: 250,
@@ -55,6 +55,7 @@ export default function HeadInfo (props) {
   const [totalBills, setTotalBills] = useState(0)
   const [ridingCode, setRidingCode] = useState('')
   const [skeleton] = useState([1,2,3,4,5])
+  const [issuedBills, setIssuedBills] = useState(0)
 
   const updateNameFromSwitcher = (newName) => {
     setName(newName)
@@ -65,7 +66,10 @@ export default function HeadInfo (props) {
     if (name) {
       async function getRepInfo (name) {
         const res = await axios.get(`http://localhost:5000/api/representatives/${name}/getRepresentativesInfo`)
-        console.log('im here res.data.data' + res.data.data)
+        return res.data.data
+      }
+      async function getIssuedBillsByHead (head) {
+        const res =  await axios.get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
         return res.data.data
       }
       async function getData (name) {
@@ -75,15 +79,20 @@ export default function HeadInfo (props) {
         const total = await calculateTotalVotesBills(bills)
         setTotalBills(total)
         setRiding(riding.riding)
-          const test = riding.riding
+        const test = riding.riding
         setYearElected(riding.yearElected)
         setPoliticalParty(riding.politicalParty)
         const ridingCode = await fetchRidingCode(test)
         setRidingCode(ridingCode)
+        const issuedBillsByHead = await getIssuedBillsByHead(name)
+        if(issuedBillsByHead.length != 0 ){
+          setIssuedBills(issuedBillsByHead.length)
+        }
       }
       getData(name)
+
     }
-  }, [name, riding, politicalParty, yearElected])
+  }, [name, riding, politicalParty, yearElected,issuedBills])
 
   return (
       <Grid container spacing={2}>
@@ -142,6 +151,14 @@ export default function HeadInfo (props) {
               </ListItemAvatar>
               <ListItemText> Total Voted Bills: {totalBills}</ListItemText>
             </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar className={classes.avatar}>
+                      <AssignmentIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText> Total Issued Bills: {issuedBills}</ListItemText>
+                </ListItem>
             <ListItem>
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
@@ -167,7 +184,7 @@ export default function HeadInfo (props) {
       </Grid>
   )
 }
-async function calculateTotalVotesBills (bills) {
+function calculateTotalVotesBills (bills) {
   let totalBills = 0
   if (bills) {
     bills.forEach(bill => totalBills++)
