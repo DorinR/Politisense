@@ -15,7 +15,6 @@ export async function fetchUserData (userEmail) {
       }
     })
     .catch(err => console.log(err))
-  console.log(result)
   return result
 }
 

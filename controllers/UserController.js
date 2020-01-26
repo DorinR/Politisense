@@ -56,9 +56,7 @@ exports.userSignup = async (req, res) => {
     lastname: req.body.lastname,
     email: req.body.email,
     postalCode: req.body.postalCode,
-    categories: [
-      req.body.category1, req.body.category2
-    ],
+    categories: [req.body.category1, req.body.category2],
     riding: req.body.riding
   }
   if (req.body.password) {
@@ -69,11 +67,13 @@ exports.userSignup = async (req, res) => {
   user.password = hash
 
   const db = new Firestore()
-  await db.User()
+  await db
+    .User()
     .select('email', '==', user.email)
     .then(async snapshot => {
       if (snapshot.empty) {
-        await db.User()
+        await db
+          .User()
           .insert(user)
           .then(() => {
             res.json({
@@ -173,11 +173,14 @@ exports.updateUser = (req, res) => {
       snapshot.forEach(doc => {
         documentToChangeId = doc.id
       })
+      const salt = bcrypt.genSaltSync(10)
+      const hash = bcrypt.hashSync(req.body.password, salt)
+      const passwordToStore = hash
       return db
         .User()
         .reference.doc(documentToChangeId)
         .update({
-          password: req.body.password
+          password: passwordToStore
         })
     })
     .then(() => {
@@ -198,32 +201,36 @@ exports.setRiding = (req, res) => {
   let postalCode = req.body.postalCode
   postalCode = postalCode.replace(/\s/g, '').toUpperCase()
   let ridingName = ''
-  represent.postalCode(postalCode + '/?sets=federal-electoral-districts', async (err, data) => {
-    if (err) {
-      res.json({
-        success: false
-      })
-      return
-    }
-    const id = data.boundaries_centroid[0].external_id
-    ridingName = await new Firestore().Riding()
-      .where('code', '==', Number(id))
-      .select()
-      .then(snapshot => {
-        let name = ''
-        snapshot.forEach(doc => {
-          name = doc.data().nameEnglish
-          name = name.replace(/--+/g, '-') // double dash is evil
+  represent.postalCode(
+    postalCode + '/?sets=federal-electoral-districts',
+    async (err, data) => {
+      if (err) {
+        res.json({
+          success: false
         })
-        return name
+        return
+      }
+      const id = data.boundaries_centroid[0].external_id
+      ridingName = await new Firestore()
+        .Riding()
+        .where('code', '==', Number(id))
+        .select()
+        .then(snapshot => {
+          let name = ''
+          snapshot.forEach(doc => {
+            name = doc.data().nameEnglish
+            name = name.replace(/--+/g, '-') // double dash is evil
+          })
+          return name
+        })
+        .catch(console.error)
+      console.log(ridingName)
+      res.json({
+        success: true,
+        data: ridingName
       })
-      .catch(console.error)
-    console.log(ridingName)
-    res.json({
-      success: true,
-      data: ridingName
-    })
-  })
+    }
+  )
 }
 
 exports.updateUserRiding = (req, res) => {

@@ -9,6 +9,7 @@ import Container from '@material-ui/core/Container'
 import axios from 'axios'
 import SaveIcon from '@material-ui/icons/Save'
 import { withSnackbar } from 'notistack'
+import bcrypt from 'bcryptjs'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -128,10 +129,12 @@ function ChangeAccountPassword (props) {
       password: password
     }
 
-    errors.userEnteredPreviousPassword =
-      userEnteredPreviousPassword !== previousPasswordFromDb
-        ? 'incorrect password'
-        : ''
+    errors.userEnteredPreviousPassword = !bcrypt.compareSync(
+      userEnteredPreviousPassword,
+      previousPasswordFromDb
+    )
+      ? 'incorrect password'
+      : ''
 
     errors.password = !user.password.match(passwordFormat)
       ? 'Invalid password format'
