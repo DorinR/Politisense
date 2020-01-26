@@ -1,3 +1,4 @@
+/* eslint-env jest */
 import { PARTY_COLORS } from '../../Components/Dashboard/Sidebar/RidingShape/partyColors'
 import { fallbackSvg } from '../../Components/Dashboard/Sidebar/RidingShape/fallbackSvg'
 import { addColorFillToRidingShape } from '../../Components/Dashboard/Sidebar/RidingShape/RidingShape'
@@ -20,10 +21,10 @@ describe('Riding Shape Tests', () => {
   })
   test('That correct party color is returned', () => {
     PARTY_COLORS['bloc québécois'].should.equals('%23355888')
-    PARTY_COLORS['liberal'].should.equals('%23D71921')
-    PARTY_COLORS['conservative'].should.equals('%230C499C')
+    PARTY_COLORS.liberal.should.equals('%23D71921')
+    PARTY_COLORS.conservative.should.equals('%230C499C')
     PARTY_COLORS['green party'].should.equals('%233D9B35')
-    PARTY_COLORS['independent'].should.equals('%2378D7CE')
-    PARTY_COLORS['ndp'].should.equals('%23EF7E52')
+    PARTY_COLORS.independent.should.equals('%2378D7CE')
+    PARTY_COLORS.ndp.should.equals('%23EF7E52')
   })
 })
