@@ -24,7 +24,15 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function addColorFillToRidingShape (svg, color) {
+export function isValidColor(color) {
+  return /^([0-9A-F]{3}){1,2}$/i.test(color.substr(3))
+}
+
+export function addColorFillToRidingShape(svg, color) {
+  if (!isValidColor(color)) {
+    console.error('invalid color format, using fallback color')
+    color = '%237766E4'
+  }
   const position = svg.indexOf('<path') + 5
   const partyColor = ` fill="${color}"`
   const coloredSvg = [
@@ -35,7 +43,7 @@ export function addColorFillToRidingShape (svg, color) {
   return coloredSvg
 }
 
-export default function RidingShape (props) {
+export default function RidingShape(props) {
   const classes = useStyles()
   const [svgData, setSvgData] = React.useState('')
 
@@ -47,7 +55,7 @@ export default function RidingShape (props) {
       // convert geoJSON data to svg shape and set fill color to the party color
       const input = props.ridingShapeCoordinates
       const cmd = '-i point.json -o svg-data=* format=SVG'
-      mapshaper.applyCommands(cmd, { 'point.json': input }, function (err, out) {
+      mapshaper.applyCommands(cmd, { 'point.json': input }, function(err, out) {
         if (err) {
           console.error(err)
         }
