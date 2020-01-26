@@ -62,7 +62,7 @@ export async function fetchRepresentative (riding) {
   let result = ''
   await axios
     .get(
-          `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
     )
     .then(res => {
       if (res.data.success) {
@@ -78,7 +78,7 @@ export async function fetchRepresentatieVotes (representative) {
   const result = []
   await axios
     .get(
-          `http://localhost:5000/api/voteRecord/getVotesByRepresentative/${representative}`
+      `http://localhost:5000/api/voteRecord/getVotesByRepresentative/${representative}`
     )
     .then(res => {
       if (res.data.success) {
@@ -104,7 +104,7 @@ export function fetchAllBills () {
 export async function fetchRepresentativeId (representative) {
   return axios
     .get(
-          `http://localhost:5000/api/representatives/${representative}/getRepresentativeId`
+      `http://localhost:5000/api/representatives/${representative}/getRepresentativeId`
     )
     .then(res => {
       if (res.data.success) {
@@ -117,7 +117,7 @@ export async function fetchRepresentativeId (representative) {
 export async function fetchRepresentativeVotes (representativeId) {
   return axios
     .get(
-          `http://localhost:5000/api/votes/${representativeId}/getAllVotesByRepresentative`
+      `http://localhost:5000/api/votes/${representativeId}/getAllVotesByRepresentative`
     )
     .then(res => {
       if (res.data.success) {
@@ -145,7 +145,13 @@ function generateTableRows (bills) {
       dateVoted,
       title,
       vote,
-      <BillDetails title={title} sponsor={sponsorName} linkToFullText={link} />
+      <BillDetails
+        title={title}
+        sponsor={sponsorName}
+        linkToFullText={link}
+        billNumber={number}
+        dateVoted={dateVoted}
+      />
     )
     rows.push(tableRow)
   })
