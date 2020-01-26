@@ -205,7 +205,7 @@ export default function SignUp () {
                   label='Password'
                   type='password'
                   id='password'
-                  placeholder="8 characters, at least one letter and one digit"
+                  placeholder='8 characters, at least one letter and one digit'
                   autoComplete='current-password'
                   error={errors.password !== ''}
                   helperText={errors.password}
