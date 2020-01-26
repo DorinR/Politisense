@@ -24,22 +24,18 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function restructureData (data) {
-  const templateData = {
-    type: 'Feature',
-    properties: {
-      color: '#DD2C00',
-      weight: 15,
-      direction: 0,
-      opacity: 0.4,
-      markupType: 'highlight'
-    },
-    geometry: data
-  }
-  return templateData
+export function addColorFillToRidingShape(svg, color) {
+  const position = svg.indexOf('<path') + 5
+  const partyColor = ` fill="${color}"`
+  const coloredSvg = [
+    svg.slice(0, position),
+    partyColor,
+    svg.slice(position)
+  ].join('')
+  return coloredSvg
 }
 
-export default function RidingShape (props) {
+export default function RidingShape(props) {
   const classes = useStyles()
   const [svgData, setSvgData] = React.useState('')
 
@@ -51,7 +47,7 @@ export default function RidingShape (props) {
       // convert geoJSON data to svg shape and set fill color to the party color
       const input = props.ridingShapeCoordinates
       const cmd = '-i point.json -o svg-data=* format=SVG'
-      mapshaper.applyCommands(cmd, { 'point.json': input }, function (err, out) {
+      mapshaper.applyCommands(cmd, { 'point.json': input }, function(err, out) {
         if (err) {
           console.error(err)
         }
@@ -65,14 +61,11 @@ export default function RidingShape (props) {
           svg = fallbackSvg
         }
 
-        const position = svg.indexOf('<path') + 5
-        const partyColor = ` fill="${thisPartyColor}"`
-        const coloredSvg = [
-          svg.slice(0, position),
-          partyColor,
-          svg.slice(position)
-        ].join('')
-        setSvgData(coloredSvg)
+        const coloredSvgTestable = addColorFillToRidingShape(
+          svg,
+          thisPartyColor
+        )
+        setSvgData(coloredSvgTestable)
       })
     }
   }, [props.ridingShapeCoordinates, props.politicalParty])
