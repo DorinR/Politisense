@@ -1,10 +1,8 @@
-var fallbackSvg = `
-<?xml version="1.0"?>
-<svg xmlns="http://www.w3.org/2000/svg" version="1.2" baseProfile="tiny" width="800" height="313" viewBox="0 0 800 313" stroke-linecap="round" stroke-linejoin="round">
-<g id="simpleshape">
-<path d="M 799 16.8509 760.3654 203.2675 540.3944 312.0196 264.9681 229.7283 1 1 799 16.8509 Z"/>
+var fallbackSvg = `<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.2" baseProfile="tiny" width="800" height="627" viewBox="0 0 800 627" stroke-linecap="round" stroke-linejoin="round">
+<g id="papineauShape">
+<path d="M 633.1889 1 799 68.4405 573.3365 327.3851 338.7976 526.7723 316.7199 626.4028 1 533.5598 146.8849 302.3286 425.8673 173.6108 633.1889 1 Z"/>
 </g>
-</svg>
-`
+</svg>`
 
 export { fallbackSvg }
