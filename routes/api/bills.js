@@ -7,6 +7,12 @@ const controller = require('../../controllers/Controller')
 // @access Public
 router.get('/getAllBills', controller.getAllBills)
 
+/// ${head}/getAllBillsByHead
+// @route post api/representatives/:riding/getRepresentative
+// @desc  get representative by riding
+// @access Public
+router.get('/:head/getAllBillsByHead', controller.getAllBillsByHead)
+
 router.get('/:head/getVotedBillsByMP', controller.getVotedBillsByMP)
 
 // @route post api/bills/getAllBillsByRep
