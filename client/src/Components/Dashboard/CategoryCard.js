@@ -125,57 +125,100 @@ export default function CategoryCard (props) {
     setData(props.data)
   }, [props.title, props.data, props.representative])
 
-  return (
-    <div>
-      <Card className={classes.card}>
-        <CardHeader
-          avatar={setCardLogo()}
-          action={
-            <div>
-              <IconButton aria-label='settings' onClick={() => setOpenDeleteDialog(true)}>
-                <IndeterminateCheckBoxIcon color='primary' />
-              </IconButton>
-            </div>
-          }
-          title={props.title}
-        />
-        <DeleteCategoryDialog
-          classes={{ paper: classes.paper }}
-          keepMounted
-          open={openDeleteDialog}
-          index={props.id}
-          onClose={handleDeleteDialogClose}
-          value={confimedDeletion}
-          categoryName={props.title}
-        />
-        <CardContent>
-          {data.length
-            ? <BarChartWrapper data={data} categoryType={props.title} />
-            : 'title is empty!!'}
-          <TableContainer className={classes.container}>
-            <Table className={classes.table} size='small' aria-label='a dense table'>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Bill Name</TableCell>
-                  <TableCell align='right'>Vote</TableCell>
-                </TableRow>
-              </TableHead>
-              {(rows && rows.length) > 0 ? (
-                <TableBody stickyHeader>
-                  {rows.map(row => (
-                    <TableRow key={row.name}>
-                      <TableCell component='th' scope='row'>
-                        <Button color='primary' onClick={() => handleBillClickOpen(row)}><Typography>{row.name}</Typography></Button>
-                      </TableCell>
-                      <TableCell align='right'>{row.vote === 'yea' ? <Typography>Yea</Typography> : <Typography>Nay</Typography>}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>) : ''}
-            </Table>
-          </TableContainer>
-        </CardContent>
-      </Card>
-      <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
-    </div>
-  )
+  if (checkDataExistForCategory(props.data, props.title)) {
+    return (
+      <div>
+        <Card className={classes.card}>
+          <CardHeader
+            avatar={setCardLogo()}
+            action={
+              <div>
+                <IconButton aria-label='settings' onClick={() => setOpenDeleteDialog(true)}>
+                  <IndeterminateCheckBoxIcon color='primary' />
+                </IconButton>
+              </div>
+            }
+            title={props.title}
+          />
+          <DeleteCategoryDialog
+            classes={{ paper: classes.paper }}
+            keepMounted
+            open={openDeleteDialog}
+            index={props.id}
+            onClose={handleDeleteDialogClose}
+            value={confimedDeletion}
+            categoryName={props.title}
+          />
+          <CardContent>
+            {data.length
+              ? <BarChartWrapper data={data} categoryType={props.title} />
+              : 'title is empty!!'}
+            <br />
+            <TableContainer className={classes.container}>
+              <Table className={classes.table} size='small' aria-label='a dense table'>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Bill Name</TableCell>
+                    <TableCell align='right'>Vote</TableCell>
+                  </TableRow>
+                </TableHead>
+                {(rows && rows.length) > 0 ? (
+                  <TableBody stickyHeader>
+                    {rows.map(row => (
+                      <TableRow key={row.name}>
+                        <TableCell component='th' scope='row'>
+                          <Button color='primary' onClick={() => handleBillClickOpen(row)}><Typography>{row.name}</Typography></Button>
+                        </TableCell>
+                        <TableCell align='right'>{row.vote === 'yea' ? <Typography>Yea</Typography> : <Typography>Nay</Typography>}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>) : ''}
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
+        <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <Card className={classes.card}>
+          <CardHeader
+            avatar={setCardLogo()}
+            action={
+              <div>
+                <IconButton aria-label='settings' onClick={() => setOpenDeleteDialog(true)}>
+                  <IndeterminateCheckBoxIcon color='primary' />
+                </IconButton>
+              </div>
+            }
+            title={props.title}
+          />
+          <DeleteCategoryDialog
+            classes={{ paper: classes.paper }}
+            keepMounted
+            open={openDeleteDialog}
+            index={props.id}
+            onClose={handleDeleteDialogClose}
+            value={confimedDeletion}
+            categoryName={props.title}
+          />
+          <CardContent>
+            <div> There is no data for this Category</div>
+          </CardContent>
+        </Card>
+        <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
+      </div>
+    )
+  }
+}
+
+export function checkDataExistForCategory (data, title) {
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].billData.category === title.toLowerCase()) {
+      return true
+    }
+  }
+  return false
 }

@@ -5,7 +5,7 @@ function segColor (c) { return { Liberal: '#D31F25', Conservative: '#1B447A', ND
 function createDonut (element, fData) {
   function pieChart (pD) {
     const pC = {}
-    const pieDim = { w: 200, h: 200 }
+    const pieDim = { w: 400, h: 400 }
 
     pieDim.r = Math.min(pieDim.w, pieDim.h) / 2
 
@@ -17,11 +17,10 @@ function createDonut (element, fData) {
       .attr('transform', 'translate(' + pieDim.w / 2 + ',' + pieDim.h / 2 + ')')
 
     // create function to draw the arcs of the pie slices.
-    const arc = d3.arc().outerRadius(pieDim.r - 10).innerRadius(70)
+    const arc = d3.arc().outerRadius(pieDim.r - 10).innerRadius(pieDim.r * 0.8)
 
     // create a function to compute the pie slice angles.
     const pie = d3.pie().value(function (d) {
-      console.log(d.freq)
       return d.freq
     })
 
@@ -76,7 +75,8 @@ function createDonut (element, fData) {
       .style('display', 'inline-block')
       .style('border-collapse', 'collapse')
       .style('border-spacing', 0)
-
+      .style('margin-top', '-120px')
+      .style('margin-left', '400px')
     // create one row per segment.
     const tr = legend.append('tbody').selectAll('tr').data(lD).enter().append('tr')
 
@@ -91,13 +91,6 @@ function createDonut (element, fData) {
     tr.append('td').text(function (d) {
       return d.type
     })
-      .style('font-size', '10px')
-
-    // create the third column for each segment.
-    tr.append('td').attr('class', 'legendFreq')
-      .text(function (d) {
-        return d3.format(',')(d.freq)
-      })
       .style('font-size', '10px')
 
     // create the fourth column for each segment.
@@ -123,14 +116,15 @@ function createDonut (element, fData) {
       })
     }
     function getLegend (d, aD) { // Utility function to compute percentage.
-      return d3.format('.0%')(d.freq / d3.sum(aD.map(function (v) {
-        return v.freq
-      })))
+      // Utility function to compute percentage.
+      let sum = 0
+      aD.forEach(element => {
+        sum = sum + element.freq
+      })
+      const fraction = ((d.freq / sum) * 100).toFixed(1)
+      return fraction
     }
-
-    return leg
   }
-
   const tF = ['Liberal', 'Conservative', 'NDP', 'People', 'Green', 'BQ'].map(function (d) {
     return { type: d, freq: d3.sum(fData.map(function (t) { return t.freq[d] })) }
   })
