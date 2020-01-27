@@ -1,6 +1,5 @@
 import * as d3 from 'd3'
-// the number of bills that mp has issue on
-// the distribution of bills for that category
+
 function dashboard (element, fData) {
   const barColor = '#84c5f1'
 
