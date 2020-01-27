@@ -11,7 +11,15 @@ import { fetchUserRiding } from '../Navbar'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from "@material-ui/core/CardHeader";
+import NotListedLocationIcon from '@material-ui/icons/NotListedLocation';
+import Box from '@material-ui/core/Box';
+import ListItem from "@material-ui/core/ListItem";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import HelpIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import List from "@material-ui/core/List";
+
 const useStyles = makeStyles({
   card: {
     minWidth: 275,
@@ -28,6 +36,9 @@ const useStyles = makeStyles({
     fontSize: 18,
     textAlign: 'center'
   },
+  MuiAvatar:{
+    backgroundColor:'#43D0C4'
+  }
 });
 
 
@@ -50,9 +61,16 @@ export default function CategoryDashboard () {
 
       if (reps.length && representativeData.length) {
         const data = await createDataSetDonut(reps, representativeData)
-        setDonutData([data])
-        setDataUpdatedDonut(true)
+        if( data.Liberal !== 0 && data.Liberal !== 0 &&
+            data.Liberal !==  0 && data.Liberal !==  0 &&
+            data.Liberal !==  0 && data.Liberal !==  0)
+        {
+          setDonutData([data])
+          setDataUpdatedDonut(true)
+        }
+
       }
+
     }
     async function getAllReps () {
       let result = []
@@ -157,9 +175,20 @@ export default function CategoryDashboard () {
                         The Distribution of Sponsored Bills
                       </Typography>
                       <BarChartWrapper type='bar-pie' data={userRepIssuedBills} categories={categoryList} />
-                      <Typography variant="h7" color='textSecondary' component="p">
-                        The Distribution of Issued Bills By The Representative Among Different Categories
-                      </Typography>
+                      <Box border mx="auto" >
+                        <List>
+                          <ListItem>
+                            <ListItemAvatar>
+                              <Avatar className={classes.avatar}>
+                                <NotListedLocationIcon/>
+                              </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText>
+                              The distribution of issued bills by the representative among different categories
+                            </ListItemText>
+                          </ListItem>
+                        </List>
+                      </Box>
                     </CardContent>
              </Card>
               )
@@ -174,12 +203,16 @@ export default function CategoryDashboard () {
         ? <Grid item xs={12}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <ChartCard title='MP Voting Distribution'>
+              <Card>
+                <CardContent>
+                  <Typography className={classes.title}>
+                    MP Voting Distribution
+                  </Typography>
                 <Radar
-                  width={500}
-                  height={500}
-                  padding={70}
-                  domainMax={35}
+                  width={400}
+                  height={350}
+                  padding={40}
+                  domainMax={radarData[1]+2}
                   highlighted
                   onHover={(point) => {
                     if (point) {
@@ -198,29 +231,70 @@ export default function CategoryDashboard () {
                     ],
                     sets: [
                       {
-                        values: radarData
+                        values: radarData[0]
 
                       }
                     ]
                   }}
                 />
-              </ChartCard>
+                  <Box border mx="auto" >
+                    <List>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar className={classes.avatar}>
+                            <NotListedLocationIcon/>
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText>
+                          This radar chart shows the MP's activity with respect to a variety categories.
+                        </ListItemText>
+                      </ListItem>
+                    </List>
+                  </Box>
+                </CardContent>
+              </Card>
+
             </Grid>
             {donutData.length
               ? <Grid item item xs={6}>
-                <ChartCard title='Bipartisan Index'> <BarChartWrapper type='donut' data={donutData} /> </ChartCard>
+                  <Card>
+                    <CardContent>
+                          <Typography className={classes.title}>
+                            Bipartisan Index
+                          </Typography>
+                             <BarChartWrapper type='donut' data={donutData} />
+                      <Box border mx="auto" >
+                      <List>
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar className={classes.avatar}>
+                            <NotListedLocationIcon/>
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText>
+                              The Bipartisan Index measures how often a member of Parliamnet introduces bills that succeed in attracting
+                              co-sponsors from members of the other party, and how often they in turn co-sponsor a bill introduced
+                              from across the aisle.
+                          </ListItemText>
+                        </ListItem>
+                      </List>
+                      </Box>
+                    </CardContent>
+                  </Card>
               </Grid>
               : ''}
           </Grid>
-        </Grid> : <div style={{
+        </Grid> :
+          <div style={{
           position: 'absolute',
           left: '50%',
           top: '50%',
           zIndex: '-2',
           transform: 'translate(-50%, -50%)'
-          }}
-                    ><CircularProgress />
-        </div>}
+          }}>
+            <CircularProgress />
+           </div>
+      }
     </Grid>
   )
 }
@@ -230,7 +304,7 @@ export async function createDataSetRadar (categories, data) {
   const dataArray = []
   let temp = {}
   const dataSetRadar = {}
-
+  let maxValue=0
   categories.forEach(category => {
     let totalvotes = 0
     data.forEach(bill => {
@@ -244,12 +318,15 @@ export async function createDataSetRadar (categories, data) {
   })
 
   dataArray.forEach(category => {
+    if(category.value > maxValue){
+      maxValue = category.value
+    }
     if (category.category) {
       dataSetRadar[category.category] = category.value
     }
   })
 
-  return dataSetRadar
+  return [dataSetRadar,maxValue]
 }
 
 export async function createDataSetDonut (sponsors, mpdata) {
