@@ -189,7 +189,9 @@ export default function MiniDrawer ({ children }) {
               <MenuIcon />
             </IconButton>
             <Typography variant='h6' noWrap>
+              <Link to='/dashboard' className={classes.routerLink}>
               Politisense
+              </Link>
             </Typography>
             <Typography style={{ flex: 1 }} />
             <Link to='/account'>
