@@ -1,6 +1,5 @@
 /* eslint-env jest */
 import { GovtDataScraper } from '../GovtDataScraper'
-import { Firestore } from '../../../Firebase'
 
 describe('GovtDataScraper', () => {
   xit('should return the current parliament session', (done) => {
@@ -48,7 +47,7 @@ describe('GovtDataScraper', () => {
         console.log(mps)
         console.log(votes)
         return ({bills, mps, votes})
-      })
+      })/*
       .then(async (data) => {
         const db = new Firestore()
         console.log('clearing old data...')
@@ -102,7 +101,7 @@ describe('GovtDataScraper', () => {
           ]
         )
 
-      })
+      })*/
       .then(() => {
         console.log('data pipeline successful!')
     })
