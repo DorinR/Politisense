@@ -11,7 +11,6 @@ import { fetchUserRiding } from '../Navbar'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from "@material-ui/core/CardHeader";
 const useStyles = makeStyles({
   card: {
     minWidth: 275,
@@ -33,25 +32,21 @@ const useStyles = makeStyles({
 
 export default function CategoryDashboard () {
   const classes = useStyles();
-  const [categoryList, setCategoryList] = React.useState(['economics', 'healthcare', 'human rights', 'business', 'religion', 'criminal', 'trade'])
+  const [categoryList,] = React.useState(['economics', 'healthcare', 'human rights', 'business', 'religion', 'criminal', 'trade'])
   const [userRepresentative, setUserRepresentative] = React.useState('')
   const [representativeData, setRepresentativeData] = React.useState([])
   const [radarData, setRadarData] = React.useState([])
-  const [categoryListLoaded, setCategoryListLoaded] = React.useState(false)
   const [repDataLoaded, setRepDataLoaded] = React.useState(false)
   const [donutData, setDonutData] = React.useState([])
   const [reps, setReps] = React.useState([])
   const [userRepIssuedBills, setUserRepIssuedBills] = React.useState([])
-  const [dataUpdatedDonut, setDataUpdatedDonut] = React.useState(false)
-
-
+  
   useEffect(() => {
     async function getDataForDonut () {
 
       if (reps.length && representativeData.length) {
         const data = await createDataSetDonut(reps, representativeData)
         setDonutData([data])
-        setDataUpdatedDonut(true)
       }
     }
     async function getAllReps () {
@@ -154,7 +149,7 @@ export default function CategoryDashboard () {
               (<Card>
                     <CardContent>
                       <Typography className={classes.title}>
-                        The Distribution of Sponsored Bills
+                        Distribution of Sponsored Bills
                       </Typography>
                       <BarChartWrapper type='bar-pie' data={userRepIssuedBills} categories={categoryList} />
                       <Typography variant="h7" color='textSecondary' component="p">
@@ -199,7 +194,6 @@ export default function CategoryDashboard () {
                     sets: [
                       {
                         values: radarData
-
                       }
                     ]
                   }}

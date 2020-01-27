@@ -79,7 +79,11 @@ export function computeAverageOfficeSpending (spendingItems) {
   spendingItems.forEach(item => {
     total += item.amount
   })
-  return (total / spendingItems.length) * 9
+  if (total >= 0 && !isNaN(total)) {
+    return (total / spendingItems.length) * 9
+  } else {
+    return null
+  }
 }
 
 // =========== AVG ADVERTISING COSTS ============
@@ -112,7 +116,11 @@ export function computeAverageAdvertisingSpending (spendingItems) {
   spendingItems.forEach(item => {
     total += item.amount
   })
-  return total / spendingItems.length
+  if (total >= 0 && !isNaN(total)) {
+    return total / spendingItems.length
+  } else {
+    return null
+  }
 }
 
 // =========== AVG EMPLOYEE COSTS ============
@@ -145,7 +153,11 @@ export function computeAverageEmployeeSpending (spendingItems) {
   spendingItems.forEach(item => {
     total += item.amount
   })
-  return total / spendingItems.length
+  if (total >= 0 && !isNaN(total)) {
+    return total / spendingItems.length
+  } else {
+    return null
+  }
 }
 
 // =========== AVG GIFTS COSTS ============
@@ -178,7 +190,11 @@ export function computeAverageGiftsSpending (spendingItems) {
   spendingItems.forEach(item => {
     total += item.amount
   })
-  return total / spendingItems.length
+  if (total >= 0 && !isNaN(total)) {
+    return total / spendingItems.length
+  } else {
+    return null
+  }
 }
 
 // =========== AVG HOSPITALITY COSTS ============
@@ -211,7 +227,11 @@ export function computeAverageHospitalitySpending (spendingItems) {
   spendingItems.forEach(item => {
     total += item.amount
   })
-  return total / spendingItems.length
+  if (total >= 0 && !isNaN(total)) {
+    return total / spendingItems.length
+  } else {
+    return null
+  }
 }
 
 // =========== AVG PRINTING COSTS ============
@@ -243,7 +263,11 @@ export function computeAveragePrintingSpending (spendingItems) {
   spendingItems.forEach(item => {
     total += item.amount
   })
-  return (total / spendingItems.length) * 3
+  if (total >= 0 && !isNaN(total)) {
+    return (total / spendingItems.length) * 3
+  } else {
+    return null
+  }
 }
 
 // =========== AVG TRAVEL COSTS ============
@@ -275,7 +299,11 @@ export function computeAverageTravelSpending (spendingItems) {
   spendingItems.forEach(item => {
     total += item.amount
   })
-  return (total / spendingItems.length) * 7
+  if (total >= 0 && !isNaN(total)) {
+    return (total / spendingItems.length) * 7
+  } else {
+    return null
+  }
 }
 
 // =========== MP FULL COSTS ============
@@ -537,7 +565,7 @@ export default function BudgetContainer () {
         const { email } = user;
         const riding = await fetchUserRiding(email);
         const representative = await fetchRepresentative(riding);
-        mp.label =representative
+        mp.label = representative
         const representativeId = await fetchRepresentativeId(representative);
 
         // per MP items
@@ -583,65 +611,65 @@ export default function BudgetContainer () {
         }
 
         // MPs
-        let totalEmployees =computeTotalEmployeeSpending(employeeSpendingItems)
-        let ads =  computeTotalAdvertisingSpending(advertisingSpendingItems)
+        let totalEmployees = computeTotalEmployeeSpending(employeeSpendingItems)
+        let ads = computeTotalAdvertisingSpending(advertisingSpendingItems)
         let gifts = computeTotalGiftsSpending(giftsSpendingItems)
         let hospitality = computeTotalHospitalitySpending(hospitalitySpendingItems)
-        let office= computeTotalOfficeSpending(officeSpendingItems)
+        let office = computeTotalOfficeSpending(officeSpendingItems)
         let printing = computeTotalPrintingSpending(printingSpendingItems)
         let travel = computeTotalTravelSpending(travelSpendingItems)
 
-        mp.values[0]= Math.round(totalEmployees)
-        mp.values[1]= Math.round(ads)
-        mp.values[2]= Math.round(gifts)
-        mp.values[3]=  Math.round(hospitality)
-        mp.values[4]=  Math.round(office)
-        mp.values[5]=  Math.round(printing)
-        mp.values[6]=  Math.round(travel)
+        mp.values[0] = Math.round(totalEmployees)
+        mp.values[1] = Math.round(ads)
+        mp.values[2] = Math.round(gifts)
+        mp.values[3] = Math.round(hospitality)
+        mp.values[4] = Math.round(office)
+        mp.values[5] = Math.round(printing)
+        mp.values[6] = Math.round(travel)
 
 
         //Average
-        let avgEmp =computeAverageEmployeeSpending(avgEmployeeSpendingItems)
+        let avgEmp = computeAverageEmployeeSpending(avgEmployeeSpendingItems)
         let avgAds = computeAverageAdvertisingSpending(avgAdvertisingSpendingItems)
         let avgGifts = computeAverageGiftsSpending(avgGiftsSpendingItems)
-        let avgHosp= computeAverageHospitalitySpending(avgHospitalitySpendingItems)
+        let avgHosp = computeAverageHospitalitySpending(avgHospitalitySpendingItems)
         let avgOffice = computeAverageOfficeSpending(avgOfficeSpendingItems)
         let avgPrint = computeAveragePrintingSpending(avgPrintingSpendingItems)
         let avgTravel = computeAverageTravelSpending(avgTravelSpendingItems)
 
-        avg.values[0]=  Math.round(avgEmp)
-        avg.values[1]=  Math.round(avgAds)
-        avg.values[2]= Math.round( avgGifts)
-        avg.values[3]= Math.round( avgHosp)
-        avg.values[4]=  Math.round(avgOffice)
-        avg.values[5]=  Math.round(avgPrint)
-        avg.values[6]=  Math.round(avgTravel)
+        avg.values[0] = Math.round(avgEmp)
+        avg.values[1] = Math.round(avgAds)
+        avg.values[2] = Math.round(avgGifts)
+        avg.values[3] = Math.round(avgHosp)
+        avg.values[4] = Math.round(avgOffice)
+        avg.values[5] = Math.round(avgPrint)
+        avg.values[6] = Math.round(avgTravel)
       }
-      setBudgetData([mp,avg])
+      setBudgetData([mp, avg])
     }
     getData();
-  },[budgetData]);
+  }, [budgetData]);
 
   return (
-      <ListItemText>
-        {budgetData.length == 0 ? (
-                <div
-                    style={{
-                      position: "absolute",
-                      left: "50%",
-                      top: "50%",
-                      transform: "translate(-50%, -50%)"
-                    }}
-                >
-                  <CircularProgress />
-                </div>
-            ) :
+    <ListItemText>
+      {budgetData.length == 0 ? (
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)"
+          }}
+        >
+          <CircularProgress />
+        </div>
+      ) :
 
-            <BarChartWrapper type={'budget'} data ={budgetData}/>
+        <BarChartWrapper type={'budget'} data={budgetData} />
 
-        }
+      }
 
-        <Box m={1} />
-      </ListItemText>
+      <Box m={1} />
+    </ListItemText>
   );
 }

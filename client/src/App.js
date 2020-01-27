@@ -15,7 +15,7 @@ import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
 import MapWrapper from './Components/Dashboard/MapWrapper'
 import DashboardTabs from './Components/Dashboard/DashboardTabs'
 import Questionnaire from './Components/Questionnaire'
-import BarChartWrapper from './Components/Dashboard/Charts/Wrappers/BarChartWrapper'
+import HeadToHeadComparison from './Components/Dashboard/HeadToHeadComparison'
 
 const App = () => {
   const LoginContainer = () => (
@@ -34,6 +34,8 @@ const App = () => {
           <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/map' component={MapWrapper} />
           <PrivateRoute path='/account' component={UserAccountTabs} />
+          <PrivateRoute path='/headToHeadComparison' component={HeadToHeadComparison} />
+
         </div>
       </Navbar>
     </div>
@@ -53,8 +55,6 @@ const App = () => {
         <Route exact path='/(login)' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
         <Route exact path='/question' component={Questionnaire} />
-        <Route exact path='/testing' component={BarChartWrapper} />
-
         <Route component={DefaultContainer} />
       </Switch>
     </Router>

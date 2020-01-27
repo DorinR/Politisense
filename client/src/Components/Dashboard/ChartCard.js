@@ -6,19 +6,11 @@ import Typography from '@material-ui/core/Typography'
 
 const useStyles = makeStyles({
   card: {
-    width: 450
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)'
+    width: '100%'
   },
   title: {
     fontSize: 18,
     textAlign: 'center'
-  },
-  pos: {
-    marginBottom: 12
   }
 })
 export default function SimpleCard ({ children, title }) {
