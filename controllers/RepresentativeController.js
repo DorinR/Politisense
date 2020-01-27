@@ -55,6 +55,44 @@ exports.getAllRepresentatives = (req, res) => {
     })
 }
 
+// getRepresentativesInfo
+exports.getRepresentativesInfo = (req, res) => {
+  const name = req.params.name.toLowerCase()
+  let repInfo = {}
+  const db = new Firestore()
+  db.Politician()
+    .select('name', '==', name)
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.log('No matching documents.')
+        return
+      }
+      snapshot.forEach(doc => {
+        const {
+          name,
+          politicalParty,
+          riding,
+          yearElected,
+          imageUrl
+        } = doc.data()
+        repInfo = {
+          name: name,
+          politicalParty: politicalParty,
+          riding: riding,
+          yearElected: yearElected,
+          imageUrl: imageUrl
+        }
+      })
+      res.status(200).json({
+        data: repInfo,
+        success: true
+      })
+    })
+    .catch(err => {
+      console.log('Error getting documents', err)
+    })
+}
+
 exports.getRepresentativeId = async (req, res) => {
   const db = new Firestore()
   await db
