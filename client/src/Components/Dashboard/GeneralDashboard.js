@@ -19,6 +19,7 @@ import Avatar from "@material-ui/core/Avatar";
 import HelpIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import List from "@material-ui/core/List";
+import {capitalizedName} from "./BillDialog";
 
 const useStyles = makeStyles({
   card: {
@@ -73,7 +74,6 @@ export default function CategoryDashboard() {
           data.Liberal !== 0
         ) {
           setDonutData([data]);
-          setDataUpdatedDonut(true);
         }
       }
     }
@@ -175,7 +175,7 @@ export default function CategoryDashboard() {
           <Card>
             <CardContent>
               <Typography className={classes.title}>
-                Distribution of Sponsored Bills
+                Bills sponsored by {capitalizedName(userRepresentative)}
               </Typography>
               <BarChartWrapper
                 type="bar-pie"
@@ -217,7 +217,7 @@ export default function CategoryDashboard() {
                     width={400}
                     height={350}
                     padding={40}
-                    domainMax={radarData[1] + 2}
+                    domainMax={radarData[1] + 3}
                     highlighted
                     onHover={point => {
                       if (point) {
@@ -226,13 +226,13 @@ export default function CategoryDashboard() {
                     }}
                     data={{
                       variables: [
-                        { key: "trade", label: "trade" },
-                        { key: "criminal", label: "criminal" },
-                        { key: "business", label: "business" },
-                        { key: "Economics", label: "economics" },
-                        { key: "Healthcare", label: "healthcare" },
-                        { key: "Religion", label: "religion" },
-                        { key: "Human Rights", label: "human rights" }
+                        { key: "trade", label: "Trade" },
+                        { key: "criminal", label: "Criminal" },
+                        { key: "business", label: "Business" },
+                        { key: "Economics", label: "Economics" },
+                        { key: "Healthcare", label: "Healthcare" },
+                        { key: "Religion", label: "Religion" },
+                        { key: "Human Rights", label: "Human Rights" }
                       ],
                       sets: [
                         {

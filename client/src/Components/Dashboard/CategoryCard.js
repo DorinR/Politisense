@@ -153,6 +153,7 @@ export default function CategoryCard (props) {
             {data.length
               ? <BarChartWrapper data={data} categoryType={props.title} />
               : 'title is empty!!'}
+            <br/>
             <TableContainer className={classes.container}>
               <Table className={classes.table} size='small' aria-label='a dense table'>
                 <TableHead>
@@ -204,7 +205,7 @@ export default function CategoryCard (props) {
             categoryName={props.title}
           />
           <CardContent>
-            <div> There is no data dor this Category</div>
+            <div> There is no data for this Category</div>
           </CardContent>
         </Card>
         <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
