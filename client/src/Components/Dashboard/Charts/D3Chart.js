@@ -68,7 +68,7 @@ export default class D3Chart {
       .attr('class', 'pieChart')
 
     const g = svg.append('g')
-      .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')')
+      .attr('transform', 'translate(' + (width / 3) + ',' + (height / 2) + ')')
 
     const arcs = g.selectAll('arc')
       .data(createPie(totalYesNoVotes))
@@ -116,7 +116,7 @@ export default class D3Chart {
     const legend = d3.select(element).append('div')
       .attr('class', 'legend')
       .style('margin-top', '-120px')
-      .style('margin-left', '200px')
+      .style('margin-left', '180px')
 
     const keys = legend.selectAll('.key')
       .data(totalYesNoVotes)

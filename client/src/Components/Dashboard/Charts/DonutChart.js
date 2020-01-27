@@ -93,13 +93,6 @@ function createDonut (element, fData) {
     })
       .style('font-size', '10px')
 
-    // // create the third column for each segment.
-    // tr.append('td').attr('class', 'legendFreq')
-    //   .text(function (d) {
-    //     return d3.format(',')(d.freq)
-    //   })
-    //   .style('font-size', '10px')
-
     // create the fourth column for each segment.
     tr.append('td').attr('class', 'legendPerc')
       .text(function (d) {
