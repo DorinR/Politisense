@@ -17,7 +17,7 @@ function createDonut (element, fData) {
       .attr('transform', 'translate(' + pieDim.w / 2 + ',' + pieDim.h / 2 + ')')
 
     // create function to draw the arcs of the pie slices.
-    const arc = d3.arc().outerRadius(pieDim.r - 10).innerRadius(pieDim.r*0.8)
+    const arc = d3.arc().outerRadius(pieDim.r - 10).innerRadius(pieDim.r * 0.8)
 
     // create a function to compute the pie slice angles.
     const pie = d3.pie().value(function (d) {
@@ -126,12 +126,12 @@ function createDonut (element, fData) {
       // Utility function to compute percentage.
       let sum = 0
       aD.forEach(element => {
-        sum = sum+element.freq
+        sum = sum + element.freq
       })
-      let fraction = ((d.freq/sum) * 100).toFixed(1)
+      const fraction = ((d.freq / sum) * 100).toFixed(1)
       return fraction
     }
- }
+  }
   const tF = ['Liberal', 'Conservative', 'NDP', 'People', 'Green', 'BQ'].map(function (d) {
     return { type: d, freq: d3.sum(fData.map(function (t) { return t.freq[d] })) }
   })

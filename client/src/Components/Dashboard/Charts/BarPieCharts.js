@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 function dashboard (element, fData) {
   const barColor = '#84c5f1'
 
-  fData.forEach(function (d) { d.total = d.total })
+  fData.forEach(function (d) { return d.total })
 
   function histoGram (fD) {
     const hG = {}
@@ -170,13 +170,13 @@ function dashboard (element, fData) {
 
     // create the third column for each segment.
     tr.append('td').attr('class', 'legendFreq')
-      .text(function (d) { return d3.format(',')(d.freq)+" bills " })
+      .text(function (d) { return d3.format(',')(d.freq) + ' bills ' })
       .style('font-size', '10px')
 
     // create the fourth column for each segment.
     tr.append('td').attr('class', 'legendPerc')
       .text(function (d) {
-        return (getLegend(d, lD))+" %"
+        return (getLegend(d, lD)) + ' %'
       })
       .style('font-size', '10px')
 
@@ -186,18 +186,18 @@ function dashboard (element, fData) {
       const l = legend.select('tbody').selectAll('tr').data(nD)
 
       // update the frequencies.
-      l.select('.legendFreq').text(function (d) { return d3.format(',')(d.freq)+' bills ' })
+      l.select('.legendFreq').text(function (d) { return d3.format(',')(d.freq) + ' bills ' })
 
       // update the percentage column.
-      l.select('.legendPerc').text(function (d) { return getLegend(d, nD)+"%" })
+      l.select('.legendPerc').text(function (d) { return getLegend(d, nD) + '%' })
     }
 
     function getLegend (d, aD) { // Utility function to compute percentage.
       let sum = 0
       aD.forEach(element => {
-        sum = sum+element.freq
+        sum = sum + element.freq
       })
-      let fraction = ((d.freq/sum) * 100).toFixed(1)
+      const fraction = ((d.freq / sum) * 100).toFixed(1)
       return fraction
     }
 
@@ -227,27 +227,26 @@ export async function createData (categories, data) {
   const dataArray = []
   let temp = {}
   categories.forEach(category => {
-    let passedBills=0
+    let passedBills = 0
     let failedBills = 0
     let totalBills = 0
     data.forEach(bill => {
       if (bill.billsClassified.category === (category.toLowerCase())) {
         totalBills++
-        if(bill.voteRecord.yeas >bill.voteRecord.nays ){
+        if (bill.voteRecord.yeas > bill.voteRecord.nays) {
           passedBills++
-        }else {
+        } else {
           failedBills++
         }
       }
     })
-    if(totalBills != 0){
-      temp = { State: category, freq: { "Succeeded": passedBills, "Failed": failedBills}, total: totalBills  }
+    if (totalBills !== 0) {
+      temp = { State: category, freq: { Succeeded: passedBills, Failed: failedBills }, total: totalBills }
       dataArray.push(temp)
     }
   })
 
   return dataArray
-
 }
 
-function segColor (c) { return {'Succeeded' : '#43D0C4', 'Failed': '#de425b' }[c] }
+function segColor (c) { return { Succeeded: '#43D0C4', Failed: '#de425b' }[c] }

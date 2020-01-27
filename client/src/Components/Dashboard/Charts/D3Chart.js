@@ -46,19 +46,19 @@ export default class D3Chart {
 
     const colors = d3.scaleOrdinal(d3.schemeCategory10)
 
-    let div = d3.select(element).append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0)
-        .style('testAlign','center')
-        .style('width','30px')
-        .style('height','28px')
-        .style('padding','2px')
-        .style('font','sansSerif')
-        .style('background','lightsteelblue')
-        .style('border', '0px')
-        .style('border-radius', "8px")
-        .style('pointerEvents','none')
-        .style("position", "absolute")
+    const div = d3.select(element).append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0)
+      .style('testAlign', 'center')
+      .style('width', '30px')
+      .style('height', '28px')
+      .style('padding', '2px')
+      .style('font', 'sansSerif')
+      .style('background', 'lightsteelblue')
+      .style('border', '0px')
+      .style('border-radius', '8px')
+      .style('pointerEvents', 'none')
+      .style('position', 'absolute')
 
     // adding svg element
     const svg = d3.select(element).append('svg')
@@ -88,31 +88,29 @@ export default class D3Chart {
           .style('opacity', opacityHover)
 
         div.transition()
-            .duration(200)
-            .style("opacity", .9);
-        div	.html(d.value + "<br/>" )
-            .style("left", (d3.event.pageX) + "px")
-            .style("top", (d3.event.pageY +10) + "px");
-
+          .duration(200)
+          .style('opacity', 0.9)
+        div.html(d.value + '<br/>')
+          .style('left', (d3.event.pageX) + 'px')
+          .style('top', (d3.event.pageY + 10) + 'px')
       })
       .on('mouseout', function (d) {
         d3.selectAll('path')
           .style('opacity', opacity)
 
         div.transition()
-            .duration(500)
-            .style("opacity", 0);
+          .duration(500)
+          .style('opacity', 0)
       })
       .on('touchstart', function (d) {
         d3.selectAll('path')
-            .style('opacity', otherOpacityOnHover)
+          .style('opacity', otherOpacityOnHover)
         d3.select(this)
-            .style('opacity', opacityHover)
+          .style('opacity', opacityHover)
 
         div.transition()
-            .duration(200)
-            .style("opacity", 0.9);
-
+          .duration(200)
+          .style('opacity', 0.9)
       })
 
     const legend = d3.select(element).append('div')
