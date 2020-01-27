@@ -24,19 +24,23 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function restructureData (data) {
-  const templateData = {
-    type: 'Feature',
-    properties: {
-      color: '#DD2C00',
-      weight: 15,
-      direction: 0,
-      opacity: 0.4,
-      markupType: 'highlight'
-    },
-    geometry: data
+export function isValidColor (color) {
+  return /^([0-9A-F]{3}){1,2}$/i.test(color.substr(3))
+}
+
+export function addColorFillToRidingShape (svg, color) {
+  if (!isValidColor(color)) {
+    console.error('invalid color format, using fallback color')
+    color = '%237766E4'
   }
-  return templateData
+  const position = svg.indexOf('<path') + 5
+  const partyColor = ` fill="${color}"`
+  const coloredSvg = [
+    svg.slice(0, position),
+    partyColor,
+    svg.slice(position)
+  ].join('')
+  return coloredSvg
 }
 
 export default function RidingShape (props) {
@@ -65,14 +69,11 @@ export default function RidingShape (props) {
           svg = fallbackSvg
         }
 
-        const position = svg.indexOf('<path') + 5
-        const partyColor = ` fill="${thisPartyColor}"`
-        const coloredSvg = [
-          svg.slice(0, position),
-          partyColor,
-          svg.slice(position)
-        ].join('')
-        setSvgData(coloredSvg)
+        const coloredSvgTestable = addColorFillToRidingShape(
+          svg,
+          thisPartyColor
+        )
+        setSvgData(coloredSvgTestable)
       })
     }
   }, [props.ridingShapeCoordinates, props.politicalParty])
