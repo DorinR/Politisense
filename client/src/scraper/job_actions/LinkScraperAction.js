@@ -33,22 +33,20 @@ class LinkScraperAction extends JobAction {
   }
 
   malformedLinkError () {
-    const error = new ScrapeError()
     if (!this.url.includes('https://')) {
+      const error = new ScrapeError()
       error.message = `ERROR: Malformed link passed to scraper: ${this.url}`
-      return error
+      throw error
     }
-    return null
   }
 
   connectionError (e) {
-    const error = new ScrapeError()
     const connectionError = AbstractJob.connectionErrorName(e.message)
     if (connectionError) {
+      const error = new ScrapeError()
       error.message = `ERROR: Connection failure ${connectionError}, can re-enqueue job: ${this.url}`
-      return error
+      throw error
     }
-    return null
   }
 
   async perform (url) {

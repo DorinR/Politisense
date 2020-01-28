@@ -60,7 +60,7 @@ class ScrapeJob extends Job {
     const link = this.scraper.url
     const connectionError = Job.connectionErrorName(e.message)
     if (connectionError) {
-      error.message = 'ERROR: Connection failure ' + connectionError + ', requeuing job: ' + link
+      error.message = 'ERROR: Connection failure ' + connectionError + ', re-enqueuing job: ' + link
       this.queueCallback([new ScrapeJob(link, this.queueCallback, this.tlds)])
       console.debug(error.message)
       reject(error)
@@ -84,22 +84,23 @@ class ScrapeJob extends Job {
       link = 'https:' + this.scraper.url
       this.queueCallback([new ScrapeJob(link, this.queueCallback, this.tlds)])
       error.message = 'Re-enqueuing link as: ' + link
+      reject(error)
     } else if (this.scraper.url.startsWith('/')) {
       this.tlds.forEach(tld => {
         const newLink = tld + link
         this.queueCallback([new ScrapeJob(newLink, this.queueCallback, this.tlds)])
         error.message = ''
+        reject(error)
       })
     }
-    reject(error)
   }
 
   handleError (e, reject) {
     this.done = true
     this.throwOnUnexpected(e, reject)
-    this.throwOnMalformedLink(e, reject)
     this.requeueOnFailedConnection(e, reject)
     this.reconditionPartialLinks(e, reject)
+    this.throwOnMalformedLink(e, reject)
   }
 
   async execute () {

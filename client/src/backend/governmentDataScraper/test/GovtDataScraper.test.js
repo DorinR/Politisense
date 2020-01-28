@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { GovtDataScraper } from '../GovtDataScraper'
+const GovtDataScraper = require('../GovtDataScraper').GovtDataScraper
 
 describe('GovtDataScraper', () => {
   xit('should return the current parliament session', (done) => {
@@ -41,7 +41,7 @@ describe('GovtDataScraper', () => {
 
   it('runner', async(done) => {
     console.log('producing new data...')
-    new GovtDataScraper().getGovernmentData(500)
+    await new GovtDataScraper().getGovernmentData(500)
       .then(({bills, mps, votes}) => {
         console.log(bills)
         console.log(mps)
@@ -105,5 +105,6 @@ describe('GovtDataScraper', () => {
       .then(() => {
         console.log('data pipeline successful!')
     })
-  }, 60000 )
+    done()
+  }, 60000000)
 })
