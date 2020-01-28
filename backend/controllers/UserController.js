@@ -1,7 +1,6 @@
+import { Firestore } from '../client/src/Firebase'
+import { Auth } from '../client/src/Authentication'
 import represent from 'represent'
-
-const Firestore = require('@firestore').Firestore
-const bcrypt = require('bcryptjs')
 
 exports.checkIfUserExists = (req, res) => {
   const email = req.body.email

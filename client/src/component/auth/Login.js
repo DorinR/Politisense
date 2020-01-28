@@ -21,8 +21,6 @@ import {
 import { tokenAuthenticate } from '../../Authentication'
 >>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/auth/Login.js
 
-const Firestore = require('../../../../backend/firebase/firebase').Firestore
-
 const gridStyle = {
   display: 'flex',
   justifyContent: 'center'
