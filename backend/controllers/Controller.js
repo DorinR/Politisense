@@ -15,6 +15,9 @@ module.exports = {
   userLogin: function (req, res) {
     return UserController.userLogin(req, res)
   },
+  socialLogin: function (req, res) {
+    return UserController.socialLogin(req, res)
+  },
   getUserByEmail: function (req, res) {
     return UserController.getUserByEmail(req, res)
   },

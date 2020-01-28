@@ -14,14 +14,15 @@ exports.getAllVotesByRepresentative = async (req, res) => {
           success: false,
           message: 'No Bills Currently Stored'
         })
+      } else {
+        snapshot.forEach(doc => {
+          allVotes.push(doc.data())
+        })
+        res.status(200).json({
+          success: true,
+          data: allVotes
+        })
       }
-      snapshot.forEach(doc => {
-        allVotes.push(doc.data())
-      })
-      res.status(200).json({
-        success: true,
-        data: allVotes
-      })
     })
     .catch(console.error)
 }

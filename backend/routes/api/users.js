@@ -6,6 +6,7 @@ const controller = require('../../controllers/Controller')
 router.get('/', (req, res) => res.send('user route'))
 router.post('/signup', controller.userSignup)
 router.post('/login', controller.userLogin)
+router.post('/socialLogin', controller.socialLogin)
 router.post('/setRiding', controller.setRiding)
 router.post('/checkIfUserExists', controller.checkIfUserExists)
 
@@ -14,6 +15,7 @@ router.post('/checkIfUserExists', controller.checkIfUserExists)
 // @access Public
 router.post('/signup', controller.userSignup)
 router.post('/login', controller.userLogin)
+router.post('/socialLogin', controller.socialLogin)
 
 // @route get api/users/:userEmail/getUser
 // @desc  get user by email

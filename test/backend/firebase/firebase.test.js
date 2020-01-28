@@ -24,12 +24,12 @@ describe('All firebase tests', () => {
   })
 
   test('Can insert and delete a record', async (done) => {
-    await fb.Bill().insert({ id: 'a' })
+    await fb.Bill().insert({ id: 'c' })
       .then(resp => {
         resp.should.equal(true)
       })
     await fb.Bill()
-      .where('id', '==', 'a')
+      .where('id', '==', 'c')
       .delete()
       .then(count => {
         count.should.equal(1)

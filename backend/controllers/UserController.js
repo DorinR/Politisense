@@ -1,53 +1,53 @@
+import { Firestore } from '../client/src/Firebase'
+import { Auth } from '../client/src/Authentication'
 import represent from 'represent'
-
-const Firestore = require('@firestore').Firestore
-const bcrypt = require('bcryptjs')
 
 exports.checkIfUserExists = (req, res) => {
   const email = req.body.email
   const db = new Firestore()
   db.User()
-    .select('email', '==', email)
+    .where('email', '==', email)
+    .select()
     .then(snapshot => {
-      if (snapshot.empty) {
+      if (snapshot.empty || snapshot.size > 1) {
         res.json({
           success: false,
           data: 'doesnt exist'
         })
       } else {
-        res.json({
-          success: true,
-          data: 'its already in db'
+        snapshot.forEach(doc => {
+          res.json({
+            success: true,
+            data: 'user exists'
+          })
         })
       }
     })
-    .catch(err => {
-      console.error('Error getting documents', err)
-    })
+    .catch(console.error)
 }
 
 exports.getUserInterests = (req, res) => {
   const email = req.body.email
   const db = new Firestore()
   db.User()
-    .select('email', '==', email)
+    .where('email', '==', email)
+    .select()
     .then(snapshot => {
-      if (snapshot.empty) {
+      if (snapshot.empty || snapshot.size > 1) {
         res.json({
           success: false,
-          data: 'doesnt exist'
+          data: 'doesnt exist or more than one in db'
+        })
+      } else {
+        snapshot.forEach(doc => {
+          res.json({
+            success: true,
+            data: doc.data()
+          })
         })
       }
-      snapshot.forEach(doc => {
-        res.json({
-          success: true,
-          data: doc.data()
-        })
-      })
     })
-    .catch(err => {
-      console.error('Error getting documents', err)
-    })
+    .catch(console.error)
 }
 
 exports.userSignup = async (req, res) => {
@@ -56,20 +56,18 @@ exports.userSignup = async (req, res) => {
     lastname: req.body.lastname,
     email: req.body.email,
     postalCode: req.body.postalCode,
-    categories: [req.body.category1, req.body.category2],
+    categories: req.body.categories,
     riding: req.body.riding
   }
   if (req.body.password) {
-    user.password = req.body.password
+    user.password = Auth.hashPassword(req.body.password)
   }
-  const salt = bcrypt.genSaltSync(10)
-  const hash = bcrypt.hashSync(user.password, salt)
-  user.password = hash
 
   const db = new Firestore()
   await db
     .User()
-    .select('email', '==', user.email)
+    .where('email', '==', user.email)
+    .select()
     .then(async snapshot => {
       if (snapshot.empty) {
         await db
@@ -80,9 +78,7 @@ exports.userSignup = async (req, res) => {
               success: true
             })
           })
-          .catch(err => {
-            console.error('Error getting documents', err)
-          })
+          .catch(console.error)
       } else {
         res.json({
           success: false,
@@ -90,66 +86,51 @@ exports.userSignup = async (req, res) => {
         })
       }
     })
-    .catch(err => {
-      console.log('Error getting documents', err)
-    })
+    .catch(console.error)
 }
 exports.userLogin = (req, res) => {
-  const db = new Firestore()
-  const user = {
+  const credentials = {
     email: req.body.email,
     password: req.body.password
   }
-  let entry = {}
-  db.User()
-    .select('email', '==', user.email)
-    .then(snapshot => {
-      if (snapshot.empty) {
-        res.json({
-          success: false,
-          auth: 'Email entered does not exist',
-          type: 'email'
-        })
-      }
-      snapshot.forEach(doc => {
-        entry = doc.data()
-        if (bcrypt.compareSync(user.password, entry.password)) {
-          res.json({
-            success: true,
-            auth: 'Successful login'
-          })
-        } else {
-          res.json({
-            success: false,
-            auth: 'Incorrect password',
-            type: 'password'
-          })
-        }
-      })
+  new Auth()
+    .authenticate('email')(credentials.email, credentials.password)
+    .then((json) => {
+      console.log(`${json.success ? 'Successful' : 'Unsuccessful'} login for ${credentials.email} with message: ${json.auth}`)
+      res.json(json)
     })
-    .catch(err => {
-      console.log('Error getting documents', err)
-    })
+    .catch(console.error)
+}
+
+exports.socialLogin = (req, res) => {
+  const social = String(req.body.type)
+  const token = new Auth().authenticate(social)
+  res.json({
+    success: true,
+    data: token
+  })
 }
 
 exports.getUserByEmail = (req, res) => {
   const userEmail = req.params.userEmail
   const db = new Firestore()
   db.User()
-    .select('email', '==', userEmail)
+    .where('email', '==', userEmail)
+    .select()
     .then(snapshot => {
       if (snapshot.empty) {
         res.status(404).json({
           message: 'user not found',
           success: false
         })
-      }
-      snapshot.forEach(doc => {
-        res.json({
-          success: true,
-          data: doc.data()
+      } else {
+        snapshot.forEach(doc => {
+          res.json({
+            success: true,
+            data: doc.data()
+          })
         })
-      })
+      }
     })
     .catch(err => {
       res.status(404).json({
@@ -165,17 +146,16 @@ exports.updateUser = (req, res) => {
   const db = new Firestore()
 
   db.User()
-    .select('email', '==', req.body.email)
+    .where('email', '==', req.body.email)
+    .select()
     .then(snapshot => {
       if (snapshot.empty) {
-        console.error('no user with this email found')
+        throw new Error('no user with this email found')
       }
       snapshot.forEach(doc => {
         documentToChangeId = doc.id
       })
-      const salt = bcrypt.genSaltSync(10)
-      const hash = bcrypt.hashSync(req.body.password, salt)
-      const passwordToStore = hash
+      const passwordToStore = Auth.hashPassword(req.body.password)
       return db
         .User()
         .reference.doc(documentToChangeId)
@@ -224,7 +204,6 @@ exports.setRiding = (req, res) => {
           return name
         })
         .catch(console.error)
-      console.log(ridingName)
       res.json({
         success: true,
         data: ridingName
@@ -244,7 +223,7 @@ exports.updateUserRiding = (req, res) => {
     .select()
     .then(snapshot => {
       if (snapshot.empty) {
-        console.error('No user with this email found')
+        throw new Error('No user with this email found')
       }
       snapshot.forEach(doc => {
         targetUserId = doc.id
@@ -275,10 +254,11 @@ exports.updateUserCategory = (req, res) => {
   let documentToChangeId = 0
   const db = new Firestore()
   db.User()
-    .select('email', '==', req.body.email)
+    .where('email', '==', req.body.email)
+    .select()
     .then(snapshot => {
       if (snapshot.empty) {
-        console.error('no user with this email found')
+        throw new Error('no user with this email found')
       }
       snapshot.forEach(doc => {
         documentToChangeId = doc.id
