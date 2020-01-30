@@ -14,7 +14,6 @@ import AddIcon from '@material-ui/icons/Add'
 import axios from 'axios'
 import { fetchUserRiding } from '../Navbar'
 import CircularProgress from '@material-ui/core/CircularProgress'
-/* eslint-disable */
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -55,16 +54,16 @@ const useStyles = makeStyles(theme => ({
 function TabPanel (props) {
   const { children, value, index, ...other } = props
   return (
-      <Typography
-          component='div'
-          role='tabpanel'
-          hidden={value !== index}
-          id={`full-width-tabpanel-${index}`}
-          aria-labelledby={`full-width-tab-${index}`}
-          {...other}
-      >
-        <Box p={3}>{children}</Box>
-      </Typography>
+    <Typography
+      component='div'
+      role='tabpanel'
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}
+    >
+      <Box p={3}>{children}</Box>
+    </Typography>
   )
 }
 
@@ -73,7 +72,6 @@ TabPanel.propTypes = {
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired
 }
-
 
 export default function CategoryGrid () {
   const classes = useStyles()
@@ -85,79 +83,74 @@ export default function CategoryGrid () {
   const [representativeData, setRepresentativeData] = React.useState([])
   const [reset, setReset] = React.useState(false)
 
-  async function getUserInterests(){
+  async function getUserInterests () {
     let result = []
-    let user = JSON.parse(localStorage.getItem('user'))
+    // eslint-disable-next-line no-undef
+    const user = JSON.parse(localStorage.getItem('user'))
     await axios
-        .post('http://localhost:5000/api/users/getUserInterests', {email:user.email})
-        .then(res => {
-          result = res.data.data.categories
-        })
-        .catch(err => console.error(err))
+      .post('http://localhost:5000/api/users/getUserInterests', { email: user.email })
+      .then(res => {
+        result = res.data.data.categories
+      })
+      .catch(err => console.error(err))
     return result
   }
 
   useEffect(() => {
-
     async function getAllBillsByRep (head) {
-      console.log("im insdie the GETALLBILLS and the head "+head )
       let result = []
       await axios
-          .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
-          .then(res => {
-            if (res.data.success) {
-              console.log(res.data.data)
-              result= res.data.data
-              setRepresentativeData(result)
-            }
-          })
-          .catch(err => console.error(err))
+        .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
+        .then(res => {
+          if (res.data.success) {
+            result = res.data.data
+            setRepresentativeData(result)
+          }
+        })
+        .catch(err => console.error(err))
       return result
     }
 
     async function getData () {
+      // eslint-disable-next-line no-undef
       const user = JSON.parse(localStorage.getItem('user'))
-      console.log('user===', user);
       if (user) {
         const { email } = user
         const riding = await fetchUserRiding(email)
         const representative = await fetchRepresentative(riding)
-        if(representative.length != 0 ){
+        if (representative.length !== 0) {
           setUserRepresentative(representative)
         }
 
-        let interests = await getUserInterests().then(res => {
+        await getUserInterests().then(res => {
           setCategoryList(res)
           setCounter(res.length)
         })
-
       }
     }
+
     getData()
-    if(userRepresentative){
-      getAllBillsByRep(userRepresentative) .then(result => {
-      })
+    if (userRepresentative) {
+      getAllBillsByRep(userRepresentative)
     }
   }, [userRepresentative, reset])
 
   async function fetchRepresentative (riding) {
     let result = ''
     await axios
-        .get(
-            `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-        )
-        .then(res => {
-          if (res.data.success) {
-            result = res.data.data.name
-          }
-        })
-        .catch(err => console.error(err))
+      .get(
+        `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+      )
+      .then(res => {
+        if (res.data.success) {
+          result = res.data.data.name
+        }
+      })
+      .catch(console.error)
     return result
   }
 
   const deleteEvent = (index) => {
-    console.log('deleting index===', index)
-
     const copyCategoryArray = Object.assign([], categoryList)
     copyCategoryArray.splice(index, 1)
     setCategoryList(copyCategoryArray)
@@ -165,7 +158,6 @@ export default function CategoryGrid () {
     setCounter(counter - 1)
     setRepresentativeData([])
     setReset(!reset)
-
   }
 
   const addEvent = (newValue) => {
@@ -186,70 +178,74 @@ export default function CategoryGrid () {
     }
     setOpen(false)
   }
-
+  /* eslint-disable */
   return (
-      <div className={classes.container}>
-        <Grid container spacing={2}>
-          {
-            representativeData.length != 0 ?
-                categoryList.map((category, index) => {
-                  return (
-                      <Grid item xs={4} key={index}>
-                        <CategoryCard
-                            id={index}
-                            title={category}
-                            delete={deleteEvent}
-                            representative={representativeData}
-                            data={(representativeData.length != 0) ? representativeData : []}
-                        />
-                      </Grid>
-                  )
-                }) : <div style={{
-                  position: 'absolute',
-                  left: '50%',
-                  top: '50%',
-                  transform: 'translate(-50%, -50%)'
-                }}><CircularProgress /></div>
-          }
-          {(counter < 3 && representativeData.length > 0)
-              ? <Grid item md={4}>
-                <Card className={classes.card}>
-                  <CardActionArea>
-                    <CardContent>
-                      <div onClick={handleClickListItem}>
-                        <Typography gutterBottom variant='h5' component='h2' align='center' style={{ color: 'white' }}>
-                          Add New Category
-                        </Typography>
-                        <div align='center'>
-                          <AddIcon color='white' fontSize='large' style={{ color: 'white', fontSize: 100 }} />
-                        </div>
+    <div className={classes.container}>
+      <Grid container spacing={2}>
+        {
+          representativeData.length !== 0
+            ? categoryList.map((category, index) => {
+              return (
+                <Grid item xs={4} key={index}>
+                  <CategoryCard
+                    id={index}
+                    title={category}
+                    delete={deleteEvent}
+                    representative={representativeData}
+                    data={(representativeData.length !== 0) ? representativeData : []}
+                  />
+                </Grid>
+              )
+            })
+            : <div style={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)' }}
+            >
+              <CircularProgress/>
+            </div>
+        }
+        {(counter < 3 && representativeData.length > 0)
+          ? <Grid item md={4}>
+            <Card className={classes.card}>
+              <CardActionArea>
+                <CardContent>
+                  <div onClick={handleClickListItem}>
+                    <Typography gutterBottom variant='h5' component='h2' align='center' style={{ color: 'white' }}>
+                      Add New Category
+                    </Typography>
+                      <div align='center'>
+                        <AddIcon color='white' fontSize='large' style={{ color: 'white', fontSize: 100 }}/>
                       </div>
-                      <ConfirmationDialogRaw
-                          classes={{ paper: classes.paper }}
-                          keepMounted
-                          open={open}
-                          onClose={handleClose}
-                          value={value}
-                          existedCategories={categoryList}
-                      />
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-              : <div />}
-        </Grid>
-      </div>
+                  </div>
+                  <ConfirmationDialogRaw
+                    classes={{ paper: classes.paper }}
+                    keepMounted
+                    open={open}
+                    onClose={handleClose}
+                    value={value}
+                    existedCategories={categoryList}/>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+          : <div/>}
+      </Grid>
+    </div>
   )
 }
+
 export async function updateUserCategory (categoryList) {
   let result = ''
+  // eslint-disable-next-line no-undef
   const user = JSON.parse(localStorage.getItem('user'))
   const { email } = user
   await axios
-      .post('http://localhost:5000/api/users/updateUserCategory', { email: email, categoryList: categoryList})
-      .then(res => {
-        result = res
-      })
-      .catch(err => console.error(err))
+    .post('http://localhost:5000/api/users/updateUserCategory', { email: email, categoryList: categoryList })
+    .then(res => {
+      result = res
+    })
+    .catch(console.error)
   return result
 }

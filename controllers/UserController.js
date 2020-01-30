@@ -31,13 +31,14 @@ exports.checkIfUserExists = (req, res) => {
 exports.getUserInterests = (req, res) => {
   const email = req.body.email
   const db = new Firestore()
+  console.log(email)
   db.User()
     .select('email', '==', email)
     .then(snapshot => {
-      if (snapshot.empty) {
+      if (snapshot.empty || snapshot.size > 1) {
         res.json({
           success: false,
-          data: 'doesnt exist'
+          data: 'doesnt exist or more than one in db'
         })
       } else {
         snapshot.forEach(doc => {
@@ -59,7 +60,7 @@ exports.userSignup = async (req, res) => {
     lastname: req.body.lastname,
     email: req.body.email,
     postalCode: req.body.postalCode,
-    categories: [req.body.category1, req.body.category2],
+    categories: req.body.categories,
     riding: req.body.riding
   }
   if (req.body.password) {

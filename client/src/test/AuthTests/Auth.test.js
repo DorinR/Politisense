@@ -4,14 +4,22 @@ import { checkEmailFormat } from '../../Components/Auth/Login'
 const chai = require('chai')
 chai.should()
 
-describe('checks the inserted email format ', () => {
-  test('should return an array of possible matches when format is valid', () => {
+describe('client/src/Components/Auth/Login.js Tests', () => {
+  test('Login.js::checkEmailFormat returns array of matches when valid', () => {
     const res = checkEmailFormat('baraka.khalid4@gmail.com')
     expect(res.length).not.toBe(0)
   })
 
-  test('should return an empty array  when the format is not valid', () => {
+  test('Login.js::checkEmailFormat returns null when invalid', () => {
     const res = checkEmailFormat('baraka.khalid4')
     expect(res).toBe(null)
+  })
+
+  test('Login.js::handleSocialLogin', () => {
+
+  })
+
+  test('Login.js::handleSocialLogin', () => {
+
   })
 })

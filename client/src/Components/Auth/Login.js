@@ -79,7 +79,7 @@ export async function handleEmailLogin (user) {
   return result
 }
 
-async function handleSocialLogin (social) {
+export async function handleSocialLogin (social) {
   return await axios
     .post('http://localhost:5000/api/users/socialLogin', {type: social})
     .then(res => {
@@ -87,7 +87,7 @@ async function handleSocialLogin (social) {
       return tokenAuthenticate(token)
     })
     .then(result => {
-      return result
+      return result.user
     })
     .catch(console.error)
 }
@@ -113,13 +113,9 @@ export default function Login (props) {
           setAuthenticated(true)
         } else {
           const newUser = {
-            firstname: user.displayName.substr(
-              0,
-              user.displayName.indexOf(' ')
-            ),
-            lastname: user.displayName.substr(
-              user.displayName.indexOf(' ') + 1
-            ),
+            firstname: user.displayName ? user.displayName.substr(0, user.displayName.indexOf(' ')) : ' ',
+            lastname: user.displayName ? user.displayName.substr(user.displayName.indexOf(' ') + 1) : ' ',
+            email: user.email
           }
           props.history.push({
             pathname: '/question',

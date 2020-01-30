@@ -9,14 +9,14 @@ class _Auth {
     this.auth = fs.firebase.auth()
 
     this.providers = {}
-    this.providers['facebook'] = new ref.FacebookAuthProvider()
-    this.providers['google'] =  new ref.GoogleAuthProvider()
-    this.providers['twitter'] = new ref.TwitterAuthProvider()
-    this.providers['microsoft'] = new ref.OAuthProvider('microsoft.com')
-    this.providers['email'] = this.emailAuthenticate.bind(this)
+    this.providers.facebook = new ref.FacebookAuthProvider()
+    this.providers.google = new ref.GoogleAuthProvider()
+    this.providers.twitter = new ref.TwitterAuthProvider()
+    this.providers.microsoft = new ref.OAuthProvider('microsoft.com')
+    this.providers.email = this.emailAuthenticate.bind(this)
   }
 
-  authenticate(type) {
+  authenticate (type) {
     return this.providers[type]
   }
 
@@ -53,7 +53,6 @@ class _Auth {
         })
         .catch(reject)
     })
-
   }
 }
 
@@ -66,14 +65,14 @@ class Auth {
     return this.auth.authenticate(type)
   }
 
-  static hashPassword(plaintext) {
+  static hashPassword (plaintext) {
     const salt = bcrypt.genSaltSync(10)
     const hash = bcrypt.hashSync(plaintext, salt)
     return hash
   }
 }
 
-function tokenAuthenticate(token) {
+function tokenAuthenticate (token) {
   return new _Auth().auth.signInWithPopup(token)
 }
 
