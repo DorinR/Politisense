@@ -1,7 +1,7 @@
-import { XmlDataParser } from './XmlDataParser'
-import { ParliamentNotSetError } from './XmlParserError'
-import { Bill } from '../../models/Bill'
-import { Model } from '../../models/Model'
+const XmlDataParser = require('./XmlDataParser').XmlDataParser
+const ParliamentNotSetError = require('./XmlParserError').ParliamentNotSetError
+const Bill = require('../../models/Bill').Bill
+const Model = require('../../models/Model').Model
 
 class BillXmlParser extends XmlDataParser {
   constructor (xml, filters, currentParliament) {

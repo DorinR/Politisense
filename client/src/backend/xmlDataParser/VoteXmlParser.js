@@ -1,8 +1,8 @@
-import { XmlDataParser } from './XmlDataParser'
-import { ParliamentNotSetError } from './XmlParserError'
-import { VoteParticipantsXmlParser } from './VoteParticipantsXmlParser'
-import { VoteRecord } from '../../models/VoteRecord'
-import { Model } from '../../models/Model'
+const XmlDataParser = require('./XmlDataParser').XmlDataParser
+const ParliamentNotSetError = require('./XmlParserError').ParliamentNotSetError
+const VoteParticipantsXmlParser = require('./VoteParticipantsXmlParser').VoteParticipantsXmlParser
+const VoteRecord = require('../../models/VoteRecord').VoteRecord
+const Model = require('../../models/Model').Model
 
 class VoteXmlParser extends XmlDataParser {
   static getVoteParticipantsUrl (voteId, currentParliament) {

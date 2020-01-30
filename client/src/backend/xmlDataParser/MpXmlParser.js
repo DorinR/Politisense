@@ -1,6 +1,6 @@
-import { XmlDataParser } from './XmlDataParser'
-import { Politician } from '../../models/Politician'
-import { Model } from '../../models/Model'
+const XmlDataParser = require('./XmlDataParser').XmlDataParser
+const Politician = require('../../models/Politician').Politician
+const Model = require('../../models/Model').Model
 
 const cheerio = require('cheerio')
 

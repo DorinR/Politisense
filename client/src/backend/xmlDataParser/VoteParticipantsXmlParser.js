@@ -1,4 +1,4 @@
-import { XmlDataParser } from './XmlDataParser'
+const XmlDataParser = require('./XmlDataParser').XmlDataParser
 
 class VoteParticipantsXmlParser extends XmlDataParser {
   get tagName () {

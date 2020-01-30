@@ -1,5 +1,5 @@
-import { DataNotFoundError } from './XmlParserError'
-import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
+const DataNotFoundError = require('./XmlParserError').DataNotFoundError
+const LinkScraper = require('../../scraper/job_actions/LinkScraperAction').LinkScraper
 
 const cheerio = require('cheerio')
 

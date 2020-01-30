@@ -1,10 +1,10 @@
-import { ScrapeRunner } from '../../scraper/ScrapeRunner'
-import { BillXmlParser } from '../xmlDataParser/BillXmlParser'
-import { MpXmlParser } from '../xmlDataParser/MpXmlParser'
-import { VoteXmlParser } from '../xmlDataParser/VoteXmlParser'
-import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
-import { Firestore } from '../../Firebase'
-import { Vote } from '../../models/Vote'
+const ScrapeRunner = require('../../scraper/ScrapeRunner').ScrapeRunner
+const BillXmlParser = require('../xmlDataParser/BillXmlParser').BillXmlParser
+const MpXmlParser = require('../xmlDataParser/MpXmlParser').MpXmlParser
+const VoteXmlParser = require('../xmlDataParser/VoteXmlParser').VoteXmlParser
+const LinkScraper = require('../../scraper/job_actions/LinkScraperAction').LinkScraper
+const Firestore = require('../../Firebase').Firestore
+const Vote = require('../../models/Vote').Vote
 
 const cheerio = require('cheerio')
 const Promise = require('bluebird')

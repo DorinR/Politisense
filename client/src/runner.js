@@ -1,4 +1,4 @@
-const GovtDataScraper = require('./backend/governmentDataScraper/GovtDataScraper')
+const GovtDataScraper = require('./backend/governmentDataScraper/GovtDataScraper').GovtDataScraper
 
 console.log('producing new data...')
 new GovtDataScraper().getGovernmentData(500)
