@@ -10,8 +10,8 @@ const cheerio = require('cheerio')
 const Promise = require('bluebird')
 
 class GovtDataScraper {
-  async getGovernmentData (scrapeRunnerXmlCount) {
-    const runner = new ScrapeRunner(scrapeRunnerXmlCount)
+  async getGovernmentData (scrapeRunnerXmlCount, requestWait, startingUrl, limitedDomains) {
+    const runner = new ScrapeRunner(scrapeRunnerXmlCount, requestWait, startingUrl, limitedDomains)
     const xmlList = await runner.getXmlContent()
 
     const data = {
