@@ -14,12 +14,4 @@ describe('client/src/Components/Auth/Login.js Tests', () => {
     const res = checkEmailFormat('baraka.khalid4')
     expect(res).toBe(null)
   })
-
-  test('Login.js::handleSocialLogin', () => {
-
-  })
-
-  test('Login.js::handleSocialLogin', () => {
-
-  })
 })

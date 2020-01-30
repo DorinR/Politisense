@@ -1,4 +1,4 @@
-import { Firestore } from './Firebase'
+const Firestore = require('./Firebase').Firestore
 
 const bcrypt = require('bcryptjs')
 
@@ -37,10 +37,11 @@ class _Auth {
           }
           snapshot.forEach(doc => {
             const entry = doc.data()
-            if (bcrypt.compareSync(password, entry.password)) {
+            if (this.compare(password, entry.password)) {
               resolve({
                 success: true,
-                auth: 'Successful login'
+                auth: 'Successful login',
+                type: 'success'
               })
             } else {
               resolve({
@@ -53,6 +54,10 @@ class _Auth {
         })
         .catch(reject)
     })
+  }
+
+  compare (password, hash) {
+    return bcrypt.compareSync(password, hash)
   }
 }
 
