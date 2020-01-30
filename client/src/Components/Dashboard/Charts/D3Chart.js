@@ -23,12 +23,11 @@ export default class D3Chart {
       { index: 2, name: 'Abstain', value: abstainCounter }
     ]
 
-    const width = 150
+    const width = 200
     const height = 150
     const opacity = 0.8
     const opacityHover = 1
     const otherOpacityOnHover = 0.8
-    const tooltipMargin = 13
     const radius = Math.min(width, height) / 2
 
     // The d3.pie() function takes in a dataset and creates handy data for us to generate a pie chart in the SVG.
@@ -47,6 +46,20 @@ export default class D3Chart {
 
     const colors = d3.scaleOrdinal(d3.schemeCategory10)
 
+    const div = d3.select(element).append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0)
+      .style('testAlign', 'center')
+      .style('width', '30px')
+      .style('height', '28px')
+      .style('padding', '2px')
+      .style('font', 'sansSerif')
+      .style('background', 'lightsteelblue')
+      .style('border', '0px')
+      .style('border-radius', '8px')
+      .style('pointerEvents', 'none')
+      .style('position', 'absolute')
+
     // adding svg element
     const svg = d3.select(element).append('svg')
       .attr('width', width)
@@ -55,7 +68,7 @@ export default class D3Chart {
       .attr('class', 'pieChart')
 
     const g = svg.append('g')
-      .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')')
+      .attr('transform', 'translate(' + (width / 3) + ',' + (height / 2) + ')')
 
     const arcs = g.selectAll('arc')
       .data(createPie(totalYesNoVotes))
@@ -74,66 +87,36 @@ export default class D3Chart {
         d3.select(this)
           .style('opacity', opacityHover)
 
-        const g = d3.select('svg')
-          .style('cursor', 'pointer')
-          .append('g')
-          .attr('class', 'tooltip')
-          .style('opacity', 0)
-
-        g.append('text')
-          .attr('class', 'name-text')
-          .text(`${d.data.name} (${d.data.value})`)
-          .attr('text-anchor', 'middle')
-
-        const text = g.select('text')
-        const bbox = text.node().getBBox()
-        const padding = 2
-        g.insert('rect', 'text')
-          .attr('x', bbox.x - padding)
-          .attr('y', bbox.y - padding)
-          .attr('width', bbox.width + (padding * 2))
-          .attr('height', bbox.height + (padding * 2))
-          .style('fill', 'white')
-          .style('opacity', 0.75)
-      })
-      .on('mousemove', function (d) {
-        const mousePosition = d3.mouse(this)
-        let x = mousePosition[0] + width / 2
-        let y = mousePosition[1] + height / 2 - tooltipMargin
-
-        const text = d3.select('.tooltip text')
-        const bbox = text.node().getBBox()
-        if (x - bbox.width / 2 < 0) {
-          x = bbox.width / 2
-        } else if (width - x - bbox.width / 2 < 0) {
-          x = width - bbox.width / 2
-        }
-        if (y - bbox.height / 2 < 0) {
-          y = bbox.height + tooltipMargin * 2
-        } else if (height - y - bbox.height / 2 < 0) {
-          y = height - bbox.height / 2
-        }
-        d3.select('.tooltip')
-          .style('opacity', 1)
-          .attr('transform', `translate(${x}, ${y})`)
+        div.transition()
+          .duration(200)
+          .style('opacity', 0.9)
+        div.html(d.value + '<br/>')
+          .style('left', (d3.event.pageX) + 'px')
+          .style('top', (d3.event.pageY + 10) + 'px')
       })
       .on('mouseout', function (d) {
-        d3.select('svg')
-          .style('cursor', 'none')
-          .select('.tooltip').remove()
         d3.selectAll('path')
           .style('opacity', opacity)
+
+        div.transition()
+          .duration(500)
+          .style('opacity', 0)
       })
       .on('touchstart', function (d) {
-        d3.select('svg')
-          .style('cursor', 'none')
+        d3.selectAll('path')
+          .style('opacity', otherOpacityOnHover)
+        d3.select(this)
+          .style('opacity', opacityHover)
+
+        div.transition()
+          .duration(200)
+          .style('opacity', 0.9)
       })
-      .each(function (d, i) { this._current = i })
 
     const legend = d3.select(element).append('div')
       .attr('class', 'legend')
-      .style('margin-top', '-110px')
-      .style('margin-left', '170px')
+      .style('margin-top', '-120px')
+      .style('margin-left', '180px')
 
     const keys = legend.selectAll('.key')
       .data(totalYesNoVotes)
@@ -141,7 +124,7 @@ export default class D3Chart {
       .attr('class', 'key')
       .style('display', 'flex')
       .style('align-items', 'center')
-      .style('margin-right', '30px')
+      .style('margin-right', '-200px')
 
     keys.append('div')
       .attr('class', 'symbol')

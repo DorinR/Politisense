@@ -1,10 +1,9 @@
 import * as d3 from 'd3'
-// the number of bills that mp has issue on
-// the distribution of bills for that category
+
 function dashboard (element, fData) {
   const barColor = '#84c5f1'
 
-  fData.forEach(function (d) { d.total = d.freq.total })
+  fData.forEach(function (d) { return d.total })
 
   function histoGram (fD) {
     const hG = {}
@@ -170,12 +169,14 @@ function dashboard (element, fData) {
 
     // create the third column for each segment.
     tr.append('td').attr('class', 'legendFreq')
-      .text(function (d) { return d3.format(',')(d.freq) })
+      .text(function (d) { return d3.format(',')(d.freq) + ' bills ' })
       .style('font-size', '10px')
 
     // create the fourth column for each segment.
     tr.append('td').attr('class', 'legendPerc')
-      .text(function (d) { return getLegend(d, lD) })
+      .text(function (d) {
+        return (getLegend(d, lD)) + ' %'
+      })
       .style('font-size', '10px')
 
     // Utility function to be used to update the legend.
@@ -184,27 +185,31 @@ function dashboard (element, fData) {
       const l = legend.select('tbody').selectAll('tr').data(nD)
 
       // update the frequencies.
-      l.select('.legendFreq').text(function (d) { return d3.format(',')(d.freq) })
+      l.select('.legendFreq').text(function (d) { return d3.format(',')(d.freq) + ' bills ' })
 
       // update the percentage column.
-      l.select('.legendPerc').text(function (d) { return getLegend(d, nD) })
+      l.select('.legendPerc').text(function (d) { return getLegend(d, nD) + '%' })
     }
 
     function getLegend (d, aD) { // Utility function to compute percentage.
-      return d3.format('%')(d.freq / d3.sum(aD.map(function (v) { return v.freq })))
+      let sum = 0
+      aD.forEach(element => {
+        sum = sum + element.freq
+      })
+      const fraction = ((d.freq / sum) * 100).toFixed(1)
+      return fraction
     }
 
     return leg
   }
 
   // calculate total frequency by segment for all state.
-  const tF = ['yes', 'no', 'abstain'].map(function (d) {
+  const tF = ['Succeeded', 'Failed'].map(function (d) {
     return { type: d, freq: d3.sum(fData.map(function (t) { return t.freq[d] })) }
   })
 
   // calculate total frequency by state for all segment.
   const sF = fData.map(function (d) { return [d.State, d.total] })
-  console.log(sF)
   const hG = histoGram(sF) // create the histogram.
   const pC = pieChart(tF) // create the pie-chart.
   const leg = legend(tF) // create the legend.
@@ -219,28 +224,28 @@ export default class BarPieChart {
 }
 export async function createData (categories, data) {
   const dataArray = []
-
   let temp = {}
-  console.log(categories, data)
   categories.forEach(category => {
-    let yesCounter = 0
-    let noCounter = 0
-    const abtsainCounter = 0
-
+    let passedBills = 0
+    let failedBills = 0
     let totalBills = 0
     data.forEach(bill => {
       if (bill.billsClassified.category === (category.toLowerCase())) {
         totalBills++
-        yesCounter = yesCounter + bill.voteRecord.yeas
-        noCounter = yesCounter + bill.voteRecord.nays
+        if (bill.voteRecord.yeas > bill.voteRecord.nays) {
+          passedBills++
+        } else {
+          failedBills++
+        }
       }
     })
-    temp = { State: category, freq: { yes: yesCounter, no: noCounter, abstain: abtsainCounter, total: totalBills } }
-    console.log(temp)
-    dataArray.push(temp)
+    if (totalBills !== 0) {
+      temp = { State: category, freq: { Succeeded: passedBills, Failed: failedBills }, total: totalBills }
+      dataArray.push(temp)
+    }
   })
 
   return dataArray
 }
 
-function segColor (c) { return { yes: '#43D0C4', no: '#de425b', abstain: '#f68155' }[c] }
+function segColor (c) { return { Succeeded: '#43D0C4', Failed: '#de425b' }[c] }
