@@ -28,7 +28,6 @@ class _Auth {
         .select()
         .then(snapshot => {
           if (snapshot.empty || snapshot.size > 1) {
-            console.log(snapshot.size)
             resolve({
               success: false,
               auth: 'Email entered does not exist or is not unique',
