@@ -1,13 +1,15 @@
 const Queue = require('./utilities/UniqueJobQueue').UniqueJobQueue
 const ScrapeJob = require('./ScrapeJob').ScrapeJob
+const ScrapeError = require('./job_actions/LinkScraperAction').ScrapeError
 const Reader = require('./job_actions/XmlFileRetrieverAction').FileReader
+
 class ScrapeJobManager {
   constructor (count, wait, startingUrl, topLevelDomains) {
     this.linkQueue = new Queue()
     this.xmlSet = new Set()
     this.returnedLinkCount = typeof count === 'undefined' ? 150 : count
     this.waitPeriod = typeof wait === 'undefined' ? 5000 : wait
-    this.startingUrl = typeof startingUrl === 'undefined' ? 'https://www.ourcommons.ca' : startingUrl
+    this.startingUrl = typeof startingUrl === 'undefined' ? 'https://www.ourcommons.ca/' : startingUrl
     this.topLevelDomains = typeof topLevelDomains === 'undefined' ? ['https://www.ourcommons.ca/', 'https://www.parl.ca/'] : topLevelDomains
     this.jobs = []
     this.activeJobCount = 0
@@ -25,7 +27,7 @@ class ScrapeJobManager {
   }
 
   async startScrape (url) {
-    this.linkQueue.enqueue(new ScrapeJob(url, this.enqueueJobsCb.bind(this), this.topLevelDomains))
+    this.linkQueue.enqueue(ScrapeJob.create(url, this.enqueueJobsCb.bind(this), this.topLevelDomains))
     await this.init(this.linkQueue.dequeue())
     await this.traverse()
     return this.xmlSet
@@ -72,7 +74,8 @@ class ScrapeJobManager {
           this.linkQueue.enqueue(job)
         }
       } catch (e) {
-        if (typeof e !== typeof (new RangeError())) {
+        if (!(e instanceof RangeError)) {
+          console.log('range error')
           console.log(e.message)
         }
       }
@@ -97,7 +100,7 @@ class ScrapeJobManager {
   }
 
   logUnexpectedError (e) {
-    if (e.name !== 'ScrapeError') {
+    if (!(e instanceof ScrapeError)) {
       console.error(e.message)
     }
   }
@@ -215,3 +218,6 @@ class ScrapeRunner {
 }
 
 module.exports.ScrapeRunner = ScrapeRunner
+
+new ScrapeRunner()
+  .getXmlContent()
