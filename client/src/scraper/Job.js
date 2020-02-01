@@ -47,47 +47,18 @@ class Job {
   }
 
   async execute() {
-    return this.actions.reduce((promise, action) => {
-      return promise
-        .then(action)
-        .catch(this.handleErrors)
+      return this.actions.reduce((promise, action) => {
+        return promise.then(action)
+      }, Promise.resolve())
+        .catch(e => {
+          this.handleErrors(e)
+          return []
+        })
         .finally(this.logAction)
-    }, Promise.resolve())
-  }
-
-  createNewJobs (urls) {
-    const newJobs = []
-    urls.forEach((url) => {
-      newJobs.push(Job.create(url, this.queueCallback))
-    })
-    return newJobs
   }
 
   static create (url, callback) {
     throw new TypeError('::createNewJob not implemented in derived class')
-  }
-
-  static connectionErrorName (message) {
-    if (!message) {
-      return null
-    }
-
-    if (message.includes('ESOCKETTIMEDOUT')) {
-      return 'ESOCKETTIMEDOUT'
-    }
-    if (message.includes('ETIMEDOUT')) {
-      return 'ETIMEDOUT'
-    }
-    if (message.includes('ECONNRESET')) {
-      return 'ECONNRESET'
-    }
-    if (message.includes('EPIPE')) {
-      return 'EPIPE'
-    }
-    if (message.includes('ENOTFOUND')) {
-      return 'ENOTFOUND'
-    }
-    return null
   }
 }
 

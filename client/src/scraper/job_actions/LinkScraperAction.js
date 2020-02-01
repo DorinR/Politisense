@@ -4,10 +4,10 @@ const AbstractJob = require('../Job').AbstractJob
 const ScrapeErrorName = 'ScrapeError'
 
 class ScrapeError extends Error {
-  constructor (message) {
+  constructor (message, link) {
     super()
     this.message = message
-    this.name = ScrapeErrorName
+    this.link = link
   }
 
   static UnexpectedError (e) {
@@ -33,19 +33,19 @@ class LinkScraperAction extends JobAction {
   }
 
   malformedLinkError () {
-    const error = new ScrapeError()
     if (!this.url.includes('https://')) {
-      error.message = `ERROR: Malformed link passed to scraper: ${this.url}`
+      const message = `ERROR: Malformed link passed to scraper: ${this.url}`
+      const error = new ScrapeError(message, this.url)
       return error
     }
     return null
   }
 
   connectionError (e) {
-    const error = new ScrapeError()
     const connectionError = AbstractJob.connectionErrorName(e.message)
     if (connectionError) {
-      error.message = `ERROR: Connection failure ${connectionError}, can re-enqueue job: ${this.url}`
+      const message = `ERROR: Connection failure ${connectionError}, can re-enqueue job: ${this.url}`
+      const error = new ScrapeError(message, this.url)
       return error
     }
     return null
@@ -64,7 +64,9 @@ class LinkScraperAction extends JobAction {
         .then(this.logResult.bind(this))
         .then(resolve)
         .catch((e) => {
-          reject(new ScrapeError('could not scrape page: ' + e.message))
+          const error = new ScrapeError(e.message, this.url)
+          error.stack = e.stack
+          reject(error)
         })
     })
   }

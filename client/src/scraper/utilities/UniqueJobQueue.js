@@ -7,10 +7,10 @@ class UniqueJobQueue {
   }
 
   enqueue (task) {
-    if (this.linkSet.has(task.scraper.url)) {
+    if (this.linkSet.has(task.url)) {
       throw new RangeError('URL already in UniqueJobQueue')
     }
-    this.linkSet.add(task.scraper.url)
+    this.linkSet.add(task.url)
     const item = new LinkedList.Item()
     // eslint-disable-next-line dot-notation
     item['item'] = task
@@ -23,7 +23,7 @@ class UniqueJobQueue {
     }
     const head = this.queue.head
     head.detach()
-    this.linkSet.delete(head.item.scraper.url)
+    this.linkSet.delete(head.item.url)
     return head.item
   }
 

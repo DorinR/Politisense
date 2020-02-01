@@ -42,7 +42,6 @@ class TextParserAction extends JobAction {
     $(this.tag).each((i, elem) => {
       tagList[i] = this.filter(elem, $)
     })
-    console.log('parsed')
     return tagList
   }
 }
