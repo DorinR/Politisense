@@ -91,7 +91,7 @@ class ScrapeJobManager {
   }
 
   filterXmlLinks (xmls) {
-    if (xmls.length > 0) {
+    if (xmls && xmls.length > 0) {
       xmls.forEach(xml => {
         this.xmlSet.add(xml)
       })

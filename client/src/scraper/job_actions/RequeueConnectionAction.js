@@ -1,6 +1,6 @@
 const Action = require('./JobAction').AbstractJobAction
 
-class RequeueAction extends Action {
+class RequeueConnectionAction extends Action {
   constructor (callback, creationFn, topLevelDomains) {
     super()
     this.callback = callback
@@ -19,4 +19,4 @@ class RequeueAction extends Action {
   }
 }
 
-module.exports.RequeueAction = RequeueAction
+module.exports.RequeueAction = RequeueConnectionAction

@@ -9,7 +9,13 @@ class SelectionAction extends JobAction {
   }
 
   async perform (raw) {
-    raw.forEach((item) => {
+    let input
+    if(raw.selected) {
+      input = raw.selected
+    } else {
+      input = raw
+    }
+    input.forEach((item) => {
       if (typeof item === 'undefined') {
         return
       }

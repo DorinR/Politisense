@@ -52,7 +52,7 @@ class Job {
       }, Promise.resolve())
         .catch(e => {
           this.handleErrors(e)
-          return []
+          return null
         })
         .finally(this.logAction)
   }

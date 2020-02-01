@@ -1,6 +1,6 @@
 const Firestore = require('../Firebase').Firestore
 const ScrapeError = require('../scraper/job_actions/LinkScraperAction').ScrapeError
-const PDFParseError = require('./PDFRetrievalJob').PDFParseError
+const PDFParseError = require('../scraper/job_actions/HandleDownloadErrorAction').PDFParseError
 const BillFinder = require('./BillPDFFinderJob').BillPDFFinderJob
 const BillParser = require('./PDFRetrievalJob').PDFRetrievalJob
 const Queue = require('../scraper/utilities/Queue').Queue
@@ -57,7 +57,7 @@ class ClassificationManager {
 
   createFinderJobs (data) {
     data.forEach(datum => {
-      this.finderQueue.enqueue(new BillFinder(datum.link, datum.id, this.finderQueueCb.bind(this)))
+      this.finderQueue.enqueue(BillFinder.create(datum.link, datum.id, this.finderQueueCb.bind(this)))
     })
   }
 
@@ -97,9 +97,12 @@ class ClassificationManager {
   }
 
   enqueueBillContent (content) {
+    if(!content) {
+      return null
+    }
     console.log(`INFO: waiting for ${--this.billLinksRemaining} bills to finish retrieval`)
     console.log(`INFO: waiting for ${++this.billsToParse} bills to be parsed`)
-    this.parserQueue.enqueue(new BillParser(content.link, content.id, this.parserQueueCb.bind(this)))
+    this.parserQueue.enqueue(BillParser.create(content.link, content.id, this.parserQueueCb.bind(this)))
   }
 
   parserQueueCb (newJobs) {
@@ -263,18 +266,24 @@ class ClassificationRunner {
 
 module.exports.ClassificationRunner = ClassificationRunner
 
-new Firestore().TfIdfClassification()
-  .delete()
-  .then(async resp => {
-    console.log(`Deleted ${resp} documents`)
-    const test = new ClassificationRunner()
-    const classifications = await test.createBillClassificationsFromFirestore()
-    console.log(`Attempting to store ${classifications.length} raw bill classifications`)
-    await Promise.all(
-      classifications.map(raw => {
-        return new Firestore()
-          .TfIdfClassification()
-          .insert(raw)
-      })
-    )
+// new Firestore().TfIdfClassification()
+//   .delete()
+//   .then(async resp => {
+//     console.log(`Deleted ${resp} documents`)
+//     const test = new ClassificationRunner()
+//     const classifications = await test.createBillClassificationsFromFirestore()
+//     console.log(`Attempting to store ${classifications.length} raw bill classifications`)
+//     await Promise.all(
+//       classifications.map(raw => {
+//         return new Firestore()
+//           .TfIdfClassification()
+//           .insert(raw)
+//       })
+//     )
+//   })
+
+new ClassificationRunner()
+  .createBillClassificationsFromFirestore()
+  .then(ret => {
+    console.log(ret)
   })

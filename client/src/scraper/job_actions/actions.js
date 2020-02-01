@@ -8,4 +8,5 @@ module.exports.URLReaderAction = require('./UrlFileReaderAction').FileReader
 module.exports.XMLSelectionAction = require('./XmlLinkSelectionAction').XmlLinkSelector
 module.exports.XMLRetrieverAction = require('./XmlFileRetrieverAction').FileReader
 module.exports.HandleConnectionErrorAction = require('./HandleConnectionErrorAction').HandleConnectionErrorAction
-module.exports.RequeueAction = require('./RequeueAction').RequeueAction
+module.exports.RequeueAction = require('./RequeueConnectionAction').RequeueAction
+module.exports.HandleDownloadErrorAction = require('./HandleDownloadErrorAction').HandleDownloadErrorAction

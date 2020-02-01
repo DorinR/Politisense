@@ -2,11 +2,12 @@ const AbstractJobAction = require('./JobAction').AbstractJobAction
 const PdfReader = require('pdfreader').PdfReader
 
 class PDFParseAction extends AbstractJobAction {
-  constructor () {
+  constructor (bill) {
     super()
     this.buffer = null
     this.parser = new PdfReader()
     this.text = ''
+    this.bill = bill
   }
 
   perform (buffer) {
@@ -25,6 +26,12 @@ class PDFParseAction extends AbstractJobAction {
         }
       })
     })
+      .then(content => {
+        return {
+          name: this.bill,
+          content: content
+        }
+      })
   }
 }
 
