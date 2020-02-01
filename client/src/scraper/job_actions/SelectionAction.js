@@ -20,6 +20,7 @@ class SelectionAction extends JobAction {
         this.raw.push(item)
       }
     })
+    console.log('selected')
     return this.raw
   }
 }

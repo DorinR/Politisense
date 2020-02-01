@@ -10,12 +10,16 @@ class ParseError extends Error {
 }
 
 class TextParserAction extends JobAction {
-  constructor () {
+  constructor (xml, tag, filter) {
     super()
-    this.tag = ''
-    this.filter = function () {}
-    this.load = ParsingLibrary.load
-    this.initialised = false
+    this.tag = (typeof tag === 'undefined') ? this.tag : tag
+    this.filter = (typeof filter === 'undefined') ? this.filter : filter
+
+    if(xml) {
+      this.load = this.loadAsXml.bind(this)
+    } else {
+      this.load = ParsingLibrary.load
+    }
   }
 
   loadAsXml (content) {
@@ -29,17 +33,16 @@ class TextParserAction extends JobAction {
     })
   }
 
-  perform (content, tag, filter) {
-    if (!content || !tag || !filter) {
-      throw new ParseError('ERROR: need to pass content, a searchable tag and a filter function')
+  perform (content) {
+    if (!content) {
+      throw new ParseError('ERROR: need to pass content')
     }
-    this.tag = (typeof tag === 'undefined') ? this.tag : tag
-    this.filter = (typeof filter === 'undefined') ? this.filter : filter
     const $ = this.load(content)
     const tagList = []
     $(this.tag).each((i, elem) => {
-      tagList[i] = this.filter(elem)
+      tagList[i] = this.filter(elem, $)
     })
+    console.log('parsed')
     return tagList
   }
 }
