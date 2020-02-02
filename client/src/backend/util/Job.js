@@ -8,7 +8,7 @@ class Job {
     this.actions = []
     this.handleErrors = console.error
     this.callback = callback
-    this.logAction = console.log
+    this.logAction = () => {}
     this.done = false
   }
 

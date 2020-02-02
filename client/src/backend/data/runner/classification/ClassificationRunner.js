@@ -268,24 +268,18 @@ class ClassificationRunner {
 
 module.exports.ClassificationRunner = ClassificationRunner
 
-// new Firestore().TfIdfClassification()
-//   .delete()
-//   .then(async resp => {
-//     console.log(`Deleted ${resp} documents`)
-//     const test = new ClassificationRunner()
-//     const classifications = await test.createBillClassificationsFromFirestore()
-//     console.log(`Attempting to store ${classifications.length} raw bill classifications`)
-//     await Promise.all(
-//       classifications.map(raw => {
-//         return new Firestore()
-//           .TfIdfClassification()
-//           .insert(raw)
-//       })
-//     )
-//   })
-
-new ClassificationRunner()
-  .createBillClassificationsFromFirestore()
-  .then(ret => {
-    console.log(ret)
+new Firestore().TfIdfClassification()
+  .delete()
+  .then(async resp => {
+    console.log(`Deleted ${resp} documents`)
+    const test = new ClassificationRunner()
+    const classifications = await test.createBillClassificationsFromFirestore()
+    console.log(`Attempting to store ${classifications.length} raw bill classifications`)
+    await Promise.all(
+      classifications.map(raw => {
+        return new Firestore()
+          .TfIdfClassification()
+          .insert(raw)
+      })
+    )
   })

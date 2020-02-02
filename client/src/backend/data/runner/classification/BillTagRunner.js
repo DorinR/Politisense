@@ -1,5 +1,5 @@
-const Firestore = require('../../firebase/Firestore').Firestore
-const BillClassification = require('../../firebase/model/BillClassification').BillClassification
+const Firestore = require('../../../firebase/Firestore').Firestore
+const BillClassification = require('../../../firebase/model/BillClassification').BillClassification
 const fs = require('fs')
 
 class BillTagRunner {

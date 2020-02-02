@@ -72,8 +72,3 @@ class ScrapeRunner {
 }
 
 module.exports.ScrapeRunner = ScrapeRunner
-
-console.debug = () => {}
-
-new ScrapeRunner(50, '')
-  .getXmlContent()
