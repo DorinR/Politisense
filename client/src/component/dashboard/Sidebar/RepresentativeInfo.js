@@ -9,6 +9,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import RidingPopulation from './RidingPopulation/RidingPopulation'
 import axios from 'axios'
+<<<<<<< HEAD:client/src/Components/Dashboard/Sidebar/RepresentativeInfo.js
+=======
+
+const Firestore = require('../../../backend/firebase/Firestore').Firestore
+>>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/dashboard/Sidebar/RepresentativeInfo.js
 
 const useStyles = makeStyles(theme => ({
   customCardContent: {

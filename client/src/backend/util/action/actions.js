@@ -1,0 +1,12 @@
+module.exports.Action = require('./JobAction').AbstractJobAction
+module.exports.LinkScraperAction = require('./fetch_action/LinkScraperAction').LinkScraper
+module.exports.PDFRetrieverAction = require('./fetch_action/PDFFileRetrieverAction').PDFFileRetrieverAction
+module.exports.PDFParseAction = require('./parse_action/PDFParseAction').PDFParseAction
+module.exports.SelectionAction = require('./parse_action/SelectionAction').Selector
+module.exports.TextParserAction = require('./parse_action/TextParserAction').TextParser
+module.exports.URLReaderAction = require('./fetch_action/UrlFileReaderAction').FileReader
+module.exports.XMLRetrieverAction = require('./fetch_action/XmlFileRetrieverAction').FileReader
+module.exports.HandleConnectionErrorAction = require('./error_action/HandleConnectionErrorAction').HandleConnectionErrorAction
+module.exports.RequeueAction = require('./queue_action/RequeueConnectionAction').RequeueAction
+module.exports.HandleDownloadErrorAction = require('./error_action/HandleDownloadErrorAction').HandleDownloadErrorAction
+module.exports.Errors = require('./error/errors')

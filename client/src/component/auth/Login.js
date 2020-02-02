@@ -9,8 +9,19 @@ import { makeStyles } from '@material-ui/core/styles'
 import canadaimage from '../../assets/canada.jpg'
 import logo from '../../assets/PolotisenseTentativeLogo.png'
 import axios from 'axios'
+<<<<<<< HEAD:client/src/Components/Auth/Login.js
 import { FacebookLoginButton, GoogleLoginButton, TwitterLoginButton } from 'react-social-login-buttons'
 import { tokenAuthenticate } from './authenticate'
+=======
+import {
+  FacebookLoginButton,
+  GoogleLoginButton,
+  TwitterLoginButton
+} from 'react-social-login-buttons'
+import { tokenAuthenticate } from '../../Authentication'
+>>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/auth/Login.js
+
+const Firestore = require('../../backend/firebase/Firestore').Firestore
 
 const gridStyle = {
   display: 'flex',
@@ -56,13 +67,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function checkEmailFormat (email) {
+export function checkEmailFormat(email) {
   /* eslint-disable */
   const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   return email.match(emailFormat)
 }
 
-export async function fetchUser (email) {
+export async function fetchUser(email) {
   return await axios
     .post('http://localhost:5000/api/users/checkIfUserExists', { email: email })
     .then(res => {
@@ -71,7 +82,7 @@ export async function fetchUser (email) {
     .catch(console.error)
 }
 
-export async function handleEmailLogin (user) {
+export async function handleEmailLogin(user) {
   let result = ''
   await axios
     .post('http://localhost:5000/api/users/login', user)
@@ -82,9 +93,9 @@ export async function handleEmailLogin (user) {
   return result
 }
 
-export async function handleSocialLogin (social) {
+export async function handleSocialLogin(social) {
   return await axios
-    .post('http://localhost:5000/api/users/socialLogin', {type: social})
+    .post('http://localhost:5000/api/users/socialLogin', { type: social })
     .then(res => {
       const token = res.data.data
       return tokenAuthenticate(token)
@@ -95,14 +106,18 @@ export async function handleSocialLogin (social) {
     .catch(console.error)
 }
 
-export default function Login (props) {
+export default function Login(props) {
   const classes = useStyles()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
   const [errors, setErrors] = useState({ email: '', password: '' })
 
+<<<<<<< HEAD:client/src/Components/Auth/Login.js
   function validateUserFromSocialProviders (type, cb) {
+=======
+  function validateUserFromSocialProviders(type, cb) {
+>>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/auth/Login.js
     let user = {}
     cb(type)
       .then(usr => {
@@ -117,8 +132,12 @@ export default function Login (props) {
           setAuthenticated(true)
         } else {
           const newUser = {
-            firstname: user.displayName ? user.displayName.substr(0, user.displayName.indexOf(' ')) : ' ',
-            lastname: user.displayName ? user.displayName.substr(user.displayName.indexOf(' ') + 1) : ' ',
+            firstname: user.displayName
+              ? user.displayName.substr(0, user.displayName.indexOf(' '))
+              : ' ',
+            lastname: user.displayName
+              ? user.displayName.substr(user.displayName.indexOf(' ') + 1)
+              : ' ',
             email: user.email
           }
           props.history.push({

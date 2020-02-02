@@ -1,4 +1,9 @@
+<<<<<<< HEAD:src/controllers/UserController.js
 import { Authentication as Auth, Firestore } from '@firestore'
+=======
+import { Auth } from '../client/src/Authentication'
+import { Firestore } from '../client/src/backend/firebase/Firestore'
+>>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:controllers/UserController.js
 import represent from 'represent'
 
 exports.checkIfUserExists = (req, res) => {
@@ -96,8 +101,12 @@ exports.userLogin = (req, res) => {
   }
   new Auth()
     .authenticate('email')(credentials.email, credentials.password)
-    .then((json) => {
-      console.log(`${json.success ? 'Successful' : 'Unsuccessful'} login for ${credentials.email} with message: ${json.auth}`)
+    .then(json => {
+      console.log(
+        `${json.success ? 'Successful' : 'Unsuccessful'} login for ${
+          credentials.email
+        } with message: ${json.auth}`
+      )
       res.json(json)
     })
     .catch(console.error)

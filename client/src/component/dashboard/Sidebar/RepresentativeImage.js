@@ -3,6 +3,7 @@ import Avatar from '@material-ui/core/Avatar'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
 
+<<<<<<< HEAD:client/src/Components/Dashboard/Sidebar/RepresentativeImage.js
 export async function fetchUserRiding (userEmail) {
   return axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -26,6 +27,9 @@ export async function fetchRepresentative (riding) {
     })
     .catch(console.error)
 }
+=======
+const Firestore = require('../../../backend/firebase/Firestore').Firestore
+>>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/dashboard/Sidebar/RepresentativeImage.js
 
 const useStyles = makeStyles(theme => ({
   bigAvatar: {

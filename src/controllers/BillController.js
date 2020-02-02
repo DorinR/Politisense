@@ -1,4 +1,8 @@
+<<<<<<< HEAD:src/controllers/BillController.js
 const Firestore = require('@firestore').Firestore
+=======
+import { Firestore } from '../client/src/backend/firebase/Firestore'
+>>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:controllers/BillController.js
 
 exports.getAllBillsByHead = (req, res) => {
   const db = new Firestore()

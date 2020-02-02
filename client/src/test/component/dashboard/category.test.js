@@ -1,6 +1,11 @@
 /* eslint-env jest */
+<<<<<<< HEAD:client/src/test/component/dashboard/category.test.js
 import { capitalizedName } from '../../../Components/Dashboard/BillDialog'
 import { checkDataExistForCategory } from '../../../Components/Dashboard/CategoryCard'
+=======
+import { capitalizedName } from '../../../component/dashboard/BillDialog'
+import { checkDataExistForCategory } from '../../../component/dashboard/CategoryCard'
+>>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/test/component/dashboard/category.test.js
 
 const chai = require('chai')
 chai.should()

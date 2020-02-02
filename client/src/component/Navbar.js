@@ -18,8 +18,8 @@ import PersonIcon from '@material-ui/icons/Person'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { Link } from 'react-router-dom'
-import RepresentativeInfo from './Dashboard/Sidebar/RepresentativeInfo'
-import RepresentativeImage from './Dashboard/Sidebar/RepresentativeImage'
+import RepresentativeInfo from './dashboard/Sidebar/RepresentativeInfo'
+import RepresentativeImage from './dashboard/Sidebar/RepresentativeImage'
 import Tooltip from '@material-ui/core/Tooltip'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import Fab from '@material-ui/core/Fab'
@@ -27,6 +27,10 @@ import Box from '@material-ui/core/Box'
 import axios from 'axios'
 import politisenseLogo from '../politisenseLogo.png'
 import Button from '@material-ui/core/Button'
+<<<<<<< HEAD:client/src/Components/Navbar.js
+=======
+import CompareArrowsIcon from '@material-ui/icons/CompareArrows'
+>>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/Navbar.js
 
 const drawerWidth = 330
 
@@ -131,8 +135,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+<<<<<<< HEAD:client/src/Components/Navbar.js
 export async function fetchUserRiding (userEmail) {
   return axios
+=======
+export async function fetchUserRiding(userEmail) {
+  let result = ''
+  await axios
+>>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/Navbar.js
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
@@ -142,10 +152,19 @@ export async function fetchUserRiding (userEmail) {
     .catch(console.error)
 }
 
+<<<<<<< HEAD:client/src/Components/Navbar.js
 export async function fetchRepresentative (riding) {
   return axios.get(
           `http://localhost:5000/api/representatives/${riding}/getRepresentative`
   )
+=======
+export async function fetchRepresentative(riding) {
+  let result = ''
+  await axios
+    .get(
+      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+    )
+>>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/Navbar.js
     .then(res => {
       if (res.data.success) {
         return res.data.data.name
@@ -154,7 +173,7 @@ export async function fetchRepresentative (riding) {
     .catch(console.error)
 }
 
-export default function MiniDrawer ({ children }) {
+export default function MiniDrawer({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -169,7 +188,14 @@ export default function MiniDrawer ({ children }) {
   }, [])
 
   useEffect(() => {
+<<<<<<< HEAD:client/src/Components/Navbar.js
     async function getData () {
+=======
+    handleDrawerOpen()
+    async function getData() {
+      /* eslint-disable */
+      const user = JSON.parse(localStorage.getItem('user'))
+>>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/Navbar.js
       if (user) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
