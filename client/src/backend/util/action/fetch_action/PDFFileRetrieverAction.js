@@ -2,7 +2,6 @@ const nfetch = require('node-fetch')
 const Actions = require('../actions')
 const JobAction = Actions.Action
 
-
 class PDFFileRetrieverAction extends JobAction {
   constructor (partialFp, bill) {
     super()

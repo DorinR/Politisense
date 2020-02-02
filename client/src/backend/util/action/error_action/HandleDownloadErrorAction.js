@@ -1,7 +1,8 @@
 const Actions = require('../actions')
 const JobAction = Actions.Action
 const HandleConnectionErrorAction = Actions.HandleConnectionErrorAction
-const ScrapeError = Actions.Errors.PDFParseError
+const ScrapeError = Actions.Errors.ScrapeError
+const PDFParseError = Actions.Errors.PDFParseError
 
 class HandleDownloadErrorAction extends JobAction {
   constructor (callback, createFn) {

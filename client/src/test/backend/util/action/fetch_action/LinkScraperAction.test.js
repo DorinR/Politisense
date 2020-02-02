@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { LinkScraper } from '../../../../backend/util/action/fetch_action/LinkScraperAction'
+import { LinkScraper } from '../../../../../backend/util/action/fetch_action/LinkScraperAction'
 
 const chai = require('chai')
 const Assert = chai.assert

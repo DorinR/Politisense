@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { HandleDownloadErrorAction, PDFParseError, ScrapeError } from '../../../../backend/util/action/actions'
+import { HandleDownloadErrorAction, PDFParseError, ScrapeError } from '../../../../../backend/util/action/actions'
 
 const chai = require('chai')
 const Assert = chai.assert

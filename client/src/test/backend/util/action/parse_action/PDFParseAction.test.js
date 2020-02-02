@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { PDFParseAction } from '../../../../backend/util/action/parse_action/PDFParseAction'
+import { PDFParseAction } from '../../../../../backend/util/action/parse_action/PDFParseAction'
 
 const chai = require('chai')
 const Assert = chai.assert

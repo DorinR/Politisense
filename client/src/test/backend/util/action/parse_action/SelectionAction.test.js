@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { Selector } from '../../../../backend/util/action/parse_action/SelectionAction'
+import { Selector } from '../../../../../backend/util/action/parse_action/SelectionAction'
 
 const chai = require('chai')
 const Assert = chai.assert

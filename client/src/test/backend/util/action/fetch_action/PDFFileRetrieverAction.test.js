@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { PDFFileRetrieverAction } from '../../../../backend/util/action/fetch_action/PDFFileRetrieverAction'
+import { PDFFileRetrieverAction } from '../../../../../backend/util/action/fetch_action/PDFFileRetrieverAction'
 
 const chai = require('chai')
 const Assert = chai.assert

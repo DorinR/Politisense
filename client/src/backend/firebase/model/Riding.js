@@ -1,4 +1,4 @@
-import { Condition } from '../../util/Condition'
+const Condition = require('../../util/utils').Condition
 
 const Model = require('./Model').Model
 

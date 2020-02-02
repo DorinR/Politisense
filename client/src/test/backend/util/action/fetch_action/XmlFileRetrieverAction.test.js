@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { FileReader } from '../../../../backend/util/action/fetch_action/XmlFileRetrieverAction'
+import { FileReader } from '../../../../../backend/util/action/fetch_action/XmlFileRetrieverAction'
 
 const chai = require('chai')
 const Assert = chai.assert
