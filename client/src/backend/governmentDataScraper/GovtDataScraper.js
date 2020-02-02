@@ -150,12 +150,8 @@ class GovtDataScraper {
   }
 
   async getHtmlWithParliament (link) {
-    const linkScraper = new LinkScraper(link)
-
-    return linkScraper.perform()
-      .then(res => {
-        return res.body
-      }).then(html => {
+    return new LinkScraper(link).perform()
+      .then(html => {
         return html
       }).catch(e => {
         console.error(e.message)

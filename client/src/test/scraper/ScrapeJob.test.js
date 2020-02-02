@@ -1,13 +1,20 @@
 /* eslint-env jest */
 import { ScrapeJob } from '../../scraper/ScrapeJob'
 import { LinkScraper } from '../../scraper/job_actions/LinkScraperAction'
-import { Selector } from '../../scraper/job_actions/SelectionAction'
-import { TextParser } from '../../scraper/job_actions/TextParserAction'
 
 const chai = require('chai')
 const Assert = chai.assert
 
 describe('ScrapeJob.js', () => {
+
+  function setupJob(url) {
+    const undertest = ScrapeJob.create(url, ()=>{}, [])
+    const scraper = new LinkScraper(url)
+    scraper.send = mockSend
+    undertest.actions[0] = scraper.perform.bind(scraper)
+    return undertest
+  }
+
   let mockSend
   beforeAll(() => {
     mockSend = async (options) => {
@@ -31,8 +38,7 @@ describe('ScrapeJob.js', () => {
 
   it('ScrapeJob::execute() returns xml links on success', async (done) => {
     const url = 'https://www.google.ca/'
-    const exc = new ScrapeJob(url, () => {}, [])
-    exc.scraper.send = mockSend
+    const exc = setupJob(url)
     const didScrape = await exc.execute()
       .then(res => {
         Assert.equal(typeof res, typeof [])
@@ -41,20 +47,18 @@ describe('ScrapeJob.js', () => {
         return true
       })
       .catch(e => {
-        console.log(e)
         return false
       })
     Assert.equal(didScrape, true)
     done()
   }, 10000)
 
-  it('ScrapeJob::execute() throws on initial bad link', async (done) => {
+  it('ScrapeJob::execute() returns null on bad link', async (done) => {
     const url = 'https://'
-    const exc = new ScrapeJob(url, () => {}, [])
-    exc.scraper.send = mockSend
+    const exc = setupJob(url)
     const didScrape = await exc.execute()
       .then(res => {
-        return true
+        return res !== null
       })
       .catch(e => {
         return false
@@ -63,15 +67,18 @@ describe('ScrapeJob.js', () => {
     done()
   }, 10000)
 
-  it('ScrapeJob::initialiseJobComponents() adds a scraper, parser, processor', async (done) => {
+  it('ScrapeJob::create() adds a scraper, parser, processor, requeue-er', async (done) => {
     const url = 'https://www.google.ca/'
-    const exc = new ScrapeJob(url, () => {}, [])
-    Assert.notEqual(exc.scraper, null)
-    Assert(exc.scraper instanceof LinkScraper)
-    Assert.notEqual(exc.processor, null)
-    Assert(exc.processor instanceof Selector)
-    Assert.notEqual(exc.parser, null)
-    Assert(exc.parser instanceof TextParser)
+    const exc = ScrapeJob.create(url, ()=>{}, [])
+    Assert(exc.actions.length === 4)
+    Assert.notEqual(exc.actions[0], null)
+    Assert(typeof exc.actions[0] === 'function')
+    Assert.notEqual(exc.actions[1], null)
+    Assert(typeof exc.actions[1] === 'function')
+    Assert.notEqual(exc.actions[2], null)
+    Assert(typeof exc.actions[2] === 'function')
+    Assert.notEqual(exc.actions[3], null)
+    Assert(typeof exc.actions[3] === 'function')
     done()
   }, 1000)
 })

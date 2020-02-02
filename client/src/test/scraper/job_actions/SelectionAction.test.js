@@ -7,8 +7,14 @@ const Assert = chai.assert
 describe('SelectionAction.js', () => {
   let underTest
   let testLinks
+
+  function validResponse(links) {
+    Assert.equal(typeof links, typeof {})
+    Assert.equal(typeof links.other, typeof [])
+    Assert.equal(typeof links.selected, typeof [])
+  }
+
   beforeAll(() => {
-    underTest = new Selector('xml')
     testLinks = [
       'https://www.google.ca/xml',
       'https://www.google.ca/',
@@ -18,16 +24,48 @@ describe('SelectionAction.js', () => {
     ]
   })
 
-  it('SelectionAction::perform() returns all xml links', async (done) => {
+  beforeEach(() => {
+    underTest = new Selector('xml')
+  })
+
+  it('SelectionAction::perform() returns links by selection', async (done) => {
     const didSelect = await underTest.perform(testLinks)
-      .then(raw => {
-        Assert.equal(typeof raw, typeof [])
-        Assert.equal(raw.length, 3)
+      .then(links => {
+        validResponse(links)
+        Assert.equal(links.selected.length, 2)
+        Assert.equal(links.other.length, 3)
         return true
       })
     Assert.equal(didSelect, true)
-    Assert.equal(typeof underTest.selected, typeof [])
-    Assert.equal(underTest.selected.length, 2)
+    done()
+  })
+
+  it('SelectionAction::perform() can be chained across instances', async (done) => {
+    let resp = await underTest
+      .perform(testLinks)
+      .then(links => {
+        validResponse(links)
+        console.log(links)
+        Assert.equal(links.selected.length, 2)
+        Assert.equal(links.other.length, 3)
+        return {
+          valid: true,
+          links: links
+        }
+      })
+    Assert.equal(resp.valid, true)
+    resp = await new Selector('google')
+      .perform(resp.links)
+      .then(links => {
+        validResponse(links)
+        Assert.equal(links.selected.length, 1)
+        Assert.equal(links.other.length, 1)
+        return {
+          valid: true,
+          links: links
+        }
+      })
+    Assert.equal(resp.valid, true)
     done()
   })
 })

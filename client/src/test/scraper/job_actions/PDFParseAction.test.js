@@ -17,8 +17,9 @@ describe('PDFParseAction.js', () => {
     }
   })
   let underTest
+  const billId = 'some bill id'
   beforeEach(() => {
-    underTest = new PDFParseAction()
+    underTest = new PDFParseAction(billId)
     underTest.parser.parseBuffer = mockParse
   })
 
@@ -34,10 +35,14 @@ describe('PDFParseAction.js', () => {
     done()
   })
 
-  it('PDFParseAction::perform() returns string on success', async (done) => {
+  it('PDFParseAction::perform() returns Object on success', async (done) => {
     const didGetContent = await underTest.perform(new Uint8Array())
       .then((res) => {
-        Assert.equal(typeof res, typeof '')
+        Assert.equal(typeof res, typeof {})
+        Assert.notEqual(res.content, null)
+        Assert.notEqual(res.name, null)
+        Assert.equal(typeof res.content, typeof '')
+        Assert.equal(res.name, billId)
         return true
       })
       .catch((e) => {

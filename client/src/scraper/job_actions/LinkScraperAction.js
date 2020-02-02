@@ -1,6 +1,6 @@
 const requestFn = require('request-promise')
 const JobAction = require('./JobAction').AbstractJobAction
-const AbstractJob = require('../Job').AbstractJob
+const HandleConnectionErrorAction = require('./HandleConnectionErrorAction').HandleConnectionErrorAction
 const ScrapeErrorName = 'ScrapeError'
 
 class ScrapeError extends Error {
@@ -8,13 +8,6 @@ class ScrapeError extends Error {
     super()
     this.message = message
     this.link = link
-  }
-
-  static UnexpectedError (e) {
-    if (e.name !== ScrapeErrorName) {
-      return e
-    }
-    return null
   }
 }
 
@@ -30,25 +23,6 @@ class LinkScraperAction extends JobAction {
       Accept: '*/*',
       'User-Agent': 'PolitisenseScraper/0.1'
     }
-  }
-
-  malformedLinkError () {
-    if (!this.url.includes('https://')) {
-      const message = `ERROR: Malformed link passed to scraper: ${this.url}`
-      const error = new ScrapeError(message, this.url)
-      return error
-    }
-    return null
-  }
-
-  connectionError (e) {
-    const connectionError = AbstractJob.connectionErrorName(e.message)
-    if (connectionError) {
-      const message = `ERROR: Connection failure ${connectionError}, can re-enqueue job: ${this.url}`
-      const error = new ScrapeError(message, this.url)
-      return error
-    }
-    return null
   }
 
   async perform (url) {

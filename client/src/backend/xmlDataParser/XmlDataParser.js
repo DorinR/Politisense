@@ -108,9 +108,7 @@ class XmlDataParser {
   }
 
   _getHtmlFromLink (link) {
-    const linkScraper = new LinkScraper(link)
-
-    return linkScraper.perform()
+    return new LinkScraper(link).perform()
       .then(res => {
         return res.body
       }).then(html => {

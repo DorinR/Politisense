@@ -8,6 +8,7 @@ const Assert = chai.assert
 describe('TextParserAction.js', () => {
   let mockSend
   let mockLoad
+  let parser
   beforeAll(() => {
     mockSend = async (options) => {
       if (options.uri === 'https://www.google.ca/') {
@@ -29,11 +30,8 @@ describe('TextParserAction.js', () => {
     mockLoad = (content, options) => {
       Assert.notEqual(content, null)
       Assert.equal(typeof content, typeof '')
-      Assert.notEqual(options.normalizeWhitespace, null)
       Assert.equal(options.normalizeWhitespace, true)
-      Assert.notEqual(options.xmlMode, null)
       Assert.equal(options.xmlMode, true)
-      Assert.notEqual(options.xml, null)
       Assert.equal(options.xml, true)
     }
   })
@@ -42,19 +40,16 @@ describe('TextParserAction.js', () => {
   beforeEach(() => {
     req = new LinkScraper('https://www.google.ca/')
     req.send = mockSend
+    parser = new TextParser(false, 'a', (elem, $) => {
+      return $(elem).attr('href')
+    })
   })
 
   test('TextParser::perform() finds all links', async (done) => {
-    const parser = new TextParser()
     const didFind = await req.perform()
       .then((html) => {
-        html = html.body
         Assert.isTrue(typeof html === 'string', 'valid html is delivered by the scraper')
-        const $ = parser.load(html)
-        const select = (elem) => {
-          return $(elem).attr('href')
-        }
-        return parser.perform(html, 'a', select)
+        return parser.perform(html)
       })
       .then((links) => {
         Assert.isTrue(typeof links === typeof [], 'returned links are an array')
@@ -69,16 +64,11 @@ describe('TextParserAction.js', () => {
   })
 
   test('TextParser::perform() does not select links when not specified', async (done) => {
-    const parser = new TextParser()
+    parser.tag = ''
     const didFind = await req.perform()
       .then((html) => {
-        html = html.body
         Assert.isTrue(typeof html === 'string', 'valid html is delivered by the scraper')
-        const $ = parser.load(html)
-        const select = (elem) => {
-          return $(elem).attr('href')
-        }
-        return parser.perform(html, ' ', select)
+        return parser.perform(html)
       })
       .then((links) => {
         Assert.equal(typeof links, typeof [])
@@ -93,12 +83,9 @@ describe('TextParserAction.js', () => {
   })
 
   test('TextParser::perform() throws on invalid params passed', async (done) => {
-    const parser = new TextParser()
     const didFind = await req.perform()
       .then((html) => {
-        html = html.body
         Assert.isTrue(typeof html === 'string', 'valid html is delivered by the scraper')
-        parser.load(html)
         return parser.perform()
       })
       .then((links) => {
@@ -114,15 +101,15 @@ describe('TextParserAction.js', () => {
   })
 
   test('TextParser::loadAsXml() passes correct parameters to cheerio', async (done) => {
-    const parser = new TextParser()
-    parser.load = mockLoad
+    parser.xml = true
+    parser.load = mockLoad.bind(parser)
     parser.loadAsXml('<some><xml><content>value</content></xml></some>')
     done()
   })
 
   test('TextParser::loadAsXml() null or undefined content throws', async (done) => {
-    const parser = new TextParser()
-    parser.load = mockLoad
+    parser.xml = true
+    parser.load = mockLoad.bind(parser)
     try {
       parser.loadAsXml()
     } catch (e) {
