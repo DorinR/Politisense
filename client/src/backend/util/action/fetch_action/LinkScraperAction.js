@@ -1,7 +1,6 @@
 const requestFn = require('request-promise')
-const Actions = require('../actions')
-const JobAction = Actions.Action
-const ScrapeError = Actions.Errors.ScrapeError
+const JobAction = require('../JobAction').AbstractJobAction
+const ScrapeError = require('../error/errors').ScrapeError
 
 class LinkScraperAction extends JobAction {
   constructor (url) {

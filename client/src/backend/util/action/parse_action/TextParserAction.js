@@ -1,7 +1,7 @@
 const ParsingLibrary = require('cheerio')
-const Actions = require('../actions')
-const JobAction = Actions.Action
-const ParseError = Actions.Errors.ParseError
+const JobAction = require('../JobAction').AbstractJobAction
+const Errors = require('../error/errors')
+const ParseError = Errors.ParseError
 
 class TextParserAction extends JobAction {
   constructor (xml, tag, filter) {

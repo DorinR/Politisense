@@ -1,6 +1,5 @@
 const fetch = require('node-fetch')
-const Actions = require('../actions')
-const JobAction = Actions.Action
+const JobAction = require('../JobAction').AbstractJobAction
 
 class UrlFileReader extends JobAction {
   constructor (filepath) {

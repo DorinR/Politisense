@@ -1,6 +1,7 @@
 /* eslint-env jest */
-import { ScrapeJob } from '../../../backend/job/ScrapeJob'
-import { LinkScraper } from '../../../backend/util/action/fetch_action/LinkScraperAction'
+const Utils = require('../../../backend/util/utils')
+const LinkScraper = Utils.Actions.LinkScraperAction
+const ScrapeJob = require('../../../backend/job/jobs').ScrapeJob
 
 const chai = require('chai')
 const Assert = chai.assert
@@ -57,7 +58,7 @@ describe('ScrapeJob.js', () => {
     const exc = setupJob(url)
     const didScrape = await exc.execute()
       .then(res => {
-        return res !== null
+        return res.length !== 0
       })
       .catch(e => {
         return false

@@ -1,5 +1,4 @@
-const Actions = require('../actions')
-const JobAction = Actions.Action
+const JobAction = require('../JobAction').AbstractJobAction
 
 class SelectionAction extends JobAction {
   constructor (selector = 'xml') {
@@ -17,7 +16,7 @@ class SelectionAction extends JobAction {
       input = raw
     }
     input.forEach((item) => {
-      if (typeof item === 'undefined') {
+      if (!item) {
         return
       }
       const i = item.toLowerCase()
@@ -27,7 +26,7 @@ class SelectionAction extends JobAction {
         this.raw.push(item)
       }
     })
-    console.log(`Found ${this.selected.length} desired links and ${this.raw.length} other links`)
+    console.log(`INFO: Found ${this.selected.length} desired links and ${this.raw.length} other links`)
     return {
       other: this.raw,
       selected: this.selected

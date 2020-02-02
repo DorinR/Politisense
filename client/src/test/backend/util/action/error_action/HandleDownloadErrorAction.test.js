@@ -1,5 +1,8 @@
 /* eslint-env jest */
-import { HandleDownloadErrorAction, PDFParseError, ScrapeError } from '../../../../../backend/util/action/actions'
+const Utils = require('../../../../../backend/util/utils')
+const HandleDownloadErrorAction = Utils.Actions.HandleDownloadErrorAction
+const ScrapeError = Utils.Actions.Errors.ScrapeError
+const PDFParseError = Utils.Actions.Errors.PDFParseError
 
 const chai = require('chai')
 const Assert = chai.assert

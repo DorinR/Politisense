@@ -1,5 +1,7 @@
 /* eslint-env jest */
-import { HandleConnectionErrorAction, ScrapeError } from '../../../../../backend/util/action/actions'
+const Utils = require('../../../../../backend/util/utils')
+const HandleConnectionErrorAction = Utils.Actions.HandleConnectionErrorAction
+const ScrapeError = Utils.Actions.Errors.ScrapeError
 
 const chai = require('chai')
 const Assert = chai.assert

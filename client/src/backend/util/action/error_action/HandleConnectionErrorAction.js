@@ -1,6 +1,5 @@
-const Actions = require('../actions')
-const JobAction = Actions.Action
-const ScrapeError = Actions.Errors.ScrapeError
+const JobAction = require('../JobAction').AbstractJobAction
+const ScrapeError = require('../error/errors').ScrapeError
 const connectionErrors = [
   'ESOCKETTIMEDOUT',
   'ETIMEDOUT',
@@ -48,6 +47,7 @@ class HandleConnectionErrorAction extends JobAction {
     if (error) {
       return error
     }
+    return e
   }
 
   throwOnUnexpected (e) {

@@ -1,20 +1,13 @@
-const Utils = require('./utils')
-const Queue = Utils.Queues.Queue
-const Action = Utils.Actions.Action
-const DecorationError = Utils.Actions.Errors.ActionDecorationError
+const Queue = require('../queue/queues').Queue
+const Action = require('./QueueAction').QueueAction
+const DecorationError = require('../utils').Actions.Errors.ActionDecorationError
 
 class QueueManager {
   constructor (waitPeriod = 1000) {
-    this.start = () => {
-      throw new DecorationError(null, 'Start action not specified')
-    }
     this.error = console.error
     this.log = (result) => {
-      console.log(result.length)
+      console.debug(`INFO: job finished, found ${result.length} potential results`)
       return result
-    }
-    this.stop = () => {
-      throw new DecorationError(null, 'Stop action not specified')
     }
     this.activeJobs = []
     this.activeJobCount = 0
@@ -23,8 +16,17 @@ class QueueManager {
     this.result = []
   }
 
+  start () {
+    throw new DecorationError(null, 'Start action not specified')
+  }
+
+  stop () {
+    throw new DecorationError(null, 'Stop action not specified')
+  }
+
   async execute () {
-    await this.start()
+    const partialResults = await this.start()
+    this.accumulate(partialResults)
     await this.run()
     return this.result
   }
@@ -35,7 +37,7 @@ class QueueManager {
     })
   }
 
-  accumulate(result) {
+  accumulate (result) {
     result.forEach(entry => {
       this.result.push(entry)
     })
@@ -47,6 +49,7 @@ class QueueManager {
       throw new DecorationError(action)
     }
     this.start = action.perform.bind(action)
+    return this
   }
 
   setErrorAction (action) {
@@ -54,6 +57,7 @@ class QueueManager {
       throw new DecorationError(action)
     }
     this.error = action.perform.bind(action)
+    return this
   }
 
   setLogAction (action) {
@@ -61,6 +65,7 @@ class QueueManager {
       throw new DecorationError(action)
     }
     this.log = action.perform.bind(action)
+    return this
   }
 
   setStopAction (action) {
@@ -68,6 +73,7 @@ class QueueManager {
       throw new DecorationError(action)
     }
     this.stop = action.perform.bind(action)
+    return this
   }
 
   async run () {
@@ -76,6 +82,7 @@ class QueueManager {
       try {
         job = this.queue.dequeue()
         this.activeJobs.push(job)
+        this.activeJobCount++
       } catch (e) {
         await this.waitForActiveJobs(e)
         continue
@@ -85,6 +92,7 @@ class QueueManager {
         .then(this.log)
         .catch(this.error)
         .finally(async () => {
+          job.done = true
           this.activeJobCount--
           await this.waitForActiveJobs()
         })
@@ -92,13 +100,13 @@ class QueueManager {
   }
 
   async waitForActiveJobs (e) {
+    this.pruneCompletedJobs()
+    await QueueManager.wait(this.waitPeriod)
     if (e) {
       console.debug(`INFO: ${e.message}, waiting for links to return..`)
     } else {
       console.debug('INFO: Job completed. waiting for links to return..')
     }
-    this.pruneCompletedJobs()
-    await QueueManager.wait(this.waitPeriod)
   }
 
   pruneCompletedJobs () {

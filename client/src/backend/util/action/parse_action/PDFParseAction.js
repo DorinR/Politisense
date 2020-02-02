@@ -1,6 +1,5 @@
 const PdfReader = require('pdfreader').PdfReader
-const Actions = require('../actions')
-const JobAction = Actions.Action
+const JobAction = require('../JobAction').AbstractJobAction
 
 class PDFParseAction extends JobAction {
   constructor (url, bill) {

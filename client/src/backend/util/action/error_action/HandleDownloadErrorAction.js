@@ -1,8 +1,8 @@
-const Actions = require('../actions')
-const JobAction = Actions.Action
-const HandleConnectionErrorAction = Actions.HandleConnectionErrorAction
-const ScrapeError = Actions.Errors.ScrapeError
-const PDFParseError = Actions.Errors.PDFParseError
+const JobAction = require('../JobAction').AbstractJobAction
+const HandleConnectionErrorAction = require('../error_action/HandleConnectionErrorAction').HandleConnectionErrorAction
+const Errors = require('../error/errors')
+const ScrapeError = Errors.ScrapeError
+const PDFParseError = Errors.PDFParseError
 
 class HandleDownloadErrorAction extends JobAction {
   constructor (callback, createFn) {
@@ -22,6 +22,7 @@ class HandleDownloadErrorAction extends JobAction {
     if (error) {
       return error
     }
+    return e
   }
 
   requeueConnectionFailures (e) {

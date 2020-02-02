@@ -14,7 +14,7 @@ class ScrapeJob extends Job {
   }
 
   static create (url, cb, tlds) {
-    return new ScrapeJob(url, cb, tlds)
+    return new ScrapeJob(url, cb)
       .addAction(new Scraper(url))
       .addAction(new Parser(false, 'a', (elem, $) => {
         return $(elem).attr('href')

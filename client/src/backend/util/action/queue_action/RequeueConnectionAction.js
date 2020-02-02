@@ -1,5 +1,4 @@
-const Actions = require('../actions')
-const JobAction = Actions.Action
+const JobAction = require('../JobAction').AbstractJobAction
 
 class RequeueConnectionAction extends JobAction {
   constructor (callback, creationFn, topLevelDomains) {
@@ -15,6 +14,7 @@ class RequeueConnectionAction extends JobAction {
     other.forEach(link => {
       newJobs.push(this.create(link, this.callback, this.tlds))
     })
+    console.log(`INFO: queued ${newJobs.length} new jobs.`)
     this.callback(newJobs)
     return selected
   }
