@@ -12,6 +12,7 @@ class SelectFirstAction extends Action {
   }
 
   async perform (links) {
+    console.log(`INFO: Retrieved Bill link: ${links.selected[0]}`)
     return {
       link: links.selected[0],
       id: this.bill
@@ -34,7 +35,7 @@ class BillPDFFinderJob extends AbstractJob {
       .addAction(new SelectionAction('/Content/Bills/'))
       .addAction(new SelectionAction('PDF'))
       .addAction(new SelectFirstAction(bill))
-      .addErrorAction(new ErrorHandler(url, bill, callback, BillPDFFinderJob.create))
+      .addErrorAction(new ErrorHandler(callback, BillPDFFinderJob.create))
   }
 }
 

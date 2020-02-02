@@ -98,6 +98,8 @@ class ClassificationManager {
 
   enqueueBillContent (content) {
     if (!content) {
+      console.warn(`WARN: No content found for a given bill`)
+      --this.billLinksRemaining
       return null
     }
     console.log(`INFO: waiting for ${--this.billLinksRemaining} bills to finish retrieval`)
@@ -165,7 +167,7 @@ class ClassificationManager {
     if (e.name === new PDFParseError().name) {
       console.warn(`WARN: ${e.message}`)
     } else if (e.name !== new ScrapeError().name) {
-      console.log(`INFO: waiting for ${--this.billsToParse} bills to be parsed`)
+      console.log(`INFO: waiting for ${this.billsToParse - 1} bills to be parsed`)
       console.error(`ERROR: could not parse a PDF for bill ${e.bill}: ${e.message}`)
       console.error(e.stack)
     }
@@ -204,7 +206,7 @@ class ClassificationManager {
 
   runExternalClassifier (execString, paths, bills) {
     return new Promise((resolve, reject) => {
-      const child = proc.exec(execString)
+      const child = proc.spawn(execString)
       child.stdout.pipe(process.stdout)
       child.stderr.pipe(process.stderr)
       child.on('exit', (code) => {
