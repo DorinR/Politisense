@@ -21,7 +21,7 @@ class Job {
   }
 
   addAction (action) {
-    if(!(action instanceof Action)) {
+    if (!(action instanceof Action)) {
       throw new DecorationError()
     }
 
@@ -31,7 +31,7 @@ class Job {
   }
 
   addErrorAction (action) {
-    if(!(action instanceof Action)) {
+    if (!(action instanceof Action)) {
       throw new DecorationError()
     }
     this.handleErrors = action.perform.bind(action)
@@ -39,22 +39,22 @@ class Job {
   }
 
   addLogAction (action) {
-    if(!(action instanceof Action)) {
+    if (!(action instanceof Action)) {
       throw new DecorationError()
     }
     this.logAction = action.perform.bind(action)
     return this
   }
 
-  async execute() {
-      return this.actions.reduce((promise, action) => {
-        return promise.then(action)
-      }, Promise.resolve())
-        .catch(e => {
-          this.handleErrors(e)
-          return null
-        })
-        .finally(this.logAction)
+  async execute () {
+    return this.actions.reduce((promise, action) => {
+      return promise.then(action)
+    }, Promise.resolve())
+      .catch(e => {
+        this.handleErrors(e)
+        return null
+      })
+      .finally(this.logAction)
   }
 
   static create (url, callback) {

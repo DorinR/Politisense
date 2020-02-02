@@ -6,7 +6,6 @@ const Assert = chai.assert
 
 describe('LinkScraperAction.js', () => {
   let mockSend
-  let mockConnectionErrorSend
   beforeAll(() => {
     mockSend = async (options) => {
       if (options.uri === 'https://www.google.ca/') {
@@ -14,12 +13,6 @@ describe('LinkScraperAction.js', () => {
       } else {
         throw new Error()
       }
-    }
-    mockConnectionErrorSend = async (options) => {
-      if (options.uri.includes('not connection error')) {
-        throw new Error()
-      }
-      throw new Error('ECONNRESET')
     }
   })
 

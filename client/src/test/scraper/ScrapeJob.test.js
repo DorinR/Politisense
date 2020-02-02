@@ -6,9 +6,8 @@ const chai = require('chai')
 const Assert = chai.assert
 
 describe('ScrapeJob.js', () => {
-
-  function setupJob(url) {
-    const undertest = ScrapeJob.create(url, ()=>{}, [])
+  function setupJob (url) {
+    const undertest = ScrapeJob.create(url, () => {}, [])
     const scraper = new LinkScraper(url)
     scraper.send = mockSend
     undertest.actions[0] = scraper.perform.bind(scraper)
@@ -69,7 +68,7 @@ describe('ScrapeJob.js', () => {
 
   it('ScrapeJob::create() adds a scraper, parser, processor, requeue-er', async (done) => {
     const url = 'https://www.google.ca/'
-    const exc = ScrapeJob.create(url, ()=>{}, [])
+    const exc = ScrapeJob.create(url, () => {}, [])
     Assert(exc.actions.length === 4)
     Assert.notEqual(exc.actions[0], null)
     Assert(typeof exc.actions[0] === 'function')

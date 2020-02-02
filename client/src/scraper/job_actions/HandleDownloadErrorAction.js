@@ -1,33 +1,33 @@
 const Action = require('./JobAction').AbstractJobAction
 const HandleConnectionErrorAction = require('./HandleConnectionErrorAction').HandleConnectionErrorAction
-const ScrapeError = require('./LinkScraperAction').ScrapeError
+const ScrapeError = require('./ScrapeError').ScrapeError
 
 class PDFParseError extends Error {
-  constructor (msg) {
+  constructor (msg, bill, url) {
     super()
     this.message = msg
     this.name = 'PDFParseError'
+    this.bill = bill
+    this.url = url
   }
 }
 
 class HandleDownloadErrorAction extends Action {
-  constructor (url, bill, callback, createFn) {
+  constructor (callback, createFn) {
     super()
     this.pdfError = 'InvalidPDF'
     this.parseError = 'ParseException'
-    this.url = url
-    this.bill = bill
     this.callback = callback
     this.create = createFn
   }
 
-  async perform(e) {
+  async perform (e) {
     let error = this.requeueConnectionFailures(e)
-    if(error) {
+    if (error) {
       return error
     }
     error = this.requeueDataFailure(e)
-    if(error) {
+    if (error) {
       return error
     }
   }
@@ -35,10 +35,10 @@ class HandleDownloadErrorAction extends Action {
   requeueConnectionFailures (e) {
     const connectionError = HandleConnectionErrorAction.connectionErrorName(e.message)
     if (connectionError) {
-      const message = `ERROR: Connection failure ${connectionError}, can re-enqueue job: ${this.url}`
-      const error = new ScrapeError(message, this.url)
-      this.queueCallback([
-        this.create(this.url, this.bill, this.queueCallback)
+      const message = `ERROR: Connection failure ${connectionError}, can re-enqueue job: ${e.url}`
+      const error = new ScrapeError(message, e.url)
+      this.callback([
+        this.create(e.url, e.bill, this.callback)
       ])
       return error
     }
@@ -46,22 +46,25 @@ class HandleDownloadErrorAction extends Action {
   }
 
   requeueDataFailure (e) {
-    if ((!e || !e.message) && !e.parserError) {
-      console.log(e.message)
+    if (!e) {
+      return new Error('ERROR: unexpected behaviour')
+    }
+    if (!e.message && !e.parserError) {
       return e
-    } else if (e && e.parserError) {
-      e.message = e.parserError
+    }
+    if (e && e.parserError) {
+      e.message += ' ' + e.parserError
     }
     if (e.message.includes(this.pdfError) || e.message.includes(this.parseError)) {
       const error = new PDFParseError()
       const name = this.pdfError || (this.parseError || '')
-      error.message = `ERROR: PDF data for: ${this.bill} was corrupted: ${name}, from job: ${this.url}. Will attempt to re-parse`
-      this.queueCallback([
-        this.create(this.url, this.bill, this.queueCallback)
+      error.message = `ERROR: PDF data for: ${e.bill} was corrupted: ${name}, from job: ${e.url}. Will attempt to re-parse`
+      this.callback([
+        this.create(e.url, e.bill, this.callback)
       ])
       return error
     }
-    return e
+    return null
   }
 }
 

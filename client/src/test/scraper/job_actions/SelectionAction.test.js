@@ -8,7 +8,7 @@ describe('SelectionAction.js', () => {
   let underTest
   let testLinks
 
-  function validResponse(links) {
+  function validResponse (links) {
     Assert.equal(typeof links, typeof {})
     Assert.equal(typeof links.other, typeof [])
     Assert.equal(typeof links.selected, typeof [])

@@ -11,9 +11,9 @@ class PDFRetrievalJob extends AbstractJob {
 
   static create (url, bill, callback) {
     return new PDFRetrievalJob(url, bill, callback)
-      .addAction(new PDFRetrieverAction(url))
-      .addAction(new PDFParseAction(bill))
-      .addErrorAction(new HandleDownloadErrorAction(url, bill, callback, PDFRetrieverAction.create))
+      .addAction(new PDFRetrieverAction(url, bill))
+      .addAction(new PDFParseAction(url, bill))
+      .addErrorAction(new HandleDownloadErrorAction(callback, PDFRetrieverAction.create))
   }
 }
 

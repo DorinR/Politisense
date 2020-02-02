@@ -1,6 +1,6 @@
 const Queue = require('./utilities/UniqueJobQueue').UniqueJobQueue
 const ScrapeJob = require('./ScrapeJob').ScrapeJob
-const ScrapeError = require('./job_actions/LinkScraperAction').ScrapeError
+const ScrapeError = require('./job_actions/ScrapeError').ScrapeError
 const Reader = require('./job_actions/XmlFileRetrieverAction').FileReader
 
 class ScrapeJobManager {

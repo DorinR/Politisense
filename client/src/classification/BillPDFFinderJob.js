@@ -10,7 +10,8 @@ class SelectFirstAction extends Action {
     super()
     this.bill = bill
   }
-  async perform(links) {
+
+  async perform (links) {
     return {
       link: links.selected[0],
       id: this.bill

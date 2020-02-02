@@ -8,8 +8,8 @@ class RequeueConnectionAction extends Action {
     this.tlds = topLevelDomains
   }
 
-  async perform(data) {
-    const {other, selected} = data
+  async perform (data) {
+    const { other, selected } = data
     const newJobs = []
     other.forEach(link => {
       newJobs.push(this.create(link, this.callback, this.tlds))

@@ -15,7 +15,7 @@ class TextParserAction extends JobAction {
     this.tag = (typeof tag === 'undefined') ? this.tag : tag
     this.filter = (typeof filter === 'undefined') ? this.filter : filter
     this.xml = xml
-    if(this.xml) {
+    if (this.xml) {
       this.load = this.loadAsXml.bind(this)
     } else {
       this.load = ParsingLibrary.load

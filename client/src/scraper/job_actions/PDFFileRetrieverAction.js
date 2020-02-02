@@ -2,10 +2,11 @@ const AbstractJobAction = require('./JobAction').AbstractJobAction
 const nfetch = require('node-fetch')
 
 class PDFFileRetrieverAction extends AbstractJobAction {
-  constructor (partialFp) {
+  constructor (partialFp, bill) {
     super()
     this.fp = partialFp
     this.send = nfetch
+    this.bill = bill
   }
 
   perform () {
@@ -15,7 +16,11 @@ class PDFFileRetrieverAction extends AbstractJobAction {
         .then(this.createBufferFromResponse.bind(this))
         .then(this.formatBufferToUint8.bind(this))
         .then(resolve)
-        .catch(reject)
+        .catch(e => {
+          e.bill = this.bill
+          e.url = this.fp
+          reject(e)
+        })
     })
   }
 

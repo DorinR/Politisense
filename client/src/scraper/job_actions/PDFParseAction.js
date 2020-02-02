@@ -2,12 +2,13 @@ const AbstractJobAction = require('./JobAction').AbstractJobAction
 const PdfReader = require('pdfreader').PdfReader
 
 class PDFParseAction extends AbstractJobAction {
-  constructor (bill) {
+  constructor (url, bill) {
     super()
     this.buffer = null
     this.parser = new PdfReader()
     this.text = ''
     this.bill = bill
+    this.url = url
   }
 
   perform (buffer) {
@@ -15,6 +16,8 @@ class PDFParseAction extends AbstractJobAction {
     return new Promise((resolve, reject) => {
       return this.parser.parseBuffer(this.buffer, (e, item) => {
         if (e) {
+          e.bill = this.bill
+          e.url = this.url
           reject(e)
         } else if (!item && !e) {
           console.log('INFO: Finished parsing PDF')

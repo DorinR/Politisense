@@ -1,15 +1,6 @@
 const requestFn = require('request-promise')
 const JobAction = require('./JobAction').AbstractJobAction
-const HandleConnectionErrorAction = require('./HandleConnectionErrorAction').HandleConnectionErrorAction
-const ScrapeErrorName = 'ScrapeError'
-
-class ScrapeError extends Error {
-  constructor (message, link) {
-    super()
-    this.message = message
-    this.link = link
-  }
-}
+const ScrapeError = require('./ScrapeError').ScrapeError
 
 class LinkScraperAction extends JobAction {
   constructor (url) {
@@ -52,5 +43,3 @@ class LinkScraperAction extends JobAction {
 }
 
 module.exports.LinkScraper = LinkScraperAction
-module.exports.ScrapeError = ScrapeError
-module.exports.ScrapeErrorName = ScrapeErrorName

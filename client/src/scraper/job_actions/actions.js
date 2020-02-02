@@ -9,3 +9,6 @@ module.exports.XMLRetrieverAction = require('./XmlFileRetrieverAction').FileRead
 module.exports.HandleConnectionErrorAction = require('./HandleConnectionErrorAction').HandleConnectionErrorAction
 module.exports.RequeueAction = require('./RequeueConnectionAction').RequeueAction
 module.exports.HandleDownloadErrorAction = require('./HandleDownloadErrorAction').HandleDownloadErrorAction
+module.exports.ScrapeError = require('./ScrapeError').ScrapeError
+module.exports.PDFParseError = require('./HandleDownloadErrorAction').PDFParseError
+module.exports.ScrapeErrorName = require('./ScrapeError').ScrapeErrorName

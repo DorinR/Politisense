@@ -12,7 +12,7 @@ class ScrapeJob extends Job {
     super(url, cb)
   }
 
-  static create(url, cb, tlds) {
+  static create (url, cb, tlds) {
     return new ScrapeJob(url, cb, tlds)
       .addAction(new Scraper(url))
       .addAction(new Parser(false, 'a', (elem, $) => {

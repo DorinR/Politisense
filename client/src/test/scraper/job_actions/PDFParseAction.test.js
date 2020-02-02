@@ -18,8 +18,9 @@ describe('PDFParseAction.js', () => {
   })
   let underTest
   const billId = 'some bill id'
+  const url = 'https:://www.someurl.com'
   beforeEach(() => {
-    underTest = new PDFParseAction(billId)
+    underTest = new PDFParseAction(url, billId)
     underTest.parser.parseBuffer = mockParse
   })
 

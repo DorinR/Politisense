@@ -1,5 +1,5 @@
 const Firestore = require('../Firebase').Firestore
-const ScrapeError = require('../scraper/job_actions/LinkScraperAction').ScrapeError
+const ScrapeError = require('../scraper/job_actions/ScrapeError').ScrapeError
 const PDFParseError = require('../scraper/job_actions/HandleDownloadErrorAction').PDFParseError
 const BillFinder = require('./BillPDFFinderJob').BillPDFFinderJob
 const BillParser = require('./PDFRetrievalJob').PDFRetrievalJob
@@ -97,7 +97,7 @@ class ClassificationManager {
   }
 
   enqueueBillContent (content) {
-    if(!content) {
+    if (!content) {
       return null
     }
     console.log(`INFO: waiting for ${--this.billLinksRemaining} bills to finish retrieval`)

@@ -1,7 +1,28 @@
 const Action = require('./JobAction').AbstractJobAction
-const ScrapeError = require('./LinkScraperAction').ScrapeError
+const ScrapeError = require('./ScrapeError').ScrapeError
+const connectionErrors = [
+  'ESOCKETTIMEDOUT',
+  'ETIMEDOUT',
+  'ECONNRESET',
+  'EPIPE',
+  'ENOTFOUND'
+]
 
 class HandleConnectionErrorAction extends Action {
+  static connectionErrorName (message) {
+    if (!message) {
+      return null
+    }
+    let name = null
+    connectionErrors.some(error => {
+      if (message.includes(error)) {
+        name = error
+      }
+      return message.includes(error)
+    })
+    return name
+  }
+
   constructor (callback, creationFn, topLevelDomains) {
     super()
     this.callback = callback
@@ -9,21 +30,21 @@ class HandleConnectionErrorAction extends Action {
     this.tlds = topLevelDomains
   }
 
-  async perform(e) {
+  async perform (e) {
     let error = this.throwOnUnexpected(e)
-    if(error) {
-      return error
-    }
-    error = this.throwOnMalformedLink(e)
-    if(!error) {
+    if (error) {
       return error
     }
     error = this.requeueOnFailedConnection(e)
-    if(!error) {
+    if (error) {
+      return error
+    }
+    error = this.throwOnMalformedLink(e)
+    if (error) {
       return error
     }
     error = this.reconditionPartialLinks(e)
-    if(!error) {
+    if (error) {
       return error
     }
   }
@@ -47,7 +68,7 @@ class HandleConnectionErrorAction extends Action {
       console.debug(error.message)
       return error
     }
-    return e
+    return null
   }
 
   throwOnMalformedLink (e) {
@@ -57,7 +78,7 @@ class HandleConnectionErrorAction extends Action {
       console.debug(error.message)
       return error
     }
-    return e
+    return null
   }
 
   reconditionPartialLinks (e) {
@@ -80,33 +101,11 @@ class HandleConnectionErrorAction extends Action {
       message = 'Re-enqueuing link from specified TLDs: ' + e.link
       link = e.link
     }
-    if(message && link) {
+    if (message && link) {
       return new ScrapeError(message, link)
     } else {
-      return e
-    }
-  }
-
-  static connectionErrorName (message) {
-    if (!message) {
       return null
     }
-    if (message.includes('ESOCKETTIMEDOUT')) {
-      return 'ESOCKETTIMEDOUT'
-    }
-    if (message.includes('ETIMEDOUT')) {
-      return 'ETIMEDOUT'
-    }
-    if (message.includes('ECONNRESET')) {
-      return 'ECONNRESET'
-    }
-    if (message.includes('EPIPE')) {
-      return 'EPIPE'
-    }
-    if (message.includes('ENOTFOUND')) {
-      return 'ENOTFOUND'
-    }
-    return null
   }
 }
 

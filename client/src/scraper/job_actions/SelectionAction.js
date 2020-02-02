@@ -10,7 +10,7 @@ class SelectionAction extends JobAction {
 
   async perform (raw) {
     let input
-    if(raw.selected) {
+    if (raw.selected) {
       input = raw.selected
     } else {
       input = raw
