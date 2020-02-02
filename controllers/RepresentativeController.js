@@ -1,4 +1,4 @@
-import { Firestore } from '../client/src/Firebase'
+import { Firestore } from '../client/src/backend/firebase/Firestore'
 
 exports.getRepresentativeByRiding = (req, res) => {
   const db = new Firestore()

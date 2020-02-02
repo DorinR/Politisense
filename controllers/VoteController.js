@@ -1,4 +1,4 @@
-import { Firestore } from '../client/src/Firebase'
+import { Firestore } from '../client/src/backend/firebase/Firestore'
 
 exports.getAllVotesByRepresentative = async (req, res) => {
   const targetRepresentative = req.params.representativeId

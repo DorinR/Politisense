@@ -1,4 +1,4 @@
-import { Firestore } from '../client/src/Firebase'
+import { Firestore } from '../client/src/backend/firebase/Firestore'
 import represent from 'represent'
 
 const bcrypt = require('bcryptjs')
