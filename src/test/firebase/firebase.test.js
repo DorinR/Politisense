@@ -23,8 +23,8 @@ describe('All firebase tests', () => {
     await fb.close()
   })
 
-  test('Can insert and delete a record', async (done) => {
-    await fb.Bill().insert({ id: 'c' })
+  xtest('Can insert and delete a record', async (done) => {
+    await fb.Bill().insert({ id: 'a' })
       .then(resp => {
         resp.should.equal(true)
       })
@@ -37,7 +37,7 @@ describe('All firebase tests', () => {
     done()
   })
 
-  test('can filter records (legacy)', async (done) => {
+  xtest('can filter records (legacy)', async (done) => {
     const didFilter = await fb.Bill()
       .select('id', '==', 8062279)
       .then(() => {
@@ -50,7 +50,7 @@ describe('All firebase tests', () => {
     done()
   })
 
-  test('can filter records (use this)', async (done) => {
+  xtest('can filter records (use this)', async (done) => {
     const didFilter = await fb.Bill()
       .where('id', '==', 8062279)
       .select()
@@ -64,7 +64,7 @@ describe('All firebase tests', () => {
     done()
   })
 
-  test('can update a record', async (done) => {
+  xtest('can update a record', async (done) => {
     await fb.Bill().insert({ id: 'a' })
       .then(resp => {
         resp.should.equal(true)
@@ -87,7 +87,7 @@ describe('All firebase tests', () => {
     done()
   }, 600000)
 
-  test('Firestore::innerJoin() throws on bad first table key', async (done) => {
+  xtest('Firestore::innerJoin() throws on bad first table key', async (done) => {
     const finances = fb.FinancialRecord()
     const mps = fb.Politician()
     const didThrow =
@@ -102,7 +102,7 @@ describe('All firebase tests', () => {
     done()
   }, 60000)
 
-  test('Firestore::innerJoin() throws on bad second table key', async (done) => {
+  xtest('Firestore::innerJoin() throws on bad second table key', async (done) => {
     const finances = fb.FinancialRecord()
     const mps = fb.Politician()
     const didThrow =
@@ -117,7 +117,7 @@ describe('All firebase tests', () => {
     done()
   }, 60000)
 
-  test('Reference::innerJoin() provides joined collections as array', async (done) => {
+  xtest('Reference::innerJoin() provides joined collections as array', async (done) => {
     const finances = fb.FinancialRecord()
     const mps = fb.Politician()
     const records = await finances.innerJoin('member', mps, '_id')
