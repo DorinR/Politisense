@@ -227,7 +227,7 @@ class Reference {
 }
 
 class Firestore {
-  constructor () {
+  constructor (legacy = true) {
     this.firestore = getInstance()
     this.reference = this.firestore.db
     this.googleProvider = this.firestore.googleProvider
@@ -235,42 +235,62 @@ class Firestore {
     this.facebookProvider = this.firestore.facebookProvider
     this.twitterProvider = this.firestore.twitterProvider
     this.microsoftProvider = this.firestore.microsoftProvider
+    this.parliament = 44
+    this.legacy = legacy
+  }
+
+  forParliament (parl) {
+    this.parliament = parl
+    return this
   }
 
   Bill () {
-    return new Reference(this.reference.collection('bills'))
+    const collection = this.legacy ? 'bill' : `${this.parliament}/bills`
+    return this.createReference(collection)
   }
 
   BillClassification () {
-    return new Reference(this.reference.collection('bill_classification'))
+    const collection = this.legacy ? 'bill_classification' : `${this.parliament}/bill_classification`
+    return this.createReference(collection)
   }
 
   FinancialRecord () {
-    return new Reference(this.reference.collection('financialRecord'))
+    const collection = this.legacy ? 'financialRecord' : `${this.parliament}/financialRecord`
+    return this.createReference(collection)
   }
 
   Politician () {
-    return new Reference(this.reference.collection('politicians'))
+    const collection = this.legacy ? 'politicians' : `${this.parliament}/politicians`
+    return this.createReference(collection)
   }
 
   Riding () {
-    return new Reference(this.reference.collection('ridings'))
+    const collection = this.legacy ? 'ridings' : `${this.parliament}/ridings`
+    return this.createReference(collection)
   }
 
   TfIdfClassification () {
-    return new Reference(this.reference.collection('tf_idf_bill'))
+    const collection = this.legacy ? 'tf_idf_bill' : `${this.parliament}/tf_idf_bill`
+    return this.createReference(collection)
   }
 
   User () {
-    return new Reference(this.reference.collection('users'))
+    const collection = this.legacy ? 'users' : `${this.parliament}/users`
+    return this.createReference(collection)
   }
 
   Vote () {
-    return new Reference(this.reference.collection('votes'))
+    const collection = this.legacy ? 'votes' : `${this.parliament}/votes`
+    return this.createReference(collection)
   }
 
   VoteRecord () {
-    return new Reference(this.reference.collection('voteRecord'))
+    const collection = this.legacy ? 'voteRecord' : `${this.parliament}/voteRecord`
+    return this.createReference(collection)
+  }
+
+  createReference (collection) {
+    return new Reference(this.reference.collection(collection))
   }
 
   async close () {
