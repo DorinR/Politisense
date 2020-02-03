@@ -1,5 +1,5 @@
 const utils = require('../util/utils')
-const Job = utils.Job
+const Job = require('../util/Job').AbstractJob
 const Actions = utils.Actions
 const Scraper = Actions.LinkScraperAction
 const Parser = Actions.TextParserAction

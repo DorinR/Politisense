@@ -1,5 +1,5 @@
 const utils = require('../util/utils')
-const AbstractJob = utils.Job
+const AbstractJob = require('../util/Job').AbstractJob
 const PDFRetrieverAction = utils.Actions.PDFRetrieverAction
 const PDFParseAction = utils.Actions.PDFParseAction
 const HandleDownloadErrorAction = utils.Actions.HandleDownloadErrorAction

@@ -38,6 +38,7 @@ class QueueManager {
   }
 
   accumulate (result) {
+    result = result.flat()
     result.forEach(entry => {
       this.result.push(entry)
     })

@@ -2,8 +2,6 @@ const Parsers = require('@parser')
 const XmlDataParser = Parsers.XmlDataParser
 const Models = require('@model')
 const Politician = Models.Politician
-const Model = Models.Model
-
 const cheerio = require('cheerio')
 
 class MpXmlParser extends XmlDataParser {
