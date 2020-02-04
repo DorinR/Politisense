@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import { makeStyles } from '@material-ui/core/styles'
+import axios from 'axios'
 
-const Firestore = require('../../../backend/firebase/Firestore').Firestore
+export async function getRepresentativeData(name) {
+  return await axios.get(
+    `http://localhost:5000/api/representatives/representative/${name}`
+  )
+    .then(res => {
+    return res.data.data
+  })
+    .catch(console.error)
+}
 
 const useStyles = makeStyles(theme => ({
   bigAvatar: {
@@ -19,23 +28,9 @@ export default function RepresentativeImage (props) {
   const [imageUrl, setImageUrl] = useState('')
 
   useEffect(() => {
-    const db = new Firestore()
-    db.Politician()
-      .select('name', '==', props.representativeToLoad)
-      .then(snapshot => {
-        if (snapshot.empty) {
-          console.log('No matching documents.')
-          return
-        }
-        snapshot.forEach(doc => {
-          const { name, imageUrl } = doc.data()
-          setName(name)
-          setImageUrl(imageUrl)
-        })
-      })
-      .catch(err => {
-        console.log('Error getting documents', err)
-      })
+    const { name, imageUrl } = getRepresentativeData(props.representativeToLoad)
+    setName(name)
+    setImageUrl(imageUrl)
   })
   return <Avatar alt={name} src={imageUrl} className={classes.bigAvatar} />
 }

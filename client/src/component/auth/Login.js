@@ -11,7 +11,7 @@ import logo from '../../assets/PolotisenseTentativeLogo.png'
 import axios from 'axios'
 import { FacebookLoginButton, GoogleLoginButton, TwitterLoginButton } from 'react-social-login-buttons'
 
-const Firestore = require('../../backend/firebase/Firestore').Firestore
+const Firestore = require('../../../../backend/firebase/firebase').Firestore
 
 const gridStyle = {
   display: 'flex',

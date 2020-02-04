@@ -10,8 +10,6 @@ import { Typography } from '@material-ui/core'
 import RidingPopulation from './RidingPopulation/RidingPopulation'
 import axios from 'axios'
 
-const Firestore = require('../../../backend/firebase/Firestore').Firestore
-
 const useStyles = makeStyles(theme => ({
   customCardContent: {
     padding: 5,
@@ -50,6 +48,16 @@ export async function fetchRidingCode (riding) {
     .catch(console.error)
 }
 
+export async function getRepresentativeData(name) {
+  return await axios.get(
+    `http://localhost:5000/api/representatives/representative/${name}`
+  )
+    .then(res => {
+      return res.data.data
+    })
+    .catch(console.error)
+}
+
 export default function RepresentativeInfo (props) {
   const classes = useStyles()
   const [name, setName] = useState('')
@@ -59,25 +67,11 @@ export default function RepresentativeInfo (props) {
   const [ridingCode, setRidingCode] = useState('')
 
   useEffect(() => {
-    const db = new Firestore()
-    db.Politician()
-      .select('name', '==', props.representativeToLoad)
-      .then(snapshot => {
-        if (snapshot.empty) {
-          console.log('No matching documents.')
-          return
-        }
-        snapshot.forEach(doc => {
-          const { name, politicalParty, riding, yearElected } = doc.data()
-          setName(name)
-          setPoliticalParty(politicalParty)
-          setYearElected(yearElected)
-          setRiding(riding)
-        })
-      })
-      .catch(err => {
-        console.log('Error getting documents', err)
-      })
+    const { name, politicalParty, riding, yearElected } = getRepresentativeData(props.representativeToLoad)
+    setName(name)
+    setPoliticalParty(politicalParty)
+    setYearElected(yearElected)
+    setRiding(riding)
   })
 
   useEffect(() => {
