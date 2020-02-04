@@ -3,33 +3,14 @@ import Avatar from '@material-ui/core/Avatar'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
 
-<<<<<<< HEAD:client/src/Components/Dashboard/Sidebar/RepresentativeImage.js
-export async function fetchUserRiding (userEmail) {
-  return axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+export async function getRepresentativeData(name) {
+  return await axios
+    .get(`http://localhost:5000/api/representatives/representative/${name}`)
     .then(res => {
-      if (res.data.success) {
-        return res.data.data.riding
-      }
+      return res.data.data
     })
     .catch(console.error)
 }
-
-export async function fetchRepresentative (riding) {
-  return axios
-    .get(
-      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-    )
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data
-      }
-    })
-    .catch(console.error)
-}
-=======
-const Firestore = require('../../../backend/firebase/Firestore').Firestore
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/dashboard/Sidebar/RepresentativeImage.js
 
 const useStyles = makeStyles(theme => ({
   bigAvatar: {
@@ -40,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function RepresentativeImage (props) {
+export default function RepresentativeImage(props) {
   const classes = useStyles()
   const [user, setUser] = useState(null)
   useEffect(() => {
@@ -51,7 +32,7 @@ export default function RepresentativeImage (props) {
 
   const [riding, setRiding] = useState(props.representativeToLoad)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (user && !riding) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -62,24 +43,9 @@ export default function RepresentativeImage (props) {
 
   const [representative, setRepresentative] = useState(null)
   useEffect(() => {
-    async function getData () {
-      if (riding) {
-        const rep = await fetchRepresentative(riding)
-        setRepresentative(rep)
-      }
-    }
-    getData()
-  }, [riding])
-
-  const [name, setName] = useState(null)
-  const [imageUrl, setImageUrl] = useState(null)
-
-  useEffect(() => {
-    if (representative) {
-      setName(representative.name)
-      setImageUrl(representative.imageUrl)
-    }
-  }, [representative])
-
+    const { name, imageUrl } = getRepresentativeData(props.representativeToLoad)
+    setName(name)
+    setImageUrl(imageUrl)
+  })
   return <Avatar alt={name} src={imageUrl} className={classes.bigAvatar} />
 }

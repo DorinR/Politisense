@@ -46,13 +46,15 @@
     "nodemon": "^1.19.4",
     "async-sema": "latest",
     "nodemon": "^1.19.4",
-    "flat": "latest"
+    "flat": "latest",
+    "nodemon": "^1.19.4",
+    "module-alias": "latest"
   },
   "scripts": {
     "start": "node -r esm server.js",
     "server": "nodemon -r esm server.js",
     "client": "npm start --prefix client",
-    "test": "jest src/test/*",
+    "test": "jest test/* -- --coverage",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "repository": {
@@ -66,32 +68,14 @@
   },
   "homepage": "https://github.com/DorinR/Politisense#readme",
   "_moduleAliases": {
-    "@root": ".",
-    "@utils": "./src/util/utils",
-    "@firestore": "./src/firebase/firebase",
-    "@model": "./src/firebase/model/models",
-    "@jobs": "./src/job/jobs",
-    "@data": "./src/data/data",
-    "@action": "./src/util/action/actions",
-    "@parser": "./src/util/parser/parsers",
-    "@queue": "./src/util/queue/queues",
-    "@manager": "./src/util/queue_manager/actions",
-    "@controller": "./src/controllers",
-    "@builder": "./src/firebase/model/builder/builders"
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "@utils": "<rootDir>/src/util/utils",
-      "@firestore": "<rootDir>/src/firebase/firebase",
-      "@model": "<rootDir>/src/firebase/model/models",
-      "@jobs": "<rootDir>/src/job/jobs",
-      "@data": "<rootDir>/src/data/data",
-      "@action": "<rootDir>/src/util/action/actions",
-      "@parser": "<rootDir>/src/util/parser/parsers",
-      "@queue": "<rootDir>/src/util/queue/queues",
-      "@manager": "<rootDir>/src/util/queue_manager/actions",
-      "@controller": "<rootDir>/src/controllers",
-      "@builder": "<rootDir>/src/firebase/model/builder/builders"
-    }
+    "@utils": "./backend/util/utils",
+    "@firestore": "./backend/firebase/firebase",
+    "@model": "./backend/firebase/model/models",
+    "@jobs": "./backend/job/jobs",
+    "@data": "./backend/data",
+    "@action": "./backend/util/action/actions",
+    "@parser": "./backend/util/parser/parsers",
+    "@queue": "./backend/util/queue/queues",
+    "@manager": "./backend/util/queue_manager/actions"
   }
 }

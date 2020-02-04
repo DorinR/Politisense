@@ -1,58 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import ListItemText from '@material-ui/core/ListItemText'
-import Box from '@material-ui/core/Box'
-import axios from 'axios'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import BarChartWrapper from '../Charts/Wrappers/BarChartWrapper'
-
-
-const Firestore = require('../../../backend/firebase/Firestore').Firestore
-
-export async function fetchUserRiding(userEmail) {
-  let result = ''
-  await axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
-    .then(res => {
-      if (res.data.success) {
-        const riding = res.data.data.riding
-        result = riding
-      }
-    })
-    .catch(err => console.error(err))
-  return result
-}
-
-export async function fetchRepresentative(riding) {
-  let result = ''
-  await axios
-    .get(
-      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-    )
-    .then(res => {
-      if (res.data.success) {
-        const representative = res.data.data.name
-        result = representative
-      }
-    })
-    .catch(err => console.error(err))
-  return result
-}
-
-export async function fetchRepresentativeId(representative) {
-  return axios
-    .get(
-      `http://localhost:5000/api/representatives/${representative}/getRepresentativeId`
-    )
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data
-      }
-    })
-    .catch(console.error)
-}
+const Firestore = require('@firestore').Firestore
 // =========== AVG OFFICE COSTS ============
-
-export async function fetchAverageOfficeSpending() {
+async function fetchAverageOfficeSpending () {
   const db = new Firestore()
   const officeSpendingItems = []
 
@@ -75,7 +23,7 @@ export async function fetchAverageOfficeSpending() {
   return officeSpendingItems
 }
 
-export function computeAverageOfficeSpending(spendingItems) {
+function computeAverageOfficeSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -89,7 +37,7 @@ export function computeAverageOfficeSpending(spendingItems) {
 
 // =========== AVG ADVERTISING COSTS ============
 
-export async function fetchAverageAdvertisingSpending() {
+async function fetchAverageAdvertisingSpending () {
   const db = new Firestore()
   const advertisingSpendingItems = []
 
@@ -112,7 +60,7 @@ export async function fetchAverageAdvertisingSpending() {
   return advertisingSpendingItems
 }
 
-export function computeAverageAdvertisingSpending(spendingItems) {
+function computeAverageAdvertisingSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -126,7 +74,7 @@ export function computeAverageAdvertisingSpending(spendingItems) {
 
 // =========== AVG EMPLOYEE COSTS ============
 
-export async function fetchAverageEmployeeSpending() {
+async function fetchAverageEmployeeSpending () {
   const db = new Firestore()
   const employeeSpendingItems = []
 
@@ -149,7 +97,7 @@ export async function fetchAverageEmployeeSpending() {
   return employeeSpendingItems
 }
 
-export function computeAverageEmployeeSpending(spendingItems) {
+function computeAverageEmployeeSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -162,36 +110,30 @@ export function computeAverageEmployeeSpending(spendingItems) {
 }
 
 // =========== AVG GIFTS COSTS ============
-
-export async function fetchAverageGiftsSpending() {
+ async function fetchAverageGiftsSpending () {
   const db = new Firestore()
   const giftsSpendingItems = []
 
-  const [riding, setRiding] = useState(null)
-  useEffect(() => {
-    async function getData () {
-      if (user) {
-        const riding = await fetchUserRiding(user.email)
-        setRiding(riding)
+  await db
+    .FinancialRecord()
+    .where('category', '==', '5-Gifts')
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.log('No matching documents.')
+        return
       }
-    }
-    getData()
-  }, [user])
-
-  async function fetchUserRiding (userEmail) {
-    return axios
-      .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data.riding
-        }
+      snapshot.forEach(doc => {
+        giftsSpendingItems.push(doc.data())
       })
+    })
     .catch(err => {
       console.log('Error getting documents', err)
     })
+  return giftsSpendingItems
 }
 
-export function computeAverageGiftsSpending(spendingItems) {
+ function computeAverageGiftsSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -205,37 +147,30 @@ export function computeAverageGiftsSpending(spendingItems) {
 
 // =========== AVG HOSPITALITY COSTS ============
 
-export async function fetchAverageHospitalitySpending() {
+ async function fetchAverageHospitalitySpending () {
   const db = new Firestore()
   const hospitalitySpendingItems = []
 
-  const [representative, setRepresentative] = useState(null)
-  useEffect(() => {
-    async function getData () {
-      if (riding) {
-        const rep = await fetchRepresentative(riding)
-        setRepresentative(rep)
+  await db
+    .FinancialRecord()
+    .where('category', '==', '4-Hospitality')
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.log('No matching documents.')
+        return
       }
-    }
-    getData()
-  }, [riding])
-
-  async function fetchRepresentative (riding) {
-    return axios
-      .get(
-        `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-      )
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data.name
-        }
+      snapshot.forEach(doc => {
+        hospitalitySpendingItems.push(doc.data())
       })
+    })
     .catch(err => {
       console.log('Error getting documents', err)
     })
+  return hospitalitySpendingItems
 }
 
-export function computeAverageHospitalitySpending(spendingItems) {
+ function computeAverageHospitalitySpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -245,39 +180,33 @@ export function computeAverageHospitalitySpending(spendingItems) {
   } else {
     return null
   }
+}
 
 // =========== AVG PRINTING COSTS ============
-export async function fetchAveragePrintingSpending() {
+ async function fetchAveragePrintingSpending () {
   const db = new Firestore()
   const printingSpendingItems = []
 
-  const [repID, setRepID] = useState(null)
-  useEffect(() => {
-    async function getData () {
-      if (representative) {
-        const id = await fetchRepresentativeId(representative)
-        setRepID(id)
+  await db
+    .FinancialRecord()
+    .where('parent', '==', '7-Printing')
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.log('No matching documents.')
+        return
       }
-    }
-    getData()
-  }, [representative])
-
-  async function fetchRepresentativeId (representative) {
-    return axios
-      .get(
-        `http://localhost:5000/api/representatives/${representative}/getRepresentativeId`
-      )
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data
-        }
+      snapshot.forEach(doc => {
+        printingSpendingItems.push(doc.data())
       })
+    })
     .catch(err => {
       console.log('Error getting documents', err)
     })
+  return printingSpendingItems
 }
 
-export function computeAveragePrintingSpending(spendingItems) {
+ function computeAveragePrintingSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -287,9 +216,10 @@ export function computeAveragePrintingSpending(spendingItems) {
   } else {
     return null
   }
+}
 
 // =========== AVG TRAVEL COSTS ============
-export async function fetchAverageTravelSpending() {
+ async function fetchAverageTravelSpending () {
   const db = new Firestore()
   const travelSpendingItems = []
 
@@ -312,7 +242,7 @@ export async function fetchAverageTravelSpending() {
   return travelSpendingItems
 }
 
-export function computeAverageTravelSpending(spendingItems) {
+ function computeAverageTravelSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -327,7 +257,7 @@ export function computeAverageTravelSpending(spendingItems) {
 // =========== MP FULL COSTS ============
 
 // =========== MP OFFICE COSTS ============
-export async function fetchOfficeSpending(repID) {
+ async function fetchOfficeSpending (repID) {
   const db = new Firestore()
   const officeSpendingItems = []
 
@@ -351,7 +281,7 @@ export async function fetchOfficeSpending(repID) {
   return officeSpendingItems
 }
 
-export function computeTotalOfficeSpending(spendingItems) {
+ function computeTotalOfficeSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -360,7 +290,7 @@ export function computeTotalOfficeSpending(spendingItems) {
 }
 
 // =========== MP TRAVEL COSTS ============
-export async function fetchTravelSpending(repID) {
+ async function fetchTravelSpending (repID) {
   const db = new Firestore()
   const travelSpendingItems = []
 
@@ -384,7 +314,7 @@ export async function fetchTravelSpending(repID) {
   return travelSpendingItems
 }
 
-export function computeTotalTravelSpending(spendingItems) {
+ function computeTotalTravelSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -393,7 +323,7 @@ export function computeTotalTravelSpending(spendingItems) {
 }
 
 // =========== MP PRINTING COSTS ============
-export async function fetchPrintingSpending(repID) {
+ async function fetchPrintingSpending (repID) {
   const db = new Firestore()
   const printingSpendingItems = []
 
@@ -417,7 +347,7 @@ export async function fetchPrintingSpending(repID) {
   return printingSpendingItems
 }
 
-export function computeTotalPrintingSpending(spendingItems) {
+ function computeTotalPrintingSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -426,7 +356,7 @@ export function computeTotalPrintingSpending(spendingItems) {
 }
 
 // =========== MP ADVERTISING COSTS ============
-export async function fetchAdvertisingSpending(repID) {
+ async function fetchAdvertisingSpending (repID) {
   const db = new Firestore()
   const advertisingSpendingItems = []
 
@@ -450,7 +380,7 @@ export async function fetchAdvertisingSpending(repID) {
   return advertisingSpendingItems
 }
 
-export function computeTotalAdvertisingSpending(spendingItems) {
+ function computeTotalAdvertisingSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -459,7 +389,7 @@ export function computeTotalAdvertisingSpending(spendingItems) {
 }
 
 // =========== MP EMPLOYEE COSTS ============
-export async function fetchEmployeeSpending(repID) {
+ async function fetchEmployeeSpending (repID) {
   const db = new Firestore()
   const employeeSpendingItems = []
 
@@ -483,7 +413,7 @@ export async function fetchEmployeeSpending(repID) {
   return employeeSpendingItems
 }
 
-export function computeTotalEmployeeSpending(spendingItems) {
+ function computeTotalEmployeeSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -492,7 +422,7 @@ export function computeTotalEmployeeSpending(spendingItems) {
 }
 
 // =========== MP GIFTS COSTS ============
-export async function fetchGiftsSpending(repID) {
+ async function fetchGiftsSpending (repID) {
   const db = new Firestore()
   const giftsSpendingItems = []
 
@@ -516,7 +446,7 @@ export async function fetchGiftsSpending(repID) {
   return giftsSpendingItems
 }
 
-export function computeTotalGiftsSpending(spendingItems) {
+ function computeTotalGiftsSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -526,81 +456,87 @@ export function computeTotalGiftsSpending(spendingItems) {
 
 // =========== MP HOSPITALITY COSTS ============
 
-  async function getBudgetData (id) {
-    return axios
-      .get(
-        `http://localhost:5000/api/budgets/budget/${id}`
-      )
-      .then(res => {
-        return res.data.data
+ async function fetchHospitalitySpending (repID) {
+  const db = new Firestore()
+  const hospitalitySpendingItems = []
+
+  await db
+    .FinancialRecord()
+    .where('member', '==', repID)
+    .where('category', '==', '4-Hospitality')
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.log('No matching documents.')
+        return
+      }
+      snapshot.forEach(doc => {
+        hospitalitySpendingItems.push(doc.data())
       })
+    })
     .catch(err => {
       console.log('Error getting documents', err)
     })
-  }
-
-  export async function getBudgetData(representativeID) {
-  return await axios
-    .get(`http://localhost:5000/api/budget/:${representativeID}`)
-    .then(res => {
-      return res.data.data
-    })
-    .catch(console.error)
+  return hospitalitySpendingItems
 }
 
-// =========== AVERAGE FULL COSTS ============
+ function computeTotalHospitalitySpending (spendingItems) {
+  let total = 0
+  spendingItems.forEach(item => {
+    total += item.amount
+  })
+  return total
+}
 
-// =========== TOTAL BUDGET COSTS ============
-
-export default function BudgetContainer() {
-  // budget data
-  const [budgetData, setBudgetData] = useState([])
-  useEffect(() => {
-    async function getData() {
-      const mp = {
-        label: '',
-        values: []
+module.exports.budgetData = async (req, res) => {
+  const representativeId = res.params.representative
+  if(!representativeId) {
+    req.status(404).json({
+      success: false,
+      data: {
+        mp: [],
+        avg: []
       }
-      const avgs = {
-        label: 'Average Among MPs',
-        values: data.avg
-      }
-      /* eslint-disable */
-      const user = JSON.parse(localStorage.getItem('user'))
-      if (user) {
-        // boilerplate data fetching
-        const { email } = user
-        const riding = await fetchUserRiding(email)
-        const representative = await fetchRepresentative(riding)
-        mp.label = representative
-        const representativeId = await fetchRepresentativeId(representative)
-        const { mp, avg } = await getBudgetData(representativeId)
-      }
-      setBudgetData([mp, avg])
-    }
-    getData()
-  }, [budgetData])
-  /* eslint-disable */
-  return (
-    <ListItemText>
-      {budgetData.length === 0 ? (
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)"
-          }}
-        >
-          <CircularProgress />
-        </div>
-      ) :
+    })
+    return
+  }
 
-        <BarChartWrapper type={'budget'} data={budgetData} />
+  const rawData = await Promise.all([
+      fetchEmployeeSpending(representativeId),
+      fetchAdvertisingSpending(representativeId),
+      fetchGiftsSpending(representativeId),
+      fetchHospitalitySpending(representativeId),
+      fetchOfficeSpending(representativeId),
+      fetchPrintingSpending(representativeId),
+      fetchTravelSpending(representativeId),
+      fetchAverageEmployeeSpending(),
+      fetchAverageAdvertisingSpending(),
+      fetchAverageGiftsSpending(),
+      fetchAverageHospitalitySpending(),
+      fetchAverageOfficeSpending(),
+      fetchAveragePrintingSpending(),
+      fetchAverageTravelSpending(),
+    ])
+  const data = {}
+  data.mp = []
+  data.mp[0] = Math.round(computeTotalEmployeeSpending(rawData[0]))
+  data.mp[1] = Math.round(computeTotalAdvertisingSpending(rawData[1]))
+  data.mp[2] = Math.round(computeTotalGiftsSpending(rawData[2]))
+  data.mp[3] = Math.round(computeTotalHospitalitySpending(rawData[3]))
+  data.mp[4] = Math.round(computeTotalOfficeSpending(rawData[4]))
+  data.mp[5] = Math.round(computeTotalPrintingSpending(rawData[5]))
+  data.mp[6] = Math.round(computeTotalTravelSpending(rawData[6]))
 
-      }
+  data.avg[0] = Math.round(computeAverageEmployeeSpending(rawData[7]))
+  data.avg[1] = Math.round(computeAverageAdvertisingSpending(rawData[8]))
+  data.avg[2] = Math.round(computeAverageGiftsSpending(rawData[9]))
+  data.avg[3] = Math.round(computeAverageHospitalitySpending(rawData[10]))
+  data.avg[4] = Math.round(computeAverageOfficeSpending(rawData[11]))
+  data.avg[5] = Math.round(computeAveragePrintingSpending(rawData[12]))
+  data.avg[6] = Math.round(computeAverageTravelSpending(rawData[13]))
 
-      <Box m={1} />
-    </ListItemText>
-  )
-    }
+  req.status(200).json({
+    success: true,
+    data: data
+  })
+}
