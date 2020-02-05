@@ -27,7 +27,6 @@ import Box from '@material-ui/core/Box'
 import axios from 'axios'
 import politisenseLogo from '../politisenseLogo.png'
 import Button from '@material-ui/core/Button'
-import CompareArrowsIcon from '@material-ui/icons/CompareArrows'
 
 const drawerWidth = 330
 

@@ -1,9 +1,5 @@
 /* global describe, test */
-<<<<<<< HEAD:client/src/test/component/dashboard/Sidebar/sidebar.test.js
 import { getAllRidings } from '../../../../Components/Dashboard/Sidebar/RidingSwitcher/RidingSwitcher'
-=======
-import { getAllRidings } from '../../../../component/dashboard/Sidebar/RidingSwitcher/RidingSwitcher'
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/test/component/dashboard/Sidebar/sidebar.test.js
 
 const chai = require('chai')
 chai.should()

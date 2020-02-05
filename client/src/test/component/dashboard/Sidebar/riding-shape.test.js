@@ -1,13 +1,7 @@
 /* eslint-env jest */
-<<<<<<< HEAD:client/src/test/component/dashboard/Sidebar/riding-shape.test.js
 import { PARTY_COLORS } from '../../../../Components/Dashboard/Sidebar/RidingShape/partyColors'
 import { fallbackSvg } from '../../../../Components/Dashboard/Sidebar/RidingShape/fallbackSvg'
 import { addColorFillToRidingShape } from '../../../../Components/Dashboard/Sidebar/RidingShape/RidingShape'
-=======
-import { PARTY_COLORS } from '../../../../component/dashboard/Sidebar/RidingShape/partyColors'
-import { fallbackSvg } from '../../../../component/dashboard/Sidebar/RidingShape/fallbackSvg'
-import { addColorFillToRidingShape } from '../../../../component/dashboard/Sidebar/RidingShape/RidingShape'
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/test/component/dashboard/Sidebar/riding-shape.test.js
 
 const chai = require('chai')
 chai.should()

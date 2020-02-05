@@ -1,9 +1,5 @@
 /* eslint-env jest */
-<<<<<<< HEAD:client/src/test/component/auth/Auth.test.js
 import { checkEmailFormat } from '../../../Components/Auth/Login'
-=======
-import { checkEmailFormat } from '../../../component/auth/Login'
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/test/component/auth/Auth.test.js
 
 const chai = require('chai')
 chai.should()

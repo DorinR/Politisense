@@ -7,7 +7,7 @@ const MpXmlParser = Parsers.MpXmlParser
 const VoteXmlParser = Parsers.VoteXmlParser
 const LinkScraper = Utils.Actions.LinkScraperAction
 const Firestore = Firebase.Firestore
-const Model = require('@models/Model').Model
+const Vote = require('@models').Vote
 
 const cheerio = require('cheerio')
 const Promise = require('bluebird')
