@@ -36,10 +36,6 @@ const useStyles = makeStyles({
   },
   MuiAvatar: {
     backgroundColor: '#43D0C4'
-  },
-  container: {
-    margin: '20px',
-    marginTop: '30px'
   }
 })
 
@@ -179,7 +175,6 @@ export default function CategoryDashboard () {
 
   /* eslint-disable */
   return (
-    <div className={classes.container}>
     <Grid container spacing={1}>
       <Grid item xs={12}>
         {userRepIssuedBills && categoryList && userRepresentative ? (
@@ -353,15 +348,16 @@ function createDataSetRadar(categories, data) {
   return [dataSetRadar, maxValue]
 }
 
-export function createDataSetDonut(sponsors, mpdata) {
-  let liberalCounter = 0
-  let conservativeCounter = 0
-  let ndpCounter = 0
-  let peopleCounter = 0
-  let greenCounter = 0
-  let bqCounter = 0
-  let parties = {}
-
+function createDataSetDonut(sponsors, mpdata) {
+  let liberalCounter = 0;
+  let conservativeCounter = 0;
+  let ndpCounter = 0;
+  let peopleCounter = 0;
+  let greenCounter = 0;
+  let bqCounter = 0;
+  let parties = {};
+  console.log(sponsors)
+  console.log(mpdata)
   if (mpdata.length) {
     mpdata.forEach(bill => {
       if (bill.voteRecord.yea === true) {

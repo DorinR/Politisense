@@ -110,7 +110,7 @@ function computeAverageEmployeeSpending (spendingItems) {
 }
 
 // =========== AVG GIFTS COSTS ============
- async function fetchAverageGiftsSpending () {
+async function fetchAverageGiftsSpending () {
   const db = new Firestore()
   const giftsSpendingItems = []
 
@@ -133,7 +133,7 @@ function computeAverageEmployeeSpending (spendingItems) {
   return giftsSpendingItems
 }
 
- function computeAverageGiftsSpending (spendingItems) {
+function computeAverageGiftsSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -147,7 +147,7 @@ function computeAverageEmployeeSpending (spendingItems) {
 
 // =========== AVG HOSPITALITY COSTS ============
 
- async function fetchAverageHospitalitySpending () {
+async function fetchAverageHospitalitySpending () {
   const db = new Firestore()
   const hospitalitySpendingItems = []
 
@@ -170,7 +170,7 @@ function computeAverageEmployeeSpending (spendingItems) {
   return hospitalitySpendingItems
 }
 
- function computeAverageHospitalitySpending (spendingItems) {
+function computeAverageHospitalitySpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -183,7 +183,7 @@ function computeAverageEmployeeSpending (spendingItems) {
 }
 
 // =========== AVG PRINTING COSTS ============
- async function fetchAveragePrintingSpending () {
+async function fetchAveragePrintingSpending () {
   const db = new Firestore()
   const printingSpendingItems = []
 
@@ -206,7 +206,7 @@ function computeAverageEmployeeSpending (spendingItems) {
   return printingSpendingItems
 }
 
- function computeAveragePrintingSpending (spendingItems) {
+function computeAveragePrintingSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -219,7 +219,7 @@ function computeAverageEmployeeSpending (spendingItems) {
 }
 
 // =========== AVG TRAVEL COSTS ============
- async function fetchAverageTravelSpending () {
+async function fetchAverageTravelSpending () {
   const db = new Firestore()
   const travelSpendingItems = []
 
@@ -242,7 +242,7 @@ function computeAverageEmployeeSpending (spendingItems) {
   return travelSpendingItems
 }
 
- function computeAverageTravelSpending (spendingItems) {
+function computeAverageTravelSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -257,7 +257,7 @@ function computeAverageEmployeeSpending (spendingItems) {
 // =========== MP FULL COSTS ============
 
 // =========== MP OFFICE COSTS ============
- async function fetchOfficeSpending (repID) {
+async function fetchOfficeSpending (repID) {
   const db = new Firestore()
   const officeSpendingItems = []
 
@@ -281,7 +281,7 @@ function computeAverageEmployeeSpending (spendingItems) {
   return officeSpendingItems
 }
 
- function computeTotalOfficeSpending (spendingItems) {
+function computeTotalOfficeSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -290,7 +290,7 @@ function computeAverageEmployeeSpending (spendingItems) {
 }
 
 // =========== MP TRAVEL COSTS ============
- async function fetchTravelSpending (repID) {
+async function fetchTravelSpending (repID) {
   const db = new Firestore()
   const travelSpendingItems = []
 
@@ -314,7 +314,7 @@ function computeAverageEmployeeSpending (spendingItems) {
   return travelSpendingItems
 }
 
- function computeTotalTravelSpending (spendingItems) {
+function computeTotalTravelSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -323,7 +323,7 @@ function computeAverageEmployeeSpending (spendingItems) {
 }
 
 // =========== MP PRINTING COSTS ============
- async function fetchPrintingSpending (repID) {
+async function fetchPrintingSpending (repID) {
   const db = new Firestore()
   const printingSpendingItems = []
 
@@ -347,7 +347,7 @@ function computeAverageEmployeeSpending (spendingItems) {
   return printingSpendingItems
 }
 
- function computeTotalPrintingSpending (spendingItems) {
+function computeTotalPrintingSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -356,7 +356,7 @@ function computeAverageEmployeeSpending (spendingItems) {
 }
 
 // =========== MP ADVERTISING COSTS ============
- async function fetchAdvertisingSpending (repID) {
+async function fetchAdvertisingSpending (repID) {
   const db = new Firestore()
   const advertisingSpendingItems = []
 
@@ -380,7 +380,7 @@ function computeAverageEmployeeSpending (spendingItems) {
   return advertisingSpendingItems
 }
 
- function computeTotalAdvertisingSpending (spendingItems) {
+function computeTotalAdvertisingSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -389,7 +389,7 @@ function computeAverageEmployeeSpending (spendingItems) {
 }
 
 // =========== MP EMPLOYEE COSTS ============
- async function fetchEmployeeSpending (repID) {
+async function fetchEmployeeSpending (repID) {
   const db = new Firestore()
   const employeeSpendingItems = []
 
@@ -413,7 +413,7 @@ function computeAverageEmployeeSpending (spendingItems) {
   return employeeSpendingItems
 }
 
- function computeTotalEmployeeSpending (spendingItems) {
+function computeTotalEmployeeSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -422,7 +422,7 @@ function computeAverageEmployeeSpending (spendingItems) {
 }
 
 // =========== MP GIFTS COSTS ============
- async function fetchGiftsSpending (repID) {
+async function fetchGiftsSpending (repID) {
   const db = new Firestore()
   const giftsSpendingItems = []
 
@@ -446,7 +446,7 @@ function computeAverageEmployeeSpending (spendingItems) {
   return giftsSpendingItems
 }
 
- function computeTotalGiftsSpending (spendingItems) {
+function computeTotalGiftsSpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -456,7 +456,7 @@ function computeAverageEmployeeSpending (spendingItems) {
 
 // =========== MP HOSPITALITY COSTS ============
 
- async function fetchHospitalitySpending (repID) {
+async function fetchHospitalitySpending (repID) {
   const db = new Firestore()
   const hospitalitySpendingItems = []
 
@@ -480,7 +480,7 @@ function computeAverageEmployeeSpending (spendingItems) {
   return hospitalitySpendingItems
 }
 
- function computeTotalHospitalitySpending (spendingItems) {
+function computeTotalHospitalitySpending (spendingItems) {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -488,10 +488,10 @@ function computeAverageEmployeeSpending (spendingItems) {
   return total
 }
 
-module.exports.budgetData = async (req, res) => {
-  const representativeId = res.params.representative
-  if(!representativeId) {
-    req.status(404).json({
+exports.budgetData = async (req, res) => {
+  const representativeId = req.params.id
+  if (!representativeId) {
+    res.status(404).json({
       success: false,
       data: {
         mp: [],
@@ -502,21 +502,21 @@ module.exports.budgetData = async (req, res) => {
   }
 
   const rawData = await Promise.all([
-      fetchEmployeeSpending(representativeId),
-      fetchAdvertisingSpending(representativeId),
-      fetchGiftsSpending(representativeId),
-      fetchHospitalitySpending(representativeId),
-      fetchOfficeSpending(representativeId),
-      fetchPrintingSpending(representativeId),
-      fetchTravelSpending(representativeId),
-      fetchAverageEmployeeSpending(),
-      fetchAverageAdvertisingSpending(),
-      fetchAverageGiftsSpending(),
-      fetchAverageHospitalitySpending(),
-      fetchAverageOfficeSpending(),
-      fetchAveragePrintingSpending(),
-      fetchAverageTravelSpending(),
-    ])
+    fetchEmployeeSpending(representativeId),
+    fetchAdvertisingSpending(representativeId),
+    fetchGiftsSpending(representativeId),
+    fetchHospitalitySpending(representativeId),
+    fetchOfficeSpending(representativeId),
+    fetchPrintingSpending(representativeId),
+    fetchTravelSpending(representativeId),
+    fetchAverageEmployeeSpending(),
+    fetchAverageAdvertisingSpending(),
+    fetchAverageGiftsSpending(),
+    fetchAverageHospitalitySpending(),
+    fetchAverageOfficeSpending(),
+    fetchAveragePrintingSpending(),
+    fetchAverageTravelSpending()
+  ])
   const data = {}
   data.mp = []
   data.mp[0] = Math.round(computeTotalEmployeeSpending(rawData[0]))
@@ -527,6 +527,7 @@ module.exports.budgetData = async (req, res) => {
   data.mp[5] = Math.round(computeTotalPrintingSpending(rawData[5]))
   data.mp[6] = Math.round(computeTotalTravelSpending(rawData[6]))
 
+  data.avg = []
   data.avg[0] = Math.round(computeAverageEmployeeSpending(rawData[7]))
   data.avg[1] = Math.round(computeAverageAdvertisingSpending(rawData[8]))
   data.avg[2] = Math.round(computeAverageGiftsSpending(rawData[9]))
@@ -534,8 +535,7 @@ module.exports.budgetData = async (req, res) => {
   data.avg[4] = Math.round(computeAverageOfficeSpending(rawData[11]))
   data.avg[5] = Math.round(computeAveragePrintingSpending(rawData[12]))
   data.avg[6] = Math.round(computeAverageTravelSpending(rawData[13]))
-
-  req.status(200).json({
+  res.status(200).json({
     success: true,
     data: data
   })

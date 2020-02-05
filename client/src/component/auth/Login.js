@@ -9,17 +9,12 @@ import { makeStyles } from '@material-ui/core/styles'
 import canadaimage from '../../assets/canada.jpg'
 import logo from '../../assets/PolotisenseTentativeLogo.png'
 import axios from 'axios'
-<<<<<<< HEAD:client/src/Components/Auth/Login.js
-import { FacebookLoginButton, GoogleLoginButton, TwitterLoginButton } from 'react-social-login-buttons'
-import { tokenAuthenticate } from './authenticate'
-=======
 import {
   FacebookLoginButton,
   GoogleLoginButton,
   TwitterLoginButton
 } from 'react-social-login-buttons'
-import { tokenAuthenticate } from '../../Authentication'
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/auth/Login.js
+import { tokenAuthenticate } from './authenticate'
 
 const gridStyle = {
   display: 'flex',
@@ -111,11 +106,7 @@ export default function Login(props) {
   const [authenticated, setAuthenticated] = useState(false)
   const [errors, setErrors] = useState({ email: '', password: '' })
 
-<<<<<<< HEAD:client/src/Components/Auth/Login.js
-  function validateUserFromSocialProviders (type, cb) {
-=======
   function validateUserFromSocialProviders(type, cb) {
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/auth/Login.js
     let user = {}
     cb(type)
       .then(usr => {

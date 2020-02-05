@@ -27,10 +27,7 @@ import Box from '@material-ui/core/Box'
 import axios from 'axios'
 import politisenseLogo from '../politisenseLogo.png'
 import Button from '@material-ui/core/Button'
-<<<<<<< HEAD:client/src/Components/Navbar.js
-=======
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows'
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/Navbar.js
 
 const drawerWidth = 330
 
@@ -135,14 +132,8 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-<<<<<<< HEAD:client/src/Components/Navbar.js
-export async function fetchUserRiding (userEmail) {
-  return axios
-=======
 export async function fetchUserRiding(userEmail) {
-  let result = ''
-  await axios
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/Navbar.js
+  return axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
@@ -152,19 +143,11 @@ export async function fetchUserRiding(userEmail) {
     .catch(console.error)
 }
 
-<<<<<<< HEAD:client/src/Components/Navbar.js
-export async function fetchRepresentative (riding) {
-  return axios.get(
-          `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-  )
-=======
 export async function fetchRepresentative(riding) {
-  let result = ''
-  await axios
+  return axios
     .get(
       `http://localhost:5000/api/representatives/${riding}/getRepresentative`
     )
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/Navbar.js
     .then(res => {
       if (res.data.success) {
         return res.data.data.name
@@ -188,14 +171,9 @@ export default function MiniDrawer({ children }) {
   }, [])
 
   useEffect(() => {
-<<<<<<< HEAD:client/src/Components/Navbar.js
-    async function getData () {
-=======
-    handleDrawerOpen()
     async function getData() {
       /* eslint-disable */
       const user = JSON.parse(localStorage.getItem('user'))
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:client/src/component/Navbar.js
       if (user) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -205,7 +183,7 @@ export default function MiniDrawer({ children }) {
   }, [user])
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (riding) {
         const representative = await fetchRepresentative(riding)
         setUserRepresentative(representative)
@@ -225,6 +203,7 @@ export default function MiniDrawer({ children }) {
   const handleDrawerClose = () => {
     setOpen(false)
   }
+  /* eslint-disable */
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -232,8 +211,7 @@ export default function MiniDrawer({ children }) {
         position='fixed'
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open
-        })}
-      >
+        })}>
         <Toolbar>
           <IconButton
             color='inherit'
@@ -242,16 +220,14 @@ export default function MiniDrawer({ children }) {
             edge='start'
             className={clsx(classes.menuButton, {
               [classes.hide]: open
-            })}
-          >
+            })}>
             <MenuIcon />
           </IconButton>
           <Link to='/general' className={classes.navbarCustomFont}>
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}
-            >
+              className={classes.navbarCustomButton}>
               General
             </Button>
           </Link>
@@ -264,8 +240,7 @@ export default function MiniDrawer({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}
-            >
+              className={classes.navbarCustomButton}>
               Voting History
             </Button>
           </Link>
@@ -273,8 +248,7 @@ export default function MiniDrawer({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}
-            >
+              className={classes.navbarCustomButton}>
               Budget
             </Button>
           </Link>
@@ -282,8 +256,7 @@ export default function MiniDrawer({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}
-            >
+              className={classes.navbarCustomButton}>
               Map
             </Button>
           </Link>
@@ -312,8 +285,7 @@ export default function MiniDrawer({ children }) {
             [classes.drawerClose]: !open
           })
         }}
-        open={open}
-      >
+        open={open}>
         <div className={classes.toolbar}>
           {open ? (
             <Typography variant='h6' noWrap>

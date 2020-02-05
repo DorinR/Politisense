@@ -63,15 +63,6 @@ export async function fetchRepresentative(riding) {
     .catch(console.error)
 }
 
-export async function getRepresentativeData(name) {
-  return await axios
-    .get(`http://localhost:5000/api/representatives/representative/${name}`)
-    .then(res => {
-      return res.data.data
-    })
-    .catch(console.error)
-}
-
 export default function RepresentativeInfo(props) {
   const classes = useStyles()
   const [name, setName] = useState('')
@@ -79,16 +70,7 @@ export default function RepresentativeInfo(props) {
   const [riding, setRiding] = useState('')
   const [yearElected, setYearElected] = useState(1000)
   const [ridingCode, setRidingCode] = useState('')
-
-  useEffect(() => {
-    const { name, politicalParty, riding, yearElected } = getRepresentativeData(
-      props.representativeToLoad
-    )
-    setName(name)
-    setPoliticalParty(politicalParty)
-    setYearElected(yearElected)
-    setRiding(riding)
-  })
+  const [data, setData] = useState({})
 
   useEffect(() => {
     async function getData() {

@@ -4,11 +4,12 @@ import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
 import axios from 'axios'
 
-export async function fetchUserData (userEmail) {
+export async function fetchUserData(userEmail) {
   let result = ''
   await axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`,
-      { params: { acctdet: userEmail } })
+    .get(`http://localhost:5000/api/users/${userEmail}/getUser`, {
+      params: { acctdet: userEmail }
+    })
     .then(res => {
       if (res.data.success) {
         const user = res.data.data
@@ -19,7 +20,7 @@ export async function fetchUserData (userEmail) {
   return result
 }
 
-export default function ViewAccountDetails () {
+export default function ViewAccountDetails() {
   const [email, setEmail] = useState('')
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
@@ -27,7 +28,7 @@ export default function ViewAccountDetails () {
   const [riding, setRiding] = useState('')
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       // eslint-disable-next-line no-undef
       const user = JSON.parse(localStorage.getItem('user'))
       const fullUserDetails = await fetchUserData(user.email)
