@@ -47,7 +47,8 @@ const useStyles = makeStyles({
 export async function fetchUserRiding (userEmail) {
   let result = ''
   await axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+    .get(`http://localhost:5000/api/users/${userEmail}/getUser`,
+      { params: { billhistory: userEmail } })
     .then(res => {
       if (res.data.success) {
         const riding = res.data.data.riding
@@ -202,8 +203,7 @@ export default function BillHistoryTable () {
     async function getData () {
       // eslint-disable-next-line no-undef
       const user = JSON.parse(localStorage.getItem('user'))
-      const { email } = user
-      const riding = await fetchUserRiding(email)
+      const riding = await fetchUserRiding(user.email)
       // eslint-disable-next-line
       const representative = await fetchRepresentative(riding)
       const representativeId = await fetchRepresentativeId(representative)

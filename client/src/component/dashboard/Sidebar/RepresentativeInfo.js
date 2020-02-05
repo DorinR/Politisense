@@ -26,17 +26,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding (userEmail) {
-  return axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data.riding
-      }
-    })
-    .catch(console.error)
-}
-
 export async function fetchRidingCode (riding) {
   return axios
     .get(`http://localhost:5000/api/ridings/getRidingCode/${encodeURI(riding)}`)
@@ -48,12 +37,27 @@ export async function fetchRidingCode (riding) {
     .catch(console.error)
 }
 
-export async function getRepresentativeData(name) {
-  return await axios.get(
-    `http://localhost:5000/api/representatives/representative/${name}`
-  )
+export async function fetchUserRiding (userEmail) {
+  return axios
+    .get(`http://localhost:5000/api/users/${userEmail}/getUser`,
+      { params: { repinfo: userEmail } })
     .then(res => {
-      return res.data.data
+      if (res.data.success) {
+        return res.data.data.riding
+      }
+    })
+    .catch(console.error)
+}
+
+export async function fetchRepresentative (riding) {
+  return axios
+    .get(
+      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+    )
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
     })
     .catch(console.error)
 }
@@ -65,25 +69,37 @@ export default function RepresentativeInfo (props) {
   const [riding, setRiding] = useState('')
   const [yearElected, setYearElected] = useState(1000)
   const [ridingCode, setRidingCode] = useState('')
-
-  useEffect(() => {
-    const { name, politicalParty, riding, yearElected } = getRepresentativeData(props.representativeToLoad)
-    setName(name)
-    setPoliticalParty(politicalParty)
-    setYearElected(yearElected)
-    setRiding(riding)
-  })
+  const [data, setData] = useState({})
 
   useEffect(() => {
     async function getData () {
       // eslint-disable-next-line
-      const { email } = JSON.parse(localStorage.getItem('user'))
-      const riding = await fetchUserRiding(email)
-      const ridingCode = await fetchRidingCode(riding)
-      setRidingCode(ridingCode)
+      const user = JSON.parse(localStorage.getItem('user'))
+      const riding = await fetchUserRiding(user.email)
+      const promises = await Promise.all([
+        fetchRidingCode(riding),
+        fetchRepresentative(riding)
+      ])
+      const ridingCode = promises[0]
+      const { name, politicalParty, yearElected } = promises[1]
+      setData({
+        name: name,
+        ridingCode: ridingCode,
+        riding: riding,
+        politicalParty: politicalParty,
+        yearElected: yearElected
+      })
     }
     getData()
-  }, [ridingCode])
+  }, [])
+
+  useEffect(() => {
+    setName(data.name)
+    setPoliticalParty(data.politicalParty)
+    setRiding(data.riding)
+    setRidingCode(data.ridingCode)
+    setYearElected(data.yearElected)
+  }, [data])
 
   return (
     <ListItemText>

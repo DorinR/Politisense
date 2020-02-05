@@ -1,5 +1,4 @@
-const Firestore = require('./Firebase').Firestore
-
+const Firestore = require('@firestore').Firestore
 const bcrypt = require('bcryptjs')
 
 class _Auth {
@@ -76,8 +75,4 @@ class Auth {
   }
 }
 
-function tokenAuthenticate (token) {
-  return new _Auth().auth.signInWithPopup(token)
-}
-
-export { Auth, tokenAuthenticate }
+export { Auth }

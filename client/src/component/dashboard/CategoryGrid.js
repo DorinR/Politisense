@@ -75,99 +75,132 @@ TabPanel.propTypes = {
 
 export default function CategoryGrid () {
   const classes = useStyles()
-  const [categoryList, setCategoryList] = React.useState([])
-  const [open, setOpen] = React.useState(false)
-  const [value] = React.useState('')
-  const [counter, setCounter] = React.useState(0)
-  const [userRepresentative, setUserRepresentative] = React.useState('')
-  const [representativeData, setRepresentativeData] = React.useState([])
-  const [reset, setReset] = React.useState(false)
 
-  async function getUserInterests () {
-    let result = []
+  const [user, setUser] = React.useState(null)
+  useEffect(() => {
     // eslint-disable-next-line no-undef
     const user = JSON.parse(localStorage.getItem('user'))
-    await axios
-      .post('http://localhost:5000/api/users/getUserInterests', { email: user.email })
-      .then(res => {
-        result = res.data.data.categories
-      })
-      .catch(err => console.error(err))
-    return result
-  }
+    setUser(user)
+  }, [])
 
+  const [categoryList, setCategoryList] = React.useState(null)
   useEffect(() => {
-    async function getAllBillsByRep (head) {
-      let result = []
-      await axios
-        .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
-        .then(res => {
-          if (res.data.success) {
-            result = res.data.data
-            setRepresentativeData(result)
-          }
-        })
-        .catch(err => console.error(err))
-      return result
-    }
-
     async function getData () {
-      // eslint-disable-next-line no-undef
-      const user = JSON.parse(localStorage.getItem('user'))
       if (user) {
-        const { email } = user
-        const riding = await fetchUserRiding(email)
-        const representative = await fetchRepresentative(riding)
-        if (representative.length !== 0) {
-          setUserRepresentative(representative)
-        }
-
-        await getUserInterests().then(res => {
-          setCategoryList(res)
-          setCounter(res.length)
-        })
+        const interests = await getUserInterests(user.email)
+        setCategoryList(interests)
       }
     }
-
     getData()
-    if (userRepresentative) {
-      getAllBillsByRep(userRepresentative)
+  }, [user])
+
+  async function getUserInterests (email) {
+    return axios
+      .post('http://localhost:5000/api/users/getUserInterests', { email: email })
+      .then(res => {
+        return res.data.data.categories
+      })
+      .catch(console.error)
+  }
+
+  const [counter, setCounter] = React.useState(null)
+  useEffect(() => {
+    if (categoryList) {
+      setCounter(categoryList.length)
     }
-  }, [userRepresentative, reset])
+  }, [categoryList])
+
+  const [riding, setRiding] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (user) {
+        const riding = await fetchUserRiding(user.email)
+        setRiding(riding)
+      }
+    }
+    getData()
+  }, [user])
+
+  const [userRepresentative, setUserRepresentative] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (riding) {
+        const representative = await fetchRepresentative(riding)
+        setUserRepresentative(representative)
+      }
+    }
+    getData()
+  }, [riding])
 
   async function fetchRepresentative (riding) {
-    let result = ''
-    await axios
+    return axios
       .get(
         `http://localhost:5000/api/representatives/${riding}/getRepresentative`
       )
       .then(res => {
         if (res.data.success) {
-          result = res.data.data.name
+          return res.data.data.name
         }
       })
       .catch(console.error)
-    return result
   }
 
+  const [representativeData, setRepresentativeData] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (userRepresentative) {
+        const representative = await getAllBillsByRep(userRepresentative)
+        setRepresentativeData(representative)
+      }
+    }
+    getData()
+  }, [userRepresentative])
+
+  async function getAllBillsByRep (head) {
+    return axios
+      .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data
+        }
+      })
+      .catch(console.error)
+  }
+
+  const [value] = React.useState('')
   const deleteEvent = (index) => {
     const copyCategoryArray = Object.assign([], categoryList)
     copyCategoryArray.splice(index, 1)
-    setCategoryList(copyCategoryArray)
     updateUserCategory(copyCategoryArray)
-    setCounter(counter - 1)
-    setRepresentativeData([])
-    setReset(!reset)
+      .then((res) => {
+        if (res.data.success) {
+          setCategoryList(copyCategoryArray)
+          setCounter(counter - 1)
+        }
+      })
+      .catch(console.error)
   }
 
   const addEvent = (newValue) => {
     const copyCategoryArray = Object.assign([], categoryList)
     copyCategoryArray.push(newValue)
-    setCategoryList(copyCategoryArray)
     updateUserCategory(copyCategoryArray)
-    setCounter(counter + 1)
+      .then(res => {
+        if (res.data.success) {
+          setCategoryList(copyCategoryArray)
+          setCounter(counter + 1)
+        }
+      })
+      .catch(console.error)
   }
 
+  async function updateUserCategory (categoryList) {
+    return axios
+      .post('http://localhost:5000/api/users/updateUserCategory', { email: user.email, categoryList: categoryList })
+      .catch(console.error)
+  }
+
+  const [open, setOpen] = React.useState(false)
   const handleClickListItem = () => {
     setOpen(true)
   }
@@ -183,7 +216,7 @@ export default function CategoryGrid () {
     <div className={classes.container}>
       <Grid container spacing={2}>
         {
-          representativeData.length !== 0
+          representativeData && categoryList
             ? categoryList.map((category, index) => {
               return (
                 <Grid item xs={4} key={index}>
@@ -192,7 +225,7 @@ export default function CategoryGrid () {
                     title={category}
                     delete={deleteEvent}
                     representative={representativeData}
-                    data={(representativeData.length !== 0) ? representativeData : []}
+                    data={(representativeData) ? representativeData : []}
                   />
                 </Grid>
               )
@@ -206,7 +239,7 @@ export default function CategoryGrid () {
               <CircularProgress/>
             </div>
         }
-        {(counter < 3 && representativeData.length > 0)
+        {((counter === 0 || counter < 3) && representativeData && categoryList)
           ? <Grid item md={4}>
             <Card className={classes.card}>
               <CardActionArea>
@@ -234,18 +267,4 @@ export default function CategoryGrid () {
       </Grid>
     </div>
   )
-}
-
-export async function updateUserCategory (categoryList) {
-  let result = ''
-  // eslint-disable-next-line no-undef
-  const user = JSON.parse(localStorage.getItem('user'))
-  const { email } = user
-  await axios
-    .post('http://localhost:5000/api/users/updateUserCategory', { email: email, categoryList: categoryList })
-    .then(res => {
-      result = res
-    })
-    .catch(console.error)
-  return result
 }

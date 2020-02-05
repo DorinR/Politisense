@@ -23,6 +23,7 @@ app.use('/api/voteRecord', require('./backend/routes/api/voteRecord'))
 app.use('/api/bills', require('./backend/routes/api/bills'))
 app.use('/api/auth', require('./backend/routes/api/auth'))
 app.use('/api/ridings', require('./backend/routes/api/ridings'))
+app.use('/api/budgets', require('./backend/routes/api/budgets'))
 
 const PORT = process.env.PORT || 5000
 

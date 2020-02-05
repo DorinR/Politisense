@@ -52,7 +52,8 @@ const useStyles = makeStyles(theme => ({
 export async function fetchUserData (userEmail) {
   let result = ''
   await axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+    .get(`http://localhost:5000/api/users/${userEmail}/getUser`,
+      { params: { changepassword: userEmail } })
     .then(res => {
       if (res.data.success) {
         const user = res.data.data
@@ -101,8 +102,7 @@ function ChangeAccountPassword (props) {
     async function getData () {
       // eslint-disable-next-line no-undef
       const user = JSON.parse(localStorage.getItem('user'))
-      const { email } = user
-      const fullUserDetails = await fetchUserData(email)
+      const fullUserDetails = await fetchUserData(user.email)
       setFetchedUserDetails(fullUserDetails)
       const { password } = fullUserDetails
       setPreviousPasswordFromDb(password)

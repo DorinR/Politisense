@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import Typography from '@material-ui/core/Typography'
@@ -24,152 +23,161 @@ const useStyles = makeStyles({
     minWidth: 275
   },
   bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)"
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)'
   },
   pos: {
     marginBottom: 12
   },
   title: {
     fontSize: 18,
-    textAlign: "center"
+    textAlign: 'center'
   },
   MuiAvatar: {
-    backgroundColor: "#43D0C4"
+    backgroundColor: '#43D0C4'
   }
-});
+})
 
-export default function CategoryDashboard() {
-  const classes = useStyles();
+export default function CategoryDashboard () {
+  const classes = useStyles()
   const [categoryList] = React.useState([
-    "economics",
-    "healthcare",
-    "human rights",
-    "business",
-    "religion",
-    "criminal",
-    "trade"
-  ]);
-  const [userRepresentative, setUserRepresentative] = React.useState("");
-  const [representativeData, setRepresentativeData] = React.useState([]);
-  const [radarData, setRadarData] = React.useState([]);
-  const [repDataLoaded, setRepDataLoaded] = React.useState(false);
-  const [donutData, setDonutData] = React.useState([]);
-  const [reps, setReps] = React.useState([]);
-  const [userRepIssuedBills, setUserRepIssuedBills] = React.useState([]);
+    'economics',
+    'healthcare',
+    'human rights',
+    'business',
+    'religion',
+    'criminal',
+    'trade'
+  ])
 
+  const [user, setUser] = useState(null)
   useEffect(() => {
-    async function getDataForDonut() {
-      if (reps.length && representativeData.length) {
-        const data = await createDataSetDonut(reps, representativeData);
-        if (
-          data.Liberal !== 0 &&
-          data.Liberal !== 0 &&
-          data.Liberal !== 0 &&
-          data.Liberal !== 0 &&
-          data.Liberal !== 0 &&
-          data.Liberal !== 0
-        ) {
-          setDonutData([data]);
-        }
-      }
-    }
-    async function getAllReps() {
-      let result = [];
-      await axios
-        .get("http://localhost:5000/api/representatives/getAllRepresentatives")
-        .then(res => {
-          if (res.data.success) {
-            result = res.data.data;
-          }
-        })
-        .catch(err => console.error(err));
-      return result;
-    }
+    // eslint-disable-next-line no-undef
+    const user = JSON.parse(localStorage.getItem('user'))
+    setUser(user)
+  }, [])
 
-    async function getAllBillsByRep(head) {
-      let result = [];
-      await axios
-        .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
-        .then(res => {
-          if (res.data.success) {
-            result = res.data.data;
-            setRepresentativeData(result);
-            setRepDataLoaded(true);
-          }
-        })
-        .catch(err => console.error(err));
-      return result;
+  const [reps, setReps] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      const representatives = await getAllReps()
+      setReps(representatives)
     }
-    async function getAllBillsBySponsorName(head) {
-      let result = [];
-      await axios
-        .get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
-        .then(res => {
-          if (res.data.success) {
-            result = res.data.data;
-          }
-        })
-        .catch(err => console.error(err));
-      return result;
-    }
-    async function getData() {
-      const user = JSON.parse(localStorage.getItem("user"));
+    getData()
+  }, [])
+
+  async function getAllReps () {
+    return axios
+      .get('http://localhost:5000/api/representatives/getAllRepresentatives')
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data
+        }
+      })
+      .catch(console.error)
+  }
+
+  const [riding, setRiding] = useState(null)
+  useEffect(() => {
+    async function getData () {
       if (user) {
-        const { email } = user;
-        const riding = await fetchUserRiding(email);
-        const representative = await fetchRepresentative(riding);
-        const allRepresentatives = await getAllReps();
-        setUserRepresentative(representative);
-        setReps(allRepresentatives);
-        const issuedBillByUserRep = await getAllBillsBySponsorName(
-          representative
-        );
-        setUserRepIssuedBills(issuedBillByUserRep);
-        if (representative.length !== 0) {
-          setUserRepresentative(representative);
-        }
+        const riding = await fetchUserRiding(user.email)
+        setRiding(riding)
       }
     }
-    getData();
+    getData()
+  }, [user])
 
-    if (userRepresentative) {
-      getAllBillsByRep(userRepresentative).then(results => {});
+  const [userRepresentative, setUserRepresentative] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (riding) {
+        const representative = await fetchRepresentative(riding)
+        setUserRepresentative(representative)
+      }
     }
+    getData()
+  }, [riding])
 
-    if (categoryList && repDataLoaded) {
-      createDataSetRadar(categoryList, representativeData).then(testing => {
-        if (testing.length !== 0) {
-          setRadarData(testing);
-        }
-      });
-    }
-
-    if (reps.length && repDataLoaded) {
-      getDataForDonut();
-    }
-  }, [userRepresentative, repDataLoaded]);
-
-  async function fetchRepresentative(riding) {
-    let result = "";
-    await axios
+  async function fetchRepresentative (riding) {
+    return axios
       .get(
         `http://localhost:5000/api/representatives/${riding}/getRepresentative`
       )
       .then(res => {
         if (res.data.success) {
-          result = res.data.data.name;
+          return res.data.data.name
         }
       })
-      .catch(err => console.error(err));
-    return result;
+      .catch(console.error)
   }
 
+  const [representativeData, setRepresentativeData] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (userRepresentative) {
+        const billsByRep = await getAllBillsByRep(userRepresentative)
+        setRepresentativeData(billsByRep)
+      }
+    }
+    getData()
+  }, [userRepresentative])
+
+  async function getAllBillsByRep (head) {
+    return axios
+      .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data
+        }
+      })
+      .catch(console.error)
+  }
+
+  const [userRepIssuedBills, setUserRepIssuedBills] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (userRepresentative) {
+        const issuedBillByUserRep = await getAllBillsBySponsorName(userRepresentative)
+        setUserRepIssuedBills(issuedBillByUserRep)
+      }
+    }
+    getData()
+  }, [userRepresentative])
+
+  async function getAllBillsBySponsorName (head) {
+    return axios
+      .get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data
+        }
+      })
+      .catch(console.error)
+  }
+
+  const [donutData, setDonutData] = React.useState(null)
+  useEffect(() => {
+    if (reps && representativeData) {
+      const data = createDataSetDonut(reps, representativeData)
+      setDonutData([data])
+    }
+  }, [reps, representativeData])
+
+  const [radarData, setRadarData] = React.useState(null)
+  useEffect(() => {
+    if (categoryList && representativeData) {
+      const data = createDataSetRadar(categoryList, representativeData)
+      setRadarData(data)
+    }
+  }, [representativeData, categoryList])
+
+  /* eslint-disable */
   return (
     <Grid container spacing={1}>
       <Grid item xs={12}>
-        {userRepIssuedBills.length !== 0 && categoryList.length !== 0 ? (
+        {userRepIssuedBills && categoryList && userRepresentative ? (
           <Card>
             <CardContent>
               <Typography className={classes.title}>
@@ -202,7 +210,7 @@ export default function CategoryDashboard() {
         )}
       </Grid>
 
-      {radarData.length !== 0 && categoryList.length !== 0 ? (
+      {radarData && categoryList ? (
         <Grid item xs={12}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
@@ -257,7 +265,7 @@ export default function CategoryDashboard() {
                 </CardContent>
               </Card>
             </Grid>
-            {donutData.length ? (
+            {donutData ? (
               <Grid item item xs={6}>
                 <Card>
                   <CardContent>
@@ -308,11 +316,13 @@ export default function CategoryDashboard() {
   );
 }
 
-export async function createDataSetRadar(categories, data) {
+function createDataSetRadar(categories, data) {
   const dataArray = [];
   let temp = {};
   const dataSetRadar = {};
   let maxValue = 0;
+  console.log(categories)
+  console.log(data)
   categories.forEach(category => {
     let totalvotes = 0;
     data.forEach(bill => {
@@ -337,7 +347,7 @@ export async function createDataSetRadar(categories, data) {
   return [dataSetRadar, maxValue];
 }
 
-export async function createDataSetDonut(sponsors, mpdata) {
+function createDataSetDonut(sponsors, mpdata) {
   let liberalCounter = 0;
   let conservativeCounter = 0;
   let ndpCounter = 0;
@@ -345,7 +355,8 @@ export async function createDataSetDonut(sponsors, mpdata) {
   let greenCounter = 0;
   let bqCounter = 0;
   let parties = {};
-
+  console.log(sponsors)
+  console.log(mpdata)
   if (mpdata.length) {
     mpdata.forEach(bill => {
       if (bill.voteRecord.yea === true) {

@@ -1,4 +1,4 @@
-import { Auth } from '../Authentication'
+import { Auth } from '../../../backend/firebase/Authentication'
 import { Firestore } from '../Firebase'
 
 const firebase = require('firebase')

@@ -5,93 +5,132 @@ import axios from 'axios'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import BarChartWrapper from '../Charts/Wrappers/BarChartWrapper'
 
-export async function fetchUserRiding (userEmail) {
-  let result = ''
-  await axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
-    .then(res => {
-      if (res.data.success) {
-        const riding = res.data.data.riding
-        result = riding
-      }
-    })
-    .catch(err => console.error(err))
-  return result
-}
-
-export async function fetchRepresentative (riding) {
-  let result = ''
-  await axios
-    .get(
-      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-    )
-    .then(res => {
-      if (res.data.success) {
-        const representative = res.data.data.name
-        result = representative
-      }
-    })
-    .catch(err => console.error(err))
-  return result
-}
-
-export async function fetchRepresentativeId (representative) {
-  return axios
-    .get(
-      `http://localhost:5000/api/representatives/${representative}/getRepresentativeId`
-    )
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data
-      }
-    })
-    .catch(console.error)
-}
-
-export async function getBudgetData(representativeID) {
-  return await axios
-    .get(
-      `http://localhost:5000/api/budget/:${representativeID}`
-    )
-    .then(res => {
-        return res.data.data
-    })
-    .catch(console.error)
-}
-
 export default function BudgetContainer () {
-  // budget data
-  const [budgetData, setBudgetData] = useState([])
+  const [user, setUser] = useState(null)
+  useEffect(() => {
+    // eslint-disable-next-line no-undef
+    const usr = JSON.parse(localStorage.getItem('user'))
+    setUser(usr)
+  }, [])
 
+  const [riding, setRiding] = useState(null)
   useEffect(() => {
     async function getData () {
-      const mp = {
-        label: '',
-        values: []
-      }
-      const avg = {
-        label: 'Average Among MPs',
-        values: []
-      }
-
-      const user = JSON.parse(localStorage.getItem("user"));
       if (user) {
-        // boilerplate data fetching
-        const { email } = user;
-        const riding = await fetchUserRiding(email);
-        const representative = await fetchRepresentative(riding);
-        mp.label = representative
-        const representativeId = await fetchRepresentativeId(representative);
-        const {mp, avg} = await getBudgetData(representativeId)
+        const riding = await fetchUserRiding(user.email)
+        setRiding(riding)
       }
-      setBudgetData([mp, avg])
     }
-    getData();
-  }, [budgetData]);
+    getData()
+  }, [user])
+
+  async function fetchUserRiding (userEmail) {
+    return axios
+      .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data.riding
+        }
+      })
+      .catch(console.error)
+  }
+
+  const [representative, setRepresentative] = useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (riding) {
+        const rep = await fetchRepresentative(riding)
+        setRepresentative(rep)
+      }
+    }
+    getData()
+  }, [riding])
+
+  async function fetchRepresentative (riding) {
+    return axios
+      .get(
+        `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+      )
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data.name
+        }
+      })
+      .catch(console.error)
+  }
+
+  const [labelMP, setLabelMP] = useState(null)
+  useEffect(() => {
+    if (representative) {
+      setLabelMP(representative)
+    }
+  }, [representative])
+
+  const [repID, setRepID] = useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (representative) {
+        const id = await fetchRepresentativeId(representative)
+        setRepID(id)
+      }
+    }
+    getData()
+  }, [representative])
+
+  async function fetchRepresentativeId (representative) {
+    return axios
+      .get(
+        `http://localhost:5000/api/representatives/${representative}/getRepresentativeId`
+      )
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data
+        }
+      })
+      .catch(console.error)
+  }
+
+  const [data, setData] = useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (repID) {
+        const data = await getBudgetData(repID)
+        setData(data)
+      }
+    }
+    getData()
+  }, [repID])
+
+  async function getBudgetData (id) {
+    return axios
+      .get(
+        `http://localhost:5000/api/budgets/budget/${id}`
+      )
+      .then(res => {
+        return res.data.data
+      })
+      .catch(console.error)
+  }
+
+  const [budgetData, setBudgetData] = useState([])
+  useEffect(() => {
+    if (data) {
+      const mps = {
+        label: labelMP,
+        values: data.mp
+      }
+      const avgs = {
+        label: 'Average Among MPs',
+        values: data.avg
+      }
+      setBudgetData([mps, avgs])
+    }
+  }, [data, labelMP])
+
   /* eslint-disable */
   return (
     <ListItemText>
-      {budgetData.length == 0 ? (
+      {budgetData.length === 0 ? (
         <div
           style={{
             position: "absolute",

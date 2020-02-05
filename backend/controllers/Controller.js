@@ -1,5 +1,3 @@
-
-
 const UserController = require('./UserController')
 const RepresentativeController = require('./RepresentativeController')
 const BillController = require('./BillController')

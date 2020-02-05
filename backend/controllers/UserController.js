@@ -1,5 +1,4 @@
-import { Firestore } from '../client/src/Firebase'
-import { Auth } from '../client/src/Authentication'
+import { Authentication as Auth, Firestore } from '@firestore'
 import represent from 'represent'
 
 exports.checkIfUserExists = (req, res) => {
@@ -12,13 +11,15 @@ exports.checkIfUserExists = (req, res) => {
       if (snapshot.empty || snapshot.size > 1) {
         res.json({
           success: false,
-          data: 'doesnt exist'
+          message: 'doesnt exist',
+          data: {}
         })
       } else {
         snapshot.forEach(doc => {
           res.json({
             success: true,
-            data: 'user exists'
+            message: 'user exists',
+            data: doc.data()
           })
         })
       }

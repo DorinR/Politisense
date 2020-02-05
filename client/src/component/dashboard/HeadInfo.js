@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -27,74 +26,123 @@ import AssignmentIcon from '@material-ui/icons/Assignment'
 
 const useStyles = makeStyles({
   card: {
-    width: 250,
+    width: 250
   },
   avatar: {
     backgroundColor: '#43D0C4'
   }
 })
 
- function capitalize (str) {
+function capitalize (str) {
   if (str && isNaN(str)) {
     let res = str
     res = res.toLowerCase()
-        .split(' ')
-        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-        .join(' ')
+      .split(' ')
+      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+      .join(' ')
     return res
   }
   return null
 }
 
 export default function HeadInfo (props) {
+  // eslint-disable-next-line no-unused-vars
   const { updateHead, ...other } = props
   const classes = useStyles()
-  const [name, setName] = useState('')
-  const [politicalParty, setPoliticalParty] = useState('')
-  const [riding, setRiding] = useState('')
-  const [yearElected, setYearElected] = useState(0)
-  const [totalBills, setTotalBills] = useState(0)
-  const [ridingCode, setRidingCode] = useState('')
-  const [skeleton] = useState([1,2,3,4,5])
-  const [issuedBills, setIssuedBills] = useState(0)
 
+  const [skeleton] = useState([1, 2, 3, 4, 5])
+
+  const [name, setName] = useState(null)
   const updateNameFromSwitcher = (newName) => {
     setName(newName)
     updateHead(newName)
   }
 
+  const [mp, setMP] = useState(null)
   useEffect(() => {
-    if (name) {
-      async function getRepInfo (name) {
-        const res = await axios.get(`http://localhost:5000/api/representatives/${name}/getRepresentativesInfo`)
-        return res.data.data
+    async function getData () {
+      if (name) {
+        const mp = await getRepInfo(name)
+        setMP(mp)
       }
-      async function getIssuedBillsByHead (head) {
-        const res =  await axios.get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
-        return res.data.data
-      }
-      async function getData (name) {
-        // eslint-disable-next-line
-         const riding = await getRepInfo(name)
-        const bills = await getAllBillsByHead(name)
-        const total = await calculateTotalVotesBills(bills)
-        setTotalBills(total)
-        setRiding(riding.riding)
-        const test = riding.riding
-        setYearElected(riding.yearElected)
-        setPoliticalParty(riding.politicalParty)
-        const ridingCode = await fetchRidingCode(test)
-        setRidingCode(ridingCode)
-        const issuedBillsByHead = await getIssuedBillsByHead(name)
-        if(issuedBillsByHead.length != 0 ){
-          setIssuedBills(issuedBillsByHead.length)
-        }
-      }
-      getData(name)
-
     }
-  }, [name, riding, politicalParty, yearElected,issuedBills])
+    getData()
+  }, [name])
 
+  async function getRepInfo (name) {
+    const res = await axios.get(`http://localhost:5000/api/representatives/${name}/getRepresentativesInfo`)
+    return res.data.data
+  }
+
+  const [yearElected, setYearElected] = useState(null)
+  useEffect(() => {
+    if (mp) {
+      setYearElected(mp.yearElected)
+    }
+  }, [mp])
+
+  const [politicalParty, setpoliticalParty] = useState(null)
+  useEffect(() => {
+    if (mp) {
+      setpoliticalParty(mp.politicalParty)
+    }
+  }, [mp])
+
+  const [bills, setBills] = useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (name) {
+        const bills = await getAllBillsByHead(name)
+        setBills(bills)
+      }
+    }
+    getData()
+  }, [name])
+
+  const [totalBills, setTotalBills] = useState(null)
+  useEffect(() => {
+    if (bills) {
+      const total = calculateTotalVotesBills(bills)
+      setTotalBills(total)
+    }
+  }, [bills])
+
+  function calculateTotalVotesBills (bills) {
+    let totalBills = 0
+    if (bills) {
+      bills.forEach(bill => totalBills++)
+    }
+    return totalBills
+  }
+
+  const [issuedBills, setIssuedBills] = useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (name) {
+        const issued = await getIssuedBillsByHead(name)
+        setIssuedBills(issued.length)
+      }
+    }
+    getData()
+  }, [name])
+
+  async function getIssuedBillsByHead (head) {
+    const res = await axios.get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
+    return res.data.data
+  }
+
+  const [ridingCode, setRidingCode] = useState('')
+  useEffect(() => {
+    async function getData () {
+      if (mp) {
+        const ridingCode = await fetchRidingCode(mp.riding)
+        setRidingCode(ridingCode)
+      }
+    }
+    getData()
+  }, [mp])
+
+  /* eslint-disable */
   return (
       <Grid container spacing={2}>
         <Grid item>
@@ -105,7 +153,10 @@ export default function HeadInfo (props) {
         <CardContent>
           <Grid container justify="center" style={{paddingLeft: '12px'}}>
             <Grid item xs={12}>
-              <RepresentativeImage align="center" representativeToLoad={name}/>
+              { mp ?
+              <RepresentativeImage align="center" representativeToLoad={mp.riding}/>
+              :
+              <div /> }
             </Grid>
           </Grid>
           {ridingCode ? (<List>
@@ -132,7 +183,7 @@ export default function HeadInfo (props) {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText>
-                {capitalize(riding)}
+                {capitalize(mp.name)}
               </ListItemText>
             </ListItem>
 
@@ -184,11 +235,4 @@ export default function HeadInfo (props) {
         </Grid>
       </Grid>
   )
-}
-function calculateTotalVotesBills (bills) {
-  let totalBills = 0
-  if (bills) {
-    bills.forEach(bill => totalBills++)
-  }
-  return totalBills
 }

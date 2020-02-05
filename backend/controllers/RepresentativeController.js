@@ -7,7 +7,7 @@ exports.getImageData = async (req, res) => {
     .where('name', '==', name)
     .select()
     .then(snapshot => {
-      if(snapshot.empty || snapshot.size > 1) {
+      if (snapshot.empty || snapshot.size > 1) {
         res.status(400).json({
           message: `Could not find: ${name}`,
           success: false,
@@ -17,14 +17,13 @@ exports.getImageData = async (req, res) => {
         snapshot.forEach(doc => {
           res.status(200).json({
             message: `Found Politician: ${name}`,
-            success: false,
+            success: true,
             data: doc.data()
           })
         })
       }
     })
     .catch(console.error)
-
 }
 
 exports.getRepresentativeByRiding = (req, res) => {

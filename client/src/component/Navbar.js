@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
@@ -109,65 +109,74 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export async function fetchUserRiding (userEmail) {
-  let result = ''
-  await axios
+  return axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
-        const riding = res.data.data.riding
-        result = riding
+        return res.data.data.riding
       }
     })
-    .catch(err => console.error(err))
-  return result
+    .catch(console.error)
 }
 
 export async function fetchRepresentative (riding) {
-  let result = ''
-  await axios
-    .get(
+  return axios.get(
           `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-    )
+  )
     .then(res => {
       if (res.data.success) {
-        const representative = res.data.data.name
-        result = representative
+        return res.data.data.name
       }
     })
-    .catch(err => console.error(err))
-  return result
+    .catch(console.error)
 }
 
 export default function MiniDrawer ({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
-  const [userRepresentative, setUserRepresentative] = React.useState('')
+  const [userRepresentative, setUserRepresentative] = React.useState(null)
+  const [riding, setRiding] = useState(null)
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    // eslint-disable-next-line no-undef
+    const user = JSON.parse(localStorage.getItem('user'))
+    setUser(user)
+  }, [])
+
+  useEffect(() => {
+    async function getData () {
+      if (user) {
+        const riding = await fetchUserRiding(user.email)
+        setRiding(riding)
+      }
+    }
+    getData()
+  }, [user])
+
+  useEffect(() => {
+    async function getData () {
+      if (riding) {
+        const representative = await fetchRepresentative(riding)
+        setUserRepresentative(representative)
+      }
+    }
+    getData()
+  }, [riding])
 
   useEffect(() => {
     handleDrawerOpen()
-    async function getData () {
-      /* eslint-disable */
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (user) {
-        const { email } = user;
-        const riding = await fetchUserRiding(email);
-        const representative = await fetchRepresentative(riding);
-        setUserRepresentative(representative);
-        localStorage.setItem("rep", JSON.stringify(representative));
-      }
-    }
-    getData();
-  }, []);
+  }, [userRepresentative])
 
   const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
+    setOpen(false)
+  }
+  /* eslint-disable */
   return (
       <div className={classes.root}>
         <CssBaseline />

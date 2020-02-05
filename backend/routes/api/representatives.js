@@ -23,4 +23,5 @@ router.get(
 )
 
 router.get('/representative/representative/:name', controller.getImageData)
+
 module.exports = router
