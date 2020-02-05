@@ -1,5 +1,6 @@
-import { Auth } from '../../../backend/firebase/Authentication'
-import { Firestore } from '../Firebase'
+const Firebase = require('../../firebase/firebase')
+const Auth = Firebase.Authentication
+const Firestore = Firebase.Firestore
 
 const firebase = require('firebase')
 

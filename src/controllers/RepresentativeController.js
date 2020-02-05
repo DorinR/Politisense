@@ -1,4 +1,3 @@
-<<<<<<< HEAD:src/controllers/RepresentativeController.js
 const Firestore = require('@firestore').Firestore
 
 exports.getImageData = async (req, res) => {
@@ -26,9 +25,6 @@ exports.getImageData = async (req, res) => {
     })
     .catch(console.error)
 }
-=======
-import { Firestore } from '../client/src/backend/firebase/Firestore'
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:controllers/RepresentativeController.js
 
 exports.getRepresentativeByRiding = (req, res) => {
   const db = new Firestore()

@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 const Actions = require('@action')
 const Action = Actions.Action
 const DecorationError = Actions.Errors.ActionDecorationError
+=======
+const Utils = require('./utils')
+const Action = Utils.Actions.Action
+const DecorationError = Utils.Actions.Errors.ActionDecorationError
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
 
 class Job {
   constructor (url, callback) {
@@ -42,11 +48,18 @@ class Job {
     return this.actions.reduce((promise, action) => {
       return promise.then(action)
     }, Promise.resolve())
+<<<<<<< HEAD
       .catch(async e => {
         const err = await this.handleErrors(e)
         if (err) {
           throw err
         }
+=======
+      .catch(e => {
+        this.handleErrors(e)
+        console.log(e.message)
+        return []
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
       })
       .finally(this.logAction)
   }

@@ -1,9 +1,4 @@
-<<<<<<< HEAD:src/controllers/UserController.js
 import { Authentication as Auth, Firestore } from '@firestore'
-=======
-import { Auth } from '../client/src/Authentication'
-import { Firestore } from '../client/src/backend/firebase/Firestore'
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:controllers/UserController.js
 import represent from 'represent'
 
 exports.checkIfUserExists = (req, res) => {

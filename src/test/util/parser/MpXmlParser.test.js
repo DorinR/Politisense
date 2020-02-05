@@ -1,6 +1,7 @@
 /* eslint-env jest */
 const assert = require('chai').assert
-const Parsers = require('../../../util/parser/parsers')
+const Utils = require('../../../util/utils')
+const Parsers = Utils.Parsers
 const MpXmlParser = Parsers.MpXmlParser
 
 describe('MpXmlParser', () => {
@@ -10,19 +11,17 @@ describe('MpXmlParser', () => {
       lastName: 'Wilson-Raybould',
       riding: 'Vancouver Granville',
       party: 'Independent',
-      fromDate: '2015-10-19T00:00:00',
-      toDate: '2019-10-19T00:00:00'
+      fromDate: '2015-10-19T00:00:00'
     }
     const xml = genMpXml([mpXmlParams])
-    const parser = new MpXmlParser(xml)
+    const parser = new MpXmlParser(xml, true)
     assert.isTrue(parser.hasData())
     const mp = parser.xmlToJson()
 
     assert.strictEqual(mp.name, 'jody wilson-raybould')
     assert.strictEqual(mp.party, 'independent')
     assert.strictEqual(mp.riding, 'vancouver granville')
-    assert.strictEqual(mp.start, 2015)
-    assert.strictEqual(mp.end, 2019)
+    assert.strictEqual(mp.yearElected, 2015)
     assert.hasAnyKeys(mp, ['imageUrl'])
   })
 
@@ -39,6 +38,38 @@ describe('MpXmlParser', () => {
     parser = new MpXmlParser(xml, true)
     const mpsOnlyCurrent = parser.getAllFromXml()
     assert.strictEqual(mpsOnlyCurrent.length, 3)
+  })
+
+  it('should get the image url of the mp', (done) => {
+    const parser = new MpXmlParser('')
+    jest.spyOn(parser, '_getHtmlFromLink').mockImplementation(async () => {
+      return '<img alt="" class="ce-mip-mp-picture visible-lg visible-md img-fluid" src="/Content/Parliamentarians/Images/OfficialMPPhotos/42/TrudeauJustin_LIB.jpg">'
+    })
+
+    const mpName = 'justin trudeau'
+
+    parser.getMpImageUrl(mpName).then(url => {
+      expect(parser._getHtmlFromLink).toHaveBeenCalledTimes(1)
+      expect(parser._getHtmlFromLink).toHaveBeenCalledWith(parser._getWebPageWithMpImage(mpName))
+      expect(url).not.toBeNull()
+      expect(url).toBe('https://www.ourcommons.ca/Content/Parliamentarians/Images/OfficialMPPhotos/42/TrudeauJustin_LIB.jpg')
+      done()
+    })
+  })
+
+  it('should return empty if mp image not found', (done) => {
+    const parser = new MpXmlParser('')
+    jest.spyOn(parser, '_getHtmlFromLink').mockImplementation(async () => {
+      return ''
+    })
+
+    const mpName = 'justin trudeau'
+
+    parser.getMpImageUrl(mpName).then(url => {
+      expect(parser._getHtmlFromLink).toHaveBeenCalledWith(parser._getWebPageWithMpImage(mpName))
+      expect(url).toBe('')
+      done()
+    })
   })
 
   it('should return true if is a current mp', () => {

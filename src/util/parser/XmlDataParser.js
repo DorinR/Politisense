@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 const Action = require('../action/actions')
 const DataNotFoundError = require('./XmlParserError').DataNotFoundError
 const LinkScraperAction = Action.LinkScraperAction
+=======
+const Utils = require('@utils')
+const DataNotFoundError = require('./XmlParserError').DataNotFoundError
+const LinkScraperAction = Utils.Actions.LinkScraperAction
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
 
 const cheerio = require('cheerio')
 
@@ -24,6 +30,7 @@ class XmlDataParser {
     return this.$(tag).eq(0).text()
   }
 
+<<<<<<< HEAD
   getXmlInTag (tag, allowMissingTag = false) {
     if (!this.isTagInXml(tag)) {
       if (allowMissingTag) {
@@ -36,6 +43,8 @@ class XmlDataParser {
     return values.eq(0).html()
   }
 
+=======
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
   getDataInAttribute (tag, attribute, allowMissingTag = false) {
     if (!this.isTagInXml(tag)) {
       if (allowMissingTag) {

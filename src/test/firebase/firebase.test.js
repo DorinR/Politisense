@@ -1,5 +1,5 @@
 /* eslint-env jest */
-const fs = require('../../firebase/firebase')
+const fs = require('@firestore')
 const Firestore = fs.Firestore
 const FinancialRecord = fs.Models.FinancialRecord
 const Politician = fs.Models.Politician
@@ -23,8 +23,8 @@ describe('All firebase tests', () => {
     await fb.close()
   })
 
-  xtest('Can insert and delete a record', async (done) => {
-    await fb.Bill().insert({ id: 'a' })
+  test('Can insert and delete a record', async (done) => {
+    await fb.Bill().insert({ id: 'c' })
       .then(resp => {
         resp.should.equal(true)
       })
@@ -37,7 +37,7 @@ describe('All firebase tests', () => {
     done()
   })
 
-  xtest('can filter records (legacy)', async (done) => {
+  test('can filter records (legacy)', async (done) => {
     const didFilter = await fb.Bill()
       .select('id', '==', 8062279)
       .then(() => {
@@ -50,7 +50,7 @@ describe('All firebase tests', () => {
     done()
   })
 
-  xtest('can filter records (use this)', async (done) => {
+  test('can filter records (use this)', async (done) => {
     const didFilter = await fb.Bill()
       .where('id', '==', 8062279)
       .select()
@@ -64,7 +64,7 @@ describe('All firebase tests', () => {
     done()
   })
 
-  xtest('can update a record', async (done) => {
+  test('can update a record', async (done) => {
     await fb.Bill().insert({ id: 'a' })
       .then(resp => {
         resp.should.equal(true)
@@ -87,7 +87,7 @@ describe('All firebase tests', () => {
     done()
   }, 600000)
 
-  xtest('Firestore::innerJoin() throws on bad first table key', async (done) => {
+  test('Firestore::innerJoin() throws on bad first table key', async (done) => {
     const finances = fb.FinancialRecord()
     const mps = fb.Politician()
     const didThrow =
@@ -102,7 +102,7 @@ describe('All firebase tests', () => {
     done()
   }, 60000)
 
-  xtest('Firestore::innerJoin() throws on bad second table key', async (done) => {
+  test('Firestore::innerJoin() throws on bad second table key', async (done) => {
     const finances = fb.FinancialRecord()
     const mps = fb.Politician()
     const didThrow =
@@ -117,7 +117,7 @@ describe('All firebase tests', () => {
     done()
   }, 60000)
 
-  xtest('Reference::innerJoin() provides joined collections as array', async (done) => {
+  test('Reference::innerJoin() provides joined collections as array', async (done) => {
     const finances = fb.FinancialRecord()
     const mps = fb.Politician()
     const records = await finances.innerJoin('member', mps, '_id')

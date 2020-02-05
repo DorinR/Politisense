@@ -230,7 +230,11 @@ class Reference {
 }
 
 class Firestore {
+<<<<<<< HEAD
   constructor (legacy = true) {
+=======
+  constructor () {
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
     this.firestore = getInstance()
     this.reference = this.firestore.db
     this.googleProvider = this.firestore.googleProvider
@@ -238,6 +242,7 @@ class Firestore {
     this.facebookProvider = this.firestore.facebookProvider
     this.twitterProvider = this.firestore.twitterProvider
     this.microsoftProvider = this.firestore.microsoftProvider
+<<<<<<< HEAD
     this.parliament = 43
     this.legacy = legacy
   }
@@ -299,6 +304,44 @@ class Firestore {
 
   createReference (collection) {
     return new Reference(this.reference.collection(collection))
+=======
+  }
+
+  Bill () {
+    return new Reference(this.reference.collection('bills'))
+  }
+
+  BillClassification () {
+    return new Reference(this.reference.collection('bill_classification'))
+  }
+
+  FinancialRecord () {
+    return new Reference(this.reference.collection('financialRecord'))
+  }
+
+  Politician () {
+    return new Reference(this.reference.collection('politicians'))
+  }
+
+  Riding () {
+    return new Reference(this.reference.collection('ridings'))
+  }
+
+  TfIdfClassification () {
+    return new Reference(this.reference.collection('tf_idf_bill'))
+  }
+
+  User () {
+    return new Reference(this.reference.collection('users'))
+  }
+
+  Vote () {
+    return new Reference(this.reference.collection('votes'))
+  }
+
+  VoteRecord () {
+    return new Reference(this.reference.collection('voteRecord'))
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
   }
 
   async close () {

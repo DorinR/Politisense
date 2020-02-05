@@ -21,32 +21,34 @@ describe('HandleDownloadErrorAction.js', () => {
   ]
   let undertest
   beforeEach(() => {
-    undertest = new HandleDownloadErrorAction(() => {}, () => {}, {
-      url: 'www.google.ca'
-    })
+    undertest = new HandleDownloadErrorAction(() => {}, () => {})
   })
 
-  test('HandleDownloadErrorAction.js::perform() requeues connection errors', (done) => {
-    connectionErrors.map(error => {
-      let called = false
-      undertest.callback = () => { called = true }
-      undertest.perform(new ScrapeError(error, 'www.google.ca'))
-      Assert(undertest.error instanceof ScrapeError)
-      Assert(undertest.error.message.includes(error))
-      Assert(called)
-    })
+  test('HandleDownloadErrorAction.js::perform() requeues connection errors', async (done) => {
+    await Promise.all(
+      connectionErrors.map(async error => {
+        let called = false
+        undertest.callback = () => { called = true }
+        const e = await undertest.perform(new ScrapeError(error, 'www.google.ca'))
+        Assert(e instanceof ScrapeError)
+        Assert(e.message.includes('Connection failure'))
+        Assert(called)
+      })
+    )
     done()
   })
 
-  test('HandleDownloadErrorAction.js::perform() requeues on read errors', (done) => {
-    parseErrors.map(async error => {
-      let called = false
-      undertest.callback = () => { called = true }
-      undertest.perform(new PDFParseError(error, 'www.google.ca'))
-      Assert(undertest.error instanceof PDFParseError)
-      Assert(undertest.error.message.includes(error))
-      Assert(called)
-    })
+  test('HandleDownloadErrorAction.js::perform() requeues on read errors', async (done) => {
+    await Promise.all(
+      parseErrors.map(async error => {
+        let called = false
+        undertest.callback = () => { called = true }
+        const e = await undertest.perform(new ScrapeError(error, 'www.google.ca'))
+        Assert(e instanceof PDFParseError)
+        Assert(e.message.includes('was corrupted'))
+        Assert(called)
+      })
+    )
     done()
   })
 })

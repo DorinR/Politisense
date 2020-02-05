@@ -15,7 +15,10 @@ class SelectionAction extends JobAction {
     } else {
       input = raw
     }
+<<<<<<< HEAD
     input = input.sort()
+=======
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
     input.forEach((item) => {
       if (!item) {
         return

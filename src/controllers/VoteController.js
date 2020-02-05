@@ -1,8 +1,4 @@
-<<<<<<< HEAD:src/controllers/VoteController.js
 const Firestore = require('@firestore').Firestore
-=======
-import { Firestore } from '../client/src/backend/firebase/Firestore'
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:controllers/VoteController.js
 
 exports.getAllVotesByRepresentative = async (req, res) => {
   const targetRepresentative = req.params.representativeId

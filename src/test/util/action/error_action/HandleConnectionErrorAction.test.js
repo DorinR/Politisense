@@ -38,24 +38,18 @@ describe('HandleConnectionErrorAction.js', () => {
 
   test('HandleConnectionErrorAction.js::perform() returns with error on unexpected', async (done) => {
     const msg = 'this is an expected thing to see in the log'
-    try {
-      await undertest.perform(new Error(msg))
-    } catch (e) {
-      Assert(e instanceof Error)
-      Assert.equal(e.message, msg)
-    }
+    const e = await undertest.perform(new Error(msg))
+    Assert(e instanceof Error)
+    Assert.equal(e.message, msg)
     done()
   })
 
   test('HandleConnectionErrorAction.js::perform() returns with error on malformed', async (done) => {
     const msg = 'this is an expected thing to see in the log'
     const url = 'https://dfjkggdgdgdjl///.'
-    try {
-      await undertest.perform(new ScrapeError(msg, url))
-    } catch (e) {
-      Assert(e instanceof ScrapeError)
-      Assert(e.message.includes('Malformed'))
-    }
+    const e = await undertest.perform(new ScrapeError(msg, url))
+    Assert(e instanceof ScrapeError)
+    Assert(e.message.includes('Malformed'))
     done()
   })
 
@@ -69,13 +63,10 @@ describe('HandleConnectionErrorAction.js', () => {
     await Promise.all(
       urls.map(async link => {
         called = false
-        try {
-          await undertest.perform(new ScrapeError(msg, link))
-        } catch (e) {
-          Assert(e instanceof ScrapeError)
-          Assert(e.message.includes('Re-enqueuing'))
-          Assert(called)
-        }
+        const e = await undertest.perform(new ScrapeError(msg, link))
+        Assert(e instanceof ScrapeError)
+        Assert(e.message.includes('Re-enqueuing'))
+        Assert(called)
       })
     )
     done()
@@ -90,14 +81,10 @@ describe('HandleConnectionErrorAction.js', () => {
     await Promise.all(
       connectionErrors.map(async error => {
         called = false
-        try {
-          await undertest.perform(new ScrapeError(error, link))
-        } catch (e) {
-          Assert((e instanceof ScrapeError))
-          const goodMessage = e.message.includes(error)
-          Assert(goodMessage)
-          Assert(called)
-        }
+        const e = await undertest.perform(new ScrapeError(error, link))
+        Assert(e instanceof ScrapeError)
+        Assert(e.message.includes(error))
+        Assert(called)
       })
     )
     done()

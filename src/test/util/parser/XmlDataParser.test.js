@@ -1,6 +1,7 @@
 /* eslint-env jest */
 const assert = require('chai').assert
-const Parsers = require('../../../util/parser/parsers')
+const Utils = require('../../../util/utils')
+const Parsers = Utils.Parsers
 const XmlDataParser = Parsers.XmlDataParser
 const DataNotFoundError = Parsers.DataNotFoundError
 

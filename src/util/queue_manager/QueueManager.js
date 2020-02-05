@@ -1,12 +1,19 @@
+<<<<<<< HEAD
 const Mutex = require('async-sema').Sema
 const Queue = require('@queue').Queue
 const Action = require('@manager').QueueAction
 const DecorationError = require('@action').Errors.ActionDecorationError
+=======
+const Queue = require('../queue/queues').Queue
+const Action = require('./QueueAction').QueueAction
+const DecorationError = require('../utils').Actions.Errors.ActionDecorationError
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
 
 class QueueManager {
   constructor (waitPeriod = 1000) {
     this.error = console.error
     this.log = (result) => {
+<<<<<<< HEAD
       let message
       if (result instanceof Object) {
         message = `INFO: job finished, found ${result.data ? result.data.length : 0} potential results`
@@ -17,6 +24,9 @@ class QueueManager {
       if (message) {
         console.log(message)
       }
+=======
+      console.debug(`INFO: job finished, found ${result.length} potential results`)
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
       return result
     }
     this.activeJobs = []
@@ -24,7 +34,10 @@ class QueueManager {
     this.queue = new Queue()
     this.waitPeriod = waitPeriod
     this.result = []
+<<<<<<< HEAD
     this.lock = new Mutex(1)
+=======
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
   }
 
   start () {
@@ -35,6 +48,7 @@ class QueueManager {
     throw new DecorationError(null, 'Stop action not specified')
   }
 
+<<<<<<< HEAD
   before () {
     console.log('Before action not specified')
   }
@@ -53,6 +67,12 @@ class QueueManager {
       })
     await this.run()
     await this.after()
+=======
+  async execute () {
+    const partialResults = await this.start()
+    this.accumulate(partialResults)
+    await this.run()
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
     return this.result
   }
 
@@ -101,6 +121,7 @@ class QueueManager {
     return this
   }
 
+<<<<<<< HEAD
   setBeforeAction (action) {
     if (!(action instanceof Action)) {
       throw new DecorationError(action)
@@ -117,15 +138,21 @@ class QueueManager {
     return this
   }
 
+=======
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
   async run () {
     while (!this.stop()) {
       let job = null
       try {
         job = this.queue.dequeue()
         this.activeJobs.push(job)
+<<<<<<< HEAD
         await this.lock.acquire()
         this.activeJobCount++
         this.lock.release()
+=======
+        this.activeJobCount++
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
       } catch (e) {
         await this.waitForActiveJobs(e)
         continue
@@ -135,10 +162,15 @@ class QueueManager {
         .then(this.log)
         .catch(this.error)
         .finally(async () => {
+<<<<<<< HEAD
           await this.lock.acquire()
           job.done = true
           this.activeJobCount--
           this.lock.release()
+=======
+          job.done = true
+          this.activeJobCount--
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
           await this.waitForActiveJobs()
         })
     }

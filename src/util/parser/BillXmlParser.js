@@ -1,7 +1,16 @@
+<<<<<<< HEAD
 const Parsers = require('./parsers')
 const XmlDataParser = Parsers.XmlDataParser
 const ParliamentNotSetError = Parsers.ParliamentNotSetError
 const Builder = require('@builder').BillBuilder
+=======
+const Parsers = require('@parser')
+const XmlDataParser = Parsers.XmlDataParser
+const ParliamentNotSetError = Parsers.ParliamentNotSetError
+const Models = require('@model')
+const Bill = Models.Bill
+const Model = Models.Model
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
 
 class BillXmlParser extends XmlDataParser {
   constructor (xml, filters, currentParliament) {
@@ -23,6 +32,7 @@ class BillXmlParser extends XmlDataParser {
   }
 
   buildJson () {
+<<<<<<< HEAD
     const sponsorName = this.$('SponsorAffiliation').find('FirstName').text() + ' ' +
       this.$('SponsorAffiliation').find('LastName').text()
 
@@ -35,6 +45,18 @@ class BillXmlParser extends XmlDataParser {
       .withLink(this.getLinkToBillText())
       .withDateVoted(this.formatXmlDate(this.getDataInTag('BillIntroducedDate')))
       .build()
+=======
+    const bill = Bill.builder(Number(this.getDataInAttribute(this.tagName, 'id')))
+    bill.withNumber(this.getDataInAttribute('BillNumber', 'prefix') + '-' +
+      this.getDataInAttribute('BillNumber', 'number'))
+    bill.withTitle(this.$('BillTitle').find('Title[language=\'en\']').text().trim())
+    const sponsorName = this.$('SponsorAffiliation').find('FirstName').text() + ' ' +
+      this.$('SponsorAffiliation').find('LastName').text()
+    bill.withSponsorName(sponsorName.toLowerCase())
+    bill.withLink(this.getLinkToBillText())
+    bill.withDateVoted(this.formatXmlDate(this.getDataInTag('BillIntroducedDate')))
+    return Model.serialise(bill.build())
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
   }
 
   getLinkToBillText () {

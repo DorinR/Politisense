@@ -97,7 +97,7 @@ async function fetchAverageEmployeeSpending () {
   return employeeSpendingItems
 }
 
-function computeAverageEmployeeSpending (spendingItems) {
+module.exports.computeAverageEmployeeSpending = (spendingItems) => {
   let total = 0
   spendingItems.forEach(item => {
     total += item.amount
@@ -108,7 +108,6 @@ function computeAverageEmployeeSpending (spendingItems) {
     return null
   }
 }
-module.exports.computeAverageEmployeeSpending = computeAverageEmployeeSpending
 
 // =========== AVG GIFTS COSTS ============
 async function fetchAverageGiftsSpending () {

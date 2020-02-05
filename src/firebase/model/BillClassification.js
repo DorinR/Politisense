@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const Condition = require('../../util/Condition').Condition
+=======
+const Condition = require('../../util/utils').Condition
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
 const Model = require('./Model').Model
 
 class BillClassification extends Model {

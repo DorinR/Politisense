@@ -3,7 +3,11 @@ class PDFParseError extends Error {
     super()
     this.message = msg
     this.name = 'PDFParseError'
+<<<<<<< HEAD
     this.id = bill
+=======
+    this.bill = bill
+>>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
     this.url = url
   }
 }

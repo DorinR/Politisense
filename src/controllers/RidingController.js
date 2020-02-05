@@ -1,8 +1,4 @@
-<<<<<<< HEAD:src/controllers/RidingController.js
 const Firestore = require('@firestore').Firestore
-=======
-import { Firestore } from '../client/src/backend/firebase/Firestore'
->>>>>>> #211 [feature/scraper-refactor] : refactored backend to be easier to traverse:controllers/RidingController.js
 
 exports.getRidingCode = (req, res) => {
   const targetRiding = req.params.riding

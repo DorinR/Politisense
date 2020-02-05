@@ -1,6 +1,6 @@
 /* eslint-env jest */
 const ExpendituresScraper = require('../../../data/scraper/ExpendituresScraper').ExpendituresScraper
-const FinancialRecord = require('../../../firebase/firebase').Models.FinancialRecord
+const FinancialRecord = require('@firestore').Models.FinancialRecord
 
 const chai = require('chai')
 const Assert = chai.assert
