@@ -15,8 +15,6 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import PersonIcon from '@material-ui/icons/Person'
-import MapIcon from '@material-ui/icons/Map'
-import DashboardIcon from '@material-ui/icons/Dashboard'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { Link } from 'react-router-dom'
@@ -27,7 +25,9 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import Fab from '@material-ui/core/Fab'
 import Box from '@material-ui/core/Box'
 import axios from 'axios'
-import CompareArrowsIcon from '@material-ui/icons/CompareArrows'
+import politisenseLogo from '../politisenseLogo.png'
+// import politisenseLogo from '../PolitisenseTentativeLogo.png'
+import Button from '@material-ui/core/Button'
 const drawerWidth = 330
 
 const useStyles = makeStyles(theme => ({
@@ -104,10 +104,34 @@ const useStyles = makeStyles(theme => ({
   },
   politisenseIcon: {
     color: '#41aaa8'
+  },
+  navbarCustomFont: {
+    textDecoration: 'none',
+    marginRight: '10px',
+    '&:hover': {
+      color: '#d4d7dd'
+    }
+  },
+  navbarCustomButton: {
+    color: '#42AAA8',
+    backgroundColor: '#F7F7F7',
+    fontWeight: 'bold',
+    fontStyle: 'italic',
+    fontSize: '1.2em',
+    '&:hover': {
+      backgroundColor: '#d4d7dd'
+    }
+  },
+  logoStyling: {
+    width: '90%',
+    height: 'auto',
+    padding: '10px 0px',
+    marginTop: '8px',
+    marginLeft: '20px'
   }
 }))
 
-export async function fetchUserRiding (userEmail) {
+export async function fetchUserRiding(userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -121,11 +145,11 @@ export async function fetchUserRiding (userEmail) {
   return result
 }
 
-export async function fetchRepresentative (riding) {
+export async function fetchRepresentative(riding) {
   let result = ''
   await axios
     .get(
-          `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
     )
     .then(res => {
       if (res.data.success) {
@@ -137,7 +161,7 @@ export async function fetchRepresentative (riding) {
   return result
 }
 
-export default function MiniDrawer ({ children }) {
+export default function MiniDrawer({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -145,147 +169,163 @@ export default function MiniDrawer ({ children }) {
 
   useEffect(() => {
     handleDrawerOpen()
-    async function getData () {
+    async function getData() {
       /* eslint-disable */
-      const user = JSON.parse(localStorage.getItem("user"));
+      const user = JSON.parse(localStorage.getItem('user'))
       if (user) {
-        const { email } = user;
-        const riding = await fetchUserRiding(email);
-        const representative = await fetchRepresentative(riding);
-        setUserRepresentative(representative);
-        localStorage.setItem("rep", JSON.stringify(representative));
+        const { email } = user
+        const riding = await fetchUserRiding(email)
+        const representative = await fetchRepresentative(riding)
+        setUserRepresentative(representative)
+        localStorage.setItem('rep', JSON.stringify(representative))
       }
     }
-    getData();
-  }, []);
+    getData()
+  }, [])
 
   const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const handleDrawerClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   return (
-      <div className={classes.root}>
-        <CssBaseline />
-        <AppBar
-            position='fixed'
-            className={clsx(classes.appBar, {
-              [classes.appBarShift]: open
-            })}
-        >
-          <Toolbar>
-            <IconButton
-                color='inherit'
-                aria-label='open drawer'
-                onClick={handleDrawerOpen}
-                edge='start'
-                className={clsx(classes.menuButton, {
-                  [classes.hide]: open
-                })}
-            >
-              <MenuIcon />
-            </IconButton>
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar
+        position='fixed'
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open
+        })}>
+        <Toolbar>
+          <IconButton
+            color='inherit'
+            aria-label='open drawer'
+            onClick={handleDrawerOpen}
+            edge='start'
+            className={clsx(classes.menuButton, {
+              [classes.hide]: open
+            })}>
+            <MenuIcon />
+          </IconButton>
+          <Link to='/general' className={classes.navbarCustomFont}>
+            <Button
+              variant='contained'
+              color='primary'
+              className={classes.navbarCustomButton}>
+              General
+            </Button>
+          </Link>
+          <Link to='/categories' className={classes.navbarCustomFont}>
+            <Button variant='contained' className={classes.navbarCustomButton}>
+              Categories
+            </Button>
+          </Link>
+          <Link to='/votingHistory' className={classes.navbarCustomFont}>
+            <Button
+              variant='contained'
+              color='primary'
+              className={classes.navbarCustomButton}>
+              Voting History
+            </Button>
+          </Link>
+          <Link to='/budget' className={classes.navbarCustomFont}>
+            <Button
+              variant='contained'
+              color='primary'
+              className={classes.navbarCustomButton}>
+              Budget
+            </Button>
+          </Link>
+          <Link to='/map' className={classes.navbarCustomFont}>
+            <Button
+              variant='contained'
+              color='primary'
+              className={classes.navbarCustomButton}>
+              Map
+            </Button>
+          </Link>
+          <Typography style={{ flex: 1 }} />
+          <Link to='/account'>
+            <Tooltip title='My Account' aria-label='add'>
+              <Fab size='small' className={classes.fab}>
+                <AccountCircleIcon
+                  fontSize='large'
+                  className={classes.politisenseIcon}
+                />
+              </Fab>
+            </Tooltip>
+          </Link>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        variant='permanent'
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: open,
+          [classes.drawerClose]: !open
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open
+          })
+        }}
+        open={open}>
+        <div className={classes.toolbar}>
+          {open ? (
             <Typography variant='h6' noWrap>
-              <Link to='/dashboard' className={classes.routerLink}>
-              Politisense
+              <Link to='/general' className={classes.routerLink}>
+                <img
+                  src={politisenseLogo}
+                  alt='politisense logo'
+                  className={classes.logoStyling}
+                />
               </Link>
             </Typography>
-            <Typography style={{ flex: 1 }} />
-            <Link to='/account'>
-              <Tooltip title='My Account' aria-label='add'>
-                <Fab size='small' className={classes.fab}>
-                  <AccountCircleIcon
-                      fontSize='large'
-                      className={classes.politisenseIcon}
-                  />
-                </Fab>
-              </Tooltip>
-            </Link>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-            variant='permanent'
-            className={clsx(classes.drawer, {
-              [classes.drawerOpen]: open,
-              [classes.drawerClose]: !open
-            })}
-            classes={{
-              paper: clsx({
-                [classes.drawerOpen]: open,
-                [classes.drawerClose]: !open
-              })
-            }}
-            open={open}
-        >
-          <div className={classes.toolbar}>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === 'rtl' ? (
-                  <ChevronRightIcon />
-              ) : (
-                  <ChevronLeftIcon />
-              )}
-            </IconButton>
-          </div>
-          <Divider />
-          <Box p={1} />
-          <ListItem button onClick={handleDrawerOpen}>
-            <ListItemIcon>
-              <PersonIcon className={classes.politisenseIcon} />
-            </ListItemIcon>
-            {open ? (
-                <ListItemAvatar>
-                  <RepresentativeImage representativeToLoad={userRepresentative} />
-                </ListItemAvatar>
-            ) : null}
-          </ListItem>
-          {open ? (
-              <ListItem>
-                <RepresentativeInfo representativeToLoad={userRepresentative} />
-              </ListItem>
           ) : null}
-          <Divider />
-          <List>
-            <Link to='/map' className={classes.routerLink}>
-              <ListItem button>
-                <ListItemIcon>
-                  <MapIcon className={classes.politisenseIcon} />
-                </ListItemIcon>
-                Map
-              </ListItem>
-            </Link>
-            <Link to='/dashboard' className={classes.routerLink}>
-              <ListItem button>
-                <ListItemIcon>
-                  <DashboardIcon className={classes.politisenseIcon} />
-                </ListItemIcon>
-                Dashboard
-              </ListItem>
-            </Link>
-            <Link to='/headToHeadComparison' className={classes.routerLink}>
-              <ListItem button>
-                <ListItemIcon>
-                  <CompareArrowsIcon className={classes.politisenseIcon} />
-                </ListItemIcon>
-                Head VS Head
-              </ListItem>
-            </Link>
-            <Link to='/logout' className={classes.routerLink}>
-              <ListItem button>
-                <ListItemIcon>
-                  <ExitToAppIcon className={classes.politisenseIcon} />
-                </ListItemIcon>
-                Logout
-              </ListItem>
-            </Link>
-          </List>
-        </Drawer>
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
-          {children}
-        </main>
-      </div>
+          <Box p={1} />
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'rtl' ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
+          </IconButton>
+        </div>
+        <Divider />
+        <ListItem button onClick={handleDrawerOpen}>
+          <ListItemIcon>
+            <PersonIcon className={classes.politisenseIcon} />
+          </ListItemIcon>
+          {open ? (
+            <ListItemAvatar>
+              <RepresentativeImage representativeToLoad={userRepresentative} />
+            </ListItemAvatar>
+          ) : null}
+        </ListItem>
+        {open ? (
+          <ListItem>
+            <RepresentativeInfo representativeToLoad={userRepresentative} />
+          </ListItem>
+        ) : null}
+        <Divider />
+        <List>
+          <Link to='/logout' className={classes.routerLink}>
+            <ListItem button>
+              <ListItemIcon>
+                <ExitToAppIcon className={classes.politisenseIcon} />
+              </ListItemIcon>
+              Logout
+            </ListItem>
+          </Link>
+        </List>
+      </Drawer>
+      <main className={classes.content}>
+        <div className={classes.toolbar} />
+        {children}
+      </main>
+    </div>
   )
 }
