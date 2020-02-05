@@ -1,5 +1,5 @@
 /* global describe, test */
-import { getAllRidings } from '../../../../component/dashboard/Sidebar/RidingSwitcher/RidingSwitcher'
+import { getAllRidings } from '../../../../Components/Dashboard/Sidebar/RidingSwitcher/RidingSwitcher'
 
 const chai = require('chai')
 chai.should()

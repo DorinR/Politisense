@@ -1,6 +1,6 @@
 /* eslint-env jest */
-import { capitalizedName } from '../../../component/dashboard/BillDialog'
-import { checkDataExistForCategory } from '../../../component/dashboard/CategoryCard'
+import { capitalizedName } from '../../../Components/Dashboard/BillDialog'
+import { checkDataExistForCategory } from '../../../Components/Dashboard/CategoryCard'
 
 const chai = require('chai')
 chai.should()

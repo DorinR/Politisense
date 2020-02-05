@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { checkEmailFormat } from '../../../component/auth/Login'
+import { checkEmailFormat } from '../../../Components/Auth/Login'
 
 const chai = require('chai')
 chai.should()

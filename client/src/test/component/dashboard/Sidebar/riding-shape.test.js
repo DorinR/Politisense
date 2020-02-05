@@ -1,7 +1,7 @@
 /* eslint-env jest */
-import { PARTY_COLORS } from '../../../../component/dashboard/Sidebar/RidingShape/partyColors'
-import { fallbackSvg } from '../../../../component/dashboard/Sidebar/RidingShape/fallbackSvg'
-import { addColorFillToRidingShape } from '../../../../component/dashboard/Sidebar/RidingShape/RidingShape'
+import { PARTY_COLORS } from '../../../../Components/Dashboard/Sidebar/RidingShape/partyColors'
+import { fallbackSvg } from '../../../../Components/Dashboard/Sidebar/RidingShape/fallbackSvg'
+import { addColorFillToRidingShape } from '../../../../Components/Dashboard/Sidebar/RidingShape/RidingShape'
 
 const chai = require('chai')
 chai.should()

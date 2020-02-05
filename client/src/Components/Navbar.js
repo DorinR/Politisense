@@ -27,6 +27,7 @@ import Box from '@material-ui/core/Box'
 import axios from 'axios'
 import politisenseLogo from '../politisenseLogo.png'
 import Button from '@material-ui/core/Button'
+
 const drawerWidth = 330
 
 const useStyles = makeStyles(theme => ({
@@ -205,7 +206,8 @@ export default function MiniDrawer ({ children }) {
         position='fixed'
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open
-        })}>
+        })}
+      >
         <Toolbar>
           <IconButton
             color='inherit'
@@ -214,14 +216,16 @@ export default function MiniDrawer ({ children }) {
             edge='start'
             className={clsx(classes.menuButton, {
               [classes.hide]: open
-            })}>
+            })}
+          >
             <MenuIcon />
           </IconButton>
           <Link to='/general' className={classes.navbarCustomFont}>
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}>
+              className={classes.navbarCustomButton}
+            >
               General
             </Button>
           </Link>
@@ -234,7 +238,8 @@ export default function MiniDrawer ({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}>
+              className={classes.navbarCustomButton}
+            >
               Voting History
             </Button>
           </Link>
@@ -242,7 +247,8 @@ export default function MiniDrawer ({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}>
+              className={classes.navbarCustomButton}
+            >
               Budget
             </Button>
           </Link>
@@ -250,7 +256,8 @@ export default function MiniDrawer ({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}>
+              className={classes.navbarCustomButton}
+            >
               Map
             </Button>
           </Link>
@@ -279,7 +286,8 @@ export default function MiniDrawer ({ children }) {
             [classes.drawerClose]: !open
           })
         }}
-        open={open}>
+        open={open}
+      >
         <div className={classes.toolbar}>
           {open ? (
             <Typography variant='h6' noWrap>

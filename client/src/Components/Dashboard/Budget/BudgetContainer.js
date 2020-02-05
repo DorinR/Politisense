@@ -123,6 +123,7 @@ export default function BudgetContainer () {
         label: 'Average Among MPs',
         values: data.avg
       }
+      console.log(data)
       setBudgetData([mps, avgs])
     }
   }, [data, labelMP])

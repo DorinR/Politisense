@@ -36,7 +36,6 @@ const useStyles = makeStyles({
   },
   MuiAvatar: {
     backgroundColor: '#43D0C4'
-    backgroundColor: '#43D0C4'
   },
   container: {
     margin: '20px',
