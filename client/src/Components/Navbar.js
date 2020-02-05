@@ -131,7 +131,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding(userEmail) {
+export async function fetchUserRiding (userEmail) {
   let result = ''
   await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
@@ -145,7 +145,7 @@ export async function fetchUserRiding(userEmail) {
   return result
 }
 
-export async function fetchRepresentative(riding) {
+export async function fetchRepresentative (riding) {
   let result = ''
   await axios
     .get(
@@ -161,7 +161,7 @@ export async function fetchRepresentative(riding) {
   return result
 }
 
-export default function MiniDrawer({ children }) {
+export default function MiniDrawer ({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -169,7 +169,7 @@ export default function MiniDrawer({ children }) {
 
   useEffect(() => {
     handleDrawerOpen()
-    async function getData() {
+    async function getData () {
       /* eslint-disable */
       const user = JSON.parse(localStorage.getItem('user'))
       if (user) {
