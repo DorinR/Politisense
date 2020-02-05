@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import ListItemText from '@material-ui/core/ListItemText'
 import Box from '@material-ui/core/Box'
 import axios from 'axios'
@@ -544,7 +545,15 @@ export function computeTotalHospitalitySpending (spendingItems) {
 
 // =========== TOTAL BUDGET COSTS ============
 
+const useStyles = makeStyles({
+  container: {
+    margin: '20px',
+    marginTop: '30px'
+  }
+})
+
 export default function BudgetContainer () {
+  const classes = useStyles()
   // budget data
   const [budgetData, setBudgetData] = useState([])
 
@@ -559,62 +568,64 @@ export default function BudgetContainer () {
         values: []
       }
       /* eslint-disable */
-      const user = JSON.parse(localStorage.getItem("user"));
+      const user = JSON.parse(localStorage.getItem('user'))
       if (user) {
         // boilerplate data fetching
-        const { email } = user;
-        const riding = await fetchUserRiding(email);
-        const representative = await fetchRepresentative(riding);
+        const { email } = user
+        const riding = await fetchUserRiding(email)
+        const representative = await fetchRepresentative(riding)
         mp.label = representative
-        const representativeId = await fetchRepresentativeId(representative);
+        const representativeId = await fetchRepresentativeId(representative)
 
         // per MP items
-        let employeeSpendingItems = [];
-        let advertisingSpendingItems = [];
-        let giftsSpendingItems = [];
-        let hospitalitySpendingItems = [];
-        let officeSpendingItems = [];
-        let printingSpendingItems = [];
-        let travelSpendingItems = [];
+        let employeeSpendingItems = []
+        let advertisingSpendingItems = []
+        let giftsSpendingItems = []
+        let hospitalitySpendingItems = []
+        let officeSpendingItems = []
+        let printingSpendingItems = []
+        let travelSpendingItems = []
 
         //average of all MPs
-        let avgEmployeeSpendingItems = [];
-        let avgAdvertisingSpendingItems = [];
-        let avgGiftsSpendingItems = [];
-        let avgHospitalitySpendingItems = [];
-        let avgOfficeSpendingItems = [];
-        let avgPrintingSpendingItems = [];
-        let avgTravelSpendingItems = [];
+        let avgEmployeeSpendingItems = []
+        let avgAdvertisingSpendingItems = []
+        let avgGiftsSpendingItems = []
+        let avgHospitalitySpendingItems = []
+        let avgOfficeSpendingItems = []
+        let avgPrintingSpendingItems = []
+        let avgTravelSpendingItems = []
 
         if (representativeId) {
           // MPs
-          employeeSpendingItems = await fetchEmployeeSpending(representativeId);
+          employeeSpendingItems = await fetchEmployeeSpending(representativeId)
           advertisingSpendingItems = await fetchAdvertisingSpending(
             representativeId
-          );
-          giftsSpendingItems = await fetchGiftsSpending(representativeId);
+          )
+          giftsSpendingItems = await fetchGiftsSpending(representativeId)
           hospitalitySpendingItems = await fetchHospitalitySpending(
             representativeId
-          );
-          officeSpendingItems = await fetchOfficeSpending(representativeId);
-          printingSpendingItems = await fetchPrintingSpending(representativeId);
-          travelSpendingItems = await fetchTravelSpending(representativeId);
+          )
+          officeSpendingItems = await fetchOfficeSpending(representativeId)
+          printingSpendingItems = await fetchPrintingSpending(representativeId)
+          travelSpendingItems = await fetchTravelSpending(representativeId)
 
           //Average
-          avgEmployeeSpendingItems = await fetchAverageEmployeeSpending();
-          avgAdvertisingSpendingItems = await fetchAverageAdvertisingSpending();
-          avgGiftsSpendingItems = await fetchAverageGiftsSpending();
-          avgHospitalitySpendingItems = await fetchAverageHospitalitySpending();
-          avgOfficeSpendingItems = await fetchAverageOfficeSpending();
-          avgPrintingSpendingItems = await fetchAveragePrintingSpending();
-          avgTravelSpendingItems = await fetchAverageTravelSpending();
+          avgEmployeeSpendingItems = await fetchAverageEmployeeSpending()
+          avgAdvertisingSpendingItems = await fetchAverageAdvertisingSpending()
+          avgGiftsSpendingItems = await fetchAverageGiftsSpending()
+          avgHospitalitySpendingItems = await fetchAverageHospitalitySpending()
+          avgOfficeSpendingItems = await fetchAverageOfficeSpending()
+          avgPrintingSpendingItems = await fetchAveragePrintingSpending()
+          avgTravelSpendingItems = await fetchAverageTravelSpending()
         }
 
         // MPs
         let totalEmployees = computeTotalEmployeeSpending(employeeSpendingItems)
         let ads = computeTotalAdvertisingSpending(advertisingSpendingItems)
         let gifts = computeTotalGiftsSpending(giftsSpendingItems)
-        let hospitality = computeTotalHospitalitySpending(hospitalitySpendingItems)
+        let hospitality = computeTotalHospitalitySpending(
+          hospitalitySpendingItems
+        )
         let office = computeTotalOfficeSpending(officeSpendingItems)
         let printing = computeTotalPrintingSpending(printingSpendingItems)
         let travel = computeTotalTravelSpending(travelSpendingItems)
@@ -627,12 +638,15 @@ export default function BudgetContainer () {
         mp.values[5] = Math.round(printing)
         mp.values[6] = Math.round(travel)
 
-
         //Average
         let avgEmp = computeAverageEmployeeSpending(avgEmployeeSpendingItems)
-        let avgAds = computeAverageAdvertisingSpending(avgAdvertisingSpendingItems)
+        let avgAds = computeAverageAdvertisingSpending(
+          avgAdvertisingSpendingItems
+        )
         let avgGifts = computeAverageGiftsSpending(avgGiftsSpendingItems)
-        let avgHosp = computeAverageHospitalitySpending(avgHospitalitySpendingItems)
+        let avgHosp = computeAverageHospitalitySpending(
+          avgHospitalitySpendingItems
+        )
         let avgOffice = computeAverageOfficeSpending(avgOfficeSpendingItems)
         let avgPrint = computeAveragePrintingSpending(avgPrintingSpendingItems)
         let avgTravel = computeAverageTravelSpending(avgTravelSpendingItems)
@@ -647,29 +661,28 @@ export default function BudgetContainer () {
       }
       setBudgetData([mp, avg])
     }
-    getData();
-  }, [budgetData]);
+    getData()
+  }, [budgetData])
 
   return (
-    <ListItemText>
-      {budgetData.length == 0 ? (
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)"
-          }}
-        >
-          <CircularProgress />
-        </div>
-      ) :
+    <div className={classes.container}>
+      <ListItemText>
+        {budgetData.length == 0 ? (
+          <div
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)'
+            }}>
+            <CircularProgress />
+          </div>
+        ) : (
+          <BarChartWrapper type={'budget'} data={budgetData} />
+        )}
 
-        <BarChartWrapper type={'budget'} data={budgetData} />
-
-      }
-
-      <Box m={1} />
-    </ListItemText>
-  );
+        <Box m={1} />
+      </ListItemText>
+    </div>
+  )
 }

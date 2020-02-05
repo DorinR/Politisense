@@ -13,9 +13,11 @@ import Navbar from './Components/Navbar'
 import Logout from './Components/Logout'
 import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
 import MapWrapper from './Components/Dashboard/MapWrapper'
-import DashboardTabs from './Components/Dashboard/DashboardTabs'
 import Questionnaire from './Components/Questionnaire'
-import HeadToHeadComparison from './Components/Dashboard/HeadToHeadComparison'
+import GeneralDashboard from './Components/Dashboard/GeneralDashboard'
+import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
+import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
+import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
 
 const App = () => {
   const LoginContainer = () => (
@@ -30,12 +32,13 @@ const App = () => {
       <Navbar>
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
-          <PrivateRoute path='/dashboard' component={DashboardTabs} />
           <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/map' component={MapWrapper} />
           <PrivateRoute path='/account' component={UserAccountTabs} />
-          <PrivateRoute path='/headToHeadComparison' component={HeadToHeadComparison} />
-
+          <PrivateRoute path='/general' component={GeneralDashboard} />
+          <PrivateRoute path='/categories' component={CategoryDashboard} />
+          <PrivateRoute path='/votingHistory' component={BillHistoryTable} />
+          <PrivateRoute path='/budget' component={BudgetContainer} />
         </div>
       </Navbar>
     </div>
@@ -45,7 +48,11 @@ const App = () => {
     <Route
       {...rest}
       render={props =>
-        localStorage.getItem('user') ? (<Component {...props} />) : (<Redirect to='/login' />)}
+        localStorage.getItem('user') ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to='/login' /> // eslint-disable-next-line
+        )}
     />
   )
 
