@@ -1,16 +1,23 @@
 /* eslint-disable no-undef */
 /* eslint-env node */
 import React from 'react'
-import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
-import Login from './component/auth/Login'
-import SignUp from './component/auth/SignUp'
-import Navbar from './component/Navbar'
-import Logout from './component/Logout'
-import UserAccountTabs from './component/dashboard/UserAccount/UserAccountTabs'
-import MapWrapper from './component/dashboard/MapWrapper'
-import DashboardTabs from './component/dashboard/DashboardTabs'
-import Questionnaire from './component/Questionnaire'
-import HeadToHeadComparison from './component/dashboard/HeadToHeadComparison'
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch
+} from 'react-router-dom'
+import Login from './Components/Auth/Login'
+import SignUp from './Components/Auth/SignUp'
+import Navbar from './Components/Navbar'
+import Logout from './Components/Logout'
+import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
+import MapWrapper from './Components/Dashboard/MapWrapper'
+import Questionnaire from './Components/Questionnaire'
+import GeneralDashboard from './Components/Dashboard/GeneralDashboard'
+import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
+import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
+import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
 
 const App = () => {
   const LoginContainer = () => (
@@ -25,12 +32,13 @@ const App = () => {
       <Navbar>
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
-          <PrivateRoute path='/dashboard' component={DashboardTabs} />
           <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/map' component={MapWrapper} />
           <PrivateRoute path='/account' component={UserAccountTabs} />
-          <PrivateRoute path='/headToHeadComparison' component={HeadToHeadComparison} />
-
+          <PrivateRoute path='/general' component={GeneralDashboard} />
+          <PrivateRoute path='/categories' component={CategoryDashboard} />
+          <PrivateRoute path='/votingHistory' component={BillHistoryTable} />
+          <PrivateRoute path='/budget' component={BudgetContainer} />
         </div>
       </Navbar>
     </div>
@@ -40,7 +48,11 @@ const App = () => {
     <Route
       {...rest}
       render={props =>
-        localStorage.getItem('user') ? (<Component {...props} />) : (<Redirect to='/login' />)}
+        localStorage.getItem('user') ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to='/login' /> // eslint-disable-next-line
+        )}
     />
   )
 

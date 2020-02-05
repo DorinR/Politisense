@@ -36,6 +36,11 @@ const useStyles = makeStyles({
   },
   MuiAvatar: {
     backgroundColor: '#43D0C4'
+    backgroundColor: '#43D0C4'
+  },
+  container: {
+    margin: '20px',
+    marginTop: '30px'
   }
 })
 
@@ -175,6 +180,7 @@ export default function CategoryDashboard () {
 
   /* eslint-disable */
   return (
+    <div className={classes.container}>
     <Grid container spacing={1}>
       <Grid item xs={12}>
         {userRepIssuedBills && categoryList && userRepresentative ? (
@@ -313,6 +319,7 @@ export default function CategoryDashboard () {
         </div>
       )}
     </Grid>
+    </div>
   );
 }
 
@@ -324,70 +331,69 @@ function createDataSetRadar(categories, data) {
   console.log(categories)
   console.log(data)
   categories.forEach(category => {
-    let totalvotes = 0;
+    let totalvotes = 0
     data.forEach(bill => {
       if (bill.billData.category === category.toLowerCase()) {
-        totalvotes++;
+        totalvotes++
       }
-    });
-    const categorySmallLetter = category.toLowerCase().trim();
-    temp = { category: categorySmallLetter, value: totalvotes };
-    dataArray.push(temp);
-  });
+    })
+    const categorySmallLetter = category.toLowerCase().trim()
+    temp = { category: categorySmallLetter, value: totalvotes }
+    dataArray.push(temp)
+  })
 
   dataArray.forEach(category => {
     if (category.value > maxValue) {
-      maxValue = category.value;
+      maxValue = category.value
     }
     if (category.category) {
-      dataSetRadar[category.category] = category.value;
+      dataSetRadar[category.category] = category.value
     }
-  });
+  })
 
-  return [dataSetRadar, maxValue];
+  return [dataSetRadar, maxValue]
 }
 
-function createDataSetDonut(sponsors, mpdata) {
-  let liberalCounter = 0;
-  let conservativeCounter = 0;
-  let ndpCounter = 0;
-  let peopleCounter = 0;
-  let greenCounter = 0;
-  let bqCounter = 0;
-  let parties = {};
-  console.log(sponsors)
-  console.log(mpdata)
+export async function createDataSetDonut(sponsors, mpdata) {
+  let liberalCounter = 0
+  let conservativeCounter = 0
+  let ndpCounter = 0
+  let peopleCounter = 0
+  let greenCounter = 0
+  let bqCounter = 0
+  let parties = {}
+
   if (mpdata.length) {
     mpdata.forEach(bill => {
       if (bill.voteRecord.yea === true) {
         sponsors.forEach(sponsor => {
           if (sponsor.name === bill.billData.sponsorName) {
             switch (sponsor.politicalParty) {
-              case "liberal":
-                liberalCounter++;
-                break;
-              case "conservative":
-                conservativeCounter++;
-                break;
-              case "ndp":
-                ndpCounter++;
-                break;
-              case "bloc québécois":
-                bqCounter++;
-                break;
-              case "green":
-                greenCounter++;
-                break;
-              case "people":
-                peopleCounter++;
-                break;
+              case 'liberal':
+                liberalCounter++
+                break
+              case 'conservative':
+                conservativeCounter++
+                break
+              case 'ndp':
+                ndpCounter++
+                break
+              case 'bloc québécois':
+                bqCounter++
+                break
+              case 'green':
+                greenCounter++
+                break
+              case 'people':
+                peopleCounter++
+                break
               default:
-                return "nothing";
+                return 'nothing'
             }
           }
-        });
+        })
       }
-    });
+    })
   }
 
   parties = {
@@ -397,6 +403,6 @@ function createDataSetDonut(sponsors, mpdata) {
     People: peopleCounter,
     Green: greenCounter,
     BQ: bqCounter
-  };
-  return parties;
+  }
+  return parties
 }
