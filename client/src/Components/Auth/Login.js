@@ -99,6 +99,7 @@ export default function Login (props) {
   const [authenticated, setAuthenticated] = useState(false)
   const [errors, setErrors] = useState({ email: '', password: '' })
 
+
   function validateUserFromSocialProviders (type, cb) {
     let user = {}
     cb(type)
@@ -147,7 +148,7 @@ export default function Login (props) {
         .then(res => {
           if (res.data.success) {
             // eslint-disable-next-line no-undef
-            const userToStore = {email: user.email}
+            const userToStore = { email: user.email }
             localStorage.setItem('user', JSON.stringify(userToStore))
             setAuthenticated(true)
           } else {
@@ -167,7 +168,7 @@ export default function Login (props) {
   }
 
   if (authenticated) {
-    return <Redirect to={{ pathname: '/dashboard' }} />
+    return <Redirect to={{ pathname: '/general' }} />
   }
 
   return (
@@ -215,8 +216,7 @@ export default function Login (props) {
                   fullWidth
                   variant='contained'
                   color='primary'
-                  className={classes.submit}
-                >
+                  className={classes.submit}>
                   Log in
                 </Button>
                 <Grid container>
@@ -224,8 +224,7 @@ export default function Login (props) {
                     <Link
                       variant='body2'
                       to='/signup'
-                      className={classes.routerLink}
-                    >
+                      className={classes.routerLink}>
                       Forgot password?
                     </Link>
                   </Grid>
@@ -233,8 +232,7 @@ export default function Login (props) {
                     <Link
                       variant='body2'
                       to='/signup'
-                      className={classes.routerLink}
-                    >
+                      className={classes.routerLink}>
                       {"Don't have an account? Sign Up"}
                     </Link>
                   </Grid>
@@ -243,21 +241,29 @@ export default function Login (props) {
               <Typography
                 variant='h6'
                 gutterBottom
-                style={{ textAlign: 'center' }}
-              >
+                style={{ textAlign: 'center' }}>
                 OR
               </Typography>
               <div className='Wrapper' style={gridStyle}>
                 <Grid container justify='center'>
                   <Grid item xs={6} className={classes.social}>
                     <FacebookLoginButton
-                      onClick={() => { validateUserFromSocialProviders('facebook', handleSocialLogin) }}
+                      onClick={() => {
+                        validateUserFromSocialProviders(
+                          'facebook',
+                          handleSocialLogin
+                        )
+                      }}
                     />
                   </Grid>
                   <Grid item xs={6} className={classes.social}>
                     <TwitterLoginButton
                       onClick={() =>
-                        validateUserFromSocialProviders('twitter', handleSocialLogin)}
+                        validateUserFromSocialProviders(
+                          'twitter',
+                          handleSocialLogin
+                        )
+                      }
                     />
                   </Grid>
                   <Grid item xs={6} className={classes.social}>
@@ -265,7 +271,11 @@ export default function Login (props) {
                       type='button'
                       id='test'
                       onClick={() =>
-                        validateUserFromSocialProviders('google', handleSocialLogin)}
+                        validateUserFromSocialProviders(
+                          'google',
+                          handleSocialLogin
+                        )
+                      }
                     />
                   </Grid>
                 </Grid>
