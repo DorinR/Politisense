@@ -31,31 +31,17 @@ class HandleConnectionErrorAction extends JobAction {
   }
 
   async perform (e) {
-    let error = this.throwOnUnexpected(e)
-    if (error) {
-      return error
-    }
-    error = this.requeueOnFailedConnection(e)
-    if (error) {
-      return error
-    }
-    error = this.throwOnMalformedLink(e)
-    if (error) {
-      return error
-    }
-    error = this.reconditionPartialLinks(e)
-    if (error) {
-      return error
-    }
-    return e
+    this.throwOnUnexpected(e)
+    this.requeueOnFailedConnection(e)
+    this.throwOnMalformedLink(e)
+    this.reconditionPartialLinks(e)
   }
 
   throwOnUnexpected (e) {
     if (!(e instanceof ScrapeError)) {
       console.debug(e)
-      return e
+      throw e
     }
-    return null
   }
 
   requeueOnFailedConnection (e) {
@@ -67,9 +53,7 @@ class HandleConnectionErrorAction extends JobAction {
         this.create(e.link, this.callback, this.tlds)
       ])
       console.debug(error.message)
-      return error
     }
-    return null
   }
 
   throwOnMalformedLink (e) {
@@ -77,9 +61,8 @@ class HandleConnectionErrorAction extends JobAction {
       const message = 'ERROR: Malformed link passed to scraper: ' + e.link
       const error = new ScrapeError(message, e.link)
       console.debug(error.message)
-      return error
+      throw error
     }
-    return null
   }
 
   reconditionPartialLinks (e) {
@@ -103,9 +86,7 @@ class HandleConnectionErrorAction extends JobAction {
       link = e.link
     }
     if (message && link) {
-      return new ScrapeError(message, link)
-    } else {
-      return null
+      throw new ScrapeError(message, link)
     }
   }
 }

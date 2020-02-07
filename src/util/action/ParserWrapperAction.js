@@ -19,7 +19,7 @@ class ParserWrapperAction extends Action {
     } else if (parser.hasData()) {
       return parser.xmlToJson()
     } else {
-      throw new XMLParseError('No Data Found')
+      throw new XMLParseError('ERROR: No Data Found')
     }
   }
 }

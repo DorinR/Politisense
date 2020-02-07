@@ -1,10 +1,10 @@
-const utils = require('../util/utils')
+const Actions = require('@action')
 const AbstractJob = require('../util/Job').AbstractJob
-const LinkScraperAction = utils.Actions.LinkScraperAction
-const Action = utils.Actions.Action
-const TextParserAction = utils.Actions.TextParserAction
-const SelectionAction = utils.Actions.SelectionAction
-const ErrorHandler = utils.Actions.HandleDownloadErrorAction
+const LinkScraperAction = Actions.LinkScraperAction
+const Action = Actions.Action
+const TextParserAction = Actions.TextParserAction
+const SelectionAction = Actions.SelectionAction
+const ErrorHandler = Actions.HandleDownloadErrorAction
 
 class SelectFirstAction extends Action {
   constructor (bill) {

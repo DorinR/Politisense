@@ -1,5 +1,5 @@
-const QueueAction = require('../QueueAction').QueueAction
-const ScrapeJob = require('../../../job/ScrapeJob').ScrapeJob
+const QueueAction = require('@manager').QueueAction
+const ScrapeJob = require('@jobs').ScrapeJob
 
 class StartScrapeAction extends QueueAction {
   constructor (url, callback, tlds) {

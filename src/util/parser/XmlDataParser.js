@@ -1,4 +1,4 @@
-const Action = require('@action')
+const Action = require('../action/actions')
 const DataNotFoundError = require('./XmlParserError').DataNotFoundError
 const LinkScraperAction = Action.LinkScraperAction
 

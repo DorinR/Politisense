@@ -1,6 +1,6 @@
-const Queue = require('../queue/queues').Queue
-const Action = require('./QueueAction').QueueAction
-const DecorationError = require('../utils').Actions.Errors.ActionDecorationError
+const Queue = require('@queue').Queue
+const Action = require('@manager').QueueAction
+const DecorationError = require('@action').Errors.ActionDecorationError
 
 class QueueManager {
   constructor (waitPeriod = 1000) {
@@ -38,7 +38,6 @@ class QueueManager {
   }
 
   accumulate (result) {
-    result = result.flat()
     result.forEach(entry => {
       this.result.push(entry)
     })

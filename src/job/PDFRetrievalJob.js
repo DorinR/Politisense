@@ -1,8 +1,8 @@
-const utils = require('../util/utils')
+const Actions = require('@action')
 const AbstractJob = require('../util/Job').AbstractJob
-const PDFRetrieverAction = utils.Actions.PDFRetrieverAction
-const PDFParseAction = utils.Actions.PDFParseAction
-const HandleDownloadErrorAction = utils.Actions.HandleDownloadErrorAction
+const PDFRetrieverAction = Actions.PDFFileRetrieverAction
+const PDFParseAction = Actions.PDFParseAction
+const HandleDownloadErrorAction = Actions.HandleDownloadErrorAction
 
 class PDFRetrievalJob extends AbstractJob {
   constructor (url, bill, callback) {

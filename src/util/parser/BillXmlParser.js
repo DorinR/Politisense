@@ -1,4 +1,4 @@
-const Parsers = require('@parser')
+const Parsers = require('./parsers')
 const XmlDataParser = Parsers.XmlDataParser
 const ParliamentNotSetError = Parsers.ParliamentNotSetError
 const Models = require('@model')

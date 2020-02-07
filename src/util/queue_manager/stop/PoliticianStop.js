@@ -5,11 +5,10 @@ class PoliticianStop extends QueueAction {
   constructor (manager) {
     super()
     this.manager = manager
-    this.queryCount = this.manager.params.length + 1
   }
 
   perform () {
-    return this.manager.result.length >= this.queryCount
+    return this.manager.result.length >= this.manager.queryCount
   }
 }
 

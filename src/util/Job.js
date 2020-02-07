@@ -1,6 +1,6 @@
-const Utils = require('./utils')
-const Action = Utils.Actions.Action
-const DecorationError = Utils.Actions.Errors.ActionDecorationError
+const Actions = require('@action')
+const Action = Actions.Action
+const DecorationError = Actions.Errors.ActionDecorationError
 
 class Job {
   constructor (url, callback) {
@@ -44,8 +44,7 @@ class Job {
     }, Promise.resolve())
       .catch(e => {
         this.handleErrors(e)
-        console.log(e.message)
-        return []
+        throw e
       })
       .finally(this.logAction)
   }

@@ -1,7 +1,9 @@
-const Utils = require('../../util/utils')
+require('module-alias/register')
+const Utils = require('@utils')
 const QueueManager = Utils.QueueManager.QueueManager
 const StartAction = Utils.QueueManager.Start.StartPoliticianScrape
 const StopAction = Utils.QueueManager.Stop.StopPoliticianScrape
+const Throw = Utils.QueueManager.Error.ParseErrorAction
 
 const caucusMapping = {
   unknown: 0,
@@ -43,6 +45,7 @@ class PoliticianScraper extends QueueManager {
     manager
       .setStartAction(new StartAction(manager))
       .setStopAction(new StopAction(manager))
+      .setErrorAction(new Throw(manager))
     return manager
   }
 
@@ -60,10 +63,27 @@ class PoliticianScraper extends QueueManager {
     this.setLastNamePrefixes(params.lastNamePrefixes)
     this.params = []
     this.createQueries(params.url)
+    this.queryCount = this.params.length
+    this.maxQueryCount = this.queryCount
+  }
+
+  async run () {
+    await super.run()
+    this.finish()
+  }
+
+  accumulate (result) {
+    this.result.push(result)
+    return result
+  }
+
+  finish () {
+    console.log(`INFO: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
   setParliaments (parliaments) {
-    if (typeof parliaments === 'undefined' || (parliaments instanceof String && parliaments.toLowerCase().includes('all'))) {
+    if (typeof parliaments === 'undefined' ||
+       (parliaments instanceof String && parliaments.toLowerCase().includes('all'))) {
       this.parliaments.push('all')
     } else if (typeof parliaments === typeof []) {
       this.parliaments = parliaments.filter(parliament => {
@@ -73,7 +93,8 @@ class PoliticianScraper extends QueueManager {
   }
 
   setCaucuses (caucuses) {
-    if (typeof caucuses === 'undefined' || (typeof caucuses === typeof '' && caucuses.toLowerCase().includes('all'))) {
+    if (typeof caucuses === 'undefined' ||
+       (typeof caucuses === typeof '' && caucuses.toLowerCase().includes('all'))) {
       this.caucuses.push('all')
     } else if (typeof caucuses === typeof []) {
       const validPartyKeys = Object.values(caucusMapping)
@@ -84,7 +105,8 @@ class PoliticianScraper extends QueueManager {
   }
 
   setProvinces (provinces) {
-    if (typeof provinces === 'undefined' || (typeof provinces === typeof '' && provinces.toLowerCase().includes('all'))) {
+    if (typeof provinces === 'undefined' ||
+       (typeof provinces === typeof '' && provinces.toLowerCase().includes('all'))) {
       this.provinces.push('all')
     } else if (typeof provinces === typeof []) {
       this.provinces = provinces.filter(province => {
@@ -94,7 +116,8 @@ class PoliticianScraper extends QueueManager {
   }
 
   setGenders (genders) {
-    if (typeof genders === 'undefined' || (typeof genders === typeof '' && genders.toLowerCase().includes('all'))) {
+    if (typeof genders === 'undefined' ||
+       (typeof genders === typeof '' && genders.toLowerCase().includes('all'))) {
       this.genders.push('all')
     } else if (typeof genders === typeof []) {
       this.genders = genders.filter(gender => {
@@ -107,7 +130,8 @@ class PoliticianScraper extends QueueManager {
   }
 
   setLastNamePrefixes (lastNamePrefixes) {
-    if (typeof lastNamePrefixes === 'undefined' || (typeof lastNamePrefixes === typeof '' && lastNamePrefixes.toLowerCase().includes('all'))) {
+    if (typeof lastNamePrefixes === 'undefined' ||
+       (typeof lastNamePrefixes === typeof '' && lastNamePrefixes.toLowerCase().includes('all'))) {
       this.lastNamePrefixes.push('')
     } else if (typeof lastNamePrefixes === typeof []) {
       this.lastNamePrefixes = lastNamePrefixes.filter(prefix => {
@@ -147,9 +171,9 @@ module.exports.PoliticianScraper = PoliticianScraper
 
 PoliticianScraper.create({
   url: 'https://www.ourcommons.ca/Members/en/search/xml',
-  parliaments: [36, 38],
-  caucuses: [4],
-  provinces: ['QC', 'AB'],
+  parliaments: [36, 38, 40, 41, 44],
+  caucuses: [3, 4, 6, 7],
+  provinces: 'all',
   genders: 'all'
 })
   .execute()
