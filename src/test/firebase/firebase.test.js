@@ -1,5 +1,5 @@
 /* eslint-env jest */
-const fs = require('@firestore')
+const fs = require('../../firebase/firebase')
 const Firestore = fs.Firestore
 const FinancialRecord = fs.Models.FinancialRecord
 const Politician = fs.Models.Politician

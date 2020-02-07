@@ -1,6 +1,6 @@
-const Utils = require('@utils')
+const Action = require('@action')
 const DataNotFoundError = require('./XmlParserError').DataNotFoundError
-const LinkScraperAction = Utils.Actions.LinkScraperAction
+const LinkScraperAction = Action.LinkScraperAction
 
 const cheerio = require('cheerio')
 

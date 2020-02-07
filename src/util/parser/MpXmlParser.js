@@ -27,8 +27,9 @@ class MpXmlParser extends XmlDataParser {
     const mp = Politician.builder(name.toLowerCase())
     mp.withParty(this.getDataInTag('CaucusShortName').toLowerCase())
     mp.withRiding(this.getDataInTag('ConstituencyName').toLowerCase())
-    mp.withYearElected(Number(this.getDataInTag('FromDateTime').substring(0, 4)))
-    return Model.serialise(mp.build())
+    mp.withStartYear(Number(this.getDataInTag('FromDateTime').substring(0, 4)))
+    mp.withEndYear(Number(this.getDataInTag('ToDateTime').substring(0, 4)))
+    return mp.build()
   }
 
   passesFilters () {
