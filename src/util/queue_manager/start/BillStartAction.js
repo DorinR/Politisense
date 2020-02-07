@@ -20,7 +20,14 @@ class BillStartAction extends QueueAction {
   }
 
   perform () {
-    return this.first.execute()
+    try {
+      return this.first.execute()
+    } catch (e) {
+      return {
+        params: this.first.params,
+        data: []
+      }
+    }
   }
 }
 

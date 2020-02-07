@@ -1,15 +1,14 @@
 require('module-alias/register')
 const Components = require('@manager')
-const Jobs = require('@jobs')
 const Errors = require('./error/errors')
 const flatten = require('flat')
 
-module.exports.Chambers = {
+const Chambers = {
   senate: 'Senate',
   commons: 'House+of+Commons'
 }
 
-module.exports.Affiliations = {
+const Affiliations = {
   BlocQuebecois: 'Bloc+Québécois',
   CanadianAlliance: 'Canadian+Alliance',
   CanadianSenatorsGroup: 'Canadian+Senators+Group',
@@ -27,7 +26,7 @@ module.exports.Affiliations = {
   PCDR: 'PC%2fDR'
 }
 
-module.exports.BillTypes = {
+const BillTypes = {
   senate: {
     government: 'Senate+Government+Bill',
     public: 'Senate+Public+Bill',
@@ -43,7 +42,7 @@ module.exports.BillTypes = {
   }
 }
 
-module.exports.BillStatuses = {
+const BillStatuses = {
 
   general: {
     assented: 'RoyalAssentGiven',
@@ -55,7 +54,7 @@ module.exports.BillStatuses = {
     readings: {
       first: 'HouseAt1stReading',
       second: 'HouseAt2ndReading',
-      third:'HouseAt3rdReading'
+      third: 'HouseAt3rdReading'
     },
 
     reports: {
@@ -65,11 +64,11 @@ module.exports.BillStatuses = {
 
     committee: {
       beforeReading2: 'HouseAtReferralToCommitteeBeforeSecondReading',
-      current: 'HouseInCommittee',
+      current: 'HouseInCommittee'
     },
 
     amendment: {
-      consideration: 'HouseConsiderationOfAmendments',
+      consideration: 'HouseConsiderationOfAmendments'
     }
   },
 
@@ -92,9 +91,6 @@ module.exports.BillStatuses = {
   }
 }
 
-
-
-
 class BillScraper extends Components.QueueManager {
   static create (params, wait = 5000) {
     const manager = new BillScraper(params)
@@ -105,9 +101,20 @@ class BillScraper extends Components.QueueManager {
     return manager
   }
 
-  requeueCallback(jobs) {
+  requeueCallback (jobs) {
     super.requeueCallback(jobs)
     this.queryCount++
+  }
+
+  async execute () {
+    try {
+      const partialResults = await this.start()
+      this.accumulate(partialResults)
+    } catch (e) {
+      this.queryCount--
+    }
+    await this.run()
+    return this.result
   }
 
   async run () {
@@ -131,7 +138,7 @@ class BillScraper extends Components.QueueManager {
     this.sessions = []
     this.setSessions(params.sessions)
 
-    if(this.sessions.length === 0 && this.parliaments.length !== 0) {
+    if (this.sessions.length === 0 && this.parliaments.length !== 0) {
       throw new Errors.InvalidParameterError('ERROR: no session data provided when specifying a parliament, will not be able to query')
     }
 
@@ -179,7 +186,7 @@ class BillScraper extends Components.QueueManager {
       this.originatingChambers.push(' ')
     } else if (typeof originatingChambers === typeof []) {
       this.originatingChambers = originatingChambers.filter(chamber => {
-        return Object.keys(Chambers).includes(chamber)
+        return Object.values(Chambers).includes(chamber)
       })
     }
   }
@@ -190,7 +197,7 @@ class BillScraper extends Components.QueueManager {
       this.billTypes.push(' ')
     } else if (typeof billTypes === typeof []) {
       this.billTypes = billTypes.filter(type => {
-        return Object.keys(flatten(BillTypes)).includes(type)
+        return Object.values(flatten(BillTypes)).includes(type)
       })
     }
   }
@@ -201,7 +208,7 @@ class BillScraper extends Components.QueueManager {
       this.sponsorAffiliations.push(' ')
     } else if (typeof sponsorAffiliations === typeof []) {
       this.sponsorAffiliations = sponsorAffiliations.filter(type => {
-        return Object.keys(Affiliations).includes(type)
+        return Object.values(Affiliations).includes(type)
       })
     }
   }
@@ -221,7 +228,7 @@ class BillScraper extends Components.QueueManager {
       this.statuses.push(' ')
     } else if (typeof statuses === typeof []) {
       this.statuses = statuses.filter(type => {
-        return Object.keys(flatten(statuses)).includes(type)
+        return Object.values(flatten(statuses)).includes(type)
       })
     }
   }
@@ -234,7 +241,7 @@ class BillScraper extends Components.QueueManager {
             this.originatingChambers.forEach(chamber => {
               this.parliaments.forEach(parl => {
                 this.sessions.forEach(session => {
-                  let param = {}
+                  const param = {}
                   param.url = url
                   if (parl !== ' ' && session !== ' ') {
                     param.ParliamentSession = `${parl}-${session}`
@@ -267,47 +274,54 @@ class BillScraper extends Components.QueueManager {
     })
   }
 
-  appendQueryStringToURL(url, param) {
-    //I hate that this function needs to exist
-    //I would use C/CGI if I wanted to do this
+  appendQueryStringToURL (url, param) {
+    // I hate that this function needs to exist
+    // I would use C/CGI if I wanted to do this
     let fullString = `${url}?`
     let first = true
     if (param.ParliamentSession) {
-      fullString =`${fullString}${first ? '' : '&'}ParliamentSession=${param.ParliamentSession}`
+      fullString = `${fullString}${first ? '' : '&'}ParliamentSession=${param.ParliamentSession}`
       first = false
     }
     if (param.BillType) {
-      fullString =`${fullString}${first ? '' : '&'}BillType=${param.BillType}`
+      fullString = `${fullString}${first ? '' : '&'}BillType=${param.BillType}`
       first = false
     }
     if (param.BillStatus) {
-      fullString =`${fullString}${first ? '' : '&'}BillStatus=${param.BillStatus}`
+      fullString = `${fullString}${first ? '' : '&'}BillStatus=${param.BillStatus}`
       first = false
     }
     if (param.BillSponsorAffiliation) {
-      fullString =`${fullString}${first ? '' : '&'}BillSponsorAffiliation=${param.BillSponsorAffiliation}`
+      fullString = `${fullString}${first ? '' : '&'}BillSponsorAffiliation=${param.BillSponsorAffiliation}`
       first = false
     }
     if (param.BillSponsor) {
-      fullString =`${fullString}${first ? '' : '&'}BillSponsor=${param.BillSponsor}`
+      fullString = `${fullString}${first ? '' : '&'}BillSponsor=${param.BillSponsor}`
       first = false
     }
     if (param.OriginatingChamber) {
-      fullString =`${fullString}${first ? '' : '&'}OriginatingChamber=${param.OriginatingChamber}`
+      fullString = `${fullString}${first ? '' : '&'}OriginatingChamber=${param.OriginatingChamber}`
       first = false
     }
     return `${fullString}${first ? '' : '&'}Language=E&download=xml`
   }
 }
 
-module.exports.BillScraper = BillScraper
+module.exports = {
+  BillScraper: BillScraper,
+  Chambers: Chambers,
+  Affiliations: Affiliations,
+  BillTypes: BillTypes,
+  BillStatuses: BillStatuses
+}
 
 BillScraper.create({
   url: 'https://www.parl.ca/LegisInfo/Home.aspx',
-  parliaments: [36, 41, 40],
+  parliaments: [35, 36, 37, 38, 39, 40, 41, 42, 43],
   sessions: [1, 2, 3]
 })
   .execute()
   .then(results => {
     console.log(results)
   })
+  .catch(console.error)

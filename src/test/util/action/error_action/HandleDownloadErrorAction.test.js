@@ -8,7 +8,7 @@ const chai = require('chai')
 const Assert = chai.assert
 
 describe('HandleDownloadErrorAction.js', () => {
-  const connectionErrors = [
+  const errors = [
     'ESOCKETTIMEDOUT',
     'ETIMEDOUT',
     'ECONNRESET',
@@ -26,7 +26,7 @@ describe('HandleDownloadErrorAction.js', () => {
 
   test('HandleDownloadErrorAction.js::perform() requeues connection errors', async (done) => {
     await Promise.all(
-      connectionErrors.map(async error => {
+      errors.map(async error => {
         let called = false
         undertest.callback = () => { called = true }
         const e = await undertest.perform(new ScrapeError(error, 'www.google.ca'))

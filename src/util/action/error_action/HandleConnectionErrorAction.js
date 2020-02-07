@@ -1,6 +1,6 @@
 const JobAction = require('../JobAction').AbstractJobAction
 const ScrapeError = require('../error/errors').ScrapeError
-module.exports.connectionErrors = [
+const connectionErrors = [
   'ESOCKETTIMEDOUT',
   'ETIMEDOUT',
   'timeout',  //this error and the proceeding 3 are in response to error code fuzzing from the server
@@ -116,3 +116,4 @@ class HandleConnectionErrorAction extends JobAction {
 }
 
 module.exports.HandleConnectionErrorAction = HandleConnectionErrorAction
+module.exports.ErrorCodes = connectionErrors

@@ -20,7 +20,7 @@ class BillFetchJob extends Job {
   static create (params, callback) {
     return new BillFetchJob(params, callback)
       .addAction(new Actions.FetchAction({
-        url: params.url //cannot pass other params or the server spergs out and returns garbage
+        url: params.url // cannot pass other params or the server spergs out and returns garbage
       }))
       .addAction(new Actions.ParserWrapperAction(BillParser))
       .addAction(new FormatAction(params))

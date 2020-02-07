@@ -8,10 +8,10 @@ class ParseErrorAction extends Action {
   }
 
   perform (e) {
-      this.manager.queryCount--
-      if (!(e instanceof XMLParseError)) {
-          throw e
-      }
+    this.manager.queryCount--
+    if (!(e instanceof XMLParseError)) {
+      throw e
+    }
   }
 }
 
