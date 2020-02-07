@@ -11,14 +11,13 @@ class FormatAction extends Actions.Action {
     this.params = params
   }
 
-  async perform(result) {
+  async perform (result) {
     return {
       params: this.params,
       data: result
     }
   }
 }
-
 
 class PoliticianFetchJob extends Job {
   // eslint-disable-next-line no-useless-constructor
@@ -35,7 +34,6 @@ class PoliticianFetchJob extends Job {
       .addErrorAction(new ErrorHandler(cb, PoliticianFetchJob.create, []))
     job.params = params
     return job
-
   }
 }
 

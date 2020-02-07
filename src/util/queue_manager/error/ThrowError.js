@@ -1,7 +1,7 @@
 const Action = require('@manager').QueueAction
 
 class ThrowAction extends Action {
-  async perform(e) {
+  async perform (e) {
     throw e
   }
 }

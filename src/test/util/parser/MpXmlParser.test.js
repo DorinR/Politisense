@@ -11,7 +11,7 @@ describe('MpXmlParser', () => {
       riding: 'Vancouver Granville',
       party: 'Independent',
       fromDate: '2015-10-19T00:00:00',
-      toDate: '2019-10-19T00:00:00',
+      toDate: '2019-10-19T00:00:00'
     }
     const xml = genMpXml([mpXmlParams])
     const parser = new MpXmlParser(xml)

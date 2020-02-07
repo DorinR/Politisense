@@ -33,8 +33,8 @@ class HandleConnectionErrorAction extends JobAction {
   async perform (e) {
     this.throwOnUnexpected(e)
     this.requeueOnFailedConnection(e)
-    this.throwOnMalformedLink(e)
     this.reconditionPartialLinks(e)
+    this.throwOnMalformedLink(e)
   }
 
   throwOnUnexpected (e) {
@@ -53,6 +53,7 @@ class HandleConnectionErrorAction extends JobAction {
         this.create(e.link, this.callback, this.tlds)
       ])
       console.debug(error.message)
+      throw e
     }
   }
 

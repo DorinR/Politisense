@@ -7,7 +7,7 @@ class ParseErrorAction extends Action {
     this.manager = manager
   }
 
-  perform(e) {
+  perform (e) {
     this.manager.queryCount--
     if (!(e instanceof XMLParseError)) {
       throw e
@@ -16,4 +16,3 @@ class ParseErrorAction extends Action {
 }
 
 module.exports.ParseErrorAction = ParseErrorAction
-
