@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import MP from './MP'
+import Mp from './Mp'
 import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -100,7 +100,7 @@ export default function CompareRepresentatives() {
     }
   }, [head1, head2])
 
-  const titleExplanation = `Select two MP\'s of your choice and compare their information and
+  const titleExplanation = `Select two MP's of your choice and compare their information and
   performance in terms of bills sponsored and voted pm and then see
   how much or how little they agree on!`
 
@@ -134,10 +134,10 @@ export default function CompareRepresentatives() {
           <div>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <MP updateHead={updateHead1} />
+                <Mp updateHead={updateHead1} />
               </Grid>
               <Grid item xs={6}>
-                <MP updateHead={updateHead2} />
+                <Mp updateHead={updateHead2} />
               </Grid>
               <Grid item xs={12}>
                 {dataSet.length ? (
