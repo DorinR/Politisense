@@ -18,6 +18,7 @@ import GeneralDashboard from './Components/Dashboard/GeneralDashboard'
 import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
 import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
 import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
+import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
 
 const App = () => {
   const LoginContainer = () => (
@@ -39,6 +40,7 @@ const App = () => {
           <PrivateRoute path='/categories' component={CategoryDashboard} />
           <PrivateRoute path='/votingHistory' component={BillHistoryTable} />
           <PrivateRoute path='/budget' component={BudgetContainer} />
+          <PrivateRoute path='/compare' component={CompareContainer} />
         </div>
       </Navbar>
     </div>
@@ -52,7 +54,8 @@ const App = () => {
           <Component {...props} />
         ) : (
           <Redirect to='/login' /> // eslint-disable-next-line
-        )}
+        )
+      }
     />
   )
 

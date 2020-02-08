@@ -36,7 +36,7 @@ const MenuProps = {
   }
 }
 
-async function fetchAllRepresentatives () {
+async function fetchAllRepresentatives() {
   let representatives = []
   await axios
     .get('http://localhost:5000/api/representatives/getAllRepresentatives')
@@ -51,15 +51,15 @@ async function fetchAllRepresentatives () {
   })
 }
 
-function getStyles (name, personName, theme) {
+function getStyles(name, personName, theme) {
   return {
     fontWeight:
-            personName.indexOf(name) === -1
-              ? theme.typography.fontWeightRegular
-              : theme.typography.fontWeightMedium
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium
   }
 }
-export default function MpsSwitcher (props) {
+export default function MpsSwitcher(props) {
   // eslint-disable-next-line no-use-before-define
   const { functionUpdate, ...other } = props
   const classes = useStyles()
@@ -67,18 +67,18 @@ export default function MpsSwitcher (props) {
   const [mp, setMp] = React.useState([])
   const [dropdownMps, setDropdownMps] = React.useState([])
 
-  async function populateDropdownMps (mps) {
+  async function populateDropdownMps(mps) {
     setDropdownMps(mps)
   }
 
-  function handleChange (event) {
+  function handleChange(event) {
     setMp(event.target.value)
     const value = event.target.value
     functionUpdate(value)
   }
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const representatives = await fetchAllRepresentatives()
       populateDropdownMps(representatives)
     }
@@ -88,19 +88,19 @@ export default function MpsSwitcher (props) {
   return (
     <div>
       <FormControl className={classes.formControl}>
-        <InputLabel id='demo-simple-select-disabled-label'>Choose a Politician</InputLabel>
+        <InputLabel id='demo-simple-select-disabled-label'>
+          Choose a Politician
+        </InputLabel>
         <Select
           value={mp}
           onChange={handleChange}
           input={<Input />}
-          MenuProps={MenuProps}
-        >
+          MenuProps={MenuProps}>
           {dropdownMps.map(mp => (
             <MenuItem
               key={mp.name}
               value={mp.name}
-              style={getStyles(mp.name, mp.name, theme)}
-            >
+              style={getStyles(mp.name, mp.name, theme)}>
               {mp.name}
             </MenuItem>
           ))}
