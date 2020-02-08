@@ -7,17 +7,18 @@ import {
   Route,
   Switch
 } from 'react-router-dom'
-import Login from './component/auth/Login'
-import SignUp from './component/auth/SignUp'
-import Navbar from './component/Navbar'
-import Logout from './component/Logout'
-import UserAccountTabs from './component/dashboard/UserAccount/UserAccountTabs'
-import MapWrapper from './component/dashboard/MapWrapper'
-import Questionnaire from './component/Questionnaire'
-import GeneralDashboard from './component/dashboard/GeneralDashboard'
-import CategoryDashboard from './component/dashboard/CategoryDashboard'
-import BillHistoryTable from './component/dashboard/PastBills/BillHistoryTable'
-import BudgetContainer from './component/dashboard/Budget/BudgetContainer'
+import Login from './Components/Auth/Login'
+import SignUp from './Components/Auth/SignUp'
+import Navbar from './Components/Navbar'
+import Logout from './Components/Logout'
+import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
+import MapWrapper from './Components/Dashboard/MapWrapper'
+import Questionnaire from './Components/Questionnaire'
+import GeneralDashboard from './Components/Dashboard/GeneralDashboard'
+import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
+import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
+import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
+import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
 
 const App = () => {
   const LoginContainer = () => (
@@ -39,6 +40,7 @@ const App = () => {
           <PrivateRoute path='/categories' component={CategoryDashboard} />
           <PrivateRoute path='/votingHistory' component={BillHistoryTable} />
           <PrivateRoute path='/budget' component={BudgetContainer} />
+          <PrivateRoute path='/compare' component={CompareContainer} />
         </div>
       </Navbar>
     </div>
