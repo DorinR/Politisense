@@ -46,7 +46,7 @@ function capitalize(str) {
   return null
 }
 
-export default function MP(props) {
+export default function Mp(props) {
   const { updateHead, ...other } = props
   const classes = useStyles()
   const [name, setName] = useState('')
