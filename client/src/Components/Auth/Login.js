@@ -9,13 +9,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import canadaimage from '../../assets/canada.jpg'
 import logo from '../../assets/PolotisenseTentativeLogo.png'
 import axios from 'axios'
-import {
-  FacebookLoginButton,
-  GoogleLoginButton,
-  TwitterLoginButton
-} from 'react-social-login-buttons'
-
-const Firestore = require('../../Firebase').Firestore
+import { FacebookLoginButton, GoogleLoginButton, TwitterLoginButton } from 'react-social-login-buttons'
+import { tokenAuthenticate } from '../../Authentication'
 
 const gridStyle = {
   display: 'flex',
@@ -67,18 +62,13 @@ export function checkEmailFormat (email) {
   return email.match(emailFormat)
 }
 
-export async function fetchUser(email) {
-  let result = ''
-  await axios
+export async function fetchUser (email) {
+  return await axios
     .post('http://localhost:5000/api/users/checkIfUserExists', { email: email })
-    .then(res => {
-      result = res
-    })
-    .catch(err => console.error(err))
-  return result
+    .catch(console.error)
 }
 
-export async function loginAPICall(user) {
+export async function handleEmailLogin (user) {
   let result = ''
   await axios
     .post('http://localhost:5000/api/users/login', user)
@@ -89,81 +79,52 @@ export async function loginAPICall(user) {
   return result
 }
 
-export default function Login(props) {
+export async function handleSocialLogin (social) {
+  return await axios
+    .post('http://localhost:5000/api/users/socialLogin', {type: social})
+    .then(res => {
+      const token = res.data.data
+      return tokenAuthenticate(token)
+    })
+    .then(result => {
+      return result.user
+    })
+    .catch(console.error)
+}
+
+export default function Login (props) {
   const classes = useStyles()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
   const [errors, setErrors] = useState({ email: '', password: '' })
 
-  function signInWithSocialProviders(_provider, firestore) {
-    const ret = firestore.firebase.auth().signInWithPopup(_provider)
-    return ret
-  }
 
-  function validateUserFromSocialProviders(type, callback) {
-    callback(type)
-      .then(user => {
-        fetchUser(user.email).then(res => {
-          if (res.data.success) {
-            // eslint-disable-next-line no-undef
-            localStorage.setItem('user', JSON.stringify(user))
-            setAuthenticated(true)
-          } else {
-            const newUser = {
-              firstname: user.displayName.substr(
-                0,
-                user.displayName.indexOf(' ')
-              ),
-              lastname: user.displayName.substr(
-                user.displayName.indexOf(' ') + 1
-              ),
-              email: user.email
-            }
-            props.history.push({
-              pathname: '/question',
-              state: { user: newUser }
-            })
+  function validateUserFromSocialProviders (type, cb) {
+    let user = {}
+    cb(type)
+      .then(usr => {
+        user = usr
+        return fetchUser(user.email)
+      })
+      .then(res => {
+        if (res.data.success) {
+          // eslint-disable-next-line no-undef
+          localStorage.setItem('user', JSON.stringify(user))
+          setAuthenticated(true)
+        } else {
+          const newUser = {
+            firstname: user.displayName ? user.displayName.substr(0, user.displayName.indexOf(' ')) : ' ',
+            lastname: user.displayName ? user.displayName.substr(user.displayName.indexOf(' ') + 1) : ' ',
+            email: user.email
           }
-        })
+          props.history.push({
+            pathname: '/question',
+            state: { user: newUser }
+          })
+        }
       })
-      .catch(e => {
-        console.log(e)
-      })
-  }
-
-  function handleSocialLogin(social) {
-    return new Promise((resolve, reject) => {
-      const db = new Firestore()
-      let provider
-      switch (social) {
-        case 'facebook':
-          provider = db.facebookProvider
-          break
-        case 'google':
-          provider = db.googleProvider
-          break
-        case 'twitter':
-          provider = db.twitterProvider
-          break
-        case 'microsoft':
-          provider = db.microsoftProvider
-          break
-        default:
-          reject(new Error('no provider found'))
-      }
-
-      signInWithSocialProviders(provider, db)
-        .then(function(res) {
-          return res
-        })
-        .then(res => {
-          resolve(res.user)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
+      .catch(console.error)
   }
 
   const handleEmailChange = e => {
@@ -183,7 +144,7 @@ export default function Login(props) {
     errors.password =
       password === '' || password == null ? 'Please enter a password' : ''
     if (errors.email === '' && errors.password === '') {
-      loginAPICall(user)
+      handleEmailLogin(user)
         .then(res => {
           if (res.data.success) {
             // eslint-disable-next-line no-undef
@@ -200,7 +161,7 @@ export default function Login(props) {
             setErrors(errors)
           }
         })
-        .catch(e => console.log(e))
+        .catch(console.error)
     } else {
       setErrors(errors)
     }
