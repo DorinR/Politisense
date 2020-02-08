@@ -132,7 +132,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export async function fetchUserRiding(userEmail) {
-  return axios
+  let result = ''
+  await axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
@@ -143,7 +144,8 @@ export async function fetchUserRiding(userEmail) {
 }
 
 export async function fetchRepresentative(riding) {
-  return axios
+  let result = ''
+  await axios
     .get(
       `http://localhost:5000/api/representatives/${riding}/getRepresentative`
     )
@@ -170,6 +172,7 @@ export default function MiniDrawer({ children }) {
   }, [])
 
   useEffect(() => {
+    handleDrawerOpen()
     async function getData() {
       /* eslint-disable */
       const user = JSON.parse(localStorage.getItem('user'))

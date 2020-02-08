@@ -2,7 +2,7 @@ import React from 'react'
 import Tooltip from '@material-ui/core/Tooltip'
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
 
-export default function VariableWidth(props) {
+export default function VariableWidth (props) {
   return (
     <Tooltip title={props.text}>
       <HelpOutlineIcon
