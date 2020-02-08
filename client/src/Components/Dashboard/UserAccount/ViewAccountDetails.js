@@ -30,7 +30,6 @@ export default function ViewAccountDetails () {
     async function getData () {
       // eslint-disable-next-line no-undef
       const user = JSON.parse(localStorage.getItem('user'))
-      console.log(user)
       const fullUserDetails = await fetchUserData(user.email)
       const { firstname, lastname, postalCode, riding } = fullUserDetails
       setFirstname(firstname)
