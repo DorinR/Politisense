@@ -14,6 +14,7 @@ import AddIcon from '@material-ui/icons/Add'
 import axios from 'axios'
 import { fetchUserRiding } from '../Navbar'
 import CircularProgress from '@material-ui/core/CircularProgress'
+/* eslint-disable */
 
 const useStyles = makeStyles(theme => ({
   card: {
