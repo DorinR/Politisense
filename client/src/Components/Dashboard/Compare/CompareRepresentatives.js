@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Mp from './Mp'
+import RepresentativeCard from './RepresentativeCard'
 import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -136,10 +136,10 @@ export default function CompareRepresentatives () {
           <div>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <Mp updateHead={updateHead1} />
+                <RepresentativeCard updateHead={updateHead1} />
               </Grid>
               <Grid item xs={6}>
-                <Mp updateHead={updateHead2} />
+                <RepresentativeCard updateHead={updateHead2} />
               </Grid>
               <Grid item xs={12}>
                 {dataSet.length ? (
