@@ -5,7 +5,7 @@ import axios from 'axios'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import BarChartWrapper from '../Charts/Wrappers/BarChartWrapper'
 
-export default function BudgetContainer () {
+export default function BudgetContainer() {
   const [user, setUser] = useState(null)
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -15,7 +15,7 @@ export default function BudgetContainer () {
 
   const [riding, setRiding] = useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (user) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -24,7 +24,7 @@ export default function BudgetContainer () {
     getData()
   }, [user])
 
-  async function fetchUserRiding (userEmail) {
+  async function fetchUserRiding(userEmail) {
     return axios
       .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
       .then(res => {
@@ -37,7 +37,7 @@ export default function BudgetContainer () {
 
   const [representative, setRepresentative] = useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (riding) {
         const rep = await fetchRepresentative(riding)
         setRepresentative(rep)
@@ -46,7 +46,7 @@ export default function BudgetContainer () {
     getData()
   }, [riding])
 
-  async function fetchRepresentative (riding) {
+  async function fetchRepresentative(riding) {
     return axios
       .get(
         `http://localhost:5000/api/representatives/${riding}/getRepresentative`
@@ -68,7 +68,7 @@ export default function BudgetContainer () {
 
   const [repID, setRepID] = useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (representative) {
         const id = await fetchRepresentativeId(representative)
         setRepID(id)
@@ -77,7 +77,7 @@ export default function BudgetContainer () {
     getData()
   }, [representative])
 
-  async function fetchRepresentativeId (representative) {
+  async function fetchRepresentativeId(representative) {
     return axios
       .get(
         `http://localhost:5000/api/representatives/${representative}/getRepresentativeId`
@@ -92,7 +92,7 @@ export default function BudgetContainer () {
 
   const [data, setData] = useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (repID) {
         const data = await getBudgetData(repID)
         setData(data)
@@ -101,11 +101,9 @@ export default function BudgetContainer () {
     getData()
   }, [repID])
 
-  async function getBudgetData (id) {
+  async function getBudgetData(id) {
     return axios
-      .get(
-        `http://localhost:5000/api/budgets/budget/${id}`
-      )
+      .get(`http://localhost:5000/api/budgets/budget/${id}`)
       .then(res => {
         return res.data.data
       })
@@ -134,22 +132,18 @@ export default function BudgetContainer () {
       {budgetData.length === 0 ? (
         <div
           style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)"
-          }}
-        >
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}>
           <CircularProgress />
         </div>
-      ) :
-
+      ) : (
         <BarChartWrapper type={'budget'} data={budgetData} />
+      )}
 
-      }
-
-        <Box m={1} />
-      </ListItemText>
-    </div>
+      <Box m={1} />
+    </ListItemText>
   )
     }
