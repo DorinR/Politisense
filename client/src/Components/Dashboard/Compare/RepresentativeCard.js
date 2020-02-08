@@ -46,7 +46,7 @@ function capitalize(str) {
   return null
 }
 
-export default function Mp(props) {
+export default function RepresentativeCard(props) {
   const { updateHead, ...other } = props
   const classes = useStyles()
   const [name, setName] = useState('')
