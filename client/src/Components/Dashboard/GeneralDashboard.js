@@ -352,16 +352,15 @@ function createDataSetRadar(categories, data) {
   return [dataSetRadar, maxValue]
 }
 
-function createDataSetDonut(sponsors, mpdata) {
-  let liberalCounter = 0;
-  let conservativeCounter = 0;
-  let ndpCounter = 0;
-  let peopleCounter = 0;
-  let greenCounter = 0;
-  let bqCounter = 0;
-  let parties = {};
-  console.log(sponsors)
-  console.log(mpdata)
+export function createDataSetDonut(sponsors, mpdata) {
+  let liberalCounter = 0
+  let conservativeCounter = 0
+  let ndpCounter = 0
+  let peopleCounter = 0
+  let greenCounter = 0
+  let bqCounter = 0
+  let parties = {}
+
   if (mpdata.length) {
     mpdata.forEach(bill => {
       if (bill.voteRecord.yea === true) {
