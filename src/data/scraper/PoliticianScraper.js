@@ -83,7 +83,7 @@ class PoliticianScraper extends QueueManager {
 
   setParliaments (parliaments) {
     if (typeof parliaments === 'undefined' ||
-       (parliaments instanceof String && parliaments.toLowerCase().includes('all'))) {
+       (typeof parliaments === typeof ' ' && parliaments.toLowerCase().includes('all'))) {
       this.parliaments.push('all')
     } else if (typeof parliaments === typeof []) {
       this.parliaments = parliaments.filter(parliament => {
@@ -94,7 +94,7 @@ class PoliticianScraper extends QueueManager {
 
   setCaucuses (caucuses) {
     if (typeof caucuses === 'undefined' ||
-       (typeof caucuses === typeof '' && caucuses.toLowerCase().includes('all'))) {
+       (typeof caucuses === typeof ' ' && caucuses.toLowerCase().includes('all'))) {
       this.caucuses.push('all')
     } else if (typeof caucuses === typeof []) {
       const validPartyKeys = Object.values(caucusMapping)
@@ -106,7 +106,7 @@ class PoliticianScraper extends QueueManager {
 
   setProvinces (provinces) {
     if (typeof provinces === 'undefined' ||
-       (typeof provinces === typeof '' && provinces.toLowerCase().includes('all'))) {
+       (typeof provinces === typeof ' ' && provinces.toLowerCase().includes('all'))) {
       this.provinces.push('all')
     } else if (typeof provinces === typeof []) {
       this.provinces = provinces.filter(province => {
@@ -117,7 +117,7 @@ class PoliticianScraper extends QueueManager {
 
   setGenders (genders) {
     if (typeof genders === 'undefined' ||
-       (typeof genders === typeof '' && genders.toLowerCase().includes('all'))) {
+       (typeof genders === typeof ' ' && genders.toLowerCase().includes('all'))) {
       this.genders.push('all')
     } else if (typeof genders === typeof []) {
       this.genders = genders.filter(gender => {
@@ -131,7 +131,7 @@ class PoliticianScraper extends QueueManager {
 
   setLastNamePrefixes (lastNamePrefixes) {
     if (typeof lastNamePrefixes === 'undefined' ||
-       (typeof lastNamePrefixes === typeof '' && lastNamePrefixes.toLowerCase().includes('all'))) {
+       (typeof lastNamePrefixes === typeof ' ' && lastNamePrefixes.toLowerCase().includes('all'))) {
       this.lastNamePrefixes.push('')
     } else if (typeof lastNamePrefixes === typeof []) {
       this.lastNamePrefixes = lastNamePrefixes.filter(prefix => {
@@ -171,10 +171,7 @@ module.exports.PoliticianScraper = PoliticianScraper
 
 PoliticianScraper.create({
   url: 'https://www.ourcommons.ca/Members/en/search/xml',
-  parliaments: [36, 38, 40, 41, 44],
-  caucuses: [3, 4, 6, 7],
-  provinces: 'all',
-  genders: 'all'
+  parliaments: 'all'
 })
   .execute()
   .then(result => {

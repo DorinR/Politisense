@@ -28,6 +28,7 @@ class PoliticianFetchJob extends Job {
 
   static create (params, cb) {
     const job = new PoliticianFetchJob(params, cb)
+    job
       .addAction(new FetchAction(params))
       .addAction(new ParserAction(PoliticianParser))
       .addAction(new FormatAction(params))
