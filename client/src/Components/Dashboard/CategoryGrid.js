@@ -220,13 +220,13 @@ export default function CategoryGrid () {
           representativeData && categoryList
             ? categoryList.map((category, index) => {
               return (
-                <Grid item xs={4} key={index}>
+                <Grid item xs={4} key={categoryList[index]}>
                   <CategoryCard
                     id={index}
                     title={category}
                     delete={deleteEvent}
                     representative={representativeData}
-                    data={(representativeData) ? representativeData : []}
+                    data={representativeData}
                   />
                 </Grid>
               )

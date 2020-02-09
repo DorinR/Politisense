@@ -42,34 +42,43 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function createData (name, vote, sponsor, date, desc, link) {
-  return { name, vote, sponsor, date, desc, link }
-}
-
-export async function populateTable (data, title) {
-  const bills = data
-  const filteredBills = []
-  for (let i = 0; i < bills.length; i++) {
-    if (bills[i].billData.category.trim().localeCompare(title.toLowerCase().trim()) === 0) {
-      filteredBills.push(bills[i])
-    }
-  }
+export function populateTable (data, title) {
+  const bills = data.filter(bill => {
+    return inCategory(bill, title)
+  })
   const tableData = []
-  for (let i = 0; i < filteredBills.length; i++) {
+  bills.forEach(bill => {
     let vote = ''
-    if (filteredBills[i].voteRecord.paired) {
+    if (bill.voteRecord.paired) {
       vote = 'abstain'
-    } else if (filteredBills[i].voteRecord.yea) {
+    } else if (bill.voteRecord.yea) {
       vote = 'yea'
     } else {
       vote = 'nay'
     }
-    tableData.push(createData(filteredBills[i].voteRecord.billNumber, vote, filteredBills[i].billData.sponsorName,
-      filteredBills[i].billData.dateVoted, filteredBills[i].voteRecord.name, filteredBills[i].billData.link))
-  }
-  if (filteredBills.length > 0) {
+    tableData.push(
+      createData(bill, vote)
+    )
+  })
+
+  if (bills.length > 0) {
     return tableData
   }
+}
+
+function createData (bill, vote) {
+  return {
+    name: bill.voteRecord.billNumber,
+    vote: vote,
+    sponsor: bill.billData.sponsorName,
+    date: bill.billData.dateVoted,
+    desc: bill.voteRecord.name,
+    link: bill.billData.link
+  }
+}
+
+function inCategory (bill, title) {
+  return bill.billData.category.trim().localeCompare(title.toLowerCase().trim()) === 0
 }
 
 export default function CategoryCard (props) {
@@ -118,11 +127,13 @@ export default function CategoryCard (props) {
   }
 
   React.useEffect(() => {
-    populateTable(props.representative, props.title).then(rows => {
-      setRows(rows)
-    })
+    const rows = populateTable(props.representative, props.title)
+    setRows(rows)
     setTitle(props.title)
     setData(props.data)
+    console.log(props.title)
+    console.log(props.data)
+    console.log(rows)
   }, [props.title, props.data, props.representative])
 
   if (checkDataExistForCategory(props.data, props.title)) {
@@ -215,10 +226,7 @@ export default function CategoryCard (props) {
 }
 
 export function checkDataExistForCategory (data, title) {
-  for (let i = 0; i < data.length; i++) {
-    if (data[i].billData.category === title.toLowerCase()) {
-      return true
-    }
-  }
-  return false
+  return data.some(datum => {
+    return datum.billData.category === title.toLowerCase()
+  })
 }
