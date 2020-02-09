@@ -288,7 +288,7 @@ export default function CategoryDashboard () {
                           </ListItemAvatar>
                           <ListItemText>
                             The Bipartisan Index measures how often a member of
-                            Parliamnet introduces bills that succeed in
+                            Parliament introduces bills that succeed in
                             attracting co-sponsors from members of the other
                             party, and how often they in turn co-sponsor a bill
                             introduced from across the aisle.
@@ -353,7 +353,7 @@ function createDataSetRadar(categories, data) {
   return [dataSetRadar, maxValue]
 }
 
-export async function createDataSetDonut(sponsors, mpdata) {
+export function createDataSetDonut(sponsors, mpdata) {
   let liberalCounter = 0
   let conservativeCounter = 0
   let ndpCounter = 0
