@@ -394,7 +394,7 @@ export default function GeneralDashboard() {
                 className={classes.cardHeader}
             />
             <CardContent>
-              <div className={classes.cardPricing}>
+              <div className={classes.image}>
                 <RepresentativeImage representativeToLoad='justin trudeau' />
               </div>
               <ul>
@@ -414,36 +414,42 @@ export default function GeneralDashboard() {
         <Container>
             <TextField label="Filter by Ministry" className={classes.search} variant="outlined" onChange={handleFilterChange} color="primary"/>
           <Grid container spacing={5} alignItems="flex-end">
-            {filteredMinisters.map(minister => (
-                <Grid item key={minister.title} xs={4}>
-                  <Card>
-                    <CardHeader
-                        title={minister.title}
-                        subheader={minister.subheader}
-                        titleTypographyProps={{ align: 'center' }}
-                        subheaderTypographyProps={{ align: 'center' }}
-                        action=<HelpIcon style={{cursor:'pointer'}} onClick={() => handleMinisterClickOpen(minister.id)}/>
-                        className={classes.cardHeader}
-                    />
-                    <CardContent>
-                      <div className={classes.image}>
-                        <RepresentativeImage representativeToLoad={minister.title.toLowerCase()} />
-                      </div>
-                      <ul>
-                        <Typography component="li" variant="subtitle1" align="center" >
-                          <span style={{fontWeight:'bold'}}>Minister Since</span> {minister.description[0]}
-                        </Typography>
-                        <Typography component="li" variant="subtitle1" align="center" >
-                          <span style={{fontWeight:'bold'}}>Riding</span> {minister.description[1]}
-                        </Typography>
-                        <Typography component="li" variant="subtitle1" align="center" >
-                          <Link href={minister.description[2]}>More information</Link>
-                        </Typography>
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </Grid>
-            ))}
+              {filteredMinisters && filteredMinisters.length > 0 ?
+                  filteredMinisters.map(minister => (
+                          <Grid item key={minister.title} xs={4}>
+                              <Card>
+                                  <CardHeader
+                                      title={minister.title}
+                                      subheader={minister.subheader}
+                                      titleTypographyProps={{ align: 'center' }}
+                                      subheaderTypographyProps={{ align: 'center' }}
+                                      action=<HelpIcon style={{cursor:'pointer'}} onClick={() => handleMinisterClickOpen(minister.id)}/>
+                                  className={classes.cardHeader}
+                                  />
+                                  <CardContent>
+                                      <div className={classes.image}>
+                                          <RepresentativeImage representativeToLoad={minister.title.toLowerCase()} />
+                                      </div>
+                                      <ul>
+                                          <Typography component="li" variant="subtitle1" align="center" >
+                                              <span style={{fontWeight:'bold'}}>Minister Since</span> {minister.description[0]}
+                                          </Typography>
+                                          <Typography component="li" variant="subtitle1" align="center" >
+                                              <span style={{fontWeight:'bold'}}>Riding</span> {minister.description[1]}
+                                          </Typography>
+                                          <Typography component="li" variant="subtitle1" align="center" >
+                                              <Link href={minister.description[2]}>More information</Link>
+                                          </Typography>
+                                      </ul>
+                                  </CardContent>
+                              </Card>
+                          </Grid>
+                      )):
+                  <Grid item xs={4}>
+                      <Typography variant="h5" component="h2">
+                          No Results Found
+                      </Typography>
+                  </Grid>}
           </Grid>
         </Container>
         <MinisterHelpDialog minister={currentMinister} open={ministerOpen} onClose={handleMinisterClose} transition={Transition} />
