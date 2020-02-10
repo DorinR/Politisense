@@ -1,4 +1,5 @@
 import { Firestore } from '../client/src/Firebase'
+import { ministers } from './CabinetMinisters'
 
 exports.getRepresentativeByRiding = (req, res) => {
   const db = new Firestore()
@@ -53,6 +54,13 @@ exports.getAllRepresentatives = (req, res) => {
       })
       console.log(err)
     })
+}
+
+exports.getCabinetMinisters = (req, res) => {
+  res.status(200).json({
+    data: ministers,
+    success: true
+  })
 }
 
 // getRepresentativesInfo
