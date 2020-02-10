@@ -411,7 +411,7 @@ export default function GeneralDashboard () {
           </CardContent>
         </Card>
       </Container>
-        {/* eslint-disable */}
+     {/* eslint-disable */}
       <Container>
         <TextField label='Filter by Ministry' className={classes.search} variant='outlined' onChange={handleFilterChange} color='primary' />
         <Grid container spacing={5} alignItems='flex-end'>
