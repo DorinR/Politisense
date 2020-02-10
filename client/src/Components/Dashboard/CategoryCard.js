@@ -131,9 +131,6 @@ export default function CategoryCard (props) {
     setRows(rows)
     setTitle(props.title)
     setData(props.data)
-    console.log(props.title)
-    console.log(props.data)
-    console.log(rows)
   }, [props.title, props.data, props.representative])
 
   if (checkDataExistForCategory(props.data, props.title)) {
