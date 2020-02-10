@@ -449,7 +449,8 @@ export default function GeneralDashboard () {
               <Typography variant='h5' component='h2'>
                           No Results Found
               </Typography>
-            </Grid>}
+            </Grid>
+          }
         </Grid>
       </Container>
       <MinisterHelpDialog minister={currentMinister} open={ministerOpen} onClose={handleMinisterClose} transition={Transition} />
