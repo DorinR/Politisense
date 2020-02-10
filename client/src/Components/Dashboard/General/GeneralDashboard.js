@@ -112,7 +112,7 @@ export default function GeneralDashboard () {
       filteredMin = ministers.filter(minister => minister.subheader.toLowerCase().includes(filter.toLowerCase()))
     }
     setFilteredMinisters(filteredMin)
-  }, [filter,ministers])
+  }, [filter, ministers])
 
   const handleFilterChange = e => {
     setFilter(e.target.value)
