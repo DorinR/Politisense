@@ -206,17 +206,16 @@ export default function HorizontalLinearStepper (props) {
     }
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault()
     if (postalCode) {
-      setRiding(postalCode)
+      await setRiding(postalCode)
         .then(async res => {
           if (res.data.success) {
             const userToSignup = props.location.state.user
             userToSignup.postalCode = postalCode
             userToSignup.riding = res.data.data
-            userToSignup.category1 = category1
-            userToSignup.category2 = category2
+            userToSignup.categories = [category1, category2]
             // eslint-disable-next-line no-undef
             localStorage.setItem('user', JSON.stringify(userToSignup))
             await axios.post('http://localhost:5000/api/users/signup', userToSignup)
