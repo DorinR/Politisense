@@ -6,7 +6,7 @@ if (!fs.app) {
 }
 
 class _Firestore {
-  constructor () {
+  constructor() {
     this.config = {
       apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
       authDomain: 'abdulla-2c3a5.firebaseapp.com',
@@ -31,7 +31,7 @@ class _Firestore {
 }
 
 var instance = null
-function getInstance () {
+function getInstance() {
   if (!instance) {
     instance = new _Firestore()
   }
@@ -39,13 +39,13 @@ function getInstance () {
 }
 
 class Reference {
-  constructor (reference) {
+  constructor(reference) {
     this.reference = reference
     this.modelsOnly = false
     this.query = null
   }
 
-  where (attribute, operator, value) {
+  where(attribute, operator, value) {
     if (!this.query) {
       this.query = this.reference.where(attribute, operator, value)
     }
@@ -53,7 +53,7 @@ class Reference {
     return this
   }
 
-  update (model) {
+  update(model) {
     if (this.modelsOnly && !(model instanceof Model)) {
       throw new Error('Error: Only a model can be updated in firebase')
     } else if (!this.modelsOnly && !(model instanceof Model)) {
@@ -87,7 +87,7 @@ class Reference {
     })
   }
 
-  delete () {
+  delete() {
     let ref = this.reference
     if (this.query) {
       ref = this.query
@@ -116,7 +116,7 @@ class Reference {
     })
   }
 
-  select (attribute, operator, value) {
+  select(attribute, operator, value) {
     let ref = this.reference.get.bind(this.reference)
     if (
       typeof attribute !== 'undefined' &&
@@ -143,7 +143,7 @@ class Reference {
     })
   }
 
-  insert (model) {
+  insert(model) {
     if (this.modelsOnly && typeof !(model instanceof Model)) {
       throw new Error('Error: Only a model can be inserted in firebase')
     } else if (!this.modelsOnly && !(model instanceof Model)) {
@@ -166,7 +166,7 @@ class Reference {
     })
   }
 
-  async innerJoin (key, reference, refKey) {
+  async innerJoin(key, reference, refKey) {
     const left = {}
     const right = {}
 
@@ -230,11 +230,7 @@ class Reference {
 }
 
 class Firestore {
-<<<<<<< HEAD
-  constructor (legacy = true) {
-=======
-  constructor () {
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
+  constructor() {
     this.firestore = getInstance()
     this.reference = this.firestore.db
     this.googleProvider = this.firestore.googleProvider
@@ -242,118 +238,54 @@ class Firestore {
     this.facebookProvider = this.firestore.facebookProvider
     this.twitterProvider = this.firestore.twitterProvider
     this.microsoftProvider = this.firestore.microsoftProvider
-<<<<<<< HEAD
-    this.parliament = 43
-    this.legacy = legacy
   }
 
-  forParliament (parl) {
-    this.parliament = parl
-    return this
-  }
-
-  Bill () {
-    const collection = this.legacy ? 'bills' : `${this.parliament}/bills/bill`
-    return this.createReference(collection)
-  }
-
-  BillClassification () {
-    const collection = this.legacy ? 'bill_classification' : `${this.parliament}/bills/tag`
-    return this.createReference(collection)
-  }
-
-  FinancialRecord () {
-    const collection = this.legacy ? 'financialRecord' : `${this.parliament}/financialRecord`
-    return this.createReference(collection)
-  }
-
-  Politician () {
-    const collection = this.legacy ? 'politicians' : `${this.parliament}/politicians/politician`
-    return this.createReference(collection)
-  }
-
-  Riding () {
-    const collection = this.legacy ? 'ridings' : `${this.parliament}/ridings`
-    return this.createReference(collection)
-  }
-
-  Role () {
-    const collection = this.legacy ? 'roles' : `${this.parliament}/roles/role`
-    return this.createReference(collection)
-  }
-
-  TfIdfClassification () {
-    const collection = this.legacy ? 'tf_idf_bill' : `${this.parliament}/bills/raw`
-    return this.createReference(collection)
-  }
-
-  User () {
-    const collection = this.legacy ? 'users' : `${this.parliament}/users`
-    return this.createReference(collection)
-  }
-
-  Vote () {
-    const collection = this.legacy ? 'votes' : `${this.parliament}/voters/voter`
-    return this.createReference(collection)
-  }
-
-  VoteRecord () {
-    const collection = this.legacy ? 'voteRecord' : `${this.parliament}/vote_records/vote_record`
-    return this.createReference(collection)
-  }
-
-  createReference (collection) {
-    return new Reference(this.reference.collection(collection))
-=======
-  }
-
-  Bill () {
+  Bill() {
     return new Reference(this.reference.collection('bills'))
   }
 
-  BillClassification () {
+  BillClassification() {
     return new Reference(this.reference.collection('bill_classification'))
   }
 
-  FinancialRecord () {
+  FinancialRecord() {
     return new Reference(this.reference.collection('financialRecord'))
   }
 
-  Politician () {
+  Politician() {
     return new Reference(this.reference.collection('politicians'))
   }
 
-  Riding () {
+  Riding() {
     return new Reference(this.reference.collection('ridings'))
   }
 
-  TfIdfClassification () {
+  TfIdfClassification() {
     return new Reference(this.reference.collection('tf_idf_bill'))
   }
 
-  User () {
+  User() {
     return new Reference(this.reference.collection('users'))
   }
 
-  Vote () {
+  Vote() {
     return new Reference(this.reference.collection('votes'))
   }
 
-  VoteRecord () {
+  VoteRecord() {
     return new Reference(this.reference.collection('voteRecord'))
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
   }
 
-  async close () {
+  async close() {
     await this.firestore.app
       .delete()
       .then(result => {
         this.firestore.db
           .terminate()
-          .then(result => { })
-          .catch(e => { })
+          .then(result => {})
+          .catch(e => {})
       })
-      .catch(e => { })
+      .catch(e => {})
   }
 }
 
