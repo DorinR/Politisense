@@ -87,7 +87,7 @@ class PoliticianScraper extends QueueManager {
       this.parliaments.push('all')
     } else if (typeof parliaments === typeof []) {
       this.parliaments = parliaments.filter(parliament => {
-        return parliament > 35
+        return parliament >= 35
       })
     }
   }
