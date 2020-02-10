@@ -27,7 +27,7 @@
     "represent": "^0.2.2",
     "request": "^2.88.0",
     "svgson": "^4.0.0",
-    "typeface-roboto": "^0.0.75"
+    "typeface-roboto": "0.0.75"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.3",

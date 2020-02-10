@@ -20,8 +20,10 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import EventSeatIcon from '@material-ui/icons/EventSeat';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import 'typeface-roboto';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -52,6 +54,9 @@ const useStyles = makeStyles(theme => ({
   navbarCustomFont: {
     color: '#D71921',
     fontWeight: 'bold',
+  },
+  current: {
+    verticalAlign: 'text-top'
   },
   link: {
     margin: theme.spacing(1, 1.5),
@@ -101,41 +106,23 @@ export default function Pricing() {
             Your Government
           </Typography>
         </Container>
-        {/* End hero unit */}
         <Container maxWidth="md" component="main">
-          <Grid container spacing={5} alignItems="flex-end">
-            <Grid item xs={4}>
-              <Container>
-                <Typography variant="h5" align="center" color="textPrimary" className={classes.current}>
-                  Current Government
+          <Grid container spacing={5}>
+            <Grid item xs={12}>
+                <Typography variant="h5" align="center" color="textPrimary" >
+                  Current Government <span className={classes.navbarCustomFont}>Liberal Minority </span><HelpIcon color="primary" onClick={handleClickOpen}/>
                 </Typography>
-                <Typography variant="h5" align="center" color="textPrimary" className={classes.navbarCustomFont}>
-                  Liberal Minority <HelpIcon color="primary" onClick={handleClickOpen}/>
-                </Typography>
-              </Container>
-            </Grid>
-            <Grid item xs={8}>
               <Container >
-                <Card className={classes.card}>
-                  <CardContent>
-                    <Typography className={classes.title} gutterBottom>
-                      Seats in Parliament
-                    </Typography>
                     {Array.apply(null, { length: 31 }).map((e, i) => (
-                        <span className="busterCards" key={i}><EventSeatIcon style={{ fontSize: 30, color:'#D71921'}} /></span>))}
+                        <span className="busterCards" key={i}><FiberManualRecordIcon style={{ fontSize: 30, color:'#D71921'}} /></span>))}
                     {Array.apply(null, { length: 24 }).map((e, i) => (
-                        <span className="busterCards" key={i}><EventSeatIcon style={{ fontSize: 30, color:'#0C499C'}} /></span>))}
+                        <span className="busterCards" key={i}><FiberManualRecordIcon style={{ fontSize: 30, color:'#0C499C'}} /></span>))}
                     {Array.apply(null, { length: 6   }).map((e, i) => (
-                        <span className="busterCards" key={i}><EventSeatIcon style={{ fontSize: 30, color:'#EF7E52'}} /></span>))}
+                        <span className="busterCards" key={i}><FiberManualRecordIcon style={{ fontSize: 30, color:'#EF7E52'}} /></span>))}
                     {Array.apply(null, { length: 5 }).map((e, i) => (
-                        <span className="busterCards" key={i}><EventSeatIcon style={{ fontSize: 30, color:'#EF7E52'}} /></span>))}
-                    <EventSeatIcon style={{ fontSize: 30, color:'#2E8724'}} />
-                    <EventSeatIcon style={{ fontSize: 30, color:'#676767'}} />
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">Learn More</Button>
-                  </CardActions>
-                </Card>
+                        <span className="busterCards" key={i}><FiberManualRecordIcon style={{ fontSize: 30, color:'#EF7E52'}} /></span>))}
+                    <FiberManualRecordIcon style={{ fontSize: 30, color:'#2E8724'}} />
+                    <FiberManualRecordIcon style={{ fontSize: 30, color:'#676767'}} />
               </Container>
             </Grid>
           </Grid>
