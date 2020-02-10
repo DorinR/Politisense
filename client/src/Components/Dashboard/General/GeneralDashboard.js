@@ -444,13 +444,11 @@ export default function GeneralDashboard () {
                   </CardContent>
                 </Card>
               </Grid>
-            ))
-            : <Grid item xs={4}>
+            )) : <Grid item xs={4}>
               <Typography variant='h5' component='h2'>
                           No Results Found
               </Typography>
-            </Grid>
-          }
+              </Grid>}
         </Grid>
       </Container>
       <MinisterHelpDialog minister={currentMinister} open={ministerOpen} onClose={handleMinisterClose} transition={Transition} />
