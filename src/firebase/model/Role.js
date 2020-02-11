@@ -1,16 +1,18 @@
 const Model = require('./Model').Model
-const Condition = require('../../util/Condition').Condition.parameter
-const Builder = require('./builder/builders').RoleBuilder
+const parameter = require('../../util/Condition').Condition.parameter
+const Builder = require('./builder/RoleBuilder').RoleBuilder
 
 class Role extends Model {
-  constructor (type, title, from, to, politician) {
+  constructor (type, title, group, from, to, politician) {
     super()
     parameter(title).isType(String)
     parameter(type).isType(String)
+    parameter(group).isType(String)
     parameter(from).isType(Number)
     parameter(to).isType(Number)
-    parameter(politician).isType(string)
+    parameter(politician).isType(String)
 
+    this.group = group
     this.title = title
     this.fromDate = from
     this.toDate = to
@@ -18,11 +20,7 @@ class Role extends Model {
   }
 
   static deserialise(json) {
-    Model.deserialise(json, new Role('', -1, -1, ''))
-  }
-
-  static builder (id) {
-    return new Builder(id)
+    Model.deserialise(json, new Role('', '', '', -1, -1, ''))
   }
 }
 

@@ -1,13 +1,18 @@
+require('module-alias/register')
 const Parsers = require('@parser')
 const XmlDataParser = Parsers.XmlDataParser
+const CommitteeRoleParser = Parsers.CommitteeRoleXmlParser
+const AssociationRoleParser = Parsers.AssociationRoleXmlParser
+const ParliametaryRoleParser = Parsers.ParliamentaryRoleXMLParser
 const Models = require('@model')
 const Politician = Models.Politician
 const cheerio = require('cheerio')
 
 class MpXmlParser extends XmlDataParser {
-  constructor (xml, mustBeACurrentMember = false) {
+  constructor (xml, withRoles = false, mustBeACurrentMember = false) {
     super(xml)
     this.mustBeACurrentMember = mustBeACurrentMember
+    this.withRoles = withRoles
   }
 
   get tagName () {
@@ -23,6 +28,14 @@ class MpXmlParser extends XmlDataParser {
   }
 
   buildJson () {
+    if(this.withRoles) {
+      return this.longMPJson()
+    } else {
+      return this.shortMPJson()
+    }
+  }
+
+  shortMPJson () {
     const name = this.getDataInTag('PersonOfficialFirstName') + ' ' + this.getDataInTag('PersonOfficialLastName')
     const mp = Politician.builder(name.toLowerCase())
     mp.withParty(this.getDataInTag('CaucusShortName').toLowerCase())
@@ -31,6 +44,22 @@ class MpXmlParser extends XmlDataParser {
     mp.withEndYear(Number(this.getDataInTag('ToDateTime').substring(0, 4)))
     return mp.build()
   }
+
+  longMPJson () {
+    const mp = this.shortMPJson()
+    const associations = new AssociationRoleParser(this.getXmlInTag(AssociationRoleParser.listTagName()))
+    const committees = new CommitteeRoleParser(this.getXmlInTag(CommitteeRoleParser.listTagName()))
+    const parliamentaries = new ParliametaryRoleParser(this.getXmlInTag(ParliametaryRoleParser.listTagName()))
+    return {
+      politician: mp,
+      associations: associations.getAllFromXml(),
+      committees: committees.getAllFromXml(),
+      parliamentaries: parliamentaries.getAllFromXml()
+    }
+  }
+
+
+
 
   passesFilters () {
     return (!this.mustBeACurrentMember || this.isACurrentMember())

@@ -24,6 +24,18 @@ class XmlDataParser {
     return this.$(tag).eq(0).text()
   }
 
+  getXmlInTag(tag, allowMissingTag = false) {
+    if (!this.isTagInXml(tag)) {
+      if (allowMissingTag) {
+        return ''
+      } else {
+        throw new DataNotFoundError(`The tag ${tag} does not exist in the xml file.`)
+      }
+    }
+    const values = this.$(tag)
+    return values.eq(0).html()
+  }
+
   getDataInAttribute (tag, attribute, allowMissingTag = false) {
     if (!this.isTagInXml(tag)) {
       if (allowMissingTag) {

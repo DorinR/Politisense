@@ -1,8 +1,10 @@
 const Role = require('../Role').Role
 
 class RoleBuilder {
-  constructor(id) {
+  constructor(id = 'placeholder') {
     this.politician = id
+    this.from = 0
+    this.to = 0
   }
 
   withFromYear(year) {
@@ -25,8 +27,13 @@ class RoleBuilder {
     return this
   }
 
+  withGroup(group) {
+    this.group = group
+    return this
+  }
+
   build(){
-    return new Role(this.type, this.title, this.from, this.to, this.politician)
+    return new Role(this.type, this.title, this.group, this.from, this.to, this.politician)
   }
 }
 

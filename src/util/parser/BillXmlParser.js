@@ -2,6 +2,7 @@ const Parsers = require('./parsers')
 const XmlDataParser = Parsers.XmlDataParser
 const ParliamentNotSetError = Parsers.ParliamentNotSetError
 const Models = require('@model')
+const Builder = require('@builder').BillBuilder
 const Bill = Models.Bill
 const Model = Models.Model
 
@@ -25,7 +26,7 @@ class BillXmlParser extends XmlDataParser {
   }
 
   buildJson () {
-    const bill = Bill.builder(Number(this.getDataInAttribute(this.tagName, 'id')))
+    const bill = new Builder(Number(this.getDataInAttribute(this.tagName, 'id')))
     bill.withNumber(this.getDataInAttribute('BillNumber', 'prefix') + '-' +
       this.getDataInAttribute('BillNumber', 'number'))
     bill.withTitle(this.$('BillTitle').find('Title[language=\'en\']').text().trim())
@@ -34,7 +35,7 @@ class BillXmlParser extends XmlDataParser {
     bill.withSponsorName(sponsorName.toLowerCase())
     bill.withLink(this.getLinkToBillText())
     bill.withDateVoted(this.formatXmlDate(this.getDataInTag('BillIntroducedDate')))
-    return Model.serialise(bill.build())
+    return bill.build()
   }
 
   getLinkToBillText () {

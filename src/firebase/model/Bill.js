@@ -25,10 +25,6 @@ class Bill extends Model {
   static deserialise (json) {
     return Model.deserialise(json, new Bill(1, '', '', '', '', '', ''))
   }
-
-  static builder (id) {
-    return new Builder(id)
-  }
 }
 
 module.exports.Bill = Bill
