@@ -27,17 +27,17 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function getAllBillsByHead(head) {
+export async function getAllBillsByHead (head) {
   const res = await axios.get(
     `http://localhost:5000/api/bills/${head}/getAllBillsByHead`
   )
   return res.data.data
 }
-export function calcPercent(percent) {
+export function calcPercent (percent) {
   return [percent, 100 - percent]
 }
 
-export default function CompareRepresentatives() {
+export default function CompareRepresentatives () {
   const classes = useStyles()
   const [head1, setHead1] = useState('')
   const [head2, setHead2] = useState('')
@@ -60,7 +60,7 @@ export default function CompareRepresentatives() {
   }
 
   useEffect(() => {
-    async function getalldata(dataForHead1, dataForHead2) {
+    async function getalldata (dataForHead1, dataForHead2) {
       let dataset = {}
       let commonBillsCounter = 0
       let similarities = 0
@@ -86,7 +86,7 @@ export default function CompareRepresentatives() {
       return [dataset, final]
     }
 
-    async function getBills() {
+    async function getBills () {
       const head1Bills = await getAllBillsByHead(head1, 'head1')
       const head2Bills = await getAllBillsByHead(head2, 'head2')
       const dataset = await getalldata(head1Bills, head2Bills)
@@ -112,12 +112,13 @@ export default function CompareRepresentatives() {
               className={classes.customHeaders}
               align='left'
               color='primary'
-              gutterBottom>
+              gutterBottom
+            >
               Compare Parties
             </Typography>
             <span className={classes.customTooltip}>
               <InfoBubble
-                title={'What is a minory government?'}
+                title='What is a minory government?'
                 text={titleExplanation}
               />
             </span>
@@ -126,7 +127,8 @@ export default function CompareRepresentatives() {
             variant='h5'
             align='center'
             color='textSecondary'
-            paragraph>
+            paragraph
+          >
             Select two MP's of your choice and compare their information and
             performance in terms of bills sponsored and voted pm and then see
             how much or how little they agree on!
