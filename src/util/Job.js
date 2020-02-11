@@ -42,9 +42,11 @@ class Job {
     return this.actions.reduce((promise, action) => {
       return promise.then(action)
     }, Promise.resolve())
-      .catch(e => {
-        this.handleErrors(e)
-        throw e
+      .catch(async e => {
+        const err = await this.handleErrors(e)
+        if(err) {
+          throw err
+        }
       })
       .finally(this.logAction)
   }

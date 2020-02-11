@@ -5,6 +5,7 @@ module.exports = {
   PDFFileRetrieverAction: require('./fetch_action/PDFFileRetrieverAction').PDFFileRetrieverAction,
   PDFParseAction: require('./parse_action/PDFParseAction').PDFParseAction,
   SelectionAction: require('./parse_action/SelectionAction').Selector,
+  SelectionGroupAction: require('./parse_action/SelectionGroupAction').SelectionGroupAction,
   TextParserAction: require('./parse_action/TextParserAction').TextParser,
   XMLRetrieverAction: require('./fetch_action/XmlFileRetrieverAction').FileReader,
   HandleConnectionErrorAction: require('./error_action/HandleConnectionErrorAction').HandleConnectionErrorAction,

@@ -87,7 +87,8 @@
       "@parser": "<rootDir>/src/util/parser/parsers",
       "@queue": "<rootDir>/src/util/queue/queues",
       "@manager": "<rootDir>/src/util/queue_manager/actions",
-      "@controller": "<rootDir>/src/controllers"
+      "@controller": "<rootDir>/src/controllers",
+      "@builder": "<rootDir>/src/firebase/model/builder/builders"
     }
   }
 }

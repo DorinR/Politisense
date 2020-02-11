@@ -6,7 +6,13 @@ class QueueManager {
   constructor (waitPeriod = 1000) {
     this.error = console.error
     this.log = (result) => {
-      console.debug(`INFO: job finished, found ${result.length} potential results`)
+      let message
+      if (result instanceof Object) {
+        message = `INFO: job finished, found ${result.data ? result.data.length : 0} potential results`
+      } else {
+        message = `INFO: job finished, found ${result ? result.length : 0} potential results`
+      }
+      console.log(message)
       return result
     }
     this.activeJobs = []

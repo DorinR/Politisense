@@ -1,6 +1,6 @@
 const requestFn = require('axios')
 const JobAction = require('../JobAction').AbstractJobAction
-const RequestError = require('../error/errors').RequestError
+const RequestError = require('../error/errors').ScrapeError
 
 class FetchAction extends JobAction {
   static headers () {
@@ -37,7 +37,11 @@ class FetchAction extends JobAction {
     }
   }
 
-  async perform () {
+  async perform (params) {
+    if(params) {
+      this.params = params
+    }
+
     return new Promise((resolve, reject) => {
       this.send(this.params)
         .then(this.logResult.bind(this))
@@ -45,6 +49,7 @@ class FetchAction extends JobAction {
         .catch((e) => {
           const error = new RequestError(e.message, this.params.url)
           error.stack = e.stack
+          error.params = this.params
           reject(error)
         })
     })

@@ -1,6 +1,5 @@
 const Condition = require('../../util/Condition').Condition
 const Model = require('./Model').Model
-const Builder = require('./builder/builders').BillBuilder
 
 class Bill extends Model {
   constructor (id, number, title, text, link, dateVoted, sponsorName) {

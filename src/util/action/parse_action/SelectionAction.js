@@ -15,6 +15,7 @@ class SelectionAction extends JobAction {
     } else {
       input = raw
     }
+    input = input.sort()
     input.forEach((item) => {
       if (!item) {
         return
