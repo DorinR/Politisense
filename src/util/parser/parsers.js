@@ -5,3 +5,4 @@ module.exports.BillXmlParser = require('./BillXmlParser').BillXmlParser
 module.exports.MpXmlParser = require('./MpXmlParser').MpXmlParser
 module.exports.VoteParticipantsXmlParser = require('./VoteParticipantsXmlParser').VoteParticipantsXmlParser
 module.exports.VoteXmlParser = require('./VoteXmlParser').VoteXmlParser
+module.exports.ParliamentaryRoleXMLParser = require('./ParliamentaryRoleXmlParser').ParliamentaryRoleXMLParser
