@@ -218,6 +218,22 @@ export default function MiniDrawer ({ children }) {
               General
             </Button>
           </Link>
+          <Link to='/myMP' className={classes.navbarCustomFont}>
+            <Button
+                variant='contained'
+                color='primary'
+                className={classes.navbarCustomButton}>
+              My MP
+            </Button>
+          </Link>
+          <Link to='/alternativeMyMP' className={classes.navbarCustomFont}>
+            <Button
+                variant='contained'
+                color='primary'
+                className={classes.navbarCustomButton}>
+              Althernative My MP
+            </Button>
+          </Link>
           <Link to='/categories' className={classes.navbarCustomFont}>
             <Button variant='contained' className={classes.navbarCustomButton}>
               Categories

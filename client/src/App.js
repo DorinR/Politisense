@@ -18,7 +18,9 @@ import GeneralDashboard from './Components/Dashboard/GeneralDashboard'
 import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
 import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
 import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
-
+import MyMP from './Components/Dashboard/MyMP'
+import AlternativeMyMP from './Components/Dashboard/AlternativeMyMP'
+import MyMP2 from "./Components/Dashboard/MyMP2";
 const App = () => {
   const LoginContainer = () => (
     <div className='container'>
@@ -39,6 +41,10 @@ const App = () => {
           <PrivateRoute path='/categories' component={CategoryDashboard} />
           <PrivateRoute path='/votingHistory' component={BillHistoryTable} />
           <PrivateRoute path='/budget' component={BudgetContainer} />
+          <PrivateRoute path='/myMP' component={MyMP2} />
+         <PrivateRoute path='/alternativeMyMP' component={AlternativeMyMP} />
+
+
         </div>
       </Navbar>
     </div>
@@ -62,7 +68,9 @@ const App = () => {
         <Route exact path='/(login)' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
         <Route exact path='/question' component={Questionnaire} />
-        <Route component={DefaultContainer} />
+          <Route exact path='/MyMP2' component={MyMP2} />
+
+          <Route component={DefaultContainer} />
       </Switch>
     </Router>
   )

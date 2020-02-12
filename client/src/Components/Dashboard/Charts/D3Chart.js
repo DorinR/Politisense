@@ -1,12 +1,14 @@
 import * as d3 from 'd3'
+import React, { Component } from 'react'
 
-export default class D3Chart {
+export default class D3Chart extends Component {
   constructor (element, data, categoryType) {
+    super(element)
     const test = data.filter(element => element.billData.category === categoryType.toLowerCase())
 
     let yeaCounter = 0
     let nayCounter = 0
-    let abstainCounter = 0
+    // let abstainCounter = 0
 
     if (test.length !== 0) {
       test.forEach(element => {
@@ -14,13 +16,15 @@ export default class D3Chart {
           yeaCounter++
         } else if (element.voteRecord.yea === false) {
           nayCounter++
-        } else { abstainCounter++ }
+        }
+        // else { abstainCounter++ }
+
       })
     }
     const totalYesNoVotes = [
       { index: 0, name: 'Yeas', value: yeaCounter },
       { index: 1, name: 'Nays', value: nayCounter },
-      { index: 2, name: 'Abstain', value: abstainCounter }
+      // { index: 2, name: 'Abstain', value: abstainCounter }
     ]
 
     const width = 200
@@ -44,7 +48,7 @@ export default class D3Chart {
       .innerRadius(radius - 20)
       .outerRadius(radius)
 
-    const colors = d3.scaleOrdinal(d3.schemeCategory10)
+    const colors = ['#40bfc1','#ff6f5e']
 
     const div = d3.select(element).append('div')
       .attr('class', 'tooltip')
@@ -77,7 +81,7 @@ export default class D3Chart {
       .attr('class', 'arc')
 
     arcs.append('path')
-      .attr('fill', (d, i) => { return colors(i) })
+      .attr('fill', (d, i) => { return colors[i] })
       .attr('d', createArc)
       .style('opacity', opacity)
       .style('stroke', 'white')
@@ -131,7 +135,7 @@ export default class D3Chart {
       .style('height', '10px')
       .style('width', '10px')
       .style('margin', '5px 5px')
-      .style('background-color', (d, i) => colors(i))
+      .style('background-color', (d, i) => colors[i])
 
     keys.append('div')
       .attr('class', 'name')

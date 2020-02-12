@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     transform: 'rotate(180deg)'
   },
   container: {
-    maxHeight: 200
+    maxHeight: 200,
   }
 }))
 
@@ -150,11 +150,15 @@ export default function CategoryCard (props) {
             categoryName={props.title}
           />
           <CardContent>
+            <div>
             {data.length
               ? <BarChartWrapper data={data} categoryType={props.title} />
               : 'title is empty!!'}
-            <br />
-            <TableContainer className={classes.container}>
+            </div>
+          </CardContent>
+            <CardContent>
+              <br />
+              <TableContainer className={classes.container}>
               <Table className={classes.table} size='small' aria-label='a dense table'>
                 <TableHead>
                   <TableRow>

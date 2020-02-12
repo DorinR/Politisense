@@ -17,7 +17,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 const useStyles = makeStyles(theme => ({
   card: {
-    backgroundColor: '#43D0C4'
+    backgroundColor: '#43D0C4',
   },
   container: {
     margin: '20px',
@@ -207,8 +207,8 @@ export default function CategoryGrid () {
             </div>
         }
         {(counter < 3 && representativeData.length > 0)
-          ? <Grid item md={4}>
-            <Card className={classes.card}>
+          ? <Grid item md={4} style={counter == 0? {marginLeft: "34%"} : {}}>
+            <Card className={classes.card} >
               <CardActionArea>
                 <CardContent>
                   <div onClick={handleClickListItem}>
