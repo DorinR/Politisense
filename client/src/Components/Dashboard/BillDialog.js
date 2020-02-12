@@ -47,7 +47,7 @@ export default function BillDialog (props) {
               <DescriptionIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText>{props.billInfo.name}</ListItemText>
+          <ListItemText>{props.billInfo.name }</ListItemText>
         </ListItem>
         <ListItem>
           <ListItemAvatar>
@@ -89,3 +89,4 @@ export default function BillDialog (props) {
     </Dialog>
   )
 }
+

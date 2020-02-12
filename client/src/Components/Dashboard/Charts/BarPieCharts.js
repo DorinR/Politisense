@@ -216,7 +216,6 @@ function dashboard (element, fData) {
 }
 export default class BarPieChart {
   constructor (element, data, categories) {
-    console.log(data, categories)
     createData(categories, data).then(results => {
       dashboard(element, results)
     })
@@ -230,6 +229,7 @@ export async function createData (categories, data) {
     let failedBills = 0
     let totalBills = 0
     data.forEach(bill => {
+      // console.log(bill)
       if (bill.billsClassified.category === (category.toLowerCase())) {
         totalBills++
         if (bill.voteRecord.yeas > bill.voteRecord.nays) {
@@ -239,10 +239,10 @@ export async function createData (categories, data) {
         }
       }
     })
-    if (totalBills !== 0) {
+    // if (totalBills !== 0) {
       temp = { State: category, freq: { Succeeded: passedBills, Failed: failedBills }, total: totalBills }
       dataArray.push(temp)
-    }
+    // }
   })
 
   return dataArray

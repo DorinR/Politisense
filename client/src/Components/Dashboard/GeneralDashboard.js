@@ -18,10 +18,34 @@ import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import List from '@material-ui/core/List'
 import { capitalizedName } from './BillDialog'
-
-const useStyles = makeStyles({
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Container from "@material-ui/core/Container";
+import CardHeader from '@material-ui/core/CardHeader';
+import IconButton from '@material-ui/core/IconButton';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ShareIcon from '@material-ui/icons/Share';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import HelpIcon from '@material-ui/icons/Help';
+import Divider from '@material-ui/core/Divider';
+import Button from "@material-ui/core/Button";
+import clsx from 'clsx';
+import CardActions from "@material-ui/core/CardActions";
+import Collapse from '@material-ui/core/Collapse';
+import TableContainer from "@material-ui/core/TableContainer";
+import Table from "@material-ui/core/Table";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import TableBody from "@material-ui/core/TableBody";
+import {populateTable,createData} from "./CategoryCard";
+import BillDialog from "./BillDialog";
+import TableDialog from "./TableDialog";
+const useStyles = makeStyles(theme => ({
   card: {
-    minWidth: 275
+    minWidth: 275,
+    // boxShadow: 'none',
+
   },
   bullet: {
     display: 'inline-block',
@@ -41,8 +65,22 @@ const useStyles = makeStyles({
   container: {
     margin: '20px',
     marginTop: '30px'
+  },
+  expand: {
+    // transform: 'rotate(0deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    // transform: 'rotate(180deg)',
+  },
+  tableContainer : {
+      maxHeight: 200,
   }
-})
+
+}))
 
 export default function CategoryDashboard() {
   const classes = useStyles()
@@ -62,6 +100,45 @@ export default function CategoryDashboard() {
   const [donutData, setDonutData] = React.useState([])
   const [reps, setReps] = React.useState([])
   const [userRepIssuedBills, setUserRepIssuedBills] = React.useState([])
+  const [expanded, setExpanded] = React.useState(false);
+  const [rows, setRows] = React.useState([])
+
+  const [billInfo, setBillInfo] = React.useState([])
+  const [billOpen, setBillOpen] = React.useState(false)
+
+  const [tableContents, setTableContents] = React.useState([])
+  const [tableDialogOpen, setTableDialogOpen] = React.useState(false)
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+  const handleBillClickOpen = (row) => {
+    if(row){
+    let temp = {
+      name: row.bill.billsClassified.number,
+      desc:row.bill.billsClassified.title,
+      link:row.bill.billsClassified.link,
+      sponsor:row.bill.billsClassified.sponsorName,
+      data:row.bill.billsClassified.dateVoted
+    }
+    console.log(temp)
+    setBillInfo(temp)
+    setBillOpen(true)
+    }
+  }
+
+  const handleBillClose = () => {
+    setBillOpen(false)
+  }
+
+  const handleBarPieChartClickOpen = (rows) => {
+    setTableContents(rows)
+    setTableDialogOpen(true)
+  }
+
+  const handleBarPieChartClose = () => {
+    setTableDialogOpen(false)
+  }
 
   useEffect(() => {
     async function getDataForDonut() {
@@ -138,6 +215,16 @@ export default function CategoryDashboard() {
     }
     getData()
 
+    async function populateIssuedBill (userRepIssuedBills){
+      const dataForTable = await createDataPieBarTable(categoryList,userRepIssuedBills)
+      return dataForTable
+    }
+    if(userRepIssuedBills.length !== 0){
+      populateIssuedBill(userRepIssuedBills).then(res => {
+        setRows(res)
+      })
+    }
+
     if (userRepresentative) {
       getAllBillsByRep(userRepresentative).then(results => {})
     }
@@ -153,7 +240,10 @@ export default function CategoryDashboard() {
     if (reps.length && repDataLoaded) {
       getDataForDonut()
     }
+
   }, [userRepresentative, repDataLoaded])
+
+
 
   async function fetchRepresentative(riding) {
     let result = ''
@@ -169,22 +259,36 @@ export default function CategoryDashboard() {
       .catch(err => console.error(err))
     return result
   }
-
   return (
     <div className={classes.container}>
+      <CssBaseline />
       <Grid container spacing={1}>
+
         <Grid item xs={12}>
           {userRepIssuedBills.length !== 0 && categoryList.length !== 0 ? (
-            <Card>
+              <div>
+            <Card className={classes.card}>
+              <CardHeader
+                  action={
+                    <IconButton aria-label="settings">
+                      <HelpIcon />
+                    </IconButton>
+                    }
+                   title={
+                     <Typography variant="h4" align="center" color={"textPrimary"}>
+                       Bills sponsored by {capitalizedName(userRepresentative)}
+                      </Typography>}
+              />
+              <Divider />
               <CardContent>
-                <Typography className={classes.title}>
-                  Bills sponsored by {capitalizedName(userRepresentative)}
-                </Typography>
-                <BarChartWrapper
-                  type='bar-pie'
-                  data={userRepIssuedBills}
-                  categories={categoryList}
-                />
+                <div onClick={() => handleBarPieChartClickOpen(rows)}>
+                  <BarChartWrapper
+                    type='bar-pie'
+                    data={userRepIssuedBills}
+                    categories={categoryList}
+                  />
+                </div>
+
                 <Box border mx='auto'>
                   <List>
                     <ListItem>
@@ -201,7 +305,57 @@ export default function CategoryDashboard() {
                   </List>
                 </Box>
               </CardContent>
+            <CardActions>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={clsx(classes.expand, {
+                      [classes.expandOpen]: expanded,
+                    })}
+                    onClick={handleExpandClick}
+                    aria-expanded={expanded}
+                    aria-label="show more"
+                    // className={classes.button}
+                    style={{marginLeft:"auto"}}
+                >
+                  Find More
+                </Button>
+            </CardActions>
+              <Collapse in={expanded} timeout="auto" unmountOnExit>
+                <CardContent>
+                  <Typography paragraph>The issued bills are: </Typography>
+                  <TableContainer className={classes.tableContainer}>
+                    <Table className={classes.table} size='medium' aria-label='a dense table'>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Bill Name</TableCell>
+                          <TableCell> Category </TableCell>
+                          <TableCell align='right'>Bill Status</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      {(rows.length) > 0 ? (
+                          <TableBody stickyHeader>
+                            {rows.map((row,i)=> (
+                                <TableRow key={i}>
+                                  <TableCell component='th' scope='row'>
+                                    <Button color='primary' onClick={() => handleBillClickOpen(row)}>
+                                      <Typography>{row.bill.billsClassified.number}</Typography>
+                                    </Button>
+                                  </TableCell>
+                                  <TableCell component='th' scope='row'><Typography>{row.category}</Typography></TableCell>
+                                  <TableCell align='right'><Typography>{row.status}</Typography></TableCell>
+                                </TableRow>
+                            ))}
+                          </TableBody>) : 'nothing!'}
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </Collapse>
             </Card>
+                <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
+                <TableDialog rows={tableContents} open={tableDialogOpen} onClose={handleBarPieChartClose}> </TableDialog>
+
+              </div>
           ) : (
             ''
           )}
@@ -393,4 +547,31 @@ export async function createDataSetDonut(sponsors, mpdata) {
     BQ: bqCounter
   }
   return parties
+}
+
+export async function createDataPieBarTable(categories, data) {
+  const dataArray = []
+  let temp = {}
+  let billsForSpeicificCategory =[]
+  let finalArray=[]
+  categories.forEach(category => {
+
+    let totalBills = 0
+
+    data.forEach(bill => {
+      if (bill.billsClassified.category === (category.toLowerCase())) {
+        console.log("IM here")
+        totalBills++
+        if (bill.voteRecord.yeas > bill.voteRecord.nays) {
+          billsForSpeicificCategory.push({bill:bill,category: category, status:'Passed'})
+        } else {
+          billsForSpeicificCategory.push({bill:bill ,category: category, status:'Failed'})
+        }
+      }
+    })
+    if (totalBills !== 0) {
+         finalArray = finalArray.concat(billsForSpeicificCategory)
+    }
+  })
+  return finalArray
 }
