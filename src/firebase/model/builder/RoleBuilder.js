@@ -1,38 +1,38 @@
 const Role = require('../Role').Role
 
 class RoleBuilder {
-  constructor(id = 'placeholder') {
+  constructor (id = 'placeholder') {
     this.politician = id
     this.from = 0
     this.to = 0
   }
 
-  withFromYear(year) {
+  withFromYear (year) {
     this.from = year
     return this
   }
 
-  withToYear(year) {
+  withToYear (year) {
     this.to = year
     return this
   }
 
-  withTitle(title) {
+  withTitle (title) {
     this.title = title
     return this
   }
 
-  withType(type) {
+  withType (type) {
     this.type = type
     return this
   }
 
-  withGroup(group) {
+  withGroup (group) {
     this.group = group
     return this
   }
 
-  build(){
+  build () {
     return new Role(this.type, this.title, this.group, this.from, this.to, this.politician)
   }
 }

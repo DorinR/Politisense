@@ -9,7 +9,7 @@ class SelectionGroupAction extends JobAction {
 
   async perform () {
     let output = this.primaryFilter(this.group)
-    if(output.length < 1) {
+    if (output.length < 1) {
       output = this.fallbackFilter(this.group)
     }
 
@@ -17,14 +17,14 @@ class SelectionGroupAction extends JobAction {
     return output[0]
   }
 
-  primaryFilter(group) {
+  primaryFilter (group) {
     return group.filter(url => {
       url = url.toLowerCase()
       return url.includes(this.selector.toLowerCase())
     })
   }
 
-  fallbackFilter(group) {
+  fallbackFilter (group) {
     const selectors = this.selector.split('-')
     return group.filter(url => {
       url = url.toLowerCase()

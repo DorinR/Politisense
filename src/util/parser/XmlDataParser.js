@@ -24,7 +24,7 @@ class XmlDataParser {
     return this.$(tag).eq(0).text()
   }
 
-  getXmlInTag(tag, allowMissingTag = false) {
+  getXmlInTag (tag, allowMissingTag = false) {
     if (!this.isTagInXml(tag)) {
       if (allowMissingTag) {
         return ''

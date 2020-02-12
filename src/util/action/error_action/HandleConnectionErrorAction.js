@@ -103,7 +103,7 @@ class HandleConnectionErrorAction extends JobAction {
   }
 
   dynamicCreate (e, link) {
-    if(this.create.length === 2) {
+    if (this.create.length === 2) {
       return this.create(this.tlds, this.callback)
     } else if (this.create.length === 3) {
       return this.create(link, this.callback, this.tlds)

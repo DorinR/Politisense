@@ -38,7 +38,7 @@ class FetchAction extends JobAction {
   }
 
   async perform (params) {
-    if(params) {
+    if (params) {
       this.params = params
     }
 

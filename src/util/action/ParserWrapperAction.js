@@ -16,7 +16,7 @@ class ParserWrapperAction extends Action {
   async perform (xml) {
     const parser = new this.Create(xml)
 
-    if(this.params) {
+    if (this.params) {
       Object.keys(this.params).forEach(key => {
         parser[key] = this.params[key]
       })

@@ -44,7 +44,7 @@ class Job {
     }, Promise.resolve())
       .catch(async e => {
         const err = await this.handleErrors(e)
-        if(err) {
+        if (err) {
           throw err
         }
       })

@@ -13,5 +13,5 @@ class RoleStopAction extends QueueAction {
 }
 
 module.exports = {
-  RoleStop : RoleStopAction
+  RoleStop: RoleStopAction
 }

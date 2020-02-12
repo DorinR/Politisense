@@ -13,7 +13,7 @@ class FormatAction extends Actions.Action {
   }
 
   async perform (result) {
-    const {associations, committees, parliamentaries} = result
+    const { associations, committees, parliamentaries } = result
     const roles = []
     roles.push(...associations)
     roles.push(...committees)
@@ -35,8 +35,8 @@ class AdapterAction extends Actions.Action {
   }
 
   async perform (result) {
-    if(!result) {
-      throw new Actions.Errors.RequestError(`ERROR: no name provided`, this.params.url)
+    if (!result) {
+      throw new Actions.Errors.RequestError('ERROR: no name provided', this.params.url)
     }
     const nameWithInaccessibleID = result
     const url = ` https://www.ourcommons.ca${nameWithInaccessibleID}/roles/xml`
@@ -60,7 +60,7 @@ class RoleFetchJob extends Job {
       .addAction(new Actions.SelectionGroupAction(params.name, params.group))
       .addAction(new AdapterAction(params))
       .addAction(new Actions.FetchAction(requestParams))
-      .addAction(new Actions.ParserWrapperAction(RoleParser, {withRoles: true}))
+      .addAction(new Actions.ParserWrapperAction(RoleParser, { withRoles: true }))
       .addAction(new FormatAction(params))
       .addErrorAction(new Actions.HandleConnectionErrorAction(cb, RoleFetchJob.create, params))
     job.params = params
