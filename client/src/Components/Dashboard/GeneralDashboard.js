@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import Typography from '@material-ui/core/Typography'
@@ -44,7 +43,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function CategoryDashboard() {
+export default function CategoryDashboard () {
   const classes = useStyles()
   const [categoryList] = React.useState([
     'economics',
@@ -55,196 +54,231 @@ export default function CategoryDashboard() {
     'criminal',
     'trade'
   ])
-  const [userRepresentative, setUserRepresentative] = React.useState('')
-  const [representativeData, setRepresentativeData] = React.useState([])
-  const [radarData, setRadarData] = React.useState([])
-  const [repDataLoaded, setRepDataLoaded] = React.useState(false)
-  const [donutData, setDonutData] = React.useState([])
-  const [reps, setReps] = React.useState([])
-  const [userRepIssuedBills, setUserRepIssuedBills] = React.useState([])
 
+  const [user, setUser] = useState(null)
   useEffect(() => {
-    async function getDataForDonut() {
-      if (reps.length && representativeData.length) {
-        const data = await createDataSetDonut(reps, representativeData)
-        if (
-          data.Liberal !== 0 &&
-          data.Liberal !== 0 &&
-          data.Liberal !== 0 &&
-          data.Liberal !== 0 &&
-          data.Liberal !== 0 &&
-          data.Liberal !== 0
-        ) {
-          setDonutData([data])
-        }
-      }
-    }
-    async function getAllReps() {
-      let result = []
-      await axios
-        .get('http://localhost:5000/api/representatives/getAllRepresentatives')
-        .then(res => {
-          if (res.data.success) {
-            result = res.data.data
-          }
-        })
-        .catch(err => console.error(err))
-      return result
-    }
+    // eslint-disable-next-line no-undef
+    const user = JSON.parse(localStorage.getItem('user'))
+    setUser(user)
+  }, [])
 
-    async function getAllBillsByRep(head) {
-      let result = []
-      await axios
-        .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
-        .then(res => {
-          if (res.data.success) {
-            result = res.data.data
-            setRepresentativeData(result)
-            setRepDataLoaded(true)
-          }
-        })
-        .catch(err => console.error(err))
-      return result
+  const [reps, setReps] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      const representatives = await getAllReps()
+      setReps(representatives)
     }
-    async function getAllBillsBySponsorName(head) {
-      let result = []
-      await axios
-        .get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
-        .then(res => {
-          if (res.data.success) {
-            result = res.data.data
-          }
-        })
-        .catch(err => console.error(err))
-      return result
-    }
-    async function getData() {
-      const user = JSON.parse(localStorage.getItem('user'))
-      if (user) {
-        const { email } = user
-        const riding = await fetchUserRiding(email)
-        const representative = await fetchRepresentative(riding)
-        const allRepresentatives = await getAllReps()
-        setUserRepresentative(representative)
-        setReps(allRepresentatives)
-        const issuedBillByUserRep = await getAllBillsBySponsorName(
-          representative
-        )
-        setUserRepIssuedBills(issuedBillByUserRep)
-        if (representative.length !== 0) {
-          setUserRepresentative(representative)
+    getData()
+  }, [])
+
+  async function getAllReps () {
+    return axios
+      .get('http://localhost:5000/api/representatives/getAllRepresentatives')
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data
         }
+      })
+      .catch(console.error)
+  }
+
+  const [riding, setRiding] = useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (user) {
+        const riding = await fetchUserRiding(user.email)
+        setRiding(riding)
       }
     }
     getData()
+  }, [user])
 
-    if (userRepresentative) {
-      getAllBillsByRep(userRepresentative).then(results => {})
+  const [userRepresentative, setUserRepresentative] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (riding) {
+        const representative = await fetchRepresentative(riding)
+        setUserRepresentative(representative)
+      }
     }
+    getData()
+  }, [riding])
 
-    if (categoryList && repDataLoaded) {
-      createDataSetRadar(categoryList, representativeData).then(testing => {
-        if (testing.length !== 0) {
-          setRadarData(testing)
-        }
-      })
-    }
-
-    if (reps.length && repDataLoaded) {
-      getDataForDonut()
-    }
-  }, [userRepresentative, repDataLoaded])
-
-  async function fetchRepresentative(riding) {
-    let result = ''
-    await axios
+  async function fetchRepresentative (riding) {
+    return axios
       .get(
         `http://localhost:5000/api/representatives/${riding}/getRepresentative`
       )
       .then(res => {
         if (res.data.success) {
-          result = res.data.data.name
+          return res.data.data.name
         }
       })
-      .catch(err => console.error(err))
-    return result
+      .catch(console.error)
   }
 
+  const [representativeData, setRepresentativeData] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (userRepresentative) {
+        const billsByRep = await getAllBillsByRep(userRepresentative)
+        setRepresentativeData(billsByRep)
+      }
+    }
+    getData()
+  }, [userRepresentative])
+
+  async function getAllBillsByRep (head) {
+    return axios
+      .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data
+        }
+      })
+      .catch(console.error)
+  }
+
+  const [userRepIssuedBills, setUserRepIssuedBills] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (userRepresentative) {
+        const issuedBillByUserRep = await getAllBillsBySponsorName(userRepresentative)
+        setUserRepIssuedBills(issuedBillByUserRep)
+      }
+    }
+    getData()
+  }, [userRepresentative])
+
+  async function getAllBillsBySponsorName (head) {
+    return axios
+      .get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data
+        }
+      })
+      .catch(console.error)
+  }
+
+  const [donutData, setDonutData] = React.useState(null)
+  useEffect(() => {
+    if (reps && representativeData) {
+      const data = createDataSetDonut(reps, representativeData)
+      setDonutData([data])
+    }
+  }, [reps, representativeData])
+
+  const [radarData, setRadarData] = React.useState(null)
+  useEffect(() => {
+    if (categoryList && representativeData) {
+      const data = createDataSetRadar(categoryList, representativeData)
+      setRadarData(data)
+    }
+  }, [representativeData, categoryList])
+
+  /* eslint-disable */
   return (
     <div className={classes.container}>
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          {userRepIssuedBills.length !== 0 && categoryList.length !== 0 ? (
-            <Card>
-              <CardContent>
-                <Typography className={classes.title}>
-                  Bills sponsored by {capitalizedName(userRepresentative)}
-                </Typography>
-                <BarChartWrapper
-                  type='bar-pie'
-                  data={userRepIssuedBills}
-                  categories={categoryList}
-                />
-                <Box border mx='auto'>
-                  <List>
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar className={classes.avatar}>
-                          <NotListedLocationIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText>
-                        The distribution of issued bills by the representative
-                        among different categories
-                      </ListItemText>
-                    </ListItem>
-                  </List>
-                </Box>
-              </CardContent>
-            </Card>
-          ) : (
-            ''
-          )}
-        </Grid>
+    <Grid container spacing={1}>
+      <Grid item xs={12}>
+        {userRepIssuedBills && categoryList && userRepresentative ? (
+          <Card>
+            <CardContent>
+              <Typography className={classes.title}>
+                Bills sponsored by {capitalizedName(userRepresentative)}
+              </Typography>
+              <BarChartWrapper
+                type="bar-pie"
+                data={userRepIssuedBills}
+                categories={categoryList}
+              />
+              <Box border mx="auto">
+                <List>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar className={classes.avatar}>
+                        <NotListedLocationIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText>
+                      The distribution of issued bills by the representative
+                      among different categories
+                    </ListItemText>
+                  </ListItem>
+                </List>
+              </Box>
+            </CardContent>
+          </Card>
+        ) : (
+          ""
+        )}
+      </Grid>
 
-        {radarData.length !== 0 && categoryList.length !== 0 ? (
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
+      {radarData && categoryList ? (
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Card>
+                <CardContent>
+                  <Typography className={classes.title}>
+                    MP Voting Distribution
+                  </Typography>
+                  <Radar
+                    width={400}
+                    height={350}
+                    padding={40}
+                    domainMax={radarData[1] + 3}
+                    highlighted
+                    onHover={point => {
+                      if (point) {
+                      } else {
+                      }
+                    }}
+                    data={{
+                      variables: [
+                        { key: "trade", label: "Trade" },
+                        { key: "criminal", label: "Criminal" },
+                        { key: "business", label: "Business" },
+                        { key: "Economics", label: "Economics" },
+                        { key: "Healthcare", label: "Healthcare" },
+                        { key: "Religion", label: "Religion" },
+                        { key: "Human Rights", label: "Human Rights" }
+                      ],
+                      sets: [
+                        {
+                          values: radarData[0]
+                        }
+                      ]
+                    }}
+                  />
+                  <Box border mx="auto">
+                    <List>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar className={classes.avatar}>
+                            <NotListedLocationIcon />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText>
+                          This radar chart shows the MP's activity with respect
+                          to a variety categories.
+                        </ListItemText>
+                      </ListItem>
+                    </List>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+            {donutData ? (
+              <Grid item item xs={6}>
                 <Card>
                   <CardContent>
                     <Typography className={classes.title}>
-                      MP Voting Distribution
+                      Bipartisan Index
                     </Typography>
-                    <Radar
-                      width={400}
-                      height={350}
-                      padding={40}
-                      domainMax={radarData[1] + 3}
-                      highlighted
-                      onHover={point => {
-                        if (point) {
-                        } else {
-                        }
-                      }}
-                      data={{
-                        variables: [
-                          { key: 'trade', label: 'Trade' },
-                          { key: 'criminal', label: 'Criminal' },
-                          { key: 'business', label: 'Business' },
-                          { key: 'Economics', label: 'Economics' },
-                          { key: 'Healthcare', label: 'Healthcare' },
-                          { key: 'Religion', label: 'Religion' },
-                          { key: 'Human Rights', label: 'Human Rights' }
-                        ],
-                        sets: [
-                          {
-                            values: radarData[0]
-                          }
-                        ]
-                      }}
-                    />
-                    <Box border mx='auto'>
+                    <BarChartWrapper type="donut" data={donutData} />
+                    <Box border mx="auto">
                       <List>
                         <ListItem>
                           <ListItemAvatar>
@@ -253,8 +287,11 @@ export default function CategoryDashboard() {
                             </Avatar>
                           </ListItemAvatar>
                           <ListItemText>
-                            This radar chart shows the MP's activity with
-                            respect to a variety categories.
+                            The Bipartisan Index measures how often a member of
+                            Parliament introduces bills that succeed in
+                            attracting co-sponsors from members of the other
+                            party, and how often they in turn co-sponsor a bill
+                            introduced from across the aisle.
                           </ListItemText>
                         </ListItem>
                       </List>
@@ -262,62 +299,36 @@ export default function CategoryDashboard() {
                   </CardContent>
                 </Card>
               </Grid>
-              {donutData.length ? (
-                <Grid item item xs={6}>
-                  <Card>
-                    <CardContent>
-                      <Typography className={classes.title}>
-                        Bipartisan Index
-                      </Typography>
-                      <BarChartWrapper type='donut' data={donutData} />
-                      <Box border mx='auto'>
-                        <List>
-                          <ListItem>
-                            <ListItemAvatar>
-                              <Avatar className={classes.avatar}>
-                                <NotListedLocationIcon />
-                              </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText>
-                              The Bipartisan Index measures how often a member
-                              of Parliamnet introduces bills that succeed in
-                              attracting co-sponsors from members of the other
-                              party, and how often they in turn co-sponsor a
-                              bill introduced from across the aisle.
-                            </ListItemText>
-                          </ListItem>
-                        </List>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ) : (
-                ''
-              )}
-            </Grid>
+            ) : (
+              ""
+            )}
           </Grid>
-        ) : (
-          <div
-            style={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              zIndex: '-2',
-              transform: 'translate(-50%, -50%)'
-            }}>
-            <CircularProgress />
-          </div>
-        )}
-      </Grid>
+        </Grid>
+      ) : (
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            zIndex: "-2",
+            transform: "translate(-50%, -50%)"
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
+    </Grid>
     </div>
-  )
+  );
 }
 
-export async function createDataSetRadar(categories, data) {
-  const dataArray = []
-  let temp = {}
-  const dataSetRadar = {}
-  let maxValue = 0
+function createDataSetRadar(categories, data) {
+  const dataArray = [];
+  let temp = {};
+  const dataSetRadar = {};
+  let maxValue = 0;
+  console.log(categories)
+  console.log(data)
   categories.forEach(category => {
     let totalvotes = 0
     data.forEach(bill => {
@@ -342,7 +353,7 @@ export async function createDataSetRadar(categories, data) {
   return [dataSetRadar, maxValue]
 }
 
-export async function createDataSetDonut(sponsors, mpdata) {
+export function createDataSetDonut(sponsors, mpdata) {
   let liberalCounter = 0
   let conservativeCounter = 0
   let ndpCounter = 0

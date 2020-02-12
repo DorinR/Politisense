@@ -10,7 +10,7 @@ import canadaimage from '../../assets/canada.jpg'
 import logo from '../../assets/PolotisenseTentativeLogo.png'
 import axios from 'axios'
 import { FacebookLoginButton, GoogleLoginButton, TwitterLoginButton } from 'react-social-login-buttons'
-import { tokenAuthenticate } from '../../Authentication'
+import { tokenAuthenticate } from './authenticate'
 
 const gridStyle = {
   display: 'flex',
@@ -65,6 +65,9 @@ export function checkEmailFormat (email) {
 export async function fetchUser (email) {
   return await axios
     .post('http://localhost:5000/api/users/checkIfUserExists', { email: email })
+    .then(res => {
+      return res.data
+    })
     .catch(console.error)
 }
 
@@ -99,7 +102,6 @@ export default function Login (props) {
   const [authenticated, setAuthenticated] = useState(false)
   const [errors, setErrors] = useState({ email: '', password: '' })
 
-
   function validateUserFromSocialProviders (type, cb) {
     let user = {}
     cb(type)
@@ -108,8 +110,9 @@ export default function Login (props) {
         return fetchUser(user.email)
       })
       .then(res => {
-        if (res.data.success) {
+        if (res.success) {
           // eslint-disable-next-line no-undef
+          user = res.data
           localStorage.setItem('user', JSON.stringify(user))
           setAuthenticated(true)
         } else {

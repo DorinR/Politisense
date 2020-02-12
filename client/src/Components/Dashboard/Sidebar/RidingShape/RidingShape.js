@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { fallbackSvg } from './fallbackSvg'
 import { PARTY_COLORS } from './partyColors'
+
 const mapshaper = require('mapshaper-with-patch')
 
 const useStyles = makeStyles(theme => ({

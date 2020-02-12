@@ -66,17 +66,30 @@ run_tests () {
 
 build () {
 	cd client
+	echo "Processing Style Errors...."
 	process_flags $@
 	if [[ $style_errors -gt 0 && $strict -eq 1 ]]
 	then
 	  return 1
 	fi
+	echo "Running Frontend build scripts...."
 	npm install
 	run_tests
 	if [ $test_results -eq 1 ]
 	then
 	  return 1
 	fi
+	echo "Finished running Frontend test suite"
 	CI=false npm run build
+	cd ../
+	echo "Running Backend build scripts...."
+	npm install
+	run_tests
+	if [ $test_results -eq 1 ]
+	then
+	  return 1
+	fi
+	echo "Finished running Backend test suite"
+	echo "Exiting..."
 }
 build $@

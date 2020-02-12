@@ -1,5 +1,5 @@
 /* global fetch */
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import RidingShape from './RidingShape'
 import Box from '@material-ui/core/Box'
 
