@@ -1,5 +1,4 @@
 const XMLParser = require('@parser').XmlDataParser
-const Role = require('@model').Role
 const Builder = require('@builder').RoleBuilder
 
 class AssociationRoleXmlParser extends XMLParser {
@@ -29,13 +28,13 @@ class AssociationRoleXmlParser extends XMLParser {
   }
 
   buildJson () {
-    let title = `${this.getDataInTag('AssociationMemberRoleType').toLowerCase()} ` +
+    const title = `${this.getDataInTag('AssociationMemberRoleType').toLowerCase()} ` +
         `${this.getDataInTag('Title').toLowerCase()}`
     title.trim()
     return new Builder(this.id)
       .withTitle(title)
-      //.withFromYear(Number(this.getDataInTag('FromDateTime').substring(0, 4)))
-      //.withToYear(Number(this.getDataInTag('ToDateTime').substring(0, 4)))
+      // .withFromYear(Number(this.getDataInTag('FromDateTime').substring(0, 4)))
+      // .withToYear(Number(this.getDataInTag('ToDateTime').substring(0, 4)))
       .withType('association')
       .withGroup(this.getDataInTag('Organization').toLowerCase())
       .build()

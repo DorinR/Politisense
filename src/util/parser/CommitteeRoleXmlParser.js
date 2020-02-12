@@ -1,5 +1,4 @@
 const XMLParser = require('@parser').XmlDataParser
-const Role = require('@model').Role
 const Builder = require('@builder').RoleBuilder
 
 class CommitteeRoleXmlParser extends XMLParser {

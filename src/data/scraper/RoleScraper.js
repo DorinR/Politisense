@@ -24,7 +24,7 @@ class RoleScraper extends QueueManager {
   }
 
   accumulate (result) {
-    if(result) {
+    if (result) {
       this.result.push(result)
     }
     return result
@@ -33,7 +33,7 @@ class RoleScraper extends QueueManager {
   setParliaments (parliaments) {
     if (typeof parliaments === 'undefined' ||
       (typeof parliaments === typeof ' ' && parliaments.toLowerCase().includes('all'))) {
-      this.parliaments.push(...[35,36,37,38,39,40,41,42,43])
+      this.parliaments.push(...[35, 36, 37, 38, 39, 40, 41, 42, 43])
     } else if (typeof parliaments === typeof []) {
       this.parliaments = parliaments.filter(parliament => {
         return parliament >= 35
@@ -41,7 +41,7 @@ class RoleScraper extends QueueManager {
     }
   }
 
-  createQueries(url) {
+  createQueries (url) {
     this.parliaments.forEach(parl => {
       this.params.push({
         url: url,
@@ -51,7 +51,6 @@ class RoleScraper extends QueueManager {
       })
     })
   }
-
 }
 
 module.exports = {

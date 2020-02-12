@@ -1,7 +1,6 @@
 const Parsers = require('./parsers')
 const XmlDataParser = Parsers.XmlDataParser
 const ParliamentNotSetError = Parsers.ParliamentNotSetError
-const Models = require('@model')
 const Builder = require('@builder').BillBuilder
 
 class BillXmlParser extends XmlDataParser {

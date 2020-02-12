@@ -20,7 +20,7 @@ class RoleStartAction extends QueueAction {
     this.enqueueNewParams(this.manager)
   }
 
-  static createFirst(manager){
+  static createFirst (manager) {
     const params = manager.params.shift()
     params.params.parliament = 'all'
     const requestParams = RoleStartAction.createRequestParams(params)
@@ -43,7 +43,7 @@ class RoleStartAction extends QueueAction {
   }
 
   async modifyManagerQueryParams (manager) {
-    let params = manager.params
+    const params = manager.params
     const newParams = []
     const db = new Firestore(false)
     await Promise.all(
@@ -69,12 +69,12 @@ class RoleStartAction extends QueueAction {
     manager.queryCount = manager.params.length
   }
 
-  static formatName(name) {
+  static formatName (name) {
     name = name.toLowerCase()
     let formatted = name.replace(/\.+/g, '')
-    formatted = formatted.replace(/\'+/g, '')
-    //strips out accents since they are not used as a query param, here at least
-    formatted = formatted.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    formatted = formatted.replace(/'+/g, '')
+    // strips out accents since they are not used as a query param, here at least
+    formatted = formatted.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     formatted = formatted.replace(/\s+/g, '-')
     return formatted
   }
@@ -89,7 +89,6 @@ class RoleStartAction extends QueueAction {
       )
     })
   }
-
 }
 
 class FormatAction extends Actions.Action {
@@ -98,7 +97,7 @@ class FormatAction extends Actions.Action {
     this.params = params
   }
 
-  async perform(result) {
+  async perform (result) {
     return result.selected
   }
 }

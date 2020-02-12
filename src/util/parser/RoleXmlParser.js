@@ -5,10 +5,6 @@ const AssociationRoleParser = Parsers.AssociationRoleXmlParser
 const ParliametaryRoleParser = Parsers.ParliamentaryRoleXMLParser
 
 class RoleXmlParser extends XmlDataParser {
-  constructor (xml) {
-    super(xml)
-  }
-
   get tagName () {
     return 'Profile'
   }

@@ -1,6 +1,5 @@
 const Model = require('./Model').Model
 const parameter = require('../../util/Condition').Condition.parameter
-const Builder = require('./builder/RoleBuilder').RoleBuilder
 
 class Role extends Model {
   constructor (type, title, group, from, to, politician) {
@@ -19,11 +18,11 @@ class Role extends Model {
     this.politician = politician
   }
 
-  static deserialise(json) {
+  static deserialise (json) {
     Model.deserialise(json, new Role('', '', '', -1, -1, ''))
   }
 }
 
 module.exports = {
-  Role : Role
+  Role: Role
 }
