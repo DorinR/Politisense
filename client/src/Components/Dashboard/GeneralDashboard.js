@@ -41,9 +41,12 @@ import TableBody from "@material-ui/core/TableBody";
 import {populateTable,createData} from "./CategoryCard";
 import BillDialog from "./BillDialog";
 import TableDialog from "./TableDialog";
+import DescriptionIcon from '@material-ui/icons/Description';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
 const useStyles = makeStyles(theme => ({
   card: {
-    minWidth: 275,
+    minWidth: 280,
     // boxShadow: 'none',
 
   },
@@ -63,8 +66,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#43D0C4'
   },
   container: {
-    margin: '20px',
-    marginTop: '30px'
+    margin: '5px',
   },
   expand: {
     // transform: 'rotate(0deg)',
@@ -78,8 +80,14 @@ const useStyles = makeStyles(theme => ({
   },
   tableContainer : {
       maxHeight: 200,
+  },
+  avatar: {
+    backgroundColor: '#43D0C4',
+  },
+  cardHeader: {
+    backgroundColor:'#43D0C4',
+    color: "white"
   }
-
 }))
 
 export default function CategoryDashboard() {
@@ -262,65 +270,72 @@ export default function CategoryDashboard() {
   return (
     <div className={classes.container}>
       <CssBaseline />
-      <Grid container spacing={1}>
-
-        <Grid item xs={12}>
+      <Grid container direction="row"
+            justify="center"
+            alignItems="center">
+        <Grid item xs={11} alignContent={"center"}>
           {userRepIssuedBills.length !== 0 && categoryList.length !== 0 ? (
               <div>
             <Card className={classes.card}>
               <CardHeader
+                  className={classes.cardHeader}
                   action={
+
                     <IconButton aria-label="settings">
-                      <HelpIcon />
+                      <HelpOutlineOutlinedIcon style={{color:"white"}}/>
                     </IconButton>
                     }
                    title={
-                     <Typography variant="h4" align="center" color={"textPrimary"}>
-                       Bills sponsored by {capitalizedName(userRepresentative)}
-                      </Typography>}
+                     <div>
+                       <Typography variant="h4" align="center" color={"white"}>
+                         Bar Pie Chart
+                       </Typography>
+                       <Typography variant="h5" align="center" color={"white"}>
+                         Bills sponsored by {capitalizedName(userRepresentative)}
+                       </Typography>
+                     </div>
+
+                   }
               />
               <Divider />
               <CardContent>
-                <div onClick={() => handleBarPieChartClickOpen(rows)}>
-                  <BarChartWrapper
-                    type='bar-pie'
-                    data={userRepIssuedBills}
-                    categories={categoryList}
-                  />
-                </div>
-
-                <Box border mx='auto'>
+                  <CardActionArea>
+                    <div onClick={() => handleBarPieChartClickOpen(rows)}>
+                      <BarChartWrapper
+                        type='bar-pie'
+                        data={userRepIssuedBills}
+                        categories={categoryList}
+                      />
+                    </div>
+                 </CardActionArea>
                   <List>
                     <ListItem>
                       <ListItemAvatar>
                         <Avatar className={classes.avatar}>
-                          <NotListedLocationIcon />
+                          <DescriptionIcon />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText>
                         The distribution of issued bills by the representative
                         among different categories
                       </ListItemText>
+                      <Button
+                          variant="contained"
+                          color="primary"
+                          className={clsx(classes.expand, {
+                            [classes.expandOpen]: expanded,
+                          })}
+                          onClick={handleExpandClick}
+                          aria-expanded={expanded}
+                          aria-label="show more"
+                          // className={classes.button}
+                          style={{marginLeft:"auto"}}
+                      >
+                        Find More
+                      </Button>
                     </ListItem>
                   </List>
-                </Box>
               </CardContent>
-            <CardActions>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    className={clsx(classes.expand, {
-                      [classes.expandOpen]: expanded,
-                    })}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
-                    aria-label="show more"
-                    // className={classes.button}
-                    style={{marginLeft:"auto"}}
-                >
-                  Find More
-                </Button>
-            </CardActions>
               <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                   <Typography paragraph>The issued bills are: </Typography>
@@ -343,7 +358,7 @@ export default function CategoryDashboard() {
                                     </Button>
                                   </TableCell>
                                   <TableCell component='th' scope='row'><Typography>{row.category}</Typography></TableCell>
-                                  <TableCell align='right'><Typography>{row.status}</Typography></TableCell>
+                                  <TableCell align='right'><Typography style= {row.status === 'Passed'? {color:"green"}: {color: "red"}}>{row.status}</Typography></TableCell>
                                 </TableRow>
                             ))}
                           </TableBody>) : 'nothing!'}
@@ -354,15 +369,15 @@ export default function CategoryDashboard() {
             </Card>
                 <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
                 <TableDialog rows={tableContents} open={tableDialogOpen} onClose={handleBarPieChartClose}> </TableDialog>
-
               </div>
           ) : (
             ''
           )}
         </Grid>
-
+      </Grid>
+      <Grid container >
         {radarData.length !== 0 && categoryList.length !== 0 ? (
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Card>
@@ -416,38 +431,7 @@ export default function CategoryDashboard() {
                   </CardContent>
                 </Card>
               </Grid>
-              {donutData.length ? (
-                <Grid item item xs={6}>
-                  <Card>
-                    <CardContent>
-                      <Typography className={classes.title}>
-                        Bipartisan Index
-                      </Typography>
-                      <BarChartWrapper type='donut' data={donutData} />
-                      <Box border mx='auto'>
-                        <List>
-                          <ListItem>
-                            <ListItemAvatar>
-                              <Avatar className={classes.avatar}>
-                                <NotListedLocationIcon />
-                              </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText>
-                              The Bipartisan Index measures how often a member
-                              of Parliamnet introduces bills that succeed in
-                              attracting co-sponsors from members of the other
-                              party, and how often they in turn co-sponsor a
-                              bill introduced from across the aisle.
-                            </ListItemText>
-                          </ListItem>
-                        </List>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ) : (
-                ''
-              )}
+
             </Grid>
           </Grid>
         ) : (
@@ -462,7 +446,40 @@ export default function CategoryDashboard() {
             <CircularProgress />
           </div>
         )}
+        {donutData.length ? (
+            <Grid item item xs={4}>
+              <Card>
+                <CardContent>
+                  <Typography className={classes.title}>
+                    Bipartisan Index
+                  </Typography>
+                  <BarChartWrapper type='donut' data={donutData} />
+                  <Box border mx='auto'>
+                    <List>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar className={classes.avatar}>
+                            <NotListedLocationIcon />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText>
+                          The Bipartisan Index measures how often a member
+                          of Parliamnet introduces bills that succeed in
+                          attracting co-sponsors from members of the other
+                          party, and how often they in turn co-sponsor a
+                          bill introduced from across the aisle.
+                        </ListItemText>
+                      </ListItem>
+                    </List>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+        ) : (
+            ''
+        )}
       </Grid>
+
     </div>
   )
 }
