@@ -16,6 +16,7 @@ class Role extends Model {
     this.fromDate = from
     this.toDate = to
     this.politician = politician
+    this.type = type
   }
 
   static deserialise (json) {

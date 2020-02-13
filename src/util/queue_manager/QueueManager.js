@@ -9,10 +9,13 @@ class QueueManager {
       let message
       if (result instanceof Object) {
         message = `INFO: job finished, found ${result.data ? result.data.length : 0} potential results`
-      } else {
+      } else if (result) {
         message = `INFO: job finished, found ${result ? result.length : 0} potential results`
       }
-      console.log(message)
+
+      if (message) {
+        console.log(message)
+      }
       return result
     }
     this.activeJobs = []

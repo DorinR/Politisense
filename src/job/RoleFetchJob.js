@@ -36,7 +36,7 @@ class AdapterAction extends Actions.Action {
 
   async perform (result) {
     if (!result) {
-      throw new Actions.Errors.RequestError('ERROR: no name provided', this.params.url)
+      throw new Actions.Errors.RequestError(this.params)
     }
     const nameWithInaccessibleID = result
     const url = ` https://www.ourcommons.ca${nameWithInaccessibleID}/roles/xml`

@@ -3,8 +3,10 @@ const ScrapeError = require('../error/errors').ScrapeError
 const connectionErrors = [
   'ESOCKETTIMEDOUT',
   'ETIMEDOUT',
-  'timeout',
+  'timeout',  //this error and the proceeding 3 are in response to error code fuzzing from the server
   'status code 500',
+  'status code 503',
+  'status code 404',
   'ECONNRESET',
   'EPIPE',
   'ENOTFOUND'
@@ -55,7 +57,7 @@ class HandleConnectionErrorAction extends JobAction {
 
   requeueOnFailedConnection (e) {
     const connectionError = HandleConnectionErrorAction.connectionErrorName(e.message)
-    if (connectionError) {
+    if (connectionError && !this.handled) {
       this.handled = true
       const message = 'ERROR: Connection failure ' + connectionError + ', requeuing job: ' + e.link
       const error = new ScrapeError(message, e.link)
@@ -96,7 +98,7 @@ class HandleConnectionErrorAction extends JobAction {
       message = 'Re-enqueuing link from specified TLDs: ' + e.link
       link = e.link
     }
-    if (message && link) {
+    if (message && link && !this.handled) {
       this.handled = true
       return new ScrapeError(message, link)
     }
