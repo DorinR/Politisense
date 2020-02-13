@@ -81,7 +81,7 @@ export default function CategoryCard (props) {
   const [rows, setRows] = React.useState([])
   const [billInfo, setBillInfo] = React.useState([])
   const [billOpen, setBillOpen] = React.useState(false)
-
+  const[radar,setRadar] =React.useState(false)
   const handleDeleteDialogClose = (newValue, index) => {
     if (newValue === true) {
       props.delete(index)
@@ -118,28 +118,39 @@ export default function CategoryCard (props) {
   }
 
   React.useEffect(() => {
+
     populateTable(props.representative, props.title).then(rows => {
       setRows(rows)
     })
     setTitle(props.title)
     setData(props.data)
+    if(props.radar){
+      setRadar(true)
+    }
+
   }, [props.title, props.data, props.representative])
 
   if (checkDataExistForCategory(props.data, props.title)) {
     return (
       <div>
         <Card className={classes.card}>
-          <CardHeader
-            avatar={setCardLogo()}
-            action={
-              <div>
-                <IconButton aria-label='settings' onClick={() => setOpenDeleteDialog(true)}>
-                  <IndeterminateCheckBoxIcon color='primary' />
-                </IconButton>
-              </div>
-            }
-            title={props.title}
-          />
+          {radar && title?
+              (<CardHeader
+                  avatar={setCardLogo()}
+                  title={props.title}
+              />): (<CardHeader
+                  avatar={setCardLogo()}
+                  action={
+                    <div>
+                      <IconButton aria-label='settings' onClick={() => setOpenDeleteDialog(true)}>
+                        <IndeterminateCheckBoxIcon color='primary' />
+                      </IconButton>
+                    </div>
+                  }
+                  title={props.title}
+              />)
+          }
+
           <DeleteCategoryDialog
             classes={{ paper: classes.paper }}
             keepMounted
@@ -184,21 +195,25 @@ export default function CategoryCard (props) {
         <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
       </div>
     )
-  } else {
+  } else{
     return (
       <div>
         <Card className={classes.card}>
-          <CardHeader
-            avatar={setCardLogo()}
-            action={
-              <div>
-                <IconButton aria-label='settings' onClick={() => setOpenDeleteDialog(true)}>
-                  <IndeterminateCheckBoxIcon color='primary' />
-                </IconButton>
-              </div>
-            }
-            title={props.title}
-          />
+          {radar?
+              <CardHeader
+                  avatar={setCardLogo()}
+                  title={props.title}
+              />: <CardHeader
+                  avatar={setCardLogo()}
+                  action={
+                    <div>
+                      <IconButton aria-label='settings' onClick={() => setOpenDeleteDialog(true)}>
+                        <IndeterminateCheckBoxIcon color='primary' />
+                      </IconButton>
+                    </div>
+                  }
+                  title={props.title}
+              />}
           <DeleteCategoryDialog
             classes={{ paper: classes.paper }}
             keepMounted

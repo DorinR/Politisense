@@ -160,6 +160,8 @@ function dashboard (element, fData) {
         .style('display', 'inline-block')
         .style('border-collapse', 'collapse')
         .style('border-spacing', 0)
+        .style('margin-left', "73%")
+
 
     // create one row per segment.
     const tr = legend.append('tbody')

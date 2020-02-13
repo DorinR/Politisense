@@ -54,13 +54,25 @@ export default function TableDialog (props) {
     }
 
     const handleBillClickOpen = (row) => {
-        if(row){
+        if(row && row[1]=='bar-pie'){
             let temp = {
                 name: row.bill.billsClassified.number,
                 desc:row.bill.billsClassified.title,
                 link:row.bill.billsClassified.link,
                 sponsor:row.bill.billsClassified.sponsorName,
                 data:row.bill.billsClassified.dateVoted
+            }
+            console.log(temp)
+            setBillInfo(temp)
+            setBillOpen(true)
+        }
+        if(row && row[1]=='radar'){
+            let temp = {
+                name: row.billData.number,
+                desc:row.billData.title,
+                link:row.billData.link,
+                sponsor:row.billData.sponsorName,
+                data:row.billData.dateVoted
             }
             console.log(temp)
             setBillInfo(temp)

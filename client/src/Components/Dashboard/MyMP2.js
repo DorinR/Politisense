@@ -223,7 +223,8 @@ export default function MyMP2() {
                 <Paper className={classes.paper}>
                     <Grid container
                           direction="row"
-                          justify="center">
+                          justify="center"
+                    >
                         <Container maxWidth="sm" component="main" className={classes.heroContent}>
                             <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
                                 Activity Based On Your Interests
@@ -250,8 +251,10 @@ export default function MyMP2() {
                                 This section shows MP's Voting History & the proposed bills by the MP
                             </Typography>
                         </Container>
+                        <Container maxWidth="xl" component="main" className={classes.heroContent}>
+                        <GeneralDashboard/>
+                        </Container>
                     </Grid>
-                    <GeneralDashboard/>
                 </Paper>
             </div>
             <div>

@@ -44,15 +44,19 @@ import TableDialog from "./TableDialog";
 import DescriptionIcon from '@material-ui/icons/Description';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
+import DialogRadarChart from "./DialogRadarChart";
 const useStyles = makeStyles(theme => ({
   card: {
-    minWidth: 280,
+    minWidth: 300,
+    maxWidth: 900,
+    marginLeft: "16%"
     // boxShadow: 'none',
   },
   radarCard:{
-    maxWidth:500
+         maxWidth:500,
+        minWidth: 300,
+        // marginLeft: "300"
   },
-
   bullet: {
     display: 'inline-block',
     margin: '0 2px',
@@ -90,19 +94,23 @@ const useStyles = makeStyles(theme => ({
   cardHeader: {
     backgroundColor:'#43D0C4',
     color: "white"
+  },
+  comp:{
+    marginLeft: "280"
+
   }
 }))
 
 export default function CategoryDashboard() {
   const classes = useStyles()
   const [categoryList] = React.useState([
-    'economics',
-    'healthcare',
-    'human rights',
-    'business',
-    'religion',
-    'criminal',
-    'trade'
+    'Economics',
+    'Healthcare',
+    'Human Rights',
+    'Business',
+    'Religion',
+    'Criminal',
+    'Trade'
   ])
   const [userRepresentative, setUserRepresentative] = React.useState('')
   const [representativeData, setRepresentativeData] = React.useState([])
@@ -123,6 +131,8 @@ export default function CategoryDashboard() {
   const [tableRadarContents, setTableRadarContents] = React.useState([])
   const [tableRadarDialogOpen, setTableRadarDialogOpen] = React.useState(false)
   const[expandedRadar, setExpandedRadar]= React.useState(false)
+
+
   // Donut table
   const [rowsDonut, setRowsDonut] = React.useState([])
   const [tableDonutContents, setTableDonutContents] = React.useState([])
@@ -149,9 +159,9 @@ export default function CategoryDashboard() {
       desc:row.bill.billsClassified.title,
       link:row.bill.billsClassified.link,
       sponsor:row.bill.billsClassified.sponsorName,
-      data:row.bill.billsClassified.dateVoted
+      date:row.bill.billsClassified.dateVoted
+
     }
-    console.log(temp)
     setBillInfo(temp)
     setBillOpen(true)
     }
@@ -161,7 +171,8 @@ export default function CategoryDashboard() {
         desc:row.billData.title,
         link:row.billData.link,
         sponsor:row.billData.sponsorName,
-        data:row.billData.dateVoted
+         date:row.billData.dateVoted
+
       }
       console.log(temp)
       setBillInfo(temp)
@@ -182,6 +193,10 @@ export default function CategoryDashboard() {
     setTableDialogOpen(false)
   }
 
+  const handleRadarClickOpen = (rows) => {
+    setTableRadarContents(rows)
+    setTableRadarDialogOpen(true)
+  }
 
 
   useEffect(() => {
@@ -248,8 +263,7 @@ export default function CategoryDashboard() {
         const allRepresentatives = await getAllReps()
         setUserRepresentative(representative)
         setReps(allRepresentatives)
-        // const billsByRep = await  getAllBillsByRep(representative)
-        // setRowsRadar(billsByRep)
+
         const issuedBillByUserRep = await getAllBillsBySponsorName(
           representative
         )
@@ -264,11 +278,9 @@ export default function CategoryDashboard() {
 
     async function populateIssuedBill (userRepIssuedBills){
       const dataForTable = await createDataPieBarTable(categoryList,userRepIssuedBills)
-      console.log(dataForTable)
       return dataForTable
     }
     if(userRepIssuedBills.length !== 0){
-      console.log("im mm")
       populateIssuedBill(userRepIssuedBills).then(res => {
         setRows(res)
       })
@@ -311,14 +323,12 @@ export default function CategoryDashboard() {
   }
   return (
     <div className={classes.container}>
-
       <Grid container
             direction={"row"}
-            justify="center"
-            alignItems="center">
+            justify="center">
 
         {/*firstComponent*/}
-        <Grid item xs={12} alignContent={"center"}>
+        <Grid item xs={12}>
           {userRepIssuedBills.length !== 0 && categoryList.length !== 0? (
               <div>
             <Card className={classes.card}>
@@ -417,7 +427,11 @@ export default function CategoryDashboard() {
             ''
           )}
         </Grid>
-        <Grid item xs={6}>
+        <div className={classes.comp}>
+        <Grid container
+              direction={"row"} spacing={1}
+              justify="center" >
+          <Grid item xs={5}>
         {radarData.length !== 0 && categoryList.length !== 0 ? (
               <div>
                   <Card className={classes.radarCard}>
@@ -441,13 +455,15 @@ export default function CategoryDashboard() {
 
                         }
                     />
+                    {/*handleRadarClickOpen*/}
                     <Divider />
                     <CardActionArea>
                     <CardContent>
+                      <div onClick={() => handleRadarClickOpen(rowsRadar)}>
                       <Radar
                           width={300}
                           height={230}
-                          padding={20}
+                          padding={35}
                           domainMax={radarData[1] + 3}
                           highlighted
                           onHover={point => {
@@ -472,6 +488,7 @@ export default function CategoryDashboard() {
                             ]
                           }}
                       />
+                      </div>
                     </CardContent>
                     </CardActionArea>
                     <CardContent>
@@ -483,7 +500,7 @@ export default function CategoryDashboard() {
                             </Avatar>
                           </ListItemAvatar>
                           <ListItemText>
-                            This radar chart shows the MP's activity with*/}
+                            This radar chart shows the MP's activity with
                                   respect to a variety categories.
                           </ListItemText>
                           <Button
@@ -537,8 +554,7 @@ export default function CategoryDashboard() {
                       </CardContent>
                     </Collapse>
                   </Card>
-                {/*<BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />*/}
-                {/*<TableDialog rows={rowsRadar} open={tableRadarDialogOpen} onClose={handleRadarClose}> </TableDialog>*/}
+                <DialogRadarChart representativeData={tableRadarContents} categoryList= {categoryList} open={tableRadarDialogOpen} onClose={handleRadarClose}> </DialogRadarChart>
               </div>
         ) : (
             <div
@@ -586,6 +602,8 @@ export default function CategoryDashboard() {
             ''
         )}
         </Grid>
+      </Grid>
+        </div>
       </Grid>
     </div>
   )
