@@ -48,8 +48,11 @@ const useStyles = makeStyles(theme => ({
   card: {
     minWidth: 280,
     // boxShadow: 'none',
-
   },
+  radarCard:{
+    maxWidth:500
+  },
+
   bullet: {
     display: 'inline-block',
     margin: '0 2px',
@@ -108,20 +111,39 @@ export default function CategoryDashboard() {
   const [donutData, setDonutData] = React.useState([])
   const [reps, setReps] = React.useState([])
   const [userRepIssuedBills, setUserRepIssuedBills] = React.useState([])
-  const [expanded, setExpanded] = React.useState(false);
   const [rows, setRows] = React.useState([])
-
+  const [expanded, setExpanded] = React.useState(false);
   const [billInfo, setBillInfo] = React.useState([])
   const [billOpen, setBillOpen] = React.useState(false)
-
+  // Bar Pie Chart table
   const [tableContents, setTableContents] = React.useState([])
   const [tableDialogOpen, setTableDialogOpen] = React.useState(false)
+  // // radar table
+  const [rowsRadar, setRowsRadar] = React.useState([])
+  const [tableRadarContents, setTableRadarContents] = React.useState([])
+  const [tableRadarDialogOpen, setTableRadarDialogOpen] = React.useState(false)
+  const[expandedRadar, setExpandedRadar]= React.useState(false)
+  // Donut table
+  const [rowsDonut, setRowsDonut] = React.useState([])
+  const [tableDonutContents, setTableDonutContents] = React.useState([])
+  const [tableDonutDialogOpen, setTableDonutDialogOpen] = React.useState(false)
 
+
+  const handleExpandClickRadar = () =>{
+    setExpandedRadar(!expandedRadar);
+  }
+  const handleRadarClose = () => {
+    setTableRadarDialogOpen(false)
+  }
+  // learn more button for bar-pie chart comp + table
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const handleBillClickOpen = (row) => {
-    if(row){
+
+
+  // bill dialog
+  const handleBillClickOpen = (row,type) => {
+    if(row && type =='bar-pie'){
     let temp = {
       name: row.bill.billsClassified.number,
       desc:row.bill.billsClassified.title,
@@ -133,12 +155,24 @@ export default function CategoryDashboard() {
     setBillInfo(temp)
     setBillOpen(true)
     }
+    if(row && type =='radar'){
+      let temp = {
+        name: row.billData.number,
+        desc:row.billData.title,
+        link:row.billData.link,
+        sponsor:row.billData.sponsorName,
+        data:row.billData.dateVoted
+      }
+      console.log(temp)
+      setBillInfo(temp)
+      setBillOpen(true)
+    }
   }
-
   const handleBillClose = () => {
     setBillOpen(false)
   }
 
+  // click on the chart of pie part chart
   const handleBarPieChartClickOpen = (rows) => {
     setTableContents(rows)
     setTableDialogOpen(true)
@@ -147,6 +181,8 @@ export default function CategoryDashboard() {
   const handleBarPieChartClose = () => {
     setTableDialogOpen(false)
   }
+
+
 
   useEffect(() => {
     async function getDataForDonut() {
@@ -212,10 +248,13 @@ export default function CategoryDashboard() {
         const allRepresentatives = await getAllReps()
         setUserRepresentative(representative)
         setReps(allRepresentatives)
+        // const billsByRep = await  getAllBillsByRep(representative)
+        // setRowsRadar(billsByRep)
         const issuedBillByUserRep = await getAllBillsBySponsorName(
           representative
         )
         setUserRepIssuedBills(issuedBillByUserRep)
+        console.log(issuedBillByUserRep)
         if (representative.length !== 0) {
           setUserRepresentative(representative)
         }
@@ -225,16 +264,19 @@ export default function CategoryDashboard() {
 
     async function populateIssuedBill (userRepIssuedBills){
       const dataForTable = await createDataPieBarTable(categoryList,userRepIssuedBills)
+      console.log(dataForTable)
       return dataForTable
     }
     if(userRepIssuedBills.length !== 0){
+      console.log("im mm")
       populateIssuedBill(userRepIssuedBills).then(res => {
         setRows(res)
       })
     }
-
     if (userRepresentative) {
-      getAllBillsByRep(userRepresentative).then(results => {})
+      getAllBillsByRep(userRepresentative).then(results => {
+        setRowsRadar(results)
+      })
     }
 
     if (categoryList && repDataLoaded) {
@@ -269,18 +311,20 @@ export default function CategoryDashboard() {
   }
   return (
     <div className={classes.container}>
-      <CssBaseline />
-      <Grid container direction="row"
+
+      <Grid container
+            direction={"row"}
             justify="center"
             alignItems="center">
-        <Grid item xs={11} alignContent={"center"}>
-          {userRepIssuedBills.length !== 0 && categoryList.length !== 0 ? (
+
+        {/*firstComponent*/}
+        <Grid item xs={12} alignContent={"center"}>
+          {userRepIssuedBills.length !== 0 && categoryList.length !== 0? (
               <div>
             <Card className={classes.card}>
               <CardHeader
                   className={classes.cardHeader}
                   action={
-
                     <IconButton aria-label="settings">
                       <HelpOutlineOutlinedIcon style={{color:"white"}}/>
                     </IconButton>
@@ -294,7 +338,6 @@ export default function CategoryDashboard() {
                          Bills sponsored by {capitalizedName(userRepresentative)}
                        </Typography>
                      </div>
-
                    }
               />
               <Divider />
@@ -353,7 +396,7 @@ export default function CategoryDashboard() {
                             {rows.map((row,i)=> (
                                 <TableRow key={i}>
                                   <TableCell component='th' scope='row'>
-                                    <Button color='primary' onClick={() => handleBillClickOpen(row)}>
+                                    <Button color='primary' onClick={() => handleBillClickOpen(row,'bar-pie')}>
                                       <Typography>{row.bill.billsClassified.number}</Typography>
                                     </Button>
                                   </TableCell>
@@ -361,7 +404,7 @@ export default function CategoryDashboard() {
                                   <TableCell align='right'><Typography style= {row.status === 'Passed'? {color:"green"}: {color: "red"}}>{row.status}</Typography></TableCell>
                                 </TableRow>
                             ))}
-                          </TableBody>) : 'nothing!'}
+                          </TableBody>) : 'nothing'}
                     </Table>
                   </TableContainer>
                 </CardContent>
@@ -374,81 +417,146 @@ export default function CategoryDashboard() {
             ''
           )}
         </Grid>
-      </Grid>
-      <Grid container >
+        <Grid item xs={6}>
         {radarData.length !== 0 && categoryList.length !== 0 ? (
-          <Grid item xs={6}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Card>
-                  <CardContent>
-                    <Typography className={classes.title}>
-                      MP Voting Distribution
-                    </Typography>
-                    <Radar
-                      width={400}
-                      height={350}
-                      padding={40}
-                      domainMax={radarData[1] + 3}
-                      highlighted
-                      onHover={point => {
-                        if (point) {
-                        } else {
+              <div>
+                  <Card className={classes.radarCard}>
+                    <CardHeader
+                        className={classes.cardHeader}
+                        action={
+
+                          <IconButton aria-label="settings">
+                            <HelpOutlineOutlinedIcon style={{color:"white"}}/>
+                          </IconButton>
                         }
-                      }}
-                      data={{
-                        variables: [
-                          { key: 'trade', label: 'Trade' },
-                          { key: 'criminal', label: 'Criminal' },
-                          { key: 'business', label: 'Business' },
-                          { key: 'Economics', label: 'Economics' },
-                          { key: 'Healthcare', label: 'Healthcare' },
-                          { key: 'Religion', label: 'Religion' },
-                          { key: 'Human Rights', label: 'Human Rights' }
-                        ],
-                        sets: [
-                          {
-                            values: radarData[0]
-                          }
-                        ]
-                      }}
+                        title={
+                          <div>
+                            <Typography variant="h4" align="center" color={"white"}>
+                              Bar Pie Chart
+                            </Typography>
+                            <Typography variant="h5" align="center" color={"white"}>
+                              MP Voting Distribution
+                            </Typography>
+                          </div>
+
+                        }
                     />
-                    <Box border mx='auto'>
+                    <Divider />
+                    <CardActionArea>
+                    <CardContent>
+                      <Radar
+                          width={300}
+                          height={230}
+                          padding={20}
+                          domainMax={radarData[1] + 3}
+                          highlighted
+                          onHover={point => {
+                            if (point) {
+                            } else {
+                            }
+                          }}
+                          data={{
+                            variables: [
+                              { key: 'trade', label: 'Trade' },
+                              { key: 'criminal', label: 'Criminal' },
+                              { key: 'business', label: 'Business' },
+                              { key: 'Economics', label: 'Economics' },
+                              { key: 'Healthcare', label: 'Healthcare' },
+                              { key: 'Religion', label: 'Religion' },
+                              { key: 'Human Rights', label: 'Human Rights' }
+                            ],
+                            sets: [
+                              {
+                                values: radarData[0]
+                              }
+                            ]
+                          }}
+                      />
+                    </CardContent>
+                    </CardActionArea>
+                    <CardContent>
                       <List>
                         <ListItem>
                           <ListItemAvatar>
                             <Avatar className={classes.avatar}>
-                              <NotListedLocationIcon />
+                              <DescriptionIcon />
                             </Avatar>
                           </ListItemAvatar>
                           <ListItemText>
-                            This radar chart shows the MP's activity with
-                            respect to a variety categories.
+                            This radar chart shows the MP's activity with*/}
+                                  respect to a variety categories.
                           </ListItemText>
+                          <Button
+                              variant="contained"
+                              color="primary"
+                              className={clsx(classes.expand, {
+                                [classes.expandOpen]: expandedRadar,
+                              })}
+                              onClick={handleExpandClickRadar}
+                              aria-expanded={expanded}
+                              aria-label="show more"
+                              style={{marginLeft:"auto"}}
+                          >
+                            Find More
+                          </Button>
                         </ListItem>
                       </List>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-
-            </Grid>
-          </Grid>
+                    </CardContent>
+                    <Collapse in={expandedRadar} timeout="auto" unmountOnExit>
+                      <CardContent>
+                        <Typography paragraph>The bills are: </Typography>
+                        <TableContainer className={classes.tableContainer}>
+                          <Table className={classes.table} size='medium' aria-label='a dense table'>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>{"Bill Name"}</TableCell>
+                                <TableCell>{"Category"}</TableCell>
+                                <TableCell align='right'>{"Vote"}</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            {(rowsRadar.length) > 0 ? (
+                                <TableBody stickyHeader>
+                                  {rowsRadar.map((row,i)=> (
+                                      <TableRow key={i}>
+                                        <TableCell component='th' scope='row'>
+                                          <Button color='primary' onClick={() => handleBillClickOpen(row,'radar')}>
+                                            <Typography>{row.voteRecord.billNumber}</Typography>
+                                          </Button>
+                                        </TableCell>
+                                        <TableCell component='th' scope='row'><Typography>{row.billData.category}</Typography></TableCell>
+                                        <TableCell align='right'>
+                                          <Typography style= {row.voteRecord.yea === true? {color:"green"}: {color: "red"}}>
+                                            {row.voteRecord.yea == true? "Yea": "Nay"}
+                                          </Typography>
+                                        </TableCell>
+                                      </TableRow>
+                                  ))}
+                                </TableBody>) : ''}
+                          </Table>
+                        </TableContainer>
+                      </CardContent>
+                    </Collapse>
+                  </Card>
+                {/*<BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />*/}
+                {/*<TableDialog rows={rowsRadar} open={tableRadarDialogOpen} onClose={handleRadarClose}> </TableDialog>*/}
+              </div>
         ) : (
-          <div
-            style={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              zIndex: '-2',
-              transform: 'translate(-50%, -50%)'
-            }}>
-            <CircularProgress />
-          </div>
+            <div
+                style={{
+                  position: 'absolute',
+                  left: '50%',
+                  top: '50%',
+                  zIndex: '-2',
+                  transform: 'translate(-50%, -50%)'
+                }}>
+              <CircularProgress />
+            </div>
         )}
+        </Grid>
+
+        <Grid item xs={6}>
         {donutData.length ? (
-            <Grid item item xs={4}>
-              <Card>
+              <Card className={classes.radarCard}>
                 <CardContent>
                   <Typography className={classes.title}>
                     Bipartisan Index
@@ -474,12 +582,11 @@ export default function CategoryDashboard() {
                   </Box>
                 </CardContent>
               </Card>
-            </Grid>
         ) : (
             ''
         )}
+        </Grid>
       </Grid>
-
     </div>
   )
 }
@@ -567,8 +674,7 @@ export async function createDataSetDonut(sponsors, mpdata) {
 }
 
 export async function createDataPieBarTable(categories, data) {
-  const dataArray = []
-  let temp = {}
+
   let billsForSpeicificCategory =[]
   let finalArray=[]
   categories.forEach(category => {
@@ -577,9 +683,9 @@ export async function createDataPieBarTable(categories, data) {
 
     data.forEach(bill => {
       if (bill.billsClassified.category === (category.toLowerCase())) {
-        console.log("IM here")
         totalBills++
         if (bill.voteRecord.yeas > bill.voteRecord.nays) {
+          console.log("im inside the if")
           billsForSpeicificCategory.push({bill:bill,category: category, status:'Passed'})
         } else {
           billsForSpeicificCategory.push({bill:bill ,category: category, status:'Failed'})
