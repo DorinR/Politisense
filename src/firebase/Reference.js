@@ -5,6 +5,10 @@ class Reference {
     this.query = null
   }
 
+  id () {
+    return this.reference.id
+  }
+
   where (attribute, operator, value) {
     if (!this.query) {
       this.query = this.reference.where(attribute, operator, value)
@@ -154,8 +158,16 @@ class DataReference {
     this.data = data
   }
 
+  id () {
+    return this.suffix
+  }
+
   forEach(fn) {
     this.data.forEach(fn)
+  }
+
+  map(fn) {
+    return this.data.map(fn)
   }
 
   async innerJoin(key, reference, refKey) {
@@ -229,14 +241,14 @@ function cartesianProduct (left, key, leftName, right, refKey, rightName) {
           if(rightKeys.includes(k)) {
             joined[k] = leftDoc[k]
           } else {
-            joined[`k_${leftName}`] = leftDoc[k]
+            joined[`${k}_${leftName}`] = leftDoc[k]
           }
         })
         rightKeys.forEach(k => {
           if(leftKeys.includes(k)) {
             joined[k] = rightDoc[k]
           } else {
-            joined[`k_${rightName}`] = rightDoc[k]
+            joined[`${k}_${rightName}`] = rightDoc[k]
           }
         })
         join.push(joined)

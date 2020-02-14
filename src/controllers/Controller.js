@@ -141,6 +141,10 @@ module.exports = {
     return DataController.index(req, res)
   },
 
+  update: function (req, res) {
+    return DataController.update(req, res)
+  },
+
   getRidingByRidingCode: function (req, res) {
     return RidingController.getRidingByRidingCode(req, res)
   },
