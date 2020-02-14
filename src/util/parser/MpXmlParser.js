@@ -44,20 +44,6 @@ class MpXmlParser extends XmlDataParser {
   hasData () {
     return super.hasData() || this.isTagInXml(this.tagName + 'Role')
   }
-
-  async getMpImageUrl (mpName) {
-    const htmlWithMpImage = await this._getHtmlFromLink(this._getWebPageWithMpImage(mpName))
-    if (htmlWithMpImage === '') {
-      return ''
-    }
-
-    const $ = cheerio.load(htmlWithMpImage)
-    return 'https://www.ourcommons.ca' + $('img.ce-mip-mp-picture').attr('src')
-  }
-
-  _getWebPageWithMpImage (mpName) {
-    return `https://www.ourcommons.ca/Members/en/search?searchText=${mpName}&parliament=all`
-  }
 }
 
 module.exports.MpXmlParser = MpXmlParser
