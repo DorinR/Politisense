@@ -273,16 +273,20 @@ class Firestore {
     return new Reference(this.reference.collection('voteRecord'))
   }
 
+  Party () {
+    return new Reference(this.reference.collection('parties'))
+  }
+
   async close () {
     await this.firestore.app
       .delete()
       .then(result => {
         this.firestore.db
           .terminate()
-          .then(result => { })
-          .catch(e => { })
+          .then(result => {})
+          .catch(e => {})
       })
-      .catch(e => { })
+      .catch(e => {})
   }
 }
 

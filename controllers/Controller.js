@@ -4,6 +4,7 @@ const BillController = require('./BillController')
 const VoteRecordController = require('./VoteRecordController')
 const VoteController = require('./VoteController')
 const RidingController = require('./RidingController')
+const PartyController = require('./PartyController')
 
 module.exports = {
   userSignup: function (req, res) {
@@ -97,5 +98,8 @@ module.exports = {
 
   getRidingPopulation: function (req, res) {
     return RidingController.getRidingPopulation(req, res)
+  },
+  getAllPartyData: function (req, res) {
+    return PartyController.getAllPartyData(req, res)
   }
 }

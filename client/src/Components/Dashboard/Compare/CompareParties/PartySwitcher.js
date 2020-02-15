@@ -7,6 +7,7 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import axios from 'axios'
 import InputLabel from '@material-ui/core/InputLabel'
+import capitalize from 'capitalize'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -37,71 +38,81 @@ const MenuProps = {
 }
 
 async function fetchAllRepresentatives() {
-  let representatives = []
-  await axios
+  return await axios
     .get('http://localhost:5000/api/representatives/getAllRepresentatives')
     .then(res => {
       if (res.data.success) {
-        representatives = res.data.data
+        return res.data.data
       }
     })
     .catch(err => console.error(err))
-  return representatives.sort((mp1, mp2) => {
-    return mp1.name.localeCompare(mp2.name)
-  })
 }
 
-function getStyles(name, personName, theme) {
+function getAllParties(representatives) {
+  let parties = []
+  let party
+  representatives.forEach(rep => {
+    party = capitalize.words(rep.politicalParty)
+    if (!parties.includes(party)) {
+      parties.push(party)
+    }
+  })
+  return parties
+}
+
+function getStyles(selectedParty, party, theme) {
   return {
     fontWeight:
-      personName.indexOf(name) === -1
+      selectedParty === party
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium
   }
 }
+
 export default function PartySwitcher(props) {
   // eslint-disable-next-line no-use-before-define
   const { functionUpdate, ...other } = props
   const classes = useStyles()
   const theme = useTheme()
-  const [mp, setMp] = React.useState([])
-  const [dropdownMps, setDropdownMps] = React.useState([])
+  const [selectedParty, setSelectedParty] = React.useState([])
+  const [dropdownParties, setDropdownParties] = React.useState([])
 
-  async function populateDropdownMps(mps) {
-    setDropdownMps(mps)
+  function populateDropdownParties(parties) {
+    setDropdownParties(parties)
   }
 
   function handleChange(event) {
-    setMp(event.target.value)
+    setSelectedParty(event.target.value)
     const value = event.target.value
     functionUpdate(value)
   }
 
   useEffect(() => {
     async function getData() {
-      const representatives = await fetchAllRepresentatives()
-      populateDropdownMps(representatives)
+      const representatives = await fetchAllRepresentatives() // REPLACE WITH NEXT LINE ONCE IMPLEMENTED
+      const parties = getAllParties(representatives)
+      populateDropdownParties(parties)
     }
     getData()
-  }, [mp])
+  }, [selectedParty])
 
   return (
     <div>
       <FormControl className={classes.formControl}>
         <InputLabel id='demo-simple-select-disabled-label'>
-          Choose a Politician
+          Choose a Political Party
         </InputLabel>
         <Select
-          value={mp}
+          value={selectedParty}
           onChange={handleChange}
           input={<Input />}
           MenuProps={MenuProps}>
-          {dropdownMps.map(mp => (
+          {dropdownParties.map(party => (
             <MenuItem
-              key={mp.name}
-              value={mp.name}
-              style={getStyles(mp.name, mp.name, theme)}>
-              {mp.name}
+              key={party}
+              value={party}
+              style={getStyles(selectedParty, party, theme)}>
+              {party}
             </MenuItem>
           ))}
         </Select>

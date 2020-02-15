@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Party from './Party'
+import Party from './CompareParties/Party'
 import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -27,40 +27,41 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function getAllBillsByHead(head) {
+export async function getAllBillsByHead (head) {
   const res = await axios.get(
     `http://localhost:5000/api/bills/${head}/getAllBillsByHead`
   )
   return res.data.data
 }
-export function calcPercent(percent) {
+
+export function calcPercent (percent) {
   return [percent, 100 - percent]
 }
 
-export default function CompareRepresentatives() {
+export default function CompareParties () {
   const classes = useStyles()
-  const [head1, setHead1] = useState('')
-  const [head2, setHead2] = useState('')
+  const [party1, setParty1] = useState('')
+  const [party2, setParty2] = useState('')
   const [dataSet, setDataSet] = useState([])
 
   const updateHead1 = head => {
-    if (head === head1 || head === '') {
+    if (head === party1 || head === '') {
     } else {
       setDataSet([])
-      setHead1(head)
+      setParty1(head)
     }
   }
 
   const updateHead2 = head => {
-    if (head2 === head || head === '') {
+    if (party2 === head || head === '') {
     } else {
-      setHead2(head)
+      setParty2(head)
       setDataSet([])
     }
   }
 
   useEffect(() => {
-    async function getalldata(dataForHead1, dataForHead2) {
+    async function getalldata (dataForHead1, dataForHead2) {
       let dataset = {}
       let commonBillsCounter = 0
       let similarities = 0
@@ -86,20 +87,21 @@ export default function CompareRepresentatives() {
       return [dataset, final]
     }
 
-    async function getBills() {
-      const head1Bills = await getAllBillsByHead(head1, 'head1')
-      const head2Bills = await getAllBillsByHead(head2, 'head2')
+    async function getBills () {
+      const head1Bills = await getAllBillsByHead(party1, 'head1')
+      const head2Bills = await getAllBillsByHead(party2, 'head2')
       const dataset = await getalldata(head1Bills, head2Bills)
       setDataSet(dataset)
     }
 
-    if (head1 !== '' && head2 !== '') {
+    if (party1 !== '' && party2 !== '') {
       getBills()
     }
-  }, [head1, head2])
+  }, [party1, party2])
 
-  const titleExplanation =
-    'Select two Parties of your choice and compare their information'
+  const comparePartiesExplanationTitle = 'Compare Parties Feature'
+  const comparePartiesExplanationDescription = `This is a comparison of some metrics regarding both parties. 
+    The metrics are calculated based on currently elected members of this party.`
 
   return (
     <>
@@ -112,25 +114,17 @@ export default function CompareRepresentatives() {
               className={classes.customHeaders}
               align='left'
               color='primary'
-              gutterBottom>
+              gutterBottom
+            >
               Compare Parties
             </Typography>
             <span className={classes.customTooltip}>
               <InfoBubble
-                title='What is a minory government?'
-                text={titleExplanation}
+                title={comparePartiesExplanationTitle}
+                text={comparePartiesExplanationDescription}
               />
             </span>
           </Container>
-          <Typography
-            variant='h5'
-            align='center'
-            color='textSecondary'
-            paragraph>
-            Select two MP's of your choice and compare their information and
-            performance in terms of bills sponsored and voted pm and then see
-            how much or how little they agree on!
-          </Typography>
           <div>
             <Grid container spacing={2}>
               <Grid item xs={6}>
