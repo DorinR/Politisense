@@ -21,6 +21,17 @@ router.get('/:head/getVotedBillsByMP', controller.getVotedBillsByMP)
 // @access Public
 router.get('/:head/getAllBillsByRep', controller.getAllBillsByRep)
 
-router.get('/:head/getAllBillsBySponsorName', controller.getAllBillsBySponsorName)
+router.get(
+  '/:head/getAllBillsBySponsorName',
+  controller.getAllBillsBySponsorName
+)
+
+// @route get api/bills/getAllBillsSponsoredByParty
+// @desc get all the bills that were sponsored by MPs from that party
+// @access Public
+router.get(
+  '/:party/getNumberOfBillsSponsoredByParty',
+  controller.getNumberOfBillsSponsoredByParty
+)
 
 module.exports = router
