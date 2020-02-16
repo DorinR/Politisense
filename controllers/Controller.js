@@ -58,6 +58,9 @@ module.exports = {
   getBillById: function (req, res) {
     return BillController.getBillById(req, res)
   },
+  getNumberOfBillsSponsoredByParty: function (req, res) {
+    return BillController.getNumberOfBillsSponsoredByParty(req, res)
+  },
 
   // Bill
   getVotedBillsByMP: function (req, res) {
