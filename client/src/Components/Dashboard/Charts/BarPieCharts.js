@@ -9,9 +9,9 @@ function dashboard (element, fData) {
 
   function histoGram (fD) {
     const hG = {}
-    const hGDim = { t: 60, r: 0, b: 30, l: 60 }
+    const hGDim = { t: 60, r: 0, b: 30, l: 30 }
     hGDim.w = 600 - hGDim.l - hGDim.r
-    hGDim.h = 350 - hGDim.t - hGDim.b
+    hGDim.h = 400 - hGDim.t - hGDim.b
 
 
     // create svg for histogram.
@@ -20,17 +20,19 @@ function dashboard (element, fData) {
       .attr('height', hGDim.h + hGDim.t + hGDim.b)
       .append('g')
       .attr('transform', 'translate(' + hGDim.l + ',' + hGDim.t + ')')
-        // .attr('viewBox',`0 0 ${width} ${height} ` )
+        .attr('viewBox',`0 0 ${hGDim.w} ${hGDim.h} ` )
     // create function for x-axis mapping.
     const x = d3.scaleBand()
       .domain(fD.map(d => d[0]))
       .range([0, hGDim.w])
-      .padding(0.4)
+      .padding(0.6)
 
     // Add x-axis to the histogram svg.
     hGsvg.append('g').attr('class', 'x axis')
       .attr('transform', 'translate(0,' + hGDim.h + ')')
       .call(d3.axisBottom(x))
+        .style('font-size', '12px')
+
 
     // Create function for y-axis map.
     const y = d3.scaleLinear().range([hGDim.h, 0])

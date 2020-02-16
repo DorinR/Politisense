@@ -34,7 +34,9 @@ const useStyles = makeStyles(theme => ({
     },
     paper: {
         padding: theme.spacing(2),
-        margin: `${theme.spacing(2)}px`,
+        margin: `${theme.spacing(5)}px`,
+        marginRight: `${theme.spacing(10)}px`,
+        marginLeft: `${theme.spacing(10)}px`
     },
     h3: {
         fontFamily: 'Martel, serif',
@@ -81,9 +83,9 @@ export default function MyMP2() {
     },[])
     return (
         <div>
+            <Paper className={classes.paper}>
             <Grid container component="main">
                 <Grid item xs={12}>
-                    <Paper className={classes.paper}>
                         <Grid container
                               direction="row"
                               justify="center">
@@ -216,9 +218,9 @@ export default function MyMP2() {
                                  </Grid>
                               </Grid>
                         </Container>
-                    </Paper>
                 </Grid>
             </Grid>
+            </Paper>
             <div>
                 <Paper className={classes.paper}>
                     <Grid container
