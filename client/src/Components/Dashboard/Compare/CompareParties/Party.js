@@ -18,6 +18,13 @@ import EventSeatIcon from '@material-ui/icons/EventSeat'
 import DescriptionIcon from '@material-ui/icons/Description'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn'
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt'
+import AssignmentIcon from '@material-ui/icons/Assignment'
+import FlightTakeoffIcon from '@material-ui/icons/FlightTakeoff'
+import FastfoodIcon from '@material-ui/icons/Fastfood'
+import CardGiftcardIcon from '@material-ui/icons/CardGiftcard'
+import TvIcon from '@material-ui/icons/Tv'
 import capitalize from 'capitalize'
 
 const useStyles = makeStyles(theme => ({
@@ -353,7 +360,7 @@ export default function Party(props) {
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar className={classes.avatar}>
-                      <DescriptionIcon />
+                      <MonetizationOnIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
@@ -363,7 +370,7 @@ export default function Party(props) {
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar className={classes.avatar}>
-                      <DescriptionIcon />
+                      <PeopleAltIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
@@ -373,17 +380,18 @@ export default function Party(props) {
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar className={classes.avatar}>
-                      <DescriptionIcon />
+                      <AssignmentIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    {'Average Spending on Service: ' + averageServiceSpending}
+                    {'Average Spending on Service Contracts: ' +
+                      averageServiceSpending}
                   </ListItemText>
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar className={classes.avatar}>
-                      <DescriptionIcon />
+                      <FlightTakeoffIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
@@ -393,7 +401,7 @@ export default function Party(props) {
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar className={classes.avatar}>
-                      <DescriptionIcon />
+                      <FastfoodIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
@@ -404,7 +412,7 @@ export default function Party(props) {
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar className={classes.avatar}>
-                      <DescriptionIcon />
+                      <CardGiftcardIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
@@ -414,7 +422,7 @@ export default function Party(props) {
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar className={classes.avatar}>
-                      <DescriptionIcon />
+                      <TvIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
