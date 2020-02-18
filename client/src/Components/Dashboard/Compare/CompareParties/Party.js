@@ -95,31 +95,34 @@ export function getSpendingCategoriesAverages(spendingItems) {
   ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
   spendingItems.forEach(item => {
-    switch (item.category) {
-      case "1-Employees' salaries":
-        salariesItemsCount++
-        salariesTotal += item.amount
-        break
-      case '2-Service Contracts':
-        serviceItemsCount++
-        serviceTotal += item.amount
-        break
-      case '3-Travel':
-        travelItemsCount++
-        travelTotal += item.amount
-        break
-      case '4-Hospitality':
-        hospitalityItemsCount++
-        hospitalityTotal += item.amount
-        break
-      case '5-Gifts':
-        giftsItemsCount++
-        giftsTotal += item.amount
-        break
-      case '6-Advertising':
-        advertisingItemsCount++
-        advertisingTotal += item.amount
-        break
+    item.amount = parseInt(item.amount)
+    if (typeof item.amount === 'number' && !isNaN(item.amount)) {
+      switch (item.category) {
+        case "1-Employees' salaries":
+          salariesItemsCount++
+          salariesTotal += item.amount
+          break
+        case '2-Service Contracts':
+          serviceItemsCount++
+          serviceTotal += item.amount
+          break
+        case '3-Travel':
+          travelItemsCount++
+          travelTotal += item.amount
+          break
+        case '4-Hospitality':
+          hospitalityItemsCount++
+          hospitalityTotal += item.amount
+          break
+        case '5-Gifts':
+          giftsItemsCount++
+          giftsTotal += item.amount
+          break
+        case '6-Advertising':
+          advertisingItemsCount++
+          advertisingTotal += item.amount
+          break
+      }
     }
   })
 

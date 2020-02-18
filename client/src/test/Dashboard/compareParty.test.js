@@ -1,0 +1,119 @@
+/* eslint-env jest */
+import { getSpendingCategoriesAverages } from '../../Components/Dashboard/Compare/CompareParties/Party'
+
+const chai = require('chai')
+chai.should()
+
+describe('Checks happy and non-happy paths for getSpendingCategoriesAverages function', () => {
+  let mockSpendingItems
+  beforeEach(() => {
+    mockSpendingItems = [
+      {
+        amount: 75,
+        category: "1-Employees' salaries"
+      },
+      {
+        amount: 125,
+        category: "1-Employees' salaries"
+      },
+      {
+        amount: 175,
+        category: '2-Service Contracts'
+      },
+      {
+        amount: 225,
+        category: '2-Service Contracts'
+      },
+      {
+        amount: 275,
+        category: '3-Travel'
+      },
+      {
+        amount: 325,
+        category: '3-Travel'
+      },
+      {
+        amount: 375,
+        category: '4-Hospitality'
+      },
+      {
+        amount: 425,
+        category: '4-Hospitality'
+      },
+      {
+        amount: 475,
+        category: '5-Gifts'
+      },
+      {
+        amount: 525,
+        category: '5-Gifts'
+      },
+      {
+        amount: 575,
+        category: '6-Advertising'
+      },
+      {
+        amount: 625,
+        category: '6-Advertising'
+      }
+    ]
+  })
+
+  test('correctly extracts salaries average', () => {
+    const { salariesAverage } = getSpendingCategoriesAverages(mockSpendingItems)
+    expect(salariesAverage).toBe(100)
+  })
+  test('correctly extracts services average', () => {
+    const { serviceAverage } = getSpendingCategoriesAverages(mockSpendingItems)
+    expect(serviceAverage).toBe(200)
+  })
+  test('correctly extracts travel average', () => {
+    const { travelAverage } = getSpendingCategoriesAverages(mockSpendingItems)
+    expect(travelAverage).toBe(300)
+  })
+  test('correctly extracts hospitality average', () => {
+    const { hospitalityAverage } = getSpendingCategoriesAverages(
+      mockSpendingItems
+    )
+    expect(hospitalityAverage).toBe(400)
+  })
+  test('correctly extracts gifts average', () => {
+    const { giftsAverage } = getSpendingCategoriesAverages(mockSpendingItems)
+    expect(giftsAverage).toBe(500)
+  })
+  test('correctly extracts advertising average', () => {
+    const { advertisingAverage } = getSpendingCategoriesAverages(
+      mockSpendingItems
+    )
+    expect(advertisingAverage).toBe(600)
+  })
+  test('when one of the spending categories is absent from spending items should return NaN', () => {
+    mockSpendingItems.pop()
+    mockSpendingItems.pop()
+    const { advertisingAverage } = getSpendingCategoriesAverages(
+      mockSpendingItems
+    )
+    expect(advertisingAverage).toBe(NaN)
+  })
+
+  test('when amount value is a string that can easily be cast to int', () => {
+    mockSpendingItems.push({
+      amount: '600',
+      category: '6-Advertising'
+    })
+    const { advertisingAverage } = getSpendingCategoriesAverages(
+      mockSpendingItems
+    )
+    expect(advertisingAverage).toBe(600)
+  })
+  test('averages still compute correctly even when an item with wrong amount type is fed into the function', () => {
+    mockSpendingItems.push({
+      amount: 'definitely not a number',
+      category: '6-Advertising'
+    })
+    const { advertisingAverage } = getSpendingCategoriesAverages(
+      mockSpendingItems
+    )
+    expect(advertisingAverage).toBe(600)
+  })
+})
