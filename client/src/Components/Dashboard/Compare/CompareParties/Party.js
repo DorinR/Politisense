@@ -16,6 +16,7 @@ import Grid from '@material-ui/core/Grid'
 import FlagIcon from '@material-ui/icons/Flag'
 import EventSeatIcon from '@material-ui/icons/EventSeat'
 import DescriptionIcon from '@material-ui/icons/Description'
+import capitalize from 'capitalize'
 
 const useStyles = makeStyles(theme => ({
   bigAvatar: {
@@ -31,19 +32,6 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#43D0C4'
   }
 }))
-
-function capitalize(str) {
-  if (str && isNaN(str)) {
-    let res = str
-    res = res
-      .toLowerCase()
-      .split(' ')
-      .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-      .join(' ')
-    return res
-  }
-  return null
-}
 
 async function getPartyData(party) {
   return axios
@@ -85,22 +73,70 @@ async function getSpendingItemsForParty(party) {
 }
 
 export function getSpendingCategoriesAverages(spendingItems) {
-  let [salaries, service, travel, hospitality, gifts, advertising] = [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6
-  ]
+  let [
+    salariesAverage,
+    serviceAverage,
+    travelAverage,
+    hospitalityAverage,
+    giftsAverage,
+    advertisingAverage,
+    salariesItemsCount,
+    salariesTotal,
+    serviceItemsCount,
+    serviceTotal,
+    travelItemsCount,
+    travelTotal,
+    hospitalityItemsCount,
+    hospitalityTotal,
+    giftsItemsCount,
+    giftsTotal,
+    advertisingItemsCount,
+    advertisingTotal
+  ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+  spendingItems.forEach(item => {
+    switch (item.category) {
+      case "1-Employees' salaries":
+        salariesItemsCount++
+        salariesTotal += item.amount
+        break
+      case '2-Service Contracts':
+        serviceItemsCount++
+        serviceTotal += item.amount
+        break
+      case '3-Travel':
+        travelItemsCount++
+        travelTotal += item.amount
+        break
+      case '4-Hospitality':
+        hospitalityItemsCount++
+        hospitalityTotal += item.amount
+        break
+      case '5-Gifts':
+        giftsItemsCount++
+        giftsTotal += item.amount
+        break
+      case '6-Advertising':
+        advertisingItemsCount++
+        advertisingTotal += item.amount
+        break
+    }
+  })
+
+  salariesAverage = parseInt(salariesTotal / salariesItemsCount)
+  serviceAverage = parseInt(serviceTotal / serviceItemsCount)
+  travelAverage = parseInt(travelTotal / travelItemsCount)
+  hospitalityAverage = parseInt(hospitalityTotal / hospitalityItemsCount)
+  giftsAverage = parseInt(giftsTotal / giftsItemsCount)
+  advertisingAverage = parseInt(advertisingTotal / advertisingItemsCount)
 
   return {
-    salaries,
-    service,
-    travel,
-    hospitality,
-    gifts,
-    advertising
+    salariesAverage,
+    serviceAverage,
+    travelAverage,
+    hospitalityAverage,
+    giftsAverage,
+    advertisingAverage
   }
 }
 
@@ -161,19 +197,19 @@ export default function Party(props) {
     async function getData() {
       const spendingItems = await getSpendingItemsForParty(party)
       const {
-        salaries,
-        service,
-        travel,
-        hospitality,
-        gifts,
-        advertising
+        salariesAverage,
+        serviceAverage,
+        travelAverage,
+        hospitalityAverage,
+        giftsAverage,
+        advertisingAverage
       } = getSpendingCategoriesAverages(spendingItems)
-      setAverageSalariesSpending(salaries)
-      setAverageServiceSpending(service)
-      setAverageTravelSpending(travel)
-      setAverageHospitalitySpending(hospitality)
-      setAverageGiftsSpending(gifts)
-      setAverageAdvertisingSpending(advertising)
+      setAverageSalariesSpending(salariesAverage)
+      setAverageServiceSpending(serviceAverage)
+      setAverageTravelSpending(travelAverage)
+      setAverageHospitalitySpending(hospitalityAverage)
+      setAverageGiftsSpending(giftsAverage)
+      setAverageAdvertisingSpending(advertisingAverage)
     }
 
     if (party) {
