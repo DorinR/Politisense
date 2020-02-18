@@ -23,7 +23,7 @@ app.use('/api/bills', require('./routes/api/bills'))
 app.use('/api/auth', require('./routes/api/auth'))
 app.use('/api/ridings', require('./routes/api/ridings'))
 app.use('/api/parties', require('./routes/api/parties'))
-// app.use('/api/parties', require('./routes/api/parties'))
+app.use('/api/financialRecords', require('./routes/api/financialRecords'))
 
 const PORT = process.env.PORT || 5000
 
