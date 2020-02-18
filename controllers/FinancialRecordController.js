@@ -25,7 +25,10 @@ exports.getAllSpendingItemsForParty = (req, res) => {
       } else {
         const allSpendingItems = []
         snapshot.forEach(item => {
-          const { amount, category } = item
+          let { amount, category, parent } = item
+          if (parent === '3-Travel') {
+            category = parent
+          }
           if (desiredCategories.includes(category)) {
             allSpendingItems.push({
               amount,

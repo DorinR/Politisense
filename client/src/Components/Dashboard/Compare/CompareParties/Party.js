@@ -16,6 +16,8 @@ import Grid from '@material-ui/core/Grid'
 import FlagIcon from '@material-ui/icons/Flag'
 import EventSeatIcon from '@material-ui/icons/EventSeat'
 import DescriptionIcon from '@material-ui/icons/Description'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
+import CancelIcon from '@material-ui/icons/Cancel'
 import capitalize from 'capitalize'
 
 const useStyles = makeStyles(theme => ({
@@ -143,6 +145,19 @@ export function getSpendingCategoriesAverages(spendingItems) {
   }
 }
 
+export function getAverage(...nums) {
+  let count = 0
+  let total = 0
+  nums.forEach(num => {
+    num = parseInt(num)
+    if (typeof num === 'number' && !isNaN(num)) {
+      count++
+      total += num
+    }
+  })
+  return parseInt(total / count)
+}
+
 export default function Party(props) {
   const { updateHead, ...other } = props
   const classes = useStyles()
@@ -165,6 +180,7 @@ export default function Party(props) {
   const [nbBillsFailed, setNbBillsFailed] = useState(0)
   const [totalSpending, setTotalSpending] = useState(0)
   // Spending
+  const [averageTotalSpending, setAverageTotalSpending] = useState(0)
   const [averageSalariesSpending, setAverageSalariesSpending] = useState(0)
   const [averageServiceSpending, setAverageServiceSpending] = useState(0)
   const [averageTravelSpending, setAverageTravelSpending] = useState(0)
@@ -207,6 +223,16 @@ export default function Party(props) {
         giftsAverage,
         advertisingAverage
       } = getSpendingCategoriesAverages(spendingItems)
+      setAverageTotalSpending(
+        getAverage(
+          salariesAverage,
+          serviceAverage,
+          travelAverage,
+          hospitalityAverage,
+          giftsAverage,
+          advertisingAverage
+        )
+      )
       setAverageSalariesSpending(salariesAverage)
       setAverageServiceSpending(serviceAverage)
       setAverageTravelSpending(travelAverage)
@@ -307,7 +333,7 @@ export default function Party(props) {
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar className={classes.avatar}>
-                      <DescriptionIcon />
+                      <CheckCircleIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
@@ -317,7 +343,7 @@ export default function Party(props) {
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar className={classes.avatar}>
-                      <DescriptionIcon />
+                      <CancelIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
@@ -331,7 +357,7 @@ export default function Party(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    {'Average Spending by MP: ' + totalSpending}
+                    {'Average Spending by MP: ' + averageTotalSpending}
                   </ListItemText>
                 </ListItem>
                 <ListItem>
