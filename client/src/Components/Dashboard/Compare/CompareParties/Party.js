@@ -71,6 +71,39 @@ async function getNumberOfBillsSponsoredByParty(party) {
     .catch(console.error)
 }
 
+async function getSpendingItemsForParty(party) {
+  return axios
+    .get(
+      `http://localhost:5000/api/financialRecords/${party.toLowerCase()}/getAllSpendingItemsForParty`
+    )
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+    .catch(console.error)
+}
+
+export function getSpendingCategoriesAverages(spendingItems) {
+  let [salaries, service, travel, hospitality, gifts, advertising] = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+
+  return {
+    salaries,
+    service,
+    travel,
+    hospitality,
+    gifts,
+    advertising
+  }
+}
+
 export default function Party(props) {
   const { updateHead, ...other } = props
   const classes = useStyles()
@@ -82,13 +115,27 @@ export default function Party(props) {
   const [skeleton] = useState([1, 2, 3, 4, 5])
   const [issuedBills, setIssuedBills] = useState(0)
 
+  // General
   const [party, setParty] = useState('')
   const [partyImageUrl, setPartyImageUrl] = useState('')
+  // Seats Held
   const [seatsHeld, setSeatsHeld] = useState('')
+  // Legislative Performance
   const [nbBillsAuthored, setNbBillsAuthored] = useState(0)
   const [nbBillsSucceeded, setNbBillsSucceeded] = useState(0)
   const [nbBillsFailed, setNbBillsFailed] = useState(0)
   const [totalSpending, setTotalSpending] = useState(0)
+  // Spending
+  const [averageSalariesSpending, setAverageSalariesSpending] = useState(0)
+  const [averageServiceSpending, setAverageServiceSpending] = useState(0)
+  const [averageTravelSpending, setAverageTravelSpending] = useState(0)
+  const [averageHospitalitySpending, setAverageHospitalitySpending] = useState(
+    0
+  )
+  const [averageGiftsSpending, setAverageGiftsSpending] = useState(0)
+  const [averageAdvertisingSpending, setAverageAdvertisingSpending] = useState(
+    0
+  )
 
   useEffect(() => {
     async function getData() {
@@ -105,6 +152,30 @@ export default function Party(props) {
           numberOfBillsSponsored.billsSucceeded
       )
     }
+    if (party) {
+      getData()
+    }
+  }, [party])
+
+  useEffect(() => {
+    async function getData() {
+      const spendingItems = await getSpendingItemsForParty(party)
+      const {
+        salaries,
+        service,
+        travel,
+        hospitality,
+        gifts,
+        advertising
+      } = getSpendingCategoriesAverages(spendingItems)
+      setAverageSalariesSpending(salaries)
+      setAverageServiceSpending(service)
+      setAverageTravelSpending(travel)
+      setAverageHospitalitySpending(hospitality)
+      setAverageGiftsSpending(gifts)
+      setAverageAdvertisingSpending(advertising)
+    }
+
     if (party) {
       getData()
     }
@@ -222,6 +293,68 @@ export default function Party(props) {
                   </ListItemAvatar>
                   <ListItemText>
                     {'Average Spending by MP: ' + totalSpending}
+                  </ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar className={classes.avatar}>
+                      <DescriptionIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>
+                    {'Average Spending on Salaries: ' + averageSalariesSpending}
+                  </ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar className={classes.avatar}>
+                      <DescriptionIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>
+                    {'Average Spending on Service: ' + averageServiceSpending}
+                  </ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar className={classes.avatar}>
+                      <DescriptionIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>
+                    {'Average Spending on Travel: ' + averageTravelSpending}
+                  </ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar className={classes.avatar}>
+                      <DescriptionIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>
+                    {'Average Spending on Hospitality: ' +
+                      averageHospitalitySpending}
+                  </ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar className={classes.avatar}>
+                      <DescriptionIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>
+                    {'Average Spending on Gifts: ' + averageGiftsSpending}
+                  </ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar className={classes.avatar}>
+                      <DescriptionIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>
+                    {'Average Spending on Advertising: ' +
+                      averageAdvertisingSpending}
                   </ListItemText>
                 </ListItem>
               </List>

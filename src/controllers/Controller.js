@@ -117,7 +117,7 @@ module.exports = {
   },
 
   // Financial Record
-  getAllSpendingItems: function(req, res) {
-    return FinancialRecordController.getAllSpendingItems(req, res)
+  getAllSpendingItemsForParty: function(req, res) {
+    return FinancialRecordController.getAllSpendingItemsForParty(req, res)
   }
 }
