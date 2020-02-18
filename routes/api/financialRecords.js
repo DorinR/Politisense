@@ -5,6 +5,9 @@ const controller = require('../../controllers/Controller')
 // @route get api/financialRecords/getAllSpendingItems
 // @desc get all spending items stored in FinancialRecords collection
 // @access Public
-router.get('/getAllSpendingItems', controller.getAllSpendingItems)
+router.get(
+  '/:party/getAllSpendingItemsForParty',
+  controller.getAllSpendingItemsForParty
+)
 
 module.exports = router
