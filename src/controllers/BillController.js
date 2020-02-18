@@ -298,13 +298,11 @@ exports.getNumberOfBillsSponsoredByParty = async (req, res) => {
             .select()
             .then(result => {
               if (result.empty) {
-                console.log('bill assent data not found')
+                console.error('bill assent data not found')
               }
               result.forEach(doc => {
-                console.log(`bill extra data: ${doc.data().assent}`)
                 if (doc.data().assent) {
                   billsSucceededCount++
-                  console.log(`COUNT: ${billsSucceededCount}`)
                 }
               })
               return billsSucceededCount
