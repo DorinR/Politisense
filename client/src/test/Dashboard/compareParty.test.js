@@ -1,5 +1,8 @@
 /* eslint-env jest */
-import { getSpendingCategoriesAverages } from '../../Components/Dashboard/Compare/CompareParties/Party'
+import {
+  getSpendingCategoriesAverages,
+  getAverage
+} from '../../Components/Dashboard/Compare/CompareParties/Party'
 
 const chai = require('chai')
 chai.should()
@@ -115,5 +118,24 @@ describe('Checks happy and non-happy paths for getSpendingCategoriesAverages fun
       mockSpendingItems
     )
     expect(advertisingAverage).toBe(600)
+  })
+})
+
+describe('test that averaging function with variable number of arguments works correctly', () => {
+  test('regular input', () => {
+    const avg = getAverage(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    expect(avg).toBe(5)
+  })
+  test('single value input', () => {
+    const avg = getAverage(25)
+    expect(avg).toBe(25)
+  })
+  test('empty input', () => {
+    const avg = getAverage()
+    expect(avg).toBe(NaN)
+  })
+  test('if non-number values are fed into function average is still correctly calculated', () => {
+    const avg = getAverage(1, 2, 3, 'definitely not a number')
+    expect(avg).toBe(2)
   })
 })
