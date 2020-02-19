@@ -8,17 +8,20 @@ import axios from 'axios'
 import { fetchUserRiding } from '../Navbar'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
-import CardContent from '@material-ui/core/CardContent'
-import NotListedLocationIcon from '@material-ui/icons/NotListedLocation'
-import Box from '@material-ui/core/Box'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import Avatar from '@material-ui/core/Avatar'
-import ListItemText from '@material-ui/core/ListItemText'
-import List from '@material-ui/core/List'
-import { capitalizedName } from './BillDialog'
-
-const useStyles = makeStyles({
+import CategoryDashboard from "./CategoryDashboard";
+import BillHistoryTable from "./PastBills/BillHistoryTable";
+import Budget from "./Budget/Budget";
+import TotalProfit from "./TotalProfit";
+import TotalUsers from "./TotalUsers";
+import TasksProgress from "./TasksProgress";
+import IssuedBillsByMP from "./IssuedBillsByMP";
+import D3GaugeChart from "./Charts/D3GaugeChart";
+import UsersByDevice from "./UsersByDevice";
+import LatestProducts from "./LatestProducts";
+const useStyles = makeStyles(theme => ({
+  root: {
+    padding: theme.spacing(4)
+  },
   card: {
     minWidth: 275
   },
@@ -41,9 +44,8 @@ const useStyles = makeStyles({
     margin: '20px',
     marginTop: '30px'
   }
-})
-
-export default function CategoryDashboard () {
+}))
+export default function GeneralDashboard () {
   const classes = useStyles()
   const [categoryList] = React.useState([
     'economics',
@@ -54,8 +56,9 @@ export default function CategoryDashboard () {
     'criminal',
     'trade'
   ])
-
   const [user, setUser] = useState(null)
+  const [barPierows, setBarPieRows] = React.useState([])
+
   useEffect(() => {
     // eslint-disable-next-line no-undef
     const user = JSON.parse(localStorage.getItem('user'))
@@ -68,7 +71,16 @@ export default function CategoryDashboard () {
       const representatives = await getAllReps()
       setReps(representatives)
     }
+    // async function populateIssuedBill (userRepIssuedBills){
+    //   const dataForTable = await createDataPieBarTable(categoryList,userRepIssuedBills)
+    //   return dataForTable
+    // }
     getData()
+    // if(userRepIssuedBills){
+    //   populateIssuedBill(userRepIssuedBills).then(res => {
+    //     setRows(res)
+    //   })
+    // }
   }, [])
 
   async function getAllReps () {
@@ -145,9 +157,17 @@ export default function CategoryDashboard () {
       if (userRepresentative) {
         const issuedBillByUserRep = await getAllBillsBySponsorName(userRepresentative)
         setUserRepIssuedBills(issuedBillByUserRep)
+        populateIssuedBill(issuedBillByUserRep).then(res => {
+          setBarPieRows(res)
+        })
       }
     }
+    async function populateIssuedBill (userRepIssuedBills){
+        const dataForTable = await createDataPieBarTable(categoryList,userRepIssuedBills)
+        return dataForTable
+      }
     getData()
+
   }, [userRepresentative])
 
   async function getAllBillsBySponsorName (head) {
@@ -179,146 +199,100 @@ export default function CategoryDashboard () {
 
   /* eslint-disable */
   return (
-    <div className={classes.container}>
-    <Grid container spacing={1}>
-      <Grid item xs={12}>
-        {userRepIssuedBills && categoryList && userRepresentative ? (
-          <Card>
-            <CardContent>
-              <Typography className={classes.title}>
-                Bills sponsored by {capitalizedName(userRepresentative)}
-              </Typography>
-              <BarChartWrapper
-                type="bar-pie"
-                data={userRepIssuedBills}
-                categories={categoryList}
-              />
-              <Box border mx="auto">
-                <List>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar className={classes.avatar}>
-                        <NotListedLocationIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText>
-                      The distribution of issued bills by the representative
-                      among different categories
-                    </ListItemText>
-                  </ListItem>
-                </List>
-              </Box>
-            </CardContent>
-          </Card>
-        ) : (
-          ""
-        )}
-      </Grid>
-
-      {radarData && categoryList ? (
-        <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Card>
-                <CardContent>
-                  <Typography className={classes.title}>
-                    MP Voting Distribution
-                  </Typography>
-                  <Radar
-                    width={400}
-                    height={350}
-                    padding={40}
-                    domainMax={radarData[1] + 3}
-                    highlighted
-                    onHover={point => {
-                      if (point) {
-                      } else {
-                      }
-                    }}
-                    data={{
-                      variables: [
-                        { key: "trade", label: "Trade" },
-                        { key: "criminal", label: "Criminal" },
-                        { key: "business", label: "Business" },
-                        { key: "Economics", label: "Economics" },
-                        { key: "Healthcare", label: "Healthcare" },
-                        { key: "Religion", label: "Religion" },
-                        { key: "Human Rights", label: "Human Rights" }
-                      ],
-                      sets: [
-                        {
-                          values: radarData[0]
-                        }
-                      ]
-                    }}
-                  />
-                  <Box border mx="auto">
-                    <List>
-                      <ListItem>
-                        <ListItemAvatar>
-                          <Avatar className={classes.avatar}>
-                            <NotListedLocationIcon />
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText>
-                          This radar chart shows the MP's activity with respect
-                          to a variety categories.
-                        </ListItemText>
-                      </ListItem>
-                    </List>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-            {donutData ? (
-              <Grid item item xs={6}>
-                <Card>
-                  <CardContent>
-                    <Typography className={classes.title}>
-                      Bipartisan Index
-                    </Typography>
-                    <BarChartWrapper type="donut" data={donutData} />
-                    <Box border mx="auto">
-                      <List>
-                        <ListItem>
-                          <ListItemAvatar>
-                            <Avatar className={classes.avatar}>
-                              <NotListedLocationIcon />
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText>
-                            The Bipartisan Index measures how often a member of
-                            Parliament introduces bills that succeed in
-                            attracting co-sponsors from members of the other
-                            party, and how often they in turn co-sponsor a bill
-                            introduced from across the aisle.
-                          </ListItemText>
-                        </ListItem>
-                      </List>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ) : (
-              ""
-            )}
+      <div className={classes.root}>
+        <Grid
+            container
+            spacing={4}
+        >
+          <Grid
+              item
+              lg={3}
+              sm={6}
+              xl={3}
+              xs={12}
+          >
+            <Budget />
+          </Grid>
+          <Grid
+              item
+              lg={3}
+              sm={6}
+              xl={3}
+              xs={12}
+          >
+            <TotalUsers />
+          </Grid>
+          <Grid
+              item
+              lg={3}
+              sm={6}
+              xl={3}
+              xs={12}
+          >
+            <TasksProgress />
+          </Grid>
+          <Grid
+              item
+              lg={3}
+              sm={6}
+              xl={3}
+              xs={12}
+          >
+            <TotalProfit />
+          </Grid>
+          <Grid
+              item
+              lg={8}
+              md={12}
+              xl={9}
+              xs={12}
+          >
+            {userRepIssuedBills && categoryList && userRepresentative && barPierows ? (
+            <IssuedBillsByMP userRepIssuedBills={userRepIssuedBills}
+                             categoryList={categoryList}
+                             userRepresentative={userRepresentative}
+                             rows={barPierows}/>)
+                : ('nothing')}
+          </Grid>
+          <Grid
+              item
+              lg={4}
+              md={6}
+              xl={3}
+              xs={12}
+          >
+            <UsersByDevice title={'gauge'}/>
+          </Grid>
+          <Grid
+              item
+              lg={4}
+              md={6}
+              xl={3}
+              xs={12}
+          >
+            {radarData && categoryList ? (
+            <LatestProducts radarData={radarData} />):""}
+          </Grid>
+          <Grid
+              item
+              lg={8}
+              md={12}
+              xl={9}
+              xs={12}
+          >
+            <BillHistoryTable/>
+          </Grid>
+          <Grid
+              item
+              lg={12}
+              md={12}
+              xl={9}
+              xs={12}
+          >
+          <CategoryDashboard/>
           </Grid>
         </Grid>
-      ) : (
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            zIndex: "-2",
-            transform: "translate(-50%, -50%)"
-          }}
-        >
-          <CircularProgress />
-        </div>
-      )}
-    </Grid>
-    </div>
+      </div>
   );
 }
 
@@ -404,4 +378,28 @@ export function createDataSetDonut(sponsors, mpdata) {
     BQ: bqCounter
   }
   return parties
+}
+export async function createDataPieBarTable(categories, data) {
+
+  let billsForSpeicificCategory =[]
+  let finalArray=[]
+  categories.forEach(category => {
+
+    let totalBills = 0
+
+    data.forEach(bill => {
+      if (bill.billsClassified.category === (category.toLowerCase())) {
+        totalBills++
+        if (bill.voteRecord.yeas > bill.voteRecord.nays) {
+          billsForSpeicificCategory.push({bill:bill,category: category, status:'Passed'})
+        } else {
+          billsForSpeicificCategory.push({bill:bill ,category: category, status:'Failed'})
+        }
+      }
+    })
+    if (totalBills !== 0) {
+      finalArray = finalArray.concat(billsForSpeicificCategory)
+    }
+  })
+  return finalArray
 }
