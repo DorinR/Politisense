@@ -1,7 +1,8 @@
 /* eslint-env jest */
 import {
   getSpendingCategoriesAverages,
-  getAverage
+  getAverage,
+  getHexColor
 } from '../../Components/Dashboard/Compare/CompareParties/Party'
 
 const chai = require('chai')
@@ -137,5 +138,26 @@ describe('test that averaging function with variable number of arguments works c
   test('if non-number values are fed into function average is still correctly calculated', () => {
     const avg = getAverage(1, 2, 3, 'definitely not a number')
     expect(avg).toBe(2)
+  })
+})
+
+describe('test that getting the hex-format color is correctly gotten from the svg-format color', () => {
+  test('color extraction works with regular expected input', () => {
+    let color = getHexColor('liberal')
+    expect(color).toBe('#D71921')
+    color = getHexColor('bloc québécois')
+    expect(color).toBe('#355888')
+    color = getHexColor('conservative')
+    expect(color).toBe('#0C499C')
+    color = getHexColor('green party')
+    expect(color).toBe('#3D9B35')
+    color = getHexColor('independent')
+    expect(color).toBe('#78D7CE')
+    color = getHexColor('ndp')
+    expect(color).toBe('#EF7E52')
+  })
+  test('color extraction returns fallback color if passed argument is not among existing parties', () => {
+    const color = getHexColor('definitely not a party name')
+    expect(color).toBe('#78D7CE')
   })
 })

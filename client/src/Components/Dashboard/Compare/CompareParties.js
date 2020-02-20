@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
 import D3ChartHeadVsHeadContainer from '../D3ChartHeadVsHeadContainer'
 import Grow from '@material-ui/core/Grow'
-import InfoBubble from '../InfoBubble/InfoBubble'
+import InfoBubble from '../Utilities/InfoBubble'
 
 const useStyles = makeStyles(theme => ({
   content: {
