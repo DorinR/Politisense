@@ -26,6 +26,9 @@ import FastfoodIcon from '@material-ui/icons/Fastfood'
 import CardGiftcardIcon from '@material-ui/icons/CardGiftcard'
 import TvIcon from '@material-ui/icons/Tv'
 import capitalize from 'capitalize'
+import { PARTY_COLORS } from '../../Sidebar/RidingShape/partyColors'
+import DividerBlock from '../../Utilities/DividerBlock'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const useStyles = makeStyles(theme => ({
   bigAvatar: {
@@ -35,10 +38,7 @@ const useStyles = makeStyles(theme => ({
     border: '3px solid #41aaa8'
   },
   card: {
-    width: 350
-  },
-  avatar: {
-    backgroundColor: '#43D0C4'
+    width: 400
   }
 }))
 
@@ -165,16 +165,27 @@ export function getAverage(...nums) {
   return parseInt(total / count)
 }
 
+export function getHexColor(party) {
+  let color_svg_format = PARTY_COLORS[party.toLowerCase()]
+  let color_hex_format = ''
+  if (color_svg_format) {
+    color_hex_format = '#' + color_svg_format.substring(3)
+  }
+  if (color_hex_format === '') {
+    color_hex_format = getHexColor('independent')
+  }
+
+  return color_hex_format
+}
+
 export default function Party(props) {
   const { updateHead, ...other } = props
   const classes = useStyles()
-  const [politicalParty, setPoliticalParty] = useState('')
-  const [riding, setRiding] = useState('')
-  const [yearElected, setYearElected] = useState(0)
-  const [totalBills, setTotalBills] = useState(0)
-  const [ridingCode, setRidingCode] = useState('')
   const [skeleton] = useState([1, 2, 3, 4, 5])
-  const [issuedBills, setIssuedBills] = useState(0)
+  const [loadingComplete, setLoadingComplete] = useState('')
+
+  // Icon Colors
+  const [iconColor, setIconColor] = useState('')
 
   // General
   const [party, setParty] = useState('')
@@ -198,6 +209,16 @@ export default function Party(props) {
   const [averageAdvertisingSpending, setAverageAdvertisingSpending] = useState(
     0
   )
+
+  useEffect(() => {
+    if (nbBillsAuthored && averageTotalSpending) {
+      setLoadingComplete(true)
+    }
+  }, [party, nbBillsAuthored, averageTotalSpending])
+
+  useEffect(() => {
+    setIconColor(getHexColor(party))
+  }, [party])
 
   useEffect(() => {
     async function getData() {
@@ -254,43 +275,10 @@ export default function Party(props) {
   }, [party])
 
   const updatePartyFromSwitcher = newParty => {
+    setLoadingComplete(false)
     setParty(newParty)
     updateHead(newParty)
   }
-
-  useEffect(() => {
-    if (party) {
-      async function getRepInfo(name) {
-        const res = await axios.get(
-          `http://localhost:5000/api/representatives/${name}/getRepresentativesInfo`
-        )
-        return res.data.data
-      }
-      async function getIssuedBillsByHead(head) {
-        const res = await axios.get(
-          `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
-        )
-        return res.data.data
-      }
-      async function getData(name) {
-        // eslint-disable-next-line
-        const riding = await getRepInfo(name)
-        const total = await calculateTotalVotesBills(bills)
-        setTotalBills(total)
-        setRiding(riding.riding)
-        const test = riding.riding
-        setYearElected(riding.yearElected)
-        setPoliticalParty(riding.politicalParty)
-        const ridingCode = await fetchRidingCode(test)
-        setRidingCode(ridingCode)
-        const issuedBillsByHead = await getIssuedBillsByHead(name)
-        if (issuedBillsByHead.length != 0) {
-          setIssuedBills(issuedBillsByHead.length)
-        }
-      }
-      getData(party)
-    }
-  }, [party, riding, politicalParty, yearElected, issuedBills])
 
   return (
     <Grid container spacing={2}>
@@ -309,11 +297,12 @@ export default function Party(props) {
                 />
               </Grid>
             </Grid>
-            {party ? (
+            {loadingComplete ? (
               <List>
+                <DividerBlock text='General' color={iconColor} />
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar className={classes.avatar}>
+                    <Avatar style={{ backgroundColor: iconColor }}>
                       <FlagIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -321,15 +310,19 @@ export default function Party(props) {
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar className={classes.avatar}>
+                    <Avatar style={{ backgroundColor: iconColor }}>
                       <EventSeatIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>{'Number of seats: ' + seatsHeld}</ListItemText>
                 </ListItem>
+                <DividerBlock
+                  text='Legislative Performance'
+                  color={iconColor}
+                />
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar className={classes.avatar}>
+                    <Avatar style={{ backgroundColor: iconColor }}>
                       <DescriptionIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -339,7 +332,7 @@ export default function Party(props) {
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar className={classes.avatar}>
+                    <Avatar style={{ backgroundColor: iconColor }}>
                       <CheckCircleIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -349,7 +342,7 @@ export default function Party(props) {
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar className={classes.avatar}>
+                    <Avatar style={{ backgroundColor: iconColor }}>
                       <CancelIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -357,9 +350,10 @@ export default function Party(props) {
                     {'Number of Bills Failed: ' + nbBillsFailed}
                   </ListItemText>
                 </ListItem>
+                <DividerBlock text='Spending' color={iconColor} />
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar className={classes.avatar}>
+                    <Avatar style={{ backgroundColor: iconColor }}>
                       <MonetizationOnIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -369,7 +363,7 @@ export default function Party(props) {
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar className={classes.avatar}>
+                    <Avatar style={{ backgroundColor: iconColor }}>
                       <PeopleAltIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -379,7 +373,7 @@ export default function Party(props) {
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar className={classes.avatar}>
+                    <Avatar style={{ backgroundColor: iconColor }}>
                       <AssignmentIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -390,7 +384,7 @@ export default function Party(props) {
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar className={classes.avatar}>
+                    <Avatar style={{ backgroundColor: iconColor }}>
                       <FlightTakeoffIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -400,7 +394,7 @@ export default function Party(props) {
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar className={classes.avatar}>
+                    <Avatar style={{ backgroundColor: iconColor }}>
                       <FastfoodIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -411,7 +405,7 @@ export default function Party(props) {
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar className={classes.avatar}>
+                    <Avatar style={{ backgroundColor: iconColor }}>
                       <CardGiftcardIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -421,7 +415,7 @@ export default function Party(props) {
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar className={classes.avatar}>
+                    <Avatar style={{ backgroundColor: iconColor }}>
                       <TvIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -443,11 +437,4 @@ export default function Party(props) {
       </Grid>
     </Grid>
   )
-}
-function calculateTotalVotesBills(bills) {
-  let totalBills = 0
-  if (bills) {
-    bills.forEach(bill => totalBills++)
-  }
-  return totalBills
 }
