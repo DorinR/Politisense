@@ -39,6 +39,8 @@ class VoteScraper extends QueueManager {
     this.setResults(params.results)
     this.dateRanges = []
     this.setDateRanges(params.dateRanges)
+    this.billIds = []
+    this.setBillIds(params.billIds)
     // TODO: ADD billDocumentId
 
     this.params = []
@@ -99,6 +101,16 @@ class VoteScraper extends QueueManager {
     }
   }
 
+  setBillIds (billIds) {
+    if (typeof billIds === 'undefined' ||
+      (typeof billIds === typeof ' ' && billIds.toLowerCase().includes('all'))) {
+      this.results.push(undefined)
+    }
+    if (typeof billIds === typeof []) {
+      this.billIds = billIds.filter(id => typeof id === typeof 'number')
+    }
+  }
+
   isValidDateRange (dateRange) {
     if (typeof dateRange !== typeof [] || dateRange.length !== 2) {
       return false
@@ -125,7 +137,27 @@ class VoteScraper extends QueueManager {
   }
 
   createQueries (url) {
-
+    this.parliaments.forEach(parliament => {
+      this.billTypes.forEach(billType => {
+        this.results.forEach(result => {
+          this.dateRanges.forEach(dateRange => {
+            this.billIds.forEach(billId => {
+              this.params.push({
+                url: url,
+                params: {
+                  parlSession: parliament,
+                  billDocumentTypeId: billType,
+                  decisionResultId: result,
+                  fromDate: dateRange[0],
+                  toDate: dateRange[1],
+                  billDocumentId: billId
+                }
+              })
+            })
+          })
+        })
+      })
+    })
   }
 }
 
