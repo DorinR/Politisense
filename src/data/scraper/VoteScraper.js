@@ -1,7 +1,8 @@
 require('module-alias/register')
 const Utils = require('@utils')
 const QueueManager = Utils.QueueManager.QueueManager
-const StartAction = Utils.QueueManager.Start.StartPoliticianScrape
+const StartAction = Utils.QueueManager.Start.StartVoteScrape
+// TODO: Complete stop action
 const StopAction = Utils.QueueManager.Stop.StopPoliticianScrape
 const Throw = Utils.QueueManager.Error.ParseErrorAction
 
@@ -41,7 +42,6 @@ class VoteScraper extends QueueManager {
     this.setDateRanges(params.dateRanges)
     this.billIds = []
     this.setBillIds(params.billIds)
-    // TODO: ADD billDocumentId
 
     this.params = []
     this.createQueries(params.url)
@@ -51,7 +51,6 @@ class VoteScraper extends QueueManager {
 
   async run () {
     await super.run()
-    this.finish()
   }
 
   accumulate (result) {

@@ -22,6 +22,7 @@ class ParserWrapperAction extends Action {
       })
     }
 
+    // TODO: This should probably be done like GovtDataScraper to ensure all data gotten
     if (parser.hasData() && parser.hasListOfData()) {
       return [parser.getAllFromXml()]
     } else if (parser.hasData()) {
