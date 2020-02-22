@@ -74,12 +74,12 @@ class VoteXmlParser extends XmlDataParser {
     return numYeas > numNays
   }
 
-  async getVoters (voteId) {
-    if (typeof this.currentParliament === 'undefined') {
+  async getVoters (voteId, parliament = this.currentParliament) {
+    if (parliament === this.currentParliament && typeof this.currentParliament === 'undefined') {
       throw new ParliamentNotSetError('Must specify what the current parliament is if it is used as a filter.')
     }
 
-    const voteParticipants = await this._getHtmlFromLink(VoteXmlParser.getVoteParticipantsUrl(voteId, this.currentParliament))
+    const voteParticipants = await this._getHtmlFromLink(VoteXmlParser.getVoteParticipantsUrl(voteId, parliament))
     if (voteParticipants === '') {
       return ''
     }
