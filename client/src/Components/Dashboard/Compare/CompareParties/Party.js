@@ -181,7 +181,12 @@ export default function Party(props) {
   const { updateHead, ...other } = props
   const classes = useStyles()
   const [skeleton] = useState([1, 2, 3, 4, 5])
-  const [loadingComplete, setLoadingComplete] = useState('')
+  const [loadingComplete, setLoadingComplete] = useState(false)
+  const [isLoadingData, setIsLoadingData] = useState('')
+  const [isDoneLoadingSpendingData, setIsDoneLoadingSpendingData] = useState(
+    false
+  )
+  const [isDoneLoadingBillsData, setIsDoneLoadingBillsData] = useState(false)
   const [spendingInfoTitle, setSpendingInfoTitle] = useState('')
   const [spendingInfoText, setSpendingInfoText] = useState('')
 
@@ -212,10 +217,10 @@ export default function Party(props) {
   )
 
   useEffect(() => {
-    if (nbBillsAuthored && averageTotalSpending) {
+    if (isDoneLoadingBillsData && isDoneLoadingSpendingData) {
       setLoadingComplete(true)
     }
-  }, [party, nbBillsAuthored, averageTotalSpending])
+  }, [party, isDoneLoadingBillsData, isDoneLoadingSpendingData])
 
   useEffect(() => {
     setIconColor(getHexColor(party))
@@ -235,11 +240,12 @@ export default function Party(props) {
         numberOfBillsSponsored.totalBills -
           numberOfBillsSponsored.billsSucceeded
       )
+      setIsDoneLoadingBillsData(true)
     }
     if (party) {
       getData()
     }
-  }, [party])
+  }, [party, averageTotalSpending])
 
   useEffect(() => {
     async function getData() {
@@ -268,6 +274,7 @@ export default function Party(props) {
       setAverageHospitalitySpending(hospitalityAverage)
       setAverageGiftsSpending(giftsAverage)
       setAverageAdvertisingSpending(advertisingAverage)
+      setIsDoneLoadingSpendingData(true)
     }
 
     if (party) {
@@ -277,6 +284,9 @@ export default function Party(props) {
 
   const updatePartyFromSwitcher = newParty => {
     setLoadingComplete(false)
+    setIsDoneLoadingBillsData(false)
+    setIsDoneLoadingSpendingData(false)
+    setIsLoadingData('pulse')
     setParty(newParty)
     updateHead(newParty)
   }
@@ -323,6 +333,13 @@ export default function Party(props) {
                 <DividerBlock
                   text='Legislative Performance'
                   color={iconColor}
+                  infoBubbleTitle={
+                    'Number of Bills Sponsored by Members of this Party'
+                  }
+                  infoBubbleText={
+                    'This is a breakdown of the number of bills that were sponsored by members of the given party. We can see the total number of bills that were sponsored, as well as the portion of those that passed and entered into law, and the portion of those that were not voted into law. To see details about the bills your representative has voted on, go to the "My MP" tab'
+                  }
+                  infoBubbleColor={'white'}
                 />
                 <ListItem>
                   <ListItemAvatar>
@@ -466,7 +483,7 @@ export default function Party(props) {
             ) : (
               <Grid item style={{ paddingTop: '10px' }}>
                 {skeleton.map(skeleton => {
-                  return <Skeleton animation={false} />
+                  return <Skeleton animation={isLoadingData} />
                 })}
               </Grid>
             )}
