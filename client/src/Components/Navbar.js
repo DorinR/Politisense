@@ -250,7 +250,8 @@ export default function MiniDrawer({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}>
+              className={classes.navbarCustomButton}
+            >
               Compare
             </Button>
           </Link>

@@ -105,6 +105,14 @@ module.exports = {
     return RidingController.getRidingPopulation(req, res)
   },
 
+  getAllPartyData: function(req, res) {
+    return PartyController.getAllPartyData(req, res)
+  },
+
+  // Financial Record
+  getAllSpendingItemsForParty: function(req, res) {
+    return FinancialRecordController.getAllSpendingItemsForParty(req, res)
+  },
   getBudgetData: function(req, res) {
     return BudgetController.budgetData(req, res)
   },
