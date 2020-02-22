@@ -10,7 +10,6 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
-import { fetchRidingCode } from '../../Sidebar/RepresentativeInfo'
 import axios from 'axios'
 import Grid from '@material-ui/core/Grid'
 import FlagIcon from '@material-ui/icons/Flag'
@@ -28,7 +27,6 @@ import TvIcon from '@material-ui/icons/Tv'
 import capitalize from 'capitalize'
 import { PARTY_COLORS } from '../../Sidebar/RidingShape/partyColors'
 import DividerBlock from '../../Utilities/DividerBlock'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import ColoredText from '../../Utilities/ColoredText'
 
 const useStyles = makeStyles(theme => ({
@@ -364,6 +362,7 @@ export default function Party(props) {
                   color={iconColor}
                   infoBubbleTitle={'Spending Information for Party Candidates'}
                   infoBubbleText={'The data shown is from Q4 of 2019'}
+                  infoBubbleColor={'white'}
                 />
                 <ListItem>
                   <ListItemAvatar>
