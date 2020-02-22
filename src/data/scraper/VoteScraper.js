@@ -166,7 +166,9 @@ class VoteScraper extends QueueManager {
       this.billIds.push('')
     }
     if (typeof billIds === typeof []) {
-      this.billIds = billIds.filter(id => typeof id === typeof 'number')
+      this.billIds = billIds.filter(id => {
+        return typeof id === 'number'
+      })
     }
   }
 
@@ -236,6 +238,8 @@ class VoteScraper extends QueueManager {
 }
 
 module.exports.VoteScraper = VoteScraper
+module.exports.VoteScraperBillType = BillType
+module.exports.VoteScraperResult = Result
 
 populateParliamentData().then(res => {
   console.log(Parliament)

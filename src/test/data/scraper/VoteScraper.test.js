@@ -1,5 +1,7 @@
 /* eslint-env jest */
 const VoteScraper = require('../../../data/scraper/VoteScraper').VoteScraper
+const BillType = require('../../../data/scraper/VoteScraper').VoteScraperBillType
+const Result = require('../../../data/scraper/VoteScraper').VoteScraperResult
 
 describe('VoteScraper Dates', () => {
   it('should accept YYYY-MM-DD date format', () => {
@@ -48,5 +50,45 @@ describe('VoteScraper Dates', () => {
     expect(scraper.isValidDateRange(dr)).toBeFalsy()
     dr = ['hel', 'lo']
     expect(scraper.isValidDateRange(dr)).toBeFalsy()
+  })
+})
+
+describe('VoteScraper Queries', () => {
+  it('should create a url for all possible matches', () => {
+    let scraper = new VoteScraper({ url: 'test.com' }, { '42-1': 1234 })
+    expect(scraper.params).toHaveLength(1)
+    expect(scraper.params).toEqual(expect.arrayContaining([{
+      url: 'test.com',
+      params: {
+        parlSession: 1234,
+        billDocumentTypeId: '',
+        decisionResultId: '',
+        fromDate: '',
+        toDate: '',
+        billDocumentId: ''
+      }
+    }]))
+
+    scraper = new VoteScraper({
+      url: 'test.com',
+      parliaments: 'all',
+      billTypes: [BillType.privateMember, BillType.senateGovernment],
+      results: [Result.negatived, Result.agreedTo],
+      dateRanges: [['2000-03-22', '2010-10-06']],
+      billIds: [1, 2, 3, 4]
+    }, { a: 1, b: 2, c: 3 })
+
+    expect(scraper.params).toHaveLength(48)
+    expect(scraper.params).toEqual(expect.arrayContaining([{
+      url: 'test.com',
+      params: {
+        parlSession: 3,
+        billDocumentTypeId: BillType.senateGovernment,
+        decisionResultId: Result.negatived,
+        fromDate: '2000-03-22',
+        toDate: '2010-10-06',
+        billDocumentId: 4
+      }
+    }]))
   })
 })
