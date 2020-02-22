@@ -59,6 +59,7 @@ describe('VoteScraper Queries', () => {
     expect(scraper.params).toHaveLength(1)
     expect(scraper.params).toEqual(expect.arrayContaining([{
       url: 'test.com',
+      parliament: '42-1',
       params: {
         parlSession: 1234,
         billDocumentTypeId: '',
@@ -81,6 +82,7 @@ describe('VoteScraper Queries', () => {
     expect(scraper.params).toHaveLength(48)
     expect(scraper.params).toEqual(expect.arrayContaining([{
       url: 'test.com',
+      parliament: 'c',
       params: {
         parlSession: 3,
         billDocumentTypeId: BillType.senateGovernment,

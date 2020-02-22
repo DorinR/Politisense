@@ -32,13 +32,13 @@ describe('VoteXmlParser', () => {
   })
 
   it('should return false if current parliament not satisfied', () => {
-    const parser = new VoteXmlParser('', { number: 42, session: 1 })
+    const parser = new VoteXmlParser('', { mustBeInCurrentParliament: true }, { number: 42, session: 1 })
     assert.isFalse(parser.isInCurrentParliament())
   })
 
   it('should get vote participants when given an id', (done) => {
     const parliament = { number: 42, session: 1 }
-    const parser = new VoteXmlParser('', parliament)
+    const parser = new VoteXmlParser('', { mustBeInCurrentParliament: true }, parliament)
     jest.spyOn(parser, '_getHtmlFromLink').mockImplementation(async () => {
       return genVotersXml([{}, {}, {}])
     })
@@ -111,12 +111,12 @@ describe('VoteParticipantsXmlParser', () => {
 })
 
 function genVoteXml (voteList) {
-  let xml = '<List>'
+  let xml = '<ArrayOfVote>'
   voteList.forEach((vote, i) => {
     const billNumberCode = (typeof vote.billNumber !== 'undefined')
       ? `<BillNumberCode>${vote.billNumber}</BillNumberCode>` : '<BillNumberCode />'
 
-    const voteXml = `<VoteParticipant>
+    const voteXml = `<Vote>
         <ParliamentNumber>${vote.parliamentNumber || 42}</ParliamentNumber>
         <SessionNumber>${vote.sessionNumber || 1}</SessionNumber>
         <DecisionDivisionNumber>${vote.id || i}</DecisionDivisionNumber>
@@ -124,27 +124,27 @@ function genVoteXml (voteList) {
         <DecisionDivisionNumberOfYeas>${vote.yeas || 0}</DecisionDivisionNumberOfYeas>
         <DecisionDivisionNumberOfNays>${vote.nays || 0}</DecisionDivisionNumberOfNays>
         ${billNumberCode}
-    </VoteParticipant>`
+    </Vote>`
     xml += voteXml
   })
-  xml += '</List>'
+  xml += '</ArrayOfVote>'
   return xml
 }
 
 function genVotersXml (votersList) {
-  let xml = '<List>'
+  let xml = '<ArrayOfVoteParticipant>'
   votersList.forEach((voter, i) => {
     const voterXml = `<VoteParticipant>
         <ParliamentNumber>${voter.parliamentNumber || 42}</ParliamentNumber>
         <SessionNumber>${voter.sessionNumber || 1}</SessionNumber>
         <DecisionDivisionNumber>${voter.voteNumber || 752}</DecisionDivisionNumber>
         <VoteValueName>${voter.vote || 'Nay'}</VoteValueName>
-        <FirstName>${voter.firstName || 'FirstName' + i}</FirstName>
-        <LastName>${voter.lastName || 'LastName' + i}</LastName>
-        <Paired>${voter.paired ? 1 : 0}</Paired>
+        <PersonOfficialFirstName>${voter.firstName || 'FirstName' + i}</PersonOfficialFirstName>
+        <PersonOfficialLastName>${voter.lastName || 'LastName' + i}</PersonOfficialLastName>
+        <IsVotePaired>${voter.paired ? 'true' : 'false'}</IsVotePaired>
     </VoteParticipant>`
     xml += voterXml
   })
-  xml += '</List>'
+  xml += '</ArrayOfVoteParticipant>'
   return xml
 }
