@@ -1,9 +1,14 @@
 require('module-alias/register')
 const Utils = require('@utils')
+const FetchAction = require('@action').FetchAction
 const QueueManager = Utils.QueueManager.QueueManager
 const StartAction = Utils.QueueManager.Start.StartVoteScrape
 const StopAction = Utils.QueueManager.Stop.StopVoteScrape
 const Throw = Utils.QueueManager.Error.ParseErrorAction
+
+const cheerio = require('cheerio')
+
+const defaultUrl = 'https://www.ourcommons.ca/Members/en/votes/xml'
 
 const BillType = {
   houseGovernment: 3,
@@ -17,6 +22,32 @@ const Result = {
   agreedTo: 15,
   negatived: 16,
   tie: 17
+}
+
+async function getParliamentIDMap () {
+  const votesPageUrl = 'https://www.ourcommons.ca/Members/en/votes'
+  const html = await getVotesPageHtml(votesPageUrl)
+
+  const $ = cheerio.load(html)
+  const parliamentMap = {}
+  $('li', 'ul[aria-labelledby="parlSession"]').each((i, parlData) => {
+    const numbersFromParlText = $(parlData).text().match(/\d+/g).map(Number)
+    const parlNumber = numbersFromParlText[0]
+    const session = numbersFromParlText[1]
+    const key = `${parlNumber}-${session}`
+    parliamentMap[key] = Number($('a', parlData).eq(0).attr('data-value'))
+  })
+
+  return parliamentMap
+}
+
+async function getVotesPageHtml (url) {
+  return new FetchAction({ url: url }).perform()
+    .then(html => { return html })
+    .catch(e => {
+      console.error(e.message)
+      return ''
+    })
 }
 
 class VoteScraper extends QueueManager {
@@ -113,7 +144,7 @@ class VoteScraper extends QueueManager {
       return false
     }
 
-    for (const date in dateRange) {
+    for (const date of dateRange) {
       if (!this.isValidDate(date)) {
         return false
       }
@@ -159,3 +190,8 @@ class VoteScraper extends QueueManager {
 }
 
 module.exports.VoteScraper = VoteScraper
+module.exports.tester = getParliamentIDMap
+
+getParliamentIDMap().then(res => {
+  console.log(res)
+})
