@@ -18,13 +18,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function DividerBlock(props) {
+export default function DividerBlock (props) {
   const classes = useStyles()
 
   return (
     <div
       className={classes.customBackground}
-      style={{ backgroundColor: props.color }}>
+      style={{ backgroundColor: props.color }}
+    >
       <span style={{ display: '-webkit-inline-box' }}>
         <Typography variant='h6' className={classes.customTypographyFont}>
           {props.text}
@@ -34,6 +35,7 @@ export default function DividerBlock(props) {
             <InfoBubble
               title={props.infoBubbleTitle}
               text={props.infoBubbleText}
+              color={props.infoBubbleColor}
             />
           )}
         </span>

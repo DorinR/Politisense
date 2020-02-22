@@ -7,7 +7,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function ColoredText(props) {
+export default function ColoredText (props) {
   const classes = useStyles()
 
   return (
