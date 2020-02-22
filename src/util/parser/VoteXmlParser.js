@@ -19,11 +19,11 @@ class VoteXmlParser extends XmlDataParser {
   }
 
   get tagName () {
-    return 'VoteParticipant'
+    return 'Vote'
   }
 
   get listTagName () {
-    return 'List'
+    return 'ArrayOfVote'
   }
 
   generateNewParser (xml) {

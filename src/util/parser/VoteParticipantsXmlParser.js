@@ -7,7 +7,7 @@ class VoteParticipantsXmlParser extends XmlDataParser {
   }
 
   get listTagName () {
-    return 'List'
+    return 'ArrayOfVoteParticipant'
   }
 
   generateNewParser (xml) {

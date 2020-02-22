@@ -98,7 +98,7 @@ class VoteScraper extends QueueManager {
   setParliaments (parliaments) {
     if (typeof parliaments === 'undefined' ||
       (typeof parliaments === typeof ' ' && parliaments.toLowerCase().includes('all'))) {
-      this.parliaments.push(Object.values(Parliament))
+      this.parliaments = Object.values(Parliament)
     }
     if (typeof parliaments === typeof []) {
       const validParliaments = Object.values(Parliament)
@@ -111,7 +111,7 @@ class VoteScraper extends QueueManager {
   setBillTypes (billTypes) {
     if (typeof billTypes === 'undefined' ||
       (typeof billTypes === typeof ' ' && billTypes.toLowerCase().includes('all'))) {
-      this.billTypes.push(undefined)
+      this.billTypes.push('')
     }
     if (typeof billTypes === typeof []) {
       const validBillTypes = Object.values(BillType)
@@ -124,7 +124,7 @@ class VoteScraper extends QueueManager {
   setResults (results) {
     if (typeof results === 'undefined' ||
       (typeof results === typeof ' ' && results.toLowerCase().includes('all'))) {
-      this.results.push(undefined)
+      this.results.push('')
     }
     if (typeof results === typeof []) {
       const validResult = Object.values(Result)
@@ -137,7 +137,7 @@ class VoteScraper extends QueueManager {
   setDateRanges (dateRanges) {
     if (typeof dateRanges === 'undefined' ||
       (typeof dateRanges === typeof ' ' && dateRanges.toLowerCase().includes('all'))) {
-      this.dateRanges.push(undefined)
+      this.dateRanges.push(['', ''])
     }
     if (typeof dateRanges === typeof []) {
       this.dateRanges = dateRanges.filter(dateRange => {
@@ -149,7 +149,7 @@ class VoteScraper extends QueueManager {
   setBillIds (billIds) {
     if (typeof billIds === 'undefined' ||
       (typeof billIds === typeof ' ' && billIds.toLowerCase().includes('all'))) {
-      this.results.push(undefined)
+      this.billIds.push('')
     }
     if (typeof billIds === typeof []) {
       this.billIds = billIds.filter(id => typeof id === typeof 'number')
