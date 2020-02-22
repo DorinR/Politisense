@@ -13,8 +13,9 @@ class VoteXmlParser extends XmlDataParser {
     `output=XML&parliament=${currentParliament.number}&session=${currentParliament.session}&vote=${voteId}`
   }
 
-  constructor (xml, currentParliament) {
+  constructor (xml, filters, currentParliament) {
     super(xml)
+    this.filters = Object.assign({}, VoteXmlParser.defaultFilters, filters)
     this.currentParliament = currentParliament
   }
 
@@ -40,7 +41,10 @@ class VoteXmlParser extends XmlDataParser {
   }
 
   passesFilters () {
-    return this.isInCurrentParliament() && this.isVoteForBill() && this.isFinalDecision()
+    return (!this.filters.mustBeVoteForBill || this.isVoteForBill()) &&
+      (!this.filters.mustBeFinalDecisionVote || this.isFinalDecision()) &&
+      (!this.filters.mustBeAPassedVote || this.isPassing()) &&
+      (!this.filters.mustBeInCurrentParliament || this.isInCurrentParliament())
   }
 
   isVoteForBill () {
@@ -64,6 +68,12 @@ class VoteXmlParser extends XmlDataParser {
     return voteSubject.includes('3rd reading and adoption')
   }
 
+  isPassing () {
+    const numYeas = Number(this.getDataInTag('DecisionDivisionNumberOfYeas'))
+    const numNays = Number(this.getDataInTag('DecisionDivisionNumberOfNays'))
+    return numYeas > numNays
+  }
+
   async getVoters (voteId) {
     if (typeof this.currentParliament === 'undefined') {
       throw new ParliamentNotSetError('Must specify what the current parliament is if it is used as a filter.')
@@ -76,6 +86,13 @@ class VoteXmlParser extends XmlDataParser {
 
     return new VoteParticipantsXmlParser(voteParticipants).getAllFromXml()
   }
+}
+
+VoteXmlParser.defaultFilters = {
+  mustBeVoteForBill: true,
+  mustBeFinalDecisionVote: false,
+  mustBeAPassedVote: false,
+  mustBeInCurrentParliament: false
 }
 
 module.exports.VoteXmlParser = VoteXmlParser

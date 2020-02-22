@@ -33,7 +33,11 @@ class GovtDataScraper {
         mustBeInCurrentParliament: true
       }, currentParliament)), 'id')
       data.mps = this.addUniqueData(data.mps, this.getPossibleDataFromXmlParser(new MpXmlParser(xml, true)), 'name')
-      data.votes = this.addUniqueData(data.votes, this.getPossibleDataFromXmlParser(new VoteXmlParser(xml, currentParliament)), 'id')
+      data.votes = this.addUniqueData(data.votes, this.getPossibleDataFromXmlParser(new VoteXmlParser(xml, {
+        mustBeFinalDecisionVote: true,
+        mustBeAPassedVote: true,
+        mustBeInCurrentParliament: true
+      }, currentParliament)), 'id')
     })
 
     const billNumberList = data.bills.map(bill => bill.number)
