@@ -43,12 +43,6 @@ async function getParliamentIDMap () {
   return parliamentMap
 }
 
-async function populateParliamentData () {
-  if (typeof Parliament === 'undefined') {
-    Parliament = await getParliamentIDMap()
-  }
-}
-
 async function getVotesPageHtml (url) {
   return new FetchAction({ url: url }).perform()
     .then(html => { return html })
@@ -56,6 +50,12 @@ async function getVotesPageHtml (url) {
       console.error(e.message)
       return ''
     })
+}
+
+async function populateParliamentData () {
+  if (typeof Parliament === 'undefined') {
+    Parliament = await getParliamentIDMap()
+  }
 }
 
 class VoteScraper extends QueueManager {
@@ -112,13 +112,13 @@ class VoteScraper extends QueueManager {
   setParliaments (parliaments) {
     if (typeof parliaments === 'undefined' ||
       (typeof parliaments === typeof ' ' && parliaments.toLowerCase().includes('all'))) {
-      this.parliaments = Object.values(Parliament)
+      this.parliaments = Object.entries(Parliament)
     }
     if (typeof parliaments === typeof []) {
       const validParliaments = Object.values(Parliament)
-      this.parliaments = parliaments.filter(parl => {
-        return validParliaments.includes(parl)
-      })
+      this.parliaments = parliaments
+        .filter(parl => { return validParliaments.includes(parl) })
+        .map(parl => { return [parl, Parliament[parl]] })
     }
   }
 
@@ -220,8 +220,9 @@ class VoteScraper extends QueueManager {
             this.billIds.forEach(billId => {
               this.params.push({
                 url: url,
+                parliament: parliament[0],
                 params: {
-                  parlSession: parliament,
+                  parlSession: parliament[1],
                   billDocumentTypeId: billType,
                   decisionResultId: result,
                   fromDate: dateRange[0],
