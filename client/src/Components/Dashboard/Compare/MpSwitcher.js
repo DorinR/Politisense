@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect } from 'react'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Input from '@material-ui/core/Input'
@@ -59,8 +58,8 @@ function getStyles(name, personName, theme) {
         : theme.typography.fontWeightMedium
   }
 }
-export default function MpsSwitcher(props) {
-  // eslint-disable-next-line no-use-before-define
+export default function MpsSwitcher (props) {
+  // eslint-disable-next-line no-unused-vars
   const { functionUpdate, ...other } = props
   const classes = useStyles()
   const theme = useTheme()
@@ -84,7 +83,7 @@ export default function MpsSwitcher(props) {
     }
     getData()
   }, [mp])
-
+  /* eslint-disable */
   return (
     <div>
       <FormControl className={classes.formControl}>
