@@ -68,7 +68,7 @@ class VoteScraper extends QueueManager {
     return manager
   }
 
-  constructor (params, parliamentIdMap = Parliament, wait = 5000) {
+  constructor (params, wait = 5000, parliamentIdMap = Parliament) {
     super(wait)
     Parliament = parliamentIdMap
     this.parliaments = []
