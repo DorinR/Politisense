@@ -68,8 +68,9 @@ class VoteScraper extends QueueManager {
     return manager
   }
 
-  constructor (params, wait = 5000) {
+  constructor (params, parliamentIdMap = Parliament, wait = 5000) {
     super(wait)
+    Parliament = parliamentIdMap
     this.parliaments = []
     this.setParliaments(params.parliaments)
     this.billTypes = []
@@ -88,6 +89,19 @@ class VoteScraper extends QueueManager {
 
   async run () {
     await super.run()
+  }
+
+  async getVoters () {
+    // if (parliament === this.currentParliament && typeof this.currentParliament === 'undefined') {
+    //   throw new ParliamentNotSetError('Must specify what the current parliament is if it is used as a filter.')
+    // }
+    //
+    // const voteParticipants = await this._getHtmlFromLink(VoteXmlParser.getVoteParticipantsUrl(voteId, parliament))
+    // if (voteParticipants === '') {
+    //   return ''
+    // }
+    //
+    // return new VoteParticipantsXmlParser(voteParticipants).getAllFromXml()
   }
 
   accumulate (result) {
@@ -174,10 +188,25 @@ class VoteScraper extends QueueManager {
     if (typeof date !== typeof '') {
       return false
     }
-    const dateAsArray = date.split('-')
+    const dateAsArray = date.split('-').map(stringNum => Number(stringNum))
     if (dateAsArray.length !== 3 || dateAsArray.some(el => typeof el !== 'number')) {
       return false
     }
+
+    const year = dateAsArray[0]
+    const month = dateAsArray[1]
+    const day = dateAsArray[2]
+
+    if (isNaN(day) || day <= 0 || day > 31) {
+      return false
+    }
+    if (isNaN(month) || month <= 0 || month > 12) {
+      return false
+    }
+    if (isNaN(year) || year <= 0) {
+      return false
+    }
+
     return true
   }
 
