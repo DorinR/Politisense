@@ -16,10 +16,10 @@ class VoteParticipantsXmlParser extends XmlDataParser {
 
   buildJson () {
     const participant = {}
-    const name = this.getDataInTag('FirstName') + ' ' + this.getDataInTag('LastName')
+    const name = this.getDataInTag('PersonOfficialFirstName') + ' ' + this.getDataInTag('PersonOfficialLastName')
     participant.name = name.toLowerCase()
     participant.vote = this.getDataInTag('VoteValueName')
-    participant.paired = this.getDataInTag('Paired') === '1'
+    participant.paired = this.getDataInTag('IsVotePaired') === 'true'
     return participant
   }
 

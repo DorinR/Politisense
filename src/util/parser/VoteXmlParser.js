@@ -9,8 +9,8 @@ const VoteRecord = Models.VoteRecord
 
 class VoteXmlParser extends XmlDataParser {
   static getVoteParticipantsUrl (voteId, currentParliament) {
-    return 'https://www.ourcommons.ca/Parliamentarians/en/HouseVotes/ExportDetailsVotes?' +
-    `output=XML&parliament=${currentParliament.number}&session=${currentParliament.session}&vote=${voteId}`
+    return 'https://www.ourcommons.ca/Members/en/votes' +
+      `/${currentParliament.number}/${currentParliament.session}/${voteId}/xml`
   }
 
   constructor (xml, filters, currentParliament) {
@@ -90,7 +90,7 @@ class VoteXmlParser extends XmlDataParser {
 
 VoteXmlParser.defaultFilters = {
   mustBeVoteForBill: true,
-  mustBeFinalDecisionVote: false,
+  mustBeFinalDecisionVote: true,
   mustBeAPassedVote: false,
   mustBeInCurrentParliament: false
 }
