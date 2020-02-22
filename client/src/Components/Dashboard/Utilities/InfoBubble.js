@@ -7,17 +7,19 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Slide from '@material-ui/core/Slide'
 
-const Transition = React.forwardRef(function Transition (props, ref) {
+const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />
 })
 
 const useStyles = makeStyles(theme => ({
   help: {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    marginTop: '4px',
+    marginLeft: '4px'
   }
 }))
 
-export default function InfoBubble (props) {
+export default function InfoBubble(props) {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
 
@@ -39,8 +41,7 @@ export default function InfoBubble (props) {
       <Dialog
         open={open}
         TransitionComponent={Transition}
-        onClose={handleClose}
-      >
+        onClose={handleClose}>
         <DialogTitle>{props.title}</DialogTitle>
         <DialogContent>
           <DialogContentText>{props.text}</DialogContentText>

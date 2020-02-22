@@ -29,6 +29,7 @@ import capitalize from 'capitalize'
 import { PARTY_COLORS } from '../../Sidebar/RidingShape/partyColors'
 import DividerBlock from '../../Utilities/DividerBlock'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import ColoredText from '../../Utilities/ColoredText'
 
 const useStyles = makeStyles(theme => ({
   bigAvatar: {
@@ -38,7 +39,7 @@ const useStyles = makeStyles(theme => ({
     border: '3px solid #41aaa8'
   },
   card: {
-    width: 400
+    width: 420
   }
 }))
 
@@ -183,6 +184,8 @@ export default function Party(props) {
   const classes = useStyles()
   const [skeleton] = useState([1, 2, 3, 4, 5])
   const [loadingComplete, setLoadingComplete] = useState('')
+  const [spendingInfoTitle, setSpendingInfoTitle] = useState('')
+  const [spendingInfoText, setSpendingInfoText] = useState('')
 
   // Icon Colors
   const [iconColor, setIconColor] = useState('')
@@ -314,7 +317,10 @@ export default function Party(props) {
                       <EventSeatIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>{'Number of seats: ' + seatsHeld}</ListItemText>
+                  <ListItemText>
+                    {'Number of seats: '}
+                    <ColoredText text={seatsHeld} color={iconColor} />
+                  </ListItemText>
                 </ListItem>
                 <DividerBlock
                   text='Legislative Performance'
@@ -327,7 +333,8 @@ export default function Party(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    {'Number of Bills Authored: ' + nbBillsAuthored}
+                    {'Number of Bills Authored: '}
+                    <ColoredText text={nbBillsAuthored} color={iconColor} />
                   </ListItemText>
                 </ListItem>
                 <ListItem>
@@ -337,7 +344,8 @@ export default function Party(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    {'Number of Bills Succeeded: ' + nbBillsSucceeded}
+                    {'Number of Bills Succeeded: '}
+                    <ColoredText text={nbBillsSucceeded} color={iconColor} />
                   </ListItemText>
                 </ListItem>
                 <ListItem>
@@ -347,10 +355,16 @@ export default function Party(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    {'Number of Bills Failed: ' + nbBillsFailed}
+                    {'Number of Bills Failed: '}
+                    <ColoredText text={nbBillsFailed} color={iconColor} />
                   </ListItemText>
                 </ListItem>
-                <DividerBlock text='Spending' color={iconColor} />
+                <DividerBlock
+                  text='Spending'
+                  color={iconColor}
+                  infoBubbleTitle={'Spending Information for Party Candidates'}
+                  infoBubbleText={'The data shown is from Q4 of 2019'}
+                />
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar style={{ backgroundColor: iconColor }}>
@@ -358,7 +372,11 @@ export default function Party(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    {'Average Spending by MP: ' + averageTotalSpending}
+                    {'Average Spending by MP: '}
+                    <ColoredText
+                      text={'$' + averageTotalSpending}
+                      color={iconColor}
+                    />
                   </ListItemText>
                 </ListItem>
                 <ListItem>
@@ -368,7 +386,11 @@ export default function Party(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    {'Average Spending on Salaries: ' + averageSalariesSpending}
+                    {'Average Spending on Salaries: '}
+                    <ColoredText
+                      text={'$' + averageSalariesSpending}
+                      color={iconColor}
+                    />
                   </ListItemText>
                 </ListItem>
                 <ListItem>
@@ -378,8 +400,11 @@ export default function Party(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    {'Average Spending on Service Contracts: ' +
-                      averageServiceSpending}
+                    {'Average Spending on Service Contracts: '}
+                    <ColoredText
+                      text={'$' + averageServiceSpending}
+                      color={iconColor}
+                    />
                   </ListItemText>
                 </ListItem>
                 <ListItem>
@@ -389,7 +414,11 @@ export default function Party(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    {'Average Spending on Travel: ' + averageTravelSpending}
+                    {'Average Spending on Travel: '}
+                    <ColoredText
+                      text={'$' + averageTravelSpending}
+                      color={iconColor}
+                    />
                   </ListItemText>
                 </ListItem>
                 <ListItem>
@@ -399,8 +428,11 @@ export default function Party(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    {'Average Spending on Hospitality: ' +
-                      averageHospitalitySpending}
+                    {'Average Spending on Hospitality: '}
+                    <ColoredText
+                      text={'$' + averageHospitalitySpending}
+                      color={iconColor}
+                    />
                   </ListItemText>
                 </ListItem>
                 <ListItem>
@@ -410,7 +442,11 @@ export default function Party(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    {'Average Spending on Gifts: ' + averageGiftsSpending}
+                    {'Average Spending on Gifts: '}
+                    <ColoredText
+                      text={'$' + averageGiftsSpending}
+                      color={iconColor}
+                    />
                   </ListItemText>
                 </ListItem>
                 <ListItem>
@@ -420,8 +456,11 @@ export default function Party(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    {'Average Spending on Advertising: ' +
-                      averageAdvertisingSpending}
+                    {'Average Spending on Advertising: '}
+                    <ColoredText
+                      text={'$' + averageAdvertisingSpending}
+                      color={iconColor}
+                    />
                   </ListItemText>
                 </ListItem>
               </List>
