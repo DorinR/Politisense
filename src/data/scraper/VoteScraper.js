@@ -10,6 +10,8 @@ const cheerio = require('cheerio')
 
 const defaultUrl = 'https://www.ourcommons.ca/Members/en/votes/xml'
 
+let Parliament
+
 const BillType = {
   houseGovernment: 3,
   privateMember: 4,
@@ -39,6 +41,12 @@ async function getParliamentIDMap () {
   })
 
   return parliamentMap
+}
+
+async function populateParliamentData () {
+  if (typeof Parliament === 'undefined') {
+    Parliament = await getParliamentIDMap()
+  }
 }
 
 async function getVotesPageHtml (url) {
@@ -88,7 +96,16 @@ class VoteScraper extends QueueManager {
   }
 
   setParliaments (parliaments) {
-    // TODO: votes uses weird form of parliament
+    if (typeof parliaments === 'undefined' ||
+      (typeof parliaments === typeof ' ' && parliaments.toLowerCase().includes('all'))) {
+      this.parliaments.push(Object.values(Parliament))
+    }
+    if (typeof parliaments === typeof []) {
+      const validParliaments = Object.values(Parliament)
+      this.parliaments = parliaments.filter(parl => {
+        return validParliaments.includes(parl)
+      })
+    }
   }
 
   setBillTypes (billTypes) {
@@ -190,8 +207,15 @@ class VoteScraper extends QueueManager {
 }
 
 module.exports.VoteScraper = VoteScraper
-module.exports.tester = getParliamentIDMap
 
-getParliamentIDMap().then(res => {
-  console.log(res)
+populateParliamentData().then(res => {
+  console.log(Parliament)
+  VoteScraper.create({
+    url: defaultUrl,
+    parliaments: 'all'
+  })
+    .execute()
+    .then(result => {
+      console.log(result)
+    })
 })
