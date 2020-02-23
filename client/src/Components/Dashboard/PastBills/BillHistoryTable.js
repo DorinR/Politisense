@@ -36,15 +36,16 @@ let rows = []
 
 const useStyles = makeStyles({
   root: {
-    width: '100%'
+    width: '100%',
+    // height:'100%'
   },
   tableWrapper: {
-    maxHeight: 450,
+    maxHeight: 490,
     overflow: 'auto'
   },
   container: {
-    margin: '20px',
-    marginTop: '30px'
+    // margin: '20px',
+    // marginTop: '30px'
   }
 })
 

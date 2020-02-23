@@ -1,28 +1,18 @@
 import * as d3 from 'd3'
 import React, { Component } from 'react'
-var width = 400;
-var arcSize = ( 5* width / 100);
-var innerRadius = arcSize * 3;
-const opacity = 0.8
-const opacityHover = 1
-const otherOpacityOnHover = 0.8
-var data = [
-    {value: 45, label: "Liberal", color: '#96d1c7'},
-    {value: 33, label: "Conservative", color: '#79bac1'},
-    {value: 66, label: "NDP", color: '#0088ff'},
-    {value: 50, label: "BQ", color: '#ffdb15'},
-    {value: 90, label: "Green", color: '#12ff85'},
-    {value: 100, label: "People", color: '#fe1116'}
-];
-
+const width = 390;
+const arcSize = ( 5* width / 100);
+const innerRadius = arcSize * 3;
+const pi =  Math.PI;
 
 export default class D3GaugeChart extends Component {
-    constructor (element) {
+
+    constructor (element,data) {
         super(element)
         const svg = d3.select(element).append('svg')
-            .attr('width', width-50)
-            .attr('height', width-50)
-            .attr('viewBox', `0 0 ${width} ${width}`)
+            .attr('width', width)
+            .attr('height', width)
+            .attr('viewBox', `0 0 ${width} (${width})`)
 
         const arcs = data.map(function (obj, i) {
             return d3.arc()
@@ -32,8 +22,11 @@ export default class D3GaugeChart extends Component {
         });
         const arcsGrey = data.map(function (obj, i) {
             return d3.arc()
-                .innerRadius(i * arcSize + (innerRadius + ((arcSize / 2) - 2)))
-                .outerRadius((i + 1) * arcSize - ((arcSize / 2)) + (innerRadius));
+                .startAngle(0)
+                .endAngle(3*pi/2)
+                .innerRadius(i * arcSize + innerRadius)
+                .outerRadius((i + 1) * arcSize - (width / 100) + innerRadius)
+                .cornerRadius(20)
         });
 
         const pieData = data.map(function (obj, i) {
@@ -50,7 +43,7 @@ export default class D3GaugeChart extends Component {
 
         let g = svg.selectAll('g').data(pieData).enter()
             .append('g')
-            .attr('transform', 'translate(' + width / 2 + ',' + width / 2 + ') rotate(180)');
+            .attr('transform', 'translate(' + ((width) /2) + ',' + ((width) / 2) + ') rotate(180)');
 
         let gText = svg.selectAll('g.textClass').data([{}]).enter()
             .append('g')
@@ -68,8 +61,12 @@ export default class D3GaugeChart extends Component {
             .attr('d', function (d) {
                 return d.data.arc(d);
             }).attr('fill', function (d, i) {
-            return i == 0 ? d.data.object.color : i == 1 ? '#D3D3D3' : 'none';
+            return i == 0 ? d.data.object.color : i == 1 ? d.data.object.color : 'none';
+            // return  d.data.object.color
         })
+            .style("opacity", (d,i)=>{
+                return i == 0 ? 1 : i == 1 ? 0.3 : 'none'
+            })
 
         const div = svg.append('div')
             .attr('class', 'tooltip')
@@ -115,11 +112,6 @@ export default class D3GaugeChart extends Component {
                         .attr('dominant-baseline', 'central')
                 }
             }).on('mouseover', function (d) {
-                d3.selectAll('path')
-                    .style('opacity', otherOpacityOnHover)
-                d3.select(this)
-                    .style('opacity', opacityHover)
-
                 g.append("text")
                     .attr('class', 'test')
                     .attr('transform', " rotate(" + (180) + ")")
@@ -130,18 +122,9 @@ export default class D3GaugeChart extends Component {
                     .style('display','block')
             })
                 .on('mouseout', function (d) {
-                    d3.selectAll('path')
-                        .style('opacity', opacity)
-
                     d3.selectAll('.test').remove()
-
                 })
                 .on('touchstart', function (d) {
-                    d3.selectAll('path')
-                        .style('opacity', otherOpacityOnHover)
-                    d3.select(this)
-                        .style('opacity', opacityHover)
-
                     div.transition()
                         .duration(200)
                         .style('opacity', 0.9)

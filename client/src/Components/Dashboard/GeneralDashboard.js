@@ -16,8 +16,11 @@ import TotalUsers from "./TotalUsers";
 import TasksProgress from "./TasksProgress";
 import IssuedBillsByMP from "./IssuedBillsByMP";
 import D3GaugeChart from "./Charts/D3GaugeChart";
-import UsersByDevice from "./UsersByDevice";
-import LatestProducts from "./LatestProducts";
+import Bipartisan from "./Bipartisan";
+import MPActivityDistribution from "./MPActivityDistribution";
+import {getLegend} from "./Charts/DonutChart";
+import {CssBaseline} from "@material-ui/core";
+
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(4)
@@ -184,8 +187,10 @@ export default function GeneralDashboard () {
   const [donutData, setDonutData] = React.useState(null)
   useEffect(() => {
     if (reps && representativeData) {
-      const data = createDataSetDonut(reps, representativeData)
-      setDonutData([data])
+      const data = createDataSetDonut(reps, representativeData).then(res=>{
+        console.log(data)
+        setDonutData(res)
+      })
     }
   }, [reps, representativeData])
 
@@ -193,12 +198,15 @@ export default function GeneralDashboard () {
   useEffect(() => {
     if (categoryList && representativeData) {
       const data = createDataSetRadar(categoryList, representativeData)
+      console.log(data)
       setRadarData(data)
     }
   }, [representativeData, categoryList])
 
   /* eslint-disable */
   return (
+      <div>
+      <CssBaseline/>
       <div className={classes.root}>
         <Grid
             container
@@ -261,7 +269,8 @@ export default function GeneralDashboard () {
               xl={3}
               xs={12}
           >
-            <UsersByDevice title={'gauge'}/>
+            {donutData && representativeData ? (
+            <Bipartisan data= {donutData[0]} rows={donutData[1]} title={'gauge'}/>):"donutData is null"}
           </Grid>
           <Grid
               item
@@ -271,7 +280,7 @@ export default function GeneralDashboard () {
               xs={12}
           >
             {radarData && categoryList ? (
-            <LatestProducts radarData={radarData} />):""}
+            <MPActivityDistribution radarData={radarData} rows ={representativeData} categoryList={categoryList}/>):""}
           </Grid>
           <Grid
               item
@@ -293,6 +302,7 @@ export default function GeneralDashboard () {
           </Grid>
         </Grid>
       </div>
+      </div>
   );
 }
 
@@ -301,8 +311,7 @@ function createDataSetRadar(categories, data) {
   let temp = {};
   const dataSetRadar = {};
   let maxValue = 0;
-  console.log(categories)
-  console.log(data)
+
   categories.forEach(category => {
     let totalvotes = 0
     data.forEach(bill => {
@@ -327,66 +336,78 @@ function createDataSetRadar(categories, data) {
   return [dataSetRadar, maxValue]
 }
 
-export function createDataSetDonut(sponsors, mpdata) {
-  let liberalCounter = 0
-  let conservativeCounter = 0
-  let ndpCounter = 0
-  let peopleCounter = 0
-  let greenCounter = 0
-  let bqCounter = 0
-  let parties = {}
+export async function createDataSetDonut(sponsors, mpdata) {
+    let bills=[],
+        liberalCounter = 0,
+        conservativeCounter = 0,
+        ndpCounter = 0,
+        peopleCounter = 0,
+        greenCounter = 0,
+        bqCounter = 0
 
-  if (mpdata.length) {
-    mpdata.forEach(bill => {
-      if (bill.voteRecord.yea === true) {
-        sponsors.forEach(sponsor => {
-          if (sponsor.name === bill.billData.sponsorName) {
-            switch (sponsor.politicalParty) {
-              case 'liberal':
-                liberalCounter++
-                break
-              case 'conservative':
-                conservativeCounter++
-                break
-              case 'ndp':
-                ndpCounter++
-                break
-              case 'bloc québécois':
-                bqCounter++
-                break
-              case 'green':
-                greenCounter++
-                break
-              case 'people':
-                peopleCounter++
-                break
-              default:
-                return 'nothing'
+    if (mpdata.length) {
+      mpdata.forEach(bill => {
+        if (bill.voteRecord.yea === true) {
+          sponsors.forEach(sponsor => {
+            if (sponsor.name === bill.billData.sponsorName) {
+              switch (sponsor.politicalParty) {
+                case 'liberal':
+                  liberalCounter++
+                  bills.push({billDetails: bill, category: "Liberal"})
+                  break
+                case 'conservative':
+                  conservativeCounter++
+                  bills.push({billDetails:bill,category:'Conservative'})
+                  break
+                case 'ndp':
+                  ndpCounter++
+                  bills.push({billDetails: bill, category: "NDP"})
+                  break
+                case 'bloc québécois':
+                  bqCounter++
+                  bills.push({billDetails: bill, category: "Bloc Québécois"})
+                  break
+                case 'green':
+                  greenCounter++
+                  bills.push({billDetails: bill, category: "Green"})
+                  break
+                case 'people':
+                  peopleCounter++
+                  bills.push({billDetails: bill, category: "People"})
+                  break
+                default:
+                  return 'nothing'
+              }
             }
-          }
-        })
-      }
+          })
+        }
+      })
+    }
+    let parties = [
+      {label : "Liberal" , freq: liberalCounter},
+      {label : "Conservative" , freq: conservativeCounter},
+      {label : "NDP" , freq: ndpCounter},
+      {label : "People" , freq: peopleCounter},
+      {label : "Green" , freq: greenCounter},
+      {label : "BQ" , freq: bqCounter},
+    ]
+
+    parties.forEach((element,i) => {
+      let percentage= getLegend(element,parties)
+      parties[i].value =percentage
     })
+    parties= sortBasedOnLargest(parties)
+    parties = AssignColorForEachItem(parties)
+    console.log(parties,bills)
+    return [parties,bills]
   }
 
-  parties = {
-    Liberal: liberalCounter,
-    Conservative: conservativeCounter,
-    NDP: ndpCounter,
-    People: peopleCounter,
-    Green: greenCounter,
-    BQ: bqCounter
-  }
-  return parties
-}
 export async function createDataPieBarTable(categories, data) {
 
   let billsForSpeicificCategory =[]
   let finalArray=[]
   categories.forEach(category => {
-
     let totalBills = 0
-
     data.forEach(bill => {
       if (bill.billsClassified.category === (category.toLowerCase())) {
         totalBills++
@@ -402,4 +423,16 @@ export async function createDataPieBarTable(categories, data) {
     }
   })
   return finalArray
+}
+export function sortBasedOnLargest(list){
+  return list.sort(function(a, b){
+    return a.value-b.value
+  })
+}
+export function AssignColorForEachItem(list){
+  const colors= ['#35495e','#79bac1','#96d1c7','#f5c3bc','#e89da2','#d45079']
+  list.forEach((item,index) => {
+    item.color = colors[index]
+  })
+  return list
 }

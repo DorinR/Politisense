@@ -1,61 +1,62 @@
 import React from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { Bar } from 'react-chartjs-2';
-import BarChartWrapper from "./Charts/Wrappers/BarChartWrapper";
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles, useTheme } from '@material-ui/styles';
 import {
     Card,
     CardHeader,
     CardContent,
-    CardActions,
+    IconButton,
     Divider,
-    Button
+    Typography, CardActions
 } from '@material-ui/core';
-import Typography from "@material-ui/core/Typography";
-import CardActionArea from '@material-ui/core/CardActionArea';
+import BarChartWrapper from "./Charts/Wrappers/BarChartWrapper";
+import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import IconButton from '@material-ui/core/IconButton';
-import Collapse from '@material-ui/core/Collapse';
+import BillDialog from "./BillDialog";
+import D3ChartDescriptionDialog from "./D3ChartDescriptionDialog";
 import TableContainer from "@material-ui/core/TableContainer";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
-import BillDialog from "./BillDialog";
-import TableDialog from "./TableDialog";
-import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
-import D3ChartDescriptionDialog from "./D3ChartDescriptionDialog";
-import clsx from 'clsx';
+import Collapse from '@material-ui/core/Collapse';
+import Button from "@material-ui/core/Button";
 
-const useStyles = makeStyles(() => ({
-    root: {},
+const useStyles = makeStyles(theme => ({
+    root: {
+        height: '100%'
+    },
     chartContainer: {
-        height: 400,
-        position: 'relative'
+        position: 'relative',
+        height: '100%',
     },
-    actions: {
-        justifyContent: 'flex-end'
+    stats: {
+        marginTop: theme.spacing(2),
+        display: 'flex',
+        justifyContent: 'center'
     },
+
     title: {
         color: "#263238",
         fontSize: "16px",
         fontFamily: "Roboto, Helvetica, Arial, sans-serif",
         fontWeight: 480
-    }
+    },
+    actions: {
+        display: 'relative',
+        justifyContent: 'flex-end'
+    },
 }));
-
-const IssuedBillsByMP = props => {
-    const classes = useStyles();
+const Bipartisan = props => {
     const { className, ...rest } = props;
-    const [tableContents, setTableContents] = React.useState([])
-    const [tableDialogOpen, setTableDialogOpen] = React.useState(false)
+    const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
     const [billInfo, setBillInfo] = React.useState([])
     const [billOpen, setBillOpen] = React.useState(false)
     const [open, setOpen] = React.useState(false)
-
-   const handleClickOpen = () => {
+    const handleClickOpen = () => {
         setOpen(true)
     };
 
@@ -89,17 +90,20 @@ const IssuedBillsByMP = props => {
             setBillInfo(temp)
             setBillOpen(true)
         }
+        if(row && type == 'donut'){
+            let temp = {
+                name: row.billDetails.billData.number,
+                desc:row.billDetails.billData.title,
+                link:row.billDetails.billData.link,
+                sponsor:row.billDetails.billData.sponsorName,
+                date:row.billDetails.billData.dateVoted
+            }
+            setBillInfo(temp)
+            setBillOpen(true)
+        }
     }
     const handleBillClose = () => {
         setBillOpen(false)
-    }
-    // click on the chart of pie part chart
-    const handleBarPieChartClickOpen = (rows) => {
-        setTableContents(rows)
-        setTableDialogOpen(true)
-    }
-    const handleBarPieChartClose = () => {
-        setTableDialogOpen(false)
     }
 
     return (
@@ -109,31 +113,26 @@ const IssuedBillsByMP = props => {
         >
             <CardHeader
                 classes={{
-                title: classes.title,
-            }}
+                    title: classes.title,
+                }}
                 action={
-                    //onClick={this.handleClickOpen}
                     <IconButton aria-label="settings">
-                        <HelpOutlineOutlinedIcon onClick={handleClickOpen}/>
+                        <HelpOutlineRoundedIcon onClick={handleClickOpen}/>
                     </IconButton>
                 }
-                title="MP's Activity and Bills Proposed"
+                title="BiPartisan Index"
             />
             <Divider />
             <CardContent>
-                <CardActionArea>
-                    <div onClick={() => handleBarPieChartClickOpen(props.rows)}>
                 <div className={classes.chartContainer}>
                     <BarChartWrapper
-                        type="bar-pie"
-                        data={props.userRepIssuedBills}
-                        categories={props.categoryList}
+                        type= {props.title}
+                        data={props.data}
                     />
                 </div>
-                    </div>
-                </CardActionArea>
             </CardContent>
             <Divider />
+
             <CardActions className={classes.actions}>
                 <IconButton
                     className={clsx(classes.expand, {
@@ -154,21 +153,34 @@ const IssuedBillsByMP = props => {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Bill Name</TableCell>
-                                    <TableCell> Category </TableCell>
-                                    <TableCell align='right'>Bill Status</TableCell>
+                                    <TableCell>Category</TableCell>
+                                    <TableCell>Vote</TableCell>
+                                    <TableCell>Political Party</TableCell>
                                 </TableRow>
                             </TableHead>
                             {(props.rows.length) > 0 ? (
                                 <TableBody stickyHeader>
                                     {props.rows.map((row,i)=> (
                                         <TableRow key={i}>
+
                                             <TableCell component='th' scope='row'>
-                                                <Button color='primary' onClick={() => handleBillClickOpen(row,'bar-pie')}>
-                                                    <Typography>{row.bill.billsClassified.number}</Typography>
+                                                <Button color='primary' onClick={() => handleBillClickOpen(row,'donut')}>
+                                                    <Typography>{row.billDetails.billData.number}</Typography>
                                                 </Button>
                                             </TableCell>
-                                            <TableCell component='th' scope='row'><Typography>{row.category}</Typography></TableCell>
-                                            <TableCell align='right'><Typography style= {row.status === 'Passed'? {color:"green"}: {color: "red"}}>{row.status}</Typography></TableCell>
+
+                                            <TableCell component='th' scope='row'>
+                                                <Typography>{row.billDetails.billData.category}</Typography>
+                                            </TableCell>
+
+                                            <TableCell component='th' scope={'row'}>
+                                                <Typography style= {{color:"green"}}>{row.billDetails.voteRecord.yea == true ? "Yea":"Nay"}</Typography>
+                                            </TableCell>
+
+                                            <TableCell component='th' scope={'row'}>
+                                                <Typography>{row.category}</Typography>
+                                            </TableCell>
+
                                         </TableRow>
                                     ))}
                                 </TableBody>) : 'nothing'}
@@ -177,15 +189,13 @@ const IssuedBillsByMP = props => {
                 </CardContent>
             </Collapse>
             <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
-            <TableDialog rows={tableContents} open={tableDialogOpen} onClose={handleBarPieChartClose}> </TableDialog>
             <D3ChartDescriptionDialog open = {open} onClose={handleClose}/>
         </Card>
-
     );
 };
 
-IssuedBillsByMP.propTypes = {
+Bipartisan.propTypes = {
     className: PropTypes.string
 };
 
-export default IssuedBillsByMP;
+export default Bipartisan;

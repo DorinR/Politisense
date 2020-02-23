@@ -115,15 +115,7 @@ function createDonut (element, fData) {
         return getLegend(d, nD)
       })
     }
-    function getLegend (d, aD) { // Utility function to compute percentage.
-      // Utility function to compute percentage.
-      let sum = 0
-      aD.forEach(element => {
-        sum = sum + element.freq
-      })
-      const fraction = ((d.freq / sum) * 100).toFixed(1)
-      return fraction
-    }
+
   }
   const tF = ['Liberal', 'Conservative', 'NDP', 'People', 'Green', 'BQ'].map(function (d) {
     return { type: d, freq: d3.sum(fData.map(function (t) { return t.freq[d] })) }
@@ -138,4 +130,14 @@ export default class DonutChart {
       { State: 'Yes Votes', freq: data[0] }]
     createDonut(element, freqData)
   }
+}
+
+export function getLegend (d, aD) { // Utility function to compute percentage.
+  // Utility function to compute percentage.
+  let sum = 0
+  aD.forEach(element => {
+    sum = sum + element.freq
+  })
+  const fraction = ((d.freq / sum) * 100).toFixed(1)
+  return fraction
 }
