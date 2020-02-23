@@ -103,7 +103,6 @@ describe('VoteScraper Queries', () => {
 
 describe('VoteScraper Parliament Data', () => {
   it('should be able parse out parliaments with its ids', async () => {
-    jest.clearAllMocks()
     VoteScraperModule.funcs.getVotesPageHtml = jest.fn().mockReturnValue(`
     <ul class="dropdown-menu " aria-labelledby="parlSession">
     <li><a data-value="153" data-input="parlSession" class="dropdown-item" href="#">
@@ -124,6 +123,7 @@ describe('VoteScraper Parliament Data', () => {
   })
 
   it('should only populate the parliament map if missing the data', async () => {
+    VoteScraperModule.clearParliamentMap()
     VoteScraperModule.funcs.getParliamentIDMap = jest.fn().mockReturnValue({})
     await VoteScraperModule.populateParliamentData()
     await VoteScraperModule.populateParliamentData()

@@ -58,6 +58,10 @@ async function populateParliamentData () {
   }
 }
 
+function clearParliamentMap () {
+  Parliament = undefined
+}
+
 class VoteScraper extends QueueManager {
   static create (params, wait = 5000) {
     const manager = new VoteScraper(params, wait)
@@ -232,18 +236,7 @@ const exportFunctions = {
 }
 module.exports.VoteScraper = VoteScraper
 module.exports.populateParliamentData = populateParliamentData
+module.exports.clearParliamentMap = clearParliamentMap
 module.exports.VoteScraperBillType = BillType
 module.exports.VoteScraperResult = Result
 module.exports.funcs = exportFunctions
-
-// populateParliamentData().then(res => {
-//   console.log(Parliament)
-//   VoteScraper.create({
-//     url: defaultUrl,
-//     parliaments: 'all'
-//   })
-//     .execute()
-//     .then(result => {
-//       console.log(result)
-//     })
-// })
