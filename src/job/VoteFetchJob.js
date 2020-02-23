@@ -92,3 +92,4 @@ class VoteFetchJob extends Job {
 }
 
 module.exports.VoteFetchJob = VoteFetchJob
+module.exports.DupeVotesFilterAction = DupeVotesFilterAction
