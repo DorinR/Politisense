@@ -41,9 +41,9 @@
     "chai": "^4.2.0",
     "concurrently": "^4.1.2",
     "jest": "^24.9.0",
-    "nodemon": "^1.19.4",
-    "module-alias": "latest",
-    "node-fetch": "latest"
+    "module-alias": "^2.2.2",
+    "node-fetch": "latest",
+    "nodemon": "^1.19.4"
   },
   "scripts": {
     "start": "node -r esm server.js",
