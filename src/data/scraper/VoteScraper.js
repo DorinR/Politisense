@@ -28,7 +28,7 @@ const Result = {
 
 async function getParliamentIDMap () {
   const votesPageUrl = 'https://www.ourcommons.ca/Members/en/votes'
-  const html = await getVotesPageHtml(votesPageUrl)
+  const html = await exportFunctions.getVotesPageHtml(votesPageUrl)
 
   const $ = cheerio.load(html)
   const parliamentMap = {}
@@ -54,7 +54,7 @@ async function getVotesPageHtml (url) {
 
 async function populateParliamentData () {
   if (typeof Parliament === 'undefined') {
-    Parliament = await getParliamentIDMap()
+    Parliament = await exportFunctions.getParliamentIDMap()
   }
 }
 
@@ -89,19 +89,6 @@ class VoteScraper extends QueueManager {
 
   async run () {
     await super.run()
-  }
-
-  async getVoters () {
-    // if (parliament === this.currentParliament && typeof this.currentParliament === 'undefined') {
-    //   throw new ParliamentNotSetError('Must specify what the current parliament is if it is used as a filter.')
-    // }
-    //
-    // const voteParticipants = await this._getHtmlFromLink(VoteXmlParser.getVoteParticipantsUrl(voteId, parliament))
-    // if (voteParticipants === '') {
-    //   return ''
-    // }
-    //
-    // return new VoteParticipantsXmlParser(voteParticipants).getAllFromXml()
   }
 
   accumulate (result) {
@@ -212,7 +199,7 @@ class VoteScraper extends QueueManager {
     return true
   }
 
-  createQueries (url) {
+  createQueries (url = defaultUrl) {
     this.parliaments.forEach(parliament => {
       this.billTypes.forEach(billType => {
         this.results.forEach(result => {
@@ -238,18 +225,25 @@ class VoteScraper extends QueueManager {
   }
 }
 
+const exportFunctions = {
+  getParliamentIDMap,
+  getVotesPageHtml,
+  populateParliamentData
+}
 module.exports.VoteScraper = VoteScraper
+module.exports.populateParliamentData = populateParliamentData
 module.exports.VoteScraperBillType = BillType
 module.exports.VoteScraperResult = Result
+module.exports.funcs = exportFunctions
 
-populateParliamentData().then(res => {
-  console.log(Parliament)
-  VoteScraper.create({
-    url: defaultUrl,
-    parliaments: 'all'
-  })
-    .execute()
-    .then(result => {
-      console.log(result)
-    })
-})
+// populateParliamentData().then(res => {
+//   console.log(Parliament)
+//   VoteScraper.create({
+//     url: defaultUrl,
+//     parliaments: 'all'
+//   })
+//     .execute()
+//     .then(result => {
+//       console.log(result)
+//     })
+// })

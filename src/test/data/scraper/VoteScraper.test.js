@@ -1,5 +1,6 @@
 /* eslint-env jest */
 const VoteScraper = require('../../../data/scraper/VoteScraper').VoteScraper
+const VoteScraperModule = require('../../../data/scraper/VoteScraper')
 const BillType = require('../../../data/scraper/VoteScraper').VoteScraperBillType
 const Result = require('../../../data/scraper/VoteScraper').VoteScraperResult
 
@@ -92,5 +93,41 @@ describe('VoteScraper Queries', () => {
         billDocumentId: 4
       }
     }]))
+  })
+
+  it('should return nothing if incorrect parameters given', () => {
+    const scraper = new VoteScraper({ url: 'test.com', results: ['invalid'] }, undefined, { '42-1': 1234 })
+    expect(scraper.params).toHaveLength(0)
+  })
+})
+
+describe('VoteScraper Parliament Data', () => {
+  it('should be able parse out parliaments with its ids', async () => {
+    jest.clearAllMocks()
+    VoteScraperModule.funcs.getVotesPageHtml = jest.fn().mockReturnValue(`
+    <ul class="dropdown-menu " aria-labelledby="parlSession">
+    <li><a data-value="153" data-input="parlSession" class="dropdown-item" href="#">
+        43rd Parliament, 1st Session<br>(December 5, 2019 to present)</a></li>
+    <li><a data-value="143" data-input="parlSession" class="dropdown-item   " href="#">
+        40th Parliament, 1st Session<br>(November 18, 2008 to December 4, 2008)</a></li>
+    <li><a data-value="140" data-input="parlSession" class="dropdown-item   " href="#">
+        38th Parliament, 1st Session<br>(October 4, 2004 to November 29, 2005)</a></li>
+    </ul>
+    `)
+
+    const res = await VoteScraperModule.funcs.getParliamentIDMap()
+    expect(res).toEqual({
+      '43-1': 153,
+      '40-1': 143,
+      '38-1': 140
+    })
+  })
+
+  it('should only populate the parliament map if missing the data', async () => {
+    VoteScraperModule.funcs.getParliamentIDMap = jest.fn().mockReturnValue({})
+    await VoteScraperModule.populateParliamentData()
+    await VoteScraperModule.populateParliamentData()
+    await VoteScraperModule.populateParliamentData()
+    expect(VoteScraperModule.funcs.getParliamentIDMap).toHaveBeenCalledTimes(1)
   })
 })
