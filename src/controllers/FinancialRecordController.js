@@ -1,4 +1,4 @@
-import { Firestore } from '../client/src/Firebase'
+const Firestore = require('@firestore').Firestore
 
 exports.getAllSpendingItemsForParty = (req, res) => {
   console.log('getAllSpendingItems endpoint hit!')
