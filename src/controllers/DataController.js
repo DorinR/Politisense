@@ -194,5 +194,10 @@ async function ridingRecords (req, res) {
 }
 
 exports.update = (req, res) => {
-
+  res
+    .status(200)
+    .json({
+      success: true,
+      message: 'stub'
+    })
 }
