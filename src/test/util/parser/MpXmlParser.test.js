@@ -1,7 +1,6 @@
 /* eslint-env jest */
 const assert = require('chai').assert
-const Utils = require('../../../util/utils')
-const Parsers = Utils.Parsers
+const Parsers = require('../../../util/parser/parsers')
 const MpXmlParser = Parsers.MpXmlParser
 
 describe('MpXmlParser', () => {
@@ -11,17 +10,19 @@ describe('MpXmlParser', () => {
       lastName: 'Wilson-Raybould',
       riding: 'Vancouver Granville',
       party: 'Independent',
-      fromDate: '2015-10-19T00:00:00'
+      fromDate: '2015-10-19T00:00:00',
+      toDate: '2019-10-19T00:00:00'
     }
     const xml = genMpXml([mpXmlParams])
-    const parser = new MpXmlParser(xml, true)
+    const parser = new MpXmlParser(xml)
     assert.isTrue(parser.hasData())
     const mp = parser.xmlToJson()
 
     assert.strictEqual(mp.name, 'jody wilson-raybould')
     assert.strictEqual(mp.party, 'independent')
     assert.strictEqual(mp.riding, 'vancouver granville')
-    assert.strictEqual(mp.yearElected, 2015)
+    assert.strictEqual(mp.start, 2015)
+    assert.strictEqual(mp.end, 2019)
     assert.hasAnyKeys(mp, ['imageUrl'])
   })
 

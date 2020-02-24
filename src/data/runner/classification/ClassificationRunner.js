@@ -1,4 +1,4 @@
-const Firestore = require('../../../firebase/Firestore').Firestore
+const Firestore = require('@firestore').Firestore
 const ScrapeError = require('../../../util/action/error/ScrapeError').ScrapeError
 const PDFParseError = require('../../../util/action/error_action/HandleDownloadErrorAction').PDFParseError
 const BillFinder = require('../../../job/BillPDFFinderJob').BillPDFFinderJob
@@ -267,19 +267,3 @@ class ClassificationRunner {
 }
 
 module.exports.ClassificationRunner = ClassificationRunner
-
-new Firestore().TfIdfClassification()
-  .delete()
-  .then(async resp => {
-    console.log(`Deleted ${resp} documents`)
-    const test = new ClassificationRunner()
-    const classifications = await test.createBillClassificationsFromFirestore()
-    console.log(`Attempting to store ${classifications.length} raw bill classifications`)
-    await Promise.all(
-      classifications.map(raw => {
-        return new Firestore()
-          .TfIdfClassification()
-          .insert(raw)
-      })
-    )
-  })

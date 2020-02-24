@@ -174,10 +174,11 @@ describe('Job.js', () => {
       .addAction(first)
       .addErrorAction(action)
     Assert.equal(undertest.actions.length, 1)
-
-    const result = await undertest.execute()
-    Assert.equal(typeof result, typeof [])
-    Assert(called)
+    try {
+      await undertest.execute()
+    } catch (e) {
+      Assert(called)
+    }
     done()
   })
 
@@ -194,9 +195,11 @@ describe('Job.js', () => {
       .addLogAction(action)
     Assert.equal(undertest.actions.length, 1)
 
-    const result = await undertest.execute()
-    Assert.equal(typeof result, typeof [])
-    Assert(called)
+    try {
+      await undertest.execute()
+    } catch (e) {
+      Assert(called)
+    }
     done()
   })
 })

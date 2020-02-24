@@ -1,9 +1,8 @@
+require('module-alias/register')
 const Parsers = require('@parser')
 const XmlDataParser = Parsers.XmlDataParser
 const Models = require('@model')
 const Politician = Models.Politician
-const Model = Models.Model
-
 const cheerio = require('cheerio')
 
 class MpXmlParser extends XmlDataParser {
@@ -29,8 +28,9 @@ class MpXmlParser extends XmlDataParser {
     const mp = Politician.builder(name.toLowerCase())
     mp.withParty(this.getDataInTag('CaucusShortName').toLowerCase())
     mp.withRiding(this.getDataInTag('ConstituencyName').toLowerCase())
-    mp.withYearElected(Number(this.getDataInTag('FromDateTime').substring(0, 4)))
-    return Model.serialise(mp.build())
+    mp.withStartYear(Number(this.getDataInTag('FromDateTime').substring(0, 4)))
+    mp.withEndYear(Number(this.getDataInTag('ToDateTime').substring(0, 4)))
+    return mp.build()
   }
 
   passesFilters () {

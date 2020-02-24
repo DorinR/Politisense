@@ -1,12 +1,21 @@
-const Queue = require('../queue/queues').Queue
-const Action = require('./QueueAction').QueueAction
-const DecorationError = require('../utils').Actions.Errors.ActionDecorationError
+const Queue = require('@queue').Queue
+const Action = require('@manager').QueueAction
+const DecorationError = require('@action').Errors.ActionDecorationError
 
 class QueueManager {
   constructor (waitPeriod = 1000) {
     this.error = console.error
     this.log = (result) => {
-      console.debug(`INFO: job finished, found ${result.length} potential results`)
+      let message
+      if (result instanceof Object) {
+        message = `INFO: job finished, found ${result.data ? result.data.length : 0} potential results`
+      } else if (result) {
+        message = `INFO: job finished, found ${result ? result.length : 0} potential results`
+      }
+
+      if (message) {
+        console.log(message)
+      }
       return result
     }
     this.activeJobs = []

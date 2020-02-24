@@ -1,4 +1,4 @@
-const Condition = require('../../util/utils').Condition
+const Condition = require('../../util/Condition').Condition
 const Model = require('./Model').Model
 
 class Vote extends Model {
