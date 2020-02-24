@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import RepresentativeCard from './RepresentativeCard'
+import RepresentativeCardRiding from './RepresentativeCardRiding'
 import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -112,7 +113,7 @@ export default function CompareRepresentatives() {
                             color='textPrimary'
                             gutterBottom
                         >
-                            Compare Representatives
+                            Ridings: Past vs Present
             </Typography>
                     </Container>
                     <Typography
@@ -121,7 +122,8 @@ export default function CompareRepresentatives() {
                         color='textSecondary'
                         paragraph
                     >
-                        Select two MP's of your choice and compare their information and
+
+                        Select a riding of your choice and compare the current MP to previous MPs through
                         performance in terms of bills sponsored and voted pm and then see
                         how much or how little they agree on!
           </Typography>
@@ -131,7 +133,7 @@ export default function CompareRepresentatives() {
                                 <RepresentativeCard updateHead={updateHead1} />
                             </Grid>
                             <Grid item xs={6}>
-                                <RepresentativeCard updateHead={updateHead2} />
+                                <RepresentativeCardRiding updateHead={updateHead2} />
                             </Grid>
                             <Grid item xs={12}>
                                 {dataSet.length ? (

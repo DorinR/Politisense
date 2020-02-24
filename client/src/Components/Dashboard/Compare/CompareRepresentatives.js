@@ -112,7 +112,7 @@ export default function CompareRepresentatives() {
               color='textPrimary'
               gutterBottom
             >
-              Ridings: Past vs Present
+              Compare Representatives
             </Typography>
           </Container>
           <Typography
@@ -121,7 +121,7 @@ export default function CompareRepresentatives() {
             color='textSecondary'
             paragraph
           >
-            Select a riding of your choice and compare the current MP to previous MPs through
+            Select two MP's of your choice and compare their information and
             performance in terms of bills sponsored and voted pm and then see
             how much or how little they agree on!
           </Typography>

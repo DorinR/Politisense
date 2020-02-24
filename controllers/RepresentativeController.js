@@ -55,6 +55,40 @@ exports.getAllRepresentatives = (req, res) => {
     })
 }
 
+
+exports.Parliament42 = (req, res) => {
+  const timePeriodsAccumulator = []
+  const db = new Firestore()
+  db.Parliament42()
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        res.status(400).json({
+          message: 'No Representatives Found in Database',
+          success: false
+        })
+      }
+      snapshot.forEach(doc => {
+        timePeriodsAccumulator.push(doc.data())
+      })
+
+      if (!timePeriodsAccumulator.empty) {
+        res.status(200).json({
+          data: timePeriodsAccumulator,
+          success: true
+        })
+      }
+    })
+    .catch(err => {
+      console.error(err.message)
+      res.status(400).json({
+        data: timePeriodsAccumulator,
+        success: false
+      })
+      console.log(err)
+    })
+}
+
 // getRepresentativesInfo
 exports.getRepresentativesInfo = (req, res) => {
   const name = req.params.name.toLowerCase()
