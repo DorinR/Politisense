@@ -253,8 +253,28 @@ class Firestore {
     return new Reference(this.reference.collection('politicians'))
   }
 
-  LastParliament() {
-    return new Reference(this.reference.collection('43'))
+  Parliament42() {
+    return new Reference(this.reference.collection('42'))
+  }
+
+  Parliament41() {
+    return new Reference(this.reference.collection('41'))
+  }
+
+  Parliament40() {
+    return new Reference(this.reference.collection('40'))
+  }
+
+  Parliament39() {
+    return new Reference(this.reference.collection('39'))
+  }
+
+  Parliament38() {
+    return new Reference(this.reference.collection('38'))
+  }
+
+  Parliament37() {
+    return new Reference(this.reference.collection('37'))
   }
 
   Riding() {
