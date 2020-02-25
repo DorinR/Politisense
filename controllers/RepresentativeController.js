@@ -57,10 +57,24 @@ exports.getAllRepresentatives = (req, res) => {
 }
 
 exports.getCabinetMinisters = (req, res) => {
-  res.status(200).json({
-    data: ministers,
-    success: true
-  })
+    const db = new Firestore(false).forParliament(43)
+    const ministers = db.Role()
+        .where('toDate', '==', 0)
+        .where('fromDate', '>=', 2015)
+        .where('type', '==', 'parliamentary')
+        .innerJoin('politician', db.Politician(), '_id')
+        .then(entries => {
+            let result = []
+            entries.forEach((element) => {
+                if(element.title.includes('minister') && !(element.title.includes('secretary'))){
+                    result.push(element)
+                }
+            })
+            res.json({
+                success: true,
+                data: result
+            })
+        })
 }
 
 // getRepresentativesInfo

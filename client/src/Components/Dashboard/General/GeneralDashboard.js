@@ -79,6 +79,7 @@ export async function getMinisters () {
     .then(res => {
       if (res.data.success) {
         result = res.data.data
+        console.log(result)
       }
     })
     .catch(err => console.error(err))
