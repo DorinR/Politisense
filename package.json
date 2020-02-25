@@ -73,7 +73,8 @@
     "@parser": "./src/util/parser/parsers",
     "@queue": "./src/util/queue/queues",
     "@manager": "./src/util/queue_manager/actions",
-    "@controller": "./src/controllers"
+    "@controller": "./src/controllers",
+    "@builder": "./src/firebase/model/builder/builders"
   },
   "jest": {
     "moduleNameMapper": {
@@ -86,7 +87,8 @@
       "@parser": "<rootDir>/src/util/parser/parsers",
       "@queue": "<rootDir>/src/util/queue/queues",
       "@manager": "<rootDir>/src/util/queue_manager/actions",
-      "@controller": "<rootDir>/src/controllers"
+      "@controller": "<rootDir>/src/controllers",
+      "@builder": "<rootDir>/src/firebase/model/builder/builders"
     }
   }
 }

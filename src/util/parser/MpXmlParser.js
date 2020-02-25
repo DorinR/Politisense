@@ -1,3 +1,4 @@
+require('module-alias/register')
 const Parsers = require('@parser')
 const XmlDataParser = Parsers.XmlDataParser
 const Models = require('@model')

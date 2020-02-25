@@ -238,7 +238,7 @@ class Firestore {
     this.facebookProvider = this.firestore.facebookProvider
     this.twitterProvider = this.firestore.twitterProvider
     this.microsoftProvider = this.firestore.microsoftProvider
-    this.parliament = 44
+    this.parliament = 43
     this.legacy = legacy
   }
 
@@ -269,6 +269,11 @@ class Firestore {
 
   Riding () {
     const collection = this.legacy ? 'ridings' : `${this.parliament}/ridings`
+    return this.createReference(collection)
+  }
+
+  Role () {
+    const collection = this.legacy ? 'roles' : `${this.parliament}/roles/role`
     return this.createReference(collection)
   }
 
