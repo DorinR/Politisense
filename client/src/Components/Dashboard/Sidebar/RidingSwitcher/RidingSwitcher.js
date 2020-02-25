@@ -97,9 +97,8 @@ export default function RidingSwitcher (props) {
 
   const handleChange = event => {
     const user = JSON.parse(localStorage.getItem('user'))
-    const { email } = user
     setRiding(event.target.value)
-    updateUserRiding(email, event.target.value)
+    updateUserRiding(user.email, event.target.value)
     setTimeout(() => {
       window.location.reload(false)
     }, 0)

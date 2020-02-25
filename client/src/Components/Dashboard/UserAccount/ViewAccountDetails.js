@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
@@ -7,7 +7,8 @@ import axios from 'axios'
 export async function fetchUserData (userEmail) {
   let result = ''
   await axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+    .get(`http://localhost:5000/api/users/${userEmail}/getUser`,
+      { params: { acctdet: userEmail } })
     .then(res => {
       if (res.data.success) {
         const user = res.data.data
@@ -29,8 +30,7 @@ export default function ViewAccountDetails () {
     async function getData () {
       // eslint-disable-next-line no-undef
       const user = JSON.parse(localStorage.getItem('user'))
-      const { email } = user
-      const fullUserDetails = await fetchUserData(email)
+      const fullUserDetails = await fetchUserData(user.email)
       const { firstname, lastname, postalCode, riding } = fullUserDetails
       setFirstname(firstname)
       setLastname(lastname)
