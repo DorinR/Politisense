@@ -21,7 +21,9 @@ const DialogTitle = withStyles(theme => ({
         top: theme.spacing.unit,
         color: theme.palette.grey[500],
     },
-}))(props => {
+}))
+
+(props => {
     const { children, classes, onClose } = props;
     return (
         <MuiDialogTitle disableTypography className={classes.root}>
@@ -53,12 +55,9 @@ const DialogActions = withStyles(theme => ({
  const D3ChartDescriptionDialog = (props)=> {
     const { onClose, selectedValue, open } = props
 
-
     const handleClose = () => {
         onClose(selectedValue)
     };
-
-
         return (
             <div>
                 <Dialog

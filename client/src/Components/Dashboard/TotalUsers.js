@@ -60,11 +60,11 @@ const TotalUsers = props => {
                             className={classes.title}
                             color="textSecondary"
                             gutterBottom
-                            variant="body2"
+                            variant="caption"
                         >
                             PREVIOUS ROLES
                         </Typography>
-                        <Typography variant="h3">1,600</Typography>
+                        <Typography variant="h5">1,600</Typography>
                     </Grid>
                     <Grid item>
                         <Avatar className={classes.avatar}>

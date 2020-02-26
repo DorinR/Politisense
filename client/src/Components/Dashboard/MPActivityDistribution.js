@@ -12,7 +12,6 @@ import {
     IconButton, Typography
 } from '@material-ui/core';
 import Radar from 'react-d3-radar'
-import HelpOutlineRoundedIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import Collapse from "@material-ui/core/Collapse";
 import TableContainer from "@material-ui/core/TableContainer";
 import Table from "@material-ui/core/Table";
@@ -43,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
         color: "#263238",
         fontSize: "16px",
         fontFamily: "Roboto, Helvetica, Arial, sans-serif",
-        fontWeight: 480
+        fontWeight: 700
     },
     actions: {
         justifyContent: 'flex-end',

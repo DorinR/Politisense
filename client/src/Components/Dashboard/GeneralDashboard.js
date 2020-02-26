@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Grid from '@material-ui/core/Grid'
-import Card from '@material-ui/core/Card'
-import Typography from '@material-ui/core/Typography'
-import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
-import Radar from 'react-d3-radar'
 import axios from 'axios'
 import { fetchUserRiding } from '../Navbar'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -15,7 +11,6 @@ import TotalProfit from "./TotalProfit";
 import TotalUsers from "./TotalUsers";
 import TasksProgress from "./TasksProgress";
 import IssuedBillsByMP from "./IssuedBillsByMP";
-import D3GaugeChart from "./Charts/D3GaugeChart";
 import Bipartisan from "./Bipartisan";
 import MPActivityDistribution from "./MPActivityDistribution";
 import {getLegend} from "./Charts/DonutChart";
@@ -24,28 +19,6 @@ import {CssBaseline} from "@material-ui/core";
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(4)
-  },
-  card: {
-    minWidth: 275
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)'
-  },
-  pos: {
-    marginBottom: 12
-  },
-  title: {
-    fontSize: 18,
-    textAlign: 'center'
-  },
-  MuiAvatar: {
-    backgroundColor: '#43D0C4'
-  },
-  container: {
-    margin: '20px',
-    marginTop: '30px'
   }
 }))
 export default function GeneralDashboard () {
@@ -74,16 +47,7 @@ export default function GeneralDashboard () {
       const representatives = await getAllReps()
       setReps(representatives)
     }
-    // async function populateIssuedBill (userRepIssuedBills){
-    //   const dataForTable = await createDataPieBarTable(categoryList,userRepIssuedBills)
-    //   return dataForTable
-    // }
     getData()
-    // if(userRepIssuedBills){
-    //   populateIssuedBill(userRepIssuedBills).then(res => {
-    //     setRows(res)
-    //   })
-    // }
   }, [])
 
   async function getAllReps () {

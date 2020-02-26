@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import GroupIcon from '@material-ui/icons/Group';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -48,22 +48,22 @@ const TotalProfit = props => {
                     <Grid item>
                         <Typography
                             className={classes.title}
-                            color="inherit"
+                            color="textSecondary"
                             gutterBottom
-                            variant="body2"
+                            variant="caption"
                         >
                             Associations
                         </Typography>
                         <Typography
                             color="inherit"
-                            variant="h3"
+                            variant="h5"
                         >
                             $23,200
                         </Typography>
                     </Grid>
                     <Grid item>
                         <Avatar className={classes.avatar}>
-                            <AttachMoneyIcon className={classes.icon} />
+                            <GroupIcon className={classes.icon}/>
                         </Avatar>
                     </Grid>
                 </Grid>
