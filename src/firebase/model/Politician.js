@@ -1,19 +1,21 @@
-const Condition = require('../../util/utils').Condition
+const Condition = require('../../util/Condition').Condition
 const Model = require('./Model').Model
 
 class Politician extends Model {
-  constructor (name, party, riding, yearElected, imageUrl) {
+  constructor (name, party, riding, start, end, imageUrl) {
     super()
     Condition.parameter(name).isType(String)
     Condition.parameter(party).isType(String)
     Condition.parameter(riding).isType(String)
-    Condition.parameter(yearElected).isType(Number)
+    Condition.parameter(start).isType(Number)
+    Condition.parameter(end).isType(Number)
     Condition.parameter(imageUrl).isType(String)
 
     this.name = name
     this.party = party
     this.riding = riding
-    this.yearElected = yearElected
+    this.start = start
+    this.end = end
     this.imageUrl = imageUrl
   }
 
@@ -29,7 +31,7 @@ class Politician extends Model {
 class PoliticianBuilder {
   constructor (name) {
     this.name = name
-    this.imageUrl = ''
+    this.imageUrl = 'placeholder'
   }
 
   withParty (party) {
@@ -42,8 +44,13 @@ class PoliticianBuilder {
     return this
   }
 
-  withYearElected (yearElected) {
-    this.yearElected = yearElected
+  withStartYear (year) {
+    this.start = year
+    return this
+  }
+
+  withEndYear (year) {
+    this.end = year
     return this
   }
 
@@ -53,7 +60,7 @@ class PoliticianBuilder {
   }
 
   build () {
-    return new Politician(this.name, this.party, this.riding, this.yearElected, this.imageUrl)
+    return new Politician(this.name, this.party, this.riding, this.start, this.end, this.imageUrl)
   }
 }
 
