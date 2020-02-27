@@ -118,6 +118,8 @@ export default function RepresentativeCard(props) {
     const [ridingCode, setRidingCode] = useState('')
     const [skeleton] = useState([1, 2, 3, 4, 5])
     const [issuedBills, setIssuedBills] = useState(0)
+    const [partyRole, setPartyRole] = useState('')
+    const [association, setAssociation] = useState('')
 
     const updateNameFromSwitcher = newName => {
         setName(newName)
@@ -125,39 +127,9 @@ export default function RepresentativeCard(props) {
     }
 
     useEffect(() => {
-        if (name) {
-            async function getRepInfo(name) {
-                const res = await axios.get(
-                    `http://localhost:5000/api/representatives/${name}/getRepresentativesInfo`
-                )
-                return res.data.data
-            }
-            async function getIssuedBillsByHead(head) {
-                const res = await axios.get(
-                    `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
-                )
-                return res.data.data
-            }
-            async function getData(name) {
-                // eslint-disable-next-line
-                const riding = await getRepInfo(name)
-                const bills = await getAllBillsByHead(name)
-                const total = await calculateTotalVotesBills(bills)
-                setTotalBills(total)
-                setRiding(riding.riding)
-                const test = riding.riding
-                setYearElected(riding.yearElected)
-                setPoliticalParty(riding.politicalParty)
-                const ridingCode = await fetchRidingCode(test)
-                setRidingCode(ridingCode)
-                const issuedBillsByHead = await getIssuedBillsByHead(name)
-                if (issuedBillsByHead.length != 0) {
-                    setIssuedBills(issuedBillsByHead.length)
-                }
-            }
-            getData(name)
-        }
-    }, [name, riding, politicalParty, yearElected, issuedBills])
+        setPartyRole('Association on foreign affairs')
+        setAssociation('some association')
+    }, [name])
 
     return (
         <Grid container spacing={2}>
@@ -175,59 +147,17 @@ export default function RepresentativeCard(props) {
                                 />
                             </Grid>
                         </Grid>
-                        {ridingCode ? (
+                        {name ? (
                             <List>
                                 <ListItem>
                                     <ListItemAvatar>
                                         <Avatar className={classes.avatar}>
-                                            <PersonIcon />
+                                            <MapIcon />
                                         </Avatar>
                                     </ListItemAvatar>
-                                    <ListItemText>{capitalize(name)}</ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <FlagIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText>{capitalize(politicalParty)}</ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <LocationOnIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText>{capitalize(riding)}</ListItemText>
-                                </ListItem>
-
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <CalendarTodayIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText>Elected in {yearElected}</ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <FormatListNumberedIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText> Total Voted Bills: {totalBills}</ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <AssignmentIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText>
-                                        {' '}
-                                        Total Issued Bills: {issuedBills}
-                                    </ListItemText>
+                                    <Box m={1} />
+                                    <div>{partyRole}</div>
+                                    <Box m={1} />
                                 </ListItem>
                                 <ListItem>
                                     <ListItemAvatar>
@@ -236,10 +166,7 @@ export default function RepresentativeCard(props) {
                                         </Avatar>
                                     </ListItemAvatar>
                                     <Box m={1} />
-                                    <RidingShapeContainer
-                                        ridingCode={ridingCode}
-                                        politicalParty={politicalParty}
-                                    />
+                                    <div>{association}</div>
                                     <Box m={1} />
                                 </ListItem>
                             </List>
@@ -255,11 +182,4 @@ export default function RepresentativeCard(props) {
             </Grid>
         </Grid>
     )
-}
-function calculateTotalVotesBills(bills) {
-    let totalBills = 0
-    if (bills) {
-        bills.forEach(bill => totalBills++)
-    }
-    return totalBills
 }
