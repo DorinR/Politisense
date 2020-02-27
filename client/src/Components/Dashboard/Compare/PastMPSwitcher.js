@@ -86,10 +86,10 @@ export default function PastMPSwitcher(props) {
                     MenuProps={MenuProps}>
                     {pastMps.map(mp => (
                         <MenuItem
-                            key={mp.name}
-                            value={mp.name}
-                            style={getStyles(mp.name, mp.name, theme)}>
-                            {mp.name}
+                            key={mp}
+                            value={mp}
+                            style={getStyles(mp, mp, theme)}>
+                            {mp}
                         </MenuItem>
                     ))}
                 </Select>
