@@ -3,7 +3,7 @@ const Actions = require('@action')
 const Parsers = require('@parser')
 
 class VoteRecordFetchJob extends Job {
-  static create(params, cb) {
+  static create (params, cb) {
     return new VoteRecordFetchJob(params, cb)
       .addAction(new Actions.FetchAction(params))
       .addAction(new Actions.ParserWrapperAction(Parsers.VoteXmlParser))

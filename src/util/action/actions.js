@@ -13,5 +13,5 @@ module.exports = {
   HandleDownloadErrorAction: require('./error_action/HandleDownloadErrorAction').HandleDownloadErrorAction,
   ParserWrapperAction: require('./ParserWrapperAction').ParserWrapperAction,
   Errors: require('./error/errors'),
-  FormatAction : require('./FormatAction').FormatAction
+  FormatAction: require('./FormatAction').FormatAction
 }

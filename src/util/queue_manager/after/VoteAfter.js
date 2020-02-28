@@ -48,13 +48,13 @@ class VoteAfterAction extends Action {
     this.bills = await Promise.all(this.bills)
     this.manager.result.forEach(result => {
       const parliament = ParliamentfromParlSession[result.params.params.parlSession]
-      for(let vote of result.data){
+      for (const vote of result.data[0]) {
         if (vote.billNumber === '' || parliament < 38) {
           continue
         }
         const bills = this.bills[Parliaments.indexOf(parliament)]
         const bill = this.findBill(vote, bills)
-        if(bill){
+        if (bill) {
           vote.bill = bill.id
         }
         console.log(vote)
@@ -62,13 +62,11 @@ class VoteAfterAction extends Action {
     })
   }
 
-  findBill(vote, bills) {
+  findBill (vote, bills) {
     return bills.find(bill => {
       return bill.data.number === vote.billNumber && (bill.data.dateVoted.includes(vote.year) || bill.data.dateVoted.includes(vote.year - 1))
     })
   }
-
-
 }
 
 module.exports = {

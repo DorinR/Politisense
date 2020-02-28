@@ -25,16 +25,17 @@ class VoteRecordBuilder {
     return this
   }
 
-  withType(type) {
+  withType (type) {
     this.type = type
     return this
   }
 
-  withYear(year) {
+  withYear (year) {
     this.year = year
     return this
   }
-  withMonth(month) {
+
+  withMonth (month) {
     this.month = month
     return this
   }

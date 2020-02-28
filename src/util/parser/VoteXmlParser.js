@@ -39,14 +39,14 @@ class VoteXmlParser extends XmlDataParser {
       .withName(this.getDataInTag('DecisionDivisionSubject').trim())
       .withYeas(Number(this.getDataInTag('DecisionDivisionNumberOfYeas')))
       .withNays(Number(this.getDataInTag('DecisionDivisionNumberOfNays')))
-      .withYear(Number(date.substring(0,4)))
-      .withMonth(Number(date.substring(5,7)))
+      .withYear(Number(date.substring(0, 4)))
+      .withMonth(Number(date.substring(5, 7)))
       .withType(type)
       .build()
   }
 
   passesFilters () {
-    return true //this.isInCurrentParliament() && this.isVoteForBill() && this.isFinalDecision()
+    return true // this.isInCurrentParliament() && this.isVoteForBill() && this.isFinalDecision()
   }
 
   isVoteForBill () {

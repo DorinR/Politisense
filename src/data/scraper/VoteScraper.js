@@ -71,7 +71,7 @@ const Topic = {
   },
 
   statutory: 'L',
-  other: 'X',
+  other: 'X'
 }
 Object.freeze(Outcome)
 Object.freeze(Topic)
@@ -79,7 +79,7 @@ Object.freeze(Type)
 Object.freeze(Parliament)
 
 class VoteScraper extends QueueManager {
-  static create(params, wait = 5000) {
+  static create (params, wait = 5000) {
     const manager = new VoteScraper(params, wait)
     manager
       .setStartAction(new StartAction(manager))
@@ -112,9 +112,9 @@ class VoteScraper extends QueueManager {
 
   createParliamentSessions (parliamentSessions) {
     const validEntries = Object.values(flatten(Parliament))
-    if(!parliamentSessions || parliamentSessions === 'all') {
+    if (!parliamentSessions || parliamentSessions === 'all') {
       this.parliamentSessions = validEntries
-    } else if(parliamentSessions instanceof Array) {
+    } else if (parliamentSessions instanceof Array) {
       this.parliamentSessions = parliamentSessions.filter(parl => {
         return validEntries.includes(parl)
       })
@@ -123,9 +123,9 @@ class VoteScraper extends QueueManager {
 
   createBillDocumentTypes (types) {
     const validEntries = Object.values(flatten(Type))
-    if(!types || types === 'all') {
+    if (!types || types === 'all') {
       this.billDocumentTypes = ['']
-    } else if(types instanceof Array) {
+    } else if (types instanceof Array) {
       this.billDocumentTypes = types.filter(type => {
         return validEntries.includes(type)
       })
@@ -134,9 +134,9 @@ class VoteScraper extends QueueManager {
 
   createVoteResults (voteResults) {
     const validEntries = Object.values(Outcome)
-    if(!voteResults || voteResults === 'all') {
+    if (!voteResults || voteResults === 'all') {
       this.voteResults = ['']
-    } else if(voteResults instanceof Array) {
+    } else if (voteResults instanceof Array) {
       this.voteResults = voteResults.filter(result => {
         return validEntries.includes(result)
       })
@@ -145,9 +145,9 @@ class VoteScraper extends QueueManager {
 
   createMotionPrefixes (prefixes) {
     const validEntries = Object.values(flatten(Type))
-    if(!prefixes || prefixes === 'all') {
+    if (!prefixes || prefixes === 'all') {
       this.motionPrefixes = ['']
-    } else if(prefixes instanceof Array) {
+    } else if (prefixes instanceof Array) {
       this.motionPrefixes = prefixes.filter(prefix => {
         return validEntries.includes(prefix)
       })
@@ -155,7 +155,7 @@ class VoteScraper extends QueueManager {
   }
 
   createParams (url) {
-    this.parliamentSessions.forEach(parl =>{
+    this.parliamentSessions.forEach(parl => {
       this.billDocumentTypes.forEach(type => {
         this.voteResults.forEach(result => {
           this.motionPrefixes.forEach(prefix => {
@@ -191,26 +191,13 @@ module.exports = {
   Topic: Topic
 }
 
-const ParliamentfromParlSession = {
-  153: 43,
-  152: 42,
-  151: 41,
-  150: 41,
-  147: 40,
-  145: 40,
-  143: 40,
-  142: 39,
-  140: 38
-}
-const Firestore = require('@firestore').Firestore
-
 VoteScraper.create({
   url: 'https://www.ourcommons.ca/Members/en/votes/xml',
   params: {
     parliaments: 'all'
   }
 })
-.execute()
-.then(results => {
-  console.log(results)
-})
+  .execute()
+  .then(results => {
+    console.log(results)
+  })

@@ -24,13 +24,8 @@ class VoteRecord extends Model {
     this.month = month
   }
 
-
   static deserialise (json) {
-    return Model.deserialise(json, new VoteRecord('',0,0,'',0,0,0,0))
-  }
-
-  static builder (id) {
-    return new VoteRecordBuilder(id)
+    return Model.deserialise(json, new VoteRecord('', 0, 0, '', 0, 0, 0, 0))
   }
 }
 
