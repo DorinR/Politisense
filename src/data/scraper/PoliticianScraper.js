@@ -1,10 +1,10 @@
 require('module-alias/register')
 const Utils = require('@utils')
-const Actions = Utils.Actions
 const QueueManager = Utils.QueueManager.QueueManager
 const StartAction = Utils.QueueManager.Start.StartPoliticianScrape
 const StopAction = Utils.QueueManager.Stop.StopPoliticianScrape
 const Throw = Utils.QueueManager.Error.ParseErrorAction
+const AfterAction = Utils.QueueManager.After.PoliticianAfterAction
 
 const caucusMapping = {
   unknown: 0,
@@ -39,14 +39,6 @@ const provinceKeys = [
   'SK',
   'YT'
 ]
-class FormatAction extends Actions.Action {
-  perform(response) {
-    const {selected, other} = response
-    return selected.map(url =>{
-      return 'https://www.ourcommons.ca' + url
-    })
-  }
-}
 
 class PoliticianScraper extends QueueManager {
   static create (params, wait = 5000) {
@@ -54,6 +46,7 @@ class PoliticianScraper extends QueueManager {
     manager
       .setStartAction(new StartAction(manager))
       .setStopAction(new StopAction(manager))
+      .setAfterAction(new AfterAction(manager))
       .setErrorAction(new Throw(manager))
     return manager
   }
@@ -78,49 +71,7 @@ class PoliticianScraper extends QueueManager {
 
   async run () {
     await super.run()
-    await this.setImageUrls()
     this.finish()
-  }
-
-  async setImageUrls () {
-    const imageLinks = await this.fetchImageLinks()
-    this.attachToMps(imageLinks)
-  }
-
-  fetchImageLinks () {
-    return new Utils.Job()
-      .addAction(new Actions.FetchAction({
-        url: 'https://www.ourcommons.ca/Members/en/search',
-        params: {
-          parliament: 'all'
-        }
-      }))
-      .addAction(new Actions.TextParserAction(false, 'img.ce-mip-mp-picture', (elem, $) => {
-        return $(elem).attr('src')
-      }))
-      .addAction(new Actions.SelectionAction('/Content/Parliamentarians/Images/OfficialMPPhotos/'))
-      .addAction(new FormatAction())
-      .execute()
-  }
-
-  attachToMps(links) {
-    this.result.forEach(resp => {
-      resp.data.forEach(datum => {
-        datum.forEach(entry => {
-          entry.imageUrl = this.findUrl(entry, links)
-          entry.imageUrl = entry.imageUrl ? entry.imageUrl : 'unavailable'
-        })
-      })
-    })
-  }
-
-  findUrl(politician, links) {
-    const names = politician.name.split(' ')
-    return links.find(elem => {
-      return names.every(name => {
-        return elem.toLowerCase().includes(name.toLowerCase())
-      })
-    })
   }
 
   accumulate (result) {
