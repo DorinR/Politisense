@@ -2,7 +2,7 @@ require('module-alias/register')
 const Utils = require('@utils')
 const QueueManager = Utils.QueueManager.QueueManager
 const StartAction = Utils.QueueManager.Start.StartPoliticianScrape
-const StopAction = Utils.QueueManager.Stop.StopPoliticianScrape
+const StopAction = Utils.QueueManager.Stop.GenericStopAction
 const Throw = Utils.QueueManager.Error.ParseErrorAction
 const AfterAction = Utils.QueueManager.After.PoliticianAfterAction
 
