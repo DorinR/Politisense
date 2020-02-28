@@ -170,12 +170,27 @@ class PoliticianScraper extends QueueManager {
 }
 
 module.exports.PoliticianScraper = PoliticianScraper
+const Firestore = require('@firestore').Firestore
+const db = new Firestore(false)
 
 PoliticianScraper.create({
   url: 'https://www.ourcommons.ca/Members/en/search/xml',
-  parliaments: 'all'
+  parliaments: [36, 37, 38, 39, 40, 41, 42, 43]
 })
   .execute()
-  .then(result => {
-    console.log(result)
+  .then(results => {
+    return Promise.all(
+      results.map(result =>{
+        const parl = result.params.params.parliament
+        const Politician = db.forParliament(parl).Politician()
+        return Promise.all(
+          result.data[0].map(politician => {
+            return Politician.insert(politician)
+          })
+        )
+      })
+    )
+  })
+  .then(responses => {
+    console.log(responses)
   })
