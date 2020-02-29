@@ -1,48 +1,33 @@
 const Parsers = require('@parser')
+const Builders = require('@builder')
 const XmlDataParser = Parsers.XmlDataParser
 
 class VoteParticipantsXmlParser extends XmlDataParser {
+  constructor (xml, id) {
+    super(xml)
+    this.id = id
+  }
+
   get tagName () {
     return 'VoteParticipant'
   }
 
   get listTagName () {
-    return 'List'
+    return 'ArrayOfVoteParticipant'
   }
 
   generateNewParser (xml) {
-    return new VoteParticipantsXmlParser(xml)
+    return new VoteParticipantsXmlParser(xml, this.id)
   }
 
   buildJson () {
-    const participant = {}
-    const name = this.getDataInTag('FirstName') + ' ' + this.getDataInTag('LastName')
-    participant.name = name.toLowerCase()
-    participant.vote = this.getDataInTag('VoteValueName')
-    participant.paired = this.getDataInTag('Paired') === '1'
-    return participant
-  }
+    const name = this.getDataInTag('PersonOfficialFirstName') + ' ' + this.getDataInTag('PersonOfficialLastName')
 
-  getAllFromXml () {
-    const participants = super.getAllFromXml()
-    if (participants === []) {
-      return {}
-    }
-
-    const votes = {}
-    participants.forEach(participant => {
-      const name = participant.name
-      votes[name] = {
-        vote: participant.vote,
-        paired: participant.paired
-      }
-    })
-
-    return votes
-  }
-
-  getVoteId () {
-    return Number(this.getDataInTag('DecisionDivisionNumber', true))
+    return new Builders.VoteParticipantBuilder(this.id)
+      .withMember(name.toLowerCase())
+      .withYea(Boolean(this.getDataInTag('IsVoteYea')))
+      .withPaired(Boolean(this.getDataInTag('IsVotePaired')))
+      .build()
   }
 }
 
