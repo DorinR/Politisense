@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -6,6 +6,9 @@ import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import HistoryIcon from '@material-ui/icons/History';
+import Button from "@material-ui/core/Button";
+import D3ChartDescriptionDialog from "./D3ChartDescriptionDialog";
+import axios from "axios";
 const useStyles = makeStyles(theme => ({
     root: {
         height: '100%'
@@ -44,6 +47,48 @@ const TotalUsers = props => {
     const { className, ...rest } = props;
 
     const classes = useStyles();
+    const [open, setOpen]= useState(false)
+    const handleOpenAction = ()=>{
+        setOpen(true)
+    }
+    const handleCloseAction = ()=>{
+        setOpen(false)
+    }
+
+    const[data,setData]= useState(null)
+    useEffect(()=>{
+        async function getData () {
+            if (props.userRepresentative) {
+                const billsByRep = await getRepresentativeId(props.userRepresentative)
+                console.log(billsByRep)
+                const roles= await getAllRolesByRep(props.userRepresentative)
+            }
+        }
+        getData()
+    },[props.userRepresentative])
+
+    async function getAllRolesByRep (repName) {
+        return axios
+            .get(`http://localhost:5000/api/representatives/${repName}/getAllRolesByRep`)
+            .then(res => {
+                if (res.data.success) {
+                    console.log(res)
+                    return res.data.data
+                }
+            })
+            .catch(console.error)
+    }
+    async function getRepresentativeId (representative) {
+        return axios
+            .get(`http://localhost:5000/api/representatives/${representative}/getRepresentativeId`)
+            .then(res => {
+                if (res.data.success) {
+                    console.log(res)
+                    return res.data.data
+                }
+            })
+            .catch(console.error)
+    }
 
     return (
         <Card
@@ -62,7 +107,7 @@ const TotalUsers = props => {
                             gutterBottom
                             variant="caption"
                         >
-                            PREVIOUS ROLES
+                            Parliament ROLES
                         </Typography>
                         <Typography variant="h5">1,600</Typography>
                     </Grid>
@@ -86,6 +131,9 @@ const TotalUsers = props => {
                     >
                         Since last month
                     </Typography>
+                    <Button color="primary" size="small" style={{"fontSize":9, "marginLeft":"30px"}} onClick={handleOpenAction}>details</Button>
+                    <D3ChartDescriptionDialog open = {open} onClose={handleCloseAction}/>
+
                 </div>
             </CardContent>
         </Card>

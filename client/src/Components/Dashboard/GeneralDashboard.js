@@ -100,6 +100,7 @@ export default function GeneralDashboard () {
   useEffect(() => {
     async function getData () {
       if (userRepresentative) {
+        console.log(userRepresentative)
         const billsByRep = await getAllBillsByRep(userRepresentative)
         setRepresentativeData(billsByRep)
       }
@@ -192,7 +193,7 @@ export default function GeneralDashboard () {
               xl={3}
               xs={12}
           >
-            <TotalUsers />
+            { userRepresentative? <TotalUsers userRepresentative={userRepresentative}/>: ""}
           </Grid>
           <Grid
               item

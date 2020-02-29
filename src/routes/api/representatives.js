@@ -24,4 +24,14 @@ router.get(
 
 router.get('/representative/representative/:name', controller.getImageData)
 
+
+// @route post api/representatives/:riding/getRepresentative
+// @desc  get representative by riding
+// @access Public
+router.get('/:repName/getAllRolesByRep', controller.getAllRolesByRep)
+
+//getAllRolesByRep
+
 module.exports = router
+
+//${head}/getAllRolesByRep
