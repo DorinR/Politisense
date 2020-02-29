@@ -181,25 +181,25 @@ exports.Parliament40 = (req, res) => {
     })
 }
 
-exports.Parliament39 = (req, res) => {
-  const timePeriod39 = []
-  const db = new Firestore()
-  db.Parliament39()
+exports.getParliamentData = (req, res) => {
+  const representatives = []
+  const db = new Firestore(false).forParliament(req.params.parliamentNumber)
+  db.Politician()
     .select()
     .then(snapshot => {
       if (snapshot.empty) {
-        res.status(400).json({
+        res.status(404).json({
           message: 'No Representatives Found in Database',
           success: false
         })
       }
       snapshot.forEach(doc => {
-        timePeriod39.push(doc.data())
+        representatives.push(doc.data())
       })
 
       if (!timePeriod39.empty) {
         res.status(200).json({
-          data: timePeriod39,
+          data: representatives,
           success: true
         })
       }
@@ -207,7 +207,7 @@ exports.Parliament39 = (req, res) => {
     .catch(err => {
       console.error(err.message)
       res.status(400).json({
-        data: timePeriod39,
+        message: 'Connection Failed',
         success: false
       })
       console.log(err)

@@ -47,61 +47,12 @@ function capitalize(str) {
     return null
 }
 
-async function fetchParliament42() {
-    let parliament42 = []
-    await axios
-        .get('http://localhost:5000/api/representatives/Parliament42')
+async function fetchParliamentData(parlNum) {
+    return await axios
+        .get(`http://localhost:5000/api/representatives/${parlNum}/getParliamentData`)
         .then(res => {
             if (res.data.success) {
-                parliament42 = res.data.data
-            }
-        })
-        .catch(err => console.error(err))
-}
-
-async function fetchParliament41() {
-    let parliament41 = []
-    await axios
-        .get('http://localhost:5000/api/representatives/Parliament41')
-        .then(res => {
-            if (res.data.success) {
-                parliament41 = res.data.data
-            }
-        })
-        .catch(err => console.error(err))
-}
-
-async function fetchParliament39() {
-    let parliament39 = []
-    await axios
-        .get('http://localhost:5000/api/representatives/Parliament39')
-        .then(res => {
-            if (res.data.success) {
-                parliament39 = res.data.data
-            }
-        })
-        .catch(err => console.error(err))
-}
-
-async function fetchParliament38() {
-    let parliament38 = []
-    await axios
-        .get('http://localhost:5000/api/representatives/Parliament38')
-        .then(res => {
-            if (res.data.success) {
-                parliament38 = res.data.data
-            }
-        })
-        .catch(err => console.error(err))
-}
-
-async function fetchParliament37() {
-    let parliament37 = []
-    await axios
-        .get('http://localhost:5000/api/representatives/Parliament37')
-        .then(res => {
-            if (res.data.success) {
-                parliament37 = res.data.data
+                return res.data.data
             }
         })
         .catch(err => console.error(err))
