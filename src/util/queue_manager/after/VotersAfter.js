@@ -12,23 +12,23 @@ class VoteParticipantAfterAction extends Action {
   }
 
   retrievePoliticians () {
-      const db = new Firestore(false)
-      return Parliaments.map(parl => {
-        return db.forParliament(parl)
-          .Politician()
-          .select()
-          .then(snapshot => {
-            const politicians = []
-            snapshot.forEach(doc => {
-              politicians.push({
-                data: doc.data(),
-                id: doc.id
-              })
+    const db = new Firestore(false)
+    return Parliaments.map(parl => {
+      return db.forParliament(parl)
+        .Politician()
+        .select()
+        .then(snapshot => {
+          const politicians = []
+          snapshot.forEach(doc => {
+            politicians.push({
+              data: doc.data(),
+              id: doc.id
             })
-            console.log(`INFO: ${politicians.length} politicians retrieved for parliament ${parl}`)
-            return politicians
           })
-      })
+          console.log(`INFO: ${politicians.length} politicians retrieved for parliament ${parl}`)
+          return politicians
+        })
+    })
   }
 
   async perform () {
@@ -37,14 +37,14 @@ class VoteParticipantAfterAction extends Action {
 
   async replaceMemberName () {
     this.politicians = await Promise.all(this.politicians)
-    for(let result of this.manager.result) {
-      if(result.data.length === 0){
+    for (const result of this.manager.result) {
+      if (result.data.length === 0) {
         continue
       }
       const politicians = this.politicians[Parliaments.indexOf(result.params.parliament)]
-      for(let voter of result.data[0]) {
+      for (const voter of result.data[0]) {
         const politician = this.findPolitician(voter.member, politicians)
-        if(politician) {
+        if (politician) {
           voter.member = politician.id
         } else {
           console.warn('WARN: cannot find politician ' + voter.member)
@@ -53,7 +53,7 @@ class VoteParticipantAfterAction extends Action {
     }
   }
 
-  findPolitician(member, politicians) {
+  findPolitician (member, politicians) {
     return politicians.find(politician => {
       return politician.data.name === member
     })

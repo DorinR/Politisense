@@ -43,7 +43,7 @@ class VoteParticipantScraper extends QueueManager {
   }
 
   createParliaments (parliaments) {
-    if(!parliaments || parliaments === 'all') {
+    if (!parliaments || parliaments === 'all') {
       this.parliaments = Parliaments
     } else if (parliaments instanceof Array) {
       this.parliaments = parliaments
@@ -51,14 +51,14 @@ class VoteParticipantScraper extends QueueManager {
   }
 
   createSessions (sessions) {
-    if(!sessions || sessions === 'all') {
+    if (!sessions || sessions === 'all') {
       this.sessions = Sessions
     } else if (sessions instanceof Array) {
       this.sessions = sessions
     }
   }
 
-  createParams(url) {
+  createParams (url) {
     this.parliaments.forEach(parl => {
       this.sessions.forEach(session => {
         this.params.push({
@@ -81,26 +81,25 @@ const db = new Firestore(false)
 
 VoteParticipantScraper.create({
   url: 'https://www.ourcommons.ca/Members/en/votes',
-  parliaments: [41],
+  parliaments: [41]
 })
-.execute()
+  .execute()
   .then(results => {
     return Promise.all(
-      results.map(result =>{
+      results.map(result => {
         const parl = result.params.parliament
         const Vote = db.forParliament(parl).Vote()
-        if(result.data.length > 0)
-        {
+        if (result.data.length > 0) {
           return Promise.all(
             result.data[0].map(vote => {
               return Vote.insert(vote)
             })
           )
         }
-        return new Promise(resolve => {resolve(true)})
+        return new Promise(resolve => { resolve(true) })
       })
     )
   })
-.then(results => {
-  console.log(results)
-})
+  .then(results => {
+    console.log(results)
+  })

@@ -1,3 +1,3 @@
 module.exports = {
-  VoteParticipant: require('./VotersBefore').VoteParticipantBeforeAction,
+  VoteParticipant: require('./VotersBefore').VoteParticipantBeforeAction
 }

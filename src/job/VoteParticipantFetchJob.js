@@ -6,7 +6,7 @@ class VoteParticipantFetchJob extends Job {
   static create (params, cb) {
     return new VoteParticipantFetchJob(params, cb)
       .addAction(new Actions.FetchAction(VoteParticipantFetchJob.createRequestParams(params)))
-      .addAction(new Actions.ParserWrapperAction(Parsers.VoteParticipantsXmlParser, {id: params.id}))
+      .addAction(new Actions.ParserWrapperAction(Parsers.VoteParticipantsXmlParser, { id: params.id }))
       .addAction(new Actions.FormatAction(params))
       .addErrorAction(new Actions.HandleConnectionErrorAction(cb, VoteParticipantFetchJob.create, params))
   }

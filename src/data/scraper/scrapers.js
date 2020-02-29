@@ -6,7 +6,3 @@ module.exports = {
   VoteScraper: require('./VoteScraper'),
   VoteParticipantScraper: require('./VoteParticipantScraper')
 }
-
-
-
-

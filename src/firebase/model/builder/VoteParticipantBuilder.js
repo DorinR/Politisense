@@ -20,7 +20,6 @@ class VoteParticipantBuilder {
     return this
   }
 
-
   build () {
     return new Vote(this.name, this.id, this.yea, this.paired)
   }

@@ -69,13 +69,13 @@ class VoteParticipantBeforeAction extends Action {
   async modifyManagerParams () {
     this.voteRecords = await Promise.all(this.voteRecords)
     const newParams = []
-    for(let param of this.manager.params) {
-      if ( !this.parliamentExists(param.params.parliament, param.params.session)) {
+    for (const param of this.manager.params) {
+      if (!this.parliamentExists(param.params.parliament, param.params.session)) {
         continue
       }
       const index = Parliaments.indexOf(Number(param.params.parliament))
       this.voteRecords[index].forEach(record => {
-        if(record.data.id) {
+        if (record.data.id) {
           newParams.push({
             url: `${param.url}/${record.data.id}/xml`,
             id: record.id,
@@ -90,7 +90,7 @@ class VoteParticipantBeforeAction extends Action {
 
   parliamentExists (parliament, session) {
     try {
-      return Boolean(Parliament[`${parliament}`][`${session}`] )
+      return Boolean(Parliament[`${parliament}`][`${session}`])
     } catch (e) {
       return false
     }

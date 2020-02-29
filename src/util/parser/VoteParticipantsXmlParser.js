@@ -22,11 +22,13 @@ class VoteParticipantsXmlParser extends XmlDataParser {
 
   buildJson () {
     const name = this.getDataInTag('PersonOfficialFirstName') + ' ' + this.getDataInTag('PersonOfficialLastName')
+    const yea = this.getDataInTag('IsVoteYea') === 'true'
+    const paired = this.getDataInTag('IsVotePaired') === 'true'
 
     return new Builders.VoteParticipantBuilder(this.id)
       .withMember(name.toLowerCase())
-      .withYea(Boolean(this.getDataInTag('IsVoteYea')))
-      .withPaired(Boolean(this.getDataInTag('IsVotePaired')))
+      .withYea(Boolean(yea))
+      .withPaired(Boolean(paired))
       .build()
   }
 }
