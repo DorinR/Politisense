@@ -90,8 +90,10 @@ export default function PartySwitcher(props) {
   useEffect(() => {
     async function getData() {
       const representatives = await fetchAllRepresentatives() // REPLACE WITH NEXT LINE ONCE IMPLEMENTED
-      const parties = getAllParties(representatives)
-      populateDropdownParties(parties)
+      if (representatives) {
+        const parties = getAllParties(representatives)
+        populateDropdownParties(parties)
+      }
     }
     getData()
   }, [selectedParty])
