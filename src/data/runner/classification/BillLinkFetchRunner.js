@@ -9,9 +9,9 @@ const StopAction = Utils.QueueManager.Stop.GenericStopAction
 
 
 
-class PDFRetrievalRunner extends QueueManager {
+class BillLinkFetchRunner extends QueueManager {
   static create(params, wait = 5000){
-    const manager = new PDFRetrievalRunner(params, wait)
+    const manager = new BillLinkFetchRunner(params, wait)
     manager
       .setBeforeAction(new BeforeAction(manager))
       .setStartAction(new StartAction(manager))
@@ -41,11 +41,12 @@ class PDFRetrievalRunner extends QueueManager {
     if(result) {
       this.result.push(result)
     }
+    return result
   }
 }
 
-PDFRetrievalRunner.create({
-  parliaments: 'all'
+BillLinkFetchRunner.create({
+  parliaments: [43]
 })
   .execute()
   .then(results => {

@@ -7,36 +7,37 @@ const SelectionAction = Actions.SelectionAction
 const ErrorHandler = Actions.HandleDownloadErrorAction
 
 class SelectFirstAction extends Action {
-  constructor (bill) {
+  constructor (params) {
     super()
-    this.bill = bill
+    this.params = params
   }
 
   async perform (links) {
     console.log(`INFO: Retrieved Bill link: ${links.selected[0]}`)
     return {
       link: links.selected[0],
-      id: this.bill
+      id: this.params.bill,
+      parliament: this.params.parliament
     }
   }
 }
 
-class BillPDFFinderJob extends AbstractJob {
+class BillLinkFetchJob extends AbstractJob {
   constructor (params, callback) {
     super(params.url, callback)
     this.params = params
   }
 
   static create (params, callback) {
-    return new BillPDFFinderJob(params, callback)
-      .addAction(new FetchAction(BillPDFFinderJob.createRequestParams(params)))
+    return new BillLinkFetchJob(params, callback)
+      .addAction(new FetchAction(BillLinkFetchJob.createRequestParams(params)))
       .addAction(new TextParserAction(false, 'a', (elem, $) => {
         return $(elem).attr('href')
       }))
       .addAction(new SelectionAction('/Content/Bills/'))
       .addAction(new SelectionAction('PDF'))
-      .addAction(new SelectFirstAction(params.bill))
-      .addErrorAction(new ErrorHandler(callback, BillPDFFinderJob.create, params))
+      .addAction(new SelectFirstAction(params))
+      .addErrorAction(new ErrorHandler(callback, BillLinkFetchJob.create, params))
   }
 
   static createRequestParams (params) {
@@ -47,4 +48,4 @@ class BillPDFFinderJob extends AbstractJob {
   }
 }
 
-module.exports.BillPDFFinderJob = BillPDFFinderJob
+module.exports.BillPDFFinderJob = BillLinkFetchJob

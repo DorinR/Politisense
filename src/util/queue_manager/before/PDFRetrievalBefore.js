@@ -47,13 +47,12 @@ class PDFRetrievalBeforeAction extends QueueAction {
     this.bills = await Promise.resolve(this.bills)
     let params = []
     this.manager.params.forEach(param => {
-      this.bills.forEach(parliament => {
-        parliament.forEach(bill => {
-          params.push({
-            bill: bill.id,
-            url: bill.data.link,
-            parliament: param.parliament
-          })
+      const parliament = this.bills[Parliaments.indexOf(param.parliament)]
+      parliament.forEach(bill => {
+        params.push({
+          bill: bill.id,
+          url: bill.data.link,
+          parliament: param.parliament
         })
       })
     })
