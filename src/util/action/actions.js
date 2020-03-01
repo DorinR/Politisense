@@ -12,5 +12,7 @@ module.exports = {
   RequeueAction: require('./queue_action/RequeueConnectionAction').RequeueAction,
   HandleDownloadErrorAction: require('./error_action/HandleDownloadErrorAction').HandleDownloadErrorAction,
   ParserWrapperAction: require('./ParserWrapperAction').ParserWrapperAction,
-  Errors: require('./error/errors')
+  Errors: require('./error/errors'),
+  FormatAction : require('./FormatAction').FormatAction,
+  ClassifyAction : require('./classify_action/ClassifyAction').ClassificationAction
 }
