@@ -1,4 +1,4 @@
-const ClassificationRunner = require('../../../../data/runner/classification/ClassificationRunner').ClassificationRunner
+const ClassificationRunner = require('../../../../data/runner/ClassificationRunner').ClassificationRunner
 
 const chai = require('chai')
 const Assert = chai.assert

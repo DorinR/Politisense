@@ -15,7 +15,7 @@ class SelectFirstAction extends Action {
   async perform (links) {
     console.log(`INFO: Retrieved Bill link: ${links.selected[0]}`)
     return {
-      link: links.selected[0],
+      url: links.selected[0],
       id: this.params.bill,
       parliament: this.params.parliament
     }
@@ -48,4 +48,4 @@ class BillLinkFetchJob extends AbstractJob {
   }
 }
 
-module.exports.BillPDFFinderJob = BillLinkFetchJob
+module.exports.BillLinkFetchJob = BillLinkFetchJob

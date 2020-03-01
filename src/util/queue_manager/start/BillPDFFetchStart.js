@@ -1,21 +1,21 @@
 const QueueActions = require('../actions')
 const QueueAction = QueueActions.QueueAction
-const BillPDFFinderJob = require('../../../job/jobs').BillPDFFinderJob
+const BillPDFFetchJob = require('../../../job/BillPDFFetchJob').PDFRetrievalJob
 
-class PDFRetrievalStart extends QueueAction {
+class BillPDFFetchStartAction extends QueueAction {
   constructor (manager) {
     super()
     this.manager = manager
   }
 
   perform () {
-    const first = BillPDFFinderJob.create(
+    const first = BillPDFFetchJob.create(
       this.manager.params.shift(),
       this.manager.requeueCallback.bind(this.manager)
     )
     this.manager.params.forEach(param => {
       this.manager.queue.enqueue(
-        BillPDFFinderJob.create(
+        BillPDFFetchJob.create(
           param,
           this.manager.requeueCallback.bind(this.manager)
         )
@@ -25,4 +25,4 @@ class PDFRetrievalStart extends QueueAction {
   }
 }
 
-module.exports.PDFRetrievalStart = PDFRetrievalStart
+module.exports.BillPDFFetchStartAction = BillPDFFetchStartAction

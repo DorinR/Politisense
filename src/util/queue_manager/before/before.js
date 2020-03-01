@@ -1,3 +1,3 @@
 module.exports = {
-  PDFRetrieval: require('./PDFRetrievalBefore').PDFRetrievalBeforeAction
+  BillLinkFetch: require('./BillLinkFetchBefore').BillLinkFetchBeforeAction,
 }

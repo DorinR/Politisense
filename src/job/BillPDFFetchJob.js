@@ -4,6 +4,7 @@ const PDFRetrieverAction = Actions.PDFFileRetrieverAction
 const PDFParseAction = Actions.PDFParseAction
 const HandleDownloadErrorAction = Actions.HandleDownloadErrorAction
 
+
 class BillPDFFetchJob extends AbstractJob {
   constructor (params, callback) {
     super(params.url, callback)
@@ -12,9 +13,10 @@ class BillPDFFetchJob extends AbstractJob {
 
   static create (params, callback) {
     return new BillPDFFetchJob(params, callback)
-      .addAction(new PDFRetrieverAction(params.url, params.bill))
-      .addAction(new PDFParseAction(params.url, params.bill))
-      .addErrorAction(new HandleDownloadErrorAction(callback, PDFRetrieverAction.create))
+      .addAction(new PDFRetrieverAction(params.url, params.id))
+      .addAction(new PDFParseAction(params.url, params.id))
+      .addAction(new Actions.FormatAction(params))
+      .addErrorAction(new HandleDownloadErrorAction(callback, BillPDFFetchJob.create, params))
   }
 }
 

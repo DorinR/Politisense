@@ -45,7 +45,9 @@ class QueueManager {
     await this.before()
     await this.start()
       .then(partialResults => {
-      this.accumulate(partialResults)
+        if(partialResults) {
+          this.accumulate(partialResults)
+        }
     })
     await this.run()
     await this.after()

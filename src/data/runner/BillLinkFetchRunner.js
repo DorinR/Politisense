@@ -1,13 +1,9 @@
 require('module-alias/register')
-const Utils = require('@utils')
-const QueueManager = Utils.QueueManager.QueueManager
-const BeforeAction = Utils.QueueManager.Before.PDFRetrieval
-const StartAction = Utils.QueueManager.Start.PDFRetrieval
-const StopAction = Utils.QueueManager.Stop.GenericStopAction
-//const AfterAction = Utils.QueueManager.After.PDFRetrieval
-//const Throw = Utils.QueueManager.Error.ScrapeErrorAction
-
-
+const QueueManager = require('../../util/queue_manager/QueueManager').QueueManager
+const BeforeAction = require('../../util/queue_manager/before/BillLinkFetchBefore').BillLinkFetchBeforeAction
+const StartAction = require('../../util/queue_manager/start/BillLinkStart').BillLinkStart
+const StopAction = require('../../util/queue_manager/stop/GenericStopAction').GenericStopAction
+const Throw = require('../../util/queue_manager/error/ScrapeError').ScrapeErrorAction
 
 class BillLinkFetchRunner extends QueueManager {
   static create(params, wait = 5000){
@@ -16,8 +12,7 @@ class BillLinkFetchRunner extends QueueManager {
       .setBeforeAction(new BeforeAction(manager))
       .setStartAction(new StartAction(manager))
       .setStopAction(new StopAction(manager))
-      //.setAfterAction(new AfterAction(manager))
-      //.setErrorAction(new Throw(manager))
+      .setErrorAction(new Throw(manager))
     return manager
   }
 
@@ -45,10 +40,4 @@ class BillLinkFetchRunner extends QueueManager {
   }
 }
 
-BillLinkFetchRunner.create({
-  parliaments: [43]
-})
-  .execute()
-  .then(results => {
-    console.log(results)
-  })
+module.exports.BillLinkFetchRunner = BillLinkFetchRunner

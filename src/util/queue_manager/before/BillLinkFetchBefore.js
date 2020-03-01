@@ -5,7 +5,7 @@ const Firestore = require('@firestore').Firestore
 const Parliaments = [36,37,38,39,40,41,42,43]
 Object.freeze(Parliaments)
 
-class PDFRetrievalBeforeAction extends QueueAction {
+class BillLinkFetchBeforeAction extends QueueAction {
   constructor (manager){
     super()
     this.manager = manager
@@ -62,5 +62,5 @@ class PDFRetrievalBeforeAction extends QueueAction {
 }
 
 module.exports = {
-  PDFRetrievalBeforeAction: PDFRetrievalBeforeAction
+  BillLinkFetchBeforeAction: BillLinkFetchBeforeAction
 }

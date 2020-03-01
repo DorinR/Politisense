@@ -29,12 +29,6 @@ class PDFParseAction extends JobAction {
         }
       })
     })
-      .then(content => {
-        return {
-          name: this.bill,
-          content: content
-        }
-      })
   }
 }
 

@@ -56,7 +56,7 @@ class HandleDownloadErrorAction extends JobAction {
       const name = this.pdfError || (this.parseError || '')
       error.message = `ERROR: PDF data for: ${this.params.bill} was corrupted: ${name}, from job: ${this.params.url}. Will attempt to re-parse`
       this.callback([
-        this.create(this.params, this.create, this.callback)
+        this.create(this.params, this.callback)
       ])
     }
   }
