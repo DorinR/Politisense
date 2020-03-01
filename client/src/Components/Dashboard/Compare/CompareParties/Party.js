@@ -23,6 +23,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment'
 import FlightTakeoffIcon from '@material-ui/icons/FlightTakeoff'
 import FastfoodIcon from '@material-ui/icons/Fastfood'
 import CardGiftcardIcon from '@material-ui/icons/CardGiftcard'
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import TvIcon from '@material-ui/icons/Tv'
 import capitalize from 'capitalize'
 import { PARTY_COLORS } from '../../Sidebar/RidingShape/partyColors'
@@ -302,10 +303,12 @@ export default function Party(props) {
             <Grid container justify='center'>
               <Grid item xs={12}>
                 <Avatar
-                  alt={party}
+                  alt='Party Logo'
                   src={partyImageUrl}
                   className={classes.bigAvatar}
-                />
+                  style={{ backgroundColor: '#43D0C4' }}>
+                  <AccountBalanceIcon style={{ fontSize: 80 }} />
+                </Avatar>
               </Grid>
             </Grid>
             {loadingComplete ? (
