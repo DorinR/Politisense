@@ -5,15 +5,15 @@ const PDFParseAction = Actions.PDFParseAction
 const HandleDownloadErrorAction = Actions.HandleDownloadErrorAction
 
 class PDFRetrievalJob extends AbstractJob {
-  constructor (url, bill, callback) {
-    super(url, callback)
-    this.bill = bill
+  constructor (params, callback) {
+    super(params.url, callback)
+    this.params = params
   }
 
-  static create (url, bill, callback) {
-    return new PDFRetrievalJob(url, bill, callback)
-      .addAction(new PDFRetrieverAction(url, bill))
-      .addAction(new PDFParseAction(url, bill))
+  static create (params, callback) {
+    return new PDFRetrievalJob(params, callback)
+      .addAction(new PDFRetrieverAction(params.url, params.bill))
+      .addAction(new PDFParseAction(params.url, params.bill))
       .addErrorAction(new HandleDownloadErrorAction(callback, PDFRetrieverAction.create))
   }
 }

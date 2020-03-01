@@ -3,7 +3,7 @@ const ScrapeError = require('../error/errors').ScrapeError
 const connectionErrors = [
   'ESOCKETTIMEDOUT',
   'ETIMEDOUT',
-  'timeout',  //this error and the proceeding 3 are in response to error code fuzzing from the server
+  'timeout', // this error and the proceeding 3 are in response to error code fuzzing from the server
   'status code 500',
   'status code 503',
   'status code 404',

@@ -1,6 +1,6 @@
 const Actions = require('@action')
 const AbstractJob = require('../util/Job').AbstractJob
-const LinkScraperAction = Actions.LinkScraperAction
+const FetchAction = Actions.FetchAction
 const Action = Actions.Action
 const TextParserAction = Actions.TextParserAction
 const SelectionAction = Actions.SelectionAction
@@ -22,21 +22,28 @@ class SelectFirstAction extends Action {
 }
 
 class BillPDFFinderJob extends AbstractJob {
-  constructor (url, bill, callback) {
-    super(url, callback)
-    this.bill = bill
+  constructor (params, callback) {
+    super(params.url, callback)
+    this.params = params
   }
 
-  static create (url, bill, callback) {
-    return new BillPDFFinderJob(url, bill, callback)
-      .addAction(new LinkScraperAction(url))
+  static create (params, callback) {
+    return new BillPDFFinderJob(params, callback)
+      .addAction(new FetchAction(BillPDFFinderJob.createRequestParams(params)))
       .addAction(new TextParserAction(false, 'a', (elem, $) => {
         return $(elem).attr('href')
       }))
       .addAction(new SelectionAction('/Content/Bills/'))
       .addAction(new SelectionAction('PDF'))
-      .addAction(new SelectFirstAction(bill))
-      .addErrorAction(new ErrorHandler(callback, BillPDFFinderJob.create))
+      .addAction(new SelectFirstAction(params.bill))
+      .addErrorAction(new ErrorHandler(callback, BillPDFFinderJob.create, params))
+  }
+
+  static createRequestParams (params) {
+    return {
+      url: params.url,
+      params: params.params
+    }
   }
 }
 
