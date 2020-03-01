@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Party from './CompareParties/Party'
+import Party from './Party'
 import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
-import D3ChartHeadVsHeadContainer from '../D3ChartHeadVsHeadContainer'
+import D3ChartHeadVsHeadContainer from '../../D3ChartHeadVsHeadContainer'
 import Grow from '@material-ui/core/Grow'
-import InfoBubble from '../Utilities/InfoBubble'
+import InfoBubble from '../../Utilities/InfoBubble'
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -27,18 +27,18 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function getAllBillsByHead (head) {
+export async function getAllBillsByHead(head) {
   const res = await axios.get(
     `http://localhost:5000/api/bills/${head}/getAllBillsByHead`
   )
   return res.data.data
 }
 
-export function calcPercent (percent) {
+export function calcPercent(percent) {
   return [percent, 100 - percent]
 }
 
-export default function CompareParties () {
+export default function CompareParties() {
   const classes = useStyles()
   const [party1, setParty1] = useState('')
   const [party2, setParty2] = useState('')
@@ -61,7 +61,7 @@ export default function CompareParties () {
   }
 
   useEffect(() => {
-    async function getalldata (dataForHead1, dataForHead2) {
+    async function getalldata(dataForHead1, dataForHead2) {
       let dataset = {}
       let commonBillsCounter = 0
       let similarities = 0
@@ -87,7 +87,7 @@ export default function CompareParties () {
       return [dataset, final]
     }
 
-    async function getBills () {
+    async function getBills() {
       const head1Bills = await getAllBillsByHead(party1, 'head1')
       const head2Bills = await getAllBillsByHead(party2, 'head2')
       const dataset = await getalldata(head1Bills, head2Bills)
@@ -114,8 +114,7 @@ export default function CompareParties () {
               className={classes.customHeaders}
               align='left'
               color='primary'
-              gutterBottom
-            >
+              gutterBottom>
               Compare Parties
             </Typography>
             <span className={classes.customTooltip}>
@@ -132,15 +131,6 @@ export default function CompareParties () {
               </Grid>
               <Grid item xs={6}>
                 <Party updateHead={updateHead2} />
-              </Grid>
-              <Grid item xs={12}>
-                {dataSet.length ? (
-                  <Grow in={dataSet.length}>
-                    <D3ChartHeadVsHeadContainer data={dataSet} />
-                  </Grow>
-                ) : (
-                  ''
-                )}
               </Grid>
             </Grid>
           </div>

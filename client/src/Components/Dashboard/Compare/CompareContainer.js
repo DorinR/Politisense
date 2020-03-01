@@ -1,7 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import CompareRepresentatives from './CompareRepresentatives'
-import CompareParties from './CompareParties'
+import CompareParties from './CompareParties/CompareParties'
 import Box from '@material-ui/core/Box'
 
 const useStyles = makeStyles({
@@ -11,7 +11,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function CompareContainer () {
+export default function CompareContainer() {
   const classes = useStyles()
 
   return (
