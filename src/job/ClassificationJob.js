@@ -1,16 +1,10 @@
-const QueueManagerWrapperAction = require('../util/action/QueueManagerWrapperAction').QueueManagerWrapperAction
+const QueueManagerWrapperAction = require('../util/action/wrapper_action/QueueManagerWrapperAction').QueueManagerWrapperAction
 const ClassificationAction = require('../util/action/classify_action/ClassifyAction').ClassificationAction
 const Action = require('../util/action/JobAction').AbstractJobAction
 const BillPDFFetchRunner = require('../data/runner/BillPDFFetchRunner').BillPDFFetchRunner
 const BillLinkFetchRunner = require('../data/runner/BillLinkFetchRunner').BillLinkFetchRunner
 const AbstractJob = require('../util/Job').AbstractJob
-
-class FormatAction extends Action {
-  perform(result){
-    console.log(result)
-    return result
-  }
-}
+const FormatAction = require('../util/action/FormatAction').FormatAction
 
 class ClassificationJob extends AbstractJob {
   constructor (params, callback) {
@@ -24,8 +18,7 @@ class ClassificationJob extends AbstractJob {
       .addAction(new QueueManagerWrapperAction(BillLinkFetchRunner, params))
       .addAction(new QueueManagerWrapperAction(BillPDFFetchRunner))
       .addAction(new ClassificationAction())
-      //.addAction(new FormatAction())
-      //.addErrorAction(new Actions.HandleClassificationErrorAction())
+      .addAction(new FormatAction(params))
     return job
   }
 }

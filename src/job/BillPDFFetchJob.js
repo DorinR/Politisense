@@ -16,6 +16,7 @@ class BillPDFFetchJob extends AbstractJob {
       .addAction(new PDFRetrieverAction(params.url, params.id))
       .addAction(new PDFParseAction(params.url, params.id))
       .addAction(new Actions.FormatAction(params))
+      .addAction(new Actions.FileOutputAction(params))
       .addErrorAction(new HandleDownloadErrorAction(callback, BillPDFFetchJob.create, params))
   }
 }

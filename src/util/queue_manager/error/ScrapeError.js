@@ -7,8 +7,10 @@ class ScrapeErrorAction extends Action {
     this.manager = manager
   }
 
-  perform (e) {
+  async perform (e) {
+    await this.manager.lock.acquire()
     this.manager.queryCount--
+    this.manager.lock.release()
     if (!(e instanceof ScrapeError)) {
       throw e
     }

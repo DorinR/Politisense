@@ -6,8 +6,14 @@ const StopAction = require('../../util/queue_manager/stop/GenericStopAction').Ge
 const Throw = require('../../util/queue_manager/error/ScrapeError').ScrapeErrorAction
 
 class LogAction extends QueueAction {
+  constructor (manager) {
+    super()
+    this.manager = manager
+  }
   perform(result) {
-    console.log(`INFO: found result for ${result.params.url}`)
+    if(result) {
+      console.log(`INFO: found result for ${result.id}`)
+    }
     return result
   }
 }
@@ -19,7 +25,7 @@ class BillPDFFetchRunner extends QueueManager {
       .setStartAction(new StartAction(manager))
       .setStopAction(new StopAction(manager))
       .setErrorAction(new Throw(manager))
-      .setLogAction(new LogAction())
+      .setLogAction(new LogAction(manager))
     return manager
   }
 

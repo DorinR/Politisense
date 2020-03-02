@@ -8,11 +8,7 @@ class BillLinkStart extends QueueAction {
     this.manager = manager
   }
 
-  perform () {
-    const first = BillPDFFinderJob.create(
-      this.manager.params.shift(),
-      this.manager.requeueCallback.bind(this.manager)
-    )
+  async perform () {
     this.manager.params.forEach(param => {
       this.manager.queue.enqueue(
         BillPDFFinderJob.create(
@@ -21,7 +17,6 @@ class BillLinkStart extends QueueAction {
         )
       )
     })
-    return first.execute()
   }
 }
 

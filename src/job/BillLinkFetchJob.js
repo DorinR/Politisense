@@ -4,7 +4,7 @@ const FetchAction = Actions.FetchAction
 const Action = Actions.Action
 const TextParserAction = Actions.TextParserAction
 const SelectionAction = Actions.SelectionAction
-const ErrorHandler = Actions.HandleDownloadErrorAction
+const ErrorHandler = Actions.HandleConnectionErrorAction
 
 class SelectFirstAction extends Action {
   constructor (params) {

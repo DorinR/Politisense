@@ -9,6 +9,7 @@ class HandleDownloadErrorAction extends JobAction {
     super()
     this.pdfError = 'InvalidPDF'
     this.parseError = 'ParseException'
+    this.freeError = 'Cannot read property \'free\' of undefined'
     this.callback = callback
     this.create = createFn
     this.params = params
@@ -17,9 +18,9 @@ class HandleDownloadErrorAction extends JobAction {
 
   async perform (e) {
     this.requeueConnectionFailures(e)
-    const err = this.requeueDataFailure(e)
-    if(!this.handled || err) {
-      return err
+    this.requeueDataFailure(e)
+    if(!this.handled) {
+      return e
     }
   }
 
@@ -27,11 +28,13 @@ class HandleDownloadErrorAction extends JobAction {
     const connectionError = HandleConnectionErrorAction.connectionErrorName(e.message)
     if (connectionError) {
       this.handled = true
-      const message = `ERROR: Connection failure ${connectionError}, can re-enqueue job: ${e.url}`
+      const message = `ERROR: Connection failure ${connectionError}, re-enqueueing job: ${e.url}`
+      console.debug(message)
       const error = new ScrapeError(message, this.params.url)
       this.callback([
         this.create(this.params, this.callback)
       ])
+      return error
     }
   }
 
@@ -39,25 +42,16 @@ class HandleDownloadErrorAction extends JobAction {
     if(this.handled) {
       return
     }
-    if (!e) {
-      this.handled = true
-      return new Error('ERROR: unexpected behaviour')
-    }
-    if (!e.message && !e.parserError) {
-      this.handled = true
-      return e
-    }
-    if (e && e.parserError) {
-      e.message += ' ' + e.parserError
-    }
-    if (e.message.includes(this.pdfError) || e.message.includes(this.parseError)) {
+    if (e.message.includes(this.pdfError) || e.message.includes(this.parseError) || e.message.includes(this.freeError)) {
       this.handled = true
       const error = new PDFParseError()
       const name = this.pdfError || (this.parseError || '')
-      error.message = `ERROR: PDF data for: ${this.params.bill} was corrupted: ${name}, from job: ${this.params.url}. Will attempt to re-parse`
+      error.message = `ERROR: PDF data for: ${this.params.id} was corrupted: ${name}, from job: ${this.params.url}. Will attempt to re-parse`
+      console.debug(error.message)
       this.callback([
         this.create(this.params, this.callback)
       ])
+      return error
     }
   }
 }
