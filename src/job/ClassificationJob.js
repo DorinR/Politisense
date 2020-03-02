@@ -12,7 +12,7 @@ class ClassificationJob extends AbstractJob {
     this.params = params
   }
 
-  static create(params, cb) {
+  static create (params, cb) {
     const job = new ClassificationJob(params, cb)
     job
       .addAction(new QueueManagerWrapperAction(BillLinkFetchRunner, params))

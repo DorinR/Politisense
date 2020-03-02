@@ -10,8 +10,9 @@ class LogAction extends QueueAction {
     super()
     this.manager = manager
   }
-  perform(result) {
-    if(result) {
+
+  perform (result) {
+    if (result) {
       console.log(`INFO: found result for ${result.id}`)
     }
     return result
@@ -19,7 +20,7 @@ class LogAction extends QueueAction {
 }
 
 class BillPDFFetchRunner extends QueueManager {
-  static create(params, wait = 5000) {
+  static create (params, wait = 5000) {
     const manager = new BillPDFFetchRunner(params, wait)
     manager
       .setStartAction(new StartAction(manager))
@@ -36,7 +37,7 @@ class BillPDFFetchRunner extends QueueManager {
   }
 
   accumulate (result) {
-    if(result) {
+    if (result) {
       this.result.push(result)
     }
     return result

@@ -1,7 +1,7 @@
 require('module-alias/register')
 const Firestore = require('@firestore').Firestore
 const BillClassification = require('@model').BillClassification
-const Action = require('@action').Action
+const Action = require('../JobAction').AbstractJobAction
 const fs = require('fs')
 const path = require('path')
 
@@ -82,7 +82,7 @@ class BillTagCreationAction extends Action {
 
   loadVocabularies () {
     console.log('INFO: loading vocabularies...')
-    const dir = path.join(__dirname,'vocabularies/')
+    const dir = path.join(__dirname, 'vocabularies/')
     this.throwIfDoesNotExist(dir)
     let filenames = this.getFilesFromDirectory(dir)
     filenames = this.filterByExpectedFormat(filenames)

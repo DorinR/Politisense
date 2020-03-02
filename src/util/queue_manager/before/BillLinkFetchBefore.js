@@ -2,11 +2,11 @@ const QueueActions = require('../actions')
 const QueueAction = QueueActions.QueueAction
 const Firestore = require('@firestore').Firestore
 
-const Parliaments = [36,37,38,39,40,41,42,43]
+const Parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
 Object.freeze(Parliaments)
 
 class BillLinkFetchBeforeAction extends QueueAction {
-  constructor (manager){
+  constructor (manager) {
     super()
     this.manager = manager
     this.bills = this.retrieveBills()
@@ -15,37 +15,37 @@ class BillLinkFetchBeforeAction extends QueueAction {
   retrieveBills () {
     return Promise.all(
       Parliaments.map(parl => {
-      return new Firestore(false)
-        .forParliament(parl)
-        .Bill()
-        .select()
-        .then(snapshot => {
-          const bills = []
-          snapshot.forEach(doc => {
-            bills.push({
-              data: doc.data(),
-              id: doc.id
+        return new Firestore(false)
+          .forParliament(parl)
+          .Bill()
+          .select()
+          .then(snapshot => {
+            const bills = []
+            snapshot.forEach(doc => {
+              bills.push({
+                data: doc.data(),
+                id: doc.id
+              })
+            })
+            return bills
+          })
+          .then(bills => {
+            return bills.filter(bill => {
+              return bill.data.link && bill.data.link !== ''
             })
           })
-          return bills
-        })
-        .then(bills => {
-          return bills.filter(bill => {
-            return bill.data.link && bill.data.link !== ''
-          })
-        })
-        .catch(console.error)
-    })
+          .catch(console.error)
+      })
     )
   }
 
-  async perform() {
+  async perform () {
     await this.createQueryParams()
   }
 
   async createQueryParams () {
     this.bills = await Promise.resolve(this.bills)
-    let params = []
+    const params = []
     this.manager.params.forEach(param => {
       const parliament = this.bills[Parliaments.indexOf(param.parliament)]
       parliament.forEach(bill => {

@@ -8,15 +8,15 @@ class FileOutputAction extends Action {
     this.params = params
   }
 
-  perform(result) {
-    const fp =  path.join(__dirname,`${result.params.id}.json`)
+  perform (result) {
+    const fp = path.join(__dirname, `${result.params.id}.json`)
     const out = JSON.stringify({
       name: result.params.id,
       content: result.data
     })
     return new Promise((resolve, reject) => {
       fs.writeFile(fp, Buffer.from(out), (err) => {
-        if(err) {
+        if (err) {
           reject(err)
         }
         resolve({

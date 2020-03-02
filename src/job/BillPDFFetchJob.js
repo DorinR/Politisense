@@ -4,7 +4,6 @@ const PDFRetrieverAction = Actions.PDFFileRetrieverAction
 const PDFParseAction = Actions.PDFParseAction
 const HandleDownloadErrorAction = Actions.HandleDownloadErrorAction
 
-
 class BillPDFFetchJob extends AbstractJob {
   constructor (params, callback) {
     super(params.url, callback)

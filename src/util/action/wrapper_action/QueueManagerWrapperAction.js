@@ -5,7 +5,7 @@ const Action = require('../JobAction').AbstractJobAction
 class QueueManagerWrapperAction extends Action {
   constructor (QueueManagerType, params) {
     super()
-    if(typeof QueueManagerType !== typeof QueueManager) {
+    if (typeof QueueManagerType !== typeof QueueManager) {
       throw new DecorationError(QueueManagerType)
     }
     this.create = QueueManagerType.create
@@ -13,7 +13,7 @@ class QueueManagerWrapperAction extends Action {
   }
 
   async perform (params) {
-    if(params) {
+    if (params) {
       this.params = params
     }
 

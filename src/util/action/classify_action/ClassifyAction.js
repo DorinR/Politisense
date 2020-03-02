@@ -6,7 +6,7 @@ const path = require('path')
 class ClassificationAction extends Action {
   constructor (fp) {
     super()
-    this.classifierPath = fp ? fp : path.join(__dirname,'classifier.py')
+    this.classifierPath = fp || path.join(__dirname, 'classifier.py')
   }
 
   async perform (billParams) {
@@ -43,7 +43,7 @@ class ClassificationAction extends Action {
           console.log('--------------------------------------------------------------------------------------------------------')
           console.log('INFO: successfully classified data')
           console.log('--------------------------------------------------------------------------------------------------------')
-          const raws = this.readClassificationFile(path.join(__dirname,'classifications.json'))
+          const raws = this.readClassificationFile(path.join(__dirname, 'classifications.json'))
           const models = this.addToModels(raws, params)
           this.deleteTempFiles(paths)
           resolve(models)
@@ -60,7 +60,7 @@ class ClassificationAction extends Action {
 
   addToModels (raws, bills) {
     const classifiedBills = []
-    bills.forEach(({id, parliament}) => {
+    bills.forEach(({ id, parliament }) => {
       classifiedBills.push({
         bill: id,
         parliament: parliament,
@@ -71,7 +71,7 @@ class ClassificationAction extends Action {
   }
 
   deleteTempFiles (files) {
-    fs.unlinkSync(path.join(__dirname,'classifications.json'))
+    fs.unlinkSync(path.join(__dirname, 'classifications.json'))
     files.forEach(path => {
       console.debug(`INFO: deleting temporary file: ${path} on completion`)
       fs.unlinkSync(path)

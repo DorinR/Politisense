@@ -13,13 +13,14 @@ class HandleDownloadErrorAction extends JobAction {
     this.callback = callback
     this.create = createFn
     this.params = params
+    this.error = null
     this.handled = false
   }
 
   async perform (e) {
     this.requeueConnectionFailures(e)
     this.requeueDataFailure(e)
-    if(!this.handled) {
+    if (!this.handled) {
       return e
     }
   }
@@ -28,30 +29,30 @@ class HandleDownloadErrorAction extends JobAction {
     const connectionError = HandleConnectionErrorAction.connectionErrorName(e.message)
     if (connectionError) {
       this.handled = true
-      const message = `ERROR: Connection failure ${connectionError}, re-enqueueing job: ${e.url}`
+      const message = `ERROR: Connection failure ${connectionError}, re-enqueueing job: ${this.params.url}`
       console.debug(message)
-      const error = new ScrapeError(message, this.params.url)
+      this.error = new ScrapeError(message, this.params.url)
       this.callback([
         this.create(this.params, this.callback)
       ])
-      return error
+      return this.error
     }
   }
 
   requeueDataFailure (e) {
-    if(this.handled) {
+    if (this.handled) {
       return
     }
     if (e.message.includes(this.pdfError) || e.message.includes(this.parseError) || e.message.includes(this.freeError)) {
       this.handled = true
-      const error = new PDFParseError()
+      this.error = new PDFParseError()
       const name = this.pdfError || (this.parseError || '')
-      error.message = `ERROR: PDF data for: ${this.params.id} was corrupted: ${name}, from job: ${this.params.url}. Will attempt to re-parse`
+      this.error.message = `ERROR: PDF data for: ${this.params.id} was corrupted: ${name}, from job: ${this.params.url}. Will attempt to re-parse`
       console.debug(error.message)
       this.callback([
         this.create(this.params, this.callback)
       ])
-      return error
+      return this.error
     }
   }
 }

@@ -1,3 +1,3 @@
 module.exports = {
-  BillLinkFetch: require('./BillLinkFetchBefore').BillLinkFetchBeforeAction,
+  BillLinkFetch: require('./BillLinkFetchBefore').BillLinkFetchBeforeAction
 }

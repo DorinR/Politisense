@@ -40,11 +40,7 @@ describe('PDFParseAction.js', () => {
   it('PDFParseAction::perform() returns Object on success', async (done) => {
     const didGetContent = await underTest.perform(new Uint8Array())
       .then((res) => {
-        Assert.equal(typeof res, typeof {})
-        Assert.notEqual(res.content, null)
-        Assert.notEqual(res.name, null)
-        Assert.equal(typeof res.content, typeof '')
-        Assert.equal(res.name, billId)
+        Assert.equal(typeof res, typeof '')
         return true
       })
       .catch((e) => {
