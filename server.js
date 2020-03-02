@@ -31,7 +31,7 @@ app.use(
   require('./backend/routes/api/financialRecords')
 )
 
-// deployment configuration
+// deployment configuration.
 const PORT = process.env.PORT || 5000
 
 if (process.env.NODE_ENV == 'production') {
