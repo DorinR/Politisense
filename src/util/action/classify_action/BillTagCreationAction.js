@@ -1,15 +1,20 @@
-const Firestore = require('../../../firebase/Firestore').Firestore
-const BillClassification = require('../../../firebase/model/BillClassification').BillClassification
+require('module-alias/register')
+const Firestore = require('@firestore').Firestore
+const BillClassification = require('@model').BillClassification
+const Action = require('@action').Action
 const fs = require('fs')
+const path = require('path')
 
-class BillTagRunner {
-  constructor (termThreshold = 0.1, tagThreshold = 1.25, clearCurrentTags = false) {
+class BillTagCreationAction extends Action {
+  constructor (parliament, termThreshold = 0.1, tagThreshold = 1.25, clearCurrentTags = false) {
+    super()
     this.termThreshold = termThreshold
     this.tagThreshold = tagThreshold
     this.clear = clearCurrentTags
+    this.parliament = parliament
   }
 
-  async createTags () {
+  async perform () {
     if (this.clear) {
       await this.clearTagCollection()
     }
@@ -22,7 +27,8 @@ class BillTagRunner {
   }
 
   clearTagCollection () {
-    return new Firestore()
+    return new Firestore(false)
+      .forParliament(this.parliament)
       .BillClassification()
       .delete()
       .then(res => {
@@ -31,7 +37,9 @@ class BillTagRunner {
   }
 
   loadRawClassifications () {
-    return new Firestore().TfIdfClassification()
+    return new Firestore(false)
+      .forParliament(this.parliament)
+      .TfIdfClassification()
       .select()
       .then(raws => {
         const classifications = []
@@ -43,7 +51,9 @@ class BillTagRunner {
           })
         })
         console.log(`INFO: successfully retrieved ${classifications.length} raw classifications`)
-        return classifications
+        return classifications.filter(clss => {
+          return clss.raw && clss.bill
+        })
       })
       .catch(console.error)
   }
@@ -72,7 +82,7 @@ class BillTagRunner {
 
   loadVocabularies () {
     console.log('INFO: loading vocabularies...')
-    const dir = './vocabularies/'
+    const dir = path.join(__dirname,'vocabularies/')
     this.throwIfDoesNotExist(dir)
     let filenames = this.getFilesFromDirectory(dir)
     filenames = this.filterByExpectedFormat(filenames)
@@ -148,7 +158,8 @@ class BillTagRunner {
   insertTagsIntoDatabase (tags) {
     return Promise.all(
       tags.map(tag => {
-        new Firestore()
+        new Firestore(false)
+          .forParliament(this.parliament)
           .BillClassification()
           .insert(tag)
           .then(() => {
@@ -160,4 +171,4 @@ class BillTagRunner {
   }
 }
 
-module.exports.BillTagRunner = BillTagRunner
+module.exports.BillTagCreationAction = BillTagCreationAction

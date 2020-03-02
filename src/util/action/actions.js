@@ -15,5 +15,6 @@ module.exports = {
   Errors: require('./error/errors'),
   FormatAction : require('./FormatAction').FormatAction,
   ClassifyAction : require('./classify_action/ClassifyAction').ClassificationAction,
-  FileOutputAction : require('./classify_action/FileOutputAction').FileOutputAction
+  FileOutputAction : require('./classify_action/FileOutputAction').FileOutputAction,
+  BillTagCreationAction: require('./classify_action/BillTagCreationAction').BillTagCreationAction
 }
