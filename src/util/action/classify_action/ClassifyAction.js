@@ -22,26 +22,15 @@ class ClassificationAction extends Action {
     let execString = 'python3.7 ' + this.classifierPath
     const paths = []
     const params = []
-    billParams.forEach((billParam, i) => {
-      const path = this.createTempFile(i, billParam)
-      paths.push(path)
+    billParams.forEach((billParam) => {
+      paths.push(billParam.path)
       params.push({
-        id: billParam.params.id,
-        parliament: billParam.params.parliament
+        id: billParam.id,
+        parliament: billParam.parliament
       })
-      execString += ' ' + path
+      execString += ' ' + billParam.path
     })
     return { execString, paths, params }
-  }
-
-  createTempFile (index, content) {
-    const fp =  path.join(__dirname,`${index}.json`)
-    const out = JSON.stringify({
-      name: content.params.id,
-      content: content.data
-    })
-    fs.writeFileSync(fp, out)
-    return fp
   }
 
   runExternalClassifier (execString, paths, params) {

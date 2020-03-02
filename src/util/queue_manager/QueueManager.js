@@ -1,3 +1,4 @@
+const Mutex = require('async-sema').Sema
 const Queue = require('@queue').Queue
 const Action = require('@manager').QueueAction
 const DecorationError = require('@action').Errors.ActionDecorationError
@@ -23,6 +24,7 @@ class QueueManager {
     this.queue = new Queue()
     this.waitPeriod = waitPeriod
     this.result = []
+    this.lock = new Mutex(1)
   }
 
   start () {
@@ -121,7 +123,9 @@ class QueueManager {
       try {
         job = this.queue.dequeue()
         this.activeJobs.push(job)
+        await this.lock.acquire()
         this.activeJobCount++
+        this.lock.release()
       } catch (e) {
         await this.waitForActiveJobs(e)
         continue
@@ -131,8 +135,10 @@ class QueueManager {
         .then(this.log)
         .catch(this.error)
         .finally(async () => {
+          await this.lock.acquire()
           job.done = true
           this.activeJobCount--
+          this.lock.release()
           await this.waitForActiveJobs()
         })
     }
