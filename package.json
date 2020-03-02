@@ -56,8 +56,8 @@
     "client": "npm start --prefix client",
     "test": "jest test/* -- --coverage",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "client-install": "npm install --prefix client",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "heroku-start": "npm install && npm run start",
+    "heroku-postbuild": "cd client && npm install && npm run build && npm start"
   },
   "repository": {
     "type": "git",
