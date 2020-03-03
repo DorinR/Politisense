@@ -1,24 +1,11 @@
 const Mutex = require('async-sema').Sema
 const Queue = require('@queue').Queue
-const Action = require('@manager').QueueAction
+const Action = require('./QueueAction').QueueAction
 const DecorationError = require('@action').Errors.ActionDecorationError
 
 class QueueManager {
   constructor (waitPeriod = 1000) {
     this.error = console.error
-    this.log = (result) => {
-      let message
-      if (result instanceof Object) {
-        message = `INFO: job finished, found ${result.data ? result.data.length : 0} potential results`
-      } else if (result) {
-        message = `INFO: job finished, found ${result ? result.length : 0} potential results`
-      }
-
-      if (message) {
-        console.log(message)
-      }
-      return result
-    }
     this.activeJobs = []
     this.activeJobCount = 0
     this.queue = new Queue()
@@ -41,6 +28,10 @@ class QueueManager {
 
   after () {
     console.log('After action not specified')
+  }
+
+  log (result) {
+    return result
   }
 
   async execute () {
@@ -157,8 +148,10 @@ class QueueManager {
   pruneCompletedJobs () {
     let currentIndex = 0
     while (currentIndex < this.activeJobs.length) {
-      if (this.activeJobs[currentIndex].done === true) {
+      if (this.activeJobs[currentIndex].done === true && currentIndex !== 0) {
         this.activeJobs.splice(currentIndex)
+      } else if (this.activeJobs[currentIndex].done === true && currentIndex === 0) {
+        this.activeJobs.shift()
       } else {
         currentIndex++
       }

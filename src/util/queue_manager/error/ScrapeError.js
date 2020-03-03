@@ -1,4 +1,4 @@
-const Action = require('@manager').QueueAction
+const Action = require('../QueueAction').QueueAction
 const ScrapeError = require('../../action/error/errors').ScrapeError
 
 class ScrapeErrorAction extends Action {

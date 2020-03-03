@@ -1,5 +1,4 @@
-const QueueActions = require('../actions')
-const QueueAction = QueueActions.QueueAction
+const QueueAction = require('../QueueAction').QueueAction
 const BillPDFFinderJob = require('../../../job/BillLinkFetchJob').BillLinkFetchJob
 
 class BillLinkStart extends QueueAction {

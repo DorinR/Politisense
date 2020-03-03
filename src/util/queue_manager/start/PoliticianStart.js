@@ -1,14 +1,9 @@
-const QueueActions = require('../actions')
-const QueueAction = QueueActions.QueueAction
+const QueueAction = require('../QueueAction').QueueAction
 const PoliticianFetchJob = require('../../../job/PoliticianFetchJob').PoliticianFetchJob
 
 class PoliticianStart extends QueueAction {
   constructor (manager) {
     super()
-    this.first = PoliticianFetchJob.create(
-      manager.params.shift(),
-      manager.requeueCallback.bind(manager)
-    )
     manager.params.forEach(param => {
       manager.queue.enqueue(
         PoliticianFetchJob.create(
@@ -19,8 +14,8 @@ class PoliticianStart extends QueueAction {
     })
   }
 
-  perform () {
-    return this.first.execute()
+  async perform () {
+    return null
   }
 }
 

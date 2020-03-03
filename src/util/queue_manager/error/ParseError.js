@@ -1,4 +1,4 @@
-const Action = require('@manager').QueueAction
+const Action = require('../QueueAction').QueueAction
 const XMLParseError = require('../../parser/parsers').DataNotFoundError
 
 class ParseErrorAction extends Action {

@@ -1,4 +1,4 @@
-const Action = require('@manager').QueueAction
+const Action = require('../QueueAction').QueueAction
 
 class ThrowAction extends Action {
   async perform (e) {

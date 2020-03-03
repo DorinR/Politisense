@@ -1,4 +1,4 @@
-const QueueAction = require('@manager').QueueAction
+const QueueAction = require('../QueueAction').QueueAction
 const VoteParticipantFetchJob = require('@jobs').VoteParticipantFetchJob
 
 class VoteParticipantStart extends QueueAction {

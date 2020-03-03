@@ -1,5 +1,4 @@
-const QueueActions = require('../actions')
-const QueueAction = QueueActions.QueueAction
+const QueueAction = require('../QueueAction').QueueAction
 const Job = require('../../Job').AbstractJob
 const RoleFetchJob = require('../../../job/RoleFetchJob').RoleFetchJob
 const Firestore = require('@firestore').Firestore

@@ -1,5 +1,4 @@
-const QueueActions = require('../actions')
-const QueueAction = QueueActions.QueueAction
+const QueueAction = require('../QueueAction').QueueAction
 const Actions = require('../../action/actions')
 const Job = require('../../Job').AbstractJob
 
