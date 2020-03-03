@@ -1,6 +1,5 @@
-const Graphs = require('./UndirectedGraph')
-const UndirectedGraph = Graphs.UndirectedGraph
-const Vertex = Graphs.Vertex
+const UndirectedGraph = require('./UndirectedGraph').UndirectedGraph
+const Vertex = require('./Vertex').Vertex
 
 class DirectedGraph extends UndirectedGraph {
 
@@ -13,6 +12,5 @@ class DirectedGraph extends UndirectedGraph {
 }
 
 module.exports = {
-  DirectedGraph: DirectedGraph,
-  Vertex: Vertex
+  DirectedGraph: DirectedGraph
 }

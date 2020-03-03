@@ -1,9 +1,4 @@
-class Vertex {
-  constructor (datum) {
-    this.datum = datum
-  }
-}
-
+const Vertex = require('./Vertex').Vertex
 //undirected graph implementation
 class UndirectedGraph {
   constructor() {
@@ -23,9 +18,16 @@ class UndirectedGraph {
     }
     this.adjacencyList.get(v).push(...[v, w])
   }
+
+  forEach(fn) {
+    this.adjacencyList.forEach(fn)
+  }
+
+  get(v) {
+    return this.adjacencyList.get(v)
+  }
 }
 
 module.exports = {
-  UndirectedGraph: UndirectedGraph,
-  Vertex: Vertex
+  UndirectedGraph: UndirectedGraph
 }

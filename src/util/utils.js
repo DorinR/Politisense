@@ -4,5 +4,6 @@ module.exports = {
   Parsers: require('./parser/parsers'),
   QueueManager: require('./queue_manager/actions'),
   Job: require('./Job').AbstractJob,
-  Condition: require('./Condition').Condition
+  Condition: require('./Condition').Condition,
+  Graphs: require('./graph/graphs')
 }

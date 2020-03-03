@@ -155,7 +155,7 @@ class Reference {
 class DataReference {
   constructor (suffix, data = []) {
     this.suffix = suffix
-    this.data = data
+    this.data = data ? data : []
   }
 
   id () {
@@ -163,7 +163,7 @@ class DataReference {
   }
 
   forEach(fn) {
-    this.data.forEach(fn)
+    return this.data.forEach(fn)
   }
 
   map(fn) {
@@ -220,7 +220,7 @@ function cartesianProduct (left, key, leftName, right, refKey, rightName) {
     const leftDoc = left[leftKey]
     const leftKeys = Object.keys(leftDoc)
     if (!leftKeys.includes(key) && key !== `_id_${leftName}`) {
-      throw new Error(
+      console.warn(
         `Current collection: ${this.reference.id} contains items without key: ${key} `
       )
     }
@@ -231,7 +231,7 @@ function cartesianProduct (left, key, leftName, right, refKey, rightName) {
         !rightKeys.includes(refKey) &&
         refKey !== `_id_${rightName}`
       ) {
-        throw new Error(
+        console.warn(
           `Current collection: ${rightName} contains items without key: ${refKey} `
         )
       }
@@ -255,7 +255,7 @@ function cartesianProduct (left, key, leftName, right, refKey, rightName) {
       }
     })
   })
-  return new DataReference(join, `_${leftName}`)
+  return new DataReference(`_${leftName}`, join)
 }
 
 module.exports = {
