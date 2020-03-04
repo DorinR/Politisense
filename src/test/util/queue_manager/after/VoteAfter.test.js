@@ -68,7 +68,7 @@ describe('VoteAfterAction.js', () => {
     done()
   })
 
-  test('VoteAfterAction.js::attachBillsToVotes ', async (done) => {
+  test('VoteAfterAction.js::attachBillsToVotes modifies links to foreign key them with votes', async (done) => {
     let num = 0
     underTest.bills = new Array(8)
       .fill({}, 0, 8)
