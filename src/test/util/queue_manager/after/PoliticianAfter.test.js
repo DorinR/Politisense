@@ -14,7 +14,7 @@ describe('PoliticianAfterAction.js', () => {
 
   test('PoliticianAfterAction.js::stripHyphensFromRecord replaces bad dashes from riding with single dash', async (done) => {
     const record = {
-      riding:'some--riding'
+      riding: 'some--riding'
     }
     undertest.stripHyphensFromRecord(record)
     Assert.equal(record.riding, 'some-riding')
@@ -56,7 +56,7 @@ describe('PoliticianAfterAction.js', () => {
 
   test('PoliticianAfterAction.js::findUrl locates the politician image url from an array of names', async (done) => {
     const politician = {
-      name: 'ben wa',
+      name: 'ben wa'
     }
     const links = [
       '/not-that-ben-guy',
@@ -141,11 +141,9 @@ describe('PoliticianAfterAction.js', () => {
     await undertest.perform()
 
     Assert.equal(order.length, 4)
-    for(let i = 0; i < desired.length; i++)
-    {
+    for (let i = 0; i < desired.length; i++) {
       Assert.equal(desired[i], order[i])
     }
     done()
   })
-
 })

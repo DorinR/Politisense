@@ -163,7 +163,7 @@ describe('QueueManager.js', () => {
   test('QueueManager.js::log returns result when not specified', async (done) => {
     const req = 'ping'
     const resp = undertest.log(req)
-    Assert.equal(resp,req)
+    Assert.equal(resp, req)
     done()
   })
 
@@ -253,7 +253,7 @@ describe('QueueManager.js', () => {
 
   test('QueueManager.js::before prints to log when no action is set', async (done) => {
     let called = false
-    console.log = () => {called = true}
+    console.log = () => { called = true }
     undertest.before()
     console.log = consoleLog
     Assert(called)
@@ -262,7 +262,7 @@ describe('QueueManager.js', () => {
 
   test('QueueManager.js::after prints to log when no action is set', async (done) => {
     let called = false
-    console.log = () => {called = true}
+    console.log = () => { called = true }
     undertest.after()
     console.log = consoleLog
     Assert(called)
@@ -301,7 +301,7 @@ describe('QueueManager.js', () => {
 
   test('QueueManager.js::waitForActiveJobs prunes completed jobs', async (done) => {
     let called = false
-    undertest.pruneCompletedJobs = () => {called = true}
+    undertest.pruneCompletedJobs = () => { called = true }
     await undertest.waitForActiveJobs()
     Assert(called)
     done()
@@ -309,7 +309,7 @@ describe('QueueManager.js', () => {
 
   test('QueueManager.js::waitForActiveJobs waits to yield cycles', async (done) => {
     let called = false
-    QueueManager.wait = () => {called = true}
+    QueueManager.wait = () => { called = true }
     await undertest.waitForActiveJobs()
     Assert(called)
     done()
@@ -318,7 +318,7 @@ describe('QueueManager.js', () => {
   test('QueueManager.js::waitForActiveJobs writes a message to log', async (done) => {
     let called = false
     const debug = console.debug
-    console.debug = () => {called = true}
+    console.debug = () => { called = true }
     await undertest.waitForActiveJobs(new Error())
     Assert(called)
     called = false
@@ -334,11 +334,11 @@ describe('QueueManager.js', () => {
       .fill({}, 0, 10)
       .map(obj => {
         const j = new Job()
-        j.execute = async () => {executedCount++}
+        j.execute = async () => { executedCount++ }
         return j
       })
 
-    undertest.stop = () => {return executedCount === jobs.length}
+    undertest.stop = () => { return executedCount === jobs.length }
 
     undertest.requeueCallback(jobs)
     Assert.equal(undertest.queue.size(), jobs.length)
@@ -350,8 +350,8 @@ describe('QueueManager.js', () => {
 
   test('QueueManager.js::run waits on empty queue', async (done) => {
     let called = false
-    undertest.waitForActiveJobs = async () => {called = true}
-    undertest.stop = () => {return called}
+    undertest.waitForActiveJobs = async () => { called = true }
+    undertest.stop = () => { return called }
 
     await undertest.run()
 
@@ -362,10 +362,10 @@ describe('QueueManager.js', () => {
   test('QueueManager.js::execute runs before, start, run, after in order', async (done) => {
     const order = []
     const desired = ['before', 'start', 'run', 'after']
-    undertest.before = async () => {order.push(desired[0])}
-    undertest.start = async () => {order.push(desired[1])}
-    undertest.run = async () => {order.push(desired[2])}
-    undertest.after = async () => {order.push(desired[3])}
+    undertest.before = async () => { order.push(desired[0]) }
+    undertest.start = async () => { order.push(desired[1]) }
+    undertest.run = async () => { order.push(desired[2]) }
+    undertest.after = async () => { order.push(desired[3]) }
 
     await undertest.execute()
     for (let i = 0; i < desired.length; i++) {
@@ -378,13 +378,13 @@ describe('QueueManager.js', () => {
   test('QueueManager.js::execute can add results to queue from start', async (done) => {
     const order = []
     const desired = ['before', 'start', 'run', 'after']
-    undertest.before = async () => {order.push(desired[0])}
+    undertest.before = async () => { order.push(desired[0]) }
     undertest.start = async () => {
       order.push(desired[1])
       return ['res1', 'res2']
     }
-    undertest.run = async () => {order.push(desired[2])}
-    undertest.after = async () => {order.push(desired[3])}
+    undertest.run = async () => { order.push(desired[2]) }
+    undertest.after = async () => { order.push(desired[3]) }
 
     await undertest.execute()
     for (let i = 0; i < desired.length; i++) {

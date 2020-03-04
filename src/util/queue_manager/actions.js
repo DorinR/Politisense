@@ -8,4 +8,3 @@ module.exports = {
   Error: require('./error/errors'),
   Log: require('./log/log')
 }
-

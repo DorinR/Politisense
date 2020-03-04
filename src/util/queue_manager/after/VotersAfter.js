@@ -8,11 +8,10 @@ class VoteParticipantAfterAction extends Action {
   constructor (manager) {
     super()
     this.manager = manager
-    this.politicians = this.retrievePoliticians()
+    this.politicians = this.retrievePoliticians(new Firestore(false))
   }
 
-  retrievePoliticians () {
-    const db = new Firestore(false)
+  retrievePoliticians (db) {
     return Parliaments.map(parl => {
       return db.forParliament(parl)
         .Politician()
@@ -43,7 +42,7 @@ class VoteParticipantAfterAction extends Action {
       }
       const politicians = this.politicians[Parliaments.indexOf(result.params.parliament)]
       for (const voter of result.data[0]) {
-        const politician = this.findPolitician(voter.member, politicians)
+        const politician = VoteParticipantAfterAction.findPolitician(voter.member, politicians)
         if (politician) {
           voter.member = politician.id
         } else {
@@ -53,7 +52,7 @@ class VoteParticipantAfterAction extends Action {
     }
   }
 
-  findPolitician (member, politicians) {
+  static findPolitician (member, politicians) {
     return politicians.find(politician => {
       return politician.data.name === member
     })

@@ -41,9 +41,9 @@ const provinceKeys = [
   'YT'
 ]
 class FormatAction extends Actions.Action {
-  perform(response) {
-    const {selected, other} = response
-    return selected.map(url =>{
+  perform (response) {
+    const { selected, other } = response
+    return selected.map(url => {
       return 'https://www.ourcommons.ca' + url
     })
   }
@@ -105,7 +105,7 @@ class PoliticianScraper extends QueueManager {
       .execute()
   }
 
-  attachToMps(links) {
+  attachToMps (links) {
     this.result.forEach(resp => {
       resp.data.forEach(datum => {
         datum.forEach(entry => {
@@ -116,7 +116,7 @@ class PoliticianScraper extends QueueManager {
     })
   }
 
-  findUrl(politician, links) {
+  findUrl (politician, links) {
     const names = politician.name.split(' ')
     return links.find(elem => {
       return names.every(name => {

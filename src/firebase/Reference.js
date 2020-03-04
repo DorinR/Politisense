@@ -155,22 +155,22 @@ class Reference {
 class DataReference {
   constructor (suffix, data = []) {
     this.suffix = suffix
-    this.data = data ? data : []
+    this.data = data || []
   }
 
   id () {
     return this.suffix
   }
 
-  forEach(fn) {
+  forEach (fn) {
     return this.data.forEach(fn)
   }
 
-  map(fn) {
+  map (fn) {
     return this.data.map(fn)
   }
 
-  async innerJoin(key, reference, refKey) {
+  async innerJoin (key, reference, refKey) {
     const left = format(this.data, this.suffix)
     const right = {}
 
@@ -199,7 +199,7 @@ function format (data, suffix) {
   })
 }
 
-function hasIDKey(datum, suffix) {
+function hasIDKey (datum, suffix) {
   return Object.keys(datum).some(key => {
     return key === `_id${suffix}`
   })
@@ -238,14 +238,14 @@ function cartesianProduct (left, key, leftName, right, refKey, rightName) {
       if (leftDoc[key] === rightDoc[refKey]) {
         const joined = {}
         leftKeys.forEach(k => {
-          if(rightKeys.includes(k)) {
+          if (rightKeys.includes(k)) {
             joined[k] = leftDoc[k]
           } else {
             joined[`${k}_${leftName}`] = leftDoc[k]
           }
         })
         rightKeys.forEach(k => {
-          if(leftKeys.includes(k)) {
+          if (leftKeys.includes(k)) {
             joined[k] = rightDoc[k]
           } else {
             joined[`${k}_${rightName}`] = rightDoc[k]

@@ -1,6 +1,6 @@
 /* eslint-env jest */
 const After = require('../../../../util/queue_manager/actions').After
-const AfterAction = After.VoteAfterAction
+const AfterAction = After.VoteParticipant
 const Actions = require('../../../../util/action/actions')
 
 const chai = require('chai')
@@ -8,40 +8,16 @@ const Assert = chai.assert
 
 describe('VoteAfterAction.js', () => {
   let undertest
-  const retrieve = AfterAction.prototype.retrieveBills
+  const retrieve = AfterAction.prototype.retrievePoliticians
   beforeEach(() => {
-    AfterAction.prototype.retrieveBills = () => {
-      console.log('mocking out firebase call')
+    AfterAction.prototype.retrievePoliticians = () => {
+      console.log('stubbing out firebase call')
     }
     undertest = new AfterAction()
   })
 
-  test('VoteAfterAction.js::findBill locates bill with correct year and same billID as vote', async (done) => {
-    const vote = {
-      year: 2000,
-      billNumber: 42
-    }
-    let id = 40
-    let year = 1998
-    const bills = new Array(10)
-      .fill({}, 0, 10)
-      .map(i => {
-        return {
-          data: {
-            number: id++,
-            dateVoted: `${year++}`
-          }
-        }
-      })
-
-    const found = AfterAction.findBill(vote, bills)
-    Assert.equal(found.data.number, vote.billNumber)
-    Assert(found.data.dateVoted.includes(vote.year) || found.data.dateVoted.includes(vote.year - 1))
-    done()
-  })
-
-  test('VoteAfterAction.js::retrieveBills calls Firestore with correct parliament', async (done) => {
-    const desired = [43, 'bill', 'select']
+  test('VoterAfterAction.js::retrievePoliticians calls Firestore with correct parliament', async (done) => {
+    const desired = [43, 'politician', 'select']
     const order = []
 
     const mockDB = {}
@@ -49,7 +25,7 @@ describe('VoteAfterAction.js', () => {
       order.push(desired[0])
       return mockDB
     }
-    mockDB.Bill = () => {
+    mockDB.Politician = () => {
       order.push(desired[1])
       return mockDB
     }
@@ -69,43 +45,52 @@ describe('VoteAfterAction.js', () => {
     done()
   })
 
-  test('VoteAfterAction.js::attachBillsToVotes ', async (done) => {
+  test('VoterAfterAction.js::find locates politican with same name as voter', async (done) => {
+    const member = 'ben wa 40'
+    let id = 40
+    const politicians = new Array(10)
+      .fill({}, 0, 10)
+      .map(i => {
+        return {
+          data: {
+            name: 'ben wa ' + id++
+          }
+        }
+      })
+
+    const found = AfterAction.findPolitician(member, politicians)
+    Assert.equal(found.data.name, member)
+    done()
+  })
+
+  test('VoterAfterAction.js:: replace name replaces voter name with record id', async (done) => {
     let num = 0
-    undertest.bills = new Array(8)
+    undertest.politicians = new Array(8)
       .fill({}, 0, 8)
       .map(i => {
-        let id = 40
-        let year = 1998
         return new Array(10)
           .fill({}, 0, 10)
           .map(i => {
             return {
               data: {
-                number: id++,
-                dateVoted: `${year++}`
+                name: 'ben wa ' + num
               },
               id: `${num++}`
             }
           })
       })
-
-    let billNumber = 40
-    let year = 1998
+    num = 70
     undertest.manager = {
       result: [{
         params: {
-          params: {
-            parlSession: 153
-          }
+          parliament: 43
         },
 
         data: [new Array(10)
           .fill({}, 0, 10)
           .map(i => {
             return {
-              billNumber: billNumber++,
-              year: year++,
-              bill: ''
+              member: `ben wa ${num++}`
             }
           })
         ]
@@ -116,8 +101,8 @@ describe('VoteAfterAction.js', () => {
 
     undertest.manager.result.forEach(datum => {
       datum.data[0].forEach((record, i) => {
-        const bill = undertest.bills[7][i]
-        Assert.equal(record.bill, bill.id)
+        const politician = undertest.politicians[7][i]
+        Assert.equal(record.member, politician.data.name)
       })
     })
     done()

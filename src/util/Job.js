@@ -33,7 +33,7 @@ class Job {
     return this
   }
 
-  static check(action) {
+  static check (action) {
     if (!(action instanceof Action)) {
       throw new DecorationError(action)
     }

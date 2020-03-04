@@ -1,8 +1,8 @@
-function validate(type, category, parliament) {
+function validate (type, category, parliament) {
   return !type || !category || !parliament || parliament < 36 || parliament > 43
 }
 
-function error(res, message, status = 412) {
+function error (res, message, status = 412) {
   res
     .status(status)
     .type('json')
@@ -13,7 +13,7 @@ function error(res, message, status = 412) {
     })
 }
 
-function success(res, data, message) {
+function success (res, data, message) {
   res
     .status(200)
     .type('json')
@@ -24,7 +24,7 @@ function success(res, data, message) {
     })
 }
 
-function records(reference) {
+function records (reference) {
   return new Promise((resolve, reject) => {
     reference
       .select()

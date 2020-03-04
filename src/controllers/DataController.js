@@ -14,12 +14,12 @@ const IndexDirector = {
   Politicians: {
     records: politicianRecords,
     roles: politicianRoles,
-    financials: politicianFinancials,
+    financials: politicianFinancials
   },
 
   Votes: {
     records: voteRecords,
-    voters: voters,
+    voters: voters
   },
 
   Ridings: {
@@ -32,7 +32,7 @@ exports.index = (req, res) => {
   const type = req.params.type
   const category = req.params.category
   const parliament = req.params.parliament
-  if(Utils.validate(type, category, parliament)) {
+  if (Utils.validate(type, category, parliament)) {
     error(res, 'No parameters passed to data API')
     return
   }
@@ -59,7 +59,7 @@ async function rawClassifications (req, res) {
       link: datum.link_bill,
       dateVoted: datum.dateVoted_bill,
       sponsorName: datum.sponsorName_bill,
-      raw: datum.raw_raw,
+      raw: datum.raw_raw
     }
   })
   Utils.success(res, data, 'Bill Data with Raw TF-IDF Classifications')
@@ -80,7 +80,7 @@ async function derivedClassifications (req, res) {
       link: datum.link_bill,
       dateVoted: datum.dateVoted_bill,
       sponsorName: datum.sponsorName_bill,
-      category: datum.category_tag,
+      category: datum.category_tag
     }
   })
   Utils.success(res, data, 'Bill Data with Derived Classifications')
@@ -120,7 +120,7 @@ async function politicianRoles (req, res) {
       imageUrl: datum.imageUrl_politician,
       group: datum.group_role,
       title: datum.title_role,
-      type: datum.type_role,
+      type: datum.type_role
     }
   })
   Utils.success(res, data, 'Politician Data with Roles')
@@ -207,11 +207,11 @@ const UpdateDirector = {
     records: 'politicians',
     roles: 'roles',
     ministers: 'ministers',
-    financials: 'finances',
+    financials: 'finances'
   },
 
   Parties: {
-    records: 'parties',
+    records: 'parties'
   },
 
   Root: {
@@ -220,7 +220,7 @@ const UpdateDirector = {
 
   Votes: {
     records: 'vote_records',
-    voters: 'voters',
+    voters: 'voters'
   },
 
   Ridings: {
@@ -233,7 +233,7 @@ exports.update = (req, res) => {
   const type = req.params.type
   const category = req.params.category
   const parliament = req.params.parliament
-  if(Utils.validate(type, category, parliament)) {
+  if (Utils.validate(type, category, parliament)) {
     error(res, 'No parameters passed to data API for updating')
     return
   }
@@ -244,15 +244,15 @@ exports.update = (req, res) => {
     Utils.error(res, 'Invalid Parameters passed to data API for updating')
     return
   }
-  const {graph, root} = createUpdateGraph(req, res)
+  const { graph, root } = createUpdateGraph(req, res)
   const dependencies = graph
     .get(root)
     .map(v => {
       return v.tag
-  })
-  Utils.success(res,{
+    })
+  Utils.success(res, {
     dependencies: dependencies
-  } ,'stub')
+  }, 'stub')
 }
 
 function createUpdateGraph (req, res) {
@@ -276,7 +276,7 @@ function createUpdateGraph (req, res) {
     leaf: new Vertex('leaf')
   }
 
-  if(!Object.keys(vertices).includes(req.params.root)) {
+  if (!Object.keys(vertices).includes(req.params.root)) {
     throw new Error('Invalid root specified for update graph')
   }
 
@@ -285,24 +285,24 @@ function createUpdateGraph (req, res) {
   })
 
   graph.forEach((adj, v) => {
-    if(v.tag === 'root') {
+    if (v.tag === 'root') {
       graph.addEdge(v, vertices.politicians)
       graph.addEdge(v, vertices.bills)
-    } else if(v.tag === 'bills') {
+    } else if (v.tag === 'bills') {
       graph.addEdge(v, vertices.raw)
       graph.addEdge(v, vertices.vote_records)
-    } else if(v.tag === 'raw') {
+    } else if (v.tag === 'raw') {
       graph.addEdge(v, vertices.classifications)
-    } else if(v.tag === 'politicians'){
+    } else if (v.tag === 'politicians') {
       graph.addEdge(v, vertices.roles)
       graph.addEdge(v, vertices.finances)
       graph.addEdge(v, vertices.voters)
       graph.addEdge(v, vertices.parties)
-    }else if(v.tag === 'vote_records'){
+    } else if (v.tag === 'vote_records') {
       graph.addEdge(v, vertices.voters)
-    }else if(v.tag === 'roles'){
+    } else if (v.tag === 'roles') {
       graph.addEdge(v, vertices.ministers)
-    } else if(v.tag !== 'leaf'){
+    } else if (v.tag !== 'leaf') {
       graph.addEdge(v, vertices.leaf)
     }
   })
