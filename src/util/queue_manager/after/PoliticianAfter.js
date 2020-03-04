@@ -20,13 +20,15 @@ class PoliticianAfterAction extends QueueAction {
 
   async perform () {
     console.log('INFO: adding image URLs to Politician Records')
-    const imageLinks = await this.fetchImageLinks()
+    const imageLinks = await PoliticianAfterAction
+      .createFetchJob()
+      .execute()
     this.attachToMps(imageLinks)
     console.log('INFO: stripping away unnecessary hyphens from riding names')
     this.stripHyphens()
   }
 
-  fetchImageLinks () {
+  static createFetchJob () {
     return new Job()
       .addAction(new Actions.FetchAction({
         url: 'https://www.ourcommons.ca/Members/en/search',
@@ -39,7 +41,6 @@ class PoliticianAfterAction extends QueueAction {
       }))
       .addAction(new Actions.SelectionAction('/Content/Parliamentarians/Images/OfficialMPPhotos/'))
       .addAction(new FormatAction())
-      .execute()
   }
 
   attachToMps (links) {
