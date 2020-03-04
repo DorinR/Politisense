@@ -3,8 +3,8 @@ const Action = Actions.Action
 const DecorationError = Actions.Errors.ActionDecorationError
 
 class Job {
-  constructor (url, callback) {
-    this.url = url
+  constructor (param, callback) {
+    this.url = param && param.url ? param.url : ''
     this.actions = []
     this.registry = []
     this.handleErrors = console.error

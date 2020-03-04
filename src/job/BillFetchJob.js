@@ -28,7 +28,7 @@ class BillFetchJob extends Job {
   }
 
   constructor (params, callback) {
-    super(params.url, callback)
+    super(params, callback)
   }
 }
 

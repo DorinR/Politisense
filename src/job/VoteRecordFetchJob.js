@@ -12,7 +12,7 @@ class VoteRecordFetchJob extends Job {
   }
 
   constructor (params, cb) {
-    super(params.url, cb)
+    super(params, cb)
     this.params = params
   }
 }

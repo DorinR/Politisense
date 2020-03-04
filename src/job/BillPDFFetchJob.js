@@ -6,7 +6,7 @@ const HandleDownloadErrorAction = Actions.HandleDownloadErrorAction
 
 class BillPDFFetchJob extends AbstractJob {
   constructor (params, callback) {
-    super(params.url, callback)
+    super(params, callback)
     this.params = params
   }
 

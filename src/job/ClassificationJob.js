@@ -7,7 +7,7 @@ const FormatAction = require('../util/action/FormatAction').FormatAction
 
 class ClassificationJob extends AbstractJob {
   constructor (params, callback) {
-    super('', callback)
+    super(params, callback)
     this.params = params
   }
 

@@ -9,7 +9,7 @@ const PoliticianParser = require('@parser').MpXmlParser
 class PoliticianFetchJob extends Job {
   // eslint-disable-next-line no-useless-constructor
   constructor (params, cb) {
-    super(params.url, cb)
+    super(params, cb)
     this.params = params
   }
 

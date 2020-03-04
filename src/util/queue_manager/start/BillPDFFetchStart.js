@@ -3,7 +3,7 @@ const BillPDFFetchJob = require('../../../job/BillPDFFetchJob').PDFRetrievalJob
 
 class BillPDFFetchStartAction extends QueueAction {
   constructor (manager) {
-    super(manager, BillPDFFetchStartAction)
+    super(manager, BillPDFFetchJob)
   }
 }
 

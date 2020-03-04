@@ -24,7 +24,7 @@ class SelectFirstAction extends Action {
 
 class BillLinkFetchJob extends AbstractJob {
   constructor (params, callback) {
-    super(params.url, callback)
+    super(params, callback)
     this.params = params
   }
 
