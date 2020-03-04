@@ -1,19 +1,18 @@
 /* eslint-env jest */
 const After = require('../../../../util/queue_manager/actions').After
 const AfterAction = After.VoteAfterAction
-const Actions = require('../../../../util/action/actions')
 
 const chai = require('chai')
 const Assert = chai.assert
 
 describe('VoteAfterAction.js', () => {
-  let undertest
+  let underTest
   const retrieve = AfterAction.prototype.retrieveBills
   beforeEach(() => {
     AfterAction.prototype.retrieveBills = () => {
       console.log('mocking out firebase call')
     }
-    undertest = new AfterAction()
+    underTest = new AfterAction()
   })
 
   test('VoteAfterAction.js::findBill locates bill with correct year and same billID as vote', async (done) => {
@@ -60,8 +59,8 @@ describe('VoteAfterAction.js', () => {
         id: 'a'
       }]
     }
-    undertest.retrieveBills = retrieve
-    await undertest.retrieveBills(mockDB)
+    underTest.retrieveBills = retrieve
+    await underTest.retrieveBills(mockDB)
     Assert.equal(order.length, 24)
     for (let i = 0; i < desired.length; i++) {
       Assert.equal(desired[i], order[i % 3])
@@ -71,7 +70,7 @@ describe('VoteAfterAction.js', () => {
 
   test('VoteAfterAction.js::attachBillsToVotes ', async (done) => {
     let num = 0
-    undertest.bills = new Array(8)
+    underTest.bills = new Array(8)
       .fill({}, 0, 8)
       .map(i => {
         let id = 40
@@ -91,7 +90,7 @@ describe('VoteAfterAction.js', () => {
 
     let billNumber = 40
     let year = 1998
-    undertest.manager = {
+    underTest.manager = {
       result: [{
         params: {
           params: {
@@ -112,11 +111,11 @@ describe('VoteAfterAction.js', () => {
       }]
     }
 
-    await undertest.perform()
+    await underTest.perform()
 
-    undertest.manager.result.forEach(datum => {
+    underTest.manager.result.forEach(datum => {
       datum.data[0].forEach((record, i) => {
-        const bill = undertest.bills[7][i]
+        const bill = underTest.bills[7][i]
         Assert.equal(record.bill, bill.id)
       })
     })

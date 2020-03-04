@@ -33,7 +33,7 @@ exports.index = (req, res) => {
   const category = req.params.category
   const parliament = req.params.parliament
   if (Utils.validate(type, category, parliament)) {
-    error(res, 'No parameters passed to data API')
+    Utils.error(res, 'No parameters passed to data API')
     return
   }
   try {
@@ -234,7 +234,7 @@ exports.update = (req, res) => {
   const category = req.params.category
   const parliament = req.params.parliament
   if (Utils.validate(type, category, parliament)) {
-    error(res, 'No parameters passed to data API for updating')
+    Utils.error(res, 'No parameters passed to data API for updating')
     return
   }
   try {

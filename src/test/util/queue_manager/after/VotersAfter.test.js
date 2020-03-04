@@ -1,7 +1,6 @@
 /* eslint-env jest */
 const After = require('../../../../util/queue_manager/actions').After
 const AfterAction = After.VoteParticipant
-const Actions = require('../../../../util/action/actions')
 
 const chai = require('chai')
 const Assert = chai.assert

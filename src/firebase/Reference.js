@@ -1,3 +1,5 @@
+const Model = require('./firebase').Models.Model
+
 class Reference {
   constructor (reference) {
     this.reference = reference

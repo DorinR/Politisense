@@ -42,6 +42,7 @@ const provinceKeys = [
 ]
 class FormatAction extends Actions.Action {
   perform (response) {
+    // eslint-next-line-disable no-unused-var
     const { selected, other } = response
     return selected.map(url => {
       return 'https://www.ourcommons.ca' + url

@@ -38,11 +38,10 @@ class VoteParticipantBeforeAction extends Action {
   constructor (manager) {
     super()
     this.manager = manager
-    this.voteRecords = this.retrieveVoteRecords()
+    this.voteRecords = this.retrieveVoteRecords(new Firestore(false))
   }
 
-  retrieveVoteRecords () {
-    const db = new Firestore(false)
+  retrieveVoteRecords (db) {
     return Parliaments.map(parl => {
       return db.forParliament(parl)
         .VoteRecord()
@@ -69,8 +68,8 @@ class VoteParticipantBeforeAction extends Action {
   async modifyManagerParams () {
     this.voteRecords = await Promise.all(this.voteRecords)
     const newParams = []
-    for (const param of this.manager.params) {
-      if (!this.parliamentExists(param.params.parliament, param.params.session)) {
+    for (let param of this.manager.params) {
+      if (!VoteParticipantBeforeAction.parliamentExists(param.params.parliament, param.params.session)) {
         continue
       }
       const index = Parliaments.indexOf(Number(param.params.parliament))
@@ -88,12 +87,13 @@ class VoteParticipantBeforeAction extends Action {
     this.manager.queryCount = newParams.length
   }
 
-  parliamentExists (parliament, session) {
+  static parliamentExists (parliament, session) {
     try {
       return Boolean(Parliament[`${parliament}`][`${session}`])
     } catch (e) {
       return false
     }
+
   }
 }
 
