@@ -1,19 +1,9 @@
-const Action = require('../QueueAction').QueueAction
+const GenericErrorAction = require('./GenericError').GenericErrorAction
 const XMLParseError = require('../../parser/parsers').DataNotFoundError
 
-class ParseErrorAction extends Action {
+class ParseErrorAction extends GenericErrorAction {
   constructor (manager) {
-    super()
-    this.manager = manager
-  }
-
-  async perform (e) {
-    await this.manager.lock.acquire()
-    this.manager.queryCount--
-    this.manager.lock.release()
-    if (!(e instanceof XMLParseError)) {
-      throw e
-    }
+    super(manager, XMLParseError)
   }
 }
 
