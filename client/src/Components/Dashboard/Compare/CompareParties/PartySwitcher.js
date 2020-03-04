@@ -67,50 +67,55 @@ function getStyles(selectedParty, party, theme) {
         : theme.typography.fontWeightMedium
   }
 }
-const classes = useStyles()
-const theme = useTheme()
-const [selectedParty, setSelectedParty] = React.useState([])
 
-function populateDropdownParties(parties) {
-  setDropdownParties(parties)
-}
+export default function PartySwitcher(props) {
+  // eslint-disable-next-line no-use-before-define
+  const { functionUpdate, ...other } = props
+  const classes = useStyles()
+  const theme = useTheme()
+  const [selectedParty, setSelectedParty] = React.useState([])
+  const [dropdownParties, setDropdownParties] = React.useState([])
 
-function handleChange(event) {
-  setSelectedParty(event.target.value)
-  const value = event.target.value
-  functionUpdate(value)
-}
-
-useEffect(() => {
-  async function getData() {
-    const representatives = await fetchAllRepresentatives() // REPLACE WITH NEXT LINE ONCE IMPLEMENTED
-    const parties = getAllParties(representatives)
-    populateDropdownParties(parties)
+  function populateDropdownParties(parties) {
+    setDropdownParties(parties)
   }
-  getData()
-}, [selectedParty])
 
-return (
-  <div>
-    <FormControl className={classes.formControl}>
-      <InputLabel id='demo-simple-select-disabled-label'>
-        Choose a Political Party
+  function handleChange(event) {
+    setSelectedParty(event.target.value)
+    const value = event.target.value
+    functionUpdate(value)
+  }
+
+  useEffect(() => {
+    async function getData() {
+      const representatives = await fetchAllRepresentatives() // REPLACE WITH NEXT LINE ONCE IMPLEMENTED
+      const parties = getAllParties(representatives)
+      populateDropdownParties(parties)
+    }
+    getData()
+  }, [selectedParty])
+
+  return (
+    <div>
+      <FormControl className={classes.formControl}>
+        <InputLabel id='demo-simple-select-disabled-label'>
+          Choose a Political Party
         </InputLabel>
-      <Select
-        value={selectedParty}
-        onChange={handleChange}
-        input={<Input />}
-        MenuProps={MenuProps}>
-        {dropdownParties.map(party => (
-          <MenuItem
-            key={party}
-            value={party}
-            style={getStyles(selectedParty, party, theme)}>
-            {party}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  </div>
-)
-
+        <Select
+          value={selectedParty}
+          onChange={handleChange}
+          input={<Input />}
+          MenuProps={MenuProps}>
+          {dropdownParties.map(party => (
+            <MenuItem
+              key={party}
+              value={party}
+              style={getStyles(selectedParty, party, theme)}>
+              {party}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
+  )
+}
