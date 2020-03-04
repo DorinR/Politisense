@@ -40,6 +40,7 @@ class VoteParticipantScraper extends QueueManager {
     this.createSessions(params.sessions)
     this.params = []
     this.createParams(params.url)
+    this.queryCount = this.params.length
   }
 
   createParliaments (parliaments) {

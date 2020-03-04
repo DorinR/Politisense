@@ -123,7 +123,9 @@ class BillScraper extends Components.QueueManager {
   }
 
   accumulate (result) {
-    this.result.push(result)
+    if(result) {
+      this.result.push(result)
+    }
     return result
   }
 

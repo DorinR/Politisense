@@ -1,6 +1,7 @@
 require('module-alias/register')
 const Utils = require('@utils')
 const QueueManager = Utils.QueueManager.QueueManager
+const BeforeAction = Utils.QueueManager.Before.Role
 const StartAction = Utils.QueueManager.Start.StartRoleScrape
 const StopAction = Utils.QueueManager.Stop.GenericStopAction
 const Throw = Utils.QueueManager.Error.ParseErrorAction
@@ -9,6 +10,7 @@ class RoleScraper extends QueueManager {
   static create (params, wait = 5000) {
     const manager = new RoleScraper(params, wait)
     manager
+      .setBeforeAction(new BeforeAction(manager))
       .setStartAction(new StartAction(manager))
       .setStopAction(new StopAction(manager))
       .setErrorAction(new Throw(manager))
