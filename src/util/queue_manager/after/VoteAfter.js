@@ -15,16 +15,16 @@ const ParliamentfromParlSession = {
   142: 39,
   140: 38
 }
+Object.freeze(ParliamentfromParlSession)
 
 class VoteAfterAction extends Action {
   constructor (manager) {
     super()
     this.manager = manager
-    this.bills = this.retrieveBills()
+    this.bills = this.retrieveBills(new Firestore(false))
   }
 
-  retrieveBills () {
-    const db = new Firestore(false)
+  retrieveBills (db) {
     return Parliaments.map(parl => {
       return db.forParliament(parl)
         .Bill()
@@ -45,7 +45,13 @@ class VoteAfterAction extends Action {
   }
 
   async perform () {
-    this.bills = await Promise.all(this.bills)
+    if(this.bills[0] instanceof Promise) {
+      this.bills = await Promise.all(this.bills)
+    }
+    this.attachBillsToVotes()
+  }
+
+  attachBillsToVotes () {
     this.manager.result.forEach(result => {
       const parliament = ParliamentfromParlSession[result.params.params.parlSession]
       for (const vote of result.data[0]) {
@@ -53,18 +59,19 @@ class VoteAfterAction extends Action {
           continue
         }
         const bills = this.bills[Parliaments.indexOf(parliament)]
-        const bill = this.findBill(vote, bills)
+        const bill = VoteAfterAction.findBill(vote, bills)
         if (bill) {
           vote.bill = bill.id
         }
-        console.log(vote)
       }
     })
   }
 
-  findBill (vote, bills) {
+  static findBill (vote, bills) {
     return bills.find(bill => {
-      return bill.data.number === vote.billNumber && (bill.data.dateVoted.includes(vote.year) || bill.data.dateVoted.includes(vote.year - 1))
+      return bill.data.number === vote.billNumber &&
+        (bill.data.dateVoted.includes(vote.year) ||
+          bill.data.dateVoted.includes(vote.year - 1))
     })
   }
 }
