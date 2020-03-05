@@ -13,7 +13,6 @@ class PollsMainPage extends Component {
     state = {
         pollAnswers: [...pollAnswers]
     }
-
     // Handling user vote
     // Increments the votes count of answer when the user votes
     handleVote = voteAnswer => {
