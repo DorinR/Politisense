@@ -3,3 +3,4 @@ module.exports.StartPoliticianScrape = require('./PoliticianStart').PoliticianSt
 module.exports.StartVoteRecordScrape = require('./VoteRecordStart').VoteRecordStart
 module.exports.StartRoleScrape = require('./RoleStart').RoleStartAction
 module.exports.StartVoteParticipantScrape = require('./VoteParticipantStart').VoteParticipantStart
+module.exports.Bill = require('./BillStartAction').BillStartAction

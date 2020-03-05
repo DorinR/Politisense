@@ -116,3 +116,4 @@ class HandleConnectionErrorAction extends JobAction {
 }
 
 module.exports.HandleConnectionErrorAction = HandleConnectionErrorAction
+module.exports.ErrorCodes = connectionErrors
