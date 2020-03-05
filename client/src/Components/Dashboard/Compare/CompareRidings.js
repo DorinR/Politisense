@@ -113,7 +113,7 @@ export default function CompareRepresentatives() {
               color='textPrimary'
               gutterBottom
             >
-              Compare Representatives
+              Riding History
             </Typography>
           </Container>
           <Typography
@@ -122,9 +122,7 @@ export default function CompareRepresentatives() {
             color='textSecondary'
             paragraph
           >
-            Select two MP's of your choice and compare their information and
-            performance in terms of bills sponsored and voted pm and then see
-            how much or how little they agree on!
+            Have a look at the historical data of past MPs of your riding!
           </Typography>
           <div>
             <Grid container spacing={2}>
@@ -132,7 +130,7 @@ export default function CompareRepresentatives() {
                 <RepresentativeCard updateHead={updateHead1} />
               </Grid>
               <Grid item xs={6}>
-                <RepresentativeCard updateHead={updateHead2} />
+                <RepresentativeCardRiding updateHead={updateHead2} />
               </Grid>
               <Grid item xs={12}>
                 {dataSet.length ? (

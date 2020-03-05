@@ -34,18 +34,18 @@ const useStyles = makeStyles({
     }
 })
 
-function capitalize(str) {
-    if (str && isNaN(str)) {
-        let res = str
-        res = res
-            .toLowerCase()
-            .split(' ')
-            .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-            .join(' ')
-        return res
-    }
-    return null
-}
+// function capitalize(str) {
+//     if (str && isNaN(str)) {
+//         let res = str
+//         res = res
+//             .toLowerCase()
+//             .split(' ')
+//             .map(s => s.charAt(0).toUpperCase() + s.substring(1))
+//             .join(' ')
+//         return res
+//     }
+//     return null
+// }
 
 async function fetchParliamentData(parlNum) {
     return await axios
