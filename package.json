@@ -45,6 +45,8 @@
     "node-fetch": "latest",
     "nodemon": "^1.19.4",
     "async-sema": "latest"
+    "nodemon": "^1.19.4",
+    "flat": "latest"
   },
   "scripts": {
     "start": "node -r esm server.js",

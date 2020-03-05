@@ -3,7 +3,6 @@ const Parsers = require('@parser')
 const XmlDataParser = Parsers.XmlDataParser
 const Models = require('@model')
 const Politician = Models.Politician
-const cheerio = require('cheerio')
 
 class MpXmlParser extends XmlDataParser {
   constructor (xml, mustBeACurrentMember = false) {
@@ -44,20 +43,6 @@ class MpXmlParser extends XmlDataParser {
 
   hasData () {
     return super.hasData() || this.isTagInXml(this.tagName + 'Role')
-  }
-
-  async getMpImageUrl (mpName) {
-    const htmlWithMpImage = await this._getHtmlFromLink(this._getWebPageWithMpImage(mpName))
-    if (htmlWithMpImage === '') {
-      return ''
-    }
-
-    const $ = cheerio.load(htmlWithMpImage)
-    return 'https://www.ourcommons.ca' + $('img.ce-mip-mp-picture').attr('src')
-  }
-
-  _getWebPageWithMpImage (mpName) {
-    return `https://www.ourcommons.ca/Members/en/search?searchText=${mpName}&parliament=all`
   }
 }
 

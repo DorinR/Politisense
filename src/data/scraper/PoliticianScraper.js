@@ -4,6 +4,7 @@ const QueueManager = Utils.QueueManager.QueueManager
 const StartAction = Utils.QueueManager.Start.StartPoliticianScrape
 const StopAction = Utils.QueueManager.Stop.GenericStopAction
 const Throw = Utils.QueueManager.Error.ParseErrorAction
+const AfterAction = Utils.QueueManager.After.PoliticianAfterAction
 
 const caucusMapping = {
   unknown: 0,
@@ -45,6 +46,7 @@ class PoliticianScraper extends QueueManager {
     manager
       .setStartAction(new StartAction(manager))
       .setStopAction(new StopAction(manager))
+      .setAfterAction(new AfterAction(manager))
       .setErrorAction(new Throw(manager))
     return manager
   }
@@ -83,7 +85,7 @@ class PoliticianScraper extends QueueManager {
 
   setParliaments (parliaments) {
     if (typeof parliaments === 'undefined' ||
-       (typeof parliaments === typeof ' ' && parliaments.toLowerCase().includes('all'))) {
+       (typeof parliaments === typeof '' && parliaments.toLowerCase().includes('all'))) {
       this.parliaments.push('all')
     } else if (typeof parliaments === typeof []) {
       this.parliaments = parliaments.filter(parliament => {
@@ -174,6 +176,6 @@ PoliticianScraper.create({
   parliaments: 'all'
 })
   .execute()
-  .then(result => {
-    console.log(result)
+  .then(results => {
+    console.log(results)
   })
