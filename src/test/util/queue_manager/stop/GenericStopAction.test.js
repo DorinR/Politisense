@@ -7,7 +7,7 @@ describe('GenericStopAction.js', () => {
   let undertest
   beforeEach(() => {
     const manager = {
-      result: [1,2,3,4,5,6,7,8,9,0],
+      result: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
       queryCount: 0
     }
     undertest = new StopAction(manager)

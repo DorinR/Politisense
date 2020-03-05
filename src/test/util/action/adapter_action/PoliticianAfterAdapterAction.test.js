@@ -8,8 +8,8 @@ describe('PoliticianAfterAdapterAction.js', () => {
   let result
   beforeAll(() => {
     result = {
-      selected: ['a','b','c'],
-      other: ['d','e','f'],
+      selected: ['a', 'b', 'c'],
+      other: ['d', 'e', 'f']
     }
   })
 
@@ -21,7 +21,7 @@ describe('PoliticianAfterAdapterAction.js', () => {
     const resp = await undertest.perform(result)
     Assert(resp instanceof Array)
     Assert.equal(resp.length, 3)
-    for(let i = 0; i < result.selected.length; i++) {
+    for (let i = 0; i < result.selected.length; i++) {
       Assert.equal(resp[i], undertest.prefix + result.selected[i])
     }
     done()

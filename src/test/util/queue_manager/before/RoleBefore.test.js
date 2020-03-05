@@ -7,7 +7,7 @@ const Assert = chai.assert
 
 describe('RoleBeforeAction.js', () => {
   let underTest
-  let retrieve = BeforeAction.prototype.retrievePoliticians
+  const retrieve = BeforeAction.prototype.retrievePoliticians
   beforeEach(() => {
     BeforeAction.prototype.retrievePoliticians = () => {
       console.log('mocking out firebase call')
@@ -26,7 +26,7 @@ describe('RoleBeforeAction.js', () => {
       'adam-eve',
       'yosef-ioseph'
     ]
-    for(let i = 0; i < correct.length; i++) {
+    for (let i = 0; i < correct.length; i++) {
       Assert.equal(correct[i], BeforeAction.formatName(names[i]))
     }
     done()
@@ -102,7 +102,7 @@ describe('RoleBeforeAction.js', () => {
           return {
             data: () => {
               return {
-                name: `some politician name${num}`,
+                name: `some politician name${num}`
               }
             },
             id: `${num++}`
@@ -112,7 +112,6 @@ describe('RoleBeforeAction.js', () => {
     underTest.retrieveVoteRecords = retrieve
     const politicians = await Promise.all(underTest.retrieveVoteRecords(mockDB))
     Assert.equal(politicians.length, 8)
-
 
     Assert.equal(order.length, 24)
     for (let i = 0; i < desired.length; i++) {
@@ -167,7 +166,7 @@ describe('RoleBeforeAction.js', () => {
       'link1',
       'link2',
       'link3',
-      'link4',
+      'link4'
     ])
 
     Assert.equal(underTest.manager.params.length, 80)
@@ -196,7 +195,6 @@ describe('RoleBeforeAction.js', () => {
     }
     const desired = ['create', 'execute', 'modify']
     const order = []
-    let called =
     BeforeAction.create = () => {
       order.push(desired[0])
       return {

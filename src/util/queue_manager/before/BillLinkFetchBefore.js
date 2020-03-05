@@ -11,10 +11,9 @@ class BillLinkFetchBeforeAction extends QueueAction {
     this.bills = this.retrieveBills(new Firestore(false))
   }
 
-  retrieveBills () {
+  retrieveBills (db) {
     return Parliaments.map(parl => {
-      return new Firestore(false)
-        .forParliament(parl)
+      db.forParliament(parl)
         .Bill()
         .select()
         .then(snapshot => {
@@ -45,7 +44,7 @@ class BillLinkFetchBeforeAction extends QueueAction {
     const params = []
     this.manager.params.forEach(param => {
       const parliament = this.bills[Parliaments.indexOf(param.parliament)]
-      if(parliament){
+      if (parliament) {
         parliament.forEach(bill => {
           params.push({
             bill: bill.id,

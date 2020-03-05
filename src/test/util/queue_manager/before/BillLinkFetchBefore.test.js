@@ -33,12 +33,12 @@ describe('BillLinkFetchBeforeAction.js', () => {
       return [{
         data: () => {
           return { link: 'www.google.ca' }
-          },
+        },
         id: 'a'
       }]
     }
-    underTest.retrieveVoteRecords = retrieve
-    await underTest.retrieveVoteRecords(mockDB)
+    underTest.retrieveBills = retrieve
+    await underTest.retrieveBills(mockDB)
     Assert.equal(order.length, 24)
     for (let i = 0; i < desired.length; i++) {
       Assert.equal(desired[i], order[i % 3])
@@ -48,7 +48,7 @@ describe('BillLinkFetchBeforeAction.js', () => {
 
   test('BillLinkFetchBeforeAction.js::perform modifies manager query parameter set', async (done) => {
     let called = false
-    underTest.createQueryParams = () => {called = true}
+    underTest.createQueryParams = () => { called = true }
     await underTest.perform()
     Assert(called)
     done()
@@ -59,14 +59,12 @@ describe('BillLinkFetchBeforeAction.js', () => {
     underTest.bills = new Array(8)
       .fill({}, 0, 8)
       .map(i => {
-        let id = 40
-        let year = 1998
         return new Array(10)
           .fill({}, 0, 10)
           .map(i => {
             return {
               data: {
-                link: 'https://www.google.ca',
+                link: 'https://www.google.ca'
               },
               id: `${num++}`
             }
@@ -81,7 +79,7 @@ describe('BillLinkFetchBeforeAction.js', () => {
       .fill({}, 0, 10)
       .map(i => {
         return {
-          parliament: ++num + 36,
+          parliament: ++num + 36
         }
       })
 

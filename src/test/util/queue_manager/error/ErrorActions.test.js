@@ -7,7 +7,6 @@ const chai = require('chai')
 const Assert = chai.assert
 
 describe('ErrorActions', () => {
-
   describe('ThrowErrorAction.js', () => {
     let manager
     beforeEach(() => {
@@ -54,7 +53,7 @@ describe('ErrorActions', () => {
         await underTest.perform(new TypeError())
         Assert.fail()
       } catch (e) {
-        if((e instanceof chai.AssertionError)) {
+        if ((e instanceof chai.AssertionError)) {
           throw e
         }
         Assert.equal(manager.queryCount, 8)

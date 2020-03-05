@@ -9,9 +9,9 @@ describe('RoleQueryResponseAdapterAction.js', () => {
   let param
   beforeAll(() => {
     result = {
-      associations: new Array(3).fill({},0,3),
-      committees: new Array(3).fill({},0,3),
-      parliamentaries: new Array(3).fill({},0,3)
+      associations: new Array(3).fill({}, 0, 3),
+      committees: new Array(3).fill({}, 0, 3),
+      parliamentaries: new Array(3).fill({}, 0, 3)
     }
     param = {
       id: 'some id',

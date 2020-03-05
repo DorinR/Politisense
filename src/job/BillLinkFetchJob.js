@@ -6,9 +6,8 @@ const TextParserAction = Actions.TextParserAction
 const SelectionAction = Actions.SelectionAction
 const ErrorHandler = Actions.HandleConnectionErrorAction
 
-
-
 class BillLinkFetchJob extends AbstractJob {
+  // eslint-disable-next-line no-useless-constructor
   constructor (params, callback) {
     super(params, callback)
     this.params = params

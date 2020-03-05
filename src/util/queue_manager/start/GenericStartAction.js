@@ -1,12 +1,12 @@
 const QueueAction = require('../QueueAction').QueueAction
-const Job = require('../../Job').AbstractJob
 const ActionDecorationError = require('@action').Errors.ActionDecorationError
 
 class GenericStartAction extends QueueAction {
-  constructor(manager, type) {
+  constructor (manager, type) {
     super()
     this.manager = manager
-    if(type.__proto__.name !== 'Job') {
+    // eslint-disable-next-line no-proto
+    if (type.__proto__.name !== 'Job') {
       throw new ActionDecorationError(type)
     }
     this.create = type.create

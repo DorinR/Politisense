@@ -1,7 +1,7 @@
 const Vertex = require('./Vertex').Vertex
 
 class InvalidVertexError extends Error {
-  constructor(message) {
+  constructor (message) {
     super()
     this.message = message
   }
@@ -21,16 +21,16 @@ class DirectedGraph {
     DirectedGraph.check(from)
     DirectedGraph.check(to)
     const list = this.adjacencyList.get(from)
-    if(!list) {
+    if (!list) {
       throw new InvalidVertexError('Vertex from not in graph')
     }
-    if(!this.adjacencyList.get(to)) {
+    if (!this.adjacencyList.get(to)) {
       throw new InvalidVertexError('Vertex from not in graph')
     }
     list.push(to)
   }
 
-  static check(v) {
+  static check (v) {
     if (!(v instanceof Vertex)) {
       throw new InvalidVertexError('Vertex must be an instance of vertex')
     }

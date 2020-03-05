@@ -23,7 +23,7 @@ describe('RoleFetchLinkAdapterAction.js', () => {
   test('RoleFetchLinkAdapterAction.js::perform returns object with correct format', async (done) => {
     const resp = await undertest.perform(result)
     Assert(resp instanceof Object)
-    Assert.equal(resp.url, `https://www.ourcommons.ca/some-link-here/roles/xml`)
+    Assert.equal(resp.url, 'https://www.ourcommons.ca/some-link-here/roles/xml')
     done()
   })
 

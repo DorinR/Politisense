@@ -20,4 +20,3 @@ class RoleFetchLinkAdapterAction extends Action {
 }
 
 module.exports.RoleFetchLinkAdapterAction = RoleFetchLinkAdapterAction
-

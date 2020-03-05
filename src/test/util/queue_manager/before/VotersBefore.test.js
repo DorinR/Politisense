@@ -45,18 +45,18 @@ describe('VoteBeforeAction.js', () => {
   })
 
   test('VoteBeforeAction.js::parliamentExists returns true on valid parliament', async (done) => {
-    Assert(BeforeAction.parliamentExists(41,1))
+    Assert(BeforeAction.parliamentExists(41, 1))
     done()
   })
 
   test('VoteBeforeAction.js::parliamentExists returns false on invalid parliament', async (done) => {
-    Assert(!BeforeAction.parliamentExists(41,3))
+    Assert(!BeforeAction.parliamentExists(41, 3))
     done()
   })
 
   test('VoteBeforeAction.js::perform modifies query parameter set', async (done) => {
     let called = false
-    underTest.modifyManagerParams = () => {called = true}
+    underTest.modifyManagerParams = () => { called = true }
     await underTest.perform()
     Assert(called)
     done()

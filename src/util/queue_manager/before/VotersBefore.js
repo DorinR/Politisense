@@ -68,7 +68,7 @@ class VoteParticipantBeforeAction extends Action {
   async modifyManagerParams () {
     this.voteRecords = await Promise.all(this.voteRecords)
     const newParams = []
-    for (let param of this.manager.params) {
+    for (const param of this.manager.params) {
       if (!VoteParticipantBeforeAction.parliamentExists(param.params.parliament, param.params.session)) {
         continue
       }
@@ -93,7 +93,6 @@ class VoteParticipantBeforeAction extends Action {
     } catch (e) {
       return false
     }
-
   }
 }
 

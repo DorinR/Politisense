@@ -12,10 +12,6 @@ class BillFetchJob extends Job {
       .addAction(new Actions.QueryResponseAdapterAction(params))
       .addErrorAction(new Actions.HandleConnectionErrorAction(callback, BillFetchJob.create, []))
   }
-
-  constructor (params, callback) {
-    super(params, callback)
-  }
 }
 
 module.exports.BillFetchJob = BillFetchJob

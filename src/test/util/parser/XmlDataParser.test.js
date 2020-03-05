@@ -39,9 +39,11 @@ describe('XmlDataParser.js', () => {
   test('XmlDataParser.js unimplemented functions throw', () => {
     const parser = new XmlDataParser('')
     Assert.throws(() => {
+      // eslint-disable-next-line no-unused-expressions
       parser.tagName
     })
     Assert.throws(() => {
+      // eslint-disable-next-line no-unused-expressions
       parser.listTagName
     })
     Assert.throws(() => {

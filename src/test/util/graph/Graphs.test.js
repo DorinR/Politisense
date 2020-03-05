@@ -16,7 +16,7 @@ describe('Graphs', () => {
       graph = new DirectedGraph()
     })
 
-    test('DirectedGraph.js uses an adjacency map', () =>{
+    test('DirectedGraph.js uses an adjacency map', () => {
       Assert(graph.adjacencyList instanceof Map)
     })
 
@@ -25,29 +25,29 @@ describe('Graphs', () => {
         graph.addVertex({})
         Assert.fail()
       } catch (e) {
-        if(e instanceof chai.AssertionError) {
+        if (e instanceof chai.AssertionError) {
           throw e
         }
-        if(!(e instanceof InvalidVertexError)) {
+        if (!(e instanceof InvalidVertexError)) {
           Assert.fail()
         }
       }
     })
 
-    test('DirectedGraph.js::addVertex adds valid vertex', () =>{
+    test('DirectedGraph.js::addVertex adds valid vertex', () => {
       graph.addVertex(vertex)
       Assert(graph.adjacencyList.has(vertex))
     })
 
-    test('DirectedGraph.js::addEdge throws on invalid from vertex', () =>{
+    test('DirectedGraph.js::addEdge throws on invalid from vertex', () => {
       try {
         graph.addEdge({}, vertex)
         Assert.fail()
       } catch (e) {
-        if(e instanceof chai.AssertionError) {
+        if (e instanceof chai.AssertionError) {
           throw e
         }
-        if(!(e instanceof InvalidVertexError)) {
+        if (!(e instanceof InvalidVertexError)) {
           Assert.fail()
         }
       }
@@ -58,10 +58,10 @@ describe('Graphs', () => {
         graph.addEdge(vertex, {})
         Assert.fail()
       } catch (e) {
-        if(e instanceof chai.AssertionError) {
+        if (e instanceof chai.AssertionError) {
           throw e
         }
-        if(!(e instanceof InvalidVertexError)) {
+        if (!(e instanceof InvalidVertexError)) {
           Assert.fail()
         }
       }
@@ -72,10 +72,10 @@ describe('Graphs', () => {
         graph.addEdge(vertex, new Vertex())
         Assert.fail()
       } catch (e) {
-        if(e instanceof chai.AssertionError) {
+        if (e instanceof chai.AssertionError) {
           throw e
         }
-        if(!(e instanceof InvalidVertexError)) {
+        if (!(e instanceof InvalidVertexError)) {
           Assert.fail()
         }
       }
@@ -87,16 +87,16 @@ describe('Graphs', () => {
         graph.addEdge(vertex, new Vertex())
         Assert.fail()
       } catch (e) {
-        if(e instanceof chai.AssertionError) {
+        if (e instanceof chai.AssertionError) {
           throw e
         }
-        if(!(e instanceof InvalidVertexError)) {
+        if (!(e instanceof InvalidVertexError)) {
           Assert.fail()
         }
       }
     })
 
-    test('DirectedGraph.js::addEdge adds to vertex to adjacencies of from vertex', () =>{
+    test('DirectedGraph.js::addEdge adds to vertex to adjacencies of from vertex', () => {
       const to = new Vertex()
       graph.addVertex(vertex)
       graph.addVertex(to)
@@ -106,8 +106,8 @@ describe('Graphs', () => {
       Assert(adjacencies.includes(to))
     })
 
-    test('DirectedGraph.js::forEach iterates over adjacency list', () =>{
-      const tags = ['a','b','c']
+    test('DirectedGraph.js::forEach iterates over adjacency list', () => {
+      const tags = ['a', 'b', 'c']
       graph.addVertex(new Vertex(tags[0]))
       graph.addVertex(new Vertex(tags[1]))
       graph.addVertex(new Vertex(tags[2]))
@@ -116,7 +116,6 @@ describe('Graphs', () => {
       graph.forEach((adj, v) => {
         Assert.equal(v.tag, tags[count++])
       })
-
     })
   })
 
@@ -128,7 +127,7 @@ describe('Graphs', () => {
       graph = new UndirectedGraph()
     })
 
-    test('UndirectedGraph.js::addEdge adds undirected edge', () =>{
+    test('UndirectedGraph.js::addEdge adds undirected edge', () => {
       const to = new Vertex()
       graph.addVertex(vertex)
       graph.addVertex(to)
@@ -138,4 +137,3 @@ describe('Graphs', () => {
     })
   })
 })
-

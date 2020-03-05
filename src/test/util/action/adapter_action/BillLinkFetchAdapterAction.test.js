@@ -9,8 +9,8 @@ describe('BillLinkFetchAdapterAction.js', () => {
   let param
   beforeAll(() => {
     result = {
-      selected: ['a','b','c'],
-      other: ['d','e','f'],
+      selected: ['a', 'b', 'c'],
+      other: ['d', 'e', 'f']
     }
     param = {
       bill: 'some bill',

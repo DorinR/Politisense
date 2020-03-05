@@ -52,10 +52,8 @@ describe('QueueManager.js', () => {
 
   test('QueueManager.js::requeueCallback places passed jobs into queue', async (done) => {
     Assert.equal(undertest.queue.size(), 0)
-    undertest.requeueCallback([
-      new Job(),
-      new Job(),
-      new Job()
+    // eslint-disable-next-line no-new
+    undertest.requeueCallback([new Job(), new Job(), new Job()
     ])
     Assert.equal(undertest.queue.size(), 3)
     done()
@@ -317,7 +315,6 @@ describe('QueueManager.js', () => {
 
   test('QueueManager.js::waitForActiveJobs writes a message to log', async (done) => {
     let called = false
-    const debug = console.debug
     console.debug = () => { called = true }
     await undertest.waitForActiveJobs(new Error())
     Assert(called)

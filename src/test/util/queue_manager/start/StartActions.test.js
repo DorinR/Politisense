@@ -28,18 +28,21 @@ describe('QueueManager Start Actions', () => {
   })
 
   test('GenericStartAction.js can be created with any Job Type', async (done) => {
-    let test = new Generic(manager, Jobs.RoleFetchJob)
-    test = new Generic(manager, Jobs.VoteRecordFetchJob)
-    test = new Generic(manager, Jobs.ClassificationJob)
+    Object.values(Jobs).forEach(type => {
+      // eslint-disable-next-line no-new
+      new Generic(manager, type)
+    })
+
     done()
   }, 60000)
 
   test('GenericStartAction.js throws on bad Type', async (done) => {
     try {
-      const test = new Generic(manager, {})
+      // eslint-disable-next-line no-new
+      new Generic(manager, {})
       Assert.fail()
     } catch (e) {
-      if(e instanceof chai.AssertionError) {
+      if (e instanceof chai.AssertionError) {
         throw e
       }
       Assert(e instanceof ActionDecorationError)
@@ -54,14 +57,22 @@ describe('QueueManager Start Actions', () => {
     done()
   })
 
-  test('StartAction Specialisations do not throw', async(done) => {
+  test('StartAction Specialisations do not throw', async (done) => {
+    // eslint-disable-next-line no-new
     new Start.StartVoteParticipantScrape({})
+    // eslint-disable-next-line no-new
     new Start.StartVoteRecordScrape({})
+    // eslint-disable-next-line no-new
     new Start.StartRoleScrape({})
+    // eslint-disable-next-line no-new
     new Start.StartPoliticianScrape({})
+    // eslint-disable-next-line no-new
     new Start.Classify({})
+    // eslint-disable-next-line no-new
     new Start.BillLink({})
+    // eslint-disable-next-line no-new
     new Start.BillPDF({})
+    // eslint-disable-next-line no-new
     new Start.Bill({})
     done()
   })

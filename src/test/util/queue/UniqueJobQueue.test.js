@@ -15,17 +15,17 @@ describe('UniqueJobQueue.js', () => {
 
   test('UniqueJobQueue::dequeue() removes one job from queue', () => {
     const q = new Queue()
-    q.enqueue(new ScrapeJob({url: 'a'}, () => {}, []))
-    q.enqueue(new ScrapeJob({url: 'b'}, () => {}, []))
+    q.enqueue(new ScrapeJob({ url: 'a' }, () => {}, []))
+    q.enqueue(new ScrapeJob({ url: 'b' }, () => {}, []))
     q.dequeue()
     assert.equal(q.size(), 1, 'There should only be one Job in the queue')
   })
 
   test('UniqueJobQueue::enqueue() throws when enqueuing same job', () => {
     const q = new Queue()
-    q.enqueue(new ScrapeJob({url: 'b'}, () => {}, []))
+    q.enqueue(new ScrapeJob({ url: 'b' }, () => {}, []))
     const testFn = () => {
-      q.enqueue(new ScrapeJob({url: 'b'}, () => {}, []))
+      q.enqueue(new ScrapeJob({ url: 'b' }, () => {}, []))
     }
     expect(testFn).to.throw()
   })

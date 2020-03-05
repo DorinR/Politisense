@@ -3,7 +3,7 @@ const Job = require('../../Job').AbstractJob
 const Firestore = require('@firestore').Firestore
 const Actions = require('@action')
 
-const Parliaments = [36,37,38,39,40,41,42,43]
+const Parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
 Object.freeze(Parliaments)
 
 class FormatAction extends Actions.Action {
@@ -19,7 +19,7 @@ class RoleBeforeAction extends QueueAction {
     this.politicians = this.retrievePoliticians(new Firestore(false))
   }
 
-  retrievePoliticians(db) {
+  retrievePoliticians (db) {
     return Parliaments.map(parl => {
       return db.forParliament(parl)
         .Politician()

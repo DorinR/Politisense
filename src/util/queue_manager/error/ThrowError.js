@@ -1,10 +1,11 @@
 const Action = require('../QueueAction').QueueAction
 
 class ThrowAction extends Action {
-  constructor(manager){
+  constructor (manager) {
     super()
     this.manager = manager
   }
+
   async perform (e) {
     throw e
   }

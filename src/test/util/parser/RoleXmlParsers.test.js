@@ -3,7 +3,6 @@ const Assert = require('chai').assert
 const Parsers = require('../../../util/parser/parsers')
 
 describe('Roles', () => {
-
   describe('RoleXmlParser.js', () => {
     let underTest
     let xml
@@ -19,7 +18,7 @@ describe('Roles', () => {
         '<CaucusShortName>Liberal</CaucusShortName>\n' +
         '<FromDateTime>2019-10-21T00:00:00</FromDateTime>\n' +
         '<ToDateTime xsi:nil="true"/>\n' +
-        '</MemberOfParliamentRole>'+
+        '</MemberOfParliamentRole>' +
         '</MemberOfParliamentRoles>' +
         '<CaucusMemberRoles>' +
         '<CaucusMemberRole>\n' +
@@ -27,8 +26,8 @@ describe('Roles', () => {
         '<FromDateTime>2015-10-19T00:00:00</FromDateTime>\n' +
         '<ToDateTime>2019-10-20T23:59:59</ToDateTime>\n' +
         '<ParliamentNumber>42</ParliamentNumber>\n' +
-        '</CaucusMemberRole>'+
-        '</CaucusMemberRoles>'+
+        '</CaucusMemberRole>' +
+        '</CaucusMemberRoles>' +
         '<ParliamentaryPositionRoles>' +
         '<ParliamentaryPositionRole>\n' +
         '<Title>\n' +
@@ -46,15 +45,15 @@ describe('Roles', () => {
         '<CommitteeName>Procedure and House Affairs</CommitteeName>\n' +
         '<FromDateTime>2020-02-03T15:08:00</FromDateTime>\n' +
         '<ToDateTime xsi:nil="true"/>\n' +
-        '</CommitteeMemberRole>'+
-        '</CommitteeMemberRoles>'+
+        '</CommitteeMemberRole>' +
+        '</CommitteeMemberRoles>' +
         '<ParliamentaryAssociationsandInterparliamentaryGroupRoles>' +
         '<ParliamentaryAssociationsandInterparliamentaryGroupRole>\n' +
         '<AssociationMemberRoleType>Association Member</AssociationMemberRoleType>\n' +
         '<Title/>\n' +
         '<Organization>Canada-China Legislative Association</Organization>\n' +
         '</ParliamentaryAssociationsandInterparliamentaryGroupRole>' +
-        '</ParliamentaryAssociationsandInterparliamentaryGroupRoles>'+
+        '</ParliamentaryAssociationsandInterparliamentaryGroupRoles>' +
         '<ElectionCandidateRoles>' +
         '<ElectionCandidateRole>\n' +
         '<ElectionEventTypeName>General Election</ElectionEventTypeName>\n' +
@@ -63,7 +62,7 @@ describe('Roles', () => {
         '<ConstituencyProvinceTerritoryName>Ontario</ConstituencyProvinceTerritoryName>\n' +
         '<PoliticalPartyName>Liberal Party of Canada</PoliticalPartyName>\n' +
         '<ResolvedElectionResultTypeName>Re-Elected</ResolvedElectionResultTypeName>\n' +
-        '</ElectionCandidateRole>'+
+        '</ElectionCandidateRole>' +
         '</ElectionCandidateRoles>' +
         '</Profile>'
       underTest = new Parsers.RoleXmlParser(xml)
