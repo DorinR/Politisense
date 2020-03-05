@@ -1,6 +1,21 @@
 import React, { Component } from 'react';
 import axios from 'axios'
 
+export async function getIpInfo() {
+    return axios.get('https://ipapi.co/json/').then((response) => {
+        let data = response.data;
+        // this.setState({
+        //     country: data.country_name,
+        //     postalCode: data.postal,
+        //     city: data.city,
+        //     region: data.region
+        // });
+        console.log(data.country_name)
+        return data.country_name
+    }).catch((error) => {
+        console.log(error);
+    });
+}
 
 class GetIpAddress extends Component {
 
@@ -14,19 +29,7 @@ class GetIpAddress extends Component {
         }
     }
 
-    getIpInfo = () => {
-        axios.get('https://ipapi.co/json/').then((response) => {
-            let data = response.data;
-            this.setState({
-                country: data.country_name,
-                postalCode: data.postal,
-                city: data.city,
-                region: data.region
-            });
-        }).catch((error) => {
-            console.log(error);
-        });
-    };
+
 
     componentDidMount() {
         this.getIpInfo();

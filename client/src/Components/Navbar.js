@@ -27,7 +27,7 @@ import Box from '@material-ui/core/Box'
 import axios from 'axios'
 import politisenseLogo from '../politisenseLogo.png'
 import Button from '@material-ui/core/Button'
-
+import { getIpInfo } from './Dashboard/Polls/GetIpAddress'
 const drawerWidth = 330
 
 const useStyles = makeStyles(theme => ({
@@ -161,6 +161,7 @@ export default function MiniDrawer({ children }) {
   const [userRepresentative, setUserRepresentative] = React.useState(null)
   const [riding, setRiding] = useState(null)
   const [user, setUser] = useState(null)
+  const [userCountry, setUserCountry] = useState("")
 
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -172,7 +173,10 @@ export default function MiniDrawer({ children }) {
     async function getData() {
       if (user) {
         const riding = await fetchUserRiding(user.email)
+        const country = await getIpInfo()
+        console.log(country)
         setRiding(riding)
+        setUserCountry(country)
       }
     }
     getData()
@@ -182,6 +186,8 @@ export default function MiniDrawer({ children }) {
     async function getData() {
       if (riding) {
         const representative = await fetchRepresentative(riding)
+        const country = await getIpInfo()
+        console.log(country)
         setUserRepresentative(representative)
       }
     }
@@ -261,15 +267,17 @@ export default function MiniDrawer({ children }) {
               Map
             </Button>
           </Link>
-          <Link to='/polls' className={classes.navbarCustomFont}>
-            <Button
-              variant='contained'
-              color='primary'
-              className={classes.navbarCustomButton}
-            >
-              Polls
+          {userCountry && userCountry == 'Canada' ?
+            <Link to='/polls' className={classes.navbarCustomFont}>
+              <Button
+                variant='contained'
+                color='primary'
+                className={classes.navbarCustomButton}
+              >
+                Polls
             </Button>
-          </Link>
+            </Link> : ''}
+
           <Typography style={{ flex: 1 }} />
           <Link to='/account'>
             <Tooltip title='My Account' aria-label='add'>
