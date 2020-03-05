@@ -1,4 +1,5 @@
 module.exports = {
   BillBuilder: require('./BillBuilder').BillBuilder,
-  RoleBuilder: require('./RoleBuilder').RoleBuilder
+  RoleBuilder: require('./RoleBuilder').RoleBuilder,
+  VoteRecordBuilder: require('./VoteRecordBuilder').VoteRecordBuilder
 }
