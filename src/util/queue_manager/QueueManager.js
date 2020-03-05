@@ -33,10 +33,22 @@ class QueueManager {
     throw new DecorationError(null, 'Stop action not specified')
   }
 
+  before () {
+    console.log('Before action not specified')
+  }
+
+  after () {
+    console.log('After action not specified')
+  }
+
   async execute () {
-    const partialResults = await this.start()
-    this.accumulate(partialResults)
+    await this.before()
+    await this.start()
+      .then(partialResults => {
+        this.accumulate(partialResults)
+      })
     await this.run()
+    await this.after()
     return this.result
   }
 
@@ -82,6 +94,22 @@ class QueueManager {
       throw new DecorationError(action)
     }
     this.stop = action.perform.bind(action)
+    return this
+  }
+
+  setBeforeAction (action) {
+    if (!(action instanceof Action)) {
+      throw new DecorationError(action)
+    }
+    this.before = action.perform.bind(action)
+    return this
+  }
+
+  setAfterAction (action) {
+    if (!(action instanceof Action)) {
+      throw new DecorationError(action)
+    }
+    this.after = action.perform.bind(action)
     return this
   }
 
