@@ -62,7 +62,7 @@ describe('VoteBeforeAction.js', () => {
     done()
   })
 
-  test('VoteBeforeAction.js', async (done) => {
+  test('VoteBeforeAction.js::modifyManagerParams creates a new valid manager query set', async (done) => {
     let num = 0
     underTest.voteRecords = new Array(10)
       .fill({}, 0, 10)
@@ -83,8 +83,8 @@ describe('VoteBeforeAction.js', () => {
     underTest.manager = {
       queryCount: 0
     }
-    underTest.manager.params = new Array(10)
-      .fill({}, 0, 10)
+    underTest.manager.params = new Array(8)
+      .fill({}, 0, 8)
       .map(i => {
         return {
           url: 'https://www.google.ca',
