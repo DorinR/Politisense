@@ -55,6 +55,13 @@ class Job {
   static create (url, callback) {
     throw new TypeError('::createNewJob not implemented in derived class')
   }
+
+  static createRequestParams (params) {
+    return {
+      url: params.url,
+      params: params.params
+    }
+  }
 }
 
 module.exports.AbstractJob = Job

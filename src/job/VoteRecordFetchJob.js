@@ -7,7 +7,7 @@ class VoteRecordFetchJob extends Job {
     return new VoteRecordFetchJob(params, cb)
       .addAction(new Actions.FetchAction(params))
       .addAction(new Actions.ParserWrapperAction(Parsers.VoteXmlParser))
-      .addAction(new Actions.FormatAction(params))
+      .addAction(new Actions.QueryResponseAdapterAction(params))
       .addErrorAction(new Actions.HandleConnectionErrorAction(cb, VoteRecordFetchJob.create, []))
   }
 
