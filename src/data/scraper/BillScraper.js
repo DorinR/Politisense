@@ -96,7 +96,7 @@ class BillScraper extends Components.QueueManager {
     const manager = new BillScraper(params)
     manager
       .setStartAction(new Components.Start.Bill(manager))
-      .setStopAction(new Components.Stop.Bill(manager))
+      .setStopAction(new Components.Stop.GenericStopAction(manager))
       .setErrorAction(new Components.Error.ParseErrorAction(manager))
     return manager
   }
