@@ -44,7 +44,7 @@
     "module-alias": "^2.2.2",
     "node-fetch": "latest",
     "nodemon": "^1.19.4",
-    "async-sema": "latest"
+    "async-sema": "latest",
     "nodemon": "^1.19.4",
     "flat": "latest"
   },
