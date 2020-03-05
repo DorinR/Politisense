@@ -18,6 +18,7 @@ import GeneralDashboard from './Components/Dashboard/GeneralDashboard'
 import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
 import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
 import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
+import PollsMainPage from './Components/Dashboard/Polls/PollsMainPage'
 
 const App = () => {
   const LoginContainer = () => (
@@ -34,6 +35,7 @@ const App = () => {
           <Route exact path='/' render={() => <Redirect to='/login' />} />
           <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/map' component={MapWrapper} />
+          <PrivateRoute path='/polls' component={PollsMainPage} />
           <PrivateRoute path='/account' component={UserAccountTabs} />
           <PrivateRoute path='/general' component={GeneralDashboard} />
           <PrivateRoute path='/categories' component={CategoryDashboard} />
@@ -51,8 +53,8 @@ const App = () => {
         localStorage.getItem('user') ? (
           <Component {...props} />
         ) : (
-          <Redirect to='/login' /> // eslint-disable-next-line
-        )}
+            <Redirect to='/login' /> // eslint-disable-next-line
+          )}
     />
   )
 
