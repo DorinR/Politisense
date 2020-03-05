@@ -45,9 +45,7 @@ class VoteAfterAction extends Action {
   }
 
   async perform () {
-    if (this.bills[0] instanceof Promise) {
-      this.bills = await Promise.all(this.bills)
-    }
+    this.bills = await Promise.all(this.bills)
     this.attachBillsToVotes()
   }
 

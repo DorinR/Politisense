@@ -116,7 +116,7 @@ describe('PoliticianAfterAction.js', () => {
     Assert.equal(job.registry[0], Actions.FetchAction.name)
     Assert.equal(job.registry[1], Actions.TextParserAction.name)
     Assert.equal(job.registry[2], Actions.SelectionAction.name)
-    Assert.equal(job.registry[3], 'FormatAction')
+    Assert.equal(job.registry[3], Actions.PoliticianAfterAdapterAction.name)
     done()
   })
 

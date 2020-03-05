@@ -2,16 +2,6 @@ const QueueAction = require('../QueueAction').QueueAction
 const Actions = require('../../action/actions')
 const Job = require('../../Job').AbstractJob
 
-class FormatAction extends Actions.Action {
-  perform (response) {
-    // eslint-disable-next-line no-unused-vars
-    const { selected, other } = response
-    return selected.map(url => {
-      return 'https://www.ourcommons.ca' + url
-    })
-  }
-}
-
 class PoliticianAfterAction extends QueueAction {
   constructor (manager) {
     super()
@@ -40,7 +30,7 @@ class PoliticianAfterAction extends QueueAction {
         return $(elem).attr('src')
       }))
       .addAction(new Actions.SelectionAction('/Content/Parliamentarians/Images/OfficialMPPhotos/'))
-      .addAction(new FormatAction())
+      .addAction(new Actions.PoliticianAfterAdapterAction())
   }
 
   attachToMps (links) {

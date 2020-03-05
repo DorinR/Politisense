@@ -94,28 +94,4 @@ describe('Roles', () => {
       Assert.equal(roles.parliamentaries.length, 1)
     })
   })
-
-  describe('AssociationRoleXmlParser.js', () => {
-    let underTest
-    let xml
-    beforeEach(() => {
-      underTest = new Parsers.AssociationRoleXmlParser()
-    })
-  })
-
-  describe('CommitteeRoleXmlParser.js', () => {
-    let underTest
-    let xml
-    beforeEach(() => {
-      underTest = new Parsers.CommitteeRoleXmlParser()
-    })
-  })
-
-  describe('ParliamentaryRoleXmlParser.js', () => {
-    let underTest
-    let xml
-    beforeEach(() => {
-      underTest = new Parsers.ParliamentaryRoleXMLParser()
-    })
-  })
 })
