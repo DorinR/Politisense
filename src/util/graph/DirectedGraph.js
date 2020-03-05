@@ -1,15 +1,51 @@
-const UndirectedGraph = require('./UndirectedGraph').UndirectedGraph
 const Vertex = require('./Vertex').Vertex
 
-class DirectedGraph extends UndirectedGraph {
-  addEdge (v, w) {
-    if (!(v instanceof Vertex) || !(w instanceof Vertex)) {
-      throw new Error('Vertices must be an instance of vertex')
+class InvalidVertexError extends Error {
+  constructor(message) {
+    super()
+    this.message = message
+  }
+}
+
+class DirectedGraph {
+  constructor () {
+    this.adjacencyList = new Map()
+  }
+
+  addVertex (v) {
+    DirectedGraph.check(v)
+    this.adjacencyList.set(v, [])
+  }
+
+  addEdge (from, to) {
+    DirectedGraph.check(from)
+    DirectedGraph.check(to)
+    const list = this.adjacencyList.get(from)
+    if(!list) {
+      throw new InvalidVertexError('Vertex from not in graph')
     }
-    this.adjacencyList.get(v).push(w)
+    if(!this.adjacencyList.get(to)) {
+      throw new InvalidVertexError('Vertex from not in graph')
+    }
+    list.push(to)
+  }
+
+  static check(v) {
+    if (!(v instanceof Vertex)) {
+      throw new InvalidVertexError('Vertex must be an instance of vertex')
+    }
+  }
+
+  forEach (fn) {
+    this.adjacencyList.forEach(fn)
+  }
+
+  get (v) {
+    return this.adjacencyList.get(v)
   }
 }
 
 module.exports = {
-  DirectedGraph: DirectedGraph
+  DirectedGraph: DirectedGraph,
+  InvalidVertexError: InvalidVertexError
 }
