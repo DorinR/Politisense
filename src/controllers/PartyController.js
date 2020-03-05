@@ -1,4 +1,4 @@
-import { Firestore } from '../client/src/Firebase'
+const Firestore = require('@firestore').Firestore
 
 exports.getAllPartyData = (req, res) => {
   console.log('party: ', req.params.party)

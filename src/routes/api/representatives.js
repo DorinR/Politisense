@@ -22,10 +22,6 @@ router.get(
   controller.getRepresentativeId
 )
 
-// api/representatives
-router.get('/:parliamentNumber/getRepresentatives',
-  controller.getRepresentatives)
-
 router.get('/representative/representative/:name', controller.getImageData)
 
 module.exports = router
