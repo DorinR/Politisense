@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
 import D3ChartHeadVsHeadContainer from '../D3ChartHeadVsHeadContainer'
 import Grow from '@material-ui/core/Grow'
+import { firestore } from 'firebase'
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -28,6 +29,29 @@ const useStyles = makeStyles(theme => ({
     paddingTop: '20px'
   }
 }))
+
+export async function getPastParliaments() {
+  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
+  const riding = 'nunavut'
+  const db = new Firestore(false)
+  let politicians = parliaments.map(parl => {
+    return db.forParliament(parl)
+      .Politicians()
+      .where('riding', '==', riding)
+      .select()
+      .then(snapshot => {
+        let ret = {}
+        snapshot.forEach(doc => {
+          ret = doc.data()
+        })
+        return ret
+      })
+  })
+  politicians = await Promise.all(politicians)
+  politicians.forEach(politicians => {
+    console.log(politicians)
+  })
+}
 
 export async function getAllBillsByHead(head) {
   const res = await axios.get(
