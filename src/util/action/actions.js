@@ -11,7 +11,10 @@ module.exports = {
   HandleConnectionErrorAction: require('./error_action/HandleConnectionErrorAction').HandleConnectionErrorAction,
   RequeueAction: require('./queue_action/RequeueConnectionAction').RequeueAction,
   HandleDownloadErrorAction: require('./error_action/HandleDownloadErrorAction').HandleDownloadErrorAction,
-  ParserWrapperAction: require('./ParserWrapperAction').ParserWrapperAction,
+  ParserWrapperAction: require('./wrapper_action/ParserWrapperAction').ParserWrapperAction,
   Errors: require('./error/errors'),
-  FormatAction: require('./FormatAction').FormatAction
+  FormatAction: require('./FormatAction').FormatAction,
+  ClassifyAction: require('./classify_action/ClassifyAction').ClassificationAction,
+  FileOutputAction: require('./classify_action/FileOutputAction').FileOutputAction,
+  BillTagCreationAction: require('./classify_action/BillTagCreationAction').BillTagCreationAction
 }

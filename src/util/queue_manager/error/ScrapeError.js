@@ -1,7 +1,7 @@
 const Action = require('@manager').QueueAction
-const XMLParseError = require('../../parser/parsers').DataNotFoundError
+const ScrapeError = require('../../action/error/errors').ScrapeError
 
-class ParseErrorAction extends Action {
+class ScrapeErrorAction extends Action {
   constructor (manager) {
     super()
     this.manager = manager
@@ -11,10 +11,10 @@ class ParseErrorAction extends Action {
     await this.manager.lock.acquire()
     this.manager.queryCount--
     this.manager.lock.release()
-    if (!(e instanceof XMLParseError)) {
+    if (!(e instanceof ScrapeError)) {
       throw e
     }
   }
 }
 
-module.exports.ParseErrorAction = ParseErrorAction
+module.exports.ScrapeErrorAction = ScrapeErrorAction

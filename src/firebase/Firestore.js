@@ -253,7 +253,7 @@ class Firestore {
   }
 
   BillClassification () {
-    const collection = this.legacy ? 'bill_classification' : `${this.parliament}/bill_classification`
+    const collection = this.legacy ? 'bill_classification' : `${this.parliament}/bills/tag`
     return this.createReference(collection)
   }
 
@@ -278,7 +278,7 @@ class Firestore {
   }
 
   TfIdfClassification () {
-    const collection = this.legacy ? 'tf_idf_bill' : `${this.parliament}/tf_idf_bill`
+    const collection = this.legacy ? 'tf_idf_bill' : `${this.parliament}/bills/raw`
     return this.createReference(collection)
   }
 

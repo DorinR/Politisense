@@ -1,7 +1,7 @@
-const Action = require('./JobAction').AbstractJobAction
-const DecorationError = require('../action/error/errors').ActionDecorationError
-const XMLParser = require('../parser/XmlDataParser').XmlDataParser
-const XMLParseError = require('../parser/XmlParserError').DataNotFoundError
+const Action = require('../JobAction').AbstractJobAction
+const DecorationError = require('../error/errors').ActionDecorationError
+const XMLParser = require('../../parser/XmlDataParser').XmlDataParser
+const XMLParseError = require('../../parser/XmlParserError').DataNotFoundError
 
 class ParserWrapperAction extends Action {
   constructor (xmlParserType, params) {
