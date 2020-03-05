@@ -3,7 +3,6 @@ const assert = require('chai').assert
 const Parsers = require('../../../util/parser/parsers')
 const VoteXmlParser = Parsers.VoteXmlParser
 const VoteParticipantsXmlParser = Parsers.VoteParticipantsXmlParser
-const ParliamentNotSetError = Parsers.ParliamentNotSetError
 
 describe('VoteXmlParser', () => {
   it('should return a final vote for bill C-19', () => {
@@ -20,40 +19,18 @@ describe('VoteXmlParser', () => {
     const xml = genVoteXml([{}, nonFinalVote, nonBillVote, finalBillVote])
     const parser = new VoteXmlParser(xml)
     const votes = parser.getAllFromXml()
-    assert.lengthOf(votes, 1, 'only 1 final vote for a bill')
 
-    const vote = votes[0]
+    const vote = votes[3]
     assert.strictEqual(vote.id, 95)
     assert.strictEqual(vote.billNumber, 'C-19')
     assert.strictEqual(vote.name, '3rd reading and adoption of Bill C-19')
     assert.strictEqual(vote.yeas, 177)
     assert.strictEqual(vote.nays, 139)
-    assert.hasAnyKeys(vote, ['voters'])
   })
 
   it('should return false if current parliament not satisfied', () => {
     const parser = new VoteXmlParser('', { number: 42, session: 1 })
     assert.isFalse(parser.isInCurrentParliament())
-  })
-
-  it('should get vote participants when given an id', (done) => {
-    const parliament = { number: 42, session: 1 }
-    const parser = new VoteXmlParser('', parliament)
-    jest.spyOn(parser, '_getHtmlFromLink').mockImplementation(async () => {
-      return genVotersXml([{}, {}, {}])
-    })
-
-    parser.getVoters(752).then(voters => {
-      expect(parser._getHtmlFromLink).toHaveBeenCalledTimes(1)
-      expect(parser._getHtmlFromLink).toHaveBeenCalledWith(VoteXmlParser.getVoteParticipantsUrl(752, parliament))
-      assert.lengthOf(Object.keys(voters), 3)
-      done()
-    })
-  })
-
-  it('should throw error if get voters without parliament', async () => {
-    const parser = new VoteXmlParser('')
-    await expect(parser.getVoters(752)).rejects.toThrow(ParliamentNotSetError)
   })
 })
 
@@ -111,23 +88,24 @@ describe('VoteParticipantsXmlParser', () => {
 })
 
 function genVoteXml (voteList) {
-  let xml = '<List>'
+  let xml = '<ArrayOfVote>'
   voteList.forEach((vote, i) => {
     const billNumberCode = (typeof vote.billNumber !== 'undefined')
       ? `<BillNumberCode>${vote.billNumber}</BillNumberCode>` : '<BillNumberCode />'
 
-    const voteXml = `<VoteParticipant>
+    const voteXml = `<Vote>
         <ParliamentNumber>${vote.parliamentNumber || 42}</ParliamentNumber>
+        <DecisionEventDateTime>2014-02-18</DecisionEventDateTime>
         <SessionNumber>${vote.sessionNumber || 1}</SessionNumber>
         <DecisionDivisionNumber>${vote.id || i}</DecisionDivisionNumber>
         <DecisionDivisionSubject>${vote.name || 'Vote Subject Name'}</DecisionDivisionSubject>
         <DecisionDivisionNumberOfYeas>${vote.yeas || 0}</DecisionDivisionNumberOfYeas>
         <DecisionDivisionNumberOfNays>${vote.nays || 0}</DecisionDivisionNumberOfNays>
         ${billNumberCode}
-    </VoteParticipant>`
+    </Vote>`
     xml += voteXml
   })
-  xml += '</List>'
+  xml += '</ArrayOfVote>'
   return xml
 }
 

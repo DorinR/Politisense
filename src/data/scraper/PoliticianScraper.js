@@ -2,7 +2,7 @@ require('module-alias/register')
 const Utils = require('@utils')
 const QueueManager = Utils.QueueManager.QueueManager
 const StartAction = Utils.QueueManager.Start.StartPoliticianScrape
-const StopAction = Utils.QueueManager.Stop.StopPoliticianScrape
+const StopAction = Utils.QueueManager.Stop.GenericStopAction
 const Throw = Utils.QueueManager.Error.ParseErrorAction
 const AfterAction = Utils.QueueManager.After.PoliticianAfterAction
 
@@ -170,12 +170,27 @@ class PoliticianScraper extends QueueManager {
 }
 
 module.exports.PoliticianScraper = PoliticianScraper
+const Firestore = require('@firestore').Firestore
+const db = new Firestore(false)
 
 PoliticianScraper.create({
   url: 'https://www.ourcommons.ca/Members/en/search/xml',
-  parliaments: 'all'
+  parliaments: [36, 37, 38, 39, 40, 41, 42, 43]
 })
   .execute()
-  .then(result => {
-    console.log(result)
+  .then(results => {
+    return Promise.all(
+      results.map(result =>{
+        const parl = result.params.params.parliament
+        const Politician = db.forParliament(parl).Politician()
+        return Promise.all(
+          result.data[0].map(politician => {
+            return Politician.insert(politician)
+          })
+        )
+      })
+    )
+  })
+  .then(responses => {
+    console.log(responses)
   })
