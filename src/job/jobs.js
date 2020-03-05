@@ -5,3 +5,4 @@ module.exports.PoliticianFetchJob = require('./PoliticianFetchJob').PoliticianFe
 module.exports.RoleFetchJob = require('./RoleFetchJob').RoleFetchJob
 module.exports.BillFetchJob = require('./BillFetchJob').BillFetchJob
 module.exports.VoteRecordFetchJob = require('./VoteRecordFetchJob').VoteRecordFetchJob
+module.exports.VoteParticipantFetchJob = require('./VoteParticipantFetchJob').VoteParticipantFetchJob

@@ -26,8 +26,10 @@ class ParserWrapperAction extends Action {
       return [parser.getAllFromXml()]
     } else if (parser.hasData()) {
       return parser.xmlToJson()
-    } else {
+    } else if (!parser.xml.includes(parser.tagName) || !parser.xml.includes(parser.listTagName)) {
       throw new XMLParseError('ERROR: No Data Found')
+    } else {
+      return []
     }
   }
 }
