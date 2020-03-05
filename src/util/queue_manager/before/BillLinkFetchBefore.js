@@ -13,8 +13,7 @@ class BillLinkFetchBeforeAction extends QueueAction {
   }
 
   retrieveBills () {
-    return Promise.all(
-      Parliaments.map(parl => {
+    return Parliaments.map(parl => {
         return new Firestore(false)
           .forParliament(parl)
           .Bill()
@@ -36,7 +35,6 @@ class BillLinkFetchBeforeAction extends QueueAction {
           })
           .catch(console.error)
       })
-    )
   }
 
   async perform () {
@@ -44,7 +42,7 @@ class BillLinkFetchBeforeAction extends QueueAction {
   }
 
   async createQueryParams () {
-    this.bills = await Promise.resolve(this.bills)
+    this.bills = await Promise.all(this.bills)
     const params = []
     this.manager.params.forEach(param => {
       const parliament = this.bills[Parliaments.indexOf(param.parliament)]

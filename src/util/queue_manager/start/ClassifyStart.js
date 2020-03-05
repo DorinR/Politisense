@@ -4,18 +4,18 @@ const ClassificationJob = require('../../../job/ClassificationJob').Classificati
 class ClassifyStart extends QueueAction {
   constructor (manager) {
     super()
-    manager.params.forEach(param => {
-      manager.queue.enqueue(
-        ClassificationJob.create(
-          param,
-          manager.requeueCallback.bind(manager)
-        )
-      )
-    })
+    this.manager = manager
   }
 
   async perform () {
-    return null
+    this.manager.params.forEach(param => {
+      this.manager.queue.enqueue(
+        ClassificationJob.create(
+          param,
+          this.manager.requeueCallback.bind(this.manager)
+        )
+      )
+    })
   }
 }
 
