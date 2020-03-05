@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import HelpIcon from '@material-ui/icons/Help'
 import { makeStyles } from '@material-ui/core/styles'
 import Dialog from '@material-ui/core/Dialog'
@@ -13,13 +13,16 @@ const Transition = React.forwardRef(function Transition (props, ref) {
 
 const useStyles = makeStyles(theme => ({
   help: {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    marginTop: '4px',
+    marginLeft: '4px'
   }
 }))
 
 export default function InfoBubble (props) {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
+  const [color, setColor] = React.useState('#43D0C4')
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -29,11 +32,17 @@ export default function InfoBubble (props) {
     setOpen(false)
   }
 
+  useEffect(() => {
+    if (props.color) {
+      setColor(props.color)
+    }
+  })
+
   return (
     <span>
       <HelpIcon
         className={classes.help}
-        color='primary'
+        style={{ color: color }}
         onClick={handleClickOpen}
       />
       <Dialog

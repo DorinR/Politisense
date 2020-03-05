@@ -60,7 +60,7 @@ function getStyles(name, personName, theme) {
   }
 }
 export default function MpsSwitcher(props) {
-  // eslint-disable-next-line no-use-before-define
+  // eslint-disable-next-line no-unused-vars
   const { functionUpdate, ...other } = props
   const classes = useStyles()
   const theme = useTheme()
