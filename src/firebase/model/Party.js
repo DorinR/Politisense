@@ -1,5 +1,5 @@
 const Model = require('./Model').Model
-const Condition = require('@utils').Condition
+const Condition = require('../../util/Condition').Condition
 
 class Party extends Model {
   constructor (name, seats, imageUrl) {
@@ -17,3 +17,5 @@ class Party extends Model {
     return Model.deserialise(json, new Party('', 0, ''))
   }
 }
+
+module.exports.PoliticalParty = Party

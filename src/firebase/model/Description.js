@@ -1,5 +1,5 @@
 const Model = require('./Model').Model
-const Condition = require('@utils').Condition
+const Condition = require('../../util/Condition').Condition
 
 class Description extends Model {
   constructor (identifier, description) {
