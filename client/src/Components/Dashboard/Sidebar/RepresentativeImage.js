@@ -3,7 +3,7 @@ import Avatar from '@material-ui/core/Avatar'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
 
-export async function fetchUserRiding(userEmail) {
+export async function fetchUserRiding (userEmail) {
   return axios
     .get(`/api/users/${userEmail}/getUser`)
     .then(res => {
@@ -14,7 +14,7 @@ export async function fetchUserRiding(userEmail) {
     .catch(console.error)
 }
 
-export async function fetchRepresentative(riding) {
+export async function fetchRepresentative (riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function RepresentativeImage(props) {
+export default function RepresentativeImage (props) {
   const classes = useStyles()
   const [user, setUser] = useState(null)
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function RepresentativeImage(props) {
 
   const [riding, setRiding] = useState(props.representativeToLoad)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (user && !riding) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -56,7 +56,7 @@ export default function RepresentativeImage(props) {
 
   const [representative, setRepresentative] = useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (riding) {
         const rep = await fetchRepresentative(riding)
         setRepresentative(rep)

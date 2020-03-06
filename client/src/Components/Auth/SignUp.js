@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function signupAPICall(user) {
+export async function signupAPICall (user) {
   let result = ''
   await axios.post('/api/users/checkIfUserExists', user).then(res => {
     result = res
@@ -54,7 +54,7 @@ export async function signupAPICall(user) {
   return result
 }
 
-export default function SignUp() {
+export default function SignUp () {
   const classes = useStyles()
   const [registered, setRegistered] = useState(false)
   const [email, setEmail] = useState('')
@@ -72,7 +72,7 @@ export default function SignUp() {
     passwordConfirm: ''
   })
 
-  function checkIfFormIsValid() {
+  function checkIfFormIsValid () {
     if (firstname && lastname && email && password && passwordConfirm) {
       setValidForm(true)
     }
@@ -145,7 +145,8 @@ export default function SignUp() {
             className={classes.form}
             noValidate
             onSubmit={handleSubmit}
-            onChange={checkIfFormIsValid}>
+            onChange={checkIfFormIsValid}
+          >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -228,7 +229,8 @@ export default function SignUp() {
               variant='contained'
               color='primary'
               className={classes.submit}
-              disabled={!validForm}>
+              disabled={!validForm}
+            >
               CONTINUE WITH SIGN UP
             </Button>
             <Grid container justify='flex-end'>

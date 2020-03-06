@@ -131,7 +131,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding(userEmail) {
+export async function fetchUserRiding (userEmail) {
   return axios
     .get(`/api/users/${userEmail}/getUser`)
     .then(res => {
@@ -142,7 +142,7 @@ export async function fetchUserRiding(userEmail) {
     .catch(console.error)
 }
 
-export async function fetchRepresentative(riding) {
+export async function fetchRepresentative (riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
@@ -153,7 +153,7 @@ export async function fetchRepresentative(riding) {
     .catch(console.error)
 }
 
-export default function MiniDrawer({ children }) {
+export default function MiniDrawer ({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -168,7 +168,7 @@ export default function MiniDrawer({ children }) {
   }, [])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (user) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -178,7 +178,7 @@ export default function MiniDrawer({ children }) {
   }, [user])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (riding) {
         const representative = await fetchRepresentative(riding)
         setUserRepresentative(representative)
@@ -206,7 +206,8 @@ export default function MiniDrawer({ children }) {
         position='fixed'
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open
-        })}>
+        })}
+      >
         <Toolbar>
           <IconButton
             color='inherit'
@@ -215,14 +216,16 @@ export default function MiniDrawer({ children }) {
             edge='start'
             className={clsx(classes.menuButton, {
               [classes.hide]: open
-            })}>
+            })}
+          >
             <MenuIcon />
           </IconButton>
           <Link to='/general' className={classes.navbarCustomFont}>
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}>
+              className={classes.navbarCustomButton}
+            >
               General
             </Button>
           </Link>
@@ -235,7 +238,8 @@ export default function MiniDrawer({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}>
+              className={classes.navbarCustomButton}
+            >
               Voting History
             </Button>
           </Link>
@@ -243,7 +247,8 @@ export default function MiniDrawer({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}>
+              className={classes.navbarCustomButton}
+            >
               Compare
             </Button>
           </Link>
@@ -251,7 +256,8 @@ export default function MiniDrawer({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}>
+              className={classes.navbarCustomButton}
+            >
               Budget
             </Button>
           </Link>
@@ -259,7 +265,8 @@ export default function MiniDrawer({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}>
+              className={classes.navbarCustomButton}
+            >
               Map
             </Button>
           </Link>
@@ -288,7 +295,8 @@ export default function MiniDrawer({ children }) {
             [classes.drawerClose]: !open
           })
         }}
-        open={open}>
+        open={open}
+      >
         <div className={classes.toolbar}>
           {open ? (
             <Typography variant='h6' noWrap>
