@@ -80,14 +80,15 @@ export default function RepresentativeInfo (props) {
         fetchRepresentative(riding)
       ])
       const ridingCode = promises[0]
-      const { name, politicalParty, yearElected } = promises[1]
-      setData({
+      const { name, party, start } = promises[1]
+      const data = {
         name: name,
         ridingCode: ridingCode,
         riding: riding,
-        politicalParty: politicalParty,
-        yearElected: yearElected
-      })
+        politicalParty: party,
+        yearElected: start
+      }
+      setData(data)
     }
     getData()
   }, [])

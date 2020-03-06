@@ -1,11 +1,7 @@
-const QueueManagerWrapperAction = require('../util/action/wrapper_action/QueueManagerWrapperAction')
-  .QueueManagerWrapperAction
-const ClassificationAction = require('../util/action/classify_action/ClassifyAction')
-  .ClassificationAction
-const BillPDFFetchRunner = require('../data/runner/BillPDFFetchRunner')
-  .BillPDFFetchRunner
-const BillLinkFetchRunner = require('../data/runner/BillLinkFetchRunner')
-  .BillLinkFetchRunner
+const QueueManagerWrapperAction = require('../util/action/wrapper_action/QueueManagerWrapperAction').QueueManagerWrapperAction
+const ClassificationAction = require('../util/action/classify_action/ClassifyAction').ClassificationAction
+const BillPDFFetchRunner = require('../data/runner/BillPDFFetchRunner').BillPDFFetchRunner
+const BillLinkFetchRunner = require('../data/runner/BillLinkFetchRunner').BillLinkFetchRunner
 const AbstractJob = require('../util/Job').AbstractJob
 const FormatAction = require('../util/action/FormatAction').FormatAction
 
