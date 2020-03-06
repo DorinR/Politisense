@@ -250,11 +250,11 @@ class Firestore {
   }
 
   FinancialRecord () {
-    const collection = this.legacy ? 'financialRecord' : 'financialRecord' //`${this.parliament}/financialRecord` not currently implemented
+    const collection = this.legacy ? 'financialRecord' : 'financialRecord' // `${this.parliament}/financialRecord` not currently implemented
     return this.createReference(collection)
   }
 
-  PoliticalParty() {
+  PoliticalParty () {
     const collection = this.legacy ? 'parties' : 'parties'
     return this.createReference(collection)
   }
@@ -296,30 +296,6 @@ class Firestore {
 
   createReference (collection) {
     return new Reference(this.reference.collection(collection))
-  }
-
-  static copyCollection(from, to) {
-    return new Promise(resolve => {
-      from
-        .select()
-        .then(snapshot => {
-          const records = []
-          snapshot.forEach(doc => {
-            records.push(doc.data())
-          })
-          return records
-        })
-        .then(records => {
-          return records.map(old => {
-            return to.insert(old)
-          })
-        })
-        .then(Promise.all)
-        .then((responses) => {
-          resolve(responses)
-        })
-        .catch(console.error)
-    })
   }
 
   async close () {
