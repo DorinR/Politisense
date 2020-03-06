@@ -9,3 +9,4 @@ module.exports.User = require('./User').User
 module.exports.Vote = require('./Vote').Vote
 module.exports.VoteRecord = require('./VoteRecord').VoteRecord
 module.exports.Role = require('./Role').Role
+module.exports.LegislativeActivity = require('./LegislativeActivity').LegislativeActivity
