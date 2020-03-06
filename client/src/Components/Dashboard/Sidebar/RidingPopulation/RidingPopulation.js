@@ -1,13 +1,9 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
-export async function fetchPopulation (riding) {
+export async function fetchPopulation(riding) {
   return axios
-    .get(
-      `http://localhost:5000/api/ridings/getRidingPopulation/${encodeURI(
-        riding
-      )}`
-    )
+    .get(`/api/ridings/getRidingPopulation/${encodeURI(riding)}`)
     .then(res => {
       if (res.data.success) {
         return res.data.data.population
@@ -16,11 +12,11 @@ export async function fetchPopulation (riding) {
     .catch(console.error)
 }
 
-export default function RidingPopulation (props) {
+export default function RidingPopulation(props) {
   const [population, setPopulation] = useState('')
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (props.riding) {
         setPopulation(await fetchPopulation(props.riding))
       }

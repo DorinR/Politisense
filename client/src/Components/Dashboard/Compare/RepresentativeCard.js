@@ -67,13 +67,13 @@ export default function RepresentativeCard(props) {
     if (name) {
       async function getRepInfo(name) {
         const res = await axios.get(
-          `http://localhost:5000/api/representatives/${name}/getRepresentativesInfo`
+          `/api/representatives/${name}/getRepresentativesInfo`
         )
         return res.data.data
       }
       async function getIssuedBillsByHead(head) {
         const res = await axios.get(
-          `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
+          `/api/bills/${head}/getAllBillsBySponsorName`
         )
         return res.data.data
       }

@@ -43,7 +43,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function CategoryDashboard () {
+export default function CategoryDashboard() {
   const classes = useStyles()
   const [categoryList] = React.useState([
     'economics',
@@ -64,16 +64,16 @@ export default function CategoryDashboard () {
 
   const [reps, setReps] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const representatives = await getAllReps()
       setReps(representatives)
     }
     getData()
   }, [])
 
-  async function getAllReps () {
+  async function getAllReps() {
     return axios
-      .get('http://localhost:5000/api/representatives/getAllRepresentatives')
+      .get('/api/representatives/getAllRepresentatives')
       .then(res => {
         if (res.data.success) {
           return res.data.data
@@ -84,7 +84,7 @@ export default function CategoryDashboard () {
 
   const [riding, setRiding] = useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (user) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -95,7 +95,7 @@ export default function CategoryDashboard () {
 
   const [userRepresentative, setUserRepresentative] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (riding) {
         const representative = await fetchRepresentative(riding)
         setUserRepresentative(representative)
@@ -104,11 +104,9 @@ export default function CategoryDashboard () {
     getData()
   }, [riding])
 
-  async function fetchRepresentative (riding) {
+  async function fetchRepresentative(riding) {
     return axios
-      .get(
-        `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-      )
+      .get(`/api/representatives/${riding}/getRepresentative`)
       .then(res => {
         if (res.data.success) {
           return res.data.data.name
@@ -119,7 +117,7 @@ export default function CategoryDashboard () {
 
   const [representativeData, setRepresentativeData] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (userRepresentative) {
         const billsByRep = await getAllBillsByRep(userRepresentative)
         setRepresentativeData(billsByRep)
@@ -128,9 +126,9 @@ export default function CategoryDashboard () {
     getData()
   }, [userRepresentative])
 
-  async function getAllBillsByRep (head) {
+  async function getAllBillsByRep(head) {
     return axios
-      .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
+      .get(`/api/bills/${head}/getAllBillsByRep`)
       .then(res => {
         if (res.data.success) {
           return res.data.data
@@ -141,18 +139,20 @@ export default function CategoryDashboard () {
 
   const [userRepIssuedBills, setUserRepIssuedBills] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (userRepresentative) {
-        const issuedBillByUserRep = await getAllBillsBySponsorName(userRepresentative)
+        const issuedBillByUserRep = await getAllBillsBySponsorName(
+          userRepresentative
+        )
         setUserRepIssuedBills(issuedBillByUserRep)
       }
     }
     getData()
   }, [userRepresentative])
 
-  async function getAllBillsBySponsorName (head) {
+  async function getAllBillsBySponsorName(head) {
     return axios
-      .get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
+      .get(`/api/bills/${head}/getAllBillsBySponsorName`)
       .then(res => {
         if (res.data.success) {
           return res.data.data
@@ -216,61 +216,43 @@ export default function CategoryDashboard () {
 
       {radarData && categoryList ? (
         <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Card>
-                <CardContent>
-                  <Typography className={classes.title}>
-                    MP Voting Distribution
-                  </Typography>
-                  <Radar
-                    width={400}
-                    height={350}
-                    padding={40}
-                    domainMax={radarData[1] + 3}
-                    highlighted
-                    onHover={point => {
-                      if (point) {
-                      } else {
-                      }
-                    }}
-                    data={{
-                      variables: [
-                        { key: "trade", label: "Trade" },
-                        { key: "criminal", label: "Criminal" },
-                        { key: "business", label: "Business" },
-                        { key: "Economics", label: "Economics" },
-                        { key: "Healthcare", label: "Healthcare" },
-                        { key: "Religion", label: "Religion" },
-                        { key: "Human Rights", label: "Human Rights" }
-                      ],
-                      sets: [
-                        {
-                          values: radarData[0]
-                        }
-                      ]
-                    }}
-                  />
-                  <Box border mx="auto">
-                    <List>
-                      <ListItem>
-                        <ListItemAvatar>
-                          <Avatar className={classes.avatar}>
-                            <NotListedLocationIcon />
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText>
-                          This radar chart shows the MP's activity with respect
-                          to a variety categories.
-                        </ListItemText>
-                      </ListItem>
-                    </List>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-            {donutData ? (
-              <Grid item item xs={6}>
+          {userRepIssuedBills && categoryList && userRepresentative ? (
+            <Card>
+              <CardContent>
+                <Typography className={classes.title}>
+                  Bills sponsored by {capitalizedName(userRepresentative)}
+                </Typography>
+                <BarChartWrapper
+                  type='bar-pie'
+                  data={userRepIssuedBills}
+                  categories={categoryList}
+                />
+                <Box border mx='auto'>
+                  <List>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar className={classes.avatar}>
+                          <NotListedLocationIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText>
+                        The distribution of issued bills by the representative
+                        among different categories
+                      </ListItemText>
+                    </ListItem>
+                  </List>
+                </Box>
+              </CardContent>
+            </Card>
+          ) : (
+            ''
+          )}
+        </Grid>
+
+        {radarData && categoryList ? (
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
                 <Card>
                   <CardContent>
                     <Typography className={classes.title}>
@@ -322,10 +304,10 @@ export default function CategoryDashboard () {
 }
 
 function createDataSetRadar(categories, data) {
-  const dataArray = [];
-  let temp = {};
-  const dataSetRadar = {};
-  let maxValue = 0;
+  const dataArray = []
+  let temp = {}
+  const dataSetRadar = {}
+  let maxValue = 0
   console.log(categories)
   console.log(data)
   categories.forEach(category => {

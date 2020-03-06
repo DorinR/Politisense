@@ -68,7 +68,7 @@ export function checkEmailFormat(email) {
 
 export async function fetchUser(email) {
   return await axios
-    .post('http://localhost:5000/api/users/checkIfUserExists', { email: email })
+    .post('/api/users/checkIfUserExists', { email: email })
     .then(res => {
       return res.data
     })
@@ -78,7 +78,7 @@ export async function fetchUser(email) {
 export async function handleEmailLogin(user) {
   let result = ''
   await axios
-    .post('http://localhost:5000/api/users/login', user)
+    .post('/api/users/login', user)
     .then(res => {
       result = res
     })
@@ -88,7 +88,7 @@ export async function handleEmailLogin(user) {
 
 export async function handleSocialLogin(social) {
   return await axios
-    .post('http://localhost:5000/api/users/socialLogin', { type: social })
+    .post('/api/users/socialLogin', { type: social })
     .then(res => {
       const token = res.data.data
       return tokenAuthenticate(token)

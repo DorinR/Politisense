@@ -58,13 +58,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function getSteps () {
+function getSteps() {
   return ['Voting Issue', 'Area of Interest', 'Postal Code']
 }
 
-export async function setRiding (postalCode) {
+export async function setRiding(postalCode) {
   const result = await axios
-    .post('http://localhost:5000/api/users/setRiding', {
+    .post('/api/users/setRiding', {
       postalCode: postalCode
     })
     .then(res => {
@@ -76,12 +76,21 @@ export async function setRiding (postalCode) {
   return result
 }
 
-export default function HorizontalLinearStepper (props) {
+export default function HorizontalLinearStepper(props) {
   const classes = useStyles()
   const [activeStep, setActiveStep] = useState(0)
   const steps = getSteps()
   // eslint-disable-next-line no-unused-vars
-  const [options, setOptions] = useState(['Economics', 'Social Issues', 'Trade', 'Healthcare', 'Human Rights', 'Business', 'Religion', 'Criminal'])
+  const [options, setOptions] = useState([
+    'Economics',
+    'Social Issues',
+    'Trade',
+    'Healthcare',
+    'Human Rights',
+    'Business',
+    'Religion',
+    'Criminal'
+  ])
   const [category1, setCatergory1] = useState('Economics')
   const [category2, setCatergory2] = useState('')
   const [errors, setErrors] = useState({ postalCode: '' })
@@ -94,7 +103,7 @@ export default function HorizontalLinearStepper (props) {
   const handleChangeCategory2 = event => {
     setCatergory2(event.target.value)
   }
-  function getStepContent (step) {
+  function getStepContent(step) {
     switch (step) {
       case 0:
         return (
@@ -108,8 +117,7 @@ export default function HorizontalLinearStepper (props) {
                   aria-label='issue'
                   name='issue'
                   value={category1}
-                  onChange={handleChangeCategory1}
-                >
+                  onChange={handleChangeCategory1}>
                   <FormControlLabel
                     value='Economics'
                     control={<Radio />}
@@ -167,8 +175,7 @@ export default function HorizontalLinearStepper (props) {
                   aria-label='issue'
                   name='issue'
                   value={category2}
-                  onChange={handleChangeCategory2}
-                >
+                  onChange={handleChangeCategory2}>
                   {options &&
                     options.map(option =>
                       option !== category1 ? (
@@ -218,7 +225,7 @@ export default function HorizontalLinearStepper (props) {
             userToSignup.categories = [category1, category2]
             // eslint-disable-next-line no-undef
             localStorage.setItem('user', JSON.stringify(userToSignup))
-            await axios.post('http://localhost:5000/api/users/signup', userToSignup)
+            await axios.post('/api/users/signup', userToSignup)
             props.history.push('/dashboard')
           } else {
             console.log('Could not fetch riding')
@@ -307,18 +314,15 @@ export default function HorizontalLinearStepper (props) {
                     Registration completed. You're all set!
                   </Typography>
                   <div className={classes.actions}>
-                    <Button
-                      className={classes.button}
-                      onClick={handleReset}
-                    >Reset
+                    <Button className={classes.button} onClick={handleReset}>
+                      Reset
                     </Button>
                     <Button
                       onClick={handleSubmit}
                       variant='contained'
                       color='primary'
-                      className={classes.button}
-                    >
-                    Confirm information
+                      className={classes.button}>
+                      Confirm information
                     </Button>
                   </div>
                 </div>
@@ -333,16 +337,14 @@ export default function HorizontalLinearStepper (props) {
                     <Button
                       disabled={activeStep === 0}
                       onClick={handleBack}
-                      className={classes.button}
-                    >
+                      className={classes.button}>
                       Back
                     </Button>
                     <Button
                       variant='contained'
                       color='primary'
                       onClick={handleNext}
-                      className={classes.button}
-                    >
+                      className={classes.button}>
                       Next
                     </Button>
                   </div>

@@ -26,7 +26,7 @@ export default function BudgetContainer() {
 
   async function fetchUserRiding(userEmail) {
     return axios
-      .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+      .get(`/api/users/${userEmail}/getUser`)
       .then(res => {
         if (res.data.success) {
           return res.data.data.riding
@@ -48,9 +48,7 @@ export default function BudgetContainer() {
 
   async function fetchRepresentative(riding) {
     return axios
-      .get(
-        `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-      )
+      .get(`/api/representatives/${riding}/getRepresentative`)
       .then(res => {
         if (res.data.success) {
           return res.data.data.name
@@ -79,9 +77,7 @@ export default function BudgetContainer() {
 
   async function fetchRepresentativeId(representative) {
     return axios
-      .get(
-        `http://localhost:5000/api/representatives/${representative}/getRepresentativeId`
-      )
+      .get(`/api/representatives/${representative}/getRepresentativeId`)
       .then(res => {
         if (res.data.success) {
           return res.data.data
@@ -103,7 +99,7 @@ export default function BudgetContainer() {
 
   async function getBudgetData(id) {
     return axios
-      .get(`http://localhost:5000/api/budgets/budget/${id}`)
+      .get(`/api/budgets/budget/${id}`)
       .then(res => {
         return res.data.data
       })

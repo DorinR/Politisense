@@ -96,9 +96,7 @@ export default function CategoryGrid() {
 
   async function getUserInterests(email) {
     return axios
-      .post('http://localhost:5000/api/users/getUserInterests', {
-        email: email
-      })
+      .post('/api/users/getUserInterests', { email: email })
       .then(res => {
         return res.data.data.categories
       })
@@ -136,9 +134,7 @@ export default function CategoryGrid() {
 
   async function fetchRepresentative(riding) {
     return axios
-      .get(
-        `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-      )
+      .get(`/api/representatives/${riding}/getRepresentative`)
       .then(res => {
         if (res.data.success) {
           return res.data.data.name
@@ -160,7 +156,7 @@ export default function CategoryGrid() {
 
   async function getAllBillsByRep(head) {
     return axios
-      .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
+      .get(`/api/bills/${head}/getAllBillsByRep`)
       .then(res => {
         if (res.data.success) {
           return res.data.data
@@ -198,7 +194,7 @@ export default function CategoryGrid() {
 
   async function updateUserCategory(categoryList) {
     return axios
-      .post('http://localhost:5000/api/users/updateUserCategory', {
+      .post('/api/users/updateUserCategory', {
         email: user.email,
         categoryList: categoryList
       })

@@ -36,10 +36,10 @@ const MenuProps = {
   }
 }
 
-async function fetchAllRepresentatives () {
+async function fetchAllRepresentatives() {
   let representatives = []
   await axios
-    .get('http://localhost:5000/api/representatives/getAllRepresentatives')
+    .get('/api/representatives/getAllRepresentatives')
     .then(res => {
       if (res.data.success) {
         representatives = res.data.data
@@ -51,7 +51,7 @@ async function fetchAllRepresentatives () {
   })
 }
 
-function getStyles (name, personName, theme) {
+function getStyles(name, personName, theme) {
   return {
     fontWeight:
       personName.indexOf(name) === -1
@@ -67,18 +67,18 @@ export default function MpsSwitcher(props) {
   const [mp, setMp] = React.useState([])
   const [dropdownMps, setDropdownMps] = React.useState([])
 
-  async function populateDropdownMps (mps) {
+  async function populateDropdownMps(mps) {
     setDropdownMps(mps)
   }
 
-  function handleChange (event) {
+  function handleChange(event) {
     setMp(event.target.value)
     const value = event.target.value
     functionUpdate(value)
   }
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const representatives = await fetchAllRepresentatives()
       populateDropdownMps(representatives)
     }

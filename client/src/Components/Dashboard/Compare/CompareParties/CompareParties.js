@@ -25,18 +25,16 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function getAllBillsByHead (head) {
-  const res = await axios.get(
-    `http://localhost:5000/api/bills/${head}/getAllBillsByHead`
-  )
+export async function getAllBillsByHead(head) {
+  const res = await axios.get(`/api/bills/${head}/getAllBillsByHead`)
   return res.data.data
 }
 
-export function calcPercent (percent) {
+export function calcPercent(percent) {
   return [percent, 100 - percent]
 }
 
-export default function CompareParties () {
+export default function CompareParties() {
   const classes = useStyles()
   const [party1, setParty1] = useState('')
   const [party2, setParty2] = useState('')
@@ -70,8 +68,7 @@ export default function CompareParties () {
               className={classes.customHeaders}
               align='left'
               color='primary'
-              gutterBottom
-            >
+              gutterBottom>
               Compare Parties
             </Typography>
             <span className={classes.customTooltip}>

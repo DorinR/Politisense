@@ -49,11 +49,12 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserData (userEmail) {
+export async function fetchUserData(userEmail) {
   let result = ''
   await axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`,
-      { params: { changepassword: userEmail } })
+    .get(`/api/users/${userEmail}/getUser`, {
+      params: { changepassword: userEmail }
+    })
     .then(res => {
       if (res.data.success) {
         const user = res.data.data
@@ -64,10 +65,10 @@ export async function fetchUserData (userEmail) {
   return result
 }
 
-export async function updatePassword (user, newPassword) {
+export async function updatePassword(user, newPassword) {
   user.password = newPassword
   axios
-    .post('http://localhost:5000/api/users/updateUser', user)
+    .post('/api/users/updateUser', user)
     .then(res => {
       if (res.data.success) {
         console.log('password update was successful')
@@ -76,7 +77,7 @@ export async function updatePassword (user, newPassword) {
     .catch(err => console.log(err))
 }
 
-function ChangeAccountPassword (props) {
+function ChangeAccountPassword(props) {
   const classes = useStyles()
   const [changeCompleted, setChangeCompleted] = useState(false)
   const [
@@ -99,7 +100,7 @@ function ChangeAccountPassword (props) {
   })
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       // eslint-disable-next-line no-undef
       const user = JSON.parse(localStorage.getItem('user'))
       const fullUserDetails = await fetchUserData(user.email)
@@ -110,7 +111,7 @@ function ChangeAccountPassword (props) {
     getData()
   }, [])
 
-  function checkEmpty (obj) {
+  function checkEmpty(obj) {
     for (var key in obj) {
       if (obj[key] !== null && obj[key] !== '') {
         return false
@@ -213,8 +214,7 @@ function ChangeAccountPassword (props) {
                 variant='contained'
                 color='primary'
                 size='large'
-                className={classes.button}
-              >
+                className={classes.button}>
                 <SaveIcon />
                 <Box m={0.5} />
                 Save New Password

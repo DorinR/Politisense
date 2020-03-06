@@ -132,9 +132,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export async function fetchUserRiding(userEmail) {
-  let result = ''
-  await axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+  return axios
+    .get(`/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
         return res.data.data.riding
@@ -144,11 +143,8 @@ export async function fetchUserRiding(userEmail) {
 }
 
 export async function fetchRepresentative(riding) {
-  let result = ''
-  await axios
-    .get(
-      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-    )
+  return axios
+    .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
       if (res.data.success) {
         return res.data.data.name
@@ -172,10 +168,7 @@ export default function MiniDrawer({ children }) {
   }, [])
 
   useEffect(() => {
-    handleDrawerOpen()
     async function getData() {
-      /* eslint-disable */
-      const user = JSON.parse(localStorage.getItem('user'))
       if (user) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -250,8 +243,7 @@ export default function MiniDrawer({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}
-            >
+              className={classes.navbarCustomButton}>
               Compare
             </Button>
           </Link>

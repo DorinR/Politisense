@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 
 export async function fetchRidingCode(riding) {
   return axios
-    .get(`http://localhost:5000/api/ridings/getRidingCode/${encodeURI(riding)}`)
+    .get(`/api/ridings/getRidingCode/${encodeURI(riding)}`)
     .then(res => {
       if (res.data.success) {
         return res.data.data.code
@@ -39,9 +39,7 @@ export async function fetchRidingCode(riding) {
 
 export async function fetchUserRiding(userEmail) {
   return axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`, {
-      params: { repinfo: userEmail }
-    })
+    .get(`/api/users/${userEmail}/getUser`, { params: { repinfo: userEmail } })
     .then(res => {
       if (res.data.success) {
         return res.data.data.riding
@@ -52,9 +50,7 @@ export async function fetchUserRiding(userEmail) {
 
 export async function fetchRepresentative(riding) {
   return axios
-    .get(
-      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-    )
+    .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
       if (res.data.success) {
         return res.data.data
