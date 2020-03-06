@@ -54,11 +54,6 @@ class PoliticianBuilder {
     return this
   }
 
-  withImageUrl (imageUrl) {
-    this.imageUrl = imageUrl
-    return this
-  }
-
   build () {
     return new Politician(this.name, this.party, this.riding, this.start, this.end, this.imageUrl)
   }
