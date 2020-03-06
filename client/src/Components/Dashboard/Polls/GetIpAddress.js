@@ -11,6 +11,7 @@ export async function getIpInfo() {
         //     region: data.region
         // });
         console.log(data.country_name)
+        console.log(data.postal)
         return data.country_name
     }).catch((error) => {
         console.log(error);
