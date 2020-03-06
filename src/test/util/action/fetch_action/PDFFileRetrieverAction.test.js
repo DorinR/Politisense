@@ -21,10 +21,10 @@ describe('PDFFileRetrieverAction.js', () => {
   })
   let underTest
   beforeEach(() => {
-    underTest = new PDFFileRetrieverAction('https://www.google.ca/')
+    underTest = new PDFFileRetrieverAction('https://www.google.ca/', 'some-bill')
   })
 
-  it('PDFFileRetrieverAction::perform() throws on error', async (done) => {
+  test('PDFFileRetrieverAction::perform() throws on error', async (done) => {
     underTest.send = () => { throw new Error() }
     underTest.fp = ''
     const didThrow = await underTest.perform()
@@ -38,7 +38,7 @@ describe('PDFFileRetrieverAction.js', () => {
     done()
   })
 
-  it('PDFFileRetrieverAction::perform() returns buffer on success', async (done) => {
+  test('PDFFileRetrieverAction::perform() returns buffer on success', async (done) => {
     underTest.send = mockSend
     const didReturn = await underTest.perform()
       .then((buffer) => {
@@ -52,7 +52,7 @@ describe('PDFFileRetrieverAction.js', () => {
     done()
   })
 
-  it('PDFFileRetrieverAction::createBufferFromResponse() returns buffer from response', () => {
+  test('PDFFileRetrieverAction::createBufferFromResponse() returns buffer from response', () => {
     const resp = {
       buffer: () => {
         return new ArrayBuffer()
@@ -63,10 +63,28 @@ describe('PDFFileRetrieverAction.js', () => {
     Assert.isTrue(buffer instanceof ArrayBuffer)
   })
 
-  it('PDFFileRetrieverAction::formatBufferToUint8() returns formatted buffer object', () => {
+  test('PDFFileRetrieverAction::formatBufferToUint8() returns formatted buffer object', () => {
     const buffer = new ArrayBuffer()
     const formatted = underTest.formatBufferToUint8(buffer)
     Assert.isOk(formatted)
     Assert.isTrue(formatted instanceof Uint8Array)
+  })
+
+  test('PDFFileRetrieverAction::perform rejects when library throws', async (done) => {
+    underTest.send = async () => {
+      throw new Error()
+    }
+    await underTest.perform()
+      .then(resp => {
+        Assert.fail()
+      })
+      .catch(e => {
+        if(e instanceof chai.AssertionError) {
+          Assert.fail()
+        }
+        Assert.isOk(e.bill)
+        Assert.isOk(e.url)
+      })
+    done()
   })
 })

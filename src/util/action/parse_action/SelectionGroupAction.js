@@ -8,24 +8,24 @@ class SelectionGroupAction extends JobAction {
   }
 
   async perform () {
-    let output = this.primaryFilter(this.group)
+    let output = SelectionGroupAction.primaryFilter(this.group, this.selector)
     if (output.length < 1) {
-      output = this.fallbackFilter(this.group)
+      output = SelectionGroupAction.fallbackFilter(this.group, this.selector)
     }
 
     console.debug(`INFO: ${output[0] ? 'Found' : 'Did not find'} selector: ${this.selector} in group`)
     return output[0]
   }
 
-  primaryFilter (group) {
+  static primaryFilter (group, selector) {
     return group.filter(url => {
       url = url.toLowerCase()
-      return url.includes(this.selector.toLowerCase())
+      return url.includes(selector.toLowerCase())
     })
   }
 
-  fallbackFilter (group) {
-    const selectors = this.selector.split('-')
+  static fallbackFilter (group, selector) {
+    const selectors = selector.split('-')
     return group.filter(url => {
       url = url.toLowerCase()
       return selectors.every(selector => {
