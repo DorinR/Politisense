@@ -1,17 +1,14 @@
 require('module-alias/register')
-const Utils = require('@utils')
-const QueueManager = Utils.QueueManager.QueueManager
-const StartAction = Utils.QueueManager.Start.Classify
-const StopAction = Utils.QueueManager.Stop.GenericStopAction
-const Throw = Utils.QueueManager.Error.Throw
+const Components = require('@manager')
 
-class ClassificationRunner extends QueueManager {
+class ClassificationRunner extends Components.QueueManager {
   static create (params, wait = 30000) {
     const manager = new ClassificationRunner(params, wait)
     manager
-      .setStartAction(new StartAction(manager))
-      .setStopAction(new StopAction(manager))
-      .setErrorAction(new Throw(manager))
+      .setStartAction(new Components.Start.Classify(manager))
+      .setStopAction(new Components.Stop.Generic(manager))
+      .setErrorAction(new Components.Error.Throw(manager))
+      .setLogAction(new Components.Log.Generic(manager))
     return manager
   }
 

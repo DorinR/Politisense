@@ -1,10 +1,9 @@
 const QueueAction = require('../QueueAction').QueueAction
-const Job = require('../../Job').AbstractJob
+const Job = require('../../../job/Job').AbstractJob
 const Firestore = require('@firestore').Firestore
 const Actions = require('@action')
 
-const Parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
-Object.freeze(Parliaments)
+const Parliaments = require('@parameter').Parliament.Number
 
 class FormatAction extends Actions.Action {
   async perform (result) {

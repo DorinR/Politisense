@@ -1,7 +1,7 @@
 /* eslint-env jest */
 const QueueManager = require('../../../util/queue_manager/QueueManager').QueueManager
 const Action = require('../../../util/queue_manager/QueueAction').QueueAction
-const Job = require('../../../util/Job').AbstractJob
+const Job = require('../../../job/Job').AbstractJob
 
 const chai = require('chai')
 const Assert = chai.assert

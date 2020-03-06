@@ -3,6 +3,7 @@ const QueueManager = require('../../util/queue_manager/QueueManager').QueueManag
 const BeforeAction = require('../../util/queue_manager/before/BillLinkFetchBefore').BillLinkFetchBeforeAction
 const StartAction = require('../../util/queue_manager/start/BillLinkStart').BillLinkStart
 const StopAction = require('../../util/queue_manager/stop/GenericStopAction').GenericStopAction
+const LogAction = require('../../util/queue_manager/log/DefaultLogAction').DefaultLogAction
 const Throw = require('../../util/queue_manager/error/ScrapeError').ScrapeErrorAction
 
 class BillLinkFetchRunner extends QueueManager {
@@ -13,6 +14,7 @@ class BillLinkFetchRunner extends QueueManager {
       .setStartAction(new StartAction(manager))
       .setStopAction(new StopAction(manager))
       .setErrorAction(new Throw(manager))
+      .setLogAction(new LogAction())
     return manager
   }
 

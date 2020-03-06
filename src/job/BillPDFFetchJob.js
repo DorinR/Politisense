@@ -1,5 +1,5 @@
 const Actions = require('@action')
-const AbstractJob = require('../util/Job').AbstractJob
+const AbstractJob = require('./Job').AbstractJob
 const PDFRetrieverAction = Actions.PDFFileRetrieverAction
 const PDFParseAction = Actions.PDFParseAction
 const HandleDownloadErrorAction = Actions.HandleDownloadErrorAction

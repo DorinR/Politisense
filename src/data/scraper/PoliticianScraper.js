@@ -1,53 +1,15 @@
 require('module-alias/register')
-const Utils = require('@utils')
-const QueueManager = Utils.QueueManager.QueueManager
-const StartAction = Utils.QueueManager.Start.StartPoliticianScrape
-const StopAction = Utils.QueueManager.Stop.GenericStopAction
-const Throw = Utils.QueueManager.Error.ParseErrorAction
-const AfterAction = Utils.QueueManager.After.PoliticianAfterAction
+const Components = require('@manager')
 
-const caucusMapping = {
-  unknown: 0,
-  reform: 7,
-  people: 24357,
-  progressiveConservative: 5,
-  newDemocratic: 3,
-  liberal: 4,
-  independentConservative: 1796,
-  independentBlocQuebec: 3638,
-  independentCanadianAlliance: 8,
-  green: 14130,
-  forceEtDemocratie: 20915,
-  CooperativeCommonwealthFederation: 24046,
-  conservativeIndependent: 20159,
-  conservative: 8781,
-  canadianAlliance: 103,
-  blocQuebecois: 6
-}
-const provinceKeys = [
-  'AB',
-  'BC',
-  'MB',
-  'NB',
-  'NL',
-  'NT',
-  'NS',
-  'NU',
-  'ON',
-  'PE',
-  'QC',
-  'SK',
-  'YT'
-]
-
-class PoliticianScraper extends QueueManager {
+class PoliticianScraper extends Components.QueueManager {
   static create (params, wait = 5000) {
     const manager = new PoliticianScraper(params, wait)
     manager
-      .setStartAction(new StartAction(manager))
-      .setStopAction(new StopAction(manager))
-      .setAfterAction(new AfterAction(manager))
-      .setErrorAction(new Throw(manager))
+      .setStartAction(new Components.Start.Politician(manager))
+      .setStopAction(new Components.Stop.Generic(manager))
+      .setAfterAction(new Components.After.Politician(manager))
+      .setErrorAction(new Components.Error.Parse(manager))
+      .setLogAction(new Components.Log.Generic(manager))
     return manager
   }
 

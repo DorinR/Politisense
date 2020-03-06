@@ -59,13 +59,13 @@ describe('QueueManager Start Actions', () => {
 
   test('StartAction Specialisations do not throw', async (done) => {
     // eslint-disable-next-line no-new
-    new Start.StartVoteParticipantScrape({})
+    new Start.VoteParticipant({})
     // eslint-disable-next-line no-new
-    new Start.StartVoteRecordScrape({})
+    new Start.VoteRecord({})
     // eslint-disable-next-line no-new
-    new Start.StartRoleScrape({})
+    new Start.Role({})
     // eslint-disable-next-line no-new
-    new Start.StartPoliticianScrape({})
+    new Start.Politician({})
     // eslint-disable-next-line no-new
     new Start.Classify({})
     // eslint-disable-next-line no-new

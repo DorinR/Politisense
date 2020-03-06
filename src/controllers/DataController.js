@@ -244,70 +244,7 @@ exports.update = (req, res) => {
     Utils.error(res, 'Invalid Parameters passed to data API for updating')
     return
   }
-  const { graph, root } = createUpdateGraph(req, res)
-  const dependencies = graph
-    .get(root)
-    .map(v => {
-      return v.tag
-    })
   Utils.success(res, {
-    dependencies: dependencies
+    dependencies: 'dependencies stub'
   }, 'stub')
-}
-
-function createUpdateGraph (req, res) {
-  const graph = new Graph()
-  const vertices = {
-    bills: new Vertex('bills'),
-    politicians: new Vertex('politicians'),
-    vote_records: new Vertex('vote_records'),
-    voters: new Vertex('voters'),
-
-    classifications: new Vertex('classifications'),
-    raw: new Vertex('raw'),
-    roles: new Vertex('roles'),
-    finances: new Vertex('finances'),
-
-    parties: new Vertex('parties'),
-    ridings: new Vertex('ridings'),
-    ministers: new Vertex('ministers'),
-    root: new Vertex('root'),
-
-    leaf: new Vertex('leaf')
-  }
-
-  if (!Object.keys(vertices).includes(req.params.root)) {
-    throw new Error('Invalid root specified for update graph')
-  }
-
-  Object.keys(vertices).forEach(key => {
-    graph.addVertex(vertices[key])
-  })
-
-  graph.forEach((adj, v) => {
-    if (v.tag === 'root') {
-      graph.addEdge(v, vertices.politicians)
-      graph.addEdge(v, vertices.bills)
-    } else if (v.tag === 'bills') {
-      graph.addEdge(v, vertices.raw)
-      graph.addEdge(v, vertices.vote_records)
-    } else if (v.tag === 'raw') {
-      graph.addEdge(v, vertices.classifications)
-    } else if (v.tag === 'politicians') {
-      graph.addEdge(v, vertices.roles)
-      graph.addEdge(v, vertices.finances)
-      graph.addEdge(v, vertices.voters)
-      graph.addEdge(v, vertices.parties)
-    } else if (v.tag === 'vote_records') {
-      graph.addEdge(v, vertices.voters)
-    } else if (v.tag === 'roles') {
-      graph.addEdge(v, vertices.ministers)
-    } else if (v.tag !== 'leaf') {
-      graph.addEdge(v, vertices.leaf)
-    }
-  })
-  return {
-    graph: graph,
-    root: vertices[req.params.root]
-  }
 }

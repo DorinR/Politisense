@@ -1,21 +1,9 @@
 const Action = require('../QueueAction').QueueAction
 const Firestore = require('@firestore').Firestore
 
-const Parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
-Object.freeze(Parliaments)
+const Parliaments = require('@parameter').Parliament.Number
 
-const ParliamentfromParlSession = {
-  153: 43,
-  152: 42,
-  151: 41,
-  150: 41,
-  147: 40,
-  145: 40,
-  143: 40,
-  142: 39,
-  140: 38
-}
-Object.freeze(ParliamentfromParlSession)
+const ParliamentfromParlSession = require('@parameter').VoteParameters.ParliamentfromParlSession
 
 class VoteAfterAction extends Action {
   constructor (manager) {

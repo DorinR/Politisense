@@ -3,101 +3,14 @@ const Components = require('@manager')
 const Errors = require('../error/errors')
 const flatten = require('flat')
 
-const Chambers = {
-  senate: 'Senate',
-  commons: 'House+of+Commons'
-}
-
-const Affiliations = {
-  BlocQuebecois: 'Bloc+Québécois',
-  CanadianAlliance: 'Canadian+Alliance',
-  CanadianSenatorsGroup: 'Canadian+Senators+Group',
-  Conservative: 'Conservative',
-  ConservativeIndependent: 'Conservative+Independent',
-  ForcesEtDemocratie: 'Forces+et+Démocratie',
-  GreenParty: 'Green+Party',
-  Independent: 'Independent',
-  IndependentConservative: 'Independent+Conservative',
-  IndependentSenatorsGroup: 'Independent+Senators+Group',
-  Liberal: 'Liberal',
-  NDP: 'NDP',
-  NonAffiliated: 'Non-affiliated',
-  PC: 'PC',
-  PCDR: 'PC%2fDR'
-}
-
-const BillTypes = {
-  senate: {
-    government: 'Senate+Government+Bill',
-    public: 'Senate+Public+Bill',
-    private: 'Senate+Private+Bill'
-  },
-
-  house: {
-    government: 'House+Government+Bill'
-  },
-
-  member: {
-    private: 'Private+Member%e2%80%99s+Bill'
-  }
-}
-
-const BillStatuses = {
-
-  general: {
-    assented: 'RoyalAssentGiven',
-    defeated: 'BillDefeated',
-    tabled: 'WillNotBeProceededWith'
-  },
-
-  house: {
-    readings: {
-      first: 'HouseAt1stReading',
-      second: 'HouseAt2ndReading',
-      third: 'HouseAt3rdReading'
-    },
-
-    reports: {
-      report: 'HouseAtReportStage',
-      beforeReading2: 'HouseAtReportStageAndSecondReading'
-    },
-
-    committee: {
-      beforeReading2: 'HouseAtReferralToCommitteeBeforeSecondReading',
-      current: 'HouseInCommittee'
-    },
-
-    amendment: {
-      consideration: 'HouseConsiderationOfAmendments'
-    }
-  },
-
-  senate: {
-
-    readings: {
-      first: 'SenateAt1stReading',
-      second: 'SenateAt2ndReading',
-      third: 'SenateAt3rdReading'
-    },
-
-    amendment: {
-      consideration: 'SenateConsiderationOfAmendments'
-    },
-
-    committee: {
-      consideration: 'SenateConsiderationOfCommitteeReport',
-      current: 'SenateInCommittee'
-    }
-  }
-}
-
 class BillScraper extends Components.QueueManager {
   static create (params, wait = 5000) {
     const manager = new BillScraper(params)
     manager
       .setStartAction(new Components.Start.Bill(manager))
-      .setStopAction(new Components.Stop.GenericStopAction(manager))
-      .setErrorAction(new Components.Error.ParseErrorAction(manager))
+      .setStopAction(new Components.Stop.Generic(manager))
+      .setErrorAction(new Components.Error.Parse(manager))
+      .setLogAction(new Components.Log.Generic(manager))
     return manager
   }
 
@@ -309,10 +222,4 @@ class BillScraper extends Components.QueueManager {
   }
 }
 
-module.exports = {
-  BillScraper: BillScraper,
-  Chambers: Chambers,
-  Affiliations: Affiliations,
-  BillTypes: BillTypes,
-  BillStatuses: BillStatuses
-}
+module.exports.BillScraper = BillScraper

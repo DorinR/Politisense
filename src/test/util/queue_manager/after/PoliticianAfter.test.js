@@ -1,18 +1,18 @@
 /* eslint-env jest */
 const After = require('../../../../util/queue_manager/actions').After
-const AfterAction = After.PoliticianAfterAction
+const AfterAction = After.Politician
 const Actions = require('../../../../util/action/actions')
 
 const chai = require('chai')
 const Assert = chai.assert
 
-describe('PoliticianAfterAction.js', () => {
+describe('Politician.js', () => {
   let undertest
   beforeEach(() => {
     undertest = new AfterAction()
   })
 
-  test('PoliticianAfterAction.js::stripHyphensFromRecord replaces bad dashes from riding with single dash', async (done) => {
+  test('Politician.js::stripHyphensFromRecord replaces bad dashes from riding with single dash', async (done) => {
     const record = {
       riding: 'some--riding'
     }
@@ -25,7 +25,7 @@ describe('PoliticianAfterAction.js', () => {
     done()
   })
 
-  test('PoliticianAfterAction.js::stripHyphens removes all bad hyphens', async (done) => {
+  test('Politician.js::stripHyphens removes all bad hyphens', async (done) => {
     let toggle = true
     const data = new Array(10)
       .fill(null, 0, 10)
@@ -54,7 +54,7 @@ describe('PoliticianAfterAction.js', () => {
     done()
   })
 
-  test('PoliticianAfterAction.js::findUrl locates the politician image url from an array of names', async (done) => {
+  test('Politician.js::findUrl locates the politician image url from an array of names', async (done) => {
     const politician = {
       name: 'ben wa'
     }
@@ -68,7 +68,7 @@ describe('PoliticianAfterAction.js', () => {
     done()
   })
 
-  test('PoliticianAfterAction.js::attachToMPs attaches appropriate link if found to politicians', async (done) => {
+  test('Politician.js::attachToMPs attaches appropriate link if found to politicians', async (done) => {
     const politician = {
       name: 'ben wa',
       imageUrl: ''
@@ -89,7 +89,7 @@ describe('PoliticianAfterAction.js', () => {
     done()
   })
 
-  test('PoliticianAfterAction.js::attachToMps sets link to unavailable if not found', async (done) => {
+  test('Politician.js::attachToMps sets link to unavailable if not found', async (done) => {
     const politician = {
       name: 'notbenwa',
       imageUrl: ''
@@ -110,7 +110,7 @@ describe('PoliticianAfterAction.js', () => {
     done()
   })
 
-  test('PoliticianAfterAction.js::createFetchJob returns an anonymous Job', async (done) => {
+  test('Politician.js::createFetchJob returns an anonymous Job', async (done) => {
     const job = AfterAction.createFetchJob()
     Assert.equal(job.actions.length, 4)
     Assert.equal(job.registry[0], Actions.FetchAction.name)
@@ -120,7 +120,7 @@ describe('PoliticianAfterAction.js', () => {
     done()
   })
 
-  test('PoliticianAfterAction.js::perform retreives links, attachs to MPs, then replaces bad hyphens', async (done) => {
+  test('Politician.js::perform retreives links, attachs to MPs, then replaces bad hyphens', async (done) => {
     const order = []
     const desired = ['create', 'fetch', 'link', 'strip']
     AfterAction.createFetchJob = () => {

@@ -2,7 +2,7 @@ const QueueManagerWrapperAction = require('../util/action/wrapper_action/QueueMa
 const ClassificationAction = require('../util/action/classify_action/BillClassifyAction').BillClassificationAction
 const BillPDFFetchRunner = require('../data/runner/BillPDFFetchRunner').BillPDFFetchRunner
 const BillLinkFetchRunner = require('../data/runner/BillLinkFetchRunner').BillLinkFetchRunner
-const AbstractJob = require('../util/Job').AbstractJob
+const AbstractJob = require('./Job').AbstractJob
 const FormatAction = require('../util/action/adapter_action/QueryResponseAdapterAction').QueryResponseAdapterAction
 
 class ClassificationJob extends AbstractJob {

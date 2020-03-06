@@ -3,7 +3,7 @@ module.exports = {
   Actions: require('./action/actions'),
   Parsers: require('./parser/parsers'),
   QueueManager: require('./queue_manager/actions'),
-  Job: require('./Job').AbstractJob,
+  Job: require('../job/Job').AbstractJob,
   Condition: require('./Condition').Condition,
   Graphs: require('./graph/graphs')
 }

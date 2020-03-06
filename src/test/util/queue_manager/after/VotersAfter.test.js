@@ -5,7 +5,7 @@ const AfterAction = After.VoteParticipant
 const chai = require('chai')
 const Assert = chai.assert
 
-describe('VoteAfterAction.js', () => {
+describe('Vote.js', () => {
   let undertest
   const retrieve = AfterAction.prototype.retrievePoliticians
   beforeEach(() => {

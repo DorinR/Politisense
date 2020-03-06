@@ -1,27 +1,16 @@
 require('module-alias/register')
 const Utils = require('@utils')
-const QueueManager = Utils.QueueManager.QueueManager
-const StartAction = Utils.QueueManager.Start.StartVoteParticipantScrape
-const StopAction = Utils.QueueManager.Stop.GenericStopAction
-const Throw = Utils.QueueManager.Error.ParseErrorAction
-const BeforeAction = Utils.QueueManager.Before.VoteParticipant
-const AfterAction = Utils.QueueManager.After.VoteParticipant
+const Components = require('@manager')
 
-const Parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
-Object.freeze(Parliaments)
-
-const Sessions = [1, 2, 3]
-Object.freeze(Sessions)
-
-class VoteParticipantScraper extends QueueManager {
+class VoteParticipantScraper extends Components.QueueManager {
   static create (params, wait = 5000) {
     const manager = new VoteParticipantScraper(params, wait)
     manager
-      .setBeforeAction(new BeforeAction(manager))
-      .setStartAction(new StartAction(manager))
-      .setStopAction(new StopAction(manager))
-      .setAfterAction(new AfterAction(manager))
-      .setErrorAction(new Throw(manager))
+      .setBeforeAction(new Components.Before.VoteParticipant(manager))
+      .setStartAction(new Components.Start.VoteParticipant(manager))
+      .setStopAction(new Components.Stop.Generic(manager))
+      .setAfterAction(new Components.After.VoteParticipant(manager))
+      .setErrorAction(new Components.Error.Parse(manager))
     return manager
   }
 

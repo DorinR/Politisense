@@ -1,1 +1,1 @@
-module.exports.GenericStopAction = require('./GenericStopAction').GenericStopAction
+module.exports.Generic = require('./GenericStopAction').GenericStopAction

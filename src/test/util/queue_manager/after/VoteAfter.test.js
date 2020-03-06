@@ -1,11 +1,11 @@
 /* eslint-env jest */
 const After = require('../../../../util/queue_manager/actions').After
-const AfterAction = After.VoteAfterAction
+const AfterAction = After.Vote
 
 const chai = require('chai')
 const Assert = chai.assert
 
-describe('VoteAfterAction.js', () => {
+describe('Vote.js', () => {
   let underTest
   const retrieve = AfterAction.prototype.retrieveBills
   beforeEach(() => {
@@ -15,7 +15,7 @@ describe('VoteAfterAction.js', () => {
     underTest = new AfterAction()
   })
 
-  test('VoteAfterAction.js::findBill locates bill with correct year and same billID as vote', async (done) => {
+  test('Vote.js::findBill locates bill with correct year and same billID as vote', async (done) => {
     const vote = {
       year: 2000,
       billNumber: 42
@@ -39,7 +39,7 @@ describe('VoteAfterAction.js', () => {
     done()
   })
 
-  test('VoteAfterAction.js::retrieveBills calls Firestore with correct parliament', async (done) => {
+  test('Vote.js::retrieveBills calls Firestore with correct parliament', async (done) => {
     const desired = [43, 'bill', 'select']
     const order = []
 
@@ -68,7 +68,7 @@ describe('VoteAfterAction.js', () => {
     done()
   })
 
-  test('VoteAfterAction.js::attachBillsToVotes modifies links to foreign key them with votes', async (done) => {
+  test('Vote.js::attachBillsToVotes modifies links to foreign key them with votes', async (done) => {
     let num = 0
     underTest.bills = new Array(8)
       .fill({}, 0, 8)

@@ -1,5 +1,6 @@
 module.exports = {
   DirectedGraph: require('./DirectedGraph').DirectedGraph,
   UndirectedGraph: require('./UndirectedGraph').UndirectedGraph,
-  Vertex: require('./Vertex').Vertex
+  Vertex: require('./Vertex').Vertex,
+  UpdateDependencyGraph: require('./UpdateDependencyGraph').UpdateDependencyGraph
 }

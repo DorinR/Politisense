@@ -1,5 +1,5 @@
 const Actions = require('@action')
-const AbstractJob = require('../util/Job').AbstractJob
+const AbstractJob = require('./Job').AbstractJob
 const FetchAction = Actions.FetchAction
 const FormatAction = Actions.BillLinkFetchAdapterAction
 const TextParserAction = Actions.TextParserAction

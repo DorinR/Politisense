@@ -1,6 +1,6 @@
 const QueueAction = require('../QueueAction').QueueAction
 const Actions = require('../../action/actions')
-const Job = require('../../Job').AbstractJob
+const Job = require('../../../job/Job').AbstractJob
 
 class PoliticianAfterAction extends QueueAction {
   constructor (manager) {

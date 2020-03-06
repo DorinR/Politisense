@@ -34,7 +34,7 @@ describe('ErrorActions', () => {
     })
   })
 
-  describe('GenericErrorAction.js', () => {
+  describe('Generic.js', () => {
     let manager
     beforeEach(() => {
       manager = {
@@ -46,8 +46,8 @@ describe('ErrorActions', () => {
       }
     })
 
-    test('GenericErrorAction.js Throws Error on specified type and decrements query count in manager', async (done) => {
-      const underTest = new ErrorActions.GenericErrorAction(manager, TypeError)
+    test('Generic.js Throws Error on specified type and decrements query count in manager', async (done) => {
+      const underTest = new ErrorActions.Generic(manager, TypeError)
       try {
         await underTest.perform(new RangeError())
         await underTest.perform(new TypeError())
@@ -62,7 +62,7 @@ describe('ErrorActions', () => {
     })
   })
 
-  describe('ParseErrorAction.js', () => {
+  describe('Parse.js', () => {
     let manager
     beforeEach(() => {
       manager = {
@@ -74,8 +74,8 @@ describe('ErrorActions', () => {
       }
     })
 
-    test('ParseErrorAction.js Throws Error on an XMLParseError and decrements query count', async (done) => {
-      const underTest = new ErrorActions.ParseErrorAction(manager)
+    test('Parse.js Throws Error on an XMLParseError and decrements query count', async (done) => {
+      const underTest = new ErrorActions.Parse(manager)
       try {
         await underTest.perform(new ParseError())
         Assert.fail()
@@ -89,7 +89,7 @@ describe('ErrorActions', () => {
     })
   })
 
-  describe('ScrapeErrorAction.js', () => {
+  describe('Scrape.js', () => {
     let manager
     beforeEach(() => {
       manager = {
@@ -101,8 +101,8 @@ describe('ErrorActions', () => {
       }
     })
 
-    test('ScrapeErrorAction.js Throws Error on an ScrapeError and decrements query count', async (done) => {
-      const underTest = new ErrorActions.ScrapeErrorAction(manager)
+    test('Scrape.js Throws Error on an ScrapeError and decrements query count', async (done) => {
+      const underTest = new ErrorActions.Scrape(manager)
       try {
         await underTest.perform(new ScrapeError())
         Assert.fail()
