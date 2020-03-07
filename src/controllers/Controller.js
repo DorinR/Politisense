@@ -105,10 +105,6 @@ module.exports = {
     return RidingController.getRidingPopulation(req, res)
   },
 
-  getAllPartyData: function (req, res) {
-    return PartyController.getAllPartyData(req, res)
-  },
-
   // Financial Record
   getAllSpendingItemsForParty: function (req, res) {
     return FinancialRecordController.getAllSpendingItemsForParty(req, res)
@@ -122,10 +118,5 @@ module.exports = {
   },
   getAllPartyData: function (req, res) {
     return PartyController.getAllPartyData(req, res)
-  },
-
-  // Financial Record
-  getAllSpendingItemsForParty: function (req, res) {
-    return FinancialRecordController.getAllSpendingItemsForParty(req, res)
   }
 }

@@ -10,11 +10,15 @@ class ClassificationAction extends Action {
   }
 
   async perform (billParams) {
-    return await this.addBillsToClassifier(billParams)
+    return this.addBillsToClassifier(billParams)
   }
 
   addBillsToClassifier (billParams) {
-    const { execString, paths, params } = this.createExternalClassifierParameters(billParams)
+    const {
+      execString,
+      paths,
+      params
+    } = this.createExternalClassifierParameters(billParams)
     return this.runExternalClassifier(execString, paths, params)
   }
 
@@ -22,7 +26,7 @@ class ClassificationAction extends Action {
     let execString = 'python3.7 ' + this.classifierPath
     const paths = []
     const params = []
-    billParams.forEach((billParam) => {
+    billParams.forEach(billParam => {
       paths.push(billParam.path)
       params.push({
         id: billParam.id,
@@ -38,12 +42,18 @@ class ClassificationAction extends Action {
       const child = proc.exec(execString)
       child.stdout.pipe(process.stdout)
       child.stderr.pipe(process.stderr)
-      child.on('exit', (code) => {
+      child.on('exit', code => {
         if (code === 0) {
-          console.log('--------------------------------------------------------------------------------------------------------')
+          console.log(
+            '--------------------------------------------------------------------------------------------------------'
+          )
           console.log('INFO: successfully classified data')
-          console.log('--------------------------------------------------------------------------------------------------------')
-          const raws = this.readClassificationFile(path.join(__dirname, 'classifications.json'))
+          console.log(
+            '--------------------------------------------------------------------------------------------------------'
+          )
+          const raws = this.readClassificationFile(
+            path.join(__dirname, 'classifications.json')
+          )
           const models = this.addToModels(raws, params)
           this.deleteTempFiles(paths)
           resolve(models)

@@ -43,7 +43,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function CategoryDashboard () {
+export default function CategoryDashboard() {
   const classes = useStyles()
   const [categoryList] = React.useState([
     'economics',
@@ -64,16 +64,16 @@ export default function CategoryDashboard () {
 
   const [reps, setReps] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const representatives = await getAllReps()
       setReps(representatives)
     }
     getData()
   }, [])
 
-  async function getAllReps () {
+  async function getAllReps() {
     return axios
-      .get('/api/representatives/getAllRepresentatives')
+      .get('http://localhost:5000/api/representatives/getAllRepresentatives')
       .then(res => {
         if (res.data.success) {
           return res.data.data
@@ -84,7 +84,7 @@ export default function CategoryDashboard () {
 
   const [riding, setRiding] = useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (user) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -95,7 +95,7 @@ export default function CategoryDashboard () {
 
   const [userRepresentative, setUserRepresentative] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (riding) {
         const representative = await fetchRepresentative(riding)
         setUserRepresentative(representative)
@@ -104,9 +104,11 @@ export default function CategoryDashboard () {
     getData()
   }, [riding])
 
-  async function fetchRepresentative (riding) {
+  async function fetchRepresentative(riding) {
     return axios
-      .get(`/api/representatives/${riding}/getRepresentative`)
+      .get(
+        `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+      )
       .then(res => {
         if (res.data.success) {
           return res.data.data.name
@@ -117,7 +119,7 @@ export default function CategoryDashboard () {
 
   const [representativeData, setRepresentativeData] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (userRepresentative) {
         const billsByRep = await getAllBillsByRep(userRepresentative)
         setRepresentativeData(billsByRep)
@@ -126,9 +128,9 @@ export default function CategoryDashboard () {
     getData()
   }, [userRepresentative])
 
-  async function getAllBillsByRep (head) {
+  async function getAllBillsByRep(head) {
     return axios
-      .get(`/api/bills/${head}/getAllBillsByRep`)
+      .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
       .then(res => {
         if (res.data.success) {
           return res.data.data
@@ -139,7 +141,7 @@ export default function CategoryDashboard () {
 
   const [userRepIssuedBills, setUserRepIssuedBills] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (userRepresentative) {
         const issuedBillByUserRep = await getAllBillsBySponsorName(
           userRepresentative
@@ -150,9 +152,9 @@ export default function CategoryDashboard () {
     getData()
   }, [userRepresentative])
 
-  async function getAllBillsBySponsorName (head) {
+  async function getAllBillsBySponsorName(head) {
     return axios
-      .get(`/api/bills/${head}/getAllBillsBySponsorName`)
+      .get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
       .then(res => {
         if (res.data.success) {
           return res.data.data
@@ -179,42 +181,8 @@ export default function CategoryDashboard () {
 
   /* eslint-disable */
   return (
-    <Grid container spacing={1}>
-      <Grid item xs={12}>
-        {userRepIssuedBills && categoryList && userRepresentative ? (
-          <Card>
-            <CardContent>
-              <Typography className={classes.title}>
-                Bills sponsored by {capitalizedName(userRepresentative)}
-              </Typography>
-              <BarChartWrapper
-                type="bar-pie"
-                data={userRepIssuedBills}
-                categories={categoryList}
-              />
-              <Box border mx="auto">
-                <List>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar className={classes.avatar}>
-                        <NotListedLocationIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText>
-                      The distribution of issued bills by the representative
-                      among different categories
-                    </ListItemText>
-                  </ListItem>
-                </List>
-              </Box>
-            </CardContent>
-          </Card>
-        ) : (
-          ""
-        )}
-      </Grid>
-
-      {radarData && categoryList ? (
+    <div className={classes.container}>
+      <Grid container spacing={1}>
         <Grid item xs={12}>
           {userRepIssuedBills && categoryList && userRepresentative ? (
             <Card>
@@ -256,10 +224,37 @@ export default function CategoryDashboard () {
                 <Card>
                   <CardContent>
                     <Typography className={classes.title}>
-                      Bipartisan Index
+                      MP Voting Distribution
                     </Typography>
-                    <BarChartWrapper type="donut" data={donutData} />
-                    <Box border mx="auto">
+                    <Radar
+                      width={400}
+                      height={350}
+                      padding={40}
+                      domainMax={radarData[1] + 3}
+                      highlighted
+                      onHover={point => {
+                        if (point) {
+                        } else {
+                        }
+                      }}
+                      data={{
+                        variables: [
+                          { key: 'trade', label: 'Trade' },
+                          { key: 'criminal', label: 'Criminal' },
+                          { key: 'business', label: 'Business' },
+                          { key: 'Economics', label: 'Economics' },
+                          { key: 'Healthcare', label: 'Healthcare' },
+                          { key: 'Religion', label: 'Religion' },
+                          { key: 'Human Rights', label: 'Human Rights' }
+                        ],
+                        sets: [
+                          {
+                            values: radarData[0]
+                          }
+                        ]
+                      }}
+                    />
+                    <Box border mx='auto'>
                       <List>
                         <ListItem>
                           <ListItemAvatar>
@@ -268,11 +263,8 @@ export default function CategoryDashboard () {
                             </Avatar>
                           </ListItemAvatar>
                           <ListItemText>
-                            The Bipartisan Index measures how often a member of
-                            Parliament introduces bills that succeed in
-                            attracting co-sponsors from members of the other
-                            party, and how often they in turn co-sponsor a bill
-                            introduced from across the aisle.
+                            This radar chart shows the MP's activity with
+                            respect to a variety categories.
                           </ListItemText>
                         </ListItem>
                       </List>
@@ -280,27 +272,55 @@ export default function CategoryDashboard () {
                   </CardContent>
                 </Card>
               </Grid>
-            ) : (
-              ""
-            )}
+              {donutData ? (
+                <Grid item item xs={6}>
+                  <Card>
+                    <CardContent>
+                      <Typography className={classes.title}>
+                        Bipartisan Index
+                      </Typography>
+                      <BarChartWrapper type='donut' data={donutData} />
+                      <Box border mx='auto'>
+                        <List>
+                          <ListItem>
+                            <ListItemAvatar>
+                              <Avatar className={classes.avatar}>
+                                <NotListedLocationIcon />
+                              </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText>
+                              The Bipartisan Index measures how often a member
+                              of Parliament introduces bills that succeed in
+                              attracting co-sponsors from members of the other
+                              party, and how often they in turn co-sponsor a
+                              bill introduced from across the aisle.
+                            </ListItemText>
+                          </ListItem>
+                        </List>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ) : (
+                ''
+              )}
+            </Grid>
           </Grid>
-        </Grid>
-      ) : (
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            zIndex: "-2",
-            transform: "translate(-50%, -50%)"
-          }}
-        >
-          <CircularProgress />
-        </div>
-      )}
-    </Grid>
+        ) : (
+          <div
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              zIndex: '-2',
+              transform: 'translate(-50%, -50%)'
+            }}>
+            <CircularProgress />
+          </div>
+        )}
+      </Grid>
     </div>
-  );
+  )
 }
 
 function createDataSetRadar(categories, data) {

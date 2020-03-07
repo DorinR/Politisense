@@ -37,7 +37,7 @@ const MenuProps = {
 }
 
 async function fetchAllRepresentatives () {
-  return await axios
+  return axios
     .get('/api/representatives/getAllRepresentatives')
     .then(res => {
       if (res.data.success) {
@@ -70,7 +70,7 @@ function getStyles (selectedParty, party, theme) {
 
 export default function PartySwitcher (props) {
   // eslint-disable-next-line no-use-before-define
-  const { functionUpdate, ...other } = props
+  const { functionUpdate } = props
   const classes = useStyles()
   const theme = useTheme()
   const [selectedParty, setSelectedParty] = React.useState([])
