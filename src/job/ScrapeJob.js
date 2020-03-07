@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-const Job = require('../util/Job').AbstractJob
-const Actions = require('@action')
-=======
 const utils = require('../util/utils')
 const Job = utils.Job
 const Actions = utils.Actions
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
 const Scraper = Actions.LinkScraperAction
 const Parser = Actions.TextParserAction
 const Processor = Actions.SelectionAction
@@ -21,9 +16,11 @@ class ScrapeJob extends Job {
   static create (url, cb, tlds) {
     return new ScrapeJob(url, cb)
       .addAction(new Scraper(url))
-      .addAction(new Parser(false, 'a', (elem, $) => {
-        return $(elem).attr('href')
-      }))
+      .addAction(
+        new Parser(false, 'a', (elem, $) => {
+          return $(elem).attr('href')
+        })
+      )
       .addAction(new Processor('xml'))
       .addAction(new RequeueAction(cb, ScrapeJob.create, tlds))
       .addErrorAction(new ErrorHandler(cb, ScrapeJob.create, tlds))

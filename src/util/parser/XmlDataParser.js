@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-const Action = require('../action/actions')
-const DataNotFoundError = require('./XmlParserError').DataNotFoundError
-const LinkScraperAction = Action.LinkScraperAction
-=======
 const Utils = require('@utils')
 const DataNotFoundError = require('./XmlParserError').DataNotFoundError
 const LinkScraperAction = Utils.Actions.LinkScraperAction
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
 
 const cheerio = require('cheerio')
 
@@ -24,37 +18,30 @@ class XmlDataParser {
       if (allowMissingTag) {
         return ''
       } else {
-        throw new DataNotFoundError(`The tag ${tag} does not exist in the xml file.`)
+        throw new DataNotFoundError(
+          `The tag ${tag} does not exist in the xml file.`
+        )
       }
     }
-    return this.$(tag).eq(0).text()
+    return this.$(tag)
+      .eq(0)
+      .text()
   }
 
-<<<<<<< HEAD
-  getXmlInTag (tag, allowMissingTag = false) {
-    if (!this.isTagInXml(tag)) {
-      if (allowMissingTag) {
-        return ''
-      } else {
-        throw new DataNotFoundError(`The tag ${tag} does not exist in the xml file.`)
-      }
-    }
-    const values = this.$(tag)
-    return values.eq(0).html()
-  }
-
-=======
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
   getDataInAttribute (tag, attribute, allowMissingTag = false) {
     if (!this.isTagInXml(tag)) {
       if (allowMissingTag) {
         return ''
       } else {
-        throw new DataNotFoundError(`The tag ${tag} does not exist in the xml file.`)
+        throw new DataNotFoundError(
+          `The tag ${tag} does not exist in the xml file.`
+        )
       }
     }
 
-    return this.$(tag).eq(0).attr(attribute)
+    return this.$(tag)
+      .eq(0)
+      .attr(attribute)
   }
 
   formatXmlDate (xmlDate) {
@@ -104,7 +91,9 @@ class XmlDataParser {
       return []
     }
 
-    const foundData = onlyFromListTag ? this.$(this.listTagName).find(this.tagName) : this.$(this.tagName)
+    const foundData = onlyFromListTag
+      ? this.$(this.listTagName).find(this.tagName)
+      : this.$(this.tagName)
 
     foundData.each((i, data) => {
       const xml = this.$(data).toString()
@@ -130,12 +119,15 @@ class XmlDataParser {
   }
 
   _getHtmlFromLink (link) {
-    return new LinkScraperAction(link).perform()
+    return new LinkScraperAction(link)
+      .perform()
       .then(res => {
         return res.body
-      }).then(html => {
+      })
+      .then(html => {
         return html
-      }).catch(e => {
+      })
+      .catch(e => {
         console.error(e.message)
         return ''
       })

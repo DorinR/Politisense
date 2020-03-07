@@ -12,13 +12,7 @@ class PDFFileRetrieverAction extends JobAction {
   perform () {
     return new Promise((resolve, reject) => {
       this.fp = 'https://www.parl.ca' + this.fp.slice(0, this.fp.length)
-<<<<<<< HEAD
-      return this.send(this.fp, {
-        timeout: 60000
-      })
-=======
       return this.send(this.fp)
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
         .then(this.createBufferFromResponse.bind(this))
         .then(this.formatBufferToUint8.bind(this))
         .then(resolve)

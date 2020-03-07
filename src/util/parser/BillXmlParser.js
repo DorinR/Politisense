@@ -1,16 +1,9 @@
-<<<<<<< HEAD
-const Parsers = require('./parsers')
-const XmlDataParser = Parsers.XmlDataParser
-const ParliamentNotSetError = Parsers.ParliamentNotSetError
-const Builder = require('@builder').BillBuilder
-=======
 const Parsers = require('@parser')
 const XmlDataParser = Parsers.XmlDataParser
 const ParliamentNotSetError = Parsers.ParliamentNotSetError
 const Models = require('@model')
 const Bill = Models.Bill
 const Model = Models.Model
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
 
 class BillXmlParser extends XmlDataParser {
   constructor (xml, filters, currentParliament) {
@@ -32,38 +25,44 @@ class BillXmlParser extends XmlDataParser {
   }
 
   buildJson () {
-<<<<<<< HEAD
-    const sponsorName = this.$('SponsorAffiliation').find('FirstName').text() + ' ' +
-      this.$('SponsorAffiliation').find('LastName').text()
-
-    return new Builder(Number(this.getDataInAttribute(this.tagName, 'id')))
-      .withNumber(
-        this.getDataInAttribute('BillNumber', 'prefix') + '-' +
-        this.getDataInAttribute('BillNumber', 'number'))
-      .withTitle(this.$('BillTitle').find('Title[language=\'en\']').text().trim())
-      .withSponsorName(sponsorName.toLowerCase())
-      .withLink(this.getLinkToBillText())
-      .withDateVoted(this.formatXmlDate(this.getDataInTag('BillIntroducedDate')))
-      .build()
-=======
-    const bill = Bill.builder(Number(this.getDataInAttribute(this.tagName, 'id')))
-    bill.withNumber(this.getDataInAttribute('BillNumber', 'prefix') + '-' +
-      this.getDataInAttribute('BillNumber', 'number'))
-    bill.withTitle(this.$('BillTitle').find('Title[language=\'en\']').text().trim())
-    const sponsorName = this.$('SponsorAffiliation').find('FirstName').text() + ' ' +
-      this.$('SponsorAffiliation').find('LastName').text()
+    const bill = Bill.builder(
+      Number(this.getDataInAttribute(this.tagName, 'id'))
+    )
+    bill.withNumber(
+      this.getDataInAttribute('BillNumber', 'prefix') +
+        '-' +
+        this.getDataInAttribute('BillNumber', 'number')
+    )
+    bill.withTitle(
+      this.$('BillTitle')
+        .find("Title[language='en']")
+        .text()
+        .trim()
+    )
+    const sponsorName =
+      this.$('SponsorAffiliation')
+        .find('FirstName')
+        .text() +
+      ' ' +
+      this.$('SponsorAffiliation')
+        .find('LastName')
+        .text()
     bill.withSponsorName(sponsorName.toLowerCase())
     bill.withLink(this.getLinkToBillText())
-    bill.withDateVoted(this.formatXmlDate(this.getDataInTag('BillIntroducedDate')))
+    bill.withDateVoted(
+      this.formatXmlDate(this.getDataInTag('BillIntroducedDate'))
+    )
     return Model.serialise(bill.build())
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
   }
 
   getLinkToBillText () {
     let link = ''
     const publications = this.$('Publications').find('Publication')
     publications.each((i, pub) => {
-      const isRoyalAssentText = this.$(pub).find('Title').text().includes('Royal Assent')
+      const isRoyalAssentText = this.$(pub)
+        .find('Title')
+        .text()
+        .includes('Royal Assent')
       if (isRoyalAssentText) {
         link = this.getPublicationUrlPath(pub).replace('//', 'https://www.')
       }
@@ -72,27 +71,44 @@ class BillXmlParser extends XmlDataParser {
   }
 
   getPublicationUrlPath (publication) {
-    return this.$(publication).find('PublicationFile[language=\'en\']').attr('relativePath')
+    return this.$(publication)
+      .find("PublicationFile[language='en']")
+      .attr('relativePath')
   }
 
   passesFilters () {
-    return (!this.filters.mustHaveRoyalAssent || this.hasRoyalAssent()) &&
+    return (
+      (!this.filters.mustHaveRoyalAssent || this.hasRoyalAssent()) &&
       (!this.filters.mustBeInCurrentParliament || this.isInCurrentParliament())
+    )
   }
 
   hasRoyalAssent () {
-    const currentState = this.getDataInAttribute('Events', 'laagCurrentStage', true)
+    const currentState = this.getDataInAttribute(
+      'Events',
+      'laagCurrentStage',
+      true
+    )
     return currentState === 'RoyalAssentGiven'
   }
 
   isInCurrentParliament () {
     if (typeof this.currentParliament === 'undefined') {
-      throw new ParliamentNotSetError('Must specify what the current parliament is if it is used as a filter.')
+      throw new ParliamentNotSetError(
+        'Must specify what the current parliament is if it is used as a filter.'
+      )
     }
 
-    const parliamentNumber = Number(this.getDataInAttribute('ParliamentSession', 'parliamentNumber', true))
-    const parliamentSession = Number(this.getDataInAttribute('ParliamentSession', 'sessionNumber', true))
-    return this.currentParliament.number === parliamentNumber && this.currentParliament.session === parliamentSession
+    const parliamentNumber = Number(
+      this.getDataInAttribute('ParliamentSession', 'parliamentNumber', true)
+    )
+    const parliamentSession = Number(
+      this.getDataInAttribute('ParliamentSession', 'sessionNumber', true)
+    )
+    return (
+      this.currentParliament.number === parliamentNumber &&
+      this.currentParliament.session === parliamentSession
+    )
   }
 }
 

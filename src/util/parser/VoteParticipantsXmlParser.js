@@ -1,43 +1,12 @@
 const Parsers = require('@parser')
-<<<<<<< HEAD
-const Builders = require('@builder')
 const XmlDataParser = Parsers.XmlDataParser
 
 class VoteParticipantsXmlParser extends XmlDataParser {
-  constructor (xml, id) {
-    super(xml)
-    this.id = id
-  }
-
-=======
-const XmlDataParser = Parsers.XmlDataParser
-
-class VoteParticipantsXmlParser extends XmlDataParser {
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
   get tagName () {
     return 'VoteParticipant'
   }
 
   get listTagName () {
-<<<<<<< HEAD
-    return 'ArrayOfVoteParticipant'
-  }
-
-  generateNewParser (xml) {
-    return new VoteParticipantsXmlParser(xml, this.id)
-  }
-
-  buildJson () {
-    const name = this.getDataInTag('PersonOfficialFirstName') + ' ' + this.getDataInTag('PersonOfficialLastName')
-    const yea = this.getDataInTag('IsVoteYea') === 'true'
-    const paired = this.getDataInTag('IsVotePaired') === 'true'
-
-    return new Builders.VoteParticipantBuilder(this.id)
-      .withMember(name.toLowerCase())
-      .withYea(Boolean(yea))
-      .withPaired(Boolean(paired))
-      .build()
-=======
     return 'List'
   }
 
@@ -47,7 +16,8 @@ class VoteParticipantsXmlParser extends XmlDataParser {
 
   buildJson () {
     const participant = {}
-    const name = this.getDataInTag('FirstName') + ' ' + this.getDataInTag('LastName')
+    const name =
+      this.getDataInTag('FirstName') + ' ' + this.getDataInTag('LastName')
     participant.name = name.toLowerCase()
     participant.vote = this.getDataInTag('VoteValueName')
     participant.paired = this.getDataInTag('Paired') === '1'
@@ -74,7 +44,6 @@ class VoteParticipantsXmlParser extends XmlDataParser {
 
   getVoteId () {
     return Number(this.getDataInTag('DecisionDivisionNumber', true))
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
   }
 }
 

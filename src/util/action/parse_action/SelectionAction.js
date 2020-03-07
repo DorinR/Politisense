@@ -15,11 +15,7 @@ class SelectionAction extends JobAction {
     } else {
       input = raw
     }
-<<<<<<< HEAD
-    input = input.sort()
-=======
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
-    input.forEach((item) => {
+    input.forEach(item => {
       if (!item) {
         return
       }
@@ -30,7 +26,9 @@ class SelectionAction extends JobAction {
         this.raw.push(item)
       }
     })
-    console.log(`INFO: Found ${this.selected.length} desired links and ${this.raw.length} other links`)
+    console.log(
+      `INFO: Found ${this.selected.length} desired links and ${this.raw.length} other links`
+    )
     return {
       other: this.raw,
       selected: this.selected

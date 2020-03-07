@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-const Condition = require('../../util/Condition').Condition
-=======
 const Condition = require('../../util/utils').Condition
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
 const Model = require('./Model').Model
 
 class Bill extends Model {
@@ -28,8 +24,6 @@ class Bill extends Model {
   static deserialise (json) {
     return Model.deserialise(json, new Bill(1, '', '', '', '', '', ''))
   }
-<<<<<<< HEAD
-=======
 
   static builder (id) {
     return new BillBuilder(id)
@@ -73,9 +67,16 @@ class BillBuilder {
   }
 
   build () {
-    return new Bill(this.id, this.number, this.title, this.text, this.link, this.dateVoted, this.sponsorName)
+    return new Bill(
+      this.id,
+      this.number,
+      this.title,
+      this.text,
+      this.link,
+      this.dateVoted,
+      this.sponsorName
+    )
   }
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
 }
 
 module.exports.Bill = Bill

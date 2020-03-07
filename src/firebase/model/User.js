@@ -1,12 +1,16 @@
-<<<<<<< HEAD
-const Condition = require('../../util/Condition').Condition
-=======
 const Condition = require('../../util/utils').Condition
->>>>>>> #211 [feature/scraper-refactor] : reorganisation of files for backend
 const Model = require('./Model').Model
 
 class User extends Model {
-  constructor (email, firstname, lastname, password, postalCode, riding, categories) {
+  constructor (
+    email,
+    firstname,
+    lastname,
+    password,
+    postalCode,
+    riding,
+    categories
+  ) {
     super()
     Condition.parameter(email).isType(String)
     Condition.parameter(firstname).isType(String)

@@ -43,7 +43,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function CategoryDashboard() {
+export default function CategoryDashboard () {
   const classes = useStyles()
   const [categoryList] = React.useState([
     'economics',
@@ -64,14 +64,14 @@ export default function CategoryDashboard() {
 
   const [reps, setReps] = React.useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const representatives = await getAllReps()
       setReps(representatives)
     }
     getData()
   }, [])
 
-  async function getAllReps() {
+  async function getAllReps () {
     return axios
       .get('http://localhost:5000/api/representatives/getAllRepresentatives')
       .then(res => {
@@ -84,7 +84,7 @@ export default function CategoryDashboard() {
 
   const [riding, setRiding] = useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (user) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -95,7 +95,7 @@ export default function CategoryDashboard() {
 
   const [userRepresentative, setUserRepresentative] = React.useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (riding) {
         const representative = await fetchRepresentative(riding)
         setUserRepresentative(representative)
@@ -104,7 +104,7 @@ export default function CategoryDashboard() {
     getData()
   }, [riding])
 
-  async function fetchRepresentative(riding) {
+  async function fetchRepresentative (riding) {
     return axios
       .get(
         `http://localhost:5000/api/representatives/${riding}/getRepresentative`
@@ -119,7 +119,7 @@ export default function CategoryDashboard() {
 
   const [representativeData, setRepresentativeData] = React.useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (userRepresentative) {
         const billsByRep = await getAllBillsByRep(userRepresentative)
         setRepresentativeData(billsByRep)
@@ -128,7 +128,7 @@ export default function CategoryDashboard() {
     getData()
   }, [userRepresentative])
 
-  async function getAllBillsByRep(head) {
+  async function getAllBillsByRep (head) {
     return axios
       .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
       .then(res => {
@@ -141,7 +141,7 @@ export default function CategoryDashboard() {
 
   const [userRepIssuedBills, setUserRepIssuedBills] = React.useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (userRepresentative) {
         const issuedBillByUserRep = await getAllBillsBySponsorName(
           userRepresentative
@@ -152,7 +152,7 @@ export default function CategoryDashboard() {
     getData()
   }, [userRepresentative])
 
-  async function getAllBillsBySponsorName(head) {
+  async function getAllBillsBySponsorName (head) {
     return axios
       .get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
       .then(res => {
