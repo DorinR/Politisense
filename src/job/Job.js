@@ -16,7 +16,14 @@ class Job {
   addAction (action) {
     Job.check(action)
     const fn = action.perform.bind(action)
-    this.registry.push(action.constructor.name)
+
+    if(action.wrapped){
+      this.registry.push(action.wrapped)
+    } else {
+      this.registry.push(action.constructor.name)
+    }
+
+
     this.actions.push(fn)
     return this
   }

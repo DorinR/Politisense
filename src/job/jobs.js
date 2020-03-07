@@ -1,4 +1,5 @@
 module.exports = {
+  Job: require('./Job').AbstractJob,
   BillLinkFetchJob: require('./BillLinkFetchJob').BillLinkFetchJob,
   BillPDFFetchJob: require('./BillPDFFetchJob').PDFRetrievalJob,
   ScrapeJob: require('./ScrapeJob').ScrapeJob,

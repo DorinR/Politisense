@@ -10,6 +10,7 @@ class ParserWrapperAction extends Action {
       throw new DecorationError(xmlParserType)
     }
     this.Create = xmlParserType.prototype.constructor
+    this.wrapped =  'Wrapped ' + xmlParserType.name
     this.params = params
   }
 

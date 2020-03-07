@@ -1,6 +1,7 @@
 require('module-alias/register')
 const Components = require('@manager')
 const flatten = require('flat')
+const Parameters = require('@parameter')
 
 class VoteScraper extends Components.QueueManager {
   static create (params, wait = 5000) {
@@ -37,7 +38,7 @@ class VoteScraper extends Components.QueueManager {
   }
 
   createParliamentSessions (parliamentSessions) {
-    const validEntries = Object.values(flatten(Parliament))
+    const validEntries = Object.values(flatten(Parameters.VoteParameters.Parliament))
     if (!parliamentSessions || parliamentSessions === 'all') {
       this.parliamentSessions = validEntries
     } else if (parliamentSessions instanceof Array) {
@@ -48,7 +49,7 @@ class VoteScraper extends Components.QueueManager {
   }
 
   createBillDocumentTypes (types) {
-    const validEntries = Object.values(flatten(Type))
+    const validEntries = Object.values(flatten(Parameters.VoteParameters.Type))
     if (!types || types === 'all') {
       this.billDocumentTypes = ['']
     } else if (types instanceof Array) {
@@ -59,7 +60,7 @@ class VoteScraper extends Components.QueueManager {
   }
 
   createVoteResults (voteResults) {
-    const validEntries = Object.values(Outcome)
+    const validEntries = Object.values(Parameters.VoteParameters.Outcome)
     if (!voteResults || voteResults === 'all') {
       this.voteResults = ['']
     } else if (voteResults instanceof Array) {
@@ -70,7 +71,7 @@ class VoteScraper extends Components.QueueManager {
   }
 
   createMotionPrefixes (prefixes) {
-    const validEntries = Object.values(flatten(Type))
+    const validEntries = Object.values(flatten(Parameters.VoteParameters.Topic))
     if (!prefixes || prefixes === 'all') {
       this.motionPrefixes = ['']
     } else if (prefixes instanceof Array) {

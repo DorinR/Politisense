@@ -1,8 +1,17 @@
 class Vertex {
-  constructor (tag = 'Vertex', fn = () => {}) {
-    this.tag = tag
-    this.fn = fn
+  constructor (data = 'Vertex') {
+    this.data = data
   }
 }
 
-module.exports.Vertex = Vertex
+class TypeVertex extends Vertex {
+  constructor (type, data) {
+    super(data)
+    this.type = type
+  }
+}
+
+module.exports = {
+  Vertex: Vertex,
+  TypeVertex: TypeVertex
+}

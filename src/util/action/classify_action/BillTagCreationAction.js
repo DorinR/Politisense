@@ -154,21 +154,6 @@ class BillTagCreationAction extends Action {
     console.log(`INFO: successfully created ${billTags.length} bill tags.`)
     return billTags
   }
-
-  insertTagsIntoDatabase (tags) {
-    return Promise.all(
-      tags.map(tag => {
-        new Firestore(false)
-          .forParliament(this.parliament)
-          .BillClassification()
-          .insert(tag)
-          .then(() => {
-            console.log(`INFO: Bill tag: ${tag.category}, for bill: ${tag.bill}, was successfully inserted into firestore`)
-          })
-          .catch(console.error)
-      })
-    )
-  }
 }
 
 module.exports.BillTagCreationAction = BillTagCreationAction

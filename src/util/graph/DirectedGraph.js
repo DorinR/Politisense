@@ -43,40 +43,14 @@ class DirectedGraph {
   get (v) {
     return this.adjacencyList.get(v)
   }
-  //implements a BFS search for a euler walk
-  static eulerWalk(graph, vert, first = true) {
-    if(!vert) {
-      return [] //base case for recursive function
+  static eulerWalk(graph, vertex) {
+    if(!vertex) {
+      return []
     }
-    const vertices = []
-    let d = 0
-    if(first){
-      vertices.push({
-        vertex: vert,
-        depth: d
-      })
-    } else {
-      let {vertex, depth} = vert
-      vert = vertex
-      d = depth
-    }
-
-    graph.get(vert).forEach(v => {
-      vertices.push({
-        vertex: v,
-        depth: d + 1
-      })
+    const vertices = [vertex]
+    graph.get(vertex).forEach(v => {
+      vertices.push(...DirectedGraph.eulerWalk(graph, v))
     })
-    if(first) {
-      vertices.slice(1).forEach(v => {
-        vertices.push(...DirectedGraph.eulerWalk(graph, v, false))
-      })
-    } else {
-      vertices.forEach(v => {
-        vertices.push(...DirectedGraph.eulerWalk(graph, v, false))
-      })
-    }
-
     return vertices
   }
 }

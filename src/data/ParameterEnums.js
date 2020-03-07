@@ -247,6 +247,8 @@ const Updates = {
   Role: 'roles',
   TfIdf: 'raw',
   Category: 'classifications',
+  All: 'root',
+  None: 'leaf'
 }
 
 module.exports = {
