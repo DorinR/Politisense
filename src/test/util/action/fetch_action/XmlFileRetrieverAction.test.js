@@ -8,11 +8,12 @@ const Assert = chai.assert
 describe('PDFParseAction.js', () => {
   let mockSend
   beforeAll(() => {
-    mockSend = async (filepath) => {
+    mockSend = async filepath => {
       if (filepath.includes('html')) {
         return {
           text: function () {
-            return '<!DOCTYPE html>' +
+            return (
+              '<!DOCTYPE html>' +
               '<html>' +
               '<head>' +
               '</head>' +
@@ -21,6 +22,7 @@ describe('PDFParseAction.js', () => {
               '<a href="https://www.google.ca/xml">google1</a>' +
               '</body>' +
               '</html>'
+            )
           }
         }
       } else if (filepath.includes('xml')) {
@@ -35,10 +37,13 @@ describe('PDFParseAction.js', () => {
       }
     }
   })
-  it('PDFParseAction::perform() returns xml on good link', async (done) => {
-    const underTest = new FileReader('https://www.i.want/this/xml/file/from/the/web/')
+  it('PDFParseAction::perform() returns xml on good link', async done => {
+    const underTest = new FileReader(
+      'https://www.i.want/this/xml/file/from/the/web/'
+    )
     underTest.send = mockSend
-    const didGetXml = await underTest.perform()
+    const didGetXml = await underTest
+      .perform()
       .then(res => {
         Assert.equal(typeof res, typeof '', 'Should be a string')
         Assert.isFalse(res.includes('html'), 'Should not be an html document')
@@ -52,10 +57,13 @@ describe('PDFParseAction.js', () => {
     done()
   })
 
-  it('PDFParseAction::perform() returns null on html returned', async (done) => {
-    const underTest = new FileReader('https://www.i.do/not/wantthis/html/file/from/the/web/')
+  it('PDFParseAction::perform() returns null on html returned', async done => {
+    const underTest = new FileReader(
+      'https://www.i.do/not/wantthis/html/file/from/the/web/'
+    )
     underTest.send = mockSend
-    const isNull = await underTest.perform()
+    const isNull = await underTest
+      .perform()
       .then(res => {
         Assert.equal(res, null, 'Should be null')
         return true
@@ -67,10 +75,11 @@ describe('PDFParseAction.js', () => {
     done()
   })
 
-  it('PDFParseAction::perform() returns null on error', async (done) => {
+  it('PDFParseAction::perform() returns null on error', async done => {
     const underTest = new FileReader('https://www.i.want/this/to/throw')
     underTest.send = mockSend
-    const isNull = await underTest.perform()
+    const isNull = await underTest
+      .perform()
       .then(res => {
         Assert.equal(res, null, 'Should be null')
         return true
