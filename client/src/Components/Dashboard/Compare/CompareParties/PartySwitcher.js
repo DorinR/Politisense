@@ -36,7 +36,7 @@ const MenuProps = {
   }
 }
 
-async function fetchAllRepresentatives() {
+async function fetchAllRepresentatives () {
   return await axios
     .get('/api/representatives/getAllRepresentatives')
     .then(res => {
@@ -47,8 +47,8 @@ async function fetchAllRepresentatives() {
     .catch(err => console.error(err))
 }
 
-function getAllParties(representatives) {
-  let parties = []
+function getAllParties (representatives) {
+  const parties = []
   let party
   representatives.forEach(rep => {
     party = capitalize.words(rep.politicalParty)
@@ -59,7 +59,7 @@ function getAllParties(representatives) {
   return parties
 }
 
-function getStyles(selectedParty, party, theme) {
+function getStyles (selectedParty, party, theme) {
   return {
     fontWeight:
       selectedParty === party
@@ -68,7 +68,7 @@ function getStyles(selectedParty, party, theme) {
   }
 }
 
-export default function PartySwitcher(props) {
+export default function PartySwitcher (props) {
   // eslint-disable-next-line no-use-before-define
   const { functionUpdate, ...other } = props
   const classes = useStyles()
@@ -76,18 +76,18 @@ export default function PartySwitcher(props) {
   const [selectedParty, setSelectedParty] = React.useState([])
   const [dropdownParties, setDropdownParties] = React.useState([])
 
-  function populateDropdownParties(parties) {
+  function populateDropdownParties (parties) {
     setDropdownParties(parties)
   }
 
-  function handleChange(event) {
+  function handleChange (event) {
     setSelectedParty(event.target.value)
     const value = event.target.value
     functionUpdate(value)
   }
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const representatives = await fetchAllRepresentatives() // REPLACE WITH NEXT LINE ONCE IMPLEMENTED
       if (representatives) {
         const parties = getAllParties(representatives)
@@ -107,12 +107,14 @@ export default function PartySwitcher(props) {
           value={selectedParty}
           onChange={handleChange}
           input={<Input />}
-          MenuProps={MenuProps}>
+          MenuProps={MenuProps}
+        >
           {dropdownParties.map(party => (
             <MenuItem
               key={party}
               value={party}
-              style={getStyles(selectedParty, party, theme)}>
+              style={getStyles(selectedParty, party, theme)}
+            >
               {party}
             </MenuItem>
           ))}

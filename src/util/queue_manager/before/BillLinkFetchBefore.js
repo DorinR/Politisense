@@ -14,27 +14,27 @@ class BillLinkFetchBeforeAction extends QueueAction {
 
   retrieveBills () {
     return Parliaments.map(parl => {
-        return new Firestore(false)
-          .forParliament(parl)
-          .Bill()
-          .select()
-          .then(snapshot => {
-            const bills = []
-            snapshot.forEach(doc => {
-              bills.push({
-                data: doc.data(),
-                id: doc.id
-              })
-            })
-            return bills
-          })
-          .then(bills => {
-            return bills.filter(bill => {
-              return bill.data.link && bill.data.link !== ''
+      return new Firestore(false)
+        .forParliament(parl)
+        .Bill()
+        .select()
+        .then(snapshot => {
+          const bills = []
+          snapshot.forEach(doc => {
+            bills.push({
+              data: doc.data(),
+              id: doc.id
             })
           })
-          .catch(console.error)
-      })
+          return bills
+        })
+        .then(bills => {
+          return bills.filter(bill => {
+            return bill.data.link && bill.data.link !== ''
+          })
+        })
+        .catch(console.error)
+    })
   }
 
   async perform () {

@@ -12,7 +12,7 @@ describe('Authentication.js', () => {
   let underTest
   let user
 
-  function assertProperResponse(json) {
+  function assertProperResponse (json) {
     Assert.equal(typeof json, typeof {})
     Assert.notEqual(json.success, null)
     Assert.notEqual(json.auth, null)
