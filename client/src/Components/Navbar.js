@@ -18,8 +18,8 @@ import PersonIcon from '@material-ui/icons/Person'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { Link } from 'react-router-dom'
-import RepresentativeInfo from './dashboard/Sidebar/RepresentativeInfo'
-import RepresentativeImage from './dashboard/Sidebar/RepresentativeImage'
+import RepresentativeInfo from './Dashboard/Sidebar/RepresentativeInfo'
+import RepresentativeImage from './Dashboard/Sidebar/RepresentativeImage'
 import Tooltip from '@material-ui/core/Tooltip'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import Fab from '@material-ui/core/Fab'
@@ -206,8 +206,7 @@ export default function MiniDrawer ({ children }) {
         position='fixed'
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open
-        })}
-      >
+        })}>
         <Toolbar>
           <IconButton
             color='inherit'
@@ -216,16 +215,14 @@ export default function MiniDrawer ({ children }) {
             edge='start'
             className={clsx(classes.menuButton, {
               [classes.hide]: open
-            })}
-          >
+            })}>
             <MenuIcon />
           </IconButton>
           <Link to='/general' className={classes.navbarCustomFont}>
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}
-            >
+              className={classes.navbarCustomButton}>
               General
             </Button>
           </Link>
@@ -238,8 +235,7 @@ export default function MiniDrawer ({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}
-            >
+              className={classes.navbarCustomButton}>
               Voting History
             </Button>
           </Link>
@@ -247,8 +243,7 @@ export default function MiniDrawer ({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}
-            >
+              className={classes.navbarCustomButton}>
               Compare
             </Button>
           </Link>
@@ -256,8 +251,7 @@ export default function MiniDrawer ({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}
-            >
+              className={classes.navbarCustomButton}>
               Budget
             </Button>
           </Link>
@@ -265,8 +259,7 @@ export default function MiniDrawer ({ children }) {
             <Button
               variant='contained'
               color='primary'
-              className={classes.navbarCustomButton}
-            >
+              className={classes.navbarCustomButton}>
               Map
             </Button>
           </Link>
@@ -295,8 +288,7 @@ export default function MiniDrawer ({ children }) {
             [classes.drawerClose]: !open
           })
         }}
-        open={open}
-      >
+        open={open}>
         <div className={classes.toolbar}>
           {open ? (
             <Typography variant='h6' noWrap>
