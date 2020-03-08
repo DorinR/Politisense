@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {Card, CardContent, Grid, Typography, Avatar, CardActions} from '@material-ui/core';
+import {Card, CardContent, Grid, Typography, Avatar, CardActions, CardHeader} from '@material-ui/core';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import MoneyIcon from '@material-ui/icons/Money';
 import Button from '@material-ui/core/Button';
@@ -11,10 +11,14 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import axios from "axios";
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
+import IconButton from '@material-ui/core/IconButton';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        height: '100%'
+        height: '100%',
+        // width:'100%'
     },
     content: {
         alignItems: 'center',
@@ -24,13 +28,13 @@ const useStyles = makeStyles(theme => ({
         fontWeight: 700
     },
     avatar: {
-        backgroundColor: theme.palette.error.main,
+        backgroundColor: '#00bcd4',
         height: 56,
         width: 56
     },
     icon: {
         height: 32,
-        width: 32
+        width: 32,
     },
     difference: {
         marginTop: theme.spacing(2),
@@ -43,13 +47,13 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center'
     },
     differenceIcon: {
-        color: theme.palette.error.dark
-    },
-    positiveIcon: {
         color: "green"
     },
+    positiveIcon: {
+        color: theme.palette.error.dark
+    },
     differenceValue: {
-        color: theme.palette.error.dark,
+        color: "green",
         marginRight: theme.spacing(1)
     }
 }));
@@ -57,8 +61,6 @@ const useStyles = makeStyles(theme => ({
 const Budget = props => {
     const { className, ...rest } = props;
     const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('xl'));
-
     const classes = useStyles();
     const [open, setOpen]= useState(false)
     const handleOpenAction = ()=>{
@@ -187,8 +189,8 @@ const Budget = props => {
             }
             setBudgetData([mps, avgs])
 
-        }
-    }, [data, labelMP])
+        }    }, [data, labelMP])
+
 
 
     const [totalMPBudget, setTotalMPBudget] = useState(0)
@@ -263,13 +265,24 @@ console.log(budgetData)
                     <Typography
                         className={classes.caption}
                         variant="caption"
-                    >{"than average member"}
+                    >{"than average"}
                     </Typography>
-                    <Button color="primary" size="small" style={{"fontSize":9, "marginLeft":"30px"}} onClick={handleOpenAction}>details</Button>
+                       {budgetData?
+                           (<Button color="primary" size="medium" style={{"fontSize":10 }}
+                                    onClick={handleOpenAction}>
+                                   details
+                               </Button>
+                           )
+                           :''}
                    </div>
                 </Grid>
+                {/*{budgetData?*/}
+                {/*    (<ArrowRightAltIcon style={{marginLeft:"auto"}} onClick={handleOpenAction}/>)*/}
+                {/*    :''}*/}
+
             </CardContent>
-            <BudgetDetailsDialog maxWidth={"xl"} fullWidth={true} onClose ={handleCloseAction} open={open} budgetData={budgetData}/>
+
+            <BudgetDetailsDialog maxWidth={"l"} fullWidth={true} onClose ={handleCloseAction} open={open} budgetData={budgetData}/>
         </Card>
     );
 };

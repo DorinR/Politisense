@@ -18,7 +18,8 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 const useStyles = makeStyles(theme => ({
   card: {
-    backgroundColor: '#43D0C4'
+    // backgroundColor: '#43D0C4'
+    backgroundColor: '#00bcd4'
   },
   container: {
     margin: '20px',

@@ -17,7 +17,7 @@ import {
   Divider,
   IconButton
 } from '@material-ui/core';
-import D3ChartDescriptionDialog from "../D3ChartDescriptionDialog";
+import DescriptionDialog from "../../MyMP/DescriptionDialog";
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 const columns = [
@@ -48,12 +48,11 @@ let rows = []
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-
     // height:'100%'
   },
   tableWrapper: {
     // minWidth: 800,
-    maxHeight: 408,
+    maxHeight: 350,
     overflow: 'auto'
   },
   container: {
@@ -358,7 +357,18 @@ export default function BillHistoryTable (props) {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
           </CardContent>
-          <D3ChartDescriptionDialog open = {open} onClose={handleClose}/>
+          <DescriptionDialog
+              open = {open}
+              onClose={handleClose}
+              d3={true}
+              explaination={
+                {title:"Bill History Table",
+                body:"This table shows all the bills for this current parliament, " +
+                    "including bills number," +
+                    " bill's type,date voted, your current MP's vote." +
+                    " You can also find more details by clicking on More Details button "}
+              }
+          />
         </Card>
       {/*</Paper>*/}
     </div>
