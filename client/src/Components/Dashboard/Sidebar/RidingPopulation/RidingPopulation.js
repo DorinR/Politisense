@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import {formatNumber} from "../../Budget/Budget";
 
 export async function fetchPopulation (riding) {
   return axios
@@ -22,7 +23,7 @@ export default function RidingPopulation (props) {
   useEffect(() => {
     async function getData () {
       if (props.riding) {
-        setPopulation(await fetchPopulation(props.riding))
+        setPopulation(formatNumber(await fetchPopulation(props.riding)))
       }
     }
     getData()

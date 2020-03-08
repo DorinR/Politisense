@@ -29,10 +29,10 @@ export async function fetchRepresentative (riding) {
 
 const useStyles = makeStyles(theme => ({
   bigAvatar: {
-    marginLeft: 26,
-    width: 150,
-    height: 150,
-    border: '3px solid #41aaa8'
+    marginLeft: 45,
+    width: 100,
+    height: 100,
+    border: '3px solid #00bcd4'
   }
 }))
 

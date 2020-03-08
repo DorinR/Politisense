@@ -148,7 +148,6 @@ exports.getRepresentativeId = async (req, res) => {
 }
 
 async function fetchRolesByParliament (parliamentNo,repName) {
-    console.log(repName,parliamentNo)
     let id = await fetchIDbyRepName(parliamentNo,repName)
     if(id){
         let roles =await fetchrolesbyID(parliamentNo,id)
@@ -207,32 +206,8 @@ async function fetchrolesbyID (parliamentNo,id) {
         })
     return roles
 }
+
 exports.getAllRolesByRep = async (req, res) => {
-
-    // const db43 = new Firestore(false).forParliament(43)
-    // const role43= db43.Role()
-    //
-    // const db42 = new Firestore(false).forParliament(42)
-    // const role42= db42.Role()
-    //
-    // const db41 = new Firestore(false).forParliament(41)
-    // const role41= db41.Role()
-    //
-    // const db40 = new Firestore(false).forParliament(40)
-    // const role40= db40.Role()
-    //
-    // const db39 = new Firestore(false).forParliament(39)
-    // const role39= db39.Role()
-    //
-    // const db38 = new Firestore(false).forParliament(38)
-    // const role38= db38.Role()
-    //
-    // const db37 = new Firestore(false).forParliament(37)
-    // const role37= db37.Role()
-    //
-    // const db36 = new Firestore(false).forParliament(36)
-    // const role36= db36.Role()
-
 
     let rawData = await Promise.all([
         fetchRolesByParliament(43,req.params.repName),
@@ -245,185 +220,8 @@ exports.getAllRolesByRep = async (req, res) => {
         fetchRolesByParliament(36,req.params.repName),
     ])
 
-    // let roless= []
-    //  let test = await fetchRolesByParliament(43,req.params.repName)
-    //
         res.status(200).json({
             success: true,
             data: rawData
         })
-
-
-
-
-
-   // let id= null
-   //  db43.Politician()
-   //      .where('name','==',req.params.repName)
-   //      .select()
-   //      .then(snapshot => {
-   //          if (snapshot.empty) {
-   //              res.status(404).json({
-   //                  success: false,
-   //                  message: 'Representative not found'
-   //              })
-   //          }
-   //          snapshot.forEach(doc => {
-   //              // const name = doc.id
-   //              id = doc.id
-   //          })
-   //          if(id){
-   //              console.log("IM HERE ",id)
-   //              role43.where('politician','==',id)
-   //                  .select()
-   //                  .then(snapshot => {
-   //                      if (snapshot.empty) {
-   //                          res.status(404).json({
-   //                              success: false,
-   //                              message: 'Representative not found'
-   //                          })
-   //                      }
-   //                      snapshot.forEach(doc => {
-   //                          const {fromDate,group,title,toDate,type} = doc.data()
-   //                          let test={
-   //                              fromDate:fromDate,
-   //                              group:group,
-   //                              title:title,
-   //                              toDate:toDate,
-   //                              type:type
-   //                          }
-   //                          console.log(test)
-   //                          roless.push(test)
-   //                      })
-   //                      // res.status(200).json({
-   //                      //     success: true,
-   //                      //     data: roless
-   //                      // })
-   //                      db42.Politician()
-   //                          .where('name','==',req.params.repName)
-   //                          .select()
-   //                          .then(snapshot => {
-   //                              if (snapshot.empty) {
-   //                                  res.status(404).json({
-   //                                      success: false,
-   //                                      message: 'Representative not found'
-   //                                  })
-   //                              }
-   //                              snapshot.forEach(doc => {
-   //                                  // const name = doc.id
-   //                                  id = doc.id
-   //                              })
-   //                              if(id){
-   //                                  console.log("IM HERE ",id)
-   //                                  role42.where('politician','==',id)
-   //                                      .select()
-   //                                      .then(snapshot => {
-   //                                          if (snapshot.empty) {
-   //                                              res.status(404).json({
-   //                                                  success: false,
-   //                                                  message: 'Representative not found'
-   //                                              })
-   //                                          }
-   //                                          snapshot.forEach(doc => {
-   //                                              const {fromDate,group,title,toDate,type} = doc.data()
-   //                                              let test={
-   //                                                  fromDate:fromDate,
-   //                                                  group:group,
-   //                                                  title:title,
-   //                                                  toDate:toDate,
-   //                                                  type:type
-   //                                              }
-   //                                              console.log(test)
-   //                                              roless.push(test)
-   //                                          })
-   //                                          // res.status(200).json({
-   //                                          //     success: true,
-   //                                          //     data: roless
-   //                                          // })
-   //                                          db42.Politician()
-   //                                              .where('name','==',req.params.repName)
-   //                                              .select()
-   //                                              .then(snapshot => {
-   //                                                  if (snapshot.empty) {
-   //                                                      res.status(404).json({
-   //                                                          success: false,
-   //                                                          message: 'Representative not found'
-   //                                                      })
-   //                                                  }
-   //                                                  snapshot.forEach(doc => {
-   //                                                      // const name = doc.id
-   //                                                      id = doc.id
-   //                                                  })
-   //                                                  if(id){
-   //                                                      console.log("IM HERE ",id)
-   //                                                      role42.where('politician','==',id)
-   //                                                          .select()
-   //                                                          .then(snapshot => {
-   //                                                              if (snapshot.empty) {
-   //                                                                  res.status(404).json({
-   //                                                                      success: false,
-   //                                                                      message: 'Representative not found'
-   //                                                                  })
-   //                                                              }
-   //                                                              snapshot.forEach(doc => {
-   //                                                                  const {fromDate,group,title,toDate,type} = doc.data()
-   //                                                                  let test={
-   //                                                                      fromDate:fromDate,
-   //                                                                      group:group,
-   //                                                                      title:title,
-   //                                                                      toDate:toDate,
-   //                                                                      type:type
-   //                                                                  }
-   //                                                                  console.log(test)
-   //                                                                  roless.push(test)
-   //                                                              })
-   //                                                              res.status(200).json({
-   //                                                                  success: true,
-   //                                                                  data: roless
-   //                                                              })
-   //                                                          })
-   //
-   //                                                  }
-   //                                                  // res.status(200).json({
-   //                                                  //     success: true,
-   //                                                  //     data: "NOTHING!"
-   //                                                  // })
-   //
-   //                                              })
-   //                                              .catch(err => {
-   //                                                  res.status(400).json({
-   //                                                      success: false,
-   //                                                      message: err
-   //                                                  })
-   //                                              })
-   //                                      })
-   //
-   //                              }
-   //                              // res.status(200).json({
-   //                              //     success: true,
-   //                              //     data: "NOTHING!"
-   //                              // })
-   //
-   //                          })
-   //                          .catch(err => {
-   //                              res.status(400).json({
-   //                                  success: false,
-   //                                  message: err
-   //                              })
-   //                          })
-   //                  })
-   //
-   //          }
-   //          // res.status(200).json({
-   //          //     success: true,
-   //          //     data: "NOTHING!"
-   //          // })
-   //
-   //      })
-   //      .catch(err => {
-   //          res.status(400).json({
-   //              success: false,
-   //              message: err
-   //          })
-   //      })
 }

@@ -33,7 +33,7 @@ const useStyles = makeStyles({
   }
 })
 
-function capitalize (str) {
+export function capitalize (str) {
   if (str && isNaN(str)) {
     let res = str
     res = res.toLowerCase()
