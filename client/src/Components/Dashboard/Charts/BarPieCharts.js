@@ -1,18 +1,17 @@
 import * as d3 from 'd3'
 
 function dashboard (element, fData) {
-
+  //        backgroundColor: '#00bcd4',
   // let mainSvg = d3.select(element).append(svg)
-  const barColor = '#d597ce'
+  const barColor = '#00bcd4'
 
   fData.forEach(function (d) { return d.total })
 
   function histoGram (fD) {
     const hG = {}
-    const hGDim = { t: 60, r: 0, b: 30, l: 30 }
+    const hGDim = { t: 30, r: 5, b: 30, l: 20 }
     hGDim.w = 550 - hGDim.l - hGDim.r
     hGDim.h = 300 - hGDim.t - hGDim.b
-
 
     // create svg for histogram.
     const hGsvg = d3.select(element).append('svg')
@@ -59,7 +58,7 @@ function dashboard (element, fData) {
         .attr('text-anchor', 'middle')
 
     function mouseover (d) {
-      d3.select(this).attr('fill', "#9852f9")
+      // d3.select(this).attr('fill', "#9852f9")
       const st = fData.filter(function (s) { return s.State === d[0] })[0]
       const nD = d3.keys(st.freq).map(function (s) { return { type: s, freq: st.freq[s] } })
 
@@ -70,7 +69,7 @@ function dashboard (element, fData) {
 
     function mouseout (d) { // utility function to be called on mouseout.
       // reset the pie-chart and legend.
-      d3.select(this).attr('fill', barColor)
+      // d3.select(this).attr('fill', barColor)
       pC.update(tF)
       leg.update(tF)
     }
@@ -100,15 +99,16 @@ function dashboard (element, fData) {
   // function to handle pieChart.
   function pieChart (pD) {
     const pC = {}
+    // const margin =
     const pieDim = { w: 150, h: 150 }
     pieDim.r = Math.min(pieDim.w, pieDim.h) / 2
 
     // create svg for pie chart.
     const piesvg = d3.select(element).append('svg')
         .attr('width', pieDim.w).attr('height', pieDim.h)
-        .attr('viewBox',`0 0 ${pieDim.w}/2 (${pieDim.h}/2 ` )
+        // .attr('viewBox',`0 0 ${pieDim.w}/2 (${pieDim.h}/2 ` )
         .append('g')
-        .attr('transform', 'translate(' + pieDim.w / 2 + ',' + pieDim.h / 2 + ')')
+        .attr('transform', 'translate(' + ((pieDim.w) / 2 )+ ',' + pieDim.h / 2 + ')')
 
     // create function to draw the arcs of the pie slices.
     const arc = d3.arc().outerRadius(pieDim.r - 10).innerRadius(0)
@@ -274,4 +274,4 @@ export async function createData (categories, data) {
   return dataArray
 }
 
-function segColor (c) { return { Succeeded: '#43D0C4', Failed: '#ff6f5e' }[c] }
+function segColor (c) { return { Succeeded: '#20c997', Failed: '#ff6f5e' }[c] }

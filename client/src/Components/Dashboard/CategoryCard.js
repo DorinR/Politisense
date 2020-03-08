@@ -39,6 +39,9 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     maxHeight: 200
+  },
+  header:{
+    backgroundColor:"#f6f6f6"
   }
 }))
 
@@ -138,6 +141,7 @@ export default function CategoryCard (props) {
       <div>
         <Card className={classes.card}>
           <CardHeader
+              className={classes.header}
             avatar={setCardLogo()}
             action={
               <div>
@@ -145,6 +149,7 @@ export default function CategoryCard (props) {
                   <IndeterminateCheckBoxIcon color='primary' />
                 </IconButton>
               </div>
+
             }
             title={props.title}
           />
@@ -161,6 +166,8 @@ export default function CategoryCard (props) {
             {data.length
               ? <BarChartWrapper data={data} categoryType={props.title} />
               : 'title is empty!!'}
+            <br />
+            <br />
             <br />
             <TableContainer className={classes.container}>
               <Table className={classes.table} size='small' aria-label='a dense table'>

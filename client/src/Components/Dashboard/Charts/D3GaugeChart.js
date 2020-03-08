@@ -1,19 +1,19 @@
 import * as d3 from 'd3'
 import React, { Component } from 'react'
-const width = 390;
-const arcSize = ( 5* width / 100);
-const innerRadius = arcSize * 3;
+let width = null;
+// const arcSize = ( 4* width / 100);
+// const innerRadius = arcSize * 3;
+let arcSize = null
+let innerRadius = null
 const pi =  Math.PI;
+const margin = {top: 30, right: 20, bottom: 30, left: 50}
 
 export default class D3GaugeChart extends Component {
 
     constructor (element,data) {
         super(element)
         const svg = d3.select(element).append('svg')
-            .attr('width', width)
-            .attr('height', width)
-            .attr('viewBox', `0 0 ${width} (${width})`)
-
+        drawChart()
         const arcs = data.map(function (obj, i) {
             return d3.arc()
                 .innerRadius(i * arcSize + innerRadius)
@@ -40,15 +40,14 @@ export default class D3GaugeChart extends Component {
             .value(function (d) {
                 return d.value;
             })
-
         let g = svg.selectAll('g').data(pieData).enter()
             .append('g')
-            .attr('transform', 'translate(' + ((width) /2) + ',' + ((width) / 2) + ') rotate(180)');
+            .attr('transform', 'translate(' + (((width)/2)-25) + ',' + ((width) / 2) + ') rotate(180)');
 
         let gText = svg.selectAll('g.textClass').data([{}]).enter()
             .append('g')
             .classed('textClass', true)
-            .attr('transform', 'translate(' + width / 2 + ',' + width / 2 + ') rotate(180)');
+            .attr('transform', 'translate(' + ((width/ 2)-25) + ',' + width / 2 + ') rotate(180)');
 
         g.selectAll('path').data(function (d) {
             return pie(d);
@@ -61,11 +60,16 @@ export default class D3GaugeChart extends Component {
             .attr('d', function (d) {
                 return d.data.arc(d);
             }).attr('fill', function (d, i) {
-            return i == 0 ? d.data.object.color : i == 1 ? d.data.object.color : 'none';
+            return i == 0 ? d.data.object.color : i == 1 ?'#dedede':'none'
+            //   return i == 0 ? d.data.object.color : i == 1 ?'#dedede':'none'
+            // return i == 0 ? d.data.object.color : i == 1 ? d.data.object.color : 'none'; (old)
             // return  d.data.object.color
+            //ededed
+            //rgba(242, 242, 242, 0.85)
+            //dedede
         })
             .style("opacity", (d,i)=>{
-                return i == 0 ? 1 : i == 1 ? 0.3 : 'none'
+                return i == 0 ? 1 : i == 1 ? 0.3 : 1
             })
 
         const div = svg.append('div')
@@ -106,7 +110,7 @@ export default class D3GaugeChart extends Component {
                     });
                     let lableObj = r.data.object;
                     gText.append('text')
-                        .attr('font-size', ((5 * width) / 100))
+                        .attr('font-size', ((4 * width) / 100))
                         .text(lableObj.label)
                         .attr('transform', "translate(" + (centroidText[0] - ((1.5 * width) / 100)) + "," + (centroidText[1] + ") rotate(" + (180) + ")"))
                         .attr('dominant-baseline', 'central')
@@ -116,19 +120,41 @@ export default class D3GaugeChart extends Component {
                     .attr('class', 'test')
                     .attr('transform', " rotate(" + (180) + ")")
                     .attr("text-anchor", "middle")
-                    .attr('font-size', '2em')
-                    .attr('y', 20)
-                    .text(`${d.data.object.value} %`)
+                    .attr('font-size', '1.4em')
+                    .attr('y', 10)
+                    .text(`${d.data.object.value}%`)
                     .style('display','block')
             })
                 .on('mouseout', function (d) {
                     d3.selectAll('.test').remove()
                 })
-                .on('touchstart', function (d) {
-                    div.transition()
-                        .duration(200)
-                        .style('opacity', 0.9)
-                })
+                // .on('touchstart', function (d) {
+                //     // div.transition()
+                //     //     .duration(200)
+                //     //     .style('opacity', 0.9)
+                //     g.append("text")
+                //         .attr('class', 'test')
+                //         .attr('transform', " rotate(" + (180) + ")")
+                //         .attr("text-anchor", "middle")
+                //         .attr('font-size', '1.4em')
+                //         .attr('y', 10)
+                //         .text(`${d.data.object.value}%`)
+                //         .style('display','block')
+                // })
         });
+        function drawChart(){
+            // reset the width
+            width = parseInt(d3.select(element).style('width'), 10)+67;
+             arcSize = ( 4* width / 100);
+             innerRadius = arcSize * 3;
+            // set the svg dimensions
+            svg.attr("width", width)
+            .attr('height', width)
+            // .attr('viewBox', `0 0 ${width} (${width})`)
+
+        }
+        window.addEventListener('resize', drawChart);
     }
+
 }
+
