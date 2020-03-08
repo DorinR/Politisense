@@ -7,29 +7,20 @@ import {
     CardHeader,
     CardContent,
     CardActions,
+    CardActionArea,
     Button,
     Divider,
     IconButton, Typography
 } from '@material-ui/core';
 import Radar from 'react-d3-radar'
-import Collapse from "@material-ui/core/Collapse";
-import TableContainer from "@material-ui/core/TableContainer";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
-import TableBody from "@material-ui/core/TableBody";
-import BillDialog from "./BillDialog";
-import D3ChartDescriptionDialog from "./D3ChartDescriptionDialog";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DialogRadarChart from "./DialogRadarChart";
+import BillDialog from "../Dashboard/BillDialog";
+import DescriptionDialog from "./DescriptionDialog";
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import TableDialog from "./TableDialog";
+
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '`calc(100% - 1px)%',
-        // width: `calc(100% - 20px)`,
-// [theme.breakpoints.up('lg')]: {
-        //     height: "90%"}
     },
     content: {
         padding: 0
@@ -57,13 +48,17 @@ const MPActivityDistribution = props => {
     const [billOpen, setBillOpen] = React.useState(false)
     const [open, setOpen] = React.useState(false)
     const [tableDialogOpen, setTableDialogOpen] = React.useState(false)
+    const [tableContents, setTableContents] = React.useState([])
 
-    const handleRadarTableDialogClose = () => {
-        setTableDialogOpen(false)
-    }
-    const handleD3ClickOpen = (rows) => {
+    const handleBarPieChartClickOpen = (rows) => {
+        setTableContents(rows)
         setTableDialogOpen(true)
     }
+    const handleBarPieChartClose = () => {
+        setTableDialogOpen(false)
+    }
+
+
     const handleClickOpen = () => {
         setOpen(true)
     };
@@ -130,7 +125,8 @@ const MPActivityDistribution = props => {
             />
             <Divider />
             <CardContent>
-                <div className={classes.chartContainer} onClick={() => handleD3ClickOpen(props.rows)}>
+                <CardActionArea>
+                <div className={classes.chartContainer}>
                     <Radar
                         width={400}
                         height={385}
@@ -159,59 +155,30 @@ const MPActivityDistribution = props => {
                             ]
                         }}
                         size={400}
+                        style={classes.title}
+
                     />
                 </div>
+                </CardActionArea>
             </CardContent>
             <Divider />
             <CardActions className={classes.actions}>
-                <IconButton
-                    className={clsx(classes.expand, {
-                        [classes.expandOpen]: expanded,
-                    })}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
-                    aria-label="show more"
-                >
-                    <ExpandMoreIcon />
-                </IconButton>
+                <Button style={{fontWeight:40,textTransform:'none'}} onClick={()=>handleBarPieChartClickOpen(props.rows)}>
+                    show more
+                </Button>
             </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                    <Typography paragraph>The issued bills are: </Typography>
-                    <TableContainer className={classes.tableContainer}>
-                        <Table className={classes.table} size='medium' aria-label='a dense table'>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>{"Bill Name"}</TableCell>
-                                    <TableCell>{"Category"}</TableCell>
-                                    <TableCell align='right'>{"Vote"}</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            {(props.rows.length) > 0 ? (
-                                <TableBody stickyHeader>
-                                    {props.rows.map((row,i)=> (
-                                        <TableRow key={i}>
-                                            <TableCell component='th' scope='row'>
-                                                <Button color='primary' onClick={() => handleBillClickOpen(row,'radar')}>
-                                                    <Typography>{row.voteRecord.billNumber}</Typography>
-                                                </Button>
-                                            </TableCell>
-                                            <TableCell component='th' scope='row'><Typography>{row.billData.category}</Typography></TableCell>
-                                            <TableCell align='right'>
-                                                <Typography style= {row.voteRecord.yea === true? {color:"green"}: {color: "red"}}>
-                                                    {row.voteRecord.yea == true? "Yea": "Nay"}
-                                                </Typography>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>) : 'nothing'}
-                        </Table>
-                    </TableContainer>
-                </CardContent>
-            </Collapse>
-            <DialogRadarChart representativeData={props.rows} categoryList= {props.categoryList} open={tableDialogOpen} onClose={handleRadarTableDialogClose}> </DialogRadarChart>
+            <TableDialog rows={tableContents} open={tableDialogOpen} onClose={handleBarPieChartClose} type={'radar'}> </TableDialog>
             <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
-            <D3ChartDescriptionDialog open = {open} onClose={handleClose}/>
+            <DescriptionDialog
+                open = {open}
+                onClose={handleClose}
+                d3={true}
+                explaination={{title:"Mp Activity Distribution",
+                    body:"From this radar chart," +
+                        " we can measure the MP's activity in the parliament as well as which " +
+                        "categories he/she are most active with, such as religion, economics, human right etc."}
+                }
+            />
         </Card>
     );
 };
