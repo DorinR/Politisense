@@ -7,8 +7,10 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import HistoryIcon from '@material-ui/icons/History';
 import Button from "@material-ui/core/Button";
-import D3ChartDescriptionDialog from "./D3ChartDescriptionDialog";
+import DescriptionDialog from "./DescriptionDialog";
 import axios from "axios";
+import {loadingTextdata,loadingTextTitle} from "./DescriptionDialog";
+
 const useStyles = makeStyles(theme => ({
     root: {
         height: '100%'
@@ -21,7 +23,8 @@ const useStyles = makeStyles(theme => ({
         fontWeight: 700
     },
     avatar: {
-        backgroundColor: theme.palette.success.main,
+        // backgroundColor: "#20c997",
+        backgroundColor: '#00bcd4',
         height: 56,
         width: 56
     },
@@ -40,10 +43,13 @@ const useStyles = makeStyles(theme => ({
     differenceValue: {
         color: theme.palette.success.dark,
         marginRight: theme.spacing(1)
+    },
+    caption:{
+        marginLeft: theme.spacing(0)
     }
 }));
 
-const TotalUsers = props => {
+const Roles = props => {
     const { className, ...rest } = props;
 
     const classes = useStyles();
@@ -61,34 +67,12 @@ const TotalUsers = props => {
             if (props.userRepresentative) {
                 const billsByRep = await getRepresentativeId(props.userRepresentative)
                 console.log(billsByRep)
-                const roles= await getAllRolesByRep(props.userRepresentative)
+                const roles= await getAllRolesByRep('role',props.userRepresentative)
+                setData(roles)
             }
         }
         getData()
     },[props.userRepresentative])
-
-    async function getAllRolesByRep (repName) {
-        return axios
-            .get(`http://localhost:5000/api/representatives/${repName}/getAllRolesByRep`)
-            .then(res => {
-                if (res.data.success) {
-                    console.log(res)
-                    return res.data.data
-                }
-            })
-            .catch(console.error)
-    }
-    async function getRepresentativeId (representative) {
-        return axios
-            .get(`http://localhost:5000/api/representatives/${representative}/getRepresentativeId`)
-            .then(res => {
-                if (res.data.success) {
-                    console.log(res)
-                    return res.data.data
-                }
-            })
-            .catch(console.error)
-    }
 
     return (
         <Card
@@ -109,7 +93,7 @@ const TotalUsers = props => {
                         >
                             Parliament ROLES
                         </Typography>
-                        <Typography variant="h5">1,600</Typography>
+                        <Typography variant="h5">{data? `${data.length} roles`: 0}</Typography>
                     </Grid>
                     <Grid item>
                         <Avatar className={classes.avatar}>
@@ -118,30 +102,88 @@ const TotalUsers = props => {
                     </Grid>
                 </Grid>
                 <div className={classes.difference}>
-                    <ArrowUpwardIcon className={classes.differenceIcon} />
-                    <Typography
-                        className={classes.differenceValue}
-                        variant="body2"
-                    >
-                        16%
-                    </Typography>
+                        <li>
                     <Typography
                         className={classes.caption}
                         variant="caption"
                     >
-                        Since last month
+                        {data? (`${loadingTextTitle(data[0])}`): 'This MP doesnt have roles'  }
                     </Typography>
-                    <Button color="primary" size="small" style={{"fontSize":9, "marginLeft":"30px"}} onClick={handleOpenAction}>details</Button>
-                    <D3ChartDescriptionDialog open = {open} onClose={handleCloseAction}/>
+                        </li>
 
+                    {data? <Button color="primary" size="medium" style={{"fontSize":10 }} onClick={handleOpenAction}>details</Button> :''}
+                    <DescriptionDialog open = {open} onClose={handleCloseAction} data={data? data : []} title={'Roles'}/>
                 </div>
             </CardContent>
         </Card>
     );
 };
 
-TotalUsers.propTypes = {
+Roles.propTypes = {
     className: PropTypes.string
 };
 
-export default TotalUsers;
+
+export function mergeArrays(type,...arrays) {
+    let jointArray = []
+
+    arrays.forEach(array => {
+        jointArray = [...jointArray, ...array]
+    });
+    let test=  [...new Set([...jointArray])]
+
+    let testing = test.filter((thing, index, self) =>
+        index === self.findIndex((t) => (
+            t.title === thing.title && t.group === thing.group && t.toDate === thing.toDate && t.fromDate === thing.fromDate
+        ))
+    )
+
+    if(testing.length == 0){
+        return null
+    }
+    // console.log(testing.filter(item => item.group == 'none'))
+    if(type =='role'){
+        return testing.filter(item => item.group == 'none')
+    }
+    if(type =='committee'){
+        return testing.filter(item => item.type == 'committee')
+    }
+    if(type =='association'){
+        console.log( testing.filter(item => item.group.includes("association")))
+        return testing.filter(item => item.group.includes("association"))
+    }
+
+}
+
+export async function getAllRolesByRep (type,repName) {
+    return axios
+        .get(`http://localhost:5000/api/representatives/${repName}/getAllRolesByRep`)
+        .then(res => {
+            if (res.data.success) {
+                console.log(res)
+                let data = res.data.data
+                let arrays =[]
+                data.forEach(arr =>arrays.push(arr))
+                console.log(arrays)
+                const mpRoles = mergeArrays(type,arrays[0],arrays[1],arrays[2],arrays[3],arrays[4],arrays[5],arrays[6],arrays[7])
+                console.log(mpRoles)
+                return mpRoles
+            }
+        })
+        .catch(console.error)
+}
+export async function getRepresentativeId (representative) {
+    return axios
+        .get(`http://localhost:5000/api/representatives/${representative}/getRepresentativeId`)
+        .then(res => {
+            if (res.data.success) {
+                console.log(res)
+                return res.data.data
+            }
+        })
+        .catch(console.error)
+}
+
+
+
+export default Roles;
