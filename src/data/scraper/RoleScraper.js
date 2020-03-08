@@ -2,7 +2,7 @@ require('module-alias/register')
 const Utils = require('@utils')
 const QueueManager = Utils.QueueManager.QueueManager
 const StartAction = Utils.QueueManager.Start.StartRoleScrape
-const StopAction = Utils.QueueManager.Stop.StopRoleScrape
+const StopAction = Utils.QueueManager.Stop.GenericStopAction
 const Throw = Utils.QueueManager.Error.ParseErrorAction
 
 class RoleScraper extends QueueManager {

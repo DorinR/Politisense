@@ -1,3 +1,4 @@
+const Mutex = require('async-sema').Sema
 const Queue = require('@queue').Queue
 const Action = require('@manager').QueueAction
 const DecorationError = require('@action').Errors.ActionDecorationError
@@ -23,6 +24,7 @@ class QueueManager {
     this.queue = new Queue()
     this.waitPeriod = waitPeriod
     this.result = []
+    this.lock = new Mutex(1)
   }
 
   start () {
@@ -33,10 +35,24 @@ class QueueManager {
     throw new DecorationError(null, 'Stop action not specified')
   }
 
+  before () {
+    console.log('Before action not specified')
+  }
+
+  after () {
+    console.log('After action not specified')
+  }
+
   async execute () {
-    const partialResults = await this.start()
-    this.accumulate(partialResults)
+    await this.before()
+    await this.start()
+      .then(partialResults => {
+        if (partialResults) {
+          this.accumulate(partialResults)
+        }
+      })
     await this.run()
+    await this.after()
     return this.result
   }
 
@@ -85,13 +101,31 @@ class QueueManager {
     return this
   }
 
+  setBeforeAction (action) {
+    if (!(action instanceof Action)) {
+      throw new DecorationError(action)
+    }
+    this.before = action.perform.bind(action)
+    return this
+  }
+
+  setAfterAction (action) {
+    if (!(action instanceof Action)) {
+      throw new DecorationError(action)
+    }
+    this.after = action.perform.bind(action)
+    return this
+  }
+
   async run () {
     while (!this.stop()) {
       let job = null
       try {
         job = this.queue.dequeue()
         this.activeJobs.push(job)
+        await this.lock.acquire()
         this.activeJobCount++
+        this.lock.release()
       } catch (e) {
         await this.waitForActiveJobs(e)
         continue
@@ -101,8 +135,10 @@ class QueueManager {
         .then(this.log)
         .catch(this.error)
         .finally(async () => {
+          await this.lock.acquire()
           job.done = true
           this.activeJobCount--
+          this.lock.release()
           await this.waitForActiveJobs()
         })
     }
