@@ -10,6 +10,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import BudgetContainer from "./BudgetContainer";
 import BarChartWrapper from "../Charts/Wrappers/BarChartWrapper";
+import MDBHorizontalBar from "../Charts/MDBHorizontalBar";
 const styles = theme => ({
     root: {
         margin: 0,
@@ -64,7 +65,8 @@ export default function BudgetDetailsDialog(props) {
                     Budget Details
                 </DialogTitle>
                 <DialogContent dividers>
-                    <BarChartWrapper type={'budget'} data={props.budgetData}/>
+                    <MDBHorizontalBar data={props.budgetData}/>
+                    {/*<BarChartWrapper type={'budget'} data={props.budgetData}/>*/}
                 </DialogContent>
             </Dialog>
         </div>
