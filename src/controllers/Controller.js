@@ -88,6 +88,10 @@ module.exports = {
     return RidingController.getRidingCode(req, res)
   },
 
+  getUpcomingBills: function (req, res) {
+    return BillController.getUpcomingBills(req, res)
+  },
+
   getAllBillsByHead: function (req, res) {
     return BillController.getAllBillsByHead(req, res)
   },

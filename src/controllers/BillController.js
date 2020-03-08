@@ -1,5 +1,15 @@
 const Firestore = require('@firestore').Firestore
 
+exports.getUpcomingBills = (req, res) => {
+  const db = new Firestore()
+
+  db.LegislativeActivityScraper.create()
+    .execute()
+    .then(result => {
+      console.log(result.data)
+    })
+}
+
 exports.getAllBillsByHead = (req, res) => {
   const db = new Firestore()
   const votes = db.Vote()
