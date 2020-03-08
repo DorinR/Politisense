@@ -17,12 +17,11 @@ class Job {
     Job.check(action)
     const fn = action.perform.bind(action)
 
-    if(action.wrapped){
+    if (action.wrapped) {
       this.registry.push(action.wrapped)
     } else {
       this.registry.push(action.constructor.name)
     }
-
 
     this.actions.push(fn)
     return this

@@ -1,6 +1,6 @@
 /* eslint-env jest */
 const Utils = require('../../util/utils')
-const Job = Utils.Job
+const Job = require('../../job/Job').AbstractJob
 const Action = Utils.Actions.Action
 
 const chai = require('chai')

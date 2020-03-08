@@ -79,7 +79,7 @@ describe('PDFFileRetrieverAction.js', () => {
         Assert.fail()
       })
       .catch(e => {
-        if(e instanceof chai.AssertionError) {
+        if (e instanceof chai.AssertionError) {
           Assert.fail()
         }
         Assert.isOk(e.bill)

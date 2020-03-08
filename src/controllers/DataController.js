@@ -1,8 +1,6 @@
 require('module-alias/register')
 const Firestore = require('@firestore').Firestore
 const Utils = require('./util/DataUtil')
-const Graph = require('@utils').Graphs.DirectedGraph
-const Vertex = require('@utils').Graphs.Vertex
 
 const IndexDirector = {
   Bills: {

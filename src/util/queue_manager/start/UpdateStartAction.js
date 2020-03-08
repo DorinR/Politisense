@@ -6,7 +6,7 @@ class UpdateStartAction extends QueueAction {
     this.manager = manager
   }
 
-  async perform() {
+  async perform () {
     console.log(`INFO: ${UpdateStartAction.name}: queueing level 0 updates (${this.manager.updateJobQueue[0].length} total)`)
     this.manager.queryCount = this.manager.updateJobQueue[0].length
     this.manager.updateJobQueue[0].forEach(job => {

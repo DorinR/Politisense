@@ -6,33 +6,19 @@ const fs = require('fs')
 const path = require('path')
 
 class BillTagCreationAction extends Action {
-  constructor (parliament, termThreshold = 0.1, tagThreshold = 1.25, clearCurrentTags = false) {
+  constructor (parliament, termThreshold = 0.001, tagThreshold = 2) {
     super()
     this.termThreshold = termThreshold
     this.tagThreshold = tagThreshold
-    this.clear = clearCurrentTags
     this.parliament = parliament
   }
 
   async perform () {
-    if (this.clear) {
-      await this.clearTagCollection()
-    }
     const vocabs = this.loadVocabularies()
     const classifications = await this.loadRawClassifications()
       .then(this.filterRawByThreshold.bind(this))
       .catch(console.error)
     return this.tagBills(classifications, vocabs)
-  }
-
-  clearTagCollection () {
-    return new Firestore(false)
-      .forParliament(this.parliament)
-      .BillClassification()
-      .delete()
-      .then(res => {
-        console.log(`INFO: successfully removed ${res} bill tags from firestore`)
-      })
   }
 
   loadRawClassifications () {

@@ -1,5 +1,7 @@
 require('module-alias/register')
 const Components = require('@manager')
+const Parameters = require('@parameter')
+
 
 class RoleScraper extends Components.QueueManager {
   static create (params, wait = 5000) {
@@ -23,18 +25,6 @@ class RoleScraper extends Components.QueueManager {
     this.maxQueryCount = 0
   }
 
-  accumulate (result) {
-    if (result) {
-      this.result.push(result)
-    }
-    return result
-  }
-
-  async run () {
-    await super.run()
-    this.finish()
-  }
-
   finish () {
     console.log(`INFO: ${RoleScraper.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
@@ -42,10 +32,10 @@ class RoleScraper extends Components.QueueManager {
   setParliaments (parliaments) {
     if (typeof parliaments === 'undefined' ||
       (typeof parliaments === typeof ' ' && parliaments.toLowerCase().includes('all'))) {
-      this.parliaments.push(...[35, 36, 37, 38, 39, 40, 41, 42, 43])
+      this.parliaments.push(...Parameters.Parliament.Number)
     } else if (typeof parliaments === typeof []) {
       this.parliaments = parliaments.filter(parliament => {
-        return parliament >= 35
+        return parliament >= 36
       })
     }
   }

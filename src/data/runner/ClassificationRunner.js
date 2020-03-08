@@ -1,5 +1,6 @@
 require('module-alias/register')
 const Components = require('@manager')
+const InvalidParameterError = require('../error/errors').InvalidParameterError
 
 class ClassificationRunner extends Components.QueueManager {
   static create (params, wait = 30000) {
@@ -12,24 +13,19 @@ class ClassificationRunner extends Components.QueueManager {
     return manager
   }
 
-  accumulate (result) {
-    if (result) {
-      this.result.push(result)
-    }
-    return result
-  }
-
-  async run () {
-    await super.run()
-    this.finish()
-  }
-
   finish () {
     console.log(`INFO: ${ClassificationRunner.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
   constructor (params, wait = 30000) {
     super(wait)
+    if(!(params instanceof Object)) {
+      throw new InvalidParameterError('ERROR: parameter must be an object')
+    }
+    if(!params.parliaments) {
+      throw new InvalidParameterError('ERROR: parameter object must contain parliament information')
+    }
+
     this.params = [params]
     this.queryCount = this.params.length
     this.maxQueryCount = this.queryCount

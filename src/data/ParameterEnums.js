@@ -1,6 +1,6 @@
 const Parliament = {
-  Number: [36,37,38,39,40,41,42,43],
-  Session: [1,2,3]
+  Number: [36, 37, 38, 39, 40, 41, 42, 43],
+  Session: [1, 2, 3]
 }
 
 const Bill = {

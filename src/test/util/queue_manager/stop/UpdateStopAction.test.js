@@ -2,7 +2,7 @@
 const chai = require('chai')
 const Assert = chai.assert
 
-describe('FileOutputAction.js', () => {
+describe('UpdateStopAction.js', () => {
   test('', async (done) => {
     Assert.fail('stub')
     done()

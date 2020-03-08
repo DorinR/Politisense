@@ -1,0 +1,15 @@
+military
+militaries
+navy
+navies
+army
+armies
+defence
+defences
+attack
+war
+wars
+veteran
+veterans
+reservist
+reservists

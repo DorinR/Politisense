@@ -8,7 +8,7 @@ const Assert = chai.assert
 
 describe('QueueManager.js', () => {
   const consoleDebug = console.debug
-  const consoleLog = console.log
+  const consoleWarn = console.warn
   let undertest
   beforeEach(() => {
     undertest = new QueueManager()
@@ -66,13 +66,13 @@ describe('QueueManager.js', () => {
       'result 2',
       'result 3'
     ])
-    Assert.equal(undertest.result.length, 3)
+    Assert.equal(undertest.result.length, 1)
     undertest.accumulate([
       'result 4',
       'result 5',
       'result 6'
     ])
-    Assert.equal(undertest.result.length, 6)
+    Assert.equal(undertest.result.length, 2)
     done()
   })
 
@@ -242,7 +242,7 @@ describe('QueueManager.js', () => {
     action.perform = () => { called = true }
 
     undertest.setAfterAction(action)
-    undertest.after()
+    await undertest.after()
 
     Assert(typeof undertest.log === 'function')
     Assert(called)
@@ -251,18 +251,18 @@ describe('QueueManager.js', () => {
 
   test('QueueManager.js::before prints to log when no action is set', async (done) => {
     let called = false
-    console.log = () => { called = true }
-    undertest.before()
-    console.log = consoleLog
+    console.warn = () => { called = true }
+    await undertest.before()
+    console.warn = consoleWarn
     Assert(called)
     done()
   })
 
   test('QueueManager.js::after prints to log when no action is set', async (done) => {
     let called = false
-    console.log = () => { called = true }
-    undertest.after()
-    console.log = consoleLog
+    console.warn = () => { called = true }
+    await undertest.after()
+    console.warn = consoleWarn
     Assert(called)
     done()
   })
@@ -387,7 +387,7 @@ describe('QueueManager.js', () => {
     for (let i = 0; i < desired.length; i++) {
       Assert.equal(order[i], desired[i])
     }
-    Assert.equal(undertest.result.length, 2)
+    Assert.equal(undertest.result.length, 1)
 
     done()
   })

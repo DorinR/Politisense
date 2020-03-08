@@ -114,12 +114,41 @@ describe('Graphs', () => {
 
       let count = 0
       graph.forEach((adj, v) => {
-        Assert.equal(v.tag, tags[count++])
+        Assert.equal(v.data, tags[count++])
       })
+    })
+
+    test('DirectedGraph.js::eulerWalkDepth first returns vertices by depth', () => {
+      const vertices = new Array(10)
+        .fill({}, 0, 10)
+        .map(i => {
+          return new Vertex()
+        })
+      vertices.forEach((v, i) => {
+        graph.addVertex(v)
+      })
+      vertices.forEach((v, i) => {
+        if (i < vertices.length - 1) {
+          graph.addEdge(v, vertices[i + 1])
+        }
+      })
+
+      const orderedVertices = graph.eulerWalkDepthFirst(vertices[0])
+      let count = 0
+      orderedVertices.forEach((v, i) => {
+        Assert.equal(count++, i)
+        Assert(v.vertex instanceof Vertex)
+      })
+    })
+
+    test('DirectedGraph.js::eulerWalkDepth returns empty array if falsy value passed', () => {
+      const ret = graph.eulerWalkDepthFirst()
+      Assert(ret instanceof Array)
+      Assert.equal(ret.length, 0)
     })
   })
 
-  describe('DirectedGraph.js', () => {
+  describe('UndirectedGraph.js', () => {
     let vertex
     let graph
     beforeEach(() => {

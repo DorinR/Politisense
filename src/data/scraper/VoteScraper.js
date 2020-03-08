@@ -15,13 +15,6 @@ class VoteScraper extends Components.QueueManager {
     return manager
   }
 
-  accumulate (result) {
-    if (result) {
-      this.result.push(result)
-    }
-    return result
-  }
-
   constructor (params, wait = 5000) {
     super(wait)
     this.parliamentSessions = []
@@ -38,20 +31,15 @@ class VoteScraper extends Components.QueueManager {
     this.maxQueryCount = this.queryCount
   }
 
-  async run () {
-    await super.run()
-    this.finish()
-  }
-
   finish () {
     console.log(`INFO: ${VoteScraper.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
   createParliamentSessions (parliamentSessions) {
     const validEntries = Object.values(flatten(Parameters.VoteParameters.Parliament))
-    if (!parliamentSessions || parliamentSessions === 'all') {
+    if (!parliamentSessions || parliamentSessions === 'all' || !Array.isArray(parliamentSessions)) {
       this.parliamentSessions = validEntries
-    } else if (parliamentSessions instanceof Array) {
+    } else if (Array.isArray(parliamentSessions)) {
       this.parliamentSessions = parliamentSessions.filter(parl => {
         return validEntries.includes(parl)
       })
@@ -60,9 +48,9 @@ class VoteScraper extends Components.QueueManager {
 
   createBillDocumentTypes (types) {
     const validEntries = Object.values(flatten(Parameters.VoteParameters.Type))
-    if (!types || types === 'all') {
+  if (!types || types === 'all' || !Array.isArray(types)) {
       this.billDocumentTypes = ['']
-    } else if (types instanceof Array) {
+    } else if (Array.isArray(types)) {
       this.billDocumentTypes = types.filter(type => {
         return validEntries.includes(type)
       })
@@ -71,9 +59,9 @@ class VoteScraper extends Components.QueueManager {
 
   createVoteResults (voteResults) {
     const validEntries = Object.values(Parameters.VoteParameters.Outcome)
-    if (!voteResults || voteResults === 'all') {
+    if (!voteResults || voteResults === 'all' || !Array.isArray(voteResults)) {
       this.voteResults = ['']
-    } else if (voteResults instanceof Array) {
+    } else if (Array.isArray(voteResults)) {
       this.voteResults = voteResults.filter(result => {
         return validEntries.includes(result)
       })
@@ -82,9 +70,9 @@ class VoteScraper extends Components.QueueManager {
 
   createMotionPrefixes (prefixes) {
     const validEntries = Object.values(flatten(Parameters.VoteParameters.Topic))
-    if (!prefixes || prefixes === 'all') {
+    if (!prefixes || prefixes === 'all' || !Array.isArray(prefixes)) {
       this.motionPrefixes = ['']
-    } else if (prefixes instanceof Array) {
+    } else if (Array.isArray(prefixes)) {
       this.motionPrefixes = prefixes.filter(prefix => {
         return validEntries.includes(prefix)
       })

@@ -1,6 +1,6 @@
 require('module-alias/register')
-const Utils = require('@utils')
 const Components = require('@manager')
+const Parameters = require('@parameter')
 
 class VoteParticipantScraper extends Components.QueueManager {
   static create (params, wait = 5000) {
@@ -15,13 +15,6 @@ class VoteParticipantScraper extends Components.QueueManager {
     return manager
   }
 
-  accumulate (result) {
-    if (result) {
-      this.result.push(result)
-    }
-    return result
-  }
-
   constructor (params, wait = 5000) {
     super(wait)
     this.parliaments = []
@@ -31,12 +24,7 @@ class VoteParticipantScraper extends Components.QueueManager {
     this.params = []
     this.createParams(params.url)
     this.queryCount = this.params.length
-    this.maxqueryCount = this.queryCount
-  }
-
-  async run () {
-    await super.run()
-    this.finish()
+    this.maxQueryCount = this.queryCount
   }
 
   finish () {
@@ -45,16 +33,16 @@ class VoteParticipantScraper extends Components.QueueManager {
 
   createParliaments (parliaments) {
     if (!parliaments || parliaments === 'all') {
-      this.parliaments = Parliaments
-    } else if (parliaments instanceof Array) {
+      this.parliaments = Parameters.Parliament.Number
+    } else if (Array.isArray(parliaments)) {
       this.parliaments = parliaments
     }
   }
 
   createSessions (sessions) {
     if (!sessions || sessions === 'all') {
-      this.sessions = Sessions
-    } else if (sessions instanceof Array) {
+      this.sessions = Parameters.Parliament.Session
+    } else if (Array.isArray(sessions)) {
       this.sessions = sessions
     }
   }

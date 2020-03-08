@@ -8,7 +8,7 @@ const InvalidParameterError = require('./error/InvalidParameterError').InvalidPa
 const Parameters = require('@parameter')
 
 class UpdatePipelineManager extends QueueManager {
-  static create(param, wait = 30000) {
+  static create (param, wait = 30000) {
     const manager = new UpdatePipelineManager(param, wait)
     manager
       .setBeforeAction(new BeforeAction(manager))
@@ -20,21 +20,20 @@ class UpdatePipelineManager extends QueueManager {
 
   constructor (param, wait = 30000) {
     super(wait)
-    if(!(typeof param === 'string')) {
+    if (!(typeof param === 'string')) {
       throw new InvalidParameterError(`ERROR: parameter ${param} is not a string`)
     }
-    if(!Object.values(Parameters.UpdateNode).includes(param)) {
+    if (!Object.values(Parameters.UpdateNode).includes(param)) {
       throw new InvalidParameterError(`ERROR: parameter ${param} is not a valid update`)
     }
     this.updateJobQueue = []
     this.params = param
     this.queryCount = 1
   }
-
 }
 
 module.exports = {
-  UpdatePipelineManager: UpdatePipelineManager,
+  UpdatePipelineManager: UpdatePipelineManager
 }
 
 UpdatePipelineManager

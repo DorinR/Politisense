@@ -3,43 +3,17 @@ const Components = require('@manager')
 const Errors = require('../error/errors')
 const flatten = require('flat')
 
+const Parameters = require('@parameter')
+
 class BillScraper extends Components.QueueManager {
   static create (params, wait = 5000) {
-    const manager = new BillScraper(params)
+    const manager = new BillScraper(params, wait)
     manager
       .setStartAction(new Components.Start.Bill(manager))
       .setStopAction(new Components.Stop.Generic(manager))
       .setErrorAction(new Components.Error.Parse(manager))
       .setLogAction(new Components.Log.Typed(BillScraper))
     return manager
-  }
-
-  requeueCallback (jobs) {
-    super.requeueCallback(jobs)
-    this.queryCount++
-  }
-
-  async execute () {
-    try {
-      const partialResults = await this.start()
-      this.accumulate(partialResults)
-    } catch (e) {
-      this.queryCount--
-    }
-    await this.run()
-    return this.result
-  }
-
-  accumulate (result) {
-    if (result) {
-      this.result.push(result)
-    }
-    return result
-  }
-
-  async run () {
-    await super.run()
-    this.finish()
   }
 
   finish () {
@@ -53,7 +27,7 @@ class BillScraper extends Components.QueueManager {
     this.sessions = []
     this.setSessions(params.sessions)
 
-    if (this.sessions.length === 0 && this.parliaments.length !== 0) {
+    if (this.sessions.length === 1 && this.parliaments.length > 1) {
       throw new Errors.InvalidParameterError('ERROR: no session data provided when specifying a parliament, will not be able to query')
     }
 
@@ -75,9 +49,9 @@ class BillScraper extends Components.QueueManager {
 
   setParliaments (parliaments) {
     if (typeof parliaments === 'undefined' ||
-        (parliaments instanceof String && parliaments.toLowerCase().includes('all'))) {
+        (typeof parliaments === 'string' && parliaments.toLowerCase().includes('all'))) {
       this.parliaments.push(' ')
-    } else if (typeof parliaments === typeof []) {
+    } else if (Array.isArray(parliaments)) {
       this.parliaments = parliaments.filter(parliament => {
         return parliament > 35
       })
@@ -88,7 +62,7 @@ class BillScraper extends Components.QueueManager {
     if (typeof sessions === 'undefined' ||
       (sessions instanceof String && sessions.toLowerCase().includes('all'))) {
       this.sessions.push(' ')
-    } else if (typeof sessions === typeof []) {
+    } else if (Array.isArray(sessions)) {
       this.sessions = sessions.filter(session => {
         return session >= 1 && session <= 4
       })
@@ -99,9 +73,9 @@ class BillScraper extends Components.QueueManager {
     if (typeof originatingChambers === 'undefined' ||
       (originatingChambers instanceof String && originatingChambers.toLowerCase().includes('all'))) {
       this.originatingChambers.push(' ')
-    } else if (typeof originatingChambers === typeof []) {
+    } else if (Array.isArray(originatingChambers)) {
       this.originatingChambers = originatingChambers.filter(chamber => {
-        return Object.values(Chambers).includes(chamber)
+        return Object.values(Parameters.BillParameters.Chambers).includes(chamber)
       })
     }
   }
@@ -110,9 +84,9 @@ class BillScraper extends Components.QueueManager {
     if (typeof billTypes === 'undefined' ||
       (billTypes instanceof String && billTypes.toLowerCase().includes('all'))) {
       this.billTypes.push(' ')
-    } else if (typeof billTypes === typeof []) {
+    } else if (Array.isArray(billTypes)) {
       this.billTypes = billTypes.filter(type => {
-        return Object.values(flatten(BillTypes)).includes(type)
+        return Object.values(flatten(Parameters.BillParameters.Type)).includes(type)
       })
     }
   }
@@ -121,9 +95,9 @@ class BillScraper extends Components.QueueManager {
     if (typeof sponsorAffiliations === 'undefined' ||
       (sponsorAffiliations instanceof String && sponsorAffiliations.toLowerCase().includes('all'))) {
       this.sponsorAffiliations.push(' ')
-    } else if (typeof sponsorAffiliations === typeof []) {
+    } else if (Array.isArray(sponsorAffiliations)) {
       this.sponsorAffiliations = sponsorAffiliations.filter(type => {
-        return Object.values(Affiliations).includes(type)
+        return Object.values(Parameters.BillParameters.Affiliation).includes(type)
       })
     }
   }
@@ -132,7 +106,7 @@ class BillScraper extends Components.QueueManager {
     if (typeof sponsors === 'undefined' ||
       (sponsors instanceof String && sponsors.toLowerCase().includes('all'))) {
       this.sponsors.push(' ')
-    } else if (typeof sponsors === typeof []) {
+    } else if (Array.isArray(sponsors)) {
       this.sponsors = sponsors
     }
   }
@@ -141,7 +115,7 @@ class BillScraper extends Components.QueueManager {
     if (typeof statuses === 'undefined' ||
       (statuses instanceof String && statuses.toLowerCase().includes('all'))) {
       this.statuses.push(' ')
-    } else if (typeof statuses === typeof []) {
+    } else if (Array.isArray(statuses)) {
       this.statuses = statuses.filter(type => {
         return Object.values(flatten(statuses)).includes(type)
       })

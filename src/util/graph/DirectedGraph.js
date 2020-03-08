@@ -44,8 +44,8 @@ class DirectedGraph {
     return this.adjacencyList.get(v)
   }
 
-  eulerWalkDepthFirst(vertex, depth = 0) {
-    if(!vertex) {
+  eulerWalkDepthFirst (vertex, depth = 0) {
+    if (!vertex) {
       return []
     }
     const vertices = [{

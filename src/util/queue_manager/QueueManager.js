@@ -12,6 +12,7 @@ class QueueManager {
     this.waitPeriod = waitPeriod
     this.result = []
     this.lock = new Mutex(1)
+    this.registry = {}
   }
 
   start () {
@@ -44,6 +45,7 @@ class QueueManager {
       })
     await this.run()
     await this.after()
+    this.finish()
     return this.result
   }
 
@@ -54,58 +56,62 @@ class QueueManager {
   }
 
   accumulate (result) {
-    result.forEach(entry => {
-      this.result.push(entry)
-    })
+    if (result) {
+      this.result.push(result)
+    }
     return result
   }
 
+  finish() {
+    console.debug('WARN: No Finish Message Specified')
+  }
+
   setStartAction (action) {
-    if (!(action instanceof Action)) {
-      throw new DecorationError(action)
-    }
+    QueueManager.check(action)
     this.start = action.perform.bind(action)
+    this.registry.start = action.constructor.name
     return this
   }
 
   setErrorAction (action) {
-    if (!(action instanceof Action)) {
-      throw new DecorationError(action)
-    }
+    QueueManager.check(action)
     this.error = action.perform.bind(action)
+    this.registry.error = action.constructor.name
     return this
   }
 
   setLogAction (action) {
-    if (!(action instanceof Action)) {
-      throw new DecorationError(action)
-    }
+    QueueManager.check(action)
     this.log = action.perform.bind(action)
+    this.registry.log = action.constructor.name
     return this
   }
 
   setStopAction (action) {
-    if (!(action instanceof Action)) {
-      throw new DecorationError(action)
-    }
+    QueueManager.check(action)
     this.stop = action.perform.bind(action)
+    this.registry.stop = action.constructor.name
     return this
   }
 
   setBeforeAction (action) {
-    if (!(action instanceof Action)) {
-      throw new DecorationError(action)
-    }
+    QueueManager.check(action)
     this.before = action.perform.bind(action)
+    this.registry.before = action.constructor.name
     return this
   }
 
   setAfterAction (action) {
+    QueueManager.check(action)
+    this.after = action.perform.bind(action)
+    this.registry.after = action.constructor.name
+    return this
+  }
+
+  static check(action) {
     if (!(action instanceof Action)) {
       throw new DecorationError(action)
     }
-    this.after = action.perform.bind(action)
-    return this
   }
 
   async run () {

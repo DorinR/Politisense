@@ -5,6 +5,7 @@ class TypedLogAction extends Action {
     super()
     this.type = type.name
   }
+
   perform (result) {
     let message
     if (result instanceof Object && !(result instanceof Array)) {

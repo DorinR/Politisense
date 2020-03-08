@@ -72,10 +72,10 @@ describe('Jobs', () => {
     Assert.equal(job.actions.length, 4)
 
     Assert.equal(job.actions[0].name, 'bound perform')
-    Assert.equal(job.registry[0], 'QueueManagerWrapperAction')
+    Assert.equal(job.registry[0], 'Wrapped BillLinkFetchRunner')
 
     Assert.equal(job.actions[1].name, 'bound perform')
-    Assert.equal(job.registry[1], 'QueueManagerWrapperAction')
+    Assert.equal(job.registry[1], 'Wrapped BillPDFFetchRunner')
 
     Assert.equal(job.actions[2].name, 'bound perform')
     Assert.equal(job.registry[2], 'ClassificationAction')
@@ -94,7 +94,7 @@ describe('Jobs', () => {
     Assert.equal(job.registry[0], 'FetchAction')
 
     Assert.equal(job.actions[1].name, 'bound perform')
-    Assert.equal(job.registry[1], 'ParserWrapperAction')
+    Assert.equal(job.registry[1], 'Wrapped MpXmlParser')
 
     Assert.equal(job.actions[2].name, 'bound perform')
     Assert.equal(job.registry[2], 'QueryResponseAdapterAction')
@@ -117,7 +117,7 @@ describe('Jobs', () => {
     Assert.equal(job.registry[2], 'FetchAction')
 
     Assert.equal(job.actions[3].name, 'bound perform')
-    Assert.equal(job.registry[3], 'ParserWrapperAction')
+    Assert.equal(job.registry[3], 'Wrapped RoleXmlParser')
 
     Assert.equal(job.actions[4].name, 'bound perform')
     Assert.equal(job.registry[4], 'RoleQueryResponseAdapterAction')
@@ -154,7 +154,7 @@ describe('Jobs', () => {
     Assert.equal(job.registry[0], 'FetchAction')
 
     Assert.equal(job.actions[1].name, 'bound perform')
-    Assert.equal(job.registry[1], 'ParserWrapperAction')
+    Assert.equal(job.registry[1], 'Wrapped VoteParticipantsXmlParser')
 
     Assert.equal(job.actions[2].name, 'bound perform')
     Assert.equal(job.registry[2], 'QueryResponseAdapterAction')
@@ -171,7 +171,7 @@ describe('Jobs', () => {
     Assert.equal(job.registry[0], 'FetchAction')
 
     Assert.equal(job.actions[1].name, 'bound perform')
-    Assert.equal(job.registry[1], 'ParserWrapperAction')
+    Assert.equal(job.registry[1], 'Wrapped VoteXmlParser')
 
     Assert.equal(job.actions[2].name, 'bound perform')
     Assert.equal(job.registry[2], 'QueryResponseAdapterAction')

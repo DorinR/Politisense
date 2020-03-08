@@ -13,7 +13,7 @@ describe('SelectionGroupAction.js', () => {
       'jane-smyth22222222',
       'joe-smith222222',
       'joe-smeeth221209383222',
-      'joe-e-bloe222222',
+      'joe-e-bloe222222'
     ]
   })
 
@@ -42,7 +42,7 @@ describe('SelectionGroupAction.js', () => {
   })
 
   test('SelectionGroupAction.js::perform applies fallbackFilter filter if primary fails', async (done) => {
-    let called = []
+    const called = []
     const undertest = new Selector('dummy', list)
     Selector.primaryFilter = () => {
       called.push(true)

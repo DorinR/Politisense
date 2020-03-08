@@ -1,6 +1,7 @@
 /* eslint-env jest */
 const chai = require('chai')
 const expect = chai.expect
+const Assert = chai.assert
 
 const Condition = require('../../util/Condition').Condition
 
@@ -19,5 +20,9 @@ describe('All Condition tests', () => {
     expect(() => {
       cond.isType(Number)
     }).to.not.throw()
+  })
+
+  test(('stub'), async (done) => {
+    Assert.fail('stub')
   })
 })

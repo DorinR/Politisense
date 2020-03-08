@@ -1,5 +1,6 @@
 require('module-alias/register')
 const Components = require('@manager')
+const Parameters = require('@parameter')
 
 class PoliticianScraper extends Components.QueueManager {
   static create (params, wait = 5000) {
@@ -31,16 +32,6 @@ class PoliticianScraper extends Components.QueueManager {
     this.maxQueryCount = this.queryCount
   }
 
-  async run () {
-    await super.run()
-    this.finish()
-  }
-
-  accumulate (result) {
-    this.result.push(result)
-    return result
-  }
-
   finish () {
     console.log(`INFO: ${PoliticianScraper.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
@@ -61,7 +52,7 @@ class PoliticianScraper extends Components.QueueManager {
        (typeof caucuses === typeof ' ' && caucuses.toLowerCase().includes('all'))) {
       this.caucuses.push('all')
     } else if (typeof caucuses === typeof []) {
-      const validPartyKeys = Object.values(caucusMapping)
+      const validPartyKeys = Object.values(Parameters.PoliticianParameters.Caucus)
       this.caucuses = caucuses.filter(caucus => {
         return validPartyKeys.includes(caucus)
       })
@@ -74,7 +65,7 @@ class PoliticianScraper extends Components.QueueManager {
       this.provinces.push('all')
     } else if (typeof provinces === typeof []) {
       this.provinces = provinces.filter(province => {
-        return provinceKeys.includes(province)
+        return Object.values(Parameters.PoliticianParameters.Province).includes(province)
       })
     }
   }
@@ -95,13 +86,13 @@ class PoliticianScraper extends Components.QueueManager {
 
   setLastNamePrefixes (lastNamePrefixes) {
     if (typeof lastNamePrefixes === 'undefined' ||
-       (typeof lastNamePrefixes === typeof ' ' && lastNamePrefixes.toLowerCase().includes('all'))) {
+       (typeof lastNamePrefixes === 'string' && lastNamePrefixes.toLowerCase().includes('all'))) {
       this.lastNamePrefixes.push('')
-    } else if (typeof lastNamePrefixes === typeof []) {
+    } else if (Array.isArray(lastNamePrefixes)) {
       this.lastNamePrefixes = lastNamePrefixes.filter(prefix => {
         return prefix.length === 1 && prefix.toLowerCase().match(/[a-z]/i)
       })
-      this.lastNamePrefixes = this.lastNamePrefixes.forEach(prefix => {
+      this.lastNamePrefixes = this.lastNamePrefixes.map(prefix => {
         return prefix.toUpperCase()
       })
     }

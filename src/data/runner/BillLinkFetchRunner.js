@@ -7,6 +7,7 @@ const LogAction = require('../../util/queue_manager/log/TypedLogAction').TypedLo
 const Throw = require('../../util/queue_manager/error/ScrapeError').ScrapeErrorAction
 
 const Parameters = require('@parameter')
+const InvalidParameterError = require('../error/errors').InvalidParameterError
 
 class BillLinkFetchRunner extends QueueManager {
   static create (params, wait = 5000) {
@@ -24,10 +25,10 @@ class BillLinkFetchRunner extends QueueManager {
     super(wait)
     if (!params.parliaments || params.parliaments === 'all') {
       this.parliaments = Parameters.Parliament.Number
-    } else if (params.parliaments instanceof Array) {
+    } else if (Array.isArray(params.parliaments)) {
       this.parliaments = params.parliaments
     } else {
-      throw new Error('ERROR: no parliaments specified')
+      throw new InvalidParameterError('ERROR: invalid parliaments specified')
     }
     this.params = this.parliaments.map(parl => {
       return {
@@ -36,18 +37,6 @@ class BillLinkFetchRunner extends QueueManager {
     })
     this.queryCount = this.params.length
     this.maxQueryCount = this.queryCount
-  }
-
-  accumulate (result) {
-    if (result) {
-      this.result.push(result)
-    }
-    return result
-  }
-
-  async run () {
-    await super.run()
-    this.finish()
   }
 
   finish () {

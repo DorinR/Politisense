@@ -15,5 +15,3 @@ profit
 profits
 revenue
 revenues
-incorporate
-incorporated

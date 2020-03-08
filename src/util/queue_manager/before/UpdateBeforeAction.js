@@ -1,7 +1,6 @@
 const QueueAction = require('../QueueAction').QueueAction
 const QueueManager = require('../QueueManager').QueueManager
 const Jobs = require('@jobs')
-const Actions = require('@action')
 const QueueManagerWrapperAction = require('../../action/wrapper_action/QueueManagerWrapperAction').QueueManagerWrapperAction
 const UpdateGraph = require('../../../data/UpdateDependencyGraph').UpdateDependencyGraph
 const Parameters = require('@parameter')
@@ -17,11 +16,11 @@ class UpdateBeforeAction extends QueueAction {
     let currentDepth
     let index = 0
     console.log(`INFO: ${UpdateBeforeAction.name}: structuring ${this.updates.length} requested updates`)
-    this.updates.forEach(({vertex, depth}) => {
+    this.updates.forEach(({ vertex, depth }) => {
       const update = vertex
       const params = UpdateBeforeAction.createParams(update)
       const job = new Jobs.Job(params, this.manager.requeueCallback.bind(this.manager))
-      if(!currentDepth) {
+      if (!currentDepth) {
         this.manager.updateJobQueue.push([])
         currentDepth = depth
       }
@@ -30,7 +29,7 @@ class UpdateBeforeAction extends QueueAction {
         this.manager.updateJobQueue.push([])
         currentDepth = depth
       }
-      if(depth === currentDepth) {
+      if (depth === currentDepth) {
         UpdateBeforeAction.addActions(job, params, vertex)
       }
       this.manager.updateJobQueue[index].push(job)
@@ -38,7 +37,7 @@ class UpdateBeforeAction extends QueueAction {
     console.log(`INFO: ${UpdateBeforeAction.name}: structured updates into ${this.manager.updateJobQueue.length} phases`)
   }
 
-  static createParams(vertex) {
+  static createParams (vertex) {
     const params = {
       parliaments: Object.assign(Parameters.Parliament.Number),
       sessions: Object.assign(Parameters.Parliament.Session),
@@ -49,8 +48,10 @@ class UpdateBeforeAction extends QueueAction {
     return params
   }
 
-  static addActions(job, params, update) {
-    if(new update.type(params) instanceof QueueManager) {
+  static addActions (job, params, update) {
+    // eslint-disable-next-line new-cap
+    const typeCheck = new update.type(params)
+    if (typeCheck instanceof QueueManager) {
       job.addAction(new QueueManagerWrapperAction(update.type, params))
     } else {
       throw new Error('ERROR: Invalid update type')

@@ -9,7 +9,7 @@ class QueueManagerWrapperAction extends Action {
       throw new DecorationError(QueueManagerType)
     }
     this.create = QueueManagerType.create
-    this.wrapped =  'Wrapped ' + QueueManagerType.name
+    this.wrapped = 'Wrapped ' + QueueManagerType.name
     this.params = params
   }
 

@@ -8,7 +8,11 @@ describe('Generic.js', () => {
   beforeEach(() => {
     const manager = {
       result: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-      queryCount: 0
+      queryCount: 0,
+      lock: {
+        acquire: () => {},
+        release: () => {}
+      }
     }
     undertest = new StopAction(manager)
   })

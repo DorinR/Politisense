@@ -4,21 +4,10 @@ const QueueAction = require('../../util/queue_manager/QueueAction').QueueAction
 const StartAction = require('../../util/queue_manager/start/BillPDFFetchStart').BillPDFFetchStartAction
 const StopAction = require('../../util/queue_manager/stop/GenericStopAction').GenericStopAction
 const Throw = require('../../util/queue_manager/error/ScrapeError').ScrapeErrorAction
+const LogAction = require('../../util/queue_manager/log/TypedLogAction').TypedLogAction
 
-class LogAction extends QueueAction {
-  constructor (manager, type) {
-    super()
-    this.manager = manager
-    this.type = type
-  }
-
-  perform (result) {
-    if (result) {
-      console.log(`INFO: ${this.type.name}: found result for ${result.id}`)
-    }
-    return result
-  }
-}
+const InvalidParameterError = require('../error/errors').InvalidParameterError
+const Parameters = require('@parameter')
 
 class BillPDFFetchRunner extends QueueManager {
   static create (params, wait = 5000) {
@@ -33,21 +22,19 @@ class BillPDFFetchRunner extends QueueManager {
 
   constructor (params, wait = 5000) {
     super(wait)
+    if(!params.url) {
+      throw new InvalidParameterError('ERROR: no url to bill pdf provided')
+    }
+    if(!params.id) {
+      throw new InvalidParameterError('ERROR: no bill ID for provided url')
+    }
+    if(!params.parliament || (params.parliament && !Parameters.Parliament.Number.includes(params.parliament))) {
+      throw new InvalidParameterError('ERROR: no parliament or invalid provided for bill ID and url')
+    }
+
     this.params = params
     this.queryCount = params.length
     this.maxQueryCount = this.queryCount
-  }
-
-  accumulate (result) {
-    if (result) {
-      this.result.push(result)
-    }
-    return result
-  }
-
-  async run () {
-    await super.run()
-    this.finish()
   }
 
   finish () {

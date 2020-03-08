@@ -29,8 +29,10 @@ describe('QueueManager Start Actions', () => {
 
   test('GenericStartAction.js can be created with any Job Type', async (done) => {
     Object.values(Jobs).forEach(type => {
-      // eslint-disable-next-line no-new
-      new Generic(manager, type)
+      if (type.name !== 'Job') {
+        // eslint-disable-next-line no-new
+        new Generic(manager, type)
+      }
     })
 
     done()
@@ -74,6 +76,8 @@ describe('QueueManager Start Actions', () => {
     new Start.BillPDF({})
     // eslint-disable-next-line no-new
     new Start.Bill({})
+    // eslint-disable-next-line no-new
+    new Start.Category({})
     done()
   })
 })
