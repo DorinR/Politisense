@@ -3,6 +3,7 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse.csc import csc_matrix
 import sys
+import os
 import json
 import numpy
 import enchant
@@ -57,7 +58,9 @@ def create_return_classifications(values, terms, corpus):
     return classifications
 
 def write_to_file(classifications):
-    with open("classifications.json", "w+") as output_file:
+    name_len = len(os.path.basename(__file__))
+    dir_name = os.path.realpath(__file__)[:-1*name_len]
+    with open(dir_name + "classifications.json", "w+") as output_file:
         output_file.write(json.dumps(classifications))
 
 print("INFO: TFIDF module invoked with %i documents" % (len(sys.argv) - 1), file=sys.stdout)
