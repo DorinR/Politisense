@@ -9,12 +9,12 @@ class PoliticianAfterAction extends QueueAction {
   }
 
   async perform () {
-    console.log('INFO: adding image URLs to Politician Records')
+    console.log(`INFO: ${PoliticianAfterAction.name}: adding image URLs to Politician Records`)
     const imageLinks = await PoliticianAfterAction
       .createFetchJob()
       .execute()
     this.attachToMps(imageLinks)
-    console.log('INFO: stripping away unnecessary hyphens from riding names')
+    console.log(`INFO: ${PoliticianAfterAction.name}: stripping away unnecessary hyphens from riding names`)
     this.stripHyphens()
   }
 

@@ -10,7 +10,7 @@ class DefaultLogAction extends Action {
     } else if (result) {
       message = `INFO: job finished with value: ${result}`
     } else {
-      message = 'WARN: undefined or null result received'
+      console.debug('WARN: undefined or null result received')
     }
     if (message) {
       console.log(message)

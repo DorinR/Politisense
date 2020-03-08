@@ -9,7 +9,7 @@ class RoleScraper extends Components.QueueManager {
       .setStartAction(new Components.Start.Role(manager))
       .setStopAction(new Components.Stop.Generic(manager))
       .setErrorAction(new Components.Error.Parse(manager))
-      .setLogAction(new Components.Log.Generic(manager))
+      .setLogAction(new Components.Log.Typed(RoleScraper))
     return manager
   }
 
@@ -19,6 +19,8 @@ class RoleScraper extends Components.QueueManager {
     this.setParliaments(params.parliaments)
     this.params = []
     this.createQueries(params.url)
+    this.queryCount = 0
+    this.maxQueryCount = 0
   }
 
   accumulate (result) {
@@ -26,6 +28,15 @@ class RoleScraper extends Components.QueueManager {
       this.result.push(result)
     }
     return result
+  }
+
+  async run () {
+    await super.run()
+    this.finish()
+  }
+
+  finish () {
+    console.log(`INFO: ${RoleScraper.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
   setParliaments (parliaments) {

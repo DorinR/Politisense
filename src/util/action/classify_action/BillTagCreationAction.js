@@ -22,8 +22,7 @@ class BillTagCreationAction extends Action {
     const classifications = await this.loadRawClassifications()
       .then(this.filterRawByThreshold.bind(this))
       .catch(console.error)
-    const tags = this.tagBills(classifications, vocabs)
-    await this.insertTagsIntoDatabase(tags)
+    return this.tagBills(classifications, vocabs)
   }
 
   clearTagCollection () {

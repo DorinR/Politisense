@@ -24,7 +24,7 @@ class VoteParticipantBeforeAction extends Action {
               id: doc.id
             })
           })
-          console.log(`INFO: ${voteRecords.length} vote records found for parliament ${parl}`)
+          console.log(`INFO ${VoteParticipantBeforeAction.name}: ${voteRecords.length} vote records found for parliament ${parl}`)
           return voteRecords
         })
         .catch(console.error)
@@ -53,8 +53,10 @@ class VoteParticipantBeforeAction extends Action {
         }
       })
     }
+    console.log(`INFO: ${VoteParticipantBeforeAction.name}: Parameter Query set changed to ${this.manager.params.length} from ${newParams.length}`)
     this.manager.params = newParams
     this.manager.queryCount = newParams.length
+    this.manager.maxQueryCount = this.manager.queryCount
   }
 
   static parliamentExists (parliament, session) {

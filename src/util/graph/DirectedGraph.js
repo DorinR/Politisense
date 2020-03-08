@@ -43,13 +43,17 @@ class DirectedGraph {
   get (v) {
     return this.adjacencyList.get(v)
   }
-  static eulerWalk(graph, vertex) {
+
+  eulerWalkDepthFirst(vertex, depth = 0) {
     if(!vertex) {
       return []
     }
-    const vertices = [vertex]
-    graph.get(vertex).forEach(v => {
-      vertices.push(...DirectedGraph.eulerWalk(graph, v))
+    const vertices = [{
+      vertex: vertex,
+      depth: depth
+    }]
+    this.get(vertex).forEach(v => {
+      vertices.push(...this.eulerWalkDepthFirst(v, depth + 1))
     })
     return vertices
   }

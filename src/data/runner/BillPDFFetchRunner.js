@@ -6,14 +6,15 @@ const StopAction = require('../../util/queue_manager/stop/GenericStopAction').Ge
 const Throw = require('../../util/queue_manager/error/ScrapeError').ScrapeErrorAction
 
 class LogAction extends QueueAction {
-  constructor (manager) {
+  constructor (manager, type) {
     super()
     this.manager = manager
+    this.type = type
   }
 
   perform (result) {
     if (result) {
-      console.log(`INFO: found result for ${result.id}`)
+      console.log(`INFO: ${this.type.name}: found result for ${result.id}`)
     }
     return result
   }
@@ -26,7 +27,7 @@ class BillPDFFetchRunner extends QueueManager {
       .setStartAction(new StartAction(manager))
       .setStopAction(new StopAction(manager))
       .setErrorAction(new Throw(manager))
-      .setLogAction(new LogAction(manager))
+      .setLogAction(new LogAction(manager, BillPDFFetchRunner))
     return manager
   }
 
@@ -34,6 +35,7 @@ class BillPDFFetchRunner extends QueueManager {
     super(wait)
     this.params = params
     this.queryCount = params.length
+    this.maxQueryCount = this.queryCount
   }
 
   accumulate (result) {
@@ -41,6 +43,15 @@ class BillPDFFetchRunner extends QueueManager {
       this.result.push(result)
     }
     return result
+  }
+
+  async run () {
+    await super.run()
+    this.finish()
+  }
+
+  finish () {
+    console.log(`INFO: ${BillPDFFetchRunner.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 }
 

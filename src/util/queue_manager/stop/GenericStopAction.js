@@ -6,9 +6,16 @@ class GenericStopAction extends QueueAction {
     this.manager = manager
   }
 
-  perform () {
+  async perform () {
     console.debug(`INFO: waiting on ${this.manager.queryCount - this.manager.result.length} results out of ${this.manager.queryCount} expected results`)
-    return this.manager.result.length >= this.manager.queryCount
+    return this.shouldStop()
+  }
+
+  async shouldStop() {
+    await this.manager.lock.acquire()
+    const ret = this.manager.result.length >= this.manager.queryCount
+    this.manager.lock.release()
+    return ret
   }
 }
 

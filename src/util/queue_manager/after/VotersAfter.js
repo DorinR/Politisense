@@ -23,7 +23,7 @@ class VoteParticipantAfterAction extends Action {
               id: doc.id
             })
           })
-          console.log(`INFO: ${politicians.length} politicians retrieved for parliament ${parl}`)
+          console.log(`INFO: ${VoteParticipantAfterAction.name}: ${politicians.length} politicians retrieved for parliament ${parl}`)
           return politicians
         })
     })
@@ -45,7 +45,7 @@ class VoteParticipantAfterAction extends Action {
         if (politician) {
           voter.member = politician.id
         } else {
-          console.warn('WARN: cannot find politician ' + voter.member)
+          console.warn(`WARN: ${VoteParticipantAfterAction.name}:cannot find politician ${voter.member}`)
         }
       }
     }

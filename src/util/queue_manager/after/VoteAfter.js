@@ -25,7 +25,7 @@ class VoteAfterAction extends Action {
               id: doc.id
             })
           })
-          console.log(`INFO: returning stored bills for parliament: ${parl}`)
+          console.log(`INFO: ${VoteAfterAction.name}: returning stored bills for parliament: ${parl}`)
           return docs
         })
         .catch(console.error)

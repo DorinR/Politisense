@@ -6,5 +6,7 @@ module.exports.Bill = require('./BillStartAction').BillStartAction
 module.exports.BillLink = require('./BillLinkStart').BillLinkStart
 module.exports.BillPDF = require('./BillPDFFetchStart').BillPDFFetchStartAction
 module.exports.Classify = require('./ClassifyStart').ClassifyStart
+module.exports.Update = require('./UpdateStartAction').UpdateStartAction
+module.exports.Category = require('./CategoryStart').CategoryStart
 module.exports.LegislativeActivity = require('./LegislativeActivityStart').LegislativeActivityStart
 module.exports.Expenditure = require('./ExpenditureStart').ExpenditureStartAction

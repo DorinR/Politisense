@@ -6,8 +6,9 @@ const Data = require('@data')
 const Scrapers = Data.Scrapers
 const Runners = Data.Runners
 const Actions = require('@action')
-const Firestore = require('@firestore').Firestore
+const Parameters = require('@parameter')
 
+const Firestore = require('@firestore').Firestore
 const db = new Firestore(false)
 
 const Links = {
@@ -48,7 +49,7 @@ const RegisteredVertices = {
   vote_records: new TypeVertex(Scrapers.VoteScraper.VoteScraper, Links.vote),
   voters: new TypeVertex(Scrapers.VoteParticipantScraper.VoteParticipantScraper, Links.voter),
 
-  classifications: new TypeVertex(Actions.BillTagCreationAction, Links.classification),
+  classifications: new TypeVertex(Runners.CategoryRunner, Links.classification),
   raw: new TypeVertex(Runners.ClassificationRunner, Links.raw),
   roles: new TypeVertex(Scrapers.RoleScraper.RoleScraper, Links.role),
 
@@ -112,8 +113,34 @@ class UpdateDependencyGraph extends Graph {
       throw new Error(`ERROR: ${start} is not in the update dependency graph`)
     }
     start = RegisteredVertices[start]
-    return Graph.eulerWalk(this, start)
+    const cleaned = this.eulerWalkDepthFirst(start)
+      .filter(removeUtilityTags)
+      .sort(reverseDepthSort)
+      .filter(removeDuplicates)
+      .sort(depthSort)
+    seen = {}
+    return cleaned
   }
+}
+
+function removeUtilityTags (v) {
+  return v.vertex.type !== Parameters.UpdateNode.All && v.vertex.type !== Parameters.UpdateNode.None
+}
+
+function depthSort (v, w) {
+  if (v.depth < w.depth) return -1
+  if (v.depth > w.depth) return 1
+  return 0
+}
+
+function reverseDepthSort(v, w) {
+  if (v.depth < w.depth) return 1
+  if (v.depth > w.depth) return -1
+  return 0
+}
+var seen = {}
+function removeDuplicates (v) {
+  return seen.hasOwnProperty(v.vertex.data.collection.name) ? false : (seen[v.vertex.data.collection.name] = true)
 }
 
 module.exports = {

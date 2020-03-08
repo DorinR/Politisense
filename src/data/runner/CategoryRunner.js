@@ -1,14 +1,15 @@
 require('module-alias/register')
 const Components = require('@manager')
+const Parameters = require('@parameter')
 
-class ClassificationRunner extends Components.QueueManager {
+class CategoryRunner extends Components.QueueManager {
   static create (params, wait = 30000) {
-    const manager = new ClassificationRunner(params, wait)
+    const manager = new CategoryRunner(params, wait)
     manager
-      .setStartAction(new Components.Start.Classify(manager))
+      .setStartAction(new Components.Start.Category(manager))
       .setStopAction(new Components.Stop.Generic(manager))
       .setErrorAction(new Components.Error.Throw(manager))
-      .setLogAction(new Components.Log.Typed(ClassificationRunner))
+      .setLogAction(new Components.Log.Typed(CategoryRunner))
     return manager
   }
 
@@ -25,15 +26,17 @@ class ClassificationRunner extends Components.QueueManager {
   }
 
   finish () {
-    console.log(`INFO: ${ClassificationRunner.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
+    console.log(`INFO: ${CategoryRunner.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
   constructor (params, wait = 30000) {
     super(wait)
-    this.params = [params]
+    this.params = Parameters.Parliament.Number.map(parliament => {
+      return { parliament: parliament }
+    })
     this.queryCount = this.params.length
     this.maxQueryCount = this.queryCount
   }
 }
 
-module.exports.ClassificationRunner = ClassificationRunner
+module.exports.CategoryRunner = CategoryRunner

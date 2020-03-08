@@ -11,7 +11,7 @@ class VoteScraper extends Components.QueueManager {
       .setStopAction(new Components.Stop.Generic(manager))
       .setAfterAction(new Components.After.Vote(manager))
       .setErrorAction(new Components.Error.Parse(manager))
-      .setLogAction(new Components.Log.Generic(manager))
+      .setLogAction(new Components.Log.Typed(VoteScraper))
     return manager
   }
 
@@ -35,6 +35,16 @@ class VoteScraper extends Components.QueueManager {
     this.params = []
     this.createParams(params.url)
     this.queryCount = this.params.length
+    this.maxQueryCount = this.queryCount
+  }
+
+  async run () {
+    await super.run()
+    this.finish()
+  }
+
+  finish () {
+    console.log(`INFO: ${VoteScraper.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
   createParliamentSessions (parliamentSessions) {

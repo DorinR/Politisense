@@ -10,9 +10,11 @@ class GenericStartAction extends QueueAction {
       throw new ActionDecorationError(type)
     }
     this.create = type.create
+    this.type = type
   }
 
   async perform () {
+    console.log(`INFO: ${this.type.name}: initial ${this.manager.params.length} queries enqueued`)
     this.manager.params.forEach(param => {
       this.manager.queue.enqueue(
         this.create(param, this.manager.requeueCallback.bind(this.manager))

@@ -10,7 +10,7 @@ class BillScraper extends Components.QueueManager {
       .setStartAction(new Components.Start.Bill(manager))
       .setStopAction(new Components.Stop.Generic(manager))
       .setErrorAction(new Components.Error.Parse(manager))
-      .setLogAction(new Components.Log.Generic(manager))
+      .setLogAction(new Components.Log.Typed(BillScraper))
     return manager
   }
 
@@ -30,11 +30,6 @@ class BillScraper extends Components.QueueManager {
     return this.result
   }
 
-  async run () {
-    await super.run()
-    this.finish()
-  }
-
   accumulate (result) {
     if (result) {
       this.result.push(result)
@@ -42,8 +37,13 @@ class BillScraper extends Components.QueueManager {
     return result
   }
 
+  async run () {
+    await super.run()
+    this.finish()
+  }
+
   finish () {
-    console.log(`INFO: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
+    console.log(`INFO: ${BillScraper.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
   constructor (params, wait = 5000) {

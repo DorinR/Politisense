@@ -9,7 +9,7 @@ class PoliticianScraper extends Components.QueueManager {
       .setStopAction(new Components.Stop.Generic(manager))
       .setAfterAction(new Components.After.Politician(manager))
       .setErrorAction(new Components.Error.Parse(manager))
-      .setLogAction(new Components.Log.Generic(manager))
+      .setLogAction(new Components.Log.Typed(PoliticianScraper))
     return manager
   }
 
@@ -42,7 +42,7 @@ class PoliticianScraper extends Components.QueueManager {
   }
 
   finish () {
-    console.log(`INFO: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
+    console.log(`INFO: ${PoliticianScraper.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
   setParliaments (parliaments) {

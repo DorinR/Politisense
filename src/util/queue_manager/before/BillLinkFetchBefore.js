@@ -12,7 +12,7 @@ class BillLinkFetchBeforeAction extends QueueAction {
 
   retrieveBills (db) {
     return Parliaments.map(parl => {
-      db.forParliament(parl)
+      return db.forParliament(parl)
         .Bill()
         .select()
         .then(snapshot => {
@@ -23,6 +23,7 @@ class BillLinkFetchBeforeAction extends QueueAction {
               id: doc.id
             })
           })
+          console.debug(`INFO: ${BillLinkFetchBeforeAction.name}: retrieved ${bills.length} bills.`)
           return bills
         })
         .then(bills => {
@@ -53,6 +54,7 @@ class BillLinkFetchBeforeAction extends QueueAction {
         })
       }
     })
+    console.log(`INFO: ${BillLinkFetchBeforeAction.name}: Parameter Query set changed to ${this.manager.params.length} from ${params.length}`)
     this.manager.params = params
     this.manager.queryCount = params.length
   }

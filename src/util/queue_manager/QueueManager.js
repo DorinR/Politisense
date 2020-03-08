@@ -23,11 +23,11 @@ class QueueManager {
   }
 
   before () {
-    console.log('Before action not specified')
+    console.warn('Before action not specified')
   }
 
   after () {
-    console.log('After action not specified')
+    console.warn('After action not specified')
   }
 
   log (result) {
@@ -109,7 +109,7 @@ class QueueManager {
   }
 
   async run () {
-    while (!this.stop()) {
+    while (!await this.stop()) {
       let job = null
       try {
         job = this.queue.dequeue()

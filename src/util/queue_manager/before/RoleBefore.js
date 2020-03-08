@@ -31,7 +31,7 @@ class RoleBeforeAction extends QueueAction {
               id: doc.id
             })
           })
-          console.log(`INFO: found ${politicians.length} politicians in parliament ${parl}`)
+          console.log(`INFO: ${RoleBeforeAction.name}: found ${politicians.length} politicians in parliament ${parl}`)
           return politicians
         })
         .then(politicians => {
@@ -68,7 +68,7 @@ class RoleBeforeAction extends QueueAction {
     const links = await RoleBeforeAction
       .create(params)
       .execute()
-    console.log(`INFO: found ${links.length} links for MPs`)
+    console.log(`INFO: ${RoleBeforeAction.name}: found ${links.length} links for MPs`)
     return this.modifyManagerQueryParams(links)
   }
 
@@ -107,8 +107,10 @@ class RoleBeforeAction extends QueueAction {
         })
       })
     })
+    console.log(`INFO: ${RoleBeforeAction.name}: Parameter Query set changed to ${this.manager.params.length} from ${params.length}`)
     this.manager.params = newParams
     this.manager.queryCount = this.manager.params.length
+    this.manager.maxQueryCount = this.manager.queryCount
   }
 }
 
