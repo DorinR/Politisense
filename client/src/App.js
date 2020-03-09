@@ -23,7 +23,6 @@ import { makeStyles, useTheme } from '@material-ui/styles';
 import { useMediaQuery } from '@material-ui/core';
 import Sidebar from "./Components/Navbar";
 import Topbar from "./Components/Topbar";
-import Testing from "./Components/Dashboard/Test/Testing";
 const useStyles = makeStyles(theme => ({
     root: {
         paddingTop: 56,
@@ -115,9 +114,7 @@ const App = () => {
         <Route exact path='/(login)' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
         <Route exact path='/question' component={Questionnaire} />
-        <Route exact path='/testing' component={Testing} />
-
-          <Route component={DefaultContainer} />
+        <Route component={DefaultContainer} />
       </Switch>
     </Router>
   )

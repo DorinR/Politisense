@@ -188,7 +188,12 @@ export default function MyMP () {
                     xl={3}
                     xs={12}
                 >
-                  <Budget />
+                  {userRepIssuedBills && categoryList && userRepresentative && barPieRows ? (
+                          <IssuedBillsByMP userRepIssuedBills={userRepIssuedBills}
+                                           categoryList={categoryList}
+                                           userRepresentative={userRepresentative}
+                                           rows={barPieRows}/>)
+                      : ('nothing')}
                 </Grid>
                 <Grid
                     item
@@ -225,12 +230,13 @@ export default function MyMP () {
                     xl={9}
                     xs={12}
                 >
-                  {userRepIssuedBills && categoryList && userRepresentative && barPieRows ? (
-                          <IssuedBillsByMP userRepIssuedBills={userRepIssuedBills}
-                                           categoryList={categoryList}
-                                           userRepresentative={userRepresentative}
-                                           rows={barPieRows}/>)
-                      : ('nothing')}
+                  <Budget />
+                  {/*{userRepIssuedBills && categoryList && userRepresentative && barPieRows ? (*/}
+                  {/*        <IssuedBillsByMP userRepIssuedBills={userRepIssuedBills}*/}
+                  {/*                         categoryList={categoryList}*/}
+                  {/*                         userRepresentative={userRepresentative}*/}
+                  {/*                         rows={barPieRows}/>)*/}
+                  {/*    : ('nothing')}*/}
                 </Grid>
                 <Grid
                     item
