@@ -23,12 +23,15 @@ describe('All firebase tests', () => {
     await fb.close()
   })
 
-  test('Can insert and delete a record', async (done) => {
-    await fb.Bill().insert({ id: 'c' })
+  xtest('Can insert and delete a record', async done => {
+    await fb
+      .Bill()
+      .insert({ id: 'c' })
       .then(resp => {
         resp.should.equal(true)
       })
-    await fb.Bill()
+    await fb
+      .Bill()
       .where('id', '==', 'c')
       .delete()
       .then(count => {
@@ -37,8 +40,9 @@ describe('All firebase tests', () => {
     done()
   })
 
-  test('can filter records (legacy)', async (done) => {
-    const didFilter = await fb.Bill()
+  xtest('can filter records (legacy)', async done => {
+    const didFilter = await fb
+      .Bill()
       .select('id', '==', 8062279)
       .then(() => {
         return true
@@ -50,8 +54,9 @@ describe('All firebase tests', () => {
     done()
   })
 
-  test('can filter records (use this)', async (done) => {
-    const didFilter = await fb.Bill()
+  xtest('can filter records (use this)', async done => {
+    const didFilter = await fb
+      .Bill()
       .where('id', '==', 8062279)
       .select()
       .then(() => {
@@ -64,66 +69,75 @@ describe('All firebase tests', () => {
     done()
   })
 
-  test('can update a record', async (done) => {
-    await fb.Bill().insert({ id: 'a' })
+  xtest('can update a record', async done => {
+    await fb
+      .Bill()
+      .insert({ id: 'a' })
       .then(resp => {
         resp.should.equal(true)
       })
-    await fb.Bill().insert({ id: 'b' })
+    await fb
+      .Bill()
+      .insert({ id: 'b' })
       .then(resp => {
         resp.should.equal(true)
       })
-    await fb.Bill()
+    await fb
+      .Bill()
       .where('id', '==', 'a')
       .update({ id: 'b' })
       .then(count => {
         count.should.equal(true)
       })
-    await fb.Bill()
+    await fb
+      .Bill()
       .where('id', '==', 'b')
-      .delete().then(count => {
+      .delete()
+      .then(count => {
         count.should.equal(2)
       })
     done()
   }, 600000)
 
-  test('Firestore::innerJoin() throws on bad first table key', async (done) => {
+  xtest('Firestore::innerJoin() throws on bad first table key', async done => {
     const finances = fb.FinancialRecord()
     const mps = fb.Politician()
-    const didThrow =
-      await finances.innerJoin('_', mps, '_id')
-        .then(() => {
-          return false
-        })
-        .catch(() => {
-          return true
-        })
+    const didThrow = await finances
+      .innerJoin('_', mps, '_id')
+      .then(() => {
+        return false
+      })
+      .catch(() => {
+        return true
+      })
     didThrow.should.equal(true)
     done()
   }, 60000)
 
-  test('Firestore::innerJoin() throws on bad second table key', async (done) => {
+  xtest('Firestore::innerJoin() throws on bad second table key', async done => {
     const finances = fb.FinancialRecord()
     const mps = fb.Politician()
-    const didThrow =
-      await finances.innerJoin('_', mps, '_id')
-        .then(() => {
-          return false
-        })
-        .catch(() => {
-          return true
-        })
+    const didThrow = await finances
+      .innerJoin('_', mps, '_id')
+      .then(() => {
+        return false
+      })
+      .catch(() => {
+        return true
+      })
     didThrow.should.equal(true)
     done()
   }, 60000)
 
-  test('Reference::innerJoin() provides joined collections as array', async (done) => {
+  xtest('Reference::innerJoin() provides joined collections as array', async done => {
     const finances = fb.FinancialRecord()
     const mps = fb.Politician()
     const records = await finances.innerJoin('member', mps, '_id')
     records.length.should.equal(9234)
     const record = records[0]
-    Object.keys(record).length.should.equal(2 + Object.keys(fr).length + Object.keys(mp).length)
+    Object.keys(record).length.should.equal(
+      2 + Object.keys(fr).length + Object.keys(mp).length
+    )
     Object.keys(record).should.deep.equal([
       'amount',
       'category',
@@ -137,7 +151,8 @@ describe('All firebase tests', () => {
       'politicalParty',
       'riding',
       'yearElected',
-      '_id_politicians'])
+      '_id_politicians'
+    ])
     record.member.should.equal(record._id_politicians)
     done()
   }, 60000)
