@@ -66,30 +66,36 @@ describe('Checks happy and non-happy paths for getSpendingCategoriesAverages fun
   test('correctly extracts salaries average', () => {
     const { salariesAverage } = getSpendingCategoriesAverages(mockSpendingItems)
     expect(salariesAverage).toBe(100)
+    done()
   })
   test('correctly extracts services average', () => {
     const { serviceAverage } = getSpendingCategoriesAverages(mockSpendingItems)
     expect(serviceAverage).toBe(200)
+    done()
   })
   test('correctly extracts travel average', () => {
     const { travelAverage } = getSpendingCategoriesAverages(mockSpendingItems)
     expect(travelAverage).toBe(300)
+    done()
   })
   test('correctly extracts hospitality average', () => {
     const { hospitalityAverage } = getSpendingCategoriesAverages(
       mockSpendingItems
     )
     expect(hospitalityAverage).toBe(400)
+    done()
   })
   test('correctly extracts gifts average', () => {
     const { giftsAverage } = getSpendingCategoriesAverages(mockSpendingItems)
     expect(giftsAverage).toBe(500)
+    done()
   })
   test('correctly extracts advertising average', () => {
     const { advertisingAverage } = getSpendingCategoriesAverages(
       mockSpendingItems
     )
     expect(advertisingAverage).toBe(600)
+    done()
   })
   test('when one of the spending categories is absent from spending items should return NaN', () => {
     mockSpendingItems.pop()
@@ -98,6 +104,7 @@ describe('Checks happy and non-happy paths for getSpendingCategoriesAverages fun
       mockSpendingItems
     )
     expect(advertisingAverage).toBe(NaN)
+    done()
   })
 
   test('when amount value is a string that can easily be cast to int', () => {
@@ -109,6 +116,7 @@ describe('Checks happy and non-happy paths for getSpendingCategoriesAverages fun
       mockSpendingItems
     )
     expect(advertisingAverage).toBe(600)
+    done()
   })
   test('averages still compute correctly even when an item with wrong amount type is fed into the function', () => {
     mockSpendingItems.push({
@@ -119,6 +127,7 @@ describe('Checks happy and non-happy paths for getSpendingCategoriesAverages fun
       mockSpendingItems
     )
     expect(advertisingAverage).toBe(600)
+    done()
   })
 })
 
@@ -126,18 +135,22 @@ describe('test that averaging function with variable number of arguments works c
   test('regular input', () => {
     const avg = getAverage(1, 2, 3, 4, 5, 6, 7, 8, 9)
     expect(avg).toBe(5)
+    done()
   })
   test('single value input', () => {
     const avg = getAverage(25)
     expect(avg).toBe(25)
+    done()
   })
   test('empty input', () => {
     const avg = getAverage()
     expect(avg).toBe(NaN)
+    done()
   })
   test('if non-number values are fed into function average is still correctly calculated', () => {
     const avg = getAverage(1, 2, 3, 'definitely not a number')
     expect(avg).toBe(2)
+    done()
   })
 })
 
@@ -155,9 +168,11 @@ describe('test that getting the hex-format color is correctly gotten from the sv
     expect(color).toBe('#78D7CE')
     color = getHexColor('ndp')
     expect(color).toBe('#EF7E52')
+    done()
   })
   test('color extraction returns fallback color if passed argument is not among existing parties', () => {
     const color = getHexColor('definitely not a party name')
     expect(color).toBe('#78D7CE')
+    done()
   })
 })

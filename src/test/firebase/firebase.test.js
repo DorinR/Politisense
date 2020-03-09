@@ -23,7 +23,7 @@ describe('All firebase tests', () => {
     await fb.close()
   })
 
-  xtest('Can insert and delete a record', async done => {
+  test('Can insert and delete a record', async done => {
     await fb
       .Bill()
       .insert({ id: 'c' })
@@ -40,7 +40,7 @@ describe('All firebase tests', () => {
     done()
   })
 
-  xtest('can filter records (legacy)', async done => {
+  test('can filter records (legacy)', async done => {
     const didFilter = await fb
       .Bill()
       .select('id', '==', 8062279)
@@ -54,7 +54,7 @@ describe('All firebase tests', () => {
     done()
   })
 
-  xtest('can filter records (use this)', async done => {
+  test('can filter records (use this)', async done => {
     const didFilter = await fb
       .Bill()
       .where('id', '==', 8062279)
@@ -69,7 +69,7 @@ describe('All firebase tests', () => {
     done()
   })
 
-  xtest('can update a record', async done => {
+  test('can update a record', async done => {
     await fb
       .Bill()
       .insert({ id: 'a' })
@@ -99,7 +99,7 @@ describe('All firebase tests', () => {
     done()
   }, 600000)
 
-  xtest('Firestore::innerJoin() throws on bad first table key', async done => {
+  test('Firestore::innerJoin() throws on bad first table key', async done => {
     const finances = fb.FinancialRecord()
     const mps = fb.Politician()
     const didThrow = await finances
@@ -114,7 +114,7 @@ describe('All firebase tests', () => {
     done()
   }, 60000)
 
-  xtest('Firestore::innerJoin() throws on bad second table key', async done => {
+  test('Firestore::innerJoin() throws on bad second table key', async done => {
     const finances = fb.FinancialRecord()
     const mps = fb.Politician()
     const didThrow = await finances
@@ -129,7 +129,7 @@ describe('All firebase tests', () => {
     done()
   }, 60000)
 
-  xtest('Reference::innerJoin() provides joined collections as array', async done => {
+  test('Reference::innerJoin() provides joined collections as array', async done => {
     const finances = fb.FinancialRecord()
     const mps = fb.Politician()
     const records = await finances.innerJoin('member', mps, '_id')
