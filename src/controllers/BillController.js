@@ -3,15 +3,21 @@ const Firestore = require('@firestore').Firestore
 exports.getUpcomingBills = async (req, res) => {
   const Data = require('@data').Scrapers.LegislativeActivityScraper
 
-  await Data.create()
+  Data.create()
     .execute()
     .then(result => {
       console.log(result)
-      res.json({
+      res.status(200).json({
         success: true,
         data: result
       })
     })
+    .catch(e => {
+      res.status(404).json({
+        success: false,
+        data: e.message
+      })
+  })
 }
 
 exports.getAllBillsByHead = (req, res) => {

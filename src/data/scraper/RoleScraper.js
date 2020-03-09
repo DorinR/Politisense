@@ -56,13 +56,3 @@ class RoleScraper extends QueueManager {
 module.exports = {
   RoleScraper: RoleScraper
 }
-
-// RoleScraper.create({
-//   url: 'https://www.ourcommons.ca/Members/en/search',
-//   parliaments: 'all'
-// })
-//   .execute()
-//   .then(result => {
-//     //console.log(result)
-//   })
-//   .catch(console.error)

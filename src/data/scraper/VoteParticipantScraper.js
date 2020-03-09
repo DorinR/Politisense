@@ -76,30 +76,3 @@ class VoteParticipantScraper extends QueueManager {
 module.exports = {
   VoteParticipantScraper: VoteParticipantScraper
 }
-const Firestore = require('@firestore').Firestore
-const db = new Firestore(false)
-
-// VoteParticipantScraper.create({
-//   url: 'https://www.ourcommons.ca/Members/en/votes',
-//   parliaments: [41]
-// })
-//   .execute()
-//   .then(results => {
-//     return Promise.all(
-//       results.map(result => {
-//         const parl = result.params.parliament
-//         const Vote = db.forParliament(parl).Vote()
-//         if (result.data.length > 0) {
-//           return Promise.all(
-//             result.data[0].map(vote => {
-//               return Vote.insert(vote)
-//             })
-//           )
-//         }
-//         return new Promise(resolve => { resolve(true) })
-//       })
-//     )
-//   })
-//   .then(results => {
-//     //console.log(results)
-//   })
