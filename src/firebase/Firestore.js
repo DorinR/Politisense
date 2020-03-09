@@ -267,6 +267,16 @@ class Firestore {
     return this.createReference(collection)
   }
 
+  Party () {
+    const collection = this.legacy ? 'parties' : `${this.parliament}/parties/party`
+    return this.createReference(collection)
+  }
+
+  MinisterDescriptions () {
+    const collection = 'static/minister_descriptions/description'
+    return this.createReference(collection)
+  }
+
   Riding () {
     const collection = this.legacy ? 'ridings' : `${this.parliament}/ridings`
     return this.createReference(collection)

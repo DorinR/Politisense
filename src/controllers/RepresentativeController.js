@@ -1,4 +1,3 @@
-import { Firestore } from '../client/src/Firebase'
 import { ministers } from './CabinetMinisters'
 const Firestore = require('@firestore').Firestore
 
@@ -81,27 +80,6 @@ exports.getAllRepresentatives = (req, res) => {
       })
       console.log(err)
     })
-}
-
-exports.getCabinetMinisters = (req, res) => {
-    const db = new Firestore(false).forParliament(43)
-    const ministers = db.Role()
-        .where('toDate', '==', 0)
-        .where('fromDate', '>=', 2015)
-        .where('type', '==', 'parliamentary')
-        .innerJoin('politician', db.Politician(), '_id')
-        .then(entries => {
-            let result = []
-            entries.forEach((element) => {
-                if(element.title.includes('minister') && !(element.title.includes('secretary'))){
-                    result.push(element)
-                }
-            })
-            res.json({
-                success: true,
-                data: result
-            })
-        })
 }
 
 // getRepresentativesInfo

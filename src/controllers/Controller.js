@@ -5,6 +5,7 @@ const VoteRecordController = require('./VoteRecordController')
 const VoteController = require('./VoteController')
 const RidingController = require('./RidingController')
 const BudgetController = require('./BudgetController')
+const ParliamentController = require('./ParliamentController')
 
 module.exports = {
   userSignup: function (req, res) {
@@ -51,7 +52,15 @@ module.exports = {
   },
 
   getCabinetMinisters: function (req, res) {
-    return RepresentativeController.getCabinetMinisters(req, res)
+    return ParliamentController.getCabinetMinisters(req, res)
+  },
+
+  getPartyInfo: function (req, res) {
+    return ParliamentController.getPartyInfo(req, res)
+  },
+
+  getRoleDescription: function (req, res) {
+    return ParliamentController.getRoleDescription(req, res)
   },
 
   getAllBills: function (req, res) {
