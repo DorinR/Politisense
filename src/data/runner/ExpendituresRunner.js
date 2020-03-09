@@ -4,7 +4,7 @@ const Firestore = require('@firestore').Firestore
 module.exports.retrieveAndStoreExpenditureData = async () => {
   await new Firestore().FinancialRecord().delete()
     .then(count => {
-      console.log(`deleted ${count} financial records before regeneration`)
+      //console.log(`deleted ${count} financial records before regeneration`)
     })
   await new ExpendituresScraper('https://www.ourcommons.ca/PublicDisclosure/MemberExpenditures.aspx?FormatType=XML')
     .createExpenditureRecords()

@@ -4,6 +4,7 @@ import Card from 'react-bootstrap/Card'
 import Container from 'react-bootstrap/Container'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Row from 'react-bootstrap/Row'
+import axios from 'axios'
 
 
 // Declaring poll question and answers
@@ -12,6 +13,33 @@ const pollAnswers = [
     { option: 'Yea', votes: 8 },
     { option: 'Nay', votes: 2 }
 ]
+
+
+// export async function getUpcomingBills() {
+//     console.log("inside")
+//     axios.get(`http://localhost:5000/api/bills/getUpcomingBills`).then((response) => {
+//         let data = response.result.data[0];
+//         console.log(data)
+//         return response.data
+//     }).catch((error) => {
+//         console.log(error);
+//     });
+// }
+
+export async function getUpcomingBills() {
+    return axios.get(
+        `http://localhost:5000/api/bills/getUpcomingBills`
+    )
+        .then(res => {
+            let data = res.result.data[0];
+            console.log(data)
+            // if (data) {
+            //     console.log("test")
+            //     console.log(data)
+            // }
+        })
+        .catch(console.error)
+}
 
 class PollsMainPage extends Component {
     // Setting answers to state to reload the component with each vote
@@ -29,6 +57,10 @@ class PollsMainPage extends Component {
         this.setState({
             pollAnswers: newPollAnswers
         })
+    }
+
+    componentDidMount() {
+        getUpcomingBills();
     }
 
     render() {

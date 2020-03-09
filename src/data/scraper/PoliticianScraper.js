@@ -41,7 +41,7 @@ const provinceKeys = [
 ]
 
 class PoliticianScraper extends QueueManager {
-  static create (params, wait = 5000) {
+  static create(params, wait = 5000) {
     const manager = new PoliticianScraper(params, wait)
     manager
       .setStartAction(new StartAction(manager))
@@ -51,7 +51,7 @@ class PoliticianScraper extends QueueManager {
     return manager
   }
 
-  constructor (params, wait = 5000) {
+  constructor(params, wait = 5000) {
     super(wait)
     this.parliaments = []
     this.setParliaments(params.parliaments)
@@ -69,23 +69,23 @@ class PoliticianScraper extends QueueManager {
     this.maxQueryCount = this.queryCount
   }
 
-  async run () {
+  async run() {
     await super.run()
     this.finish()
   }
 
-  accumulate (result) {
+  accumulate(result) {
     this.result.push(result)
     return result
   }
 
-  finish () {
+  finish() {
     console.log(`INFO: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
-  setParliaments (parliaments) {
+  setParliaments(parliaments) {
     if (typeof parliaments === 'undefined' ||
-       (typeof parliaments === typeof '' && parliaments.toLowerCase().includes('all'))) {
+      (typeof parliaments === typeof '' && parliaments.toLowerCase().includes('all'))) {
       this.parliaments.push('all')
     } else if (typeof parliaments === typeof []) {
       this.parliaments = parliaments.filter(parliament => {
@@ -94,9 +94,9 @@ class PoliticianScraper extends QueueManager {
     }
   }
 
-  setCaucuses (caucuses) {
+  setCaucuses(caucuses) {
     if (typeof caucuses === 'undefined' ||
-       (typeof caucuses === typeof ' ' && caucuses.toLowerCase().includes('all'))) {
+      (typeof caucuses === typeof ' ' && caucuses.toLowerCase().includes('all'))) {
       this.caucuses.push('all')
     } else if (typeof caucuses === typeof []) {
       const validPartyKeys = Object.values(caucusMapping)
@@ -106,9 +106,9 @@ class PoliticianScraper extends QueueManager {
     }
   }
 
-  setProvinces (provinces) {
+  setProvinces(provinces) {
     if (typeof provinces === 'undefined' ||
-       (typeof provinces === typeof ' ' && provinces.toLowerCase().includes('all'))) {
+      (typeof provinces === typeof ' ' && provinces.toLowerCase().includes('all'))) {
       this.provinces.push('all')
     } else if (typeof provinces === typeof []) {
       this.provinces = provinces.filter(province => {
@@ -117,9 +117,9 @@ class PoliticianScraper extends QueueManager {
     }
   }
 
-  setGenders (genders) {
+  setGenders(genders) {
     if (typeof genders === 'undefined' ||
-       (typeof genders === typeof ' ' && genders.toLowerCase().includes('all'))) {
+      (typeof genders === typeof ' ' && genders.toLowerCase().includes('all'))) {
       this.genders.push('all')
     } else if (typeof genders === typeof []) {
       this.genders = genders.filter(gender => {
@@ -131,9 +131,9 @@ class PoliticianScraper extends QueueManager {
     }
   }
 
-  setLastNamePrefixes (lastNamePrefixes) {
+  setLastNamePrefixes(lastNamePrefixes) {
     if (typeof lastNamePrefixes === 'undefined' ||
-       (typeof lastNamePrefixes === typeof ' ' && lastNamePrefixes.toLowerCase().includes('all'))) {
+      (typeof lastNamePrefixes === typeof ' ' && lastNamePrefixes.toLowerCase().includes('all'))) {
       this.lastNamePrefixes.push('')
     } else if (typeof lastNamePrefixes === typeof []) {
       this.lastNamePrefixes = lastNamePrefixes.filter(prefix => {
@@ -145,7 +145,7 @@ class PoliticianScraper extends QueueManager {
     }
   }
 
-  createQueries (url) {
+  createQueries(url) {
     this.parliaments.forEach(parliament => {
       this.caucuses.forEach(caucus => {
         this.provinces.forEach(province => {
@@ -171,11 +171,11 @@ class PoliticianScraper extends QueueManager {
 
 module.exports.PoliticianScraper = PoliticianScraper
 
-PoliticianScraper.create({
-  url: 'https://www.ourcommons.ca/Members/en/search/xml',
-  parliaments: 'all'
-})
-  .execute()
-  .then(results => {
-    console.log(results)
-  })
+// PoliticianScraper.create({
+//   url: 'https://www.ourcommons.ca/Members/en/search/xml',
+//   parliaments: 'all'
+// })
+//   .execute()
+//   .then(results => {
+//     //console.log(results)
+//   })

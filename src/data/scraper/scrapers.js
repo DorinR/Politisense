@@ -4,5 +4,6 @@ module.exports = {
   PoliticianScraper: require('./PoliticianScraper'),
   RoleScraper: require('./RoleScraper'),
   VoteScraper: require('./VoteScraper'),
-  VoteParticipantScraper: require('./VoteParticipantScraper')
+  VoteParticipantScraper: require('./VoteParticipantScraper'),
+  LegislativeActivityScraper: require('./LegislativeActivityScraper').LegislativeActivityScraper
 }

@@ -23,4 +23,7 @@ router.get('/:head/getAllBillsByRep', controller.getAllBillsByRep)
 
 router.get('/:head/getAllBillsBySponsorName', controller.getAllBillsBySponsorName)
 
+router.get('/getUpcomingBills', controller.getUpcomingBills)
+
+
 module.exports = router

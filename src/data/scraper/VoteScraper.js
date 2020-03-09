@@ -79,7 +79,7 @@ Object.freeze(Type)
 Object.freeze(Parliament)
 
 class VoteScraper extends QueueManager {
-  static create (params, wait = 5000) {
+  static create(params, wait = 5000) {
     const manager = new VoteScraper(params, wait)
     manager
       .setStartAction(new StartAction(manager))
@@ -89,14 +89,14 @@ class VoteScraper extends QueueManager {
     return manager
   }
 
-  accumulate (result) {
+  accumulate(result) {
     if (result) {
       this.result.push(result)
     }
     return result
   }
 
-  constructor (params, wait = 5000) {
+  constructor(params, wait = 5000) {
     super(wait)
     this.parliamentSessions = []
     this.createParliamentSessions(params.parliamentSessions)
@@ -110,7 +110,7 @@ class VoteScraper extends QueueManager {
     this.createParams(params.url)
   }
 
-  createParliamentSessions (parliamentSessions) {
+  createParliamentSessions(parliamentSessions) {
     const validEntries = Object.values(flatten(Parliament))
     if (!parliamentSessions || parliamentSessions === 'all') {
       this.parliamentSessions = validEntries
@@ -121,7 +121,7 @@ class VoteScraper extends QueueManager {
     }
   }
 
-  createBillDocumentTypes (types) {
+  createBillDocumentTypes(types) {
     const validEntries = Object.values(flatten(Type))
     if (!types || types === 'all') {
       this.billDocumentTypes = ['']
@@ -132,7 +132,7 @@ class VoteScraper extends QueueManager {
     }
   }
 
-  createVoteResults (voteResults) {
+  createVoteResults(voteResults) {
     const validEntries = Object.values(Outcome)
     if (!voteResults || voteResults === 'all') {
       this.voteResults = ['']
@@ -143,7 +143,7 @@ class VoteScraper extends QueueManager {
     }
   }
 
-  createMotionPrefixes (prefixes) {
+  createMotionPrefixes(prefixes) {
     const validEntries = Object.values(flatten(Type))
     if (!prefixes || prefixes === 'all') {
       this.motionPrefixes = ['']
@@ -154,7 +154,7 @@ class VoteScraper extends QueueManager {
     }
   }
 
-  createParams (url) {
+  createParams(url) {
     this.parliamentSessions.forEach(parl => {
       this.billDocumentTypes.forEach(type => {
         this.voteResults.forEach(result => {
@@ -191,13 +191,13 @@ module.exports = {
   Topic: Topic
 }
 
-VoteScraper.create({
-  url: 'https://www.ourcommons.ca/Members/en/votes/xml',
-  params: {
-    parliaments: 'all'
-  }
-})
-  .execute()
-  .then(results => {
-    console.log(results)
-  })
+// VoteScraper.create({
+//   url: 'https://www.ourcommons.ca/Members/en/votes/xml',
+//   params: {
+//     parliaments: 'all'
+//   }
+// })
+//   .execute()
+//   .then(results => {
+//     //console.log(results)
+//   })

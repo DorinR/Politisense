@@ -1,12 +1,16 @@
 const Firestore = require('@firestore').Firestore
 
-exports.getUpcomingBills = (req, res) => {
-  const db = new Firestore()
+exports.getUpcomingBills = async (req, res) => {
+  const Data = require('@data').Scrapers.LegislativeActivityScraper
 
-  db.LegislativeActivityScraper.create()
+  await Data.create()
     .execute()
     .then(result => {
-      console.log(result.data)
+      console.log(result)
+      res.json({
+        success: true,
+        data: result
+      })
     })
 }
 
