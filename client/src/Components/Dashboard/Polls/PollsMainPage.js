@@ -15,23 +15,14 @@ const pollAnswers = [
 ]
 
 
-export async function getUpcomingBills() {
-    axios.get(`http://localhost:5000/api/bills/getUpcomingBills`).then((response) => {
-        let array = response.data.data
-        let bills = array.map(x => x)
-        let legislativeObjects = bills[0].data[0]
-        console.log(legislativeObjects[0])
-        console.log(legislativeObjects[0].title)
-        return legislativeObjects
-    }).catch((error) => {
-        console.log(error);
-    });
-}
-
 class PollsMainPage extends Component {
-    // Setting answers to state to reload the component with each vote
-    state = {
-        pollAnswers: [...pollAnswers]
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            legislativeObjects: [],
+            pollAnswers: [...pollAnswers]
+        }
     }
 
     // Handling user vote
@@ -47,8 +38,25 @@ class PollsMainPage extends Component {
         })
     }
 
+    getUpcomingBills = async () => {
+        axios.get(`http://localhost:5000/api/bills/getUpcomingBills`).then((response) => {
+            let array = response.data.data
+            let bills = array.map(x => x)
+            let legislativeObjects = bills[0].data[0]
+            this.setState({
+                legislativeObjects: legislativeObjects
+            });
+            console.log(this.state.legislativeObjects)
+            console.log(legislativeObjects[0])
+            console.log(legislativeObjects[0].title)
+            return legislativeObjects
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     componentDidMount() {
-        getUpcomingBills();
+        this.getUpcomingBills();
     }
 
     render() {
@@ -56,7 +64,7 @@ class PollsMainPage extends Component {
         return (
             <div>
                 {/* <Poll question={pollQuestion} answers={pollAnswers} onVote={this.handleVote} /> */}
-                <Container>
+                {/* <Container>
                     <Row>
                         <Card style={{ width: '18rem' }}>
                             <Card.Body>
@@ -102,10 +110,26 @@ class PollsMainPage extends Component {
                         </Card>
                     </Row>
 
-                </Container>
-                {/* {array.map((data, index) => (
-                    <p key={index}>Bill title {data.title}</p>
-                ))} */}
+                </Container> */}
+                <ul>
+                    {this.state.legislativeObjects.map(eachData => {
+                        // console.log(eachData)
+                        return (<li>
+                            <Card style={{ width: '18rem' }}>
+                                <Card.Body>
+                                    <Card.Title>{eachData.title}</Card.Title>
+                                    <Card.Link href="#">{eachData.link}</Card.Link>
+                                    <Card.Text>
+                                        <small className="text-muted">{eachData.date}</small>
+                                    </Card.Text>
+                                    <Card.Text>{eachData.description}</Card.Text>
+                                    <Poll answers={pollAnswers} onVote={this.handleVote} />
+                                </Card.Body>
+                            </Card>
+                            {/* {eachData.title + eachData.date + eachData.link + eachData.description} */}
+                        </li>)
+                    })}
+                </ul>
             </div>
 
         );
