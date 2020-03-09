@@ -123,8 +123,6 @@ const Bipartisan = props => {
                                           { {title:"BiPartisan",
                                               body:"The Bipartisan Index measures the frequency with which a Member co-sponsors a bill introduced by the opposite party " +
                                                   "and the frequency with which a Member’s own bills attract co-sponsors from the opposite party."}
-
-
                                           }/>
         </Card>
        </div>
