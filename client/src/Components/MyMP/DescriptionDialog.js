@@ -8,6 +8,9 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import { Timeline, TimelineItem }  from 'vertical-timeline-component-for-react';
+import {Card, CardContent} from "@material-ui/core";
+import clsx from "clsx";
+import BarChartWrapper from "../Dashboard/Charts/Wrappers/BarChartWrapper"
 
 const DialogTitle = withStyles(theme => ({
     root: {
@@ -62,6 +65,7 @@ const DialogActions = withStyles(theme => ({
         return (
             <div>
                 <Dialog
+                    fullScreen={props.d3Container ? true: false}
                     onClose={handleClose}
                     aria-labelledby="customized-dialog-title"
                     open={open}
@@ -69,7 +73,18 @@ const DialogActions = withStyles(theme => ({
                     <DialogTitle id="customized-dialog-title" onClose={handleClose}>
                         {props.explaination? props.explaination.title: props.title}
                     </DialogTitle>
+                    {props.d3Container?
+                                <Card>
+                                    <CardContent style={{width:"100%"}}>
+                                        <BarChartWrapper
+                                            type="bar-pie"
+                                            data={props.userRepIssuedBills}
+                                            categories={props.categoryList}
+                                        />
+                                    </CardContent>
+                                </Card>
 
+                        :""}
                     {props.d3 ?
                         <DialogContent>
                             <Typography gutterBottom>
