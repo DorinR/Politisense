@@ -15,30 +15,17 @@ const pollAnswers = [
 ]
 
 
-// export async function getUpcomingBills() {
-//     console.log("inside")
-//     axios.get(`http://localhost:5000/api/bills/getUpcomingBills`).then((response) => {
-//         let data = response.result.data[0];
-//         console.log(data)
-//         return response.data
-//     }).catch((error) => {
-//         console.log(error);
-//     });
-// }
-
 export async function getUpcomingBills() {
-    return axios.get(
-        `http://localhost:5000/api/bills/getUpcomingBills`
-    )
-        .then(res => {
-            let data = res.result.data[0];
-            console.log(data)
-            // if (data) {
-            //     console.log("test")
-            //     console.log(data)
-            // }
-        })
-        .catch(console.error)
+    axios.get(`http://localhost:5000/api/bills/getUpcomingBills`).then((response) => {
+        let array = response.data.data
+        let bills = array.map(x => x)
+        let legislativeObjects = bills[0].data[0]
+        console.log(legislativeObjects[0])
+        console.log(legislativeObjects[0].title)
+        return legislativeObjects
+    }).catch((error) => {
+        console.log(error);
+    });
 }
 
 class PollsMainPage extends Component {
@@ -46,6 +33,7 @@ class PollsMainPage extends Component {
     state = {
         pollAnswers: [...pollAnswers]
     }
+
     // Handling user vote
     // Increments the votes count of answer when the user votes
     handleVote = voteAnswer => {
@@ -115,6 +103,9 @@ class PollsMainPage extends Component {
                     </Row>
 
                 </Container>
+                {/* {array.map((data, index) => (
+                    <p key={index}>Bill title {data.title}</p>
+                ))} */}
             </div>
 
         );
