@@ -4,6 +4,9 @@ import Card from 'react-bootstrap/Card'
 import Container from 'react-bootstrap/Container'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Row from 'react-bootstrap/Row'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
+import Col from 'react-bootstrap/Col'
 import axios from 'axios'
 
 
@@ -63,59 +66,21 @@ class PollsMainPage extends Component {
         const { pollAnswers } = this.state
         return (
             <div>
-                {/* <Poll question={pollQuestion} answers={pollAnswers} onVote={this.handleVote} /> */}
-                {/* <Container>
-                    <Row>
-                        <Card style={{ width: '18rem' }}>
-                            <Card.Body>
-                                <Card.Title>Bill C-130</Card.Title>
-                                <Card.Link href="#">Bill Link</Card.Link>
-                                <Card.Text>
-                                    <small className="text-muted">12 December 2019</small>
-                                </Card.Text>
-                                <Card.Text>
-                                    Some quick example text to build on the card title and make up the bulk of
-                                    the card's content.
-                    </Card.Text>
-                                <Poll answers={pollAnswers} onVote={this.handleVote} />
-                            </Card.Body>
-                        </Card>
-                        <Card style={{ width: '18rem' }}>
-                            <Card.Body>
-                                <Card.Title>Bill D-76</Card.Title>
-                                <Card.Link href="#">Bill Link</Card.Link>
-                                <Card.Text>
-                                    <small className="text-muted">1 November 2019</small>
-                                </Card.Text>
-                                <Card.Text>
-                                    Some quick example text to build on the card title and make up the bulk of
-                                    the card's content.
-                    </Card.Text>
-                                <Poll answers={pollAnswers} onVote={this.handleVote} />
-                            </Card.Body>
-                        </Card>
-                        <Card style={{ width: '18rem' }}>
-                            <Card.Body>
-                                <Card.Title>Motion 30</Card.Title>
-                                <Card.Link href="#">Bill Link</Card.Link>
-                                <Card.Text>
-                                    <small className="text-muted">19 October 2019</small>
-                                </Card.Text>
-                                <Card.Text>
-                                    Some quick example text to build on the card title and make up the bulk of
-                                    the card's content.
-                                </Card.Text>
-                                <Poll answers={pollAnswers} onVote={this.handleVote} />
-                            </Card.Body>
-                        </Card>
-                    </Row>
-
-                </Container> */}
+                <Row style={{ height: '1.5rem' }}></Row>
+                <InputGroup className="mb-3" style={{ width: '20rem' }}>
+                    <InputGroup.Prepend>
+                        <InputGroup.Text id="search" ></InputGroup.Text>
+                    </InputGroup.Prepend>
+                    <FormControl
+                        placeholder="Filter Through Bills"
+                        aria-label="Search"
+                        aria-describedby="basic-addon1"
+                    />
+                </InputGroup>
                 <ul>
                     {this.state.legislativeObjects.map(eachData => {
-                        // console.log(eachData)
                         return (<li>
-                            <Card style={{ width: '18rem' }}>
+                            <Card style={{ width: '40rem' }}>
                                 <Card.Body>
                                     <Card.Title>{eachData.title}</Card.Title>
                                     <Card.Link href="#">{eachData.link}</Card.Link>
@@ -126,7 +91,7 @@ class PollsMainPage extends Component {
                                     <Poll answers={pollAnswers} onVote={this.handleVote} />
                                 </Card.Body>
                             </Card>
-                            {/* {eachData.title + eachData.date + eachData.link + eachData.description} */}
+                            <Row style={{ height: '1.5rem' }}></Row>
                         </li>)
                     })}
                 </ul>
