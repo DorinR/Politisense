@@ -228,26 +228,98 @@ exports.getVotedBillsByMP = (req, res) => {
       snapshot.forEach(doc => {
         repId = doc.id
       })
-      votes.where('member', '==', repId).innerJoin('vote', voteRecord, '_id').then(result => {
-        result.forEach(element => {
-          arr.push(element)
-        })
-        if (result) {
-          bills.innerJoin('_id', billClassification, 'bill').then(billTable => {
-            for (let i = 0; i < result.length; i++) {
-              for (let j = 0; j < billTable.length; j++) {
-                if (result[i].bill === billTable[j].bill) {
-                  const temp = { voteRecord: result[i], billData: billTable[j] }
-                  console.log(temp)
-                  finalArray.push(temp)
-                }
-              }
-            }
-            res.json({
-              success: true,
-              data: finalArray
-            })
+      votes
+        .where('member', '==', repId)
+        .innerJoin('vote', voteRecord, '_id')
+        .then(result => {
+          result.forEach(element => {
+            arr.push(element)
           })
+          if (result) {
+            bills
+              .innerJoin('_id', billClassification, 'bill')
+              .then(billTable => {
+                for (let i = 0; i < result.length; i++) {
+                  for (let j = 0; j < billTable.length; j++) {
+                    if (result[i].bill === billTable[j].bill) {
+                      const temp = {
+                        voteRecord: result[i],
+                        billData: billTable[j]
+                      }
+                      console.log(temp)
+                      finalArray.push(temp)
+                    }
+                  }
+                }
+                res.json({
+                  success: true,
+                  data: finalArray
+                })
+              })
+          }
+        })
+    })
+}
+
+exports.getNumberOfBillsSponsoredByParty = async (req, res) => {
+  const party = req.params.party
+  const db = new Firestore()
+  const bills = db.Bill()
+  const politicians = db.Politician()
+  let billsSponsoredCount = 0
+  const billsAccumulator = []
+
+  new Promise((resolve, reject) => {
+    politicians
+      .where('politicalParty', '==', party)
+      .innerJoin('name', bills, 'sponsorName')
+      .then(result => {
+        if (result.empty) {
+          res.status(400).json({
+            success: false,
+            message: `No bills found for party ${party}`
+          })
+        } else {
+          result.forEach(r => {
+            billsSponsoredCount++
+            billsAccumulator.push(r)
+          })
+          resolve(billsAccumulator)
+        }
+      })
+      .catch(console.error)
+  })
+    .then(bills => {
+      return new Promise((resolve, reject) => {
+        let billsSucceededCount = 0
+        bills.forEach(b => {
+          db.VoteRecord()
+            .where('billNumber', '==', b.number)
+            .select()
+            .then(result => {
+              if (result.empty) {
+                console.error('bill assent data not found')
+              }
+              result.forEach(doc => {
+                if (doc.data().assent) {
+                  billsSucceededCount++
+                }
+              })
+              return billsSucceededCount
+            })
+            .catch(console.error)
+        })
+        setTimeout(() => {
+          resolve(billsSucceededCount)
+        }, 500)
+      })
+    })
+    .then(billsSucceeded => {
+      res.status(200).json({
+        success: true,
+        data: {
+          totalBills: billsSponsoredCount,
+          billsSucceeded: billsSucceeded
         }
       })
     })

@@ -4,6 +4,8 @@ const BillController = require('./BillController')
 const VoteRecordController = require('./VoteRecordController')
 const VoteController = require('./VoteController')
 const RidingController = require('./RidingController')
+const PartyController = require('./PartyController')
+const FinancialRecordController = require('./FinancialRecordController')
 const BudgetController = require('./BudgetController')
 
 module.exports = {
@@ -58,6 +60,9 @@ module.exports = {
   getBillById: function (req, res) {
     return BillController.getBillById(req, res)
   },
+  getNumberOfBillsSponsoredByParty: function (req, res) {
+    return BillController.getNumberOfBillsSponsoredByParty(req, res)
+  },
 
   // Bill
   getVotedBillsByMP: function (req, res) {
@@ -99,7 +104,14 @@ module.exports = {
   getRidingPopulation: function (req, res) {
     return RidingController.getRidingPopulation(req, res)
   },
+  getAllPartyData: function (req, res) {
+    return PartyController.getAllPartyData(req, res)
+  },
 
+  // Financial Record
+  getAllSpendingItemsForParty: function (req, res) {
+    return FinancialRecordController.getAllSpendingItemsForParty(req, res)
+  },
   getBudgetData: function (req, res) {
     return BudgetController.budgetData(req, res)
   },

@@ -242,6 +242,15 @@ export default function MiniDrawer ({ children }) {
               Voting History
             </Button>
           </Link>
+          <Link to='/compare' className={classes.navbarCustomFont}>
+            <Button
+              variant='contained'
+              color='primary'
+              className={classes.navbarCustomButton}
+            >
+              Compare
+            </Button>
+          </Link>
           <Link to='/budget' className={classes.navbarCustomFont}>
             <Button
               variant='contained'
