@@ -238,7 +238,7 @@ class Firestore {
     this.facebookProvider = this.firestore.facebookProvider
     this.twitterProvider = this.firestore.twitterProvider
     this.microsoftProvider = this.firestore.microsoftProvider
-    this.parliament = 44
+    this.parliament = 43
     this.legacy = legacy
   }
 
@@ -248,12 +248,12 @@ class Firestore {
   }
 
   Bill () {
-    const collection = this.legacy ? 'bills' : `${this.parliament}/bills`
+    const collection = this.legacy ? 'bills' : `${this.parliament}/bills/bill`
     return this.createReference(collection)
   }
 
   BillClassification () {
-    const collection = this.legacy ? 'bill_classification' : `${this.parliament}/bill_classification`
+    const collection = this.legacy ? 'bill_classification' : `${this.parliament}/bills/tag`
     return this.createReference(collection)
   }
 
@@ -263,7 +263,7 @@ class Firestore {
   }
 
   Politician () {
-    const collection = this.legacy ? 'politicians' : `${this.parliament}/politicians`
+    const collection = this.legacy ? 'politicians' : `${this.parliament}/politicians/politician`
     return this.createReference(collection)
   }
 
@@ -272,8 +272,13 @@ class Firestore {
     return this.createReference(collection)
   }
 
+  Role () {
+    const collection = this.legacy ? 'roles' : `${this.parliament}/roles/role`
+    return this.createReference(collection)
+  }
+
   TfIdfClassification () {
-    const collection = this.legacy ? 'tf_idf_bill' : `${this.parliament}/tf_idf_bill`
+    const collection = this.legacy ? 'tf_idf_bill' : `${this.parliament}/bills/raw`
     return this.createReference(collection)
   }
 
@@ -283,12 +288,12 @@ class Firestore {
   }
 
   Vote () {
-    const collection = this.legacy ? 'votes' : `${this.parliament}/votes`
+    const collection = this.legacy ? 'votes' : `${this.parliament}/voters/voter`
     return this.createReference(collection)
   }
 
   VoteRecord () {
-    const collection = this.legacy ? 'voteRecord' : `${this.parliament}/voteRecord`
+    const collection = this.legacy ? 'voteRecord' : `${this.parliament}/vote_records/vote_record`
     return this.createReference(collection)
   }
 

@@ -1,5 +1,5 @@
 /* eslint-env jest */
-const RequeueAction = require('@utils').Actions.RequeueAction
+const RequeueAction = require('../../../../util/utils').Actions.RequeueAction
 
 const chai = require('chai')
 const Assert = chai.assert

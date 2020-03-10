@@ -12,7 +12,9 @@ class PDFFileRetrieverAction extends JobAction {
   perform () {
     return new Promise((resolve, reject) => {
       this.fp = 'https://www.parl.ca' + this.fp.slice(0, this.fp.length)
-      return this.send(this.fp)
+      return this.send(this.fp, {
+        timeout: 60000
+      })
         .then(this.createBufferFromResponse.bind(this))
         .then(this.formatBufferToUint8.bind(this))
         .then(resolve)

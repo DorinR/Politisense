@@ -1,7 +1,7 @@
 const chai = require('chai')
 const expect = chai.expect
 
-const Condition = require('../../util/utils').Condition
+const Condition = require('../../util/Condition').Condition
 
 // eslint-disable-next-line no-undef
 describe('All Condition tests', () => {
