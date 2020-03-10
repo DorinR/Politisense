@@ -38,7 +38,7 @@ const MenuProps = {
 async function fetchAllRepresentatives () {
   let representatives = []
   await axios
-    .get('http://localhost:5000/api/representatives/getAllRepresentatives')
+    .get('/api/representatives/getAllRepresentatives')
     .then(res => {
       if (res.data.success) {
         representatives = res.data.data
@@ -53,9 +53,9 @@ async function fetchAllRepresentatives () {
 function getStyles (name, personName, theme) {
   return {
     fontWeight:
-            personName.indexOf(name) === -1
-              ? theme.typography.fontWeightRegular
-              : theme.typography.fontWeightMedium
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium
   }
 }
 export default function MpsSwitcher (props) {
@@ -87,19 +87,19 @@ export default function MpsSwitcher (props) {
   return (
     <div>
       <FormControl className={classes.formControl}>
-        <InputLabel id='demo-simple-select-disabled-label'>Choose a Politician</InputLabel>
+        <InputLabel id='demo-simple-select-disabled-label'>
+          Choose a Politician
+        </InputLabel>
         <Select
           value={mp}
           onChange={handleChange}
           input={<Input />}
-          MenuProps={MenuProps}
-        >
+          MenuProps={MenuProps}>
           {dropdownMps.map(mp => (
             <MenuItem
               key={mp.name}
               value={mp.name}
-              style={getStyles(mp.name, mp.name, theme)}
-            >
+              style={getStyles(mp.name, mp.name, theme)}>
               {mp.name}
             </MenuItem>
           ))}

@@ -9,7 +9,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import canadaimage from '../../assets/canada.jpg'
 import logo from '../../assets/PolotisenseTentativeLogo.png'
 import axios from 'axios'
-import { FacebookLoginButton, GoogleLoginButton, TwitterLoginButton } from 'react-social-login-buttons'
+import {
+  FacebookLoginButton,
+  GoogleLoginButton,
+  TwitterLoginButton
+} from 'react-social-login-buttons'
 import { tokenAuthenticate } from './authenticate'
 
 const gridStyle = {
@@ -62,19 +66,19 @@ export function checkEmailFormat (email) {
   return email.match(emailFormat)
 }
 
-export async function fetchUser (email) {
+export async function fetchUser(email) {
   return await axios
-    .post('http://localhost:5000/api/users/checkIfUserExists', { email: email })
+    .post('/api/users/checkIfUserExists', { email: email })
     .then(res => {
       return res.data
     })
     .catch(console.error)
 }
 
-export async function handleEmailLogin (user) {
+export async function handleEmailLogin(user) {
   let result = ''
   await axios
-    .post('http://localhost:5000/api/users/login', user)
+    .post('/api/users/login', user)
     .then(res => {
       result = res
     })
@@ -82,9 +86,9 @@ export async function handleEmailLogin (user) {
   return result
 }
 
-export async function handleSocialLogin (social) {
+export async function handleSocialLogin(social) {
   return await axios
-    .post('http://localhost:5000/api/users/socialLogin', {type: social})
+    .post('/api/users/socialLogin', { type: social })
     .then(res => {
       const token = res.data.data
       return tokenAuthenticate(token)
@@ -95,14 +99,14 @@ export async function handleSocialLogin (social) {
     .catch(console.error)
 }
 
-export default function Login (props) {
+export default function Login(props) {
   const classes = useStyles()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
   const [errors, setErrors] = useState({ email: '', password: '' })
 
-  function validateUserFromSocialProviders (type, cb) {
+  function validateUserFromSocialProviders(type, cb) {
     let user = {}
     cb(type)
       .then(usr => {
@@ -117,8 +121,12 @@ export default function Login (props) {
           setAuthenticated(true)
         } else {
           const newUser = {
-            firstname: user.displayName ? user.displayName.substr(0, user.displayName.indexOf(' ')) : ' ',
-            lastname: user.displayName ? user.displayName.substr(user.displayName.indexOf(' ') + 1) : ' ',
+            firstname: user.displayName
+              ? user.displayName.substr(0, user.displayName.indexOf(' '))
+              : ' ',
+            lastname: user.displayName
+              ? user.displayName.substr(user.displayName.indexOf(' ') + 1)
+              : ' ',
             email: user.email
           }
           props.history.push({

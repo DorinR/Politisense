@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export async function getAllBillsByHead (head) {
-  const res = await axios.get(`http://localhost:5000/api/bills/${head}/getAllBillsByHead`)
+  const res = await axios.get(`/api/bills/${head}/getAllBillsByHead`)
   return res.data.data
 }
 export function calcPercent (percent) {
@@ -30,18 +30,16 @@ export default function Album () {
   const [head2, setHead2] = useState('')
   const [dataSet, setDataSet] = useState([])
 
-  const updateHead1 = (head) => {
+  const updateHead1 = head => {
     if (head === head1 || head === '') {
-
     } else {
       setDataSet([])
       setHead1(head)
     }
   }
 
-  const updateHead2 = (head) => {
+  const updateHead2 = head => {
     if (head2 === head || head === '') {
-
     } else {
       setHead2(head)
       setDataSet([])
@@ -55,15 +53,19 @@ export default function Album () {
       let similarities = 0
       for (let i = 0; i < dataForHead1.length; i++) {
         for (let j = 0; j < dataForHead2.length; j++) {
-          if (dataForHead1[i].voteRecord.bill === dataForHead2[j].voteRecord.bill) {
+          if (
+            dataForHead1[i].voteRecord.bill === dataForHead2[j].voteRecord.bill
+          ) {
             commonBillsCounter++
-            if (dataForHead1[i].voteRecord.yea === dataForHead2[j].voteRecord.yea) {
+            if (
+              dataForHead1[i].voteRecord.yea === dataForHead2[j].voteRecord.yea
+            ) {
               similarities++
             }
           }
         }
       }
-      const final = (similarities / (commonBillsCounter)) * 100
+      const final = (similarities / commonBillsCounter) * 100
       dataset = {
         lower: calcPercent(0),
         upper: calcPercent(final)
@@ -89,12 +91,24 @@ export default function Album () {
       <main className={classes.content}>
         <div>
           <Container maxWidth='sm'>
-            <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
-                Head to Head
+            <Typography
+              component='h1'
+              variant='h2'
+              align='center'
+              color='textPrimary'
+              gutterBottom
+            >
+              Head to Head
             </Typography>
-            <Typography variant='h5' align='center' color='textSecondary' paragraph>
-                Select two MP's of your choice and compare their information and performance in terms of bills sponsored and voted pm
-                and then see how much or how little they agree on!
+            <Typography
+              variant='h5'
+              align='center'
+              color='textSecondary'
+              paragraph
+            >
+              Select two MP's of your choice and compare their information and
+              performance in terms of bills sponsored and voted pm and then see
+              how much or how little they agree on!
             </Typography>
             <div>
               <Grid container spacing={2}>
@@ -104,7 +118,14 @@ export default function Album () {
                 <Grid item xs={6}>
                   <HeadInfo updateHead={updateHead2} />
                 </Grid>
-                <Grid item xs={12}>{dataSet.length ? <Grow in={dataSet.length}><D3ChartHeadVsHeadContainer data={dataSet} /></Grow> : ''}
+                <Grid item xs={12}>
+                  {dataSet.length ? (
+                    <Grow in={dataSet.length}>
+                      <D3ChartHeadVsHeadContainer data={dataSet} />
+                    </Grow>
+                  ) : (
+                    ''
+                  )}
                 </Grid>
               </Grid>
             </div>

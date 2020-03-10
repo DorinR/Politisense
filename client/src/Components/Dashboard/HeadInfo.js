@@ -36,9 +36,10 @@ const useStyles = makeStyles({
 function capitalize (str) {
   if (str && isNaN(str)) {
     let res = str
-    res = res.toLowerCase()
+    res = res
+      .toLowerCase()
       .split(' ')
-      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+      .map(s => s.charAt(0).toUpperCase() + s.substring(1))
       .join(' ')
     return res
   }
@@ -53,7 +54,7 @@ export default function HeadInfo (props) {
   const [skeleton] = useState([1, 2, 3, 4, 5])
 
   const [name, setName] = useState(null)
-  const updateNameFromSwitcher = (newName) => {
+  const updateNameFromSwitcher = newName => {
     setName(newName)
     updateHead(newName)
   }
@@ -70,7 +71,9 @@ export default function HeadInfo (props) {
   }, [name])
 
   async function getRepInfo (name) {
-    const res = await axios.get(`http://localhost:5000/api/representatives/${name}/getRepresentativesInfo`)
+    const res = await axios.get(
+      `/api/representatives/${name}/getRepresentativesInfo`
+    )
     return res.data.data
   }
 
@@ -127,7 +130,7 @@ export default function HeadInfo (props) {
   }, [name])
 
   async function getIssuedBillsByHead (head) {
-    const res = await axios.get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
+    const res = await axios.get(`/api/bills/${head}/getAllBillsBySponsorName`)
     return res.data.data
   }
 
@@ -144,95 +147,103 @@ export default function HeadInfo (props) {
 
   /* eslint-disable */
   return (
-      <Grid container spacing={2}>
-        <Grid item>
-          <MpsSwitcher functionUpdate={updateNameFromSwitcher} />
-        </Grid>
-        <Grid item>
-    <Card className={classes.card} >
-        <CardContent>
-          <Grid container justify="center" style={{paddingLeft: '12px'}}>
-            <Grid item xs={12}>
-              { mp ?
-              <RepresentativeImage align="center" representativeToLoad={mp.riding}/>
-              :
-              <div /> }
+    <Grid container spacing={2}>
+      <Grid item>
+        <MpsSwitcher functionUpdate={updateNameFromSwitcher} />
+      </Grid>
+      <Grid item>
+        <Card className={classes.card}>
+          <CardContent>
+            <Grid container justify='center' style={{ paddingLeft: '12px' }}>
+              <Grid item xs={12}>
+                {mp ? (
+                  <RepresentativeImage
+                    align='center'
+                    representativeToLoad={mp.riding}
+                  />
+                ) : (
+                  <div />
+                )}
+              </Grid>
             </Grid>
-          </Grid>
-          {ridingCode ? (<List>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar className={classes.avatar}>
-                  <PersonIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText>{capitalize(name)}</ListItemText>
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar className={classes.avatar}>
-                  <FlagIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText>{capitalize(politicalParty)}</ListItemText>
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar className={classes.avatar}>
-                  <LocationOnIcon/>
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText>
-                {capitalize(mp.name)}
-              </ListItemText>
-            </ListItem>
+            {ridingCode ? (
+              <List>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar className={classes.avatar}>
+                      <PersonIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>{capitalize(name)}</ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar className={classes.avatar}>
+                      <FlagIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>{capitalize(politicalParty)}</ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar className={classes.avatar}>
+                      <LocationOnIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>{capitalize(mp.name)}</ListItemText>
+                </ListItem>
 
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar className={classes.avatar}>
-                  <CalendarTodayIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText>Elected in {yearElected}</ListItemText>
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar className={classes.avatar}>
-                  <FormatListNumberedIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText> Total Voted Bills: {totalBills}</ListItemText>
-            </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar className={classes.avatar}>
+                      <CalendarTodayIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>Elected in {yearElected}</ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar className={classes.avatar}>
+                      <FormatListNumberedIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText> Total Voted Bills: {totalBills}</ListItemText>
+                </ListItem>
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar className={classes.avatar}>
                       <AssignmentIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText> Total Issued Bills: {issuedBills}</ListItemText>
+                  <ListItemText>
+                    {' '}
+                    Total Issued Bills: {issuedBills}
+                  </ListItemText>
                 </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar className={classes.avatar}>
-                  <MapIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <Box m={1} />
-              <RidingShapeContainer
-                  ridingCode={ridingCode}
-                  politicalParty={politicalParty}
-              />
-              <Box m={1} />
-            </ListItem>
-          </List>) :
-              <Grid item style={{paddingTop: '10px'}}>
-                {skeleton.map((skeleton) => {
-                  return <Skeleton animation={false}/>;
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar className={classes.avatar}>
+                      <MapIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <Box m={1} />
+                  <RidingShapeContainer
+                    ridingCode={ridingCode}
+                    politicalParty={politicalParty}
+                  />
+                  <Box m={1} />
+                </ListItem>
+              </List>
+            ) : (
+              <Grid item style={{ paddingTop: '10px' }}>
+                {skeleton.map(skeleton => {
+                  return <Skeleton animation={false} />
                 })}
-              </Grid>}
-        </CardContent>
-    </Card>
-        </Grid>
+              </Grid>
+            )}
+          </CardContent>
+        </Card>
       </Grid>
+    </Grid>
   )
 }

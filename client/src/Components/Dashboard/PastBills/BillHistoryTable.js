@@ -51,8 +51,9 @@ const useStyles = makeStyles({
 export async function fetchUserRiding (userEmail) {
   let result = ''
   await axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`,
-      { params: { billhistory: userEmail } })
+    .get(`/api/users/${userEmail}/getUser`, {
+      params: { billhistory: userEmail }
+    })
     .then(res => {
       if (res.data.success) {
         const riding = res.data.data.riding
@@ -66,9 +67,7 @@ export async function fetchUserRiding (userEmail) {
 export async function fetchRepresentative (riding) {
   let result = ''
   await axios
-    .get(
-      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-    )
+    .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
       if (res.data.success) {
         const representative = res.data.data.name
@@ -82,9 +81,7 @@ export async function fetchRepresentative (riding) {
 export async function fetchRepresentatieVotes (representative) {
   const result = []
   await axios
-    .get(
-      `http://localhost:5000/api/voteRecord/getVotesByRepresentative/${representative}`
-    )
+    .get(`/api/voteRecord/getVotesByRepresentative/${representative}`)
     .then(res => {
       if (res.data.success) {
         const votes = res.data.data
@@ -97,7 +94,7 @@ export async function fetchRepresentatieVotes (representative) {
 
 export function fetchAllBills () {
   return axios
-    .get('http://localhost:5000/api/bills/getAllBills')
+    .get('/api/bills/getAllBills')
     .then(res => {
       if (res.data.success) {
         return res.data.data
@@ -108,9 +105,7 @@ export function fetchAllBills () {
 
 export async function fetchRepresentativeId (representative) {
   return axios
-    .get(
-      `http://localhost:5000/api/representatives/${representative}/getRepresentativeId`
-    )
+    .get(`/api/representatives/${representative}/getRepresentativeId`)
     .then(res => {
       if (res.data.success) {
         return res.data.data
@@ -121,9 +116,7 @@ export async function fetchRepresentativeId (representative) {
 
 export async function fetchRepresentativeVotes (representativeId) {
   return axios
-    .get(
-      `http://localhost:5000/api/votes/${representativeId}/getAllVotesByRepresentative`
-    )
+    .get(`/api/votes/${representativeId}/getAllVotesByRepresentative`)
     .then(res => {
       if (res.data.success) {
         return res.data.data
@@ -132,13 +125,11 @@ export async function fetchRepresentativeVotes (representativeId) {
 }
 
 export async function fetchAllVoteRecords () {
-  return axios
-    .get('http://localhost:5000/api/voteRecord/getAllVoteRecords')
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data
-      }
-    })
+  return axios.get('/api/voteRecord/getAllVoteRecords').then(res => {
+    if (res.data.success) {
+      return res.data.data
+    }
+  })
 }
 
 function generateTableRows (bills) {
