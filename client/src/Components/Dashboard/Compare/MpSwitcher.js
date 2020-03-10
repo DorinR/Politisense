@@ -38,7 +38,7 @@ const MenuProps = {
 async function fetchAllRepresentatives () {
   let representatives = []
   await axios
-    .get('http://localhost:5000/api/representatives/getAllRepresentatives')
+    .get('/api/representatives/getAllRepresentatives')
     .then(res => {
       if (res.data.success) {
         representatives = res.data.data

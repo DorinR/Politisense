@@ -51,8 +51,9 @@
     "start": "node -r esm server.js",
     "server": "nodemon -r esm server.js",
     "client": "npm start --prefix client",
-    "test": "jest src/test/*",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "test": "jest src/test/* -- --coverage",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "repository": {
     "type": "git",

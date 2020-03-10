@@ -8,11 +8,11 @@ class LegislativeActivityFetchJob extends Job {
     this.params = params
   }
 
-  static create(params, cb) {
+  static create (params, cb) {
     return new LegislativeActivityFetchJob(params, cb)
       .addAction(new Actions.FetchAction(params))
       .addAction(new Actions.ParserWrapperAction(LegislativeActivityXmlParser))
-      .addAction(new Actions.FormatAction({type: 'rss-feed'}))
+      .addAction(new Actions.FormatAction({ type: 'rss-feed' }))
       .addErrorAction(new Actions.HandleConnectionErrorAction(cb, LegislativeActivityFetchJob.create, params))
   }
 }

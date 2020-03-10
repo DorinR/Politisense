@@ -64,7 +64,7 @@ function getSteps () {
 
 export async function setRiding (postalCode) {
   const result = await axios
-    .post('http://localhost:5000/api/users/setRiding', {
+    .post('/api/users/setRiding', {
       postalCode: postalCode
     })
     .then(res => {
@@ -81,7 +81,16 @@ export default function HorizontalLinearStepper (props) {
   const [activeStep, setActiveStep] = useState(0)
   const steps = getSteps()
   // eslint-disable-next-line no-unused-vars
-  const [options, setOptions] = useState(['Economics', 'Social Issues', 'Trade', 'Healthcare', 'Human Rights', 'Business', 'Religion', 'Criminal'])
+  const [options, setOptions] = useState([
+    'Economics',
+    'Social Issues',
+    'Trade',
+    'Healthcare',
+    'Human Rights',
+    'Business',
+    'Religion',
+    'Criminal'
+  ])
   const [category1, setCatergory1] = useState('Economics')
   const [category2, setCatergory2] = useState('')
   const [errors, setErrors] = useState({ postalCode: '' })
@@ -218,7 +227,7 @@ export default function HorizontalLinearStepper (props) {
             userToSignup.categories = [category1, category2]
             // eslint-disable-next-line no-undef
             localStorage.setItem('user', JSON.stringify(userToSignup))
-            await axios.post('http://localhost:5000/api/users/signup', userToSignup)
+            await axios.post('/api/users/signup', userToSignup)
             props.history.push('/dashboard')
           } else {
             console.log('Could not fetch riding')
@@ -307,10 +316,8 @@ export default function HorizontalLinearStepper (props) {
                     Registration completed. You're all set!
                   </Typography>
                   <div className={classes.actions}>
-                    <Button
-                      className={classes.button}
-                      onClick={handleReset}
-                    >Reset
+                    <Button className={classes.button} onClick={handleReset}>
+                      Reset
                     </Button>
                     <Button
                       onClick={handleSubmit}
@@ -318,7 +325,7 @@ export default function HorizontalLinearStepper (props) {
                       color='primary'
                       className={classes.button}
                     >
-                    Confirm information
+                      Confirm information
                     </Button>
                   </div>
                 </div>
