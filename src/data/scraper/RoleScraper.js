@@ -56,4 +56,3 @@ class RoleScraper extends QueueManager {
 module.exports = {
   RoleScraper: RoleScraper
 }
-

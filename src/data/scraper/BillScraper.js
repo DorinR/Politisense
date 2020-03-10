@@ -314,4 +314,3 @@ module.exports = {
   BillTypes: BillTypes,
   BillStatuses: BillStatuses
 }
-

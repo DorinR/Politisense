@@ -274,9 +274,8 @@ class Firestore {
 
   LegislativeActivity () {
     Firestore.legacyCollectionError(this.legacy)
-    return this.createReference(`${this.parliament}/legislative_activities/legislative_activty`)
+    return this.createReference(`${this.parliament}/legislative_activities/legislative_activity`)
   }
-
 
   Politician () {
     const collection = this.legacy ? 'politicians' : `${this.parliament}/politicians/politician`
@@ -318,11 +317,10 @@ class Firestore {
   }
 
   static legacyCollectionError (legacy) {
-    if(legacy) {
+    if (legacy) {
       throw new Error('ERROR: collection not available in legacy mode')
     }
   }
-
 
   async close () {
     await this.firestore.app

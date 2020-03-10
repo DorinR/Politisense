@@ -126,6 +126,10 @@ module.exports = {
     return ActivityVotingController.index(req, res)
   },
 
+  vote: function (req, res) {
+    return ActivityVotingController.vote(req, res)
+  },
+
   fetchCategories: function (req, res) {
     return BillController.fetchCategories(req, res)
   },
