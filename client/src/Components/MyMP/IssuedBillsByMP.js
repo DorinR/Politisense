@@ -1,24 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BarChartWrapper from "../Dashboard/Charts/Wrappers/BarChartWrapper";
 import { makeStyles } from '@material-ui/styles';
 import {
     Card,
-    CardHeader,
     CardContent,
-    CardActions,
-    Divider,
     Button, Grid, Typography, Avatar
 } from '@material-ui/core';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import IconButton from '@material-ui/core/IconButton';
-import BillDialog from "../Dashboard/BillDialog";
-import TableDialog from "./TableDialog";
-import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
-import DescriptionDialog, {loadingTextTitle} from "./DescriptionDialog";
+import DescriptionDialog from "./DescriptionDialog";
 import clsx from 'clsx';
-import MoneyIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import WorkIcon from '@material-ui/icons/Work';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
+import {capitalizedName} from "./TableDialog";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -61,6 +54,8 @@ const IssuedBillsByMP = props => {
     const [billOpen, setBillOpen] = React.useState(false)
     const [open, setOpen] = React.useState(false)
     const [isFlipped,setIsFlipped]= React.useState(false)
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     console.log(props.userRepIssuedBills)
     const handleClickOpen = () => {
@@ -71,52 +66,11 @@ const IssuedBillsByMP = props => {
         setOpen(false)
     };
 
-    const handleBillClose = () => {
-        setBillOpen(false)
-    }
-    // click on the chart of pie part chart
-    const handleBarPieChartClickOpen = (rows) => {
-        setTableContents(rows)
-        setTableDialogOpen(true)
-    }
-    const handleBarPieChartClose = () => {
-        setTableDialogOpen(false)
-    }
-
     return (
         <Card
             {...rest}
             className={clsx(classes.root, className)}
         >
-            {/*<CardHeader*/}
-            {/*    classes={{*/}
-            {/*    title: classes.title,*/}
-            {/*}}*/}
-            {/*    action={*/}
-            {/*        <IconButton aria-label="settings">*/}
-            {/*            <HelpOutlineOutlinedIcon onClick={handleClickOpen}/>*/}
-            {/*        </IconButton>*/}
-            {/*    }*/}
-            {/*    title="MP's Activity and Bills Proposed"*/}
-            {/*/>*/}
-            {/*<Divider />*/}
-            {/*<CardContent>*/}
-            {/*    <CardActionArea>*/}
-            {/*    <div className={classes.chartContainer}>*/}
-            {/*        <BarChartWrapper*/}
-            {/*            type="bar-pie"*/}
-            {/*            data={props.userRepIssuedBills}*/}
-            {/*            categories={props.categoryList}*/}
-            {/*        />*/}
-            {/*        </div>*/}
-            {/*    </CardActionArea>*/}
-            {/*</CardContent>*/}
-            {/*<Divider />*/}
-            {/*<CardActions className={classes.actions}>*/}
-            {/*        <Button style={{fontWeight:40,textTransform:'none'}}onClick={()=>handleBarPieChartClickOpen(props.rows)}>*/}
-            {/*        show more*/}
-            {/*        </Button>*/}
-            {/*</CardActions>*/}
             <CardContent>
                 <Grid
                     container
@@ -147,7 +101,7 @@ const IssuedBillsByMP = props => {
                                 variant="caption"
                             >
                                 {props.userRepIssuedBills? 'Bill '+ props.userRepIssuedBills[0].billsClassified.number + '-'+
-                                    props.userRepIssuedBills[0].billsClassified.category : "no bills created"
+                                    capitalizedName(props.userRepIssuedBills[0].billsClassified.category) : "no bills created"
                                 }
                             </Typography>
                         </li>
@@ -158,8 +112,6 @@ const IssuedBillsByMP = props => {
                     </div>
                 </Grid>
             </CardContent>
-            {/*<BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />*/}
-            {/*<TableDialog rows={tableContents} open={tableDialogOpen} onClose={handleBarPieChartClose} type={'bar-pie'}> </TableDialog>*/}
             <DescriptionDialog open = {open}
                                onClose={handleClose}
                                explaination={{title:"Issued Bills By MP",
@@ -170,6 +122,8 @@ const IssuedBillsByMP = props => {
                                userRepIssuedBills ={props.userRepIssuedBills}
                                categoryList={props.categoryList}
                                maxWidth={"l"} fullWidth={true}
+                               fullScreen={fullScreen}
+                               rows={props.rows}
             />
         </Card>
 

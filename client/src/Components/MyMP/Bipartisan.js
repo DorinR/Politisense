@@ -115,7 +115,6 @@ const Bipartisan = props => {
                 </Button>
                 <TableDialog rows={tableContents} open={tableDialogOpen} onClose={handleBarPieChartClose} type={'bipartisan'}> </TableDialog>
             </CardActions>
-            <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
             <DescriptionDialog open = {open}
                                onClose={handleClose}
                                d3={true}

@@ -8,6 +8,8 @@ import Button from "@material-ui/core/Button";
 import {getAllRolesByRep,getRepresentativeId,} from "./Roles";
 import {loadingTextTitle} from "./DescriptionDialog";
 import DescriptionDialog from "./DescriptionDialog";
+import {capitalizedName} from "./TableDialog";
+
 const useStyles = makeStyles(theme => ({
     root: {
         height: '100%',
@@ -86,7 +88,7 @@ const Associations = props => {
                         >
                             Parliamentary Associations
                         </Typography>
-                        <Typography variant="h5">{data? `${data.length} Associations`: 0}</Typography>
+                        <Typography variant="h5">{data? `${data.length} associations`: 0}</Typography>
 
                     </Grid>
                     <Grid item>
@@ -101,7 +103,7 @@ const Associations = props => {
                             className={classes.caption}
                             variant="caption"
                         >
-                            {data? (`${loadingTextTitle(data[0])}`): 'This MP is not a member of any'  }
+                            {data? (`${capitalizedName(loadingTextTitle(data[0]))}`): 'This MP is not a member of any'  }
                         </Typography>
                     </li>
                     {data?<Button color="primary" size="medium" style={{"fontSize":10, color:'white'}} onClick={handleOpenAction}>details</Button>:""}

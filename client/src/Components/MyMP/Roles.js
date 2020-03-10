@@ -3,14 +3,12 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import PeopleIcon from '@material-ui/icons/PeopleOutlined';
-import HistoryIcon from '@material-ui/icons/History';
 import Button from "@material-ui/core/Button";
 import DescriptionDialog from "./DescriptionDialog";
 import axios from "axios";
-import {loadingTextdata,loadingTextTitle} from "./DescriptionDialog";
-
+import {loadingTextTitle} from "./DescriptionDialog";
+import {capitalizedName} from "./TableDialog";
+import AssignmentIcon from '@material-ui/icons/Assignment';
 const useStyles = makeStyles(theme => ({
     root: {
         height: '100%'
@@ -91,13 +89,13 @@ const Roles = props => {
                             gutterBottom
                             variant="caption"
                         >
-                            Parliament ROLES
+                            Parliament Roles
                         </Typography>
                         <Typography variant="h5">{data? `${data.length} roles`: 0}</Typography>
                     </Grid>
                     <Grid item>
                         <Avatar className={classes.avatar}>
-                            <HistoryIcon className={classes.icon} />
+                            <AssignmentIcon className={classes.icon} />
                         </Avatar>
                     </Grid>
                 </Grid>
@@ -107,7 +105,7 @@ const Roles = props => {
                         className={classes.caption}
                         variant="caption"
                     >
-                        {data? (`${loadingTextTitle(data[0])}`): 'This MP doesnt have roles'  }
+                        {data? (`${capitalizedName(loadingTextTitle(data[0]))}`): 'This MP doesnt have roles'  }
                     </Typography>
                         </li>
 

@@ -14,6 +14,7 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import {getAllRolesByRep,getRepresentativeId} from "./Roles";
 import {loadingTextTitle} from "./DescriptionDialog";
 import DescriptionDialog from "./DescriptionDialog";
+import {capitalizedName} from "./TableDialog";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -91,7 +92,7 @@ const Committees = props => {
                             gutterBottom
                             variant="caption"
                         >
-                            COMMITTEES
+                            Committees
                         </Typography>
                          <Typography variant="h5">{data? `${data.length} Committees`: 0}</Typography>
                     </Grid>
@@ -107,7 +108,7 @@ const Committees = props => {
                             className={classes.caption}
                             variant="caption"
                         >
-                            { (data !== null) ? `${loadingTextTitle(data[0])}` : 'This MP is not a member of any'}
+                            { (data !== null) ? `${capitalizedName(loadingTextTitle(data[0]))}` : 'This MP is not a member of any'}
                         </Typography>
                     </li>
                     {data?
