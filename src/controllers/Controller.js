@@ -7,6 +7,7 @@ const RidingController = require('./RidingController')
 const PartyController = require('./PartyController')
 const FinancialRecordController = require('./FinancialRecordController')
 const BudgetController = require('./BudgetController')
+const ActivityVotingController = require('./ActivityVotingController')
 
 module.exports = {
   userSignup: function (req, res) {
@@ -119,6 +120,10 @@ module.exports = {
 
   getImageData: function (req, res) {
     return RepresentativeController.getImageData(req, res)
+  },
+
+  index: function (req, res) {
+    return ActivityVotingController.index(req, res)
   },
 
   fetchCategories: function (req, res) {

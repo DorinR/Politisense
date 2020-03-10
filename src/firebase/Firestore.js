@@ -267,6 +267,17 @@ class Firestore {
     return this.createReference(collection)
   }
 
+  LegislativeActivityVote () {
+    Firestore.legacyCollectionError(this.legacy)
+    return this.createReference(`${this.parliament}/user_votes/user_vote`)
+  }
+
+  LegislativeActivity () {
+    Firestore.legacyCollectionError(this.legacy)
+    return this.createReference(`${this.parliament}/legislative_activities/legislative_activty`)
+  }
+
+
   Politician () {
     const collection = this.legacy ? 'politicians' : `${this.parliament}/politicians/politician`
     return this.createReference(collection)
@@ -305,6 +316,13 @@ class Firestore {
   createReference (collection) {
     return new Reference(this.reference.collection(collection))
   }
+
+  static legacyCollectionError (legacy) {
+    if(legacy) {
+      throw new Error('ERROR: collection not available in legacy mode')
+    }
+  }
+
 
   async close () {
     await this.firestore.app
