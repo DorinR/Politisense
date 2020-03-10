@@ -52,8 +52,9 @@ const useStyles = makeStyles(theme => ({
 export async function fetchUserData (userEmail) {
   let result = ''
   await axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`,
-      { params: { changepassword: userEmail } })
+    .get(`/api/users/${userEmail}/getUser`, {
+      params: { changepassword: userEmail }
+    })
     .then(res => {
       if (res.data.success) {
         const user = res.data.data
@@ -67,7 +68,7 @@ export async function fetchUserData (userEmail) {
 export async function updatePassword (user, newPassword) {
   user.password = newPassword
   axios
-    .post('http://localhost:5000/api/users/updateUser', user)
+    .post('/api/users/updateUser', user)
     .then(res => {
       if (res.data.success) {
         console.log('password update was successful')

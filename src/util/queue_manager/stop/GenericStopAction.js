@@ -1,7 +1,7 @@
 const QueueActions = require('../actions')
 const QueueAction = QueueActions.QueueAction
 
-class RoleStopAction extends QueueAction {
+class GenericStopAction extends QueueAction {
   constructor (manager) {
     super()
     this.manager = manager
@@ -14,5 +14,5 @@ class RoleStopAction extends QueueAction {
 }
 
 module.exports = {
-  RoleStop: RoleStopAction
+  GenericStopAction: GenericStopAction
 }

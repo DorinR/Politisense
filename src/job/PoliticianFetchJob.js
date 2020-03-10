@@ -3,21 +3,8 @@ const Actions = require('@action')
 const FetchAction = Actions.FetchAction
 const ErrorHandler = Actions.HandleConnectionErrorAction
 const ParserAction = Actions.ParserWrapperAction
+const FormatAction = Actions.FormatAction
 const PoliticianParser = require('@parser').MpXmlParser
-
-class FormatAction extends Actions.Action {
-  constructor (params) {
-    super()
-    this.params = params
-  }
-
-  async perform (result) {
-    return {
-      params: this.params,
-      data: result
-    }
-  }
-}
 
 class PoliticianFetchJob extends Job {
   // eslint-disable-next-line no-useless-constructor

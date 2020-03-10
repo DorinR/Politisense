@@ -1,6 +1,6 @@
 const QueueActions = require('../actions')
 const QueueAction = QueueActions.QueueAction
-const PoliticianFetchJob = require('../../../job/jobs').PoliticianFetchJob
+const PoliticianFetchJob = require('../../../job/PoliticianFetchJob').PoliticianFetchJob
 
 class PoliticianStart extends QueueAction {
   constructor (manager) {

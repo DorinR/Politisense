@@ -248,12 +248,12 @@ class Firestore {
   }
 
   Bill() {
-    const collection = this.legacy ? 'bills' : `${this.parliament}/bills`
+    const collection = this.legacy ? 'bills' : `${this.parliament}/bills/bill`
     return this.createReference(collection)
   }
 
   BillClassification() {
-    const collection = this.legacy ? 'bill_classification' : `${this.parliament}/bill_classification`
+    const collection = this.legacy ? 'bill_classification' : `${this.parliament}/bills/tag`
     return this.createReference(collection)
   }
 
@@ -278,7 +278,7 @@ class Firestore {
   }
 
   TfIdfClassification() {
-    const collection = this.legacy ? 'tf_idf_bill' : `${this.parliament}/tf_idf_bill`
+    const collection = this.legacy ? 'tf_idf_bill' : `${this.parliament}/bills/raw`
     return this.createReference(collection)
   }
 
@@ -288,12 +288,12 @@ class Firestore {
   }
 
   Vote() {
-    const collection = this.legacy ? 'votes' : `${this.parliament}/votes`
+    const collection = this.legacy ? 'votes' : `${this.parliament}/voters/voter`
     return this.createReference(collection)
   }
 
   VoteRecord() {
-    const collection = this.legacy ? 'voteRecord' : `${this.parliament}/voteRecord`
+    const collection = this.legacy ? 'voteRecord' : `${this.parliament}/vote_records/vote_record`
     return this.createReference(collection)
   }
 

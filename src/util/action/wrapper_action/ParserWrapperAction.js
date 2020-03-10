@@ -1,7 +1,7 @@
-const Action = require('./JobAction').AbstractJobAction
-const DecorationError = require('../action/error/errors').ActionDecorationError
-const XMLParser = require('../parser/XmlDataParser').XmlDataParser
-const XMLParseError = require('../parser/XmlParserError').DataNotFoundError
+const Action = require('../JobAction').AbstractJobAction
+const DecorationError = require('../error/errors').ActionDecorationError
+const XMLParser = require('../../parser/XmlDataParser').XmlDataParser
+const XMLParseError = require('../../parser/XmlParserError').DataNotFoundError
 
 class ParserWrapperAction extends Action {
   constructor (xmlParserType, params) {
@@ -26,8 +26,10 @@ class ParserWrapperAction extends Action {
       return [parser.getAllFromXml()]
     } else if (parser.hasData()) {
       return parser.xmlToJson()
-    } else {
+    } else if (!parser.xml.includes(parser.tagName) || !parser.xml.includes(parser.listTagName)) {
       throw new XMLParseError('ERROR: No Data Found')
+    } else {
+      return []
     }
   }
 }

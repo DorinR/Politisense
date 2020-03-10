@@ -3,7 +3,7 @@ class PDFParseError extends Error {
     super()
     this.message = msg
     this.name = 'PDFParseError'
-    this.bill = bill
+    this.id = bill
     this.url = url
   }
 }
