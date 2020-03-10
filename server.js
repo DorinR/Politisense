@@ -14,7 +14,7 @@ app.use(bodyParser.json())
 app.use(express.json({ extended: false })) // allows us to get the data from the post body
 
 // test root endpoint
-app.get('/', (req, res) => res.send('API Running'))
+app.get('/', (req, res) => res.redirect('/login'))
 
 // define our routes (these link to the endpoints in routes/api/...)
 app.use('/api/votes', require('./src/routes/api/votes'))
