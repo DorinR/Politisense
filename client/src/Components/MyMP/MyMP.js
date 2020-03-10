@@ -231,12 +231,6 @@ export default function MyMP () {
                     xs={12}
                 >
                   <Budget />
-                  {/*{userRepIssuedBills && categoryList && userRepresentative && barPieRows ? (*/}
-                  {/*        <IssuedBillsByMP userRepIssuedBills={userRepIssuedBills}*/}
-                  {/*                         categoryList={categoryList}*/}
-                  {/*                         userRepresentative={userRepresentative}*/}
-                  {/*                         rows={barPieRows}/>)*/}
-                  {/*    : ('nothing')}*/}
                 </Grid>
                 <Grid
                     item
@@ -285,9 +279,10 @@ export default function MyMP () {
           position: 'absolute',
           left: '50%',
           top: '50%',
-          transform: 'translate(-50%, -50%)' }}
+          transform: 'translate(-50%, -50%)',
+          }}
         >
-          <CircularProgress/>
+          <CircularProgress style={{ color:"#00bcd4"}}/>
         </div>
         }
 

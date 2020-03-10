@@ -18,7 +18,6 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 const useStyles = makeStyles(theme => ({
   card: {
-    // backgroundColor: '#43D0C4'
     backgroundColor: '#00bcd4'
   },
   container: {
@@ -233,12 +232,13 @@ export default function CategoryGrid () {
               )
             })
             : <div style={{
-              position: 'absolute',
+              position: 'relative',
               left: '50%',
               top: '50%',
-              transform: 'translate(-50%, -50%)' }}
+              transform: 'translate(-50%, -50%)',
+            }}
             >
-              <CircularProgress/>
+              <CircularProgress style={{ color:"#00bcd4"}}/>
             </div>
         }
         {((counter === 0 || counter < 3) && representativeData && categoryList)

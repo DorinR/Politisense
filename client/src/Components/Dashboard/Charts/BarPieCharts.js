@@ -9,7 +9,7 @@ function dashboard (element, fData) {
 
   function histoGram (fD) {
     const hG = {}
-    const hGDim = { t: 30, r: 5, b: 30, l: 20 }
+    const hGDim = { t: 30, r: 5, b: 30, l:0 }
     hGDim.w = 550 - hGDim.l - hGDim.r
     hGDim.h = 300 - hGDim.t - hGDim.b
 
@@ -100,7 +100,7 @@ function dashboard (element, fData) {
   function pieChart (pD) {
     const pC = {}
     // const margin =
-    const pieDim = { w: 150, h: 150 }
+    const pieDim = { w: 170, h: 170 }
     pieDim.r = Math.min(pieDim.w, pieDim.h) / 2
 
     // create svg for pie chart.
@@ -108,8 +108,7 @@ function dashboard (element, fData) {
         .attr('width', pieDim.w).attr('height', pieDim.h)
         // .attr('viewBox',`0 0 ${pieDim.w}/2 (${pieDim.h}/2 ` )
         .append('g')
-        .attr('transform', 'translate(' + ((pieDim.w) / 2 )+ ',' + pieDim.h / 2 + ')')
-
+        .attr('transform', 'translate(' + ((pieDim.w) / 2 )+ ',' + (pieDim.h / 2) + ')')
     // create function to draw the arcs of the pie slices.
     const arc = d3.arc().outerRadius(pieDim.r - 10).innerRadius(0)
 
@@ -162,7 +161,9 @@ function dashboard (element, fData) {
         .style('display', 'inline-block')
         .style('border-collapse', 'collapse')
         .style('border-spacing', 0)
-        .style('margin-left', "73%")
+        // .style('margin-right', "80")
+
+    //margin-bottom:76px;
 
 
     // create one row per segment.
@@ -174,31 +175,31 @@ function dashboard (element, fData) {
 
     // create the first column for each segment.
     tr.append('td').append('svg')
-        .attr('width', '15')
-        .attr('height', '15')
+        .attr('width', '10')
+        .attr('height', '10')
         .append('rect')
-        .attr('width', '15').attr('height', '15')
+        .attr('width', '10').attr('height', '10')
         .attr('fill', function (d) { return segColor(d.type) })
 
     // create the second column for each segment.
     tr.append('td').text(function (d) { return d.type })
-        .style('font-size', '14px')
+        .style('font-size', '13px')
         .style('padding',"6px 5px")
         .style('vertical-align','bottom')
 
     // create the third column for each segment.
     tr.append('td').attr('class', 'legendFreq')
         .text(function (d) { return d3.format(',')(d.freq) + ' bills ' })
-        .style('font-size', '14px')
+        .style('font-size', '13px')
         .style('align','right')
-        .style('width','50px')
+        .style('width','40px')
 
     // create the fourth column for each segment.
     tr.append('td').attr('class', 'legendPerc')
         .text(function (d) {return (getLegend(d, lD)) + '%'})
-        .style('font-size', '14px')
+        .style('font-size', '13px')
         .style('align','right')
-        .style('width','50px')
+        .style('width','40px')
 
     // Utility function to be used to update the legend.
     leg.update = function (nD) {
@@ -208,13 +209,13 @@ function dashboard (element, fData) {
       // update the frequencies.
       l.select('.legendFreq').text(function (d) { return d3.format(',')(d.freq) + ' bills ' })
           .style('align','right')
-          .style('width','50px')
+          .style('width','40px')
 
       // update the percentage column.
       l.select('.legendPerc')
           .text(function (d) { return getLegend(d, nD) + '%' })
           .style('align','right')
-          .style('width','50px')
+          .style('width','40px')
     }
 
     function getLegend (d, aD) { // Utility function to compute percentage.
