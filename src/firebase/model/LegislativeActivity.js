@@ -17,8 +17,8 @@ class LegislativeActivity extends Model {
     this.date = date
   }
 
-  static deserialise(json) {
-    return Model.deserialise(json, new LegislativeActivity('','','','',''))
+  static deserialise (json) {
+    return Model.deserialise(json, new LegislativeActivity('', '', '', '', ''))
   }
 }
 

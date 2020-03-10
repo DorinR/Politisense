@@ -45,7 +45,6 @@
     "node-fetch": "latest",
     "nodemon": "^1.19.4",
     "async-sema": "latest",
-    "nodemon": "^1.19.4",
     "flat": "latest"
   },
   "scripts": {
@@ -53,7 +52,9 @@
     "server": "nodemon -r esm server.js",
     "client": "npm start --prefix client",
     "test": "jest src/test/*",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "heroku-start": "npm install && npm run start",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "repository": {
     "type": "git",

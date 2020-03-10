@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const path = require('path')
 
 // bodyparser middleware
 app.use(cors())
@@ -25,6 +26,13 @@ app.use('/api/auth', require('./src/routes/api/auth'))
 app.use('/api/ridings', require('./src/routes/api/ridings'))
 app.use('/api/budgets', require('./src/routes/api/budgets'))
 
+// deployment configuration
 const PORT = process.env.PORT || 5000
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'))
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+  })
+}
 
 app.listen(PORT, () => console.log(`server started on port ${PORT}`))
