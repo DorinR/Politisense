@@ -18,8 +18,14 @@ const useStyles = makeStyles({
     },
     table: {
         minWidth: 650,
-        padding:3
+        // padding:30
     },
+    tableContainer:{
+        padding: "0px 40px 0px 20px"
+    },
+    titles:{
+        fontWeight:700
+    }
 })
 export function capitalizedName (sponsor) {
     if (sponsor && isNaN(sponsor)) {
@@ -32,6 +38,7 @@ export function capitalizedName (sponsor) {
     }
     return null
 }
+
 export default function TableDialog (props) {
     const classes = useStyles()
     const { onClose, selectedValue, open } = props
@@ -49,7 +56,7 @@ export default function TableDialog (props) {
                 desc:row.bill.billsClassified.title,
                 link:row.bill.billsClassified.link,
                 sponsor:row.bill.billsClassified.sponsorName,
-                data:row.bill.billsClassified.dateVoted
+                date:row.bill.billsClassified.dateVoted
             }
             console.log(temp)
             setBillInfo(temp)
@@ -61,21 +68,21 @@ export default function TableDialog (props) {
                 desc:row.billData.title,
                 link:row.billData.link,
                 sponsor:row.billData.sponsorName,
-                data:row.billData.dateVoted
+                date:row.billData.dateVoted
             }
             console.log(temp)
             setBillInfo(temp)
             setBillOpen(true)
         }
-        //row.billDetails.billData.category
         if(row && type=='bipartisan'){
             let temp = {
                 name: row.billDetails.billData.number,
                 desc:row.billDetails.billData.title,
                 link:row.billDetails.billData.link,
                 sponsor:row.billDetails.billData.sponsorName,
-                data:row.billDetails.billData.dateVoted
+                date:row.billDetails.billData.dateVoted
             }
+            console.log(temp.date)
             console.log(temp)
             setBillInfo(temp)
             setBillOpen(true)
@@ -86,30 +93,30 @@ export default function TableDialog (props) {
     }
 
     return (
-        <Dialog onClose={handleClose} open={open} maxWidth={"lg"}>
-            <DialogTitle id='simple-dialog-title'>Details: </DialogTitle>
+        <Dialog onClose={handleClose} open={open} maxWidth={"md"} fullWidth={true}>
+            <DialogTitle id='simple-dialog-title' className={classes.titles} >Details: </DialogTitle>
             <TableContainer className={classes.tableContainer}>
-                <Table className={classes.table} size='medium' aria-label='a dense table'>
+                <Table className={classes.table} size='medium' aria-label='simple table'>
                     <TableHead>
                             {!props.type? (
                                 <TableRow>
-                                    <TableCell>Bill Name</TableCell>
-                                    <TableCell align='right'> Category </TableCell>
-                                    <TableCell align='right'>Bill Status</TableCell>
+                                    <TableCell className={classes.titles}>Bill Name</TableCell>
+                                    <TableCell className={classes.titles} align='right'> Category </TableCell>
+                                    <TableCell className={classes.titles} align='right'>Bill Status</TableCell>
                                 </TableRow>
                                 ):
                                 (
                                     props.type=='bipartisan'?
-                                            ( <TableRow>
-                                                <TableCell>Bill Name</TableCell>
-                                                <TableCell align="right">Category</TableCell>
-                                                <TableCell align="right">Vote</TableCell>
-                                                <TableCell align='right'>Political Party</TableCell>
+                                            ( <TableRow >
+                                                <TableCell className={classes.titles}>Bill Name</TableCell>
+                                                <TableCell className={classes.titles} align="right">Category</TableCell>
+                                                <TableCell className={classes.titles} align="right">Vote</TableCell>
+                                                <TableCell className={classes.titles} align='right'>Political Party</TableCell>
                                             </TableRow>):
                                         <TableRow>
-                                            <TableCell>{"Bill Name"}</TableCell>
-                                            <TableCell align='right'>{"Category"}</TableCell>
-                                            <TableCell align='right'>{"Vote"}</TableCell>
+                                            <TableCell  className={classes.titles}>{"Bill Name"}</TableCell>
+                                            <TableCell className={classes.titles} align='center'>{"Category"}</TableCell>
+                                            <TableCell className={classes.titles} align='right'>{"Vote"}</TableCell>
                                         </TableRow>
                                 )}
                     </TableHead>
@@ -124,8 +131,8 @@ export default function TableDialog (props) {
                                                     <Typography>{row.bill.billsClassified.number}</Typography>
                                                 </Button>
                                             </TableCell>
-                                            <TableCell component='th' scope='row' align='right'><Typography>{row.category}</Typography></TableCell>
-                                            <TableCell align='right'><Typography>{row.status} </Typography> </TableCell>
+                                            <TableCell component='th' scope='row' align='right'><Typography>{capitalizedName(row.category)}</Typography></TableCell>
+                                            <TableCell align='right'><Typography>{capitalizedName(row.status)} </Typography> </TableCell>
                                           </TableRow>
                                         ):(
                                            !row.voteRecord?
@@ -136,13 +143,13 @@ export default function TableDialog (props) {
                                                     </Button>
                                                 </TableCell>
                                                 <TableCell component='th' scope='row' align="right">
-                                                   <Typography>{row.billDetails.billData.category}</Typography>
+                                                   <Typography>{capitalizedName(row.billDetails.billData.category)}</Typography>
                                                 </TableCell>
                                                 <TableCell component='th' scope={'row'} align="right">
                                                    <Typography style= {{color:"green"}}>{row.billDetails.voteRecord.yea == true ? "Yea":"Nay"}</Typography>
                                                 </TableCell>
                                                 <TableCell component='th' scope={'row'} align='right'>
-                                                   <Typography>{row.category}</Typography>
+                                                   <Typography>{capitalizedName(row.category)}</Typography>
                                                 </TableCell>
                                             </TableRow>:
                                                 <TableRow key={i}>
@@ -151,8 +158,8 @@ export default function TableDialog (props) {
                                                         <Typography>{row.voteRecord.billNumber}</Typography>
                                                         </Button>
                                                     </TableCell>
-                                                    <TableCell align='right' component='th' scope='row'>
-                                                        <Typography>{row.billData.category}</Typography>
+                                                    <TableCell align='center' component='th' scope='row'>
+                                                        <Typography>{capitalizedName(row.billData.category)}</Typography>
                                                     </TableCell>
                                                     <TableCell align='right'>
                                                         <Typography style= {row.voteRecord.yea === true? {color:"green"}: {color: "red"}}>{row.voteRecord.yea == true? "Yea": "Nay"}
