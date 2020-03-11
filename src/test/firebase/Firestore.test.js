@@ -21,8 +21,8 @@ describe('Firestore.js', () => {
     Assert.equal(undertest.parliament, 1337)
   })
 
-  test('Firestore.js is currently in legacy mode', () => {
-    Assert(undertest.legacy)
+  test('Firestore.js is currently not in legacy mode', () => {
+    Assert(!undertest.legacy)
   })
 
   test('Firestore.js::createReference returns a reference instance', () => {

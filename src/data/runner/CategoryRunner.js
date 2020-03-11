@@ -37,26 +37,3 @@ class CategoryRunner extends Components.QueueManager {
 }
 
 module.exports.CategoryRunner = CategoryRunner
-
-const Firestore = require('@firestore').Firestore
-
-  CategoryRunner
-    .create(Parameters.Parliament.Number)
-    .execute()
-    .then(results => {
-      return Promise.all(results.map(result => {
-        const parliament = result.params.parliament
-        return Promise.all(result.data.map(category => {
-          return new Firestore(false)
-            .forParliament(parliament)
-            .BillClassification()
-            .insert(category)
-        }))
-      }))
-    })
-    .then(async responses => {
-      console.log(responses)
-    })
-
-
-

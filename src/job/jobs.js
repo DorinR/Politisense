@@ -6,8 +6,10 @@ module.exports = {
   PoliticianFetchJob: require('./PoliticianFetchJob').PoliticianFetchJob,
   RoleFetchJob: require('./RoleFetchJob').RoleFetchJob,
   ClassificationJob: require('./ClassificationJob').ClassificationJob,
+  CategoryGenerationJob: require('./CategoryGenerationJob').CategoryGenerationJob,
   VoteRecordFetchJob: require('./VoteRecordFetchJob').VoteRecordFetchJob,
   VoteParticipantFetchJob: require('./VoteParticipantFetchJob').VoteParticipantFetchJob,
   BillFetchJob: require('./BillFetchJob').BillFetchJob,
+  LegislativeActivityFetchJob: require('./LegislativeActivityFetchJob').LegislativeActivityFetchJob,
   ExpenditureFetchJob:require('./ExpenditureFetchJob').ExpenditureFetchJob
 }

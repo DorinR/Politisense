@@ -23,6 +23,8 @@ describe('Jobs', () => {
     jobs.push(Jobs.ScrapeJob.create(params, () => {}))
     jobs.push(Jobs.VoteParticipantFetchJob.create(params, () => {}))
     jobs.push(Jobs.VoteRecordFetchJob.create(params, () => {}))
+    jobs.push(Jobs.CategoryGenerationJob.create(params, () => {}))
+    jobs.push(Jobs.LegislativeActivityFetchJob.create(params, () => {}))
   })
 
   test('BillPDFFetchJob.js', async (done) => {
@@ -172,6 +174,37 @@ describe('Jobs', () => {
 
     Assert.equal(job.actions[1].name, 'bound perform')
     Assert.equal(job.registry[1], 'Wrapped VoteXmlParser')
+
+    Assert.equal(job.actions[2].name, 'bound perform')
+    Assert.equal(job.registry[2], 'QueryResponseAdapterAction')
+
+    done()
+  })
+
+  test('CategoryGenerationJob.js', async (done) => {
+    const job = jobs[8]
+    Assert.equal(job.registry.length, 2)
+    Assert.equal(job.actions.length, 2)
+
+    Assert.equal(job.actions[0].name, 'bound perform')
+    Assert.equal(job.registry[0], 'BillTagCreationAction')
+
+    Assert.equal(job.actions[1].name, 'bound perform')
+    Assert.equal(job.registry[1], 'QueryResponseAdapterAction')
+
+    done()
+  })
+
+  test('LegislativeActivityFetchJob.js', async (done) => {
+    const job = jobs[9]
+    Assert.equal(job.registry.length, 3)
+    Assert.equal(job.actions.length, 3)
+
+    Assert.equal(job.actions[0].name, 'bound perform')
+    Assert.equal(job.registry[0], 'FetchAction')
+
+    Assert.equal(job.actions[1].name, 'bound perform')
+    Assert.equal(job.registry[1], 'Wrapped LegislativeActivityXmlParser')
 
     Assert.equal(job.actions[2].name, 'bound perform')
     Assert.equal(job.registry[2], 'QueryResponseAdapterAction')
