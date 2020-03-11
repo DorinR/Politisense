@@ -1,4 +1,4 @@
-const Firestore = require('@firestore').Firestore
+const Firestore = require('./Firestore').Firestore
 const bcrypt = require('bcryptjs')
 
 class _Auth {
@@ -75,4 +75,6 @@ class Auth {
   }
 }
 
-module.exports.Auth = Auth
+module.exports = {
+  Auth: Auth
+}

@@ -23,10 +23,6 @@ class _Firestore {
     }
     this.db = fs.firestore()
     this.firebase = fs
-    this.googleProvider = new fs.auth.GoogleAuthProvider()
-    this.facebookProvider = new fs.auth.FacebookAuthProvider()
-    this.twitterProvider = new fs.auth.TwitterAuthProvider()
-    this.microsoftProvider = new fs.auth.OAuthProvider('microsoft.com')
   }
 }
 
@@ -198,7 +194,7 @@ class Reference {
       const leftDoc = left[leftKey]
       const leftKeys = Object.keys(leftDoc)
       if (!leftKeys.includes(key) && key !== `_id_${this.reference.id}`) {
-        throw new Error(
+        console.warn(
           `Current collection: ${this.reference.id} does not contain items with key: ${key} `
         )
       }
@@ -209,7 +205,7 @@ class Reference {
           !rightKeys.includes(refKey) &&
           refKey !== `_id_${reference.reference.id}`
         ) {
-          throw new Error(
+          console.warn(
             `Current collection: ${reference.reference.id} does not contain items with key: ${refKey} `
           )
         }
@@ -230,20 +226,16 @@ class Reference {
 }
 
 class Firestore {
-  constructor (legacy = true) {
+  constructor (legacy = false) {
     this.firestore = getInstance()
     this.reference = this.firestore.db
-    this.googleProvider = this.firestore.googleProvider
     this.firebase = this.firestore.firebase
-    this.facebookProvider = this.firestore.facebookProvider
-    this.twitterProvider = this.firestore.twitterProvider
-    this.microsoftProvider = this.firestore.microsoftProvider
     this.parliament = 43
     this.legacy = legacy
   }
 
-  forParliament (parl) {
-    this.parliament = parl
+  forParliament (parliament) {
+    this.parliament = parliament
     return this
   }
 
@@ -258,7 +250,12 @@ class Firestore {
   }
 
   FinancialRecord () {
-    const collection = this.legacy ? 'financialRecord' : `${this.parliament}/financialRecord`
+    const collection = this.legacy ? 'financialRecord' : 'financialRecord' // `${this.parliament}/financialRecord` not currently implemented
+    return this.createReference(collection)
+  }
+
+  PoliticalParty () {
+    const collection = this.legacy ? 'parties' : 'parties'
     return this.createReference(collection)
   }
 
@@ -268,7 +265,7 @@ class Firestore {
   }
 
   Riding () {
-    const collection = this.legacy ? 'ridings' : `${this.parliament}/ridings`
+    const collection = this.legacy ? 'ridings' : 'ridings'
     return this.createReference(collection)
   }
 
@@ -283,7 +280,7 @@ class Firestore {
   }
 
   User () {
-    const collection = this.legacy ? 'users' : `${this.parliament}/users`
+    const collection = this.legacy ? 'users' : 'users'
     return this.createReference(collection)
   }
 
@@ -299,10 +296,6 @@ class Firestore {
 
   createReference (collection) {
     return new Reference(this.reference.collection(collection))
-  }
-
-  Party () {
-    return new Reference(this.reference.collection('parties'))
   }
 
   async close () {
