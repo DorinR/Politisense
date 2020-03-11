@@ -250,12 +250,20 @@ class Firestore {
   }
 
   FinancialRecord () {
-    const collection = this.legacy ? 'financialRecord' : 'financialRecord' // `${this.parliament}/financialRecord` not currently implemented
+    const collection = this.legacy ? 'financialRecord' : 'financialRecord'
+    return this.createReference(collection)
+  }
+
+  MinisterDescription () {
+    if(this.legacy) {
+      throw new Error('ERROR: collection not available as a legacy collection')
+    }
+    const collection = 'static/minister_descriptions/description'
     return this.createReference(collection)
   }
 
   PoliticalParty () {
-    const collection = this.legacy ? 'parties' : 'parties'
+    const collection = this.legacy ? 'parties' : `${this.parliament}/parties/party`
     return this.createReference(collection)
   }
 
@@ -265,7 +273,7 @@ class Firestore {
   }
 
   Riding () {
-    const collection = this.legacy ? 'ridings' : 'ridings'
+    const collection = this.legacy ? 'ridings' : 'static/ridings/riding'
     return this.createReference(collection)
   }
 
@@ -280,7 +288,7 @@ class Firestore {
   }
 
   User () {
-    const collection = this.legacy ? 'users' : 'users'
+    const collection = this.legacy ? 'users' : 'static/users/user'
     return this.createReference(collection)
   }
 
@@ -308,6 +316,32 @@ class Firestore {
           .catch(e => {})
       })
       .catch(e => {})
+  }
+
+  static copyCollection(from, to) {
+    return new Promise(resolve => {
+      from
+        .select()
+        .then(snapshot => {
+          const records = []
+          snapshot.forEach(doc => {
+            records.push(doc.data())
+          })
+          return records
+        })
+        .then(records => {
+          return records.map(old => {
+            return to.insert(old)
+          })
+        })
+        .then(promises => {
+          return Promise.all(promises)
+        })
+        .then(responses => {
+          resolve(responses)
+        })
+        .catch(console.error)
+    })
   }
 }
 
