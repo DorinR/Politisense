@@ -15,13 +15,13 @@ imageURLs['green party'] = 'https://www.homelesshub.ca/sites/default/files/green
 imageURLs['forces et démocratie'] = 'https://en.wikipedia.org/wiki/Strength_in_Democracy#/media/File:Strengthindemocracy.png'
 imageURLs['co-operative commonwealth federation'] = 'https://en.wikipedia.org/wiki/Co-operative_Commonwealth_Federation#/media/File:Co-operative_Commonwealth_Federation_logo.png'
 imageURLs['people\'s party'] = 'https://en.wikipedia.org/wiki/People%27s_Party_of_Canada#/media/File:PPC-logo-en.png'
-
+Object.freeze(imageURLs)
 
 class PartyClassificationAction extends Action {
   constructor (params) {
     super()
     this.parliament = params.parliament || 43
-    const db = new Firestore(false).forParliament(this.parliament)
+    const db = new Firestore().forParliament(this.parliament)
     this.politicians = this.retrievePoliticians(db)
   }
 
