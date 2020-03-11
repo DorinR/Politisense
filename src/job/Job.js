@@ -4,6 +4,7 @@ const DecorationError = Actions.Errors.ActionDecorationError
 
 class Job {
   constructor (param, callback) {
+    this.param = param
     this.url = param && param.url ? param.url : ''
     this.actions = []
     this.registry = []

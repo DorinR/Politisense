@@ -2,7 +2,6 @@ require('module-alias/register')
 const Components = require('@manager')
 const Parameters = require('@parameter')
 
-
 class RoleScraper extends Components.QueueManager {
   static create (params, wait = 5000) {
     const manager = new RoleScraper(params, wait)

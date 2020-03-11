@@ -30,7 +30,7 @@ describe('CategoryRunner.js', () => {
     try {
       CategoryRunner.create({
         url: 'test-url.com',
-        parliaments: 4,
+        parliaments: 4
       })
     } catch (e) {
       if (e instanceof chai.AssertionError) {

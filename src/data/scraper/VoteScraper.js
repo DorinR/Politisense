@@ -48,7 +48,7 @@ class VoteScraper extends Components.QueueManager {
 
   createBillDocumentTypes (types) {
     const validEntries = Object.values(flatten(Parameters.VoteParameters.Type))
-  if (!types || types === 'all' || !Array.isArray(types)) {
+    if (!types || types === 'all' || !Array.isArray(types)) {
       this.billDocumentTypes = ['']
     } else if (Array.isArray(types)) {
       this.billDocumentTypes = types.filter(type => {

@@ -3,10 +3,10 @@ const Assert = require('chai').assert
 const Parsers = require('../../../util/parser/parsers')
 
 describe('LegislativeActivityXmlParser.js', () => {
-    let underTest
-    let xml
-    beforeAll(() => {
-      xml ='<rss version="2.0">\n' +
+  let underTest
+  let xml
+  beforeAll(() => {
+    xml = '<rss version="2.0">\n' +
         '<channel>\n' +
         '<title>Custom RSS Feed</title>\n' +
         '<language>en</language>\n' +
@@ -35,32 +35,32 @@ describe('LegislativeActivityXmlParser.js', () => {
         '</item>' +
         '</channel>' +
         '</rss>'
-    })
+  })
 
-    beforeEach(() => {
-      underTest = new Parsers.LegislativeActivityXmlParser(xml)
-    })
+  beforeEach(() => {
+    underTest = new Parsers.LegislativeActivityXmlParser(xml)
+  })
 
-    test('LegislativeActivityXmlParser.js::generateNewParser creates a new Legislative activity Parser', () => {
-      const parser = underTest.generateNewParser(underTest.xml)
-      Assert.equal(parser.xml, underTest.getXmlInTag(Parsers.LegislativeActivityXmlParser.listTagName()))
-    })
+  test('LegislativeActivityXmlParser.js::generateNewParser creates a new Legislative activity Parser', () => {
+    const parser = underTest.generateNewParser(underTest.xml)
+    Assert.equal(parser.xml, underTest.getXmlInTag(Parsers.LegislativeActivityXmlParser.listTagName()))
+  })
 
-    test('LegislativeActivityXmlParser.js::hasData returns true on has content, false otherwise', () => {
-      Assert(underTest.hasData())
-      Assert(underTest.parser.hasData())
-      Assert.isFalse(underTest.generateNewParser('<rss><channel>channel stuff</channel></rss>').hasData())
-    })
+  test('LegislativeActivityXmlParser.js::hasData returns true on has content, false otherwise', () => {
+    Assert(underTest.hasData())
+    Assert(underTest.parser.hasData())
+    Assert.isFalse(underTest.generateNewParser('<rss><channel>channel stuff</channel></rss>').hasData())
+  })
 
-    test('LegislativeActivityXmlParser.js::buildJson returns valid legislative activity', () => {
-      const activities = underTest.getAllFromXml()
-      Assert.equal(activities.length,2)
-      Assert.equal(activities[0].yes, 0)
-      Assert.equal(activities[0].no, 0)
-      Assert.equal(activities[0].title, 'C-4, Debate at 3rd Reading in the House of Commons')
+  test('LegislativeActivityXmlParser.js::buildJson returns valid legislative activity', () => {
+    const activities = underTest.getAllFromXml()
+    Assert.equal(activities.length, 2)
+    Assert.equal(activities[0].yes, 0)
+    Assert.equal(activities[0].no, 0)
+    Assert.equal(activities[0].title, 'C-4, Debate at 3rd Reading in the House of Commons')
 
-      Assert.equal(activities[1].yes, 0)
-      Assert.equal(activities[1].no, 0)
-      Assert.equal(activities[1].title, 'C-4, Debate at 3rd Reading in the House of Commons')
-    })
+    Assert.equal(activities[1].yes, 0)
+    Assert.equal(activities[1].no, 0)
+    Assert.equal(activities[1].title, 'C-4, Debate at 3rd Reading in the House of Commons')
+  })
 })

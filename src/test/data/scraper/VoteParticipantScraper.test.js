@@ -13,12 +13,12 @@ describe('VoteParticipantScraper.js', () => {
     })
     const registry = undertest.registry
     Assert.equal(Object.values(registry).length, 6)
-    Assert.equal(registry.start,'VoteParticipantStart')
-    Assert.equal(registry.stop,'GenericStopAction')
-    Assert.equal(registry.after,'VoteParticipantAfterAction')
-    Assert.equal(registry.before,'VoteParticipantBeforeAction')
-    Assert.equal(registry.error,'ParseErrorAction')
-    Assert.equal(registry.log,'TypedLogAction')
+    Assert.equal(registry.start, 'VoteParticipantStart')
+    Assert.equal(registry.stop, 'GenericStopAction')
+    Assert.equal(registry.after, 'VoteParticipantAfterAction')
+    Assert.equal(registry.before, 'VoteParticipantBeforeAction')
+    Assert.equal(registry.error, 'ParseErrorAction')
+    Assert.equal(registry.log, 'TypedLogAction')
     done()
   })
 

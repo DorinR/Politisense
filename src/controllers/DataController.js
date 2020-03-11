@@ -1,6 +1,8 @@
 require('module-alias/register')
 const Firestore = require('@firestore').Firestore
 const Utils = require('./util/DataUtil')
+const flatten = require('flat')
+const Parameters = require('@parameter').UpdateNode
 
 const IndexDirector = {
   Bills: {
@@ -196,33 +198,29 @@ async function ridingRecords (req, res) {
 
 const UpdateDirector = {
   Bills: {
-    raw: 'raw',
-    classifications: 'classifications',
-    records: 'bills'
+    raw: Parameters.TfIdf,
+    classifications: Parameters.Category,
+    records: Parameters.Bill
   },
 
   Politicians: {
-    records: 'politicians',
-    roles: 'roles',
-    ministers: 'ministers',
-    financials: 'finances'
+    records: Parameters.Politician,
+    roles: Parameters.Role
   },
 
   Parties: {
-    records: 'parties'
   },
 
   Root: {
-    records: 'root'
+    records: Parameters.All
   },
 
   Votes: {
-    records: 'vote_records',
-    voters: 'voters'
+    records: Parameters.Vote,
+    voters: Parameters.Voter
   },
 
   Ridings: {
-    records: 'ridings'
   }
 }
 Object.freeze(UpdateDirector)
@@ -235,14 +233,37 @@ exports.update = (req, res) => {
     Utils.error(res, 'No parameters passed to data API for updating')
     return
   }
+  let root = Parameters.None
   try {
-    req.params.root = UpdateDirector[type][category]
+    root = UpdateDirector[type][category]
+    if (!Object.values(flatten(Parameters)).includes(root)) {
+      throw new Error('Invalid update parameter passed')
+    }
   } catch (e) {
     console.log(e.message)
     Utils.error(res, 'Invalid Parameters passed to data API for updating')
     return
   }
+  updateFromProvidedNode(root)
+
   Utils.success(res, {
-    dependencies: 'dependencies stub'
-  }, 'stub')
+    dependencies: root
+  }, 'Successfully started update process on server')
+}
+
+const child = require('child_process')
+
+function updateFromProvidedNode (root) {
+  const opts = {
+    execArgv: ['--semi-space-size=128', '--semi-space-size=8192']
+  }
+
+  const process = child.fork('src/data/update/UpdateScript.js', opts)
+  process.send({ node: root })
+  process.on('error', (err) => {
+    console.log(err)
+  })
+  process.on('close', (code) => {
+    console.log(`Closed with code ${code}`)
+  })
 }

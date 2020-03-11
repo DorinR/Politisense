@@ -12,7 +12,7 @@ describe('ConcreteModels.js', () => {
   })
 
   test('Bill.js accepts 1 number and 6 string params, respectively', async (done) => {
-    new Model.Bill(1, ' ',' ',' ',' ',' ',' ')
+    new Model.Bill(1, ' ', ' ', ' ', ' ', ' ', ' ')
     done()
   })
 
@@ -24,7 +24,7 @@ describe('ConcreteModels.js', () => {
   })
 
   test('BillClassification.js BillClassification accepts 3 string params, respectively', async (done) => {
-    new Model.BillClassification('','','')
+    new Model.BillClassification('', '', '')
     done()
   })
 
@@ -36,7 +36,7 @@ describe('ConcreteModels.js', () => {
   })
 
   test('BillClassification.js TfIdfClassification accepts a string and object param, respectively', async (done) => {
-    new Model.TfIdfClassification('',{})
+    new Model.TfIdfClassification('', {})
     done()
   })
 
@@ -48,7 +48,7 @@ describe('ConcreteModels.js', () => {
   })
 
   test('FinancialRecord.js accepts 3 strings and 3 numbers, respectively', async (done) => {
-    new Model.FinancialRecord('','','',0,0,0)
+    new Model.FinancialRecord('', '', '', 0, 0, 0)
     done()
   })
 
@@ -60,7 +60,7 @@ describe('ConcreteModels.js', () => {
   })
 
   test('Politician.js accepts 3 strings and 3 numbers, and a string, respectively', async (done) => {
-    new Model.Politician('','','',0,0,0,'')
+    new Model.Politician('', '', '', 0, 0, 0, '')
     done()
   })
 
@@ -72,7 +72,7 @@ describe('ConcreteModels.js', () => {
   })
 
   test('Riding.js accepts a number, two strings, and a number, respectively', async (done) => {
-    new Model.Riding(0,'','',0)
+    new Model.Riding(0, '', '', 0)
     done()
   })
 
@@ -84,7 +84,7 @@ describe('ConcreteModels.js', () => {
   })
 
   test('Role.js accepts 3 strings, 2 numbers, and a string, respectively', async (done) => {
-    new Model.Role('','','',0,0,'')
+    new Model.Role('', '', '', 0, 0, '')
     done()
   })
 
@@ -96,7 +96,7 @@ describe('ConcreteModels.js', () => {
   })
 
   test('User.js accepts 6 strings and an object', async (done) => {
-    new Model.User('','','','','','',{})
+    new Model.User('', '', '', '', '', '', {})
     done()
   })
 
@@ -108,7 +108,7 @@ describe('ConcreteModels.js', () => {
   })
 
   test('Vote.js accepts two strings and two booleans, respectively', async (done) => {
-    new Model.Vote('','',true, true)
+    new Model.Vote('', '', true, true)
     done()
   })
 

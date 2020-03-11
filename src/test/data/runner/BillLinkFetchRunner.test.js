@@ -31,7 +31,7 @@ describe('BillLinkFetchRunner.js', () => {
   test('BillLinkFetchRunner.js uses raw parliaments without throwing', async (done) => {
     const undertest = BillLinkFetchRunner.create({
       url: 'test-url.com',
-      parliaments: parliaments,
+      parliaments: parliaments
     })
     Assert.equal(undertest.params.length, parliaments.length)
     undertest.params.forEach(param => {
@@ -48,15 +48,14 @@ describe('BillLinkFetchRunner.js', () => {
         parliaments: {}
       })
     } catch (e) {
-      if(e instanceof chai.AssertionError) {
+      if (e instanceof chai.AssertionError) {
         throw e
       }
-      if(!(e instanceof InvalidParameterError)) {
+      if (!(e instanceof InvalidParameterError)) {
         Assert.fail()
       }
       done()
     }
     Assert.fail()
   }, 60000)
-
 })

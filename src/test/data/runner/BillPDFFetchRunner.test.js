@@ -38,7 +38,7 @@ describe('BillPDFFetchRunner.js', () => {
       if (e instanceof chai.AssertionError) {
         throw e
       }
-      if(!(e instanceof InvalidParameterError)) {
+      if (!(e instanceof InvalidParameterError)) {
         Assert.fail()
       }
       done()
@@ -50,13 +50,13 @@ describe('BillPDFFetchRunner.js', () => {
     try {
       BillPDFFetchRunner.create({
         url: 'test-url.com',
-        parliaments: 43,
+        parliaments: 43
       })
     } catch (e) {
       if (e instanceof chai.AssertionError) {
         throw e
       }
-      if(!(e instanceof InvalidParameterError)) {
+      if (!(e instanceof InvalidParameterError)) {
         Assert.fail()
       }
       done()
@@ -74,7 +74,7 @@ describe('BillPDFFetchRunner.js', () => {
       if (e instanceof chai.AssertionError) {
         throw e
       }
-      if(!(e instanceof InvalidParameterError)) {
+      if (!(e instanceof InvalidParameterError)) {
         Assert.fail()
       }
       done()

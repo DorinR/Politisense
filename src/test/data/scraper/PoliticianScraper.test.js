@@ -28,11 +28,11 @@ describe('PoliticianScraper.js', () => {
     })
     const registry = undertest.registry
     Assert.equal(Object.values(registry).length, 5)
-    Assert.equal(registry.start,'PoliticianStart')
-    Assert.equal(registry.stop,'GenericStopAction')
-    Assert.equal(registry.after,'PoliticianAfterAction')
-    Assert.equal(registry.error,'ParseErrorAction')
-    Assert.equal(registry.log,'TypedLogAction')
+    Assert.equal(registry.start, 'PoliticianStart')
+    Assert.equal(registry.stop, 'GenericStopAction')
+    Assert.equal(registry.after, 'PoliticianAfterAction')
+    Assert.equal(registry.error, 'ParseErrorAction')
+    Assert.equal(registry.log, 'TypedLogAction')
 
     done()
   }, 60000)
@@ -57,7 +57,6 @@ describe('PoliticianScraper.js', () => {
   }, 60000)
 
   test('PoliticianScraper.js uses raw parliaments, caucuses, provinces without throwing', async (done) => {
-
     const undertest = PoliticianScraper.create({
       url: 'test-url.com',
       parliaments: parliaments,
@@ -69,7 +68,6 @@ describe('PoliticianScraper.js', () => {
   }, 60000)
 
   test('PoliticianScraper.js uses raw parliaments, sessions, provinces, genders without throwing', async (done) => {
-
     const undertest = PoliticianScraper.create({
       url: 'test-url.com',
       parliaments: parliaments,
@@ -82,7 +80,6 @@ describe('PoliticianScraper.js', () => {
   }, 60000)
 
   test('PoliticianScraper.js uses raw parliaments, sessions, provinces, genders, prefixes without throwing', async (done) => {
-
     const undertest = PoliticianScraper.create({
       url: 'test-url.com',
       parliaments: parliaments,

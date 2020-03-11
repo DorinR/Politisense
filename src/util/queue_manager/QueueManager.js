@@ -62,7 +62,7 @@ class QueueManager {
     return result
   }
 
-  finish() {
+  finish () {
     console.debug('WARN: No Finish Message Specified')
   }
 
@@ -108,7 +108,7 @@ class QueueManager {
     return this
   }
 
-  static check(action) {
+  static check (action) {
     if (!(action instanceof Action)) {
       throw new DecorationError(action)
     }

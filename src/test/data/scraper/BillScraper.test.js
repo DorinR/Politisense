@@ -32,25 +32,25 @@ describe('BillScraper.js', () => {
     })
     const registry = undertest.registry
     Assert.equal(Object.values(registry).length, 4)
-    Assert.equal(registry.start,'BillStartAction')
-    Assert.equal(registry.stop,'GenericStopAction')
-    Assert.equal(registry.error,'ParseErrorAction')
-    Assert.equal(registry.log,'TypedLogAction')
+    Assert.equal(registry.start, 'BillStartAction')
+    Assert.equal(registry.stop, 'GenericStopAction')
+    Assert.equal(registry.error, 'ParseErrorAction')
+    Assert.equal(registry.log, 'TypedLogAction')
 
     done()
   }, 60000)
 
   test('BillScraper.js uses raw parliament values without session throws', async (done) => {
-    try{
+    try {
       BillScraper.create({
         url: 'test-url.com',
-        parliaments: [43,44]
+        parliaments: [43, 44]
       })
     } catch (e) {
-      if(e instanceof chai.AssertionError) {
+      if (e instanceof chai.AssertionError) {
         throw e
       }
-      if(!(e instanceof InvalidParameterError)) {
+      if (!(e instanceof InvalidParameterError)) {
         Assert.fail()
       }
       done()

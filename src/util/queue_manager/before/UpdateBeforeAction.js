@@ -2,8 +2,10 @@ const QueueAction = require('../QueueAction').QueueAction
 const QueueManager = require('../QueueManager').QueueManager
 const Jobs = require('@jobs')
 const QueueManagerWrapperAction = require('../../action/wrapper_action/QueueManagerWrapperAction').QueueManagerWrapperAction
-const UpdateGraph = require('../../../data/UpdateDependencyGraph').UpdateDependencyGraph
+const QueryResponseAdapterAction = require('../../action/adapter_action/QueryResponseAdapterAction').QueryResponseAdapterAction
+const UpdateGraph = require('../../../data/update/UpdateDependencyGraph').UpdateDependencyGraph
 const Parameters = require('@parameter')
+const InsertAction = require('../../action/classify_action/UpdateCollectionAction').UpdateCollectionAction
 
 class UpdateBeforeAction extends QueueAction {
   constructor (manager) {
@@ -15,10 +17,12 @@ class UpdateBeforeAction extends QueueAction {
   async perform () {
     let currentDepth
     let index = 0
+    this.manager.params = []
     console.log(`INFO: ${UpdateBeforeAction.name}: structuring ${this.updates.length} requested updates`)
     this.updates.forEach(({ vertex, depth }) => {
       const update = vertex
       const params = UpdateBeforeAction.createParams(update)
+      this.manager.params.push(params)
       const job = new Jobs.Job(params, this.manager.requeueCallback.bind(this.manager))
       if (!currentDepth) {
         this.manager.updateJobQueue.push([])
@@ -52,7 +56,9 @@ class UpdateBeforeAction extends QueueAction {
     // eslint-disable-next-line new-cap
     const typeCheck = new update.type(params)
     if (typeCheck instanceof QueueManager) {
-      job.addAction(new QueueManagerWrapperAction(update.type, params))
+      job
+        .addAction(new QueueManagerWrapperAction(update.type, params))
+        .addAction(new InsertAction(params))
     } else {
       throw new Error('ERROR: Invalid update type')
     }

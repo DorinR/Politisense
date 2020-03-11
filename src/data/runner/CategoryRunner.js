@@ -20,15 +20,15 @@ class CategoryRunner extends Components.QueueManager {
 
   constructor (params, wait = 30000) {
     super(wait)
-    if(typeof params.parliaments === 'undefined' || (typeof params.parliaments === 'string' && params.parliaments === 'all')) {
+    if (typeof params.parliaments === 'undefined' || (typeof params.parliaments === 'string' && params.parliaments === 'all')) {
       this.params = Parameters.Parliament.Number.map(parliament => {
         return { parliament: parliament }
       })
-    }else if(Array.isArray(params.parliaments)) {
+    } else if (Array.isArray(params.parliaments)) {
       this.params = params.parliaments.map(parliament => {
         return { parliament: parliament }
       })
-    }else {
+    } else {
       throw new InvalidParameterError('ERROR: invalid parameter object provided')
     }
     this.queryCount = this.params.length

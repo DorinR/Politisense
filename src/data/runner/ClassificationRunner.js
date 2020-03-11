@@ -19,10 +19,10 @@ class ClassificationRunner extends Components.QueueManager {
 
   constructor (params, wait = 30000) {
     super(wait)
-    if(!(params instanceof Object)) {
+    if (!(params instanceof Object)) {
       throw new InvalidParameterError('ERROR: parameter must be an object')
     }
-    if(!params.parliaments) {
+    if (!params.parliaments) {
       throw new InvalidParameterError('ERROR: parameter object must contain parliament information')
     }
 

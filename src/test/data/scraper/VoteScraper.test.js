@@ -24,11 +24,11 @@ describe('VoteScraper.js', () => {
     })
     const registry = undertest.registry
     Assert.equal(Object.values(registry).length, 5)
-    Assert.equal(registry.start,'VoteRecordStart')
-    Assert.equal(registry.stop,'GenericStopAction')
-    Assert.equal(registry.after,'VoteAfterAction')
-    Assert.equal(registry.error,'ParseErrorAction')
-    Assert.equal(registry.log,'TypedLogAction')
+    Assert.equal(registry.start, 'VoteRecordStart')
+    Assert.equal(registry.stop, 'GenericStopAction')
+    Assert.equal(registry.after, 'VoteAfterAction')
+    Assert.equal(registry.error, 'ParseErrorAction')
+    Assert.equal(registry.log, 'TypedLogAction')
 
     done()
   }, 60000)
@@ -53,7 +53,6 @@ describe('VoteScraper.js', () => {
   }, 60000)
 
   test('VoteScraper.js uses mapped vote result keys without throwing', async (done) => {
-
     const undertest = VoteScraper.create({
       url: 'test-url.com',
       parliamentSessions: parls,
@@ -75,5 +74,4 @@ describe('VoteScraper.js', () => {
     Assert.equal(undertest.params.length, parls.length * types.length * results.length * topics.length)
     done()
   }, 60000)
-
 })

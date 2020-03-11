@@ -78,6 +78,8 @@ describe('QueueManager Start Actions', () => {
     new Start.Bill({})
     // eslint-disable-next-line no-new
     new Start.Category({})
+    // eslint-disable-next-line no-new
+    new Start.LegislativeActivity({})
     done()
   })
 })

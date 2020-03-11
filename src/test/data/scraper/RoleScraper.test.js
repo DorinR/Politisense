@@ -13,11 +13,11 @@ describe('RoleScraper.js', () => {
     })
     const registry = undertest.registry
     Assert.equal(Object.values(registry).length, 5)
-    Assert.equal(registry.start,'RoleStartAction')
-    Assert.equal(registry.before,'RoleBeforeAction')
-    Assert.equal(registry.stop,'GenericStopAction')
-    Assert.equal(registry.error,'ParseErrorAction')
-    Assert.equal(registry.log,'TypedLogAction')
+    Assert.equal(registry.start, 'RoleStartAction')
+    Assert.equal(registry.before, 'RoleBeforeAction')
+    Assert.equal(registry.stop, 'GenericStopAction')
+    Assert.equal(registry.error, 'ParseErrorAction')
+    Assert.equal(registry.log, 'TypedLogAction')
 
     done()
   }, 60000)

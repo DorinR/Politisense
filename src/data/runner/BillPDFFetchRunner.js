@@ -22,13 +22,13 @@ class BillPDFFetchRunner extends QueueManager {
 
   constructor (params, wait = 5000) {
     super(wait)
-    if(!params.url) {
+    if (!params.url) {
       throw new InvalidParameterError('ERROR: no url to bill pdf provided')
     }
-    if(!params.id) {
+    if (!params.id) {
       throw new InvalidParameterError('ERROR: no bill ID for provided url')
     }
-    if(!params.parliament || (params.parliament && !Parameters.Parliament.Number.includes(params.parliament))) {
+    if (!params.parliament || (params.parliament && !Parameters.Parliament.Number.includes(params.parliament))) {
       throw new InvalidParameterError('ERROR: no parliament or invalid provided for bill ID and url')
     }
 

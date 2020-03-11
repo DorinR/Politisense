@@ -1,10 +1,10 @@
 require('module-alias/register')
-const QueueManager = require('../util/queue_manager/QueueManager').QueueManager
-const BeforeAction = require('../util/queue_manager/before/UpdateBeforeAction').UpdateBeforeAction
-const StartAction = require('../util/queue_manager/Start/UpdateStartAction').UpdateStartAction
-const StopAction = require('../util/queue_manager/stop/UpdateStopAction').UpdateStopAction
-const Throw = require('../util/queue_manager/error/ThrowError').ThrowAction
-const InvalidParameterError = require('./error/InvalidParameterError').InvalidParameterError
+const QueueManager = require('../../util/queue_manager/QueueManager').QueueManager
+const BeforeAction = require('../../util/queue_manager/before/UpdateBeforeAction').UpdateBeforeAction
+const StartAction = require('../../util/queue_manager/start/UpdateStartAction').UpdateStartAction
+const StopAction = require('../../util/queue_manager/stop/UpdateStopAction').UpdateStopAction
+const Throw = require('../../util/queue_manager/error/ThrowError').ThrowAction
+const InvalidParameterError = require('../error/InvalidParameterError').InvalidParameterError
 const Parameters = require('@parameter')
 
 class UpdatePipelineManager extends QueueManager {
@@ -36,6 +36,8 @@ module.exports = {
   UpdatePipelineManager: UpdatePipelineManager
 }
 
-UpdatePipelineManager
-  .create(Parameters.UpdateNode.Vote)
+UpdatePipelineManager.create(Parameters.UpdateNode.All)
   .execute()
+  .then(result => {
+    console.log(result)
+  })
