@@ -156,7 +156,7 @@ export default function CategoryGrid() {
 
   async function getAllBillsByRep(head) {
     return axios
-      .get(`/api/bills/${head}/getAllBillsByRep`)
+      .get(`/api/bills/${head}/getAllBillsByRepForAllParliaments`)
       .then(res => {
         if (res.data.success) {
           return res.data.data
