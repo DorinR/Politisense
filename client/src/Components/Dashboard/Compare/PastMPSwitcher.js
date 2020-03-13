@@ -37,6 +37,22 @@ const MenuProps = {
     }
 }
 
+async function fetchPastRepresentatives() {
+    let pastRepresentatives = []
+    await axios
+        .get('/api/representatives/getPastRepresentatives')
+        .then(res => {
+            if (res.data.success) {
+                pastRepresentatives = res.data.data
+            }
+        })
+        .catch(err => console.error(err))
+    console.log(pastRepresentatives)
+    return pastRepresentatives.sort((mp1, mp2) => {
+        return mp1.name.localeCompare(mp2.name)
+    })
+}
+
 function getStyles(name, personName, theme) {
     return {
         fontWeight:
@@ -46,32 +62,31 @@ function getStyles(name, personName, theme) {
     }
 }
 
-
-function handleChange(event) {
-    setMp(event.target.value)
-    const value = event.target.value
-    functionUpdate(value)
-}
-
 export default function PastMPSwitcher(props) {
     // // eslint-disable-next-line no-use-before-define
     const { functionUpdate, ...other } = props
     const classes = useStyles()
     const theme = useTheme()
     const [mp, setMp] = React.useState([])
+    const [dropdownMps, setDropdownMps] = React.useState([])
 
-    const pastMps = ['2001 - 2004 (37)',
-        '2004 - 2005 (38)',
-        '2006 - 2008 (39)',
-        '2008 - 2011 (40)',
-        '2011 - 2015 (41)',
-        '2015 - 2019 (42)']
+    async function populateDropdownMps(mps) {
+        setDropdownMps(mps)
+    }
 
     function handleChange(event) {
         setMp(event.target.value)
         const value = event.target.value
         functionUpdate(value)
     }
+
+    useEffect(() => {
+        async function getData() {
+            const pastRepresentatives = await fetchPastRepresentatives()
+            populateDropdownMps(pastRepresentatives)
+        }
+        getData()
+    }, [mp])
 
     return (
         <div>
@@ -84,12 +99,12 @@ export default function PastMPSwitcher(props) {
                     onChange={handleChange}
                     input={<Input />}
                     MenuProps={MenuProps}>
-                    {pastMps.map(mp => (
+                    {dropdownMps.map(mp => (
                         <MenuItem
-                            key={mp}
-                            value={mp}
-                            style={getStyles(mp, mp, theme)}>
-                            {mp}
+                            key={mp.name}
+                            value={mp.name}
+                            style={getStyles(mp.name, mp.name, theme)}>
+                            {mp.name}
                         </MenuItem>
                     ))}
                 </Select>

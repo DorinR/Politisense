@@ -81,203 +81,31 @@ exports.getAllRepresentatives = (req, res) => {
     })
 }
 
-
-exports.Parliament42 = (req, res) => {
-  const timePeriod42 = []
-  const db = new Firestore()
-  db.Parliament42()
-    .select()
-    .then(snapshot => {
-      if (snapshot.empty) {
-        res.status(400).json({
-          message: 'No Representatives Found in Database',
-          success: false
+exports.getPastParliaments = (req, res) => {
+  const parliaments = [36, 37, 38, 39, 40, 41, 42]
+  const riding = 'nunavut'
+  const db = new Firestore(false)
+  let politicians = parliaments.map(parl => {
+    return db.forParliament(parl)
+      .Politicians()
+      .where('riding', '==', riding)
+      .select()
+      .then(snapshot => {
+        let ret = {}
+        snapshot.forEach(doc => {
+          ret = doc.data()
         })
-      }
-      snapshot.forEach(doc => {
-        timePeriod42.push(doc.data())
+        return ret
       })
-
-      if (!timePeriod42.empty) {
-        res.status(200).json({
-          data: timePeriod42,
-          success: true
-        })
-      }
+    res.status(200).json({
+      data: repInfo,
+      success: true
     })
-    .catch(err => {
-      console.error(err.message)
-      res.status(400).json({
-        data: timePeriod42,
-        success: false
-      })
-      console.log(err)
-    })
-}
-
-exports.Parliament41 = (req, res) => {
-  const timePeriod41 = []
-  const db = new Firestore()
-  db.Parliament41()
-    .select()
-    .then(snapshot => {
-      if (snapshot.empty) {
-        res.status(400).json({
-          message: 'No Representatives Found in Database',
-          success: false
-        })
-      }
-      snapshot.forEach(doc => {
-        timePeriod41.push(doc.data())
-      })
-
-      if (!timePeriod41.empty) {
-        res.status(200).json({
-          data: timePeriod41,
-          success: true
-        })
-      }
-    })
-    .catch(err => {
-      console.error(err.message)
-      res.status(400).json({
-        data: timePeriod41,
-        success: false
-      })
-      console.log(err)
-    })
-}
-
-exports.Parliament40 = (req, res) => {
-  const timePeriod40 = []
-  const db = new Firestore()
-  db.Parliament40()
-    .select()
-    .then(snapshot => {
-      if (snapshot.empty) {
-        res.status(400).json({
-          message: 'No Representatives Found in Database',
-          success: false
-        })
-      }
-      snapshot.forEach(doc => {
-        timePeriod40.push(doc.data())
-      })
-
-      if (!timePeriod40.empty) {
-        res.status(200).json({
-          data: timePeriod40,
-          success: true
-        })
-      }
-    })
-    .catch(err => {
-      console.error(err.message)
-      res.status(400).json({
-        data: timePeriod40,
-        success: false
-      })
-      console.log(err)
-    })
-}
-
-exports.getParliamentData = (req, res) => {
-  const representatives = []
-  const db = new Firestore(false).forParliament(req.params.parliamentNumber)
-  db.Politician()
-    .select()
-    .then(snapshot => {
-      if (snapshot.empty) {
-        res.status(404).json({
-          message: 'No Representatives Found in Database',
-          success: false
-        })
-      }
-      snapshot.forEach(doc => {
-        representatives.push(doc.data())
-      })
-
-      if (!timePeriod39.empty) {
-        res.status(200).json({
-          data: representatives,
-          success: true
-        })
-      }
-    })
-    .catch(err => {
-      console.error(err.message)
-      res.status(400).json({
-        message: 'Connection Failed',
-        success: false
-      })
-      console.log(err)
-    })
-}
-
-exports.Parliament38 = (req, res) => {
-  const timePeriod38 = []
-  const db = new Firestore()
-  db.Parliament38()
-    .select()
-    .then(snapshot => {
-      if (snapshot.empty) {
-        res.status(400).json({
-          message: 'No Representatives Found in Database',
-          success: false
-        })
-      }
-      snapshot.forEach(doc => {
-        timePeriod38.push(doc.data())
-      })
-
-      if (!timePeriod38.empty) {
-        res.status(200).json({
-          data: timePeriod38,
-          success: true
-        })
-      }
-    })
-    .catch(err => {
-      console.error(err.message)
-      res.status(400).json({
-        data: timePeriod38,
-        success: false
-      })
-      console.log(err)
-    })
-}
-
-exports.Parliament37 = (req, res) => {
-  const timePeriod37 = []
-  const db = new Firestore()
-  db.Parliament37()
-    .select()
-    .then(snapshot => {
-      if (snapshot.empty) {
-        res.status(400).json({
-          message: 'No Representatives Found in Database',
-          success: false
-        })
-      }
-      snapshot.forEach(doc => {
-        timePeriod37.push(doc.data())
-      })
-
-      if (!timePeriod38.empty) {
-        res.status(200).json({
-          data: timePeriod37,
-          success: true
-        })
-      }
-    })
-    .catch(err => {
-      console.error(err.message)
-      res.status(400).json({
-        data: timePeriod37,
-        success: false
-      })
-      console.log(err)
-    })
+  })
+  politicians = await Promise.all(politicians)
+  politicians.forEach(politicians => {
+    console.log(politicians)
+  })
 }
 
 // getRepresentativesInfo

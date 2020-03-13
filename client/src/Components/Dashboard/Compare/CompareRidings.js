@@ -29,29 +29,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-// export async function getPastParliaments() {
-//   const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
-//   const riding = 'nunavut'
-//   const db = new Firestore(false)
-//   let politicians = parliaments.map(parl => {
-//     return db.forParliament(parl)
-//       .Politicians()
-//       .where('riding', '==', riding)
-//       .select()
-//       .then(snapshot => {
-//         let ret = {}
-//         snapshot.forEach(doc => {
-//           ret = doc.data()
-//         })
-//         return ret
-//       })
-//   })
-// politicians = await Promise.all(politicians)
-// politicians.forEach(politicians => {
-//   console.log(politicians)
-// })
-// }
-
 export async function getAllBillsByHead(head) {
   const res = await axios.get(
     `http://localhost:5000/api/bills/${head}/getAllBillsByHead`

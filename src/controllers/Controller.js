@@ -48,28 +48,8 @@ module.exports = {
     return RepresentativeController.getAllRepresentatives(req, res)
   },
 
-  Parliament42: function (req, res) {
-    return RepresentativeController.Parliament42(req, res)
-  },
-
-  Parliament41: function (req, res) {
-    return RepresentativeController.Parliament41(req, res)
-  },
-
-  Parliament40: function (req, res) {
-    return RepresentativeController.Parliament40(req, res)
-  },
-
-  Parliament39: function (req, res) {
-    return RepresentativeController.Parliament39(req, res)
-  },
-
-  Parliament38: function (req, res) {
-    return RepresentativeController.Parliament38(req, res)
-  },
-
-  Parliament37: function (req, res) {
-    return RepresentativeController.Parliament37(req, res)
+  getPastRepresentatives: function (req, res) {
+    return RepresentativeController.getPastRepresentatives(req, res)
   },
 
   getRepresentativeId: function (req, res) {
