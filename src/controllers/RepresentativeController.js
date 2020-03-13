@@ -47,41 +47,85 @@ exports.getRepresentativeByRiding = (req, res) => {
     })
     .catch(console.error)
 }
-
-exports.getAllRepresentatives = (req, res) => {
-  const representativesAccumulator = []
-  const db = new Firestore()
-  db.Politician()
-    .select()
-    .then(snapshot => {
-      if (snapshot.empty) {
-        res.status(400).json({
-          message: 'No Representatives Found in Database',
-          success: false
+async function getAllRepsForEachParliament(parliamentNo){
+    const db = new Firestore(false).forParliament(parliamentNo)
+    let politicians =[]
+    await db.Politician()
+        .select()
+        .then(snapshot => {
+            if (snapshot.empty) {
+                return []
+            }
+            snapshot.forEach(doc => {
+                politicians.push(doc.data())
+            })
+            return politicians
         })
-      }
-      snapshot.forEach(doc => {
-        representativesAccumulator.push(doc.data())
-      })
+    return politicians
+}
 
-      if (!representativesAccumulator.empty) {
-        res.status(200).json({
-          data: representativesAccumulator,
-          success: true
-        })
-      }
-    })
-    .catch(err => {
-      console.error(err.message)
-      res.status(400).json({
-        data: representativesAccumulator,
-        success: false
-      })
-      console.log(err)
+
+
+exports.getAllRepsFromAllParliaments= async (req,res)=>{
+    let rawData = await Promise.all([
+        getAllRepsForEachParliament(43),
+        getAllRepsForEachParliament(42),
+        getAllRepsForEachParliament(41),
+        getAllRepsForEachParliament(40),
+        getAllRepsForEachParliament(39),
+        getAllRepsForEachParliament(38),
+        getAllRepsForEachParliament(37),
+        getAllRepsForEachParliament(36),
+    ])
+    let jointArray = []
+
+    rawData.forEach(array => {
+        if(array){
+            jointArray = [...jointArray, ...array]}
+    });
+    let test=  [...new Set([...jointArray])]
+
+    res.status(200).json({
+        success: true,
+        data: test
     })
 }
 
-// getRepresentativesInfo
+
+
+exports.getAllRepresentatives = async (req, res) => {
+    const representativesAccumulator = []
+    const db = new Firestore()
+    db.Politician()
+        .select()
+        .then(snapshot => {
+            if (snapshot.empty) {
+                res.status(400).json({
+                    message: 'No Representatives Found in Database',
+                    success: false
+                })
+            }
+            snapshot.forEach(doc => {
+                representativesAccumulator.push(doc.data())
+            })
+
+            if (!representativesAccumulator.empty) {
+                res.status(200).json({
+                    data: representativesAccumulator,
+                    success: true
+                })
+            }
+        })
+        .catch(err => {
+            console.error(err.message)
+            res.status(400).json({
+                data: representativesAccumulator,
+                success: false
+            })
+            console.log(err)
+        })
+}
+
 exports.getRepresentativesInfo = (req, res) => {
   const name = req.params.name.toLowerCase()
   let repInfo = {}
