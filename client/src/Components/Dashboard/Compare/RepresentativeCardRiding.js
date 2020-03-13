@@ -34,18 +34,18 @@ const useStyles = makeStyles({
     }
 })
 
-// function capitalize(str) {
-//     if (str && isNaN(str)) {
-//         let res = str
-//         res = res
-//             .toLowerCase()
-//             .split(' ')
-//             .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-//             .join(' ')
-//         return res
-//     }
-//     return null
-// }
+function capitalize(str) {
+    if (str && isNaN(str)) {
+        let res = str
+        res = res
+            .toLowerCase()
+            .split(' ')
+            .map(s => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ')
+        return res
+    }
+    return null
+}
 
 async function fetchParliamentData(parlNum) {
     return await axios
@@ -80,7 +80,39 @@ export default function RepresentativeCard(props) {
     useEffect(() => {
         setPartyRole('Association on foreign affairs')
         setAssociation('some association')
-    }, [name])
+        if (name) {
+            async function getRepInfo(name) {
+                const res = await axios.get(
+                    `http://localhost:5000/api/representatives/${name}/getRepresentativesInfo`
+                )
+                return res.data.data
+            }
+            async function getIssuedBillsByHead(head) {
+                const res = await axios.get(
+                    `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
+                )
+                return res.data.data
+            }
+            async function getData(name) {
+                // eslint-disable-next-line
+                const riding = await getRepInfo(name)
+                const bills = await getAllBillsByHead(name)
+                const total = await calculateTotalVotesBills(bills)
+                setTotalBills(total)
+                setRiding(riding.riding)
+                const test = riding.riding
+                setYearElected(riding.yearElected)
+                setPoliticalParty(riding.politicalParty)
+                const ridingCode = await fetchRidingCode(test)
+                setRidingCode(ridingCode)
+                const issuedBillsByHead = await getIssuedBillsByHead(name)
+                if (issuedBillsByHead.length != 0) {
+                    setIssuedBills(issuedBillsByHead.length)
+                }
+            }
+            getData(name)
+        }
+    }, [name, riding, politicalParty, yearElected, issuedBills])
 
     return (
         <Grid container spacing={2}>
@@ -98,7 +130,7 @@ export default function RepresentativeCard(props) {
                                 />
                             </Grid>
                         </Grid>
-                        {name ? (
+                        {ridingCode ? (
                             <List>
                                 <ListItem>
                                     <ListItemAvatar>
@@ -118,6 +150,71 @@ export default function RepresentativeCard(props) {
                                     </ListItemAvatar>
                                     <Box m={1} />
                                     <div>{association}</div>
+                                    <Box m={1} />
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemAvatar>
+                                        <Avatar className={classes.avatar}>
+                                            <PersonIcon />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText></ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemAvatar>
+                                        <Avatar className={classes.avatar}>
+                                            <FlagIcon />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText></ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemAvatar>
+                                        <Avatar className={classes.avatar}>
+                                            <LocationOnIcon />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText>{capitalize(riding)}</ListItemText>
+                                </ListItem>
+
+                                <ListItem>
+                                    <ListItemAvatar>
+                                        <Avatar className={classes.avatar}>
+                                            <CalendarTodayIcon />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText>Elected in </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemAvatar>
+                                        <Avatar className={classes.avatar}>
+                                            <FormatListNumberedIcon />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText> Total Voted Bills: </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemAvatar>
+                                        <Avatar className={classes.avatar}>
+                                            <AssignmentIcon />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText>
+                                        {' '}
+                                        Total Issued Bills: {issuedBills}
+                                    </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemAvatar>
+                                        <Avatar className={classes.avatar}>
+                                            <MapIcon />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <Box m={1} />
+                                    <RidingShapeContainer
+                                        ridingCode={ridingCode}
+                                        politicalParty={politicalParty}
+                                    />
                                     <Box m={1} />
                                 </ListItem>
                             </List>
