@@ -43,17 +43,18 @@ const useStyles = makeStyles({
   }
 })
 
+export async function fetchCategories(){
+  return axios
+      .get('/api/bills/fetchCategories')
+      .then(res=>{
+        if(res.data.success){
+          return res.data.data
+        }
+      })
+}
 export default function CategoryDashboard () {
   const classes = useStyles()
-  const [categoryList] = React.useState([
-    'economics',
-    'healthcare',
-    'human rights',
-    'business',
-    'religion',
-    'criminal',
-    'trade'
-  ])
+  const [categoryList,setCategoryList] = React.useState(null)
 
   const [user, setUser] = useState(null)
   useEffect(() => {
@@ -62,15 +63,29 @@ export default function CategoryDashboard () {
     setUser(user)
   }, [])
 
+  async function getAllRepsFromAllParliaments(){
+    return axios
+        .get('/api/representatives/getAllRepsFromAllParliaments')
+        .then(res => {
+          if (res.data.success) {
+            return res.data.data
+          }
+        })
+        .catch(console.error)
+  }
   const [reps, setReps] = React.useState(null)
+  const [allMPsFromAllParliaments, setAllMPsFromAllParliaments] = React.useState(null)
   useEffect(() => {
     async function getData () {
       const representatives = await getAllReps()
+      const categories= await fetchCategories()
+      const mpsFromAllParliaments= await getAllRepsFromAllParliaments()
+      setAllMPsFromAllParliaments(mpsFromAllParliaments)
+      setCategoryList(categories)
       setReps(representatives)
     }
     getData()
   }, [])
-
   async function getAllReps () {
     return axios
       .get('/api/representatives/getAllRepresentatives')
@@ -119,16 +134,16 @@ export default function CategoryDashboard () {
   useEffect(() => {
     async function getData () {
       if (userRepresentative) {
-        const billsByRep = await getAllBillsByRep(userRepresentative)
+        const billsByRep = await getAllBillsByRepForAllParliaments(userRepresentative)
         setRepresentativeData(billsByRep)
       }
     }
     getData()
   }, [userRepresentative])
 
-  async function getAllBillsByRep (head) {
+  async function getAllBillsByRepForAllParliaments (head) {
     return axios
-      .get(`/api/bills/${head}/getAllBillsByRep`)
+      .get(`/api/bills/${head}/getAllBillsByRepForAllParliaments`)
       .then(res => {
         if (res.data.success) {
           return res.data.data
@@ -136,12 +151,11 @@ export default function CategoryDashboard () {
       })
       .catch(console.error)
   }
-
   const [userRepIssuedBills, setUserRepIssuedBills] = React.useState(null)
   useEffect(() => {
     async function getData () {
       if (userRepresentative) {
-        const issuedBillByUserRep = await getAllBillsBySponsorName(
+        const issuedBillByUserRep = await getAllBillsBySponsorForAllParliaments(
           userRepresentative
         )
         setUserRepIssuedBills(issuedBillByUserRep)
@@ -150,9 +164,9 @@ export default function CategoryDashboard () {
     getData()
   }, [userRepresentative])
 
-  async function getAllBillsBySponsorName (head) {
+  async function getAllBillsBySponsorForAllParliaments (head) {
     return axios
-      .get(`/api/bills/${head}/getAllBillsBySponsorName`)
+      .get(`/api/bills/${head}/getAllBillsBySponsorForAllParliaments`)
       .then(res => {
         if (res.data.success) {
           return res.data.data
@@ -160,15 +174,19 @@ export default function CategoryDashboard () {
       })
       .catch(console.error)
   }
-
   const [donutData, setDonutData] = React.useState(null)
   useEffect(() => {
-    if (reps && representativeData) {
-      const data = createDataSetDonut(reps, representativeData)
-      setDonutData([data])
+    async function getDataForDonutD3(){
+      let data=[]
+      if (allMPsFromAllParliaments && representativeData) {
+         data = await createDataSetDonut(allMPsFromAllParliaments, representativeData)
+        setDonutData(data)
+      }
     }
-  }, [reps, representativeData])
+    getDataForDonutD3()
+  }, [allMPsFromAllParliaments, representativeData])
 
+  // Radar Chart depends on the RepData
   const [radarData, setRadarData] = React.useState(null)
   useEffect(() => {
     if (categoryList && representativeData) {
@@ -228,7 +246,7 @@ export default function CategoryDashboard () {
                       width={400}
                       height={350}
                       padding={40}
-                      domainMax={radarData[1] + 3}
+                      domainMax={radarData[1] + 5}
                       highlighted
                       onHover={point => {
                         if (point) {
@@ -236,15 +254,7 @@ export default function CategoryDashboard () {
                         }
                       }}
                       data={{
-                        variables: [
-                          { key: 'trade', label: 'Trade' },
-                          { key: 'criminal', label: 'Criminal' },
-                          { key: 'business', label: 'Business' },
-                          { key: 'Economics', label: 'Economics' },
-                          { key: 'Healthcare', label: 'Healthcare' },
-                          { key: 'Religion', label: 'Religion' },
-                          { key: 'Human Rights', label: 'Human Rights' }
-                        ],
+                        variables: createVariablesRadar(categoryList),
                         sets: [
                           {
                             values: radarData[0]
@@ -320,14 +330,19 @@ export default function CategoryDashboard () {
     </div>
   )
 }
-
+function createVariablesRadar(categories){
+  let lables= []
+  categories.forEach(category =>{
+    let temp = {key: category, label:category}
+    lables.push(temp)
+  })
+  return lables
+}
 function createDataSetRadar(categories, data) {
   const dataArray = []
   let temp = {}
   const dataSetRadar = {}
   let maxValue = 0
-  console.log(categories)
-  console.log(data)
   categories.forEach(category => {
     let totalvotes = 0
     data.forEach(bill => {
@@ -351,56 +366,40 @@ function createDataSetRadar(categories, data) {
 
   return [dataSetRadar, maxValue]
 }
+export function getAllPoliticalParties(politicians){
+  let politicalParties = [...new Set(politicians.map(item => item.party))]
+  return politicalParties
+}
 
-export function createDataSetDonut(sponsors, mpdata) {
-  let liberalCounter = 0
-  let conservativeCounter = 0
-  let ndpCounter = 0
-  let peopleCounter = 0
-  let greenCounter = 0
-  let bqCounter = 0
+export async function createDataSetDonut(sponsors, mpdata) {
   let parties = {}
+  let politicalPartiesFromAllParliaments = getAllPoliticalParties(sponsors)
+  let partiesCounters = []
+
+  politicalPartiesFromAllParliaments.forEach((party,i) => {
+    let temp = {partyType: party, counter: 0}
+    partiesCounters.push(temp)
+  })
 
   if (mpdata.length) {
     mpdata.forEach(bill => {
       if (bill.voteRecord.yea === true) {
         sponsors.forEach(sponsor => {
           if (sponsor.name === bill.billData.sponsorName) {
-            switch (sponsor.politicalParty) {
-              case 'liberal':
-                liberalCounter++
-                break
-              case 'conservative':
-                conservativeCounter++
-                break
-              case 'ndp':
-                ndpCounter++
-                break
-              case 'bloc québécois':
-                bqCounter++
-                break
-              case 'green':
-                greenCounter++
-                break
-              case 'people':
-                peopleCounter++
-                break
-              default:
-                return 'nothing'
-            }
+           partiesCounters.forEach((party)=> {
+             if(sponsor.party == party.partyType && party.partyType != "" && party.partyType != undefined){
+               party.counter++
+             }
+           })
           }
         })
       }
     })
   }
 
-  parties = {
-    Liberal: liberalCounter,
-    Conservative: conservativeCounter,
-    NDP: ndpCounter,
-    People: peopleCounter,
-    Green: greenCounter,
-    BQ: bqCounter
-  }
-  return parties
+  partiesCounters.forEach(element=> {
+    parties[element.partyType]=element.counter
+  })
+  politicalPartiesFromAllParliaments =politicalPartiesFromAllParliaments.filter(element=> element != "" && element!= undefined )
+  return [parties,politicalPartiesFromAllParliaments]
 }
