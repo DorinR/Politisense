@@ -30,11 +30,11 @@ router.get(
 // @desc get all the bills that were sponsored by MPs from that party
 // @access Public
 router.get(
-    '/:party/getNumberOfBillsSponsoredByParty',
-    controller.getNumberOfBillsSponsoredByParty
+  '/:party/getNumberOfBillsSponsoredByParty',
+  controller.getNumberOfBillsSponsoredByParty
 )
 router.get(
-    '/fetchCategories',
-    controller.fetchCategories
+  '/fetchCategories',
+  controller.fetchCategories
 )
 module.exports = router

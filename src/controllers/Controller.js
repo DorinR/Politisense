@@ -126,6 +126,6 @@ module.exports = {
   },
 
   getAllRepsFromAllParliaments: function (req, res) {
-  return RepresentativeController.getAllRepsFromAllParliaments(req, res)
-}
+    return RepresentativeController.getAllRepsFromAllParliaments(req, res)
+  }
 }

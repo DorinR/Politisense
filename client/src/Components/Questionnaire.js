@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Stepper from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step'
@@ -18,7 +18,7 @@ import FormLabel from '@material-ui/core/FormLabel'
 import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 import { Redirect } from 'react-router'
-import {fetchCategories} from "./Dashboard/GeneralDashboard";
+import { fetchCategories } from './Dashboard/GeneralDashboard'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -97,14 +97,12 @@ export default function HorizontalLinearStepper (props) {
 
   const [options, setOptions] = useState([])
   React.useEffect(() => {
-    async function getCategoryList(){
-      let categories = await fetchCategories()
+    async function getCategoryList () {
+      const categories = await fetchCategories()
       setOptions(categories)
     }
     getCategoryList()
-
-  },[])
-
+  }, [])
 
   function getStepContent (step) {
     switch (step) {
@@ -117,19 +115,20 @@ export default function HorizontalLinearStepper (props) {
                   What issue brings you out to vote?
                 </FormLabel>
                 <RadioGroup
-                    aria-label='issue'
-                    name='issue'
-                    value={category1}
-                    onChange={handleChangeCategory1}
+                  aria-label='issue'
+                  name='issue'
+                  value={category1}
+                  onChange={handleChangeCategory1}
                 >
-                {options? options.map(option => (
-                     <FormControlLabel
+                  {options ? options.map((option, key) => (
+                    <FormControlLabel
+                      key={key}
                       value={option}
                       control={<Radio />}
                       label={option}
-                     />)
+                    />)
                   )
-                 : ""}
+                    : ''}
                 </RadioGroup>
               </FormControl>
             </CardContent>

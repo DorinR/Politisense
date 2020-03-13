@@ -43,18 +43,18 @@ const useStyles = makeStyles({
   }
 })
 
-export async function fetchCategories(){
+export async function fetchCategories () {
   return axios
-      .get('/api/bills/fetchCategories')
-      .then(res=>{
-        if(res.data.success){
-          return res.data.data
-        }
-      })
+    .get('/api/bills/fetchCategories')
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
 }
 export default function CategoryDashboard () {
   const classes = useStyles()
-  const [categoryList,setCategoryList] = React.useState(null)
+  const [categoryList, setCategoryList] = React.useState(null)
 
   const [user, setUser] = useState(null)
   useEffect(() => {
@@ -63,32 +63,9 @@ export default function CategoryDashboard () {
     setUser(user)
   }, [])
 
-  async function getAllRepsFromAllParliaments(){
+  async function getAllRepsFromAllParliaments () {
     return axios
-        .get('/api/representatives/getAllRepsFromAllParliaments')
-        .then(res => {
-          if (res.data.success) {
-            return res.data.data
-          }
-        })
-        .catch(console.error)
-  }
-  const [reps, setReps] = React.useState(null)
-  const [allMPsFromAllParliaments, setAllMPsFromAllParliaments] = React.useState(null)
-  useEffect(() => {
-    async function getData () {
-      const representatives = await getAllReps()
-      const categories= await fetchCategories()
-      const mpsFromAllParliaments= await getAllRepsFromAllParliaments()
-      setAllMPsFromAllParliaments(mpsFromAllParliaments)
-      setCategoryList(categories)
-      setReps(representatives)
-    }
-    getData()
-  }, [])
-  async function getAllReps () {
-    return axios
-      .get('/api/representatives/getAllRepresentatives')
+      .get('/api/representatives/getAllRepsFromAllParliaments')
       .then(res => {
         if (res.data.success) {
           return res.data.data
@@ -96,7 +73,16 @@ export default function CategoryDashboard () {
       })
       .catch(console.error)
   }
-
+  const [allMPsFromAllParliaments, setAllMPsFromAllParliaments] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      const categories = await fetchCategories()
+      const mpsFromAllParliaments = await getAllRepsFromAllParliaments()
+      setAllMPsFromAllParliaments(mpsFromAllParliaments)
+      setCategoryList(categories)
+    }
+    getData()
+  }, [])
   const [riding, setRiding] = useState(null)
   useEffect(() => {
     async function getData () {
@@ -176,10 +162,10 @@ export default function CategoryDashboard () {
   }
   const [donutData, setDonutData] = React.useState(null)
   useEffect(() => {
-    async function getDataForDonutD3(){
-      let data=[]
+    async function getDataForDonutD3 () {
+      let data = []
       if (allMPsFromAllParliaments && representativeData) {
-         data = await createDataSetDonut(allMPsFromAllParliaments, representativeData)
+        data = await createDataSetDonut(allMPsFromAllParliaments, representativeData)
         setDonutData(data)
       }
     }

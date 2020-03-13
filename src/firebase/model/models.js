@@ -14,4 +14,3 @@ module.exports = {
   Description: require('./Description').Description,
   LegislativeActivity: require('./LegislativeActivity').LegislativeActivity
 }
-

@@ -1,10 +1,10 @@
 import * as d3 from 'd3'
-const color = ["#c9485b","#6e5773","#ea9085","#75b79e",
-    "#6a8caf","#d77fa1","#ad1d45","#f8615a",
-  "#ad62aa","#be9fe1","#ffd369","#42b883",
-    "#347474","#fec771","#f58b54","#62374e"
-];
-function createDonut (element, fData,labels) {
+const color = ['#c9485b', '#6e5773', '#ea9085', '#75b79e',
+  '#6a8caf', '#d77fa1', '#ad1d45', '#f8615a',
+  '#ad62aa', '#be9fe1', '#ffd369', '#42b883',
+  '#347474', '#fec771', '#f58b54', '#62374e'
+]
+function createDonut (element, fData, labels) {
   function pieChart (pD) {
     const pC = {}
     const pieDim = { w: 400, h: 400 }
@@ -30,7 +30,7 @@ function createDonut (element, fData,labels) {
       .each(function (d) {
         this._current = d
       })
-      .style('fill', function (d,i) {
+      .style('fill', function (d, i) {
         return color[i]
       })
       .on('mouseover', mouseover).on('mouseout', mouseout)
@@ -84,7 +84,7 @@ function createDonut (element, fData,labels) {
     // create the first column for each segment.
     tr.append('td').append('svg').attr('width', '10').attr('height', '10').append('rect')
       .attr('width', '10').attr('height', '10')
-      .attr('fill', function (d,i) {
+      .attr('fill', function (d, i) {
         return color[i]
       })
 
@@ -104,7 +104,7 @@ function createDonut (element, fData,labels) {
     // Utility function to be used to update the legend.
     leg.update = function (nD) {
       // update the data attached to the row elements.
-      let l = legend.select('tbody').selectAll('tr').data(nD)
+      const l = legend.select('tbody').selectAll('tr').data(nD)
 
       // update the frequencies.
       l.select('.legendFreq').text(function (d) {
@@ -137,6 +137,6 @@ export default class DonutChart {
   constructor (element, data) {
     const freqData = [
       { State: 'Yes Votes', freq: data[0] }]
-    createDonut(element, freqData,data[1])
+    createDonut(element, freqData, data[1])
   }
 }

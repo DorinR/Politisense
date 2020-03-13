@@ -8,18 +8,17 @@ import Dialog from '@material-ui/core/Dialog'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import Radio from '@material-ui/core/Radio'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import {fetchCategories} from "./GeneralDashboard";
-
+import { fetchCategories } from './GeneralDashboard'
 
 export function ConfirmationDialogRaw (props) {
   const { onClose, value: valueProp, open, ...other } = props
   const [value, setValue] = React.useState(valueProp)
   const [options, setOptions] = React.useState(null)
   const radioGroupRef = React.useRef(null)
-  const [categoryList,setCategoryList]= React.useState(null)
+  const [categoryList, setCategoryList] = React.useState(null)
   React.useEffect(() => {
-    async function getCategoryList(){
-      let categories = await fetchCategories()
+    async function getCategoryList () {
+      const categories = await fetchCategories()
       setCategoryList(categories)
       setOptions(categories)
     }
@@ -27,14 +26,13 @@ export function ConfirmationDialogRaw (props) {
     if (!open) {
       setValue(valueProp)
     }
-    if(categoryList){
+    if (categoryList) {
       removalExistedCategoriesFromOptions(props.existedCategories)
     }
-  }, [valueProp, open, props.existedCategories,categoryList])
+  }, [valueProp, open, props.existedCategories, categoryList])
 
   const removalExistedCategoriesFromOptions = (existedCategories) => {
-      setOptions(categoryList.filter((el) => !existedCategories.includes(el)))
-
+    setOptions(categoryList.filter((el) => !existedCategories.includes(el)))
   }
 
   const handleEntering = () => {
@@ -74,9 +72,9 @@ export function ConfirmationDialogRaw (props) {
           value={value}
           onChange={handleChange}
         >
-          {options? options.map(option => (
+          {options ? options.map(option => (
             <FormControlLabel value={option} key={option} control={<Radio />} label={option} />
-          )): ""}
+          )) : ''}
         </RadioGroup>
       </DialogContent>
       <DialogActions>
