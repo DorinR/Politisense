@@ -78,11 +78,11 @@ module.exports = {
     return VoteRecordController.getAllVoteRecords(req, res)
   },
 
-  getAllBillsByRep: function (req, res) {
-    return BillController.getAllBillsByRep(req, res)
+  getAllBillsByRepForAllParliaments: function (req, res) {
+    return BillController.getAllBillsByRepForAllParliaments(req, res)
   },
-  getAllBillsBySponsorName: function (req, res) {
-    return BillController.getAllBillsBySponsorName(req, res)
+  getAllBillsBySponsorForAllParliaments: function (req, res) {
+    return BillController.getAllBillsBySponsorForAllParliaments(req, res)
   },
 
   getAllVotesByRepresentative: function (req, res) {
@@ -104,19 +104,28 @@ module.exports = {
   getRidingPopulation: function (req, res) {
     return RidingController.getRidingPopulation(req, res)
   },
+
   getAllPartyData: function (req, res) {
     return PartyController.getAllPartyData(req, res)
   },
 
-  // Financial Record
   getAllSpendingItemsForParty: function (req, res) {
     return FinancialRecordController.getAllSpendingItemsForParty(req, res)
   },
+
   getBudgetData: function (req, res) {
     return BudgetController.budgetData(req, res)
   },
 
   getImageData: function (req, res) {
     return RepresentativeController.getImageData(req, res)
-  }
+  },
+
+  fetchCategories: function (req, res) {
+    return BillController.fetchCategories(req, res)
+  },
+
+  getAllRepsFromAllParliaments: function (req, res) {
+  return RepresentativeController.getAllRepsFromAllParliaments(req, res)
+}
 }
