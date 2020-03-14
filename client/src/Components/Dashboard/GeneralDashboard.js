@@ -16,8 +16,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import List from '@material-ui/core/List'
-import { capitalizedName } from './BillDialog'
-import { fetchCategories } from './Utilities/CommonUsedFunctions'
+import { fetchCategories, capitalizedName } from './Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles({
   card: {
