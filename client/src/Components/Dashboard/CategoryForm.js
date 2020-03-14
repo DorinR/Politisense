@@ -23,19 +23,16 @@ export function ConfirmationDialogRaw (props) {
       setCategoryList(categories)
     }
     getCategoryList()
-
   }, [])
 
-
-  React.useEffect(()=>{
+  React.useEffect(() => {
     if (!open) {
       setValue(valueProp)
     }
     if (categoryList) {
       removalExistedCategoriesFromOptions(props.existedcategories)
     }
-  },[valueProp,open,props.existedcategories,categoryList])
-
+  }, [valueProp, open, props.existedcategories, categoryList])
 
   const [options, setOptions] = React.useState(null)
   const removalExistedCategoriesFromOptions = (existedCategories) => {

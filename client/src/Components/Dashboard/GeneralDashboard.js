@@ -172,7 +172,7 @@ export default function CategoryDashboard () {
     async function getDataForDonutD3 () {
       let data = []
       if (allMPsFromAllParliaments && representativeData) {
-        data =  createDataSetDonut(allMPsFromAllParliaments, representativeData)
+        data = createDataSetDonut(allMPsFromAllParliaments, representativeData)
         setDonutData(data)
       }
     }
@@ -359,13 +359,13 @@ function createDataSetRadar(categories, data) {
 
   return [dataSetRadar, maxValue]
 }
-export function getAllPoliticalParties(politicians){
-  let politicalParties = [...new Set(politicians.map(item => item.party))]
+export function getPoliticalPartyFromSponsor(sponsors){
+  let politicalParties = [...new Set(sponsors.map(item => item.party))]
   return politicalParties
 }
 export function createDataSetDonut(sponsors, mpdata) {
   let parties = {}
-  let politicalPartiesFromAllParliaments = getAllPoliticalParties(sponsors)
+  let politicalPartiesFromAllParliaments = getPoliticalPartyFromSponsor(sponsors)
   let partiesCounters = []
 
   politicalPartiesFromAllParliaments.forEach((party,i) => {
