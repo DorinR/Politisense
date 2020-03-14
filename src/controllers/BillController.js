@@ -271,7 +271,7 @@ exports.getNumberOfBillsSponsoredByParty = async (req, res) => {
 
   new Promise((resolve, reject) => {
     politicians
-      .where('politicalParty', '==', party)
+      .where('party', '==', party)
       .innerJoin('name', bills, 'sponsorName')
       .then(result => {
         if (result.empty) {
