@@ -51,7 +51,7 @@ async function populateDropdownRidings (ridings) {
 async function fetchAllRepresentatives () {
   let representatives = []
   await axios
-    .get('http://localhost:5000/api/representatives/getAllRepresentatives')
+    .get('/api/representatives/getAllRepresentatives')
     .then(res => {
       if (res.data.success) {
         representatives = res.data.data
@@ -78,7 +78,7 @@ export async function updateUserRiding (email, newRiding) {
     email: email,
     riding: newRiding
   }
-  axios.put('http://localhost:5000/api/users/updateUserRiding', updateObject)
+  axios.put('/api/users/updateUserRiding', updateObject)
 }
 
 function getStyles (name, personName, theme) {

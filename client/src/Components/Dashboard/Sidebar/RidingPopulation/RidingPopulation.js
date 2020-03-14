@@ -3,11 +3,7 @@ import axios from 'axios'
 
 export async function fetchPopulation (riding) {
   return axios
-    .get(
-      `http://localhost:5000/api/ridings/getRidingPopulation/${encodeURI(
-        riding
-      )}`
-    )
+    .get(`/api/ridings/getRidingPopulation/${encodeURI(riding)}`)
     .then(res => {
       if (res.data.success) {
         return res.data.data.population

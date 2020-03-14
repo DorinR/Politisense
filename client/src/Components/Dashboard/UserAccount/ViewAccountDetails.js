@@ -7,8 +7,7 @@ import axios from 'axios'
 export async function fetchUserData (userEmail) {
   let result = ''
   await axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`,
-      { params: { acctdet: userEmail } })
+    .get(`/api/users/${userEmail}/getUser`, { params: { acctdet: userEmail } })
     .then(res => {
       if (res.data.success) {
         const user = res.data.data

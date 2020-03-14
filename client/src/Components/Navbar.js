@@ -133,7 +133,7 @@ const useStyles = makeStyles(theme => ({
 
 export async function fetchUserRiding (userEmail) {
   return axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+    .get(`/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
         return res.data.data.riding
@@ -143,9 +143,8 @@ export async function fetchUserRiding (userEmail) {
 }
 
 export async function fetchRepresentative (riding) {
-  return axios.get(
-          `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-  )
+  return axios
+    .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
       if (res.data.success) {
         return res.data.data.name
@@ -241,6 +240,15 @@ export default function MiniDrawer ({ children }) {
               className={classes.navbarCustomButton}
             >
               Voting History
+            </Button>
+          </Link>
+          <Link to='/compare' className={classes.navbarCustomFont}>
+            <Button
+              variant='contained'
+              color='primary'
+              className={classes.navbarCustomButton}
+            >
+              Compare
             </Button>
           </Link>
           <Link to='/budget' className={classes.navbarCustomFont}>
