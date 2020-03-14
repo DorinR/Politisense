@@ -13,6 +13,7 @@ import Navbar from './Components/Navbar'
 import Logout from './Components/Logout'
 import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
 import MapWrapper from './Components/Dashboard/MapWrapper'
+import InteractiveMapWrapper from './Components/Dashboard/InteractiveMap/InteractiveMapWrapper'
 import Questionnaire from './Components/Questionnaire'
 import GeneralDashboard from './Components/Dashboard/GeneralDashboard'
 import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
@@ -35,6 +36,10 @@ const App = () => {
           <Route exact path='/' render={() => <Redirect to='/login' />} />
           <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/map' component={MapWrapper} />
+          <PrivateRoute
+            path='/interactiveMap'
+            component={InteractiveMapWrapper}
+          />
           <PrivateRoute path='/account' component={UserAccountTabs} />
           <PrivateRoute path='/general' component={GeneralDashboard} />
           <PrivateRoute path='/categories' component={CategoryDashboard} />

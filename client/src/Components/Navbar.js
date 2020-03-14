@@ -269,6 +269,15 @@ export default function MiniDrawer ({ children }) {
               Map
             </Button>
           </Link>
+          <Link to='/interactiveMap' className={classes.navbarCustomFont}>
+            <Button
+              variant='contained'
+              color='primary'
+              className={classes.navbarCustomButton}
+            >
+              Interactive Map
+            </Button>
+          </Link>
           <Typography style={{ flex: 1 }} />
           <Link to='/account'>
             <Tooltip title='My Account' aria-label='add'>
