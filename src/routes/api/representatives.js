@@ -14,6 +14,8 @@ router.get('/:riding/getRepresentative', controller.getRepresentativeByRiding)
 router.get('/getAllRepresentatives', controller.getAllRepresentatives)
 
 router.get('/:name/getRepresentativesInfo', controller.getRepresentativesInfo)
+
+router.get('/getPastRepresentatives', controller.getPastRepresentatives)
 // @route post api/:representative/getRepresentativeId
 // @desc get id of representative
 // @access Public

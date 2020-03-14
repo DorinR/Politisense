@@ -81,30 +81,31 @@ exports.getAllRepresentatives = (req, res) => {
     })
 }
 
-exports.getPastParliaments = (req, res) => {
+exports.getPastRepresentatives = async (req, res) => {
+  const representativesAccumulator = []
   const parliaments = [36, 37, 38, 39, 40, 41, 42]
   const riding = 'nunavut'
   const db = new Firestore(false)
   let politicians = parliaments.map(parl => {
     return db.forParliament(parl)
-      .Politicians()
+      .Politician()
       .where('riding', '==', riding)
       .select()
       .then(snapshot => {
-        let ret = {}
+        let ret = []
         snapshot.forEach(doc => {
           ret = doc.data()
         })
         return ret
       })
-    res.status(200).json({
-      data: repInfo,
-      success: true
-    })
   })
   politicians = await Promise.all(politicians)
-  politicians.forEach(politicians => {
-    console.log(politicians)
+  politicians.forEach(pol => {
+    representativesAccumulator.push(pol)
+  })
+  res.status(200).json({
+    data: politicians,
+    success: true
   })
 }
 

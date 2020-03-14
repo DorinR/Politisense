@@ -39,18 +39,19 @@ const MenuProps = {
 
 async function fetchPastRepresentatives() {
     let pastRepresentatives = []
+    console.log('Empty ', pastRepresentatives)
     await axios
         .get('/api/representatives/getPastRepresentatives')
         .then(res => {
             if (res.data.success) {
                 pastRepresentatives = res.data.data
+                console.log("RES DATA", pastRepresentatives)
             }
         })
         .catch(err => console.error(err))
-    console.log(pastRepresentatives)
-    return pastRepresentatives.sort((mp1, mp2) => {
-        return mp1.name.localeCompare(mp2.name)
-    })
+    console.log("END ", pastRepresentatives)
+
+    return pastRepresentatives
 }
 
 function getStyles(name, personName, theme) {
