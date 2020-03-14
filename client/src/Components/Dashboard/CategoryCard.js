@@ -21,6 +21,7 @@ import Typography from '@material-ui/core/Typography'
 import TableContainer from '@material-ui/core/TableContainer'
 import BillDialog from './BillDialog'
 import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
+import { formattingCategory } from './Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   media: {
@@ -146,7 +147,7 @@ export default function CategoryCard (props) {
                 </IconButton>
               </div>
             }
-            title={props.title}
+            title={formattingCategory(props.title)}
           />
           <DeleteCategoryDialog
             classes={{ paper: classes.paper }}

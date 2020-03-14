@@ -181,6 +181,9 @@ export default function CategoryGrid() {
 
   const addEvent = newValue => {
     const copyCategoryArray = Object.assign([], categoryList)
+    if(newValue.includes(" ")){
+       newValue= newValue.replace(" ","-")
+    }
     copyCategoryArray.push(newValue)
     updateUserCategory(copyCategoryArray)
       .then(res => {

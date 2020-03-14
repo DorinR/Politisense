@@ -8,7 +8,7 @@ import Dialog from '@material-ui/core/Dialog'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import Radio from '@material-ui/core/Radio'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import { fetchCategories, formatingCategories } from './Utilities/CommonUsedFunctions'
+import { fetchCategories, formattingCategory } from './Utilities/CommonUsedFunctions'
 
 export function ConfirmationDialogRaw (props) {
   const { onClose, value: valueProp, open, ...other } = props
@@ -19,8 +19,7 @@ export function ConfirmationDialogRaw (props) {
 
   React.useEffect(() => {
     async function getCategoryList () {
-      let categories = await fetchCategories()
-      categories = formatingCategories(categories)
+      const categories = await fetchCategories()
       setCategoryList(categories)
     }
     getCategoryList()
@@ -78,7 +77,7 @@ export function ConfirmationDialogRaw (props) {
           onChange={handleChange}
         >
           {options ? options.map(option => (
-            <FormControlLabel value={option} key={option} control={<Radio />} label={option} />
+            <FormControlLabel value={option} key={option} control={<Radio />} label={formattingCategory(option)} />
           )) : ''}
         </RadioGroup>
       </DialogContent>

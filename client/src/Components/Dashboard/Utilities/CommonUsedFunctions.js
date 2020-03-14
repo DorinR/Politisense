@@ -31,6 +31,14 @@ export function formatingCategories (categoriesList) {
   })
   return modifiedArray
 }
+
+export function formattingCategory (element) {
+  if (element.includes('-')) {
+    return capitalizedName(element.replace('-', ' '))
+  }
+  return capitalizedName(element)
+}
+
 export function capitalizedName (sponsor) {
   if (sponsor && isNaN(sponsor)) {
     let name = sponsor
