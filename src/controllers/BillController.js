@@ -1,5 +1,5 @@
+import { mergeArrays } from '../../client/src/Components/Dashboard/Utilities/CommonUsedFunctions'
 const Firestore = require('@firestore').Firestore
-
 exports.getAllBillsByHead = (req, res) => {
   const db = new Firestore()
   const votes = db.Vote()
@@ -122,17 +122,7 @@ async function getAllBillsByParliamentAndRep (parliamentNo, repName) {
   }
   return finalArray
 }
-function mergeArrays (rawData) {
-  let jointArray = []
 
-  rawData.forEach(array => {
-    if (array) {
-      jointArray = [...jointArray, ...array]
-    }
-  })
-  const test = [...new Set([...jointArray])]
-  return test
-}
 exports.getAllBillsByRepForAllParliaments = async (req, res) => {
   const repName = req.params.head.toLowerCase()
   const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]

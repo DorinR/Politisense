@@ -1,3 +1,4 @@
+import { mergeArrays } from '../../client/src/Components/Dashboard/Utilities/CommonUsedFunctions'
 const Firestore = require('@firestore').Firestore
 
 exports.getImageData = async (req, res) => {
@@ -65,28 +66,17 @@ async function getAllRepsForEachParliament (parliamentNo) {
 }
 
 exports.getAllRepsFromAllParliaments = async (req, res) => {
-  const rawData = await Promise.all([
-    getAllRepsForEachParliament(43),
-    getAllRepsForEachParliament(42),
-    getAllRepsForEachParliament(41),
-    getAllRepsForEachParliament(40),
-    getAllRepsForEachParliament(39),
-    getAllRepsForEachParliament(38),
-    getAllRepsForEachParliament(37),
-    getAllRepsForEachParliament(36)
-  ])
-  let jointArray = []
-
-  rawData.forEach(array => {
-    if (array) {
-      jointArray = [...jointArray, ...array]
-    }
-  })
-  const test = [...new Set([...jointArray])]
+  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
+  const rawData = await Promise.all(
+    parliaments.map(parliament => {
+      return getAllRepsForEachParliament(parliament)
+    })
+  )
+  const jointArray = mergeArrays((rawData))
 
   res.status(200).json({
     success: true,
-    data: test
+    data: jointArray
   })
 }
 
