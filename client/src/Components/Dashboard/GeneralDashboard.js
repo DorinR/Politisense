@@ -54,7 +54,6 @@ export async function fetchCategories () {
 }
 export default function CategoryDashboard () {
   const classes = useStyles()
-  const [categoryList, setCategoryList] = React.useState(null)
 
   const [user, setUser] = useState(null)
   useEffect(() => {
@@ -73,16 +72,24 @@ export default function CategoryDashboard () {
       })
       .catch(console.error)
   }
-  const [allMPsFromAllParliaments, setAllMPsFromAllParliaments] = React.useState(null)
+  const [categoryList, setCategoryList] = React.useState(null)
   useEffect(() => {
     async function getData () {
       const categories = await fetchCategories()
-      const mpsFromAllParliaments = await getAllRepsFromAllParliaments()
-      setAllMPsFromAllParliaments(mpsFromAllParliaments)
       setCategoryList(categories)
     }
     getData()
   }, [])
+
+  const [allMPsFromAllParliaments, setAllMPsFromAllParliaments] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      const mpsFromAllParliaments = await getAllRepsFromAllParliaments()
+      setAllMPsFromAllParliaments(mpsFromAllParliaments)
+    }
+    getData()
+  }, [])
+
   const [riding, setRiding] = useState(null)
   useEffect(() => {
     async function getData () {
@@ -165,7 +172,7 @@ export default function CategoryDashboard () {
     async function getDataForDonutD3 () {
       let data = []
       if (allMPsFromAllParliaments && representativeData) {
-        data = await createDataSetDonut(allMPsFromAllParliaments, representativeData)
+        data =  createDataSetDonut(allMPsFromAllParliaments, representativeData)
         setDonutData(data)
       }
     }
@@ -356,8 +363,7 @@ export function getAllPoliticalParties(politicians){
   let politicalParties = [...new Set(politicians.map(item => item.party))]
   return politicalParties
 }
-
-export async function createDataSetDonut(sponsors, mpdata) {
+export function createDataSetDonut(sponsors, mpdata) {
   let parties = {}
   let politicalPartiesFromAllParliaments = getAllPoliticalParties(sponsors)
   let partiesCounters = []

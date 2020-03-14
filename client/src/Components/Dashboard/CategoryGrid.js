@@ -271,7 +271,7 @@ export default function CategoryGrid() {
                     open={open}
                     onClose={handleClose}
                     value={value}
-                    existedCategories={categoryList}
+                    existedcategories={categoryList}
                   />
                 </CardContent>
               </CardActionArea>

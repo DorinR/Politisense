@@ -13,24 +13,31 @@ import { fetchCategories } from './GeneralDashboard'
 export function ConfirmationDialogRaw (props) {
   const { onClose, value: valueProp, open, ...other } = props
   const [value, setValue] = React.useState(valueProp)
-  const [options, setOptions] = React.useState(null)
   const radioGroupRef = React.useRef(null)
+
   const [categoryList, setCategoryList] = React.useState(null)
+
   React.useEffect(() => {
     async function getCategoryList () {
       const categories = await fetchCategories()
       setCategoryList(categories)
-      setOptions(categories)
     }
     getCategoryList()
+
+  }, [])
+
+
+  React.useEffect(()=>{
     if (!open) {
       setValue(valueProp)
     }
     if (categoryList) {
-      removalExistedCategoriesFromOptions(props.existedCategories)
+      removalExistedCategoriesFromOptions(props.existedcategories)
     }
-  }, [valueProp, open, props.existedCategories, categoryList])
+  },[valueProp,open,props.existedcategories,categoryList])
 
+
+  const [options, setOptions] = React.useState(null)
   const removalExistedCategoriesFromOptions = (existedCategories) => {
     setOptions(categoryList.filter((el) => !existedCategories.includes(el)))
   }
