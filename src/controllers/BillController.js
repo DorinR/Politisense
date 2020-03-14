@@ -63,7 +63,8 @@ async function fetchIDbyPoliticianName (parliamentNo, repName) {
     .select()
     .then(snapshot => {
       if (snapshot.empty) {
-        return 'nothing there 1'
+          console.log("this MP didnt exist in this parliament")
+        return id
       }
       snapshot.forEach(doc => {
         id = doc.id
@@ -86,7 +87,7 @@ async function getAllVoteRecordsByRep (repId, parliamentNo) {
         allVotes.push(element)
       })
       return allVotes
-    })
+    }).catch(e =>console.log("invalid parameters in inner join or in where clause",e))
   return allVotes
 }
 async function getAllBillsByParliamentAndRep (parliamentNo, repName) {
@@ -102,6 +103,7 @@ async function getAllBillsByParliamentAndRep (parliamentNo, repName) {
         .innerJoin('_id', billClassification, 'bill')
         .then(billTable => {
           if (billTable.empty) {
+              console.log("there is no bills for this parliament")
             return []
           }
           allVotes.forEach(data => {
@@ -115,12 +117,10 @@ async function getAllBillsByParliamentAndRep (parliamentNo, repName) {
               }
             })
           })
-          return finalArray
-        })
-      return finalArray
+        }).catch(e =>console.log("invalid parameters for inner join ",e))
     }
-    return finalArray
   }
+    return finalArray
 }
 function mergeArrays (rawData) {
   let jointArray = []
@@ -135,16 +135,12 @@ function mergeArrays (rawData) {
 }
 exports.getAllBillsByRepForAllParliaments = async (req, res) => {
   const repName = req.params.head.toLowerCase()
-  const rawData = await Promise.all([
-    getAllBillsByParliamentAndRep(43, repName),
-    getAllBillsByParliamentAndRep(42, repName),
-    getAllBillsByParliamentAndRep(41, repName),
-    getAllBillsByParliamentAndRep(40, repName),
-    getAllBillsByParliamentAndRep(39, repName),
-    getAllBillsByParliamentAndRep(38, repName),
-    getAllBillsByParliamentAndRep(37, repName),
-    getAllBillsByParliamentAndRep(36, repName)
-  ])
+  const parliaments = [36,37,38,39,40,41,42,43]
+  const rawData = await Promise.all(
+      parliaments.map(parliament => {
+        return getAllBillsByParliamentAndRep(parliament,repName)
+      })
+  )
   const jointArray = mergeArrays(rawData)
 
   res.status(200).json({
@@ -164,13 +160,13 @@ async function getBillsClassifiedBySponsor (parliamentNo, repName) {
     .innerJoin('_id', billClassification, 'bill')
     .then(result => {
       if (result.empty) {
+          console.log("No sponsored bills for "+ repName)
         return []
       }
       result.forEach(bill => {
         billsWithClassification.push(bill)
       })
-      return billsWithClassification
-    })
+    }).catch(e =>console.log("invalid parameters for inner join",e))
   return billsWithClassification
 }
 // we should have 14 unique bills
@@ -186,8 +182,7 @@ async function getVotingRecordsForBills (repName, parliamentNo) {
       data.forEach(bill => {
         billsTotalVotes.push(bill)
       })
-      return billsTotalVotes
-    })
+    }).catch(e =>console.log("invalid repName or invalid parameters in inner join",e))
   return billsTotalVotes
 }
 async function extractAllBillsAndVotingRecordsByParliamentAndSponsor (parliamentNo, repName) {
@@ -196,34 +191,27 @@ async function extractAllBillsAndVotingRecordsByParliamentAndSponsor (parliament
   const votingRecords = await getVotingRecordsForBills(repName, parliamentNo)
 
   if (classifiedBills.length !== 0 && votingRecords.length !== 0) {
-    for (let i = 0; i < classifiedBills.length; i++) {
-      for (let j = 0; j < votingRecords.length; j++) {
-        if (
-          classifiedBills[i].bill === votingRecords[j].bill
-        ) {
-          const temp = {
-            billsClassified: classifiedBills[i],
-            voteRecord: votingRecords[j]
-          }
-          finalArray.push(temp)
-        }
-      }
-    }
+      classifiedBills.forEach((classifiedBill) =>{
+          votingRecords.forEach((votingRecord)=> {
+              if (classifiedBill.bill === votingRecord.bill) {
+                  const temp = {
+                      billsClassified: classifiedBill,
+                      voteRecord: votingRecord
+                  }
+                  finalArray.push(temp)
+              }
+      })})
+   }
     return finalArray
-  }
 }
 
 async function fetchBillsByParliamentAndSponsor (parliamentNo, repName) {
   const id = await fetchIDbyPoliticianName(parliamentNo, repName)
+  let bills= []
   if (id) {
-    const bills = await extractAllBillsAndVotingRecordsByParliamentAndSponsor(parliamentNo, repName)
-    if (bills) {
-      return bills
-    } else {
-      return []
-    }
+    bills = await extractAllBillsAndVotingRecordsByParliamentAndSponsor(parliamentNo, repName)
   }
-  return []
+  return bills
 }
 
 async function getAllBillsByParliamentWithoutRep (parliamentNo) {
@@ -232,29 +220,25 @@ async function getAllBillsByParliamentWithoutRep (parliamentNo) {
   const bills = []
   await billClassification.select().then(snapshot => {
     if (snapshot.empty) {
-      return []
+        console.log("no data for this parliament ")
+        return []
     }
     snapshot.forEach(doc => {
       bills.push(doc.data())
     })
-  })
+  }).catch(e=> console.log(e))
   return bills
 }
 exports.fetchCategories = async (req, res) => {
-  const rawData = await Promise.all([
-    getAllBillsByParliamentWithoutRep(43),
-    getAllBillsByParliamentWithoutRep(42),
-    getAllBillsByParliamentWithoutRep(41),
-    getAllBillsByParliamentWithoutRep(40),
-    getAllBillsByParliamentWithoutRep(39),
-    getAllBillsByParliamentWithoutRep(38),
-    getAllBillsByParliamentWithoutRep(37),
-    getAllBillsByParliamentWithoutRep(36)
-  ])
-
+  const parliaments = [36,37,38,39,40,41,42,43]
+  const rawData = await Promise.all(
+      parliaments.map(parliament => {
+        return getAllBillsByParliamentWithoutRep(parliament)
+      })
+  )
   const jointedArray = mergeArrays(rawData)
   let categories = [...new Set(jointedArray.map(item => item.category))]
-  categories = categories.filter(category => category !== null)
+  categories = categories.filter(category => category !== null && category !== undefined && category!== "")
 
   res.status(200).json({
     success: true,
@@ -264,17 +248,12 @@ exports.fetchCategories = async (req, res) => {
 
 exports.getAllBillsBySponsorForAllParliaments = async (req, res) => {
   const repName = req.params.head.toLowerCase()
-  const rawData = await Promise.all([
-    fetchBillsByParliamentAndSponsor(43, repName),
-    fetchBillsByParliamentAndSponsor(42, repName),
-    fetchBillsByParliamentAndSponsor(41, repName),
-    fetchBillsByParliamentAndSponsor(40, repName),
-    fetchBillsByParliamentAndSponsor(39, repName),
-    fetchBillsByParliamentAndSponsor(38, repName),
-    fetchBillsByParliamentAndSponsor(37, repName),
-    fetchBillsByParliamentAndSponsor(36, repName)
-  ])
-
+  const parliaments = [36,37,38,39,40,41,42,43]
+  const rawData = await Promise.all(
+      parliaments.map(parliament => {
+        return fetchBillsByParliamentAndSponsor(parliament, repName)
+      })
+  )
   const bills = mergeArrays(rawData)
   res.status(200).json({
     success: true,

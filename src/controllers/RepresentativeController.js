@@ -90,7 +90,7 @@ exports.getAllRepsFromAllParliaments = async (req, res) => {
   })
 }
 
-exports.getAllRepresentatives = async (req, res) => {
+exports.getAllRepresentatives =  (req, res) => {
   const representativesAccumulator = []
   const db = new Firestore()
   db.Politician()
