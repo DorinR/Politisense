@@ -18,7 +18,7 @@ import FormLabel from '@material-ui/core/FormLabel'
 import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 import { Redirect } from 'react-router'
-import { fetchCategories, formatingCategories } from './Dashboard/Utilities/CommonUsedFunctions'
+import { fetchCategories, formattingCategory } from './Dashboard/Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -98,8 +98,7 @@ export default function HorizontalLinearStepper (props) {
   const [options, setOptions] = useState([])
   React.useEffect(() => {
     async function getCategoryList () {
-      let categories = await fetchCategories()
-      categories = formatingCategories(categories)
+      const categories = await fetchCategories()
       setOptions(categories)
     }
     getCategoryList()
@@ -126,7 +125,7 @@ export default function HorizontalLinearStepper (props) {
                       key={key}
                       value={option}
                       control={<Radio />}
-                      label={option}
+                      label={formattingCategory(option)}
                     />)
                   )
                     : ''}
@@ -155,7 +154,7 @@ export default function HorizontalLinearStepper (props) {
                         <FormControlLabel
                           value={option}
                           control={<Radio />}
-                          label={option}
+                          label={formattingCategory(option)}
                           key={option}
                         />
                       ) : null
