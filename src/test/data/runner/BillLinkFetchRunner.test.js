@@ -7,6 +7,7 @@ const InvalidParameterError = require('../../../data/error/InvalidParameterError
 const Parameters = require('../../../data/ParameterEnums')
 
 describe('BillLinkFetchRunner.js', () => {
+  // eslint-disable-next-line no-unused-vars
   let parliaments
   beforeAll(() => {
     parliaments = Parameters.Parliament.Number

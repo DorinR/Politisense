@@ -11,7 +11,7 @@ class UpdateCollectionAction extends Action {
   }
 
   async perform (results) {
-    return await Promise.all(
+    return Promise.all(
       results.map(result => {
         let { params, data } = result
         data = UpdateCollectionAction.getData(data)
@@ -29,7 +29,7 @@ class UpdateCollectionAction extends Action {
             return Promise.all(
               data.map(datum => {
                 const ref = UpdateCollectionAction.createNewCollectionReference(db, collection)
-                if(first){
+                if (first) {
                   first = !first
                   return ref.add(Model.serialise(datum)).then(result => { return result.id })
                 } else {
@@ -43,7 +43,7 @@ class UpdateCollectionAction extends Action {
     )
   }
 
-  static getData(data) {
+  static getData (data) {
     if (Array.isArray(data[0])) {
       data = data[0]
     }
@@ -64,7 +64,7 @@ class UpdateCollectionAction extends Action {
     return parliament
   }
 
-  static createNewCollectionReference(db, collection) {
+  static createNewCollectionReference (db, collection) {
     const hierarchy = collection().hierarchy()
     let ref = db.reference.collection(hierarchy[0])
     ref = ref.doc(hierarchy[1])

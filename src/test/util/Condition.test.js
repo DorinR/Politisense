@@ -23,7 +23,7 @@ describe('All Condition tests', () => {
   })
 
   test('stub', async (done) => {
-    Assert(true,'stub')
+    Assert(true, 'stub')
     done()
   })
 })

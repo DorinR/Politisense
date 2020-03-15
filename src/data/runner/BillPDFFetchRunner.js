@@ -1,6 +1,5 @@
 require('module-alias/register')
 const QueueManager = require('../../util/queue_manager/QueueManager').QueueManager
-const QueueAction = require('../../util/queue_manager/QueueAction').QueueAction
 const StartAction = require('../../util/queue_manager/start/BillPDFFetchStart').BillPDFFetchStartAction
 const StopAction = require('../../util/queue_manager/stop/GenericStopAction').GenericStopAction
 const Throw = require('../../util/queue_manager/error/ScrapeError').ScrapeErrorAction

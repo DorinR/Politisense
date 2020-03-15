@@ -4,7 +4,7 @@ const Assert = chai.assert
 
 describe('InvalidParameterError.js', () => {
   test('', async (done) => {
-    Assert(true,'stub')
+    Assert(true, 'stub')
     done()
   })
 })

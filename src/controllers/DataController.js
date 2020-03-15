@@ -3,6 +3,7 @@ const Firestore = require('@firestore').Firestore
 const Utils = require('./util/DataUtil')
 const flatten = require('flat')
 const Parameters = require('@parameter').UpdateNode
+const Auth = require('@firestore').Authentication
 
 const IndexDirector = {
   Bills: {
@@ -225,10 +226,30 @@ const UpdateDirector = {
 }
 Object.freeze(UpdateDirector)
 
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
+  const auth = new Auth()
+  const db = new Firestore()
+
+  if (!req.body.email || !req.body.password) {
+    Utils.error(res, 'Authentication Failed', 401)
+    return
+  }
+
+  const admins = db.Admin().where('email', '==', req.body.email)
+  let admin = await Utils.records(admins)
+  admin = admin[0]
+
+  console.log(req.body)
+  console.log(admin)
+  if (!auth.compare(`${req.body.password}${admin.random}`, admin.password)) {
+    Utils.error(res, 'Authentication Failed', 401)
+    return
+  }
+
   const type = req.params.type
   const category = req.params.category
   const parliament = req.params.parliament
+
   if (Utils.validate(type, category, parliament)) {
     Utils.error(res, 'No parameters passed to data API for updating')
     return
@@ -254,7 +275,7 @@ const child = require('child_process')
 
 function updateFromProvidedNode (root, opts) {
   const opt = Object.create(opts)
-  opts.NODE_OPTIONS='--max-old-space-size=8192'
+  opts.NODE_OPTIONS = '--max-old-space-size=8192'
 
   const process = child.fork('src/data/update/UpdateScript.js', opt)
   process.send({ node: root })

@@ -7,6 +7,7 @@ const InvalidParameterError = require('../../../data/error/InvalidParameterError
 const Parameters = require('../../../data/ParameterEnums')
 
 describe('ClassificationRunner.js', () => {
+  // eslint-disable-next-line no-unused-vars
   let parliaments
   beforeAll(() => {
     parliaments = Parameters.Parliament.Number
@@ -50,7 +51,7 @@ describe('ClassificationRunner.js', () => {
 
   test('ClassificationRunner.js throws on invalid parliaments specified', async (done) => {
     try {
-      const undertest = ClassificationRunner.create({
+      ClassificationRunner.create({
         parliaments: null
       })
     } catch (e) {

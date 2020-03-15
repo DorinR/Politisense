@@ -35,9 +35,3 @@ class UpdatePipelineManager extends QueueManager {
 module.exports = {
   UpdatePipelineManager: UpdatePipelineManager
 }
-
-UpdatePipelineManager.create(Parameters.UpdateNode.Category)
-  .execute()
-  .then(result => {
-    console.log(result)
-  })

@@ -72,6 +72,12 @@ class Firestore {
     return this.createReference(collection)
   }
 
+  Admin () {
+    Firestore.legacyCollectionError(this.legacy)
+    const collection = 'static/users/admin'
+    return this.createReference(collection)
+  }
+
   Bill () {
     const collection = this.legacy ? 'bills' : `${this.parliament}/bills/bill`
     return this.createReference(collection)
@@ -160,9 +166,7 @@ class Firestore {
   }
 
   MapSupportData () {
-    console.warn(
-      'WARNING: MapSupportData Controller does not support legacy mode.'
-    )
+    Firestore.legacyCollectionError(this.legacy)
     const collection = 'static/map_support_data/map_support_data'
     return this.createReference(collection)
   }

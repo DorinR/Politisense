@@ -2,7 +2,6 @@ const QueueAction = require('../QueueAction').QueueAction
 const QueueManager = require('../QueueManager').QueueManager
 const Jobs = require('@jobs')
 const QueueManagerWrapperAction = require('../../action/wrapper_action/QueueManagerWrapperAction').QueueManagerWrapperAction
-const QueryResponseAdapterAction = require('../../action/adapter_action/QueryResponseAdapterAction').QueryResponseAdapterAction
 const UpdateGraph = require('../../../data/update/UpdateDependencyGraph').UpdateDependencyGraph
 const Parameters = require('@parameter')
 const InsertAction = require('../../action/classify_action/UpdateCollectionAction').UpdateCollectionAction
