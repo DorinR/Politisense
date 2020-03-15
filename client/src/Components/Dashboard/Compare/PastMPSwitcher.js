@@ -37,33 +37,19 @@ const MenuProps = {
     }
 }
 
-// ${riding}
-
-async function fetchPastRepresentatives() {
+async function fetchPastRepresentatives(riding) {
     let pastRepresentatives = []
     await axios
-        .get('/api/representatives/getPastRepresentatives')
+        .get(`/api/representatives/${riding}/getPastRepresentatives`)
         .then(res => {
             if (res.data.success) {
+                console.log(res.data.success)
                 pastRepresentatives = res.data.data
             }
         })
         .catch(err => console.error(err))
-
+    console.log(pastRepresentatives)
     return pastRepresentatives
-}
-
-async function fetchUserRiding(userEmail) {
-    return axios
-        .get(`/api/users/${userEmail}/getUser`, {
-            params: { repinfo: userEmail }
-        })
-        .then(res => {
-            if (res.data.success) {
-                return res.data.data.riding
-            }
-        })
-        .catch(console.error)
 }
 
 function getStyles(name, personName, theme) {
@@ -73,6 +59,17 @@ function getStyles(name, personName, theme) {
                 ? theme.typography.fontWeightRegular
                 : theme.typography.fontWeightMedium
     }
+}
+
+async function fetchUserRiding(userEmail) {
+    return axios
+        .get(`/api/users/${userEmail}/getUser`)
+        .then(res => {
+            if (res.data.success) {
+                return res.data.data.riding
+            }
+        })
+        .catch(console.error)
 }
 
 export default function PastMPSwitcher(props) {
@@ -97,8 +94,8 @@ export default function PastMPSwitcher(props) {
         async function getData() {
             const user = JSON.parse(localStorage.getItem('user'))
             const riding = await fetchUserRiding(user.email)
-            console.log("RIDING ", riding)
-            const pastRepresentatives = await fetchPastRepresentatives()
+            console.log(riding)
+            const pastRepresentatives = await fetchPastRepresentatives(riding)
             populateDropdownMps(pastRepresentatives)
         }
         getData()

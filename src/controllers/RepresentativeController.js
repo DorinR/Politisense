@@ -82,10 +82,9 @@ exports.getAllRepresentatives = (req, res) => {
 }
 
 exports.getPastRepresentatives = async (req, res) => {
-  console.log('getPastRepresentatives endpoint hit!')
   console.log(`received from frontend: ${req.params.riding}`)
   const representativesAccumulator = []
-  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
+  const parliaments = [36, 37, 38, 39, 40, 41, 42]
   const db = new Firestore(false)
   let politicians = parliaments.map(parl => {
     return db
