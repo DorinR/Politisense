@@ -21,7 +21,7 @@ import MinisterHelpDialog from './MinisterHelpDialog'
 import TextField from '@material-ui/core/TextField'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import axios from 'axios'
-import capitalize from '@material-ui/core/utils/capitalize'
+const capitalize = require('capitalize')
 
 const Transition = React.forwardRef(function Transition (props, ref) {
   return <Slide direction='up' ref={ref} {...props} />
@@ -300,7 +300,7 @@ export default function GeneralDashboard () {
               <Grid item key={minister.title} xs={4}>
                 <Card className={classes.card}>
                   <CardHeader
-                    title={capitalize(minister.name)}
+                    title={capitalize.words(minister.name)}
                     subheader={titleCase(minister.title)}
                     titleTypographyProps={{ align: 'center' }}
                     subheaderTypographyProps={{ align: 'center' }}
