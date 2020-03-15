@@ -5,7 +5,6 @@ export async function fetchCategories () {
     .get('/api/bills/fetchCategories')
     .then(res => {
       if (res.data.success) {
-        console.log(res)
         return res.data.data
       }
     })
@@ -35,9 +34,6 @@ export function formatingCategories (categoriesList) {
 
 export function formattingCategory (element) {
   if (element.includes('-')) {
-    console.log("im here !!!")
-    let test =capitalizedName(element.replace('-', ' '))
-    console.log(test)
     return capitalizedName(element.replace('-', ' '))
   }
   return capitalizedName(element)

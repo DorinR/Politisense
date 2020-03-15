@@ -231,7 +231,6 @@ exports.fetchCategories = async (req, res) => {
   let categories = [...new Set(jointedArray.map(item => item.category))]
   categories = categories.filter(category => category !== null && category !== undefined && category !== '')
 
-  console.log("categories are" + categories)
   res.status(200).json({
     success: true,
     data: categories
