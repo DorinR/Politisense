@@ -109,7 +109,7 @@ export default function CategoryCard (props) {
   }
 
   function setCardLogo () {
-    switch (title) {
+    switch (formattingCategory(title)) {
       case 'Economics':
         return <TrendingUpIcon color='primary' />
       case 'Trade':

@@ -206,7 +206,7 @@ async function fetchBillsByParliamentAndSponsor (parliamentNo, repName) {
 }
 
 async function getAllBillsByParliamentWithoutRep (parliamentNo) {
-  const db = new Firestore(false).forParliament(parliamentNo)
+  const db = new Firestore().forParliament(parliamentNo)
   const billClassification = db.BillClassification()
   const bills = []
   await billClassification.select().then(snapshot => {
@@ -221,7 +221,7 @@ async function getAllBillsByParliamentWithoutRep (parliamentNo) {
   return bills
 }
 exports.fetchCategories = async (req, res) => {
-  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
+  const parliaments = [39, 40, 41, 42, 43]
   const rawData = await Promise.all(
     parliaments.map(parliament => {
       return getAllBillsByParliamentWithoutRep(parliament)
@@ -231,6 +231,7 @@ exports.fetchCategories = async (req, res) => {
   let categories = [...new Set(jointedArray.map(item => item.category))]
   categories = categories.filter(category => category !== null && category !== undefined && category !== '')
 
+  console.log("categories are" + categories)
   res.status(200).json({
     success: true,
     data: categories
