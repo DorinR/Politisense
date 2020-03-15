@@ -21,7 +21,7 @@ import MinisterHelpDialog from './MinisterHelpDialog'
 import TextField from '@material-ui/core/TextField'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import axios from 'axios'
-import capitalize from "@material-ui/core/utils/capitalize";
+import capitalize from '@material-ui/core/utils/capitalize'
 
 const Transition = React.forwardRef(function Transition (props, ref) {
   return <Slide direction='up' ref={ref} {...props} />
