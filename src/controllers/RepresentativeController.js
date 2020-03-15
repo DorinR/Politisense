@@ -82,9 +82,10 @@ exports.getAllRepresentatives = (req, res) => {
 }
 
 exports.getPastRepresentatives = async (req, res) => {
+  console.log("halifax")
   const representativesAccumulator = []
   const parliaments = [36, 37, 38, 39, 40, 41, 42]
-  const riding = 'nunavut'
+  const riding = 'Halifax'
   const db = new Firestore(false)
   let politicians = parliaments.map(parl => {
     return db.forParliament(parl)
@@ -92,6 +93,12 @@ exports.getPastRepresentatives = async (req, res) => {
       .where('riding', '==', riding)
       .select()
       .then(snapshot => {
+        if (snapshot.empty) {
+          res.status(400).json({
+            message: 'Riding Not Found',
+            success: false
+          })
+        }
         let ret = []
         snapshot.forEach(doc => {
           ret = doc.data()

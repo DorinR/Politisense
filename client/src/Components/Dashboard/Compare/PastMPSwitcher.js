@@ -37,21 +37,33 @@ const MenuProps = {
     }
 }
 
+// ${riding}
+
 async function fetchPastRepresentatives() {
     let pastRepresentatives = []
-    console.log('Empty ', pastRepresentatives)
     await axios
         .get('/api/representatives/getPastRepresentatives')
         .then(res => {
             if (res.data.success) {
                 pastRepresentatives = res.data.data
-                console.log("RES DATA", pastRepresentatives)
             }
         })
         .catch(err => console.error(err))
-    console.log("END ", pastRepresentatives)
 
     return pastRepresentatives
+}
+
+async function fetchUserRiding(userEmail) {
+    return axios
+        .get(`/api/users/${userEmail}/getUser`, {
+            params: { repinfo: userEmail }
+        })
+        .then(res => {
+            if (res.data.success) {
+                return res.data.data.riding
+            }
+        })
+        .catch(console.error)
 }
 
 function getStyles(name, personName, theme) {
@@ -83,6 +95,9 @@ export default function PastMPSwitcher(props) {
 
     useEffect(() => {
         async function getData() {
+            const user = JSON.parse(localStorage.getItem('user'))
+            const riding = await fetchUserRiding(user.email)
+            console.log("RIDING ", riding)
             const pastRepresentatives = await fetchPastRepresentatives()
             populateDropdownMps(pastRepresentatives)
         }
@@ -105,7 +120,7 @@ export default function PastMPSwitcher(props) {
                             key={mp.name}
                             value={mp.name}
                             style={getStyles(mp.name, mp.name, theme)}>
-                            {mp.name}
+                            {mp.name} ({mp.start}-{mp.end})
                         </MenuItem>
                     ))}
                 </Select>
