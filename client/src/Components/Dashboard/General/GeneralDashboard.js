@@ -58,7 +58,8 @@ const useStyles = makeStyles(theme => ({
   },
   cardHeader: {
     backgroundColor: '#43D0C4',
-    color: 'white'
+    color: 'white',
+    height: '100px'
   },
   image: {
     display: 'flex',
