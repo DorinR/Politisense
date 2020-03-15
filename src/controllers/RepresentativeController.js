@@ -82,24 +82,19 @@ exports.getAllRepresentatives = (req, res) => {
 }
 
 exports.getPastRepresentatives = async (req, res) => {
-  console.log("halifax")
+  console.log('getPastRepresentatives endpoint hit!')
+  console.log(`received from frontend: ${req.params.riding}`)
   const representativesAccumulator = []
-  const parliaments = [36, 37, 38, 39, 40, 41, 42]
-  const riding = 'Halifax'
+  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
   const db = new Firestore(false)
   let politicians = parliaments.map(parl => {
-    return db.forParliament(parl)
+    return db
+      .forParliament(parl)
       .Politician()
-      .where('riding', '==', riding)
+      .where('riding', '==', req.params.riding)
       .select()
       .then(snapshot => {
-        if (snapshot.empty) {
-          res.status(400).json({
-            message: 'Riding Not Found',
-            success: false
-          })
-        }
-        let ret = []
+        let ret = {}
         snapshot.forEach(doc => {
           ret = doc.data()
         })
@@ -108,12 +103,21 @@ exports.getPastRepresentatives = async (req, res) => {
   })
   politicians = await Promise.all(politicians)
   politicians.forEach(pol => {
-    representativesAccumulator.push(pol)
+    if (Object.keys(pol).length !== 0) {
+      representativesAccumulator.push(pol)
+    }
   })
-  res.status(200).json({
-    data: politicians,
-    success: true
-  })
+  if (representativesAccumulator.length === 0) {
+    res.status(404).json({
+      success: false,
+      message: 'No politicians found for those ridings'
+    })
+  } else {
+    res.status(200).json({
+      data: representativesAccumulator,
+      success: true
+    })
+  }
 }
 
 // getRepresentativesInfo
