@@ -172,7 +172,7 @@ class Firestore {
   }
 
   createReference (collection) {
-    return new Reference(this.reference.collection(collection))
+    return new Reference(this.reference.collection(collection), collection)
   }
 
   static legacyCollectionError (legacy) {

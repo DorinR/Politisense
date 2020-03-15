@@ -244,21 +244,19 @@ exports.update = (req, res) => {
     Utils.error(res, 'Invalid Parameters passed to data API for updating')
     return
   }
-  updateFromProvidedNode(root)
-
+  updateFromProvidedNode(root, process.env)
   Utils.success(res, {
     dependencies: root
-  }, 'Successfully started update process on server')
+  }, `Successfully started update at ${root} node on server`)
 }
 
 const child = require('child_process')
 
-function updateFromProvidedNode (root) {
-  const opts = {
-    execArgv: ['--semi-space-size=128', '--semi-space-size=8192']
-  }
+function updateFromProvidedNode (root, opts) {
+  const opt = Object.create(opts)
+  opts.NODE_OPTIONS='--max-old-space-size=8192'
 
-  const process = child.fork('src/data/update/UpdateScript.js', opts)
+  const process = child.fork('src/data/update/UpdateScript.js', opt)
   process.send({ node: root })
   process.on('error', (err) => {
     console.log(err)

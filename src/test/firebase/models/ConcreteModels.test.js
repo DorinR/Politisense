@@ -60,7 +60,7 @@ describe('ConcreteModels.js', () => {
   })
 
   test('Politician.js accepts 3 strings and 3 numbers, and a string, respectively', async (done) => {
-    new Model.Politician('', '', '', 0, 0, 0, '')
+    new Model.Politician('', '', '', 0, 0, '')
     done()
   })
 

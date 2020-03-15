@@ -1,5 +1,6 @@
 const Action = require('../JobAction').AbstractJobAction
 const Firestore = require('@firestore').Firestore
+const Model = require('@firestore').Models.Model
 const Parameters = require('@parameter')
 
 class UpdateCollectionAction extends Action {
@@ -9,23 +10,44 @@ class UpdateCollectionAction extends Action {
     this.collection = collection
   }
 
-  perform (results) {
-    return results.map(result => {
-      let { params, data } = result
-      if (Array.isArray(data[0])) {
-        data = data[0]
-      }
-      const parliament = UpdateCollectionAction.getParliament(params)
+  async perform (results) {
+    return await Promise.all(
+      results.map(result => {
+        let { params, data } = result
+        data = UpdateCollectionAction.getData(data)
+        const parliament = UpdateCollectionAction.getParliament(params)
+        const db = new Firestore()
+        db.forParliament(parliament)
+        let collection = this.collection
+        collection = collection.bind(db)
+        UpdateCollectionAction.createNewCollectionReference(db, collection)
+        return collection()
+          .delete()
+          .then(deleted => {
+            console.log(`INFO: replacing ${deleted} records in ${collection.name}, for parliament ${parliament}`)
+            let first = true
+            return Promise.all(
+              data.map(datum => {
+                const ref = UpdateCollectionAction.createNewCollectionReference(db, collection)
+                if(first){
+                  first = !first
+                  return ref.add(Model.serialise(datum)).then(result => { return result.id })
+                } else {
+                  return collection()
+                    .insert(datum)
+                }
+              })
+            )
+          })
+      })
+    )
+  }
 
-      const db = new Firestore().forParliament(parliament)
-      this.collection.bind(db)
-
-      return Promise.all(
-        data.map(record => {
-          return true
-        })
-      )
-    })
+  static getData(data) {
+    if (Array.isArray(data[0])) {
+      data = data[0]
+    }
+    return data
   }
 
   static getParliament (params) {
@@ -40,6 +62,14 @@ class UpdateCollectionAction extends Action {
       parliament = params.params.parliament
     }
     return parliament
+  }
+
+  static createNewCollectionReference(db, collection) {
+    const hierarchy = collection().hierarchy()
+    let ref = db.reference.collection(hierarchy[0])
+    ref = ref.doc(hierarchy[1])
+    ref = ref.collection(hierarchy[2])
+    return ref
   }
 }
 

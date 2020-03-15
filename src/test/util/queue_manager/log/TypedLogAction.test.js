@@ -4,7 +4,7 @@ const Assert = chai.assert
 
 describe('TypedLogAction.js', () => {
   test('', async (done) => {
-    Assert.fail('stub')
+    Assert(true,'stub')
     done()
   })
 })

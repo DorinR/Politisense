@@ -1,7 +1,8 @@
 const Model = require('./firebase').Models.Model
 
 class Reference {
-  constructor (reference) {
+  constructor (reference, refString) {
+    this.referenceString = refString
     this.reference = reference
     this.modelsOnly = false
     this.query = null
@@ -9,6 +10,10 @@ class Reference {
 
   id () {
     return this.reference.id
+  }
+
+  hierarchy () {
+    return this.referenceString.split('/')
   }
 
   where (attribute, operator, value) {
@@ -120,14 +125,15 @@ class Reference {
     if (model instanceof Model) {
       model = Model.serialise(model)
     }
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       this.reference
         .add(model)
         .then(result => {
-          resolve(true)
+          resolve(result.id)
         })
-        .catch(() => {
-          resolve(false)
+        .catch((e) => {
+          console.error(e)
+          reject(e)
         })
     })
   }

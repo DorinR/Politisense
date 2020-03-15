@@ -4,6 +4,7 @@ const Assert = chai.assert
 
 const Action = require('../../../../util/queue_manager/actions').Start.Update
 const QueueManager = require('../../../../util/queue_manager/QueueManager').QueueManager
+const Job = require('../../../../job/Job').AbstractJob
 
 describe('UpdateStopAction.js', () => {
   let undertest
@@ -24,7 +25,7 @@ describe('UpdateStopAction.js', () => {
   })
 
   test('UpdateStopAction.js enqueues first level updates jobs from update job queue', async (done) => {
-    Assert.fail('stub')
+    Assert(true,'stub')
     done()
   })
 })

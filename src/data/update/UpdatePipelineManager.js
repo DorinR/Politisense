@@ -36,7 +36,7 @@ module.exports = {
   UpdatePipelineManager: UpdatePipelineManager
 }
 
-UpdatePipelineManager.create(Parameters.UpdateNode.All)
+UpdatePipelineManager.create(Parameters.UpdateNode.Category)
   .execute()
   .then(result => {
     console.log(result)

@@ -43,7 +43,7 @@ describe('LegislativeActivityXmlParser.js', () => {
 
   test('LegislativeActivityXmlParser.js::generateNewParser creates a new Legislative activity Parser', () => {
     const parser = underTest.generateNewParser(underTest.xml)
-    Assert.equal(parser.xml, underTest.getXmlInTag(Parsers.LegislativeActivityXmlParser.listTagName()))
+    Assert.equal(parser.xml, underTest.getXmlInTag('channel'))
   })
 
   test('LegislativeActivityXmlParser.js::hasData returns true on has content, false otherwise', () => {
