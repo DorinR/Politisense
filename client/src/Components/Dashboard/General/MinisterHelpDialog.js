@@ -4,31 +4,28 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
-import axios from "axios";
-import {getMinisters, getPartyInfo} from "./GeneralDashboard";
-
+import axios from 'axios'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 export default function MinisterHelpDialog (props) {
   const { onClose, open } = props
   const [text, setText] = React.useState('')
 
-  async function getDescription () {
-    let desc = []
-    await axios
-        .post('http://localhost:5000/api/parliament/getRoleDescription',{'ministry':props.ministry})
-        .then(res => {
-          if (res.data.success) {
-            console.log(res)
-          }
-        })
-        .catch(err => console.error(err))
-    return desc
-  }
-
   useEffect(() => {
-    let desc = ''
+    setText('')
+    const getDescription = async () => {
+      return axios
+        .post('api/parliament/getRoleDescription', { ministry: props.ministry })
+        .then(res => {
+          let desc = ''
+          if (res.data.success) {
+            desc = res.data.data.description
+          }
+          return desc
+        }).catch(console.error)
+    }
     async function getData () {
-      desc = await getDescription()
+      const desc = await getDescription()
       setText(desc)
     }
     getData()
@@ -43,7 +40,16 @@ export default function MinisterHelpDialog (props) {
       <DialogTitle>Role of the minister</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          {text}
+          {text ||
+            <div style={{
+              position: 'absolute',
+              left: '50%',
+              top: '70%',
+              transform: 'translate(-50%, -50%)'
+            }}
+            >
+              <CircularProgress />
+            </div>}
         </DialogContentText>
       </DialogContent>
     </Dialog>

@@ -1,4 +1,3 @@
-import { ministers } from './CabinetMinisters'
 const Firestore = require('@firestore').Firestore
 
 exports.getImageData = async (req, res) => {

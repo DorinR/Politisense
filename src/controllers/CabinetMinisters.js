@@ -43,7 +43,7 @@ export const ministers = [
   },
   {
     title: 'Marc Garneau',
-      subheader: 'Minister of Transport',
+    subheader: 'Minister of Transport',
     description: ['4 November 2015', 'Notre-Dame-de-Grâce—Westmount', 'https://pm.gc.ca/en/cabinet/honourable-marc-garneau'],
     id: 'transport'
   },

@@ -19,7 +19,7 @@ import 'typeface-roboto'
 import RepresentativeImage from '../Sidebar/RepresentativeImage'
 import MinisterHelpDialog from './MinisterHelpDialog'
 import TextField from '@material-ui/core/TextField'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@material-ui/core/CircularProgress'
 import axios from 'axios'
 
 const Transition = React.forwardRef(function Transition (props, ref) {
@@ -36,9 +36,6 @@ const useStyles = makeStyles(theme => ({
   },
   card: {
     height: 400
-  },
-  pos: {
-    marginBottom: 12
   },
   search: {
     marginBottom: '30px',
@@ -70,103 +67,104 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function capitalize (str) {
-  return str.toLowerCase().replace(/(?:^|[\s-—/])\w/g, function (match) {
-    return match.toUpperCase();
-  });
+export function titleCase (str) {
+  if (str.includes('é')) {
+    return str.toLowerCase().split(' ').map(function (word) {
+      return (word.charAt(0).toUpperCase() + word.slice(1))
+    }).join(' ')
+  }
+  const regex = /(^|\b(?!(and?|at?|the|for|to|but|by|of)\b))\w+/g
+  return str.toLowerCase()
+    .replace(regex, s => s[0].toUpperCase() + s.slice(1))
 }
 
 export function getLink (str) {
-  let nameArr = str.split(' ');
-  return 'https://pm.gc.ca/en/cabinet/right-honourable-'+ nameArr[0] + '-' + nameArr[nameArr.length - 1]
+  const nameArr = str.split(' ')
+  return 'https://pm.gc.ca/en/cabinet/right-honourable-' + nameArr[0] + '-' + nameArr[nameArr.length - 1]
 }
 
 export async function getMinisters () {
-  let result = []
-  await axios
-    .get('http://localhost:5000/api/parliament/getCabinetMinisters')
+  return axios
+    .get('/api/parliament/getCabinetMinisters')
     .then(res => {
+      const result = []
       if (res.data.success) {
-        for(let i = 0; i < res.data.data.length;i++){
-          if(res.data.data[i].title === 'prime minister' ){
-            result['prime'] = res.data.data[i];
-            continue;
+        for (let i = 0; i < res.data.data.length; i++) {
+          if (res.data.data[i].title === 'prime minister') {
+            result.prime = res.data.data[i]
+            continue
           }
           result[i] = {}
-          result[i].title = res.data.data[i].name
-          result[i].subheader = res.data.data[i].title
-          let fullNameArr = res.data.data[i].name.split(" ");
-          let nameArr = []
+          result[i].name = res.data.data[i].name
+          result[i].title = res.data.data[i].title
+          const fullNameArr = res.data.data[i].name.split(' ')
+          const nameArr = []
           nameArr.push(fullNameArr[0])
-          nameArr.push(fullNameArr[1])
-          let linkName= ''
-          for(let j = 0; j < nameArr.length;j++){
+          nameArr.push(fullNameArr[fullNameArr.length - 1])
+          let linkName = ''
+          for (let j = 0; j < nameArr.length; j++) {
             linkName += '-' + nameArr[j]
           }
 
-          if(res.data.data[i].name === 'harjit s. sajjan' ){
-            result[i].description = [res.data.data[i].fromDate,res.data.data[i].riding, 'https://pm.gc.ca/en/cabinet/honourable-harjit-sajjan' ]
-          } else {
-            result[i].description = [res.data.data[i].fromDate,res.data.data[i].riding, 'https://pm.gc.ca/en/cabinet/honourable' + linkName]
-          }
+          result[i].description = [res.data.data[i].fromDate, res.data.data[i].riding, 'https://pm.gc.ca/en/cabinet/honourable' + linkName]
+
           result[i].id = res.data.data[i].title
         }
       }
+      return result
     })
     .catch(err => console.error(err))
-  return result
 }
 
 export async function getPartyInfo () {
-  let result = []
-  await axios
-      .get('http://localhost:5000/api/parliament/getPartyInfo')
-      .then(res => {
-        if (res.data.success) {
-          let max = 0
-          for(let i = 0; i < res.data.data.length;i++){
-            result[i] = {}
+  return axios
+    .get('/api/parliament/getPartyInfo')
+    .then(res => {
+      if (res.data.success) {
+        const result = []
+        let max = 0
+        for (let i = 0; i < res.data.data.length; i++) {
+          result[i] = {}
 
-            result[i].name = res.data.data[i].name
-            result[i].seats = res.data.data[i].seats
-            result[i].proportionalSeats = Math.ceil(res.data.data[i].seats / 8)
-            switch(res.data.data[i].name) {
-              case 'liberal':
-                result[i].color = '#D71921'
-                break;
-              case 'conservative':
-                result[i].color = '#0C499C'
-                break;
-              case 'ndp':
-                result[i].color = '#EF7E52'
-                break;
-              case 'bloc québécois':
-                result[i].color = '#02819E'
-                break;
-              case 'green party':
-                result[i].color = '#2E8724'
-                break
-              case 'independent':
-                result[i].color = 'black'
-                break;
-              default:
-                result[i].color = 'white'
-            }
-            if(res.data.data[i].seats > max){
-              max = res.data.data[i].seats
-              result['current'] = result[i]
-            }
+          result[i].name = res.data.data[i].name
+          result[i].seats = res.data.data[i].seats
+          result[i].proportionalSeats = Math.ceil(res.data.data[i].seats / 8)
+          switch (res.data.data[i].name) {
+            case 'liberal':
+              result[i].color = '#D71921'
+              break
+            case 'conservative':
+              result[i].color = '#0C499C'
+              break
+            case 'ndp':
+              result[i].color = '#EF7E52'
+              break
+            case 'bloc québécois':
+              result[i].color = '#02819E'
+              break
+            case 'green party':
+              result[i].color = '#2E8724'
+              break
+            case 'independent':
+              result[i].color = 'black'
+              break
+            default:
+              result[i].color = 'white'
           }
-          if(max >= 170){
-            result['status'] = 'Majority'
-          } else {
-            result['status'] = 'Minority'
+          if (res.data.data[i].seats > max) {
+            max = res.data.data[i].seats
+            result.current = result[i]
           }
         }
-        console.log(result)
-      })
-      .catch(err => console.error(err))
-  return result
+        if (max >= 170) {
+          result.status = 'Majority'
+        } else {
+          result.status = 'Minority'
+        }
+        return result
+      }
+    })
+    .catch(console.error)
 }
 
 export default function GeneralDashboard () {
@@ -180,24 +178,21 @@ export default function GeneralDashboard () {
   const [filteredMinisters, setFilteredMinisters] = React.useState([])
 
   useEffect(() => {
-    let mins = []
-    let partyInfo = []
     async function getData () {
-      mins = await getMinisters()
-      partyInfo = await getPartyInfo()
+      const mins = await getMinisters()
+      const partyInfo = await getPartyInfo()
       setMinisters(mins)
-      setFilteredMinisters(mins)
       setParties(partyInfo)
     }
     getData()
   }, [])
 
   useEffect(() => {
-    let filteredMin = []
+    let filteredMin
     if (filter === '') {
       filteredMin = ministers
     } else {
-      filteredMin = ministers.filter(minister => minister.subheader.toLowerCase().includes(filter.toLowerCase()))
+      filteredMin = ministers.filter(minister => minister.title.toLowerCase().includes(filter.toLowerCase()))
     }
     setFilteredMinisters(filteredMin)
   }, [filter, ministers])
@@ -225,90 +220,90 @@ export default function GeneralDashboard () {
 
   return (
     <Grid>
-      {ministers && ministers.length > 0 && parties && parties.length ?
-      <div>
-      <CssBaseline />
-      <Container maxWidth='sm' component='main' className={classes.content}>
-        <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
+      {ministers && ministers.length > 0 && parties && parties.length
+        ? <div>
+          <CssBaseline />
+          <Container maxWidth='sm' component='main' className={classes.content}>
+            <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
             Your Government
-        </Typography>
-      </Container>
-      <Container maxWidth='md' component='main'>
-        <Grid container>
-          <Grid item xs={4}>
-            <Typography variant='h5' color='textPrimary'>
-                Current Government
             </Typography>
-            <Typography variant='h4' color='textPrimary'>
-              <span style={{fontWeight:'bold', color:parties['current'].color}}>{capitalize(parties['current'].name)} {parties['status']} </span><HelpIcon className={classes.help} color='primary' onClick={handleClickOpen} />
-            </Typography>
-          </Grid>
-          <Grid item xs={8}>
-            <Typography variant='h5' color='textPrimary' gutterBottom>
-                  Seats in Parliament
-            </Typography>
+          </Container>
+          <Container maxWidth='md' component='main'>
             <Grid container>
-              <Grid item xs={9}>
-                {parties.map((party) =>
-                    Array.apply(null, { length: party.proportionalSeats }).map((e, i) => (
-                        <span key={i}><FiberManualRecordIcon style={{ fontSize: 30, color: party.color }} /></span>))
-                )}
-              </Grid>
-              <Grid item xs={3}>
-                <Typography variant='body2' color='textPrimary'>
-                  <span style={{ color: '#43D0C4' }}>Total</span> 338
+              <Grid item xs={4}>
+                <Typography variant='h5' color='textPrimary'>
+                Current Government
                 </Typography>
-                {parties.map((party) =>
+                <Typography variant='h4' color='textPrimary'>
+                  <span style={{ fontWeight: 'bold', color: parties.current.color }}>{titleCase(parties.current.name)} {parties.status} </span><HelpIcon className={classes.help} color='primary' onClick={handleClickOpen} />
+                </Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography variant='h5' color='textPrimary' gutterBottom>
+                  Seats in Parliament
+                </Typography>
+                <Grid container>
+                  <Grid item xs={9}>
+                    {parties.map((party) =>
+                      Array.apply(null, { length: party.proportionalSeats }).map((e, i) => (
+                        <span key={i}><FiberManualRecordIcon style={{ fontSize: 30, color: party.color }} /></span>))
+                    )}
+                  </Grid>
+                  <Grid item xs={3}>
                     <Typography variant='body2' color='textPrimary'>
-                      <span style={{ color: party.color, fontWeight: 'bold' }}>{capitalize(party.name)}</span> {party.seats}
+                      <span style={{ color: '#43D0C4' }}>Total</span> 338
                     </Typography>
-                )}
+                    {parties.map((party) =>
+                      <Typography key={party.name} variant='body2' color='textPrimary'>
+                        <span style={{ color: party.color, fontWeight: 'bold' }}>{titleCase(party.name)}</span> {party.seats}
+                      </Typography>
+                    )}
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
-      </Container>
+          </Container>
           <Container className={classes.prime}>
             <Card>
               <CardHeader
-                  title={capitalize(ministers['prime'].name)}
-                  subheader={capitalize(ministers['prime'].title)}
-                  titleTypographyProps={{ align: 'center' }}
-                  subheaderTypographyProps={{ align: 'center' }}
-                  className={classes.cardHeader}
+                title={titleCase(ministers.prime.name)}
+                subheader={titleCase(ministers.prime.title)}
+                titleTypographyProps={{ align: 'center' }}
+                subheaderTypographyProps={{ align: 'center' }}
+                className={classes.cardHeader}
               />
               <CardContent>
                 <div className={classes.image}>
-                  <RepresentativeImage representativeToLoad={ministers['prime'].riding} />
+                  <RepresentativeImage representativeToLoad={ministers.prime.riding} />
                 </div>
                 <ul>
                   <Typography component='li' variant='subtitle1' align='center'>
-                    <span style={{ fontWeight: 'bold' }}>Year Elected</span> {ministers['prime'].fromDate}
+                    <span style={{ fontWeight: 'bold' }}>Year Elected</span> {ministers.prime.fromDate}
                   </Typography>
                   <Typography component='li' variant='subtitle1' align='center'>
-                    <span style={{ fontWeight: 'bold' }}>Riding</span> {capitalize(ministers['prime'].riding)}
+                    <span style={{ fontWeight: 'bold' }}>Riding</span> {titleCase(ministers.prime.riding)}
                   </Typography>
                   <Typography component='li' variant='subtitle1' align='center'>
-                    <Link href={getLink(ministers['prime'].name)}>More information</Link>
+                    <Link href={getLink(ministers.prime.name)}>More information</Link>
                   </Typography>
                 </ul>
               </CardContent>
             </Card>
           </Container>
-      {/* eslint-disable */}
+          {/* eslint-disable */}
       <Container>
         <TextField label='Filter by Ministry' className={classes.search} variant='outlined' onChange={handleFilterChange} color='primary' />
         <Grid container spacing={5} alignItems='flex-end'>
           {filteredMinisters && filteredMinisters.length > 0
             ? filteredMinisters.map(minister => (
-              <Grid item key={minister.subheader} xs={4}>
+              <Grid item key={minister.title} xs={4}>
                 <Card className={classes.card}>
                   <CardHeader
-                    title={capitalize(minister.title)}
-                    subheader={capitalize(minister.subheader)}
+                    title={titleCase(minister.name)}
+                    subheader={titleCase(minister.title)}
                     titleTypographyProps={{ align: 'center' }}
                     subheaderTypographyProps={{ align: 'center' }}
-                    action=<HelpIcon style={{ cursor: 'pointer' }} onClick={() => handleMinisterClickOpen(capitalize(minister.subheader))} />
+                    action=<HelpIcon style={{ cursor: 'pointer' }} onClick={() => handleMinisterClickOpen(titleCase(minister.title))} />
                     className={classes.cardHeader}
                   />
                   <CardContent>
@@ -320,7 +315,7 @@ export default function GeneralDashboard () {
                         <span style={{ fontWeight: 'bold' }}>Minister Since</span> {minister.description[0]}
                       </Typography>
                       <Typography component='li' variant='subtitle1' align='center'>
-                        <span style={{ fontWeight: 'bold' }}>Riding</span> {capitalize(minister.description[1])}
+                        <span style={{ fontWeight: 'bold' }}>Riding</span> {titleCase(minister.description[1])}
                       </Typography>
                       <Typography component='li' variant='subtitle1' align='center'>
                         <Link href={minister.description[2]}>More information</Link>
