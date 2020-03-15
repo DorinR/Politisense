@@ -69,11 +69,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export function titleCase (str) {
-  if (str.includes('é')) {
-    return str.toLowerCase().split(' ').map(function (word) {
-      return (word.charAt(0).toUpperCase() + word.slice(1))
-    }).join(' ')
-  }
   const regex = /(^|\b(?!(and?|at?|the|for|to|but|by|of)\b))\w+/g
   return str.toLowerCase()
     .replace(regex, s => s[0].toUpperCase() + s.slice(1))
@@ -256,7 +251,7 @@ export default function GeneralDashboard () {
                     </Typography>
                     {parties.map((party) =>
                       <Typography key={party.name} variant='body2' color='textPrimary'>
-                        <span style={{ color: party.color, fontWeight: 'bold' }}>{titleCase(party.name)}</span> {party.seats}
+                        <span style={{ color: party.color, fontWeight: 'bold' }}>{capitalize.words(party.name)}</span> {party.seats}
                       </Typography>
                     )}
                   </Grid>
@@ -316,7 +311,7 @@ export default function GeneralDashboard () {
                         <span style={{ fontWeight: 'bold' }}>Minister Since</span> {minister.description[0]}
                       </Typography>
                       <Typography component='li' variant='subtitle1' align='center'>
-                        <span style={{ fontWeight: 'bold' }}>Riding</span> {titleCase(minister.description[1])}
+                        <span style={{ fontWeight: 'bold' }}>Riding</span> {capitalize.words(minister.description[1])}
                       </Typography>
                       <Typography component='li' variant='subtitle1' align='center'>
                         <Link href={minister.description[2]}>More information</Link>
