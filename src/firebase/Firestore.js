@@ -255,7 +255,7 @@ class Firestore {
   }
 
   MinisterDescription () {
-    if(this.legacy) {
+    if (this.legacy) {
       throw new Error('ERROR: collection not available as a legacy collection')
     }
     const collection = 'static/minister_descriptions/description'
@@ -318,7 +318,7 @@ class Firestore {
       .catch(e => {})
   }
 
-  static copyCollection(from, to) {
+  static copyCollection (from, to) {
     return new Promise(resolve => {
       from
         .select()
