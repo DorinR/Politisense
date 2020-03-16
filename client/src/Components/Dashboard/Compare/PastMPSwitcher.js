@@ -43,22 +43,12 @@ async function fetchPastRepresentatives(riding) {
         .get(`/api/representatives/${riding}/getPastRepresentatives`)
         .then(res => {
             if (res.data.success) {
-                console.log(res.data.success)
                 pastRepresentatives = res.data.data
             }
         })
         .catch(err => console.error(err))
     console.log(pastRepresentatives)
     return pastRepresentatives
-}
-
-function getStyles(name, personName, theme) {
-    return {
-        fontWeight:
-            personName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium
-    }
 }
 
 async function fetchUserRiding(userEmail) {
@@ -72,6 +62,51 @@ async function fetchUserRiding(userEmail) {
         .catch(console.error)
 }
 
+function getPartyColor(partyName) {
+
+    switch (partyName) {
+        case 'liberal':
+            return {
+                backgroundColor: '#D71921',
+                fontWeight: 700,
+                color: 'white'
+            }
+        case 'conservative':
+            return {
+                backgroundColor: '#0C499C',
+                fontWeight: 700,
+                color: 'white'
+            }
+        case 'ndp':
+            return {
+                backgroundColor: '#EF7E52',
+                fontWeight: 700,
+                color: 'white'
+            }
+        case 'bloc québécois':
+            return {
+                backgroundColor: '#02819E',
+                fontWeight: 700,
+                color: 'white'
+            }
+        case 'green party':
+            return {
+                backgroundColor: '#2E8724',
+                fontWeight: 700,
+                color: 'white'
+            }
+        case 'independent':
+            return {
+                backgroundColor: 'black',
+                fontWeight: 700,
+                color: 'white'
+            }
+        default:
+            backgroundColor = 'white'
+            break
+    }
+}
+
 export default function PastMPSwitcher(props) {
     // // eslint-disable-next-line no-use-before-define
     const { functionUpdate, ...other } = props
@@ -79,6 +114,7 @@ export default function PastMPSwitcher(props) {
     const theme = useTheme()
     const [mp, setMp] = React.useState([])
     const [dropdownMps, setDropdownMps] = React.useState([])
+    const [partyColor, setPartyColor] = React.useState('')
 
     async function populateDropdownMps(mps) {
         setDropdownMps(mps)
@@ -94,12 +130,12 @@ export default function PastMPSwitcher(props) {
         async function getData() {
             const user = JSON.parse(localStorage.getItem('user'))
             const riding = await fetchUserRiding(user.email)
-            console.log(riding)
             const pastRepresentatives = await fetchPastRepresentatives(riding)
             populateDropdownMps(pastRepresentatives)
         }
         getData()
     }, [mp])
+
 
     return (
         <div>
@@ -113,15 +149,17 @@ export default function PastMPSwitcher(props) {
                     input={<Input />}
                     MenuProps={MenuProps}>
                     {dropdownMps.map(mp => (
+
                         <MenuItem
                             key={mp.name}
                             value={mp.name}
-                            style={getStyles(mp.name, mp.name, theme)}>
+                            style={{ font: 'white' }}
+                            style={getPartyColor(mp.party)}>
                             {mp.name} ({mp.start}-{mp.end})
                         </MenuItem>
                     ))}
                 </Select>
             </FormControl>
-        </div>
+        </div >
     )
 }
