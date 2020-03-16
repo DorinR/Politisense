@@ -43,13 +43,13 @@ export default class D3Chart {
     svg.call(zoom)
 
     d3.json(
-      'https://gist.githubusercontent.com/DorinR/6ae8fd36fddec5d3c997a11814ef0eea/raw/feb1d94be8f40e1b0d0f20cc8eb95dce70997def/riding_topojson_test1.json'
+      'https://gist.githubusercontent.com/Khalidbaraka/bf881712a903b5f059f9d9063a54e2ec/raw/b82e1f22995f0ead12010d5adeff35e1b3aba97f/test.json'
     ).then(function (data) {
-      console.log(data)
       g.selectAll('path')
-        .data(topojson.feature(data, data.objects.canadaprov).features)
+        .data(topojson.feature(data, data.objects.ridings).features)
         .enter()
         .append('path')
+        .attr('data-id', function (d) { return d.properties.ID })
         .attr('d', path)
         .attr('class', 'feature')
         .style('fill', 'grey')
