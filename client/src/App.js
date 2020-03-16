@@ -87,7 +87,9 @@ const App = () => {
                     <PrivateRoute path='/categories' component={CategoryDashboard} />
                     <PrivateRoute path='/votingHistory' component={BillHistoryTable} />
                     <PrivateRoute path='/budget' component={BudgetContainer} />
-                </div>
+                    {/*<PrivateRoute path='/issuedBills' component={BudgetContainer} />*/}
+
+            </div>
             {/*<main className={classes.content}>*/}
             {/*    {children}*/}
             {/*</main>*/}

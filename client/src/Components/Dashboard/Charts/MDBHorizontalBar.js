@@ -267,121 +267,121 @@ import ReactFusioncharts from "react-fusioncharts";
 //         );
 //     }
 // }
-// import React from "react";
-// import { Line } from "react-chartjs-2";
-// import { MDBContainer } from "mdbreact";
-//
-// export default class MDBHorizontalBar extends React.Component {
-//
-//      state = {
-//             dataLine: {
-//                 labels: [
-//                     'Employee', 'Advertising', 'Gifts',
-//                     'Hospitality', 'Office', 'Printing', 'Travel'
-//                 ],
-//                 datasets: [
-//                     {
-//                         label: this.props.data[0].label,
-//                         fill: true,
-//                         lineTension: 0.3,
-//                         backgroundColor: "rgba(225, 204,230, .3)",
-//                         borderColor: "rgb(205, 130, 158)",
-//                         borderCapStyle: "butt",
-//                         borderDash: [],
-//                         borderDashOffset: 0.0,
-//                         borderJoinStyle: "miter",
-//                         pointBorderColor: "rgb(205, 130,1 58)",
-//                         pointBackgroundColor: "rgb(255, 255, 255)",
-//                         pointBorderWidth: 10,
-//                         pointHoverRadius: 5,
-//                         pointHoverBackgroundColor: "rgb(0, 0, 0)",
-//                         pointHoverBorderColor: "rgba(220, 220, 220,1)",
-//                         pointHoverBorderWidth: 2,
-//                         pointRadius: 1,
-//                         pointHitRadius: 10,
-//                         data: this.props.data[0].values
-//                     },
-//                     {
-//                         label: this.props.data[1].label,
-//                         fill: true,
-//                         lineTension: 0.3,
-//                         backgroundColor: "rgba(184, 185, 210, .3)",
-//                         borderColor: "rgb(35, 26, 136)",
-//                         borderCapStyle: "butt",
-//                         borderDash: [],
-//                         borderDashOffset: 0.0,
-//                         borderJoinStyle: "miter",
-//                         pointBorderColor: "rgb(35, 26, 136)",
-//                         pointBackgroundColor: "rgb(255, 255, 255)",
-//                         pointBorderWidth: 10,
-//                         pointHoverRadius: 5,
-//                         pointHoverBackgroundColor: "rgb(0, 0, 0)",
-//                         pointHoverBorderColor: "rgba(220, 220, 220, 1)",
-//                         pointHoverBorderWidth: 2,
-//                         pointRadius: 1,
-//                         pointHitRadius: 10,
-//                         data: this.props.data[1].values
-//                     }
-//                 ]
-//             }
-//         };
-//
-//
-//
-//
-//     render() {
-//         return (
-//             <MDBContainer>
-//                 <h3 className="mt-5">Line chart</h3>
-//                 <Line data={this.state.dataLine} options={{ responsive: true }} />
-//             </MDBContainer>
-//         );
-//     }
-// }
-
-import React from 'react';
-import { HorizontalBar } from 'react-chartjs-2';
-import { MDBContainer } from 'mdbreact';
+import React from "react";
+import { Line } from "react-chartjs-2";
+import { MDBContainer } from "mdbreact";
+import {capitalizedName} from "../BillDialog";
 
 export default class MDBHorizontalBar extends React.Component {
-    state = {
-        dataHorizontal: {
-            labels: [
+
+     state = {
+            dataLine: {
+                labels: [
                     'Employee', 'Advertising', 'Gifts',
                     'Hospitality', 'Office', 'Printing', 'Travel'
                 ],
-            datasets: [
-                {
-                    label: this.props.data[0].label,
-                    data: this.props.data[0].values,
-                    fill: true,
-                    backgroundColor: '#67b7dc'
-                    ,
-                    borderColor: '#67b7dc',
-                    borderWidth: 1
-                },
-                {
-                    label: this.props.data[1].label,
-                    data: this.props.data[1].values,
-                    fill: true,
-                    backgroundColor: 'rgb(75, 192, 192)',
-                    borderColor: 'rgb(75, 192, 192)'
-                    ,
-                    borderWidth: 1
-                }
-            ]
-        }
-    };
+                datasets: [
+                    {
+                        label: capitalizedName(this.props.data[0].label),
+                        fill: true,
+                        lineTension: 0.3,
+                        backgroundColor: "rgba(225, 204,230, .3)",
+                        borderColor: "rgb(205, 130, 158)",
+                        borderCapStyle: "butt",
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: "miter",
+                        pointBorderColor: "rgb(205, 130,1 58)",
+                        pointBackgroundColor: "rgb(255, 255, 255)",
+                        pointBorderWidth: 10,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: "rgb(0, 0, 0)",
+                        pointHoverBorderColor: "rgba(220, 220, 220,1)",
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 1,
+                        pointHitRadius: 10,
+                        data: this.props.data[0].values
+                    },
+                    {
+                        label: this.props.data[1].label,
+                        fill: true,
+                        lineTension: 0.3,
+                        backgroundColor: "rgba(184, 185, 210, .3)",
+                        borderColor: "rgb(35, 26, 136)",
+                        borderCapStyle: "butt",
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: "miter",
+                        pointBorderColor: "rgb(35, 26, 136)",
+                        pointBackgroundColor: "rgb(255, 255, 255)",
+                        pointBorderWidth: 10,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: "rgb(0, 0, 0)",
+                        pointHoverBorderColor: "rgba(220, 220, 220, 1)",
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 1,
+                        pointHitRadius: 10,
+                        data: this.props.data[1].values
+                    }
+                ]
+            }
+        };
+
+
+
 
     render() {
         return (
             <MDBContainer>
-                <HorizontalBar
-                    data={this.state.dataHorizontal}
-                    options={{ responsive: true }}
-                />
+                <Line data={this.state.dataLine} options={{ responsive: true }} />
             </MDBContainer>
         );
     }
 }
-
+//
+// import React from 'react';
+// import { HorizontalBar } from 'react-chartjs-2';
+// import { MDBContainer } from 'mdbreact';
+//
+// export default class MDBHorizontalBar extends React.Component {
+//     state = {
+//         dataHorizontal: {
+//             labels: [
+//                     'Employee', 'Advertising', 'Gifts',
+//                     'Hospitality', 'Office', 'Printing', 'Travel'
+//                 ],
+//             datasets: [
+//                 {
+//                     label: this.props.data[0].label,
+//                     data: this.props.data[0].values,
+//                     fill: true,
+//                     backgroundColor: '#67b7dc'
+//                     ,
+//                     borderColor: '#67b7dc',
+//                     borderWidth: 1
+//                 },
+//                 {
+//                     label: this.props.data[1].label,
+//                     data: this.props.data[1].values,
+//                     fill: true,
+//                     backgroundColor: 'rgb(75, 192, 192)',
+//                     borderColor: 'rgb(75, 192, 192)'
+//                     ,
+//                     borderWidth: 1
+//                 }
+//             ]
+//         }
+//     };
+//
+//     render() {
+//         return (
+//             <MDBContainer>
+//                 <HorizontalBar
+//                     data={this.state.dataHorizontal}
+//                     options={{ responsive: true }}
+//                 />
+//             </MDBContainer>
+//         );
+//     }
+// }
+//
