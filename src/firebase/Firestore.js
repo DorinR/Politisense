@@ -23,10 +23,6 @@ class _Firestore {
     }
     this.db = fs.firestore()
     this.firebase = fs
-    this.googleProvider = new fs.auth.GoogleAuthProvider()
-    this.facebookProvider = new fs.auth.FacebookAuthProvider()
-    this.twitterProvider = new fs.auth.TwitterAuthProvider()
-    this.microsoftProvider = new fs.auth.OAuthProvider('microsoft.com')
   }
 }
 
@@ -198,7 +194,7 @@ class Reference {
       const leftDoc = left[leftKey]
       const leftKeys = Object.keys(leftDoc)
       if (!leftKeys.includes(key) && key !== `_id_${this.reference.id}`) {
-        throw new Error(
+        console.warn(
           `Current collection: ${this.reference.id} does not contain items with key: ${key} `
         )
       }
@@ -209,7 +205,7 @@ class Reference {
           !rightKeys.includes(refKey) &&
           refKey !== `_id_${reference.reference.id}`
         ) {
-          throw new Error(
+          console.warn(
             `Current collection: ${reference.reference.id} does not contain items with key: ${refKey} `
           )
         }
@@ -230,20 +226,16 @@ class Reference {
 }
 
 class Firestore {
-  constructor (legacy = true) {
+  constructor (legacy = false) {
     this.firestore = getInstance()
     this.reference = this.firestore.db
-    this.googleProvider = this.firestore.googleProvider
     this.firebase = this.firestore.firebase
-    this.facebookProvider = this.firestore.facebookProvider
-    this.twitterProvider = this.firestore.twitterProvider
-    this.microsoftProvider = this.firestore.microsoftProvider
     this.parliament = 43
     this.legacy = legacy
   }
 
-  forParliament (parl) {
-    this.parliament = parl
+  forParliament (parliament) {
+    this.parliament = parliament
     return this
   }
 
@@ -258,7 +250,20 @@ class Firestore {
   }
 
   FinancialRecord () {
-    const collection = this.legacy ? 'financialRecord' : `${this.parliament}/financialRecord`
+    const collection = this.legacy ? 'financialRecord' : 'financialRecord'
+    return this.createReference(collection)
+  }
+
+  MinisterDescription () {
+    if (this.legacy) {
+      throw new Error('ERROR: collection not available as a legacy collection')
+    }
+    const collection = 'static/minister_descriptions/description'
+    return this.createReference(collection)
+  }
+
+  PoliticalParty () {
+    const collection = this.legacy ? 'parties' : `${this.parliament}/parties/party`
     return this.createReference(collection)
   }
 
@@ -268,7 +273,7 @@ class Firestore {
   }
 
   Riding () {
-    const collection = this.legacy ? 'ridings' : `${this.parliament}/ridings`
+    const collection = this.legacy ? 'ridings' : 'static/ridings/riding'
     return this.createReference(collection)
   }
 
@@ -283,7 +288,7 @@ class Firestore {
   }
 
   User () {
-    const collection = this.legacy ? 'users' : `${this.parliament}/users`
+    const collection = this.legacy ? 'users' : 'static/users/user'
     return this.createReference(collection)
   }
 
@@ -307,10 +312,36 @@ class Firestore {
       .then(result => {
         this.firestore.db
           .terminate()
-          .then(result => { })
-          .catch(e => { })
+          .then(result => {})
+          .catch(e => {})
       })
-      .catch(e => { })
+      .catch(e => {})
+  }
+
+  static copyCollection (from, to) {
+    return new Promise(resolve => {
+      from
+        .select()
+        .then(snapshot => {
+          const records = []
+          snapshot.forEach(doc => {
+            records.push(doc.data())
+          })
+          return records
+        })
+        .then(records => {
+          return records.map(old => {
+            return to.insert(old)
+          })
+        })
+        .then(promises => {
+          return Promise.all(promises)
+        })
+        .then(responses => {
+          resolve(responses)
+        })
+        .catch(console.error)
+    })
   }
 }
 

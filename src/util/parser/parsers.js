@@ -9,3 +9,4 @@ module.exports.ParliamentaryRoleXMLParser = require('./ParliamentaryRoleXmlParse
 module.exports.AssociationRoleXmlParser = require('./AssociationRoleXmlParser').AssociationRoleXmlParser
 module.exports.CommitteeRoleXmlParser = require('./CommitteeRoleXmlParser').CommitteeRoleXmlParser
 module.exports.RoleXmlParser = require('./RoleXmlParser').RoleXmlParser
+module.exports.LegislativeActivityXmlParser = require('./LegislativeActivityXmlParser').LegislativeActivityXmlParser

@@ -271,7 +271,6 @@ export async function createData (categories, data) {
     dataArray.push(temp)
     // }
   })
-
   return dataArray
 }
 

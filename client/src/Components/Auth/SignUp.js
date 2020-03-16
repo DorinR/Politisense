@@ -48,11 +48,9 @@ const useStyles = makeStyles(theme => ({
 
 export async function signupAPICall (user) {
   let result = ''
-  await axios
-    .post('http://localhost:5000/api/users/checkIfUserExists', user)
-    .then(res => {
-      result = res
-    })
+  await axios.post('/api/users/checkIfUserExists', user).then(res => {
+    result = res
+  })
   return result
 }
 
@@ -95,12 +93,8 @@ export default function SignUp () {
     const passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
     const errors = {}
     const nameError = 'Invalid name format, Please use only letters or hyphens'
-    errors.firstname = !user.firstname.match(nameFormat)
-      ? nameError
-      : ''
-    errors.lastname = !user.lastname.match(nameFormat)
-      ? nameError
-      : ''
+    errors.firstname = !user.firstname.match(nameFormat) ? nameError : ''
+    errors.lastname = !user.lastname.match(nameFormat) ? nameError : ''
     errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
     errors.password = !user.password.match(passwordFormat)
       ? 'Invalid password format, please use at least 8 characters, comprised of alphanumeric characters'
@@ -108,11 +102,13 @@ export default function SignUp () {
     errors.passwordConfirm = !(user.password === passwordConfirm)
       ? 'Passwords do not match, please re-enter confirmation password'
       : ''
-    if (errors.firstname === '' &&
-        errors.lastname === '' &&
-        errors.email === '' &&
-        errors.password === '' &&
-        errors.passwordConfirm === '') {
+    if (
+      errors.firstname === '' &&
+      errors.lastname === '' &&
+      errors.email === '' &&
+      errors.password === '' &&
+      errors.passwordConfirm === ''
+    ) {
       signupAPICall(user).then(res => {
         if (res.data.success === false) {
           setRegistered(true)

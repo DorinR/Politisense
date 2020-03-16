@@ -50,7 +50,6 @@ export default function RidingShape (props) {
 
   useEffect(() => {
     if (props.ridingShapeCoordinates && props.politicalParty) {
-      // get color for given party
       const thisPartyColor = PARTY_COLORS[props.politicalParty]
 
       // convert geoJSON data to svg shape and set fill color to the party color
