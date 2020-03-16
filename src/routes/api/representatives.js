@@ -24,4 +24,6 @@ router.get(
 
 router.get('/representative/representative/:name', controller.getImageData)
 
+router.get('/getAllRepsFromAllParliaments', controller.getAllRepsFromAllParliaments)
+
 module.exports = router

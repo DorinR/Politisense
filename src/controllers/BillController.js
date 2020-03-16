@@ -1,5 +1,5 @@
+import { mergeArrays } from '../../client/src/Components/Dashboard/Utilities/CommonUsedFunctions'
 const Firestore = require('@firestore').Firestore
-
 exports.getAllBillsByHead = (req, res) => {
   const db = new Firestore()
   const votes = db.Vote()
@@ -55,115 +55,201 @@ exports.getAllBillsByHead = (req, res) => {
     })
 }
 
-exports.getAllBillsByRep = (req, res) => {
-  const db = new Firestore()
-  const votes = db.Vote()
-  const representative = req.params.head.toLowerCase()
-  const voteRecord = db.VoteRecord()
-  const bills = db.Bill()
-  const billClassification = db.BillClassification()
-
-  const finalArray = []
-  const test = []
-  let repId = ''
-  db.Politician()
-    .select('name', '==', representative)
+async function fetchIDbyPoliticianName (parliamentNo, repName) {
+  const db = new Firestore(false).forParliament(parliamentNo)
+  let id = null
+  await db.Politician()
+    .where('name', '==', repName)
+    .select()
     .then(snapshot => {
       if (snapshot.empty) {
-        res.status(400).json({
-          message: 'Rep Not Found',
-          success: false
-        })
+        console.log('this MP didnt exist in this parliament')
+        return id
       }
       snapshot.forEach(doc => {
-        repId = doc.id
+        id = doc.id
       })
-      votes
-        .where('member', '==', repId)
-        .innerJoin('vote', voteRecord, '_id')
-        .then(result => {
-          result.forEach(element => {
-            test.push(element)
-          })
-          if (result) {
-            bills
-              .innerJoin('_id', billClassification, 'bill')
-              .then(billTable => {
-                result.forEach(data => {
-                  billTable.forEach(bill => {
-                    if (data.bill === bill.bill) {
-                      const temp = {
-                        voteRecord: data,
-                        billData: bill
-                      }
-                      finalArray.push(temp)
-                    }
-                  })
-                })
-
-                res.json({
-                  success: true,
-                  data: finalArray
-                })
-              })
-          }
-        })
+      return id
     })
+  return id
 }
 
-exports.getAllBillsBySponsorName = (req, res) => {
-  const db = new Firestore()
-  const voteRecord = db.VoteRecord()
+async function getAllVoteRecordsByRep (repId, parliamentNo) {
+  const db = new Firestore(false).forParliament(parliamentNo)
+  const votes = db.Vote()
+  const voteRecord = db.VoteRecord().where('type', '==', 'assent')
+  const allVotes = []
+  await votes
+    .where('member', '==', repId)
+    .innerJoin('vote', voteRecord, '_id')
+    .then(result => {
+      result.forEach(element => {
+        allVotes.push(element)
+      })
+      return allVotes
+    }).catch(e => console.log('invalid parameters in inner join or in where clause', e))
+  return allVotes
+}
+async function getAllBillsByParliamentAndRep (parliamentNo, repName) {
+  const db = new Firestore(false).forParliament(parliamentNo)
+  const bills = db.Bill()
   const billClassification = db.BillClassification()
-  const sponsor = req.params.head.toLowerCase()
-  const billsWithClassification = []
-  const billsTotalVotes = []
+  const repId = await fetchIDbyPoliticianName(parliamentNo, repName)
   const finalArray = []
+  if (repId) {
+    const allVotes = await getAllVoteRecordsByRep(repId, parliamentNo)
+    if (allVotes) {
+      await bills
+        .innerJoin('_id', billClassification, 'bill')
+        .then(billTable => {
+          if (billTable.empty) {
+            console.log('there is no bills for this parliament')
+            return []
+          }
+          allVotes.forEach(data => {
+            billTable.forEach(bill => {
+              if (data.bill === bill.bill) {
+                const temp = {
+                  voteRecord: data,
+                  billData: bill
+                }
+                finalArray.push(temp)
+              }
+            })
+          })
+        }).catch(e => console.log('invalid parameters for inner join ', e))
+    }
+  }
+  return finalArray
+}
 
-  db.Bill()
-    .where('sponsorName', '==', sponsor)
+exports.getAllBillsByRepForAllParliaments = async (req, res) => {
+  const repName = req.params.head.toLowerCase()
+  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
+  const rawData = await Promise.all(
+    parliaments.map(parliament => {
+      return getAllBillsByParliamentAndRep(parliament, repName)
+    })
+  )
+  const jointArray = mergeArrays(rawData)
+
+  res.status(200).json({
+    success: true,
+    data: jointArray
+  })
+}
+
+async function getBillsClassifiedBySponsor (parliamentNo, repName) {
+  const db = new Firestore(false).forParliament(parliamentNo)
+  const bill = db.Bill()
+  const billClassification = db.BillClassification()
+  const billsWithClassification = []
+
+  await bill
+    .where('sponsorName', '==', repName)
     .innerJoin('_id', billClassification, 'bill')
     .then(result => {
       if (result.empty) {
-        res.status(400).json({
-          message: 'Rep Not Found',
-          success: false
-        })
+        console.log('No sponsored bills for ' + repName)
+        return []
       }
       result.forEach(bill => {
         billsWithClassification.push(bill)
       })
+    }).catch(e => console.log('invalid parameters for inner join', e))
+  return billsWithClassification
+}
+// we should have 14 unique bills
+// we should have 14 voting records
+async function getVotingRecordsForBills (repName, parliamentNo) {
+  const db = new Firestore(false).forParliament(parliamentNo)
+  const voteRecord = db.VoteRecord().where('type', '==', 'assent')
+  const billsTotalVotes = []
+  await db.Bill()
+    .where('sponsorName', '==', repName)
+    .innerJoin('_id', voteRecord, 'bill')
+    .then(data => {
+      data.forEach(bill => {
+        billsTotalVotes.push(bill)
+      })
+    }).catch(e => console.log('invalid repName or invalid parameters in inner join', e))
+  return billsTotalVotes
+}
+async function extractAllBillsAndVotingRecordsByParliamentAndSponsor (parliamentNo, repName) {
+  const finalArray = []
+  const classifiedBills = await getBillsClassifiedBySponsor(parliamentNo, repName)
+  const votingRecords = await getVotingRecordsForBills(repName, parliamentNo)
 
-      db.Bill()
-        .where('sponsorName', '==', sponsor)
-        .innerJoin('_id', voteRecord, 'bill')
-        .then(data => {
-          data.forEach(bill => {
-            billsTotalVotes.push(bill)
-          })
-
-          if (billClassification.length !== 0 && billsTotalVotes.length !== 0) {
-            for (let i = 0; i < billsWithClassification.length; i++) {
-              for (let j = 0; j < billsTotalVotes.length; j++) {
-                if (
-                  billsWithClassification[i].bill === billsTotalVotes[j].bill
-                ) {
-                  const temp = {
-                    billsClassified: billsWithClassification[i],
-                    voteRecord: billsTotalVotes[j]
-                  }
-                  finalArray.push(temp)
-                }
-              }
-            }
-
-            res.json({
-              success: true,
-              data: finalArray
-            })
+  if (classifiedBills.length !== 0 && votingRecords.length !== 0) {
+    classifiedBills.forEach((classifiedBill) => {
+      votingRecords.forEach((votingRecord) => {
+        if (classifiedBill.bill === votingRecord.bill) {
+          const temp = {
+            billsClassified: classifiedBill,
+            voteRecord: votingRecord
           }
-        })
+          finalArray.push(temp)
+        }
+      })
     })
+  }
+  return finalArray
+}
+
+async function fetchBillsByParliamentAndSponsor (parliamentNo, repName) {
+  const id = await fetchIDbyPoliticianName(parliamentNo, repName)
+  let bills = []
+  if (id) {
+    bills = await extractAllBillsAndVotingRecordsByParliamentAndSponsor(parliamentNo, repName)
+  }
+  return bills
+}
+
+async function getAllBillsByParliamentWithoutRep (parliamentNo) {
+  const db = new Firestore().forParliament(parliamentNo)
+  const billClassification = db.BillClassification()
+  const bills = []
+  await billClassification.select().then(snapshot => {
+    if (snapshot.empty) {
+      console.log('no data for this parliament ')
+      return []
+    }
+    snapshot.forEach(doc => {
+      bills.push(doc.data())
+    })
+  }).catch(e => console.log(e))
+  return bills
+}
+exports.fetchCategories = async (req, res) => {
+  const parliaments = [39, 40, 41, 42, 43]
+  const rawData = await Promise.all(
+    parliaments.map(parliament => {
+      return getAllBillsByParliamentWithoutRep(parliament)
+    })
+  )
+  const jointedArray = mergeArrays(rawData)
+  let categories = [...new Set(jointedArray.map(item => item.category))]
+  categories = categories.filter(category => category !== null && category !== undefined && category !== '')
+
+  res.status(200).json({
+    success: true,
+    data: categories
+  })
+}
+
+exports.getAllBillsBySponsorForAllParliaments = async (req, res) => {
+  const repName = req.params.head.toLowerCase()
+  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
+  const rawData = await Promise.all(
+    parliaments.map(parliament => {
+      return fetchBillsByParliamentAndSponsor(parliament, repName)
+    })
+  )
+  const bills = mergeArrays(rawData)
+  res.status(200).json({
+    success: true,
+    data: bills
+  })
 }
 
 exports.getAllBills = async (req, res) => {
@@ -246,7 +332,6 @@ exports.getVotedBillsByMP = (req, res) => {
                         voteRecord: result[i],
                         billData: billTable[j]
                       }
-                      console.log(temp)
                       finalArray.push(temp)
                     }
                   }

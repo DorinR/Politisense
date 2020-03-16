@@ -216,7 +216,6 @@ function dashboard (element, fData) {
 }
 export default class BarPieChart {
   constructor (element, data, categories) {
-    console.log(data, categories)
     createData(categories, data).then(results => {
       dashboard(element, results)
     })
@@ -244,7 +243,6 @@ export async function createData (categories, data) {
       dataArray.push(temp)
     }
   })
-
   return dataArray
 }
 
