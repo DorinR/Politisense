@@ -11,21 +11,22 @@ export default function MinisterHelpDialog (props) {
   const { onClose, open } = props
   const [text, setText] = React.useState('')
 
+  const getDescription = async (ministry) => {
+    return axios
+      .post('api/parliament/getRoleDescription', { ministry: ministry })
+      .then(res => {
+        let desc = ''
+        if (res.data.success) {
+          desc = res.data.data.description
+        }
+        return desc
+      }).catch(console.error)
+  }
+
   useEffect(() => {
     setText('')
-    const getDescription = async () => {
-      return axios
-        .post('api/parliament/getRoleDescription', { ministry: props.ministry })
-        .then(res => {
-          let desc = ''
-          if (res.data.success) {
-            desc = res.data.data.description
-          }
-          return desc
-        }).catch(console.error)
-    }
     async function getData () {
-      const desc = await getDescription()
+      const desc = await getDescription(props.ministry)
       setText(desc)
     }
     getData()

@@ -177,8 +177,14 @@ export default function GeneralDashboard () {
   useEffect(() => {
     async function getData () {
       const mins = await getMinisters()
-      const partyInfo = await getPartyInfo()
       setMinisters(mins)
+    }
+    getData()
+  }, [])
+
+  useEffect(() => {
+    async function getData () {
+      const partyInfo = await getPartyInfo()
       setParties(partyInfo)
     }
     getData()

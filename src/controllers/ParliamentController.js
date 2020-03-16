@@ -24,7 +24,7 @@ exports.getCabinetMinisters = (req, res) => {
 exports.getPartyInfo = (req, res) => {
   const parties = []
   const db = new Firestore(false).forParliament(43)
-  db.Party().select()
+  db.PoliticalParty().select()
     .then(snapshot => {
       if (snapshot.empty) {
         res.status(404).json({
@@ -45,7 +45,7 @@ exports.getPartyInfo = (req, res) => {
 
 exports.getRoleDescription = (req, res) => {
   const db = new Firestore(false)
-  db.MinisterDescriptions().where('identifier', '==', req.body.ministry).select()
+  db.MinisterDescription().where('identifier', '==', req.body.ministry).select()
     .then(snapshot => {
       if (snapshot.empty) {
         res.status(404).json({
