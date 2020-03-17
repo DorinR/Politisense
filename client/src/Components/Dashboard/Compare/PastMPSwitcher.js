@@ -68,37 +68,31 @@ function getPartyColor(partyName) {
         case 'liberal':
             return {
                 backgroundColor: '#D71921',
-                fontWeight: 700,
                 color: 'white'
             }
         case 'conservative':
             return {
                 backgroundColor: '#0C499C',
-                fontWeight: 700,
                 color: 'white'
             }
         case 'ndp':
             return {
                 backgroundColor: '#EF7E52',
-                fontWeight: 700,
                 color: 'white'
             }
         case 'bloc québécois':
             return {
                 backgroundColor: '#02819E',
-                fontWeight: 700,
                 color: 'white'
             }
         case 'green party':
             return {
                 backgroundColor: '#2E8724',
-                fontWeight: 700,
                 color: 'white'
             }
         case 'independent':
             return {
                 backgroundColor: 'black',
-                fontWeight: 700,
                 color: 'white'
             }
         default:

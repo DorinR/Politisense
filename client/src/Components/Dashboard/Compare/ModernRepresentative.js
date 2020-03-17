@@ -10,7 +10,7 @@ import ListItem from '@material-ui/core/ListItem'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import PersonIcon from '@material-ui/icons/Person'
-import { fetchRidingCode } from '../Sidebar/RepresentativeInfo'
+import DollarIcon from '@material-ui/icons/Money'
 import axios from 'axios'
 import { getAllBillsByHead } from './CompareRepresentatives'
 import Grid from '@material-ui/core/Grid'
@@ -62,7 +62,6 @@ async function fetchCurrentRepresentative(riding) {
             }
         })
         .catch(err => console.error(err))
-    console.log("Current MP", currentRepresentative)
     return currentRepresentative
 }
 
@@ -70,45 +69,39 @@ export default function ModernRepresentative(props) {
     const { updateHead, ...other } = props
     const classes = useStyles()
     const [name, setName] = useState('')
-    const [politicalParty, setPoliticalParty] = useState('')
-    const [riding, setRiding] = useState('')
     const [totalBills, setTotalBills] = useState(0)
     const [issuedBills, setIssuedBills] = useState(0)
+    const [mp, setMp] = React.useState([])
+    const [currentRepresentative, setCurrentRepresentative] = React.useState([])
+    const [politicalParty, setPoliticalParty] = React.useState([])
+
 
     useEffect(() => {
-        async function getRepInfo(name) {
-            const res = await axios.get(
-                `http://localhost:5000/api/representatives/${name}/getRepresentativesInfo`
-            )
-            return res.data.data
-        }
         async function getIssuedBillsByHead(head) {
             const res = await axios.get(
                 `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
             )
             return res.data.data
         }
-        async function getData(name) {
+
+        async function getData(mp) {
             // eslint-disable-next-line
             const user = JSON.parse(localStorage.getItem('user'))
             const riding = await fetchUserRiding(user.email)
-            console.log(riding)
             const currentRepresentative = await fetchCurrentRepresentative(riding)
-            console.log("TEST current MP")
-            console.log("GET DATA ", currentRepresentative)
-            const riding2 = await getRepInfo(currentRepresentative)
-            const bills = await getAllBillsByHead(name)
+            const bills = await getAllBillsByHead(currentRepresentative.name)
             const total = await calculateTotalVotesBills(bills)
             setTotalBills(total)
-            setPoliticalParty(riding2.politicalParty)
+            setCurrentRepresentative(currentRepresentative.name)
+            setPoliticalParty(currentRepresentative.politicalParty)
             const issuedBillsByHead = await getIssuedBillsByHead(name)
             if (issuedBillsByHead.length != 0) {
                 setIssuedBills(issuedBillsByHead.length)
             }
         }
-        getData(name)
-
-    }, [name, riding, politicalParty, issuedBills])
+        getData(mp)
+        console.log(getData(mp))
+    }, [mp])
 
     return (
         <Grid container spacing={2}>
@@ -132,7 +125,7 @@ export default function ModernRepresentative(props) {
                                         <PersonIcon />
                                     </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText>{capitalize(name)}</ListItemText>
+                                <ListItemText>{capitalize(currentRepresentative)}</ListItemText>
                             </ListItem>
                             <ListItem>
                                 <ListItemAvatar>
@@ -141,6 +134,14 @@ export default function ModernRepresentative(props) {
                                     </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText>{capitalize(politicalParty)}</ListItemText>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemAvatar>
+                                    <Avatar className={classes.avatar}>
+                                        <DollarIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText>Total Spending: </ListItemText>
                             </ListItem>
                             <ListItem>
                                 <ListItemAvatar>
