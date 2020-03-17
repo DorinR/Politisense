@@ -27,9 +27,11 @@ exports.getImageData = async (req, res) => {
 }
 
 exports.getRepresentativeByRiding = (req, res) => {
+  console.log(`received from frontend: ${req.params.riding}`)
   const db = new Firestore()
   const riding = req.params.riding.toLowerCase()
-  db.Politician()
+  return db
+    .Politician()
     .select('riding', '==', riding)
     .then(snapshot => {
       if (snapshot.empty) {
@@ -82,7 +84,6 @@ exports.getAllRepresentatives = (req, res) => {
 }
 
 exports.getPastRepresentatives = async (req, res) => {
-  console.log(`received from frontend: ${req.params.riding}`)
   const representativesAccumulator = []
   const parliaments = [36, 37, 38, 39, 40, 41, 42]
   const db = new Firestore(false)

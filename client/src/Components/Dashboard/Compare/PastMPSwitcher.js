@@ -114,7 +114,6 @@ export default function PastMPSwitcher(props) {
     const theme = useTheme()
     const [mp, setMp] = React.useState([])
     const [dropdownMps, setDropdownMps] = React.useState([])
-    const [partyColor, setPartyColor] = React.useState('')
 
     async function populateDropdownMps(mps) {
         setDropdownMps(mps)
