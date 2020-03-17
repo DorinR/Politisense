@@ -3,7 +3,7 @@ const proc = require('child_process')
 const fs = require('fs')
 const path = require('path')
 
-class BillClassificationAction extends Action {
+class ClassificationAction extends Action {
   constructor (fp) {
     super()
     this.classifierPath = fp || path.join(__dirname, 'classifier.py')
@@ -89,4 +89,4 @@ class BillClassificationAction extends Action {
   }
 }
 
-module.exports.BillClassificationAction = BillClassificationAction
+module.exports.ClassificationAction = ClassificationAction

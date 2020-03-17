@@ -28,7 +28,7 @@ exports.getImageData = async (req, res) => {
 }
 
 exports.getRepresentativeByRiding = (req, res) => {
-  const db = new Firestore()
+  const db = new Firestore(true)
   const riding = req.params.riding.toLowerCase()
   db.Politician()
     .select('riding', '==', riding)
@@ -176,4 +176,83 @@ exports.getRepresentativeId = async (req, res) => {
         message: err
       })
     })
+}
+
+async function fetchRolesByParliament (parliamentNo,repName) {
+    let id = await fetchIDbyRepName(parliamentNo,repName)
+    if(id){
+        let roles =await fetchrolesbyID(parliamentNo,id)
+        return roles
+    }
+    return []
+}
+
+async function fetchIDbyRepName (parliamentNo,repName) {
+    const db = new Firestore(false).forParliament(parliamentNo)
+    let id =null
+    await db.Politician()
+        .where('name','==',repName)
+        .select()
+        .then(snapshot => {
+
+            if (snapshot.empty) {
+                return "nothing there 1"
+            }
+            snapshot.forEach(doc => {
+                // const name = doc.id
+                id = doc.id
+            })
+
+            return id
+        })
+    return id
+}
+
+async function fetchrolesbyID (parliamentNo,id) {
+    const db = new Firestore(false).forParliament(parliamentNo)
+    const role= db.Role()
+    let roles = []
+   await role.where('politician','==',id)
+        .select()
+        .then(snapshot => {
+            if (snapshot.empty) {
+                return []
+            }
+            snapshot.forEach(doc => {
+                const {fromDate,group,title,toDate,type} = doc.data()
+                let test={
+                    fromDate:fromDate,
+                    group:group,
+                    title:title,
+                    toDate:toDate,
+                    type:type
+                }
+                console.log("im here " + test)
+                roles.push(test)
+            })
+            return roles
+        })
+        .catch(err => {
+            console.log('Error getting documents', err)
+        })
+    return roles
+}
+
+exports.getAllRolesByRep = async (req, res) => {
+
+    let rawData = await Promise.all([
+        fetchRolesByParliament(43,req.params.repName),
+        fetchRolesByParliament(42,req.params.repName),
+        fetchRolesByParliament(41,req.params.repName),
+        fetchRolesByParliament(40,req.params.repName),
+        fetchRolesByParliament(39,req.params.repName),
+        fetchRolesByParliament(38,req.params.repName),
+        fetchRolesByParliament(37,req.params.repName),
+        fetchRolesByParliament(36,req.params.repName),
+    ])
+
+        res.status(200).json({
+            success: true,
+            data: rawData
+        })
 }

@@ -170,3 +170,12 @@ class PoliticianScraper extends QueueManager {
 }
 
 module.exports.PoliticianScraper = PoliticianScraper
+
+PoliticianScraper.create({
+  url: 'https://www.ourcommons.ca/Members/en/search/xml',
+  parliaments: 'all'
+})
+  .execute()
+  .then(results => {
+    console.log(results)
+  })

@@ -50,3 +50,13 @@ export function capitalizedName (sponsor) {
   }
   return null
 }
+
+export function getPercentagePartisanIndex (element, arr) { // Utility function to compute percentage.
+                                    // Utility function to compute percentage.
+  let sum = 0
+  arr.forEach(element => {
+    sum = sum + element.freq
+  })
+  const fraction = ((element.freq / sum) * 100).toFixed(1)
+  return fraction
+}

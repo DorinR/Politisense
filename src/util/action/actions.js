@@ -14,7 +14,7 @@ module.exports = {
   ParserWrapperAction: require('./wrapper_action/ParserWrapperAction').ParserWrapperAction,
   Errors: require('./error/errors'),
   FormatAction: require('./FormatAction').FormatAction,
-  BillClassificationAction: require('./classify_action/BillClassifyAction').BillClassificationAction,
+  ClassifyAction: require('./classify_action/ClassifyAction').ClassificationAction,
   FileOutputAction: require('./classify_action/FileOutputAction').FileOutputAction,
   BillTagCreationAction: require('./classify_action/BillTagCreationAction').BillTagCreationAction
 }

@@ -30,3 +30,12 @@ class ClassificationRunner extends QueueManager {
 }
 
 module.exports.ClassificationRunner = ClassificationRunner
+
+ClassificationRunner.create({
+  parliaments: 'all'
+})
+  .execute()
+  .then(results => {
+    console.log(results)
+  })
+  .catch(console.error)

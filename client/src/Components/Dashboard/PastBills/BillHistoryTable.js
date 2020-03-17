@@ -8,7 +8,17 @@ import TableHead from '@material-ui/core/TableHead'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import BillDetails from './BillDetails'
+import clsx from 'clsx';
 import axios from 'axios'
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Divider,
+  IconButton
+} from '@material-ui/core';
+import DescriptionDialog from "../../MyMP/DescriptionDialog";
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 const columns = [
   { id: 'number', label: 'Bill Number', minWidth: 120 },
@@ -25,7 +35,8 @@ const columns = [
     label: 'Details',
     minWidth: 170,
     align: 'right'
-  }
+  },
+
 ]
 
 function createData (number, dateVoted, title, vote, moreInfo) {
@@ -34,19 +45,40 @@ function createData (number, dateVoted, title, vote, moreInfo) {
 
 let rows = []
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%'
+    width: '100%',
+    // height:'100%'
   },
   tableWrapper: {
-    maxHeight: 450,
+    // minWidth: 800,
+    maxHeight: 350,
     overflow: 'auto'
   },
   container: {
-    margin: '20px',
-    marginTop: '30px'
+    // margin: '20px',
+    // marginTop: '30px'
+  },
+  content: {
+    padding: 0
+  },
+  inner: {
+    minWidth: 800
+  },
+  statusContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  status: {
+    marginRight: theme.spacing(1)
+  },
+  title: {
+    color: "#263238",
+    fontSize: "16px",
+    fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+    fontWeight: 700
   }
-})
+}))
 
 export async function fetchUserRiding (userEmail) {
   let result = ''
@@ -189,11 +221,23 @@ function getRepresentativeVote (billNumber, voteRecords, votesByRepresentative) 
   return vote
 }
 
-export default function BillHistoryTable () {
+export default function BillHistoryTable (props) {
+  const { className, ...rest } = props;
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const [expanded, setExpanded] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
 
+  const handleClickOpen = () => {
+    setOpen(true)
+  };
+  const handleClose = () => {
+    setOpen(false)
+  };
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
   useEffect(() => {
     async function getData () {
       // eslint-disable-next-line no-undef
@@ -228,8 +272,25 @@ export default function BillHistoryTable () {
 
   return (
     <div className={classes.container}>
-      <Paper className={classes.root}>
-        <div className={classes.tableWrapper}>
+      {/*<Paper className={classes.root}>*/}
+        <Card
+            {...rest}
+            className={clsx(classes.root, className)}
+        >
+          <CardHeader
+              classes={{
+                title: classes.title,
+              }}
+              title="Voting History"
+              action={
+                <IconButton aria-label="settings">
+                  <HelpOutlineIcon onClick={handleClickOpen}/>
+                </IconButton>
+              }
+          />
+          <Divider />
+          <CardContent className={classes.content}>
+          <div className={classes.tableWrapper}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
@@ -286,7 +347,21 @@ export default function BillHistoryTable () {
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
-      </Paper>
+          </CardContent>
+          <DescriptionDialog
+              open = {open}
+              onClose={handleClose}
+              d3={true}
+              explaination={
+                {title:"Bill History Table",
+                body:"This table shows all the bills for this current parliament, " +
+                    "including bills number," +
+                    " bill's type,date voted, your current MP's vote." +
+                    " You can also find more details by clicking on More Details button "}
+              }
+          />
+        </Card>
+      {/*</Paper>*/}
     </div>
   )
 }
