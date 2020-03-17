@@ -24,7 +24,7 @@ import { useMediaQuery } from "@material-ui/core";
 import Sidebar from "./Components/Navbar";
 import Topbar from "./Components/Topbar";
 import CompareContainer from "./Components/Dashboard/Compare/CompareContainer";
-import GeneralDashboard from './Components/Dashboard/General/GeneralDashboard'
+import GeneralDashboard from "./Components/Dashboard/GeneralDashboard";
 const useStyles = makeStyles(theme => ({
   root: {
     paddingTop: 56,

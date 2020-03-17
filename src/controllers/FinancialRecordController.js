@@ -1,6 +1,8 @@
 const Firestore = require('@firestore').Firestore
 
 exports.getAllSpendingItemsForParty = (req, res) => {
+  console.log('getAllSpendingItems endpoint hit!')
+  console.log(`argument recevied: ${req.params.party}`)
   const desiredCategories = [
     "1-Employees' salaries",
     '2-Service Contracts',
@@ -9,7 +11,7 @@ exports.getAllSpendingItemsForParty = (req, res) => {
     '5-Gifts',
     '6-Advertising'
   ]
-  const db = new Firestore(true)
+  const db = new Firestore()
   const financialRecordCollection = db.FinancialRecord()
   db.Politician()
     .where('politicalParty', '==', req.params.party)
