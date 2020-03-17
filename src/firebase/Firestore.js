@@ -150,14 +150,14 @@ class Reference {
     if (model instanceof Model) {
       model = Model.serialise(model)
     }
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       this.reference
         .add(model)
         .then(result => {
-          resolve(true)
+          resolve(result.id)
         })
-        .catch(() => {
-          resolve(false)
+        .catch((e) => {
+          reject(e)
         })
     })
   }
@@ -255,9 +255,7 @@ class Firestore {
   }
 
   MinisterDescription () {
-    if (this.legacy) {
-      throw new Error('ERROR: collection not available as a legacy collection')
-    }
+    Firestore.legacyCollectionError(this.legacy)
     const collection = 'static/minister_descriptions/description'
     return this.createReference(collection)
   }
@@ -269,12 +267,12 @@ class Firestore {
 
   LegislativeActivityVote () {
     Firestore.legacyCollectionError(this.legacy)
-    return this.createReference(`${this.parliament}/user_votes/user_vote`)
+    return this.createReference(`${this.parliament}/legislative_activities/vote`)
   }
 
   LegislativeActivity () {
     Firestore.legacyCollectionError(this.legacy)
-    return this.createReference(`${this.parliament}/legislative_activities/legislative_activity`)
+    return this.createReference(`${this.parliament}/legislative_activities/activity`)
   }
 
   Politician () {
