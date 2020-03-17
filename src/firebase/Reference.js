@@ -155,13 +155,8 @@ class Reference {
 }
 
 class DataReference {
-  constructor (suffix, data = []) {
-    this.suffix = suffix
+  constructor (data = []) {
     this.data = data || []
-  }
-
-  id () {
-    return this.suffix
   }
 
   forEach (fn) {
@@ -173,11 +168,13 @@ class DataReference {
   }
 
   async innerJoin (key, reference, refKey) {
-    const left = format(this.data, this.suffix)
+    const left = format(this.data)
     const right = {}
 
     if (key === '_id') {
-      key = `${key}_${this.suffix}`
+      throw new Error('Ambiguous _id parameter for consecutive joins')
+    } else {
+      key = `${key}_prev`
     }
     if (refKey === '_id') {
       refKey = `${refKey}_${reference.reference.id}`
@@ -186,25 +183,24 @@ class DataReference {
     await reference.select().then(snapshot => {
       fetch(snapshot, right, `_${reference.reference.id}`)
     })
-    return cartesianProduct(left, key, this.suffix, right, refKey, reference.reference.id)
+    return cartesianProduct(left, key, 'prev', right, refKey, reference.reference.id)
   }
 }
 
 function format (data, suffix) {
   const container = {}
   data.forEach(datum => {
-    if (hasIDKey(datum, suffix)) {
-      container[`_id${suffix}`] = datum
-    } else {
-      throw new Error('ERROR: data reference instance does not have an id property')
+    const obj = {}
+    let count = 0
+    Object.keys(datum).forEach(key => {
+      const keys = key.split('_')
+      obj[`${keys[0] === '' ? `_id${count++}` : keys[0]}_prev`] = datum[key]
+    })
+    for (let i = 0; i < count; i++) {
+      container[obj[`_id${i}_prev`]] = Object.assign(obj)
     }
   })
-}
-
-function hasIDKey (datum, suffix) {
-  return Object.keys(datum).some(key => {
-    return key === `_id${suffix}`
-  })
+  return container
 }
 
 function fetch (snapshot, container, suffix) {
@@ -221,9 +217,9 @@ function cartesianProduct (left, key, leftName, right, refKey, rightName) {
   Object.keys(left).forEach(leftKey => {
     const leftDoc = left[leftKey]
     const leftKeys = Object.keys(leftDoc)
-    if (!leftKeys.includes(key) && key !== `_id_${leftName}`) {
+    if (!leftKeys.includes(key)) {
       console.warn(
-        `Current collection: ${this.reference.id} contains items without key: ${key} `
+        `Current collection: ${this.reference ? this.reference.id : 'Joined Collection'}, contains items without key: ${key} `
       )
     }
     Object.keys(right).forEach(rightKey => {
@@ -240,14 +236,14 @@ function cartesianProduct (left, key, leftName, right, refKey, rightName) {
       if (leftDoc[key] === rightDoc[refKey]) {
         const joined = {}
         leftKeys.forEach(k => {
-          if (rightKeys.includes(k)) {
+          if (rightKeys.includes(k) || k.includes('_id') || k.includes('_prev')) {
             joined[k] = leftDoc[k]
           } else {
             joined[`${k}_${leftName}`] = leftDoc[k]
           }
         })
         rightKeys.forEach(k => {
-          if (leftKeys.includes(k)) {
+          if (leftKeys.includes(k) || k.includes('_id_')) {
             joined[k] = rightDoc[k]
           } else {
             joined[`${k}_${rightName}`] = rightDoc[k]
@@ -257,7 +253,7 @@ function cartesianProduct (left, key, leftName, right, refKey, rightName) {
       }
     })
   })
-  return new DataReference(`_${leftName}`, join)
+  return new DataReference(join)
 }
 
 module.exports = {
