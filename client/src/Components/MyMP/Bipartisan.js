@@ -100,7 +100,7 @@ const Bipartisan = props => {
             <Divider />
             <CardContent>
                 <CardActionArea>
-                    <div className={classes.chartContainer} onClick={flipCard} >
+                    <div className={classes.chartContainer} >
                         <BarChartWrapper
                             type= {props.title}
                             data={props.data}

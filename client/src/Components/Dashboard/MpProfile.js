@@ -7,7 +7,7 @@ import { Avatar, Typography } from '@material-ui/core';
 import {fetchRidingCode,fetchUserRiding,fetchRepresentative,RepresentativeInfo} from './Sidebar/RepresentativeInfo'
 import RidingPopulation from './Sidebar/RidingPopulation/RidingPopulation'
 import {formatNumber} from "./Budget/Budget";
-import {capitalizedName} from "./BillDialog";
+import {capitalizedName} from "./Utilities/CommonUsedFunctions";
 import Box from "@material-ui/core/Box";
 import RidingShapeContainer from "./Sidebar/RidingShape/RidingShapeContainer";
 import CardContent from "@material-ui/core/CardContent";
@@ -65,6 +65,7 @@ const MpProfile = props => {
             // eslint-disable-next-line
             const user = JSON.parse(localStorage.getItem('user'))
             const riding = await fetchUserRiding(user.email)
+            console.log("riding",riding)
             const promises = await Promise.all([
                 fetchRidingCode(riding),
                 fetchRepresentative(riding)
@@ -88,6 +89,7 @@ const MpProfile = props => {
         setRiding(data.riding)
         setRidingCode(data.ridingCode)
         setYearElected(data.yearElected)
+        console.log(data)
     }, [data])
 
 

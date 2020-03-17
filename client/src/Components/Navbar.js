@@ -549,7 +549,6 @@ const Sidebar = props => {
           <ListItemAvatar>
             <RepresentativeImage representativeToLoad={userRepresentative} />
           </ListItemAvatar>
-          {/*<RepresentativeInfo representativeToLoad={userRepresentative} />*/}
           <MpProfile />
           <Divider className={classes.divider} />
 

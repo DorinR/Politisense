@@ -106,27 +106,7 @@ const Budget = props => {
     // const [open, setOpen]= useState(false)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
-    // const [age, setAge] = React.useState('');
-    // const [open, setOpen] = React.useState(false);
-    // const handleOpenAction = ()=>{
-    //     setOpen(true)
-    // }
-    // const handleCloseAction = ()=>{
-    //     setOpen(false)
-    // }
-    //
-    //
-    // const handleChange = event => {
-    //     setAge(event.target.value);
-    // };
-    //
-    // const handleClose = () => {
-    //     setOpen(false);
-    // };
-    //
-    // const handleOpen = () => {
-    //     setOpen(true);
-    // };
+
     const options = [
         'Quarter 1',
         'Quarter 2',
@@ -243,6 +223,7 @@ const Budget = props => {
                 `http://localhost:5000/api/budgets/budget/${id}`
             )
             .then(res => {
+                console.log(res)
                 return res.data.data
             })
             .catch(console.error)

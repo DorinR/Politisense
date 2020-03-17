@@ -270,7 +270,7 @@ import ReactFusioncharts from "react-fusioncharts";
 import React from "react";
 import { Line } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
-import {capitalizedName} from "../BillDialog";
+import {capitalizedName} from "../Utilities/CommonUsedFunctions";
 
 export default class MDBHorizontalBar extends React.Component {
 

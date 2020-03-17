@@ -13,10 +13,11 @@ import Committees from "./Committees";
 import IssuedBillsByMP from "./IssuedBillsByMP";
 import Bipartisan from "./Bipartisan";
 import MPActivityDistribution from "./MPActivityDistribution";
-import {getLegend} from "../Dashboard/Charts/DonutChart";
+import {getPercentagePartisanIndex} from "../Dashboard/Utilities/CommonUsedFunctions";
 import {
   CssBaseline
 } from '@material-ui/core';
+import {fetchCategories} from "../Dashboard/Utilities/CommonUsedFunctions";
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(4)
@@ -25,17 +26,17 @@ const useStyles = makeStyles(theme => ({
 }))
 export default function MyMP () {
   const classes = useStyles()
-  const [categoryList] = React.useState([
-    'economics',
-    'healthcare',
-    'human rights',
-    'business',
-    'religion',
-    'criminal',
-    'trade'
-  ])
   const [user, setUser] = useState(null)
   const [barPieRows, setBarPieRows] = React.useState([])
+
+  const [categoryList, setCategoryList] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      const categories = await fetchCategories()
+      setCategoryList(categories)
+    }
+    getData()
+  }, [])
 
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -43,25 +44,24 @@ export default function MyMP () {
     setUser(user)
   }, [])
 
-  const [reps, setReps] = React.useState(null)
+  async function getAllRepsFromAllParliaments () {
+    return axios
+        .get('/api/representatives/getAllRepsFromAllParliaments')
+        .then(res => {
+          if (res.data.success) {
+            return res.data.data
+          }
+        })
+        .catch(console.error)
+  }
+  const [allMPsFromAllParliaments, setAllMPsFromAllParliaments] = React.useState(null)
   useEffect(() => {
     async function getData () {
-      const representatives = await getAllReps()
-      setReps(representatives)
+      const mpsFromAllParliaments = await getAllRepsFromAllParliaments()
+      setAllMPsFromAllParliaments(mpsFromAllParliaments)
     }
     getData()
   }, [])
-
-  async function getAllReps () {
-    return axios
-      .get('http://localhost:5000/api/representatives/getAllRepresentatives')
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data
-        }
-      })
-      .catch(console.error)
-  }
 
   const [riding, setRiding] = useState(null)
   useEffect(() => {
@@ -98,68 +98,67 @@ export default function MyMP () {
       .catch(console.error)
   }
 
+  async function getAllBillsByRepForAllParliaments (head) {
+    return axios
+        .get(`/api/bills/${head}/getAllBillsByRepForAllParliaments`)
+        .then(res => {
+          if (res.data.success) {
+            return res.data.data
+          }
+        })
+        .catch(console.error)
+  }
+
   const [representativeData, setRepresentativeData] = React.useState(null)
   useEffect(() => {
     async function getData () {
       if (userRepresentative) {
-        console.log(userRepresentative)
-        const billsByRep = await getAllBillsByRep(userRepresentative)
+        const billsByRep = await getAllBillsByRepForAllParliaments(userRepresentative)
         setRepresentativeData(billsByRep)
       }
     }
     getData()
   }, [userRepresentative])
 
-  async function getAllBillsByRep (head) {
+  async function getAllBillsBySponsorForAllParliaments (head) {
     return axios
-      .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data
-        }
-      })
-      .catch(console.error)
+        .get(`/api/bills/${head}/getAllBillsBySponsorForAllParliaments`)
+        .then(res => {
+          if (res.data.success) {
+            return res.data.data
+          }
+        })
+        .catch(console.error)
   }
-
   const [userRepIssuedBills, setUserRepIssuedBills] = React.useState(null)
   useEffect(() => {
     async function getData () {
       if (userRepresentative) {
-        const issuedBillByUserRep = await getAllBillsBySponsorName(userRepresentative)
+        const issuedBillByUserRep = await getAllBillsBySponsorForAllParliaments(
+            userRepresentative
+        )
         setUserRepIssuedBills(issuedBillByUserRep)
-        populateIssuedBill(issuedBillByUserRep).then(res => {
-          setBarPieRows(res)
-        })
+         populateIssuedBill(issuedBillByUserRep).then(res => {setBarPieRows(res)})
       }
     }
     async function populateIssuedBill (userRepIssuedBills){
-        const dataForTable = await createDataPieBarTable(categoryList,userRepIssuedBills)
-        return dataForTable
-      }
+      const dataForTable = await createDataPieBarTable(categoryList,userRepIssuedBills)
+      return dataForTable
+    }
     getData()
-
   }, [userRepresentative])
-
-   async function getAllBillsBySponsorName (head) {
-    return axios
-      .get(`http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`)
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data
-        }
-      })
-      .catch(console.error)
-  }
 
   const [donutData, setDonutData] = React.useState(null)
   useEffect(() => {
-    if (reps && representativeData) {
-      const data = createDataSetDonut(reps, representativeData).then(res=>{
-        console.log(data)
-        setDonutData(res)
-      })
+    async function getDataForDonutD3 () {
+      let data = []
+      if (allMPsFromAllParliaments && representativeData) {
+        data = createDataSetDonut(allMPsFromAllParliaments, representativeData)
+        setDonutData(data)
+      }
     }
-  }, [reps, representativeData])
+    getDataForDonutD3()
+  }, [allMPsFromAllParliaments, representativeData])
 
   const [radarData, setRadarData] = React.useState(null)
   useEffect(() => {
@@ -319,73 +318,61 @@ function createDataSetRadar(categories, data) {
 
   return [dataSetRadar, maxValue]
 }
+export function getPoliticalPartyFromSponsor(sponsors){
+  let politicalParties = [...new Set(sponsors.map(item => item.party))]
+  return politicalParties
+}
 
-export async function createDataSetDonut(sponsors, mpdata) {
-    let bills=[],
-        liberalCounter = 0,
-        conservativeCounter = 0,
-        ndpCounter = 0,
-        peopleCounter = 0,
-        greenCounter = 0,
-        bqCounter = 0
+export function createDataSetDonut(sponsors, mpdata) {
+  let parties = {}
+  let politicalPartiesFromAllParliaments = getPoliticalPartyFromSponsor(sponsors)
+  let partiesCounters = []
+  let bills = []
+  politicalPartiesFromAllParliaments.forEach((party,i) => {
+    let temp = {partyType: party, counter: 0}
+    partiesCounters.push(temp)
+  })
 
-    if (mpdata.length) {
-      mpdata.forEach(bill => {
-        if (bill.voteRecord.yea === true) {
-          sponsors.forEach(sponsor => {
-            if (sponsor.name === bill.billData.sponsorName) {
-              switch (sponsor.politicalParty) {
-                case 'liberal':
-                  liberalCounter++
-                  bills.push({billDetails: bill, category: "Liberal"})
-                  break
-                case 'conservative':
-                  conservativeCounter++
-                  bills.push({billDetails:bill,category:'Conservative'})
-                  break
-                case 'ndp':
-                  ndpCounter++
-                  bills.push({billDetails: bill, category: "NDP"})
-                  break
-                case 'bloc québécois':
-                  bqCounter++
-                  bills.push({billDetails: bill, category: "Bloc Québécois"})
-                  break
-                case 'green':
-                  greenCounter++
-                  bills.push({billDetails: bill, category: "Green"})
-                  break
-                case 'people':
-                  peopleCounter++
-                  bills.push({billDetails: bill, category: "People"})
-                  break
-                default:
-                  return 'nothing'
+  if (mpdata.length) {
+    mpdata.forEach(bill => {
+      if (bill.voteRecord.yea === true) {
+        sponsors.forEach(sponsor => {
+          if (sponsor.name === bill.billData.sponsorName) {
+              bills.push({billDetails: bill, category: sponsor.party})
+            partiesCounters.forEach((party)=> {
+              if(sponsor.party == party.partyType && party.partyType != "" && party.partyType != undefined){
+                party.counter++
               }
-            }
-          })
-        }
-      })
-    }
-    let parties = [
-      {label : "Liberal" , freq: liberalCounter},
-      {label : "Conservative" , freq: conservativeCounter},
-      {label : "NDP" , freq: ndpCounter},
-      {label : "People" , freq: peopleCounter},
-      {label : "Green" , freq: greenCounter},
-      {label : "BQ" , freq: bqCounter},
-    ]
-
-    parties.forEach((element,i) => {
-      let percentage= getLegend(element,parties)
-      parties[i].value =percentage
+            })
+          }
+        })
+      }
     })
-    parties= sortBasedOnLargest(parties)
-    parties = AssignColorForEachItem(parties)
-    console.log(parties,bills)
-    return [parties,bills]
   }
+  let partiesData=[]
+  partiesCounters.forEach(element=> {
+    let temp = {
+      label:element.partyType,
+      freq: element.counter,
+      value:0
+    }
+    partiesData.push(temp)
+    parties[element.partyType]=element.counter
+  })
 
+  politicalPartiesFromAllParliaments =politicalPartiesFromAllParliaments.filter(element=> element != "" && element!= undefined )
+
+  partiesData=  partiesData.filter(element=>
+    element.label !== undefined && element.label !== "" && element.freq !==0
+  )
+
+  partiesData.forEach(element => {
+    element.value = getPercentagePartisanIndex(element,partiesData)
+  })
+  partiesData= sortBasedOnLargest(partiesData)
+  partiesData = AssignColorForEachItem(partiesData)
+  return [partiesData,bills]
+}
 export async function createDataPieBarTable(categories, data) {
 
   let billsForSpeicificCategory =[]
@@ -421,3 +408,4 @@ export function AssignColorForEachItem(list){
   })
   return list
 }
+

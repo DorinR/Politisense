@@ -28,7 +28,7 @@ exports.getImageData = async (req, res) => {
 }
 
 exports.getRepresentativeByRiding = (req, res) => {
-  const db = new Firestore()
+  const db = new Firestore(true)
   const riding = req.params.riding.toLowerCase()
   db.Politician()
     .select('riding', '==', riding)

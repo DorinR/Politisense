@@ -23,6 +23,8 @@ import { makeStyles, useTheme } from "@material-ui/styles";
 import { useMediaQuery } from "@material-ui/core";
 import Sidebar from "./Components/Navbar";
 import Topbar from "./Components/Topbar";
+import CompareContainer from "./Components/Dashboard/Compare/CompareContainer";
+import GeneralDashboard from "./Components/Dashboard/GeneralDashboard";
 const useStyles = makeStyles(theme => ({
   root: {
     paddingTop: 56,
@@ -38,7 +40,6 @@ const useStyles = makeStyles(theme => ({
     height: "100%"
   }
 }));
-import CompareContainer from "./Components/Dashboard/Compare/CompareContainer";
 
 const App = () => {
   // const { children } = props;

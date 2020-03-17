@@ -1,8 +1,6 @@
 import * as d3 from 'd3'
 import React, { Component } from 'react'
 let width = null;
-// const arcSize = ( 4* width / 100);
-// const innerRadius = arcSize * 3;
 let arcSize = null
 let innerRadius = null
 const pi =  Math.PI;
@@ -11,6 +9,7 @@ const margin = {top: 30, right: 20, bottom: 30, left: 50}
 export default class D3GaugeChart extends Component {
 
     constructor (element,data) {
+        console.log(data)
         super(element)
         const svg = d3.select(element).append('svg')
         drawChart()
@@ -128,25 +127,19 @@ export default class D3GaugeChart extends Component {
                 .on('mouseout', function (d) {
                     d3.selectAll('.test').remove()
                 })
-                // .on('touchstart', function (d) {
-                //     // div.transition()
-                //     //     .duration(200)
-                //     //     .style('opacity', 0.9)
-                //     g.append("text")
-                //         .attr('class', 'test')
-                //         .attr('transform', " rotate(" + (180) + ")")
-                //         .attr("text-anchor", "middle")
-                //         .attr('font-size', '1.4em')
-                //         .attr('y', 10)
-                //         .text(`${d.data.object.value}%`)
-                //         .style('display','block')
-                // })
+
         });
         function drawChart(){
             // reset the width
-            width = parseInt(d3.select(element).style('width'), 10)+67;
-             arcSize = ( 4* width / 100);
-             innerRadius = arcSize * 3;
+            if(data.length > 3){
+                width = parseInt(d3.select(element).style('width'), 10)+67;
+                arcSize = ( 4* width / 100);
+                innerRadius = arcSize * 3;
+            }else{
+                width = parseInt(d3.select(element).style('width'), 10)+80;
+                arcSize = ( 6* width / 100);
+                innerRadius = arcSize * 3;
+            }
             // set the svg dimensions
             svg.attr("width", width)
             .attr('height', width)

@@ -131,23 +131,15 @@ const MPActivityDistribution = props => {
                         width={400}
                         height={385}
                         padding={30}
-                        domainMax={props.radarData[1]}
+                        domainMax={props.radarData[1]+2}
                         highlighted
                         onHover={point => {
                             if (point) {
                             } else {
                             }
                         }}
-                        data={{
-                            variables: [
-                                { key: 'trade', label: 'Trade' },
-                                { key: 'criminal', label: 'Criminal' },
-                                { key: 'business', label: 'Business' },
-                                { key: 'economics', label: 'Economics' },
-                                { key: 'healthcare', label: 'Healthcare' },
-                                { key: 'religion', label: 'Religion' },
-                                { key: 'human rights', label: 'Human Rights' }
-                            ],
+                        data= {{
+                            variables: createVariablesRadar(props.categoryList),
                             sets: [
                                 {
                                     values: props.radarData[0]
@@ -189,4 +181,12 @@ MPActivityDistribution.propTypes = {
 
 export default MPActivityDistribution;
 
+function createVariablesRadar(categories){
+    let lables= []
+    categories.forEach(category =>{
+        let temp = {key: category, label:category}
+        lables.push(temp)
+    })
+    return lables
+}
 

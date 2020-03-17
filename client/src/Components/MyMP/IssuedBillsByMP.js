@@ -53,7 +53,6 @@ const IssuedBillsByMP = props => {
     const [billInfo, setBillInfo] = React.useState([])
     const [billOpen, setBillOpen] = React.useState(false)
     const [open, setOpen] = React.useState(false)
-    const [isFlipped,setIsFlipped]= React.useState(false)
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -100,31 +99,34 @@ const IssuedBillsByMP = props => {
                                 className={classes.caption}
                                 variant="caption"
                             >
-                                {props.userRepIssuedBills? 'Bill '+ props.userRepIssuedBills[0].billsClassified.number + '-'+
+                                {props.userRepIssuedBills.length != 0 && props.userRepIssuedBills != null ?
+                                    'Bill '+ props.userRepIssuedBills[0].billsClassified.number + '-'+
                                     capitalizedName(props.userRepIssuedBills[0].billsClassified.category) : "no bills created"
                                 }
                             </Typography>
                         </li>
-                          <Button color="primary" size="medium" style={{"fontSize":10 }} onClick={handleClickOpen}>
+                        {props.userRepIssuedBills.length != 0 && props.userRepIssuedBills != null ?
+                        <Button color="primary" size="medium" style={{"fontSize":10 }} onClick={handleClickOpen}>
                                     details
-                           </Button>
-
+                        </Button> : ""}
                     </div>
                 </Grid>
             </CardContent>
-            <DescriptionDialog open = {open}
-                               onClose={handleClose}
-                               explaination={{title:"Issued Bills By MP",
-                                          body:"Issued Bills By Mp are the bills that that Mp sponsered and created about certain topic. " +
-                                              "It is an indication how active he or she is in the parliament"}
-                                      }
-                               d3Container={true}
-                               userRepIssuedBills ={props.userRepIssuedBills}
-                               categoryList={props.categoryList}
-                               maxWidth={"l"} fullWidth={true}
-                               fullScreen={fullScreen}
-                               rows={props.rows}
-            />
+            {props.userRepIssuedBills && props.rows?
+                <DescriptionDialog open = {open}
+                                                           onClose={handleClose}
+                                                           explaination={{title:"Issued Bills By MP",
+                                                               body:"Issued Bills By Mp are the bills that that Mp sponsered and created about certain topic. " +
+                                                                   "It is an indication how active he or she is in the parliament"}
+                                                           }
+                                                           d3Container={true}
+                                                           userRepIssuedBills ={props.userRepIssuedBills}
+                                                           categoryList={props.categoryList}
+                                                           maxWidth={"l"} fullWidth={true}
+                                                           fullScreen={fullScreen}
+                                                           rows={props.rows}
+            />:<div/>}
+
         </Card>
 
     );

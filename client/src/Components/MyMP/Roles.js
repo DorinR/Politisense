@@ -139,7 +139,6 @@ export function mergeArrays(type,...arrays) {
     if(testing.length == 0){
         return null
     }
-    // console.log(testing.filter(item => item.group == 'none'))
     if(type =='role'){
         return testing.filter(item => item.group == 'none')
     }
