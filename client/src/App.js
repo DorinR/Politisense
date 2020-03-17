@@ -12,13 +12,13 @@ import SignUp from './Components/Auth/SignUp'
 import Navbar from './Components/Navbar'
 import Logout from './Components/Logout'
 import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
-import MapWrapper from './Components/Dashboard/MapWrapper'
 import Questionnaire from './Components/Questionnaire'
 import GeneralDashboard from './Components/Dashboard/GeneralDashboard'
 import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
 import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
 import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
 import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
+import Map from './Components/Dashboard/InteractiveMap/Map'
 
 const App = () => {
   const LoginContainer = () => (
@@ -34,7 +34,7 @@ const App = () => {
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
           <PrivateRoute path='/logout' component={Logout} />
-          <PrivateRoute path='/map' component={MapWrapper} />
+          <PrivateRoute path='/map' component={Map} />
           <PrivateRoute path='/account' component={UserAccountTabs} />
           <PrivateRoute path='/general' component={GeneralDashboard} />
           <PrivateRoute path='/categories' component={CategoryDashboard} />
