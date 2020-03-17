@@ -41,64 +41,28 @@ export function calcPercent(percent) {
 
 export default function CompareRepresentatives() {
   const classes = useStyles()
-  const [head1, setHead1] = useState('')
-  const [head2, setHead2] = useState('')
+  const [pastRep, setPastRep] = useState('')
   const [dataSet, setDataSet] = useState([])
 
-  const updateHead1 = head => {
-    if (head === head1 || head === '') {
+  const updatePastRep = rep => {
+    if (pastRep === rep || rep === '') {
     } else {
-      setDataSet([])
-      setHead1(head)
-    }
-  }
-
-  const updateHead2 = head => {
-    if (head2 === head || head === '') {
-    } else {
-      setHead2(head)
+      setPastRep(rep)
       setDataSet([])
     }
   }
 
   useEffect(() => {
-    async function getalldata(dataForHead1, dataForHead2) {
-      let dataset = {}
-      let commonBillsCounter = 0
-      let similarities = 0
-      for (let i = 0; i < dataForHead1.length; i++) {
-        for (let j = 0; j < dataForHead2.length; j++) {
-          if (
-            dataForHead1[i].voteRecord.bill === dataForHead2[j].voteRecord.bill
-          ) {
-            commonBillsCounter++
-            if (
-              dataForHead1[i].voteRecord.yea === dataForHead2[j].voteRecord.yea
-            ) {
-              similarities++
-            }
-          }
-        }
-      }
-      const final = (similarities / commonBillsCounter) * 100
-      dataset = {
-        lower: calcPercent(0),
-        upper: calcPercent(final)
-      }
-      return [dataset, final]
-    }
-
     async function getBills() {
-      const head1Bills = await getAllBillsByHead(head1, 'head1')
-      const head2Bills = await getAllBillsByHead(head2, 'head2')
-      const dataset = await getalldata(head1Bills, head2Bills)
-      setDataSet(dataset)
+      const pastRepBills = await getAllBillsByHead(pastRep, 'pastRep')
+      // const dataset = await getAllData(pastRepBills)
+      // setDataSet(dataset)
     }
 
-    if (head1 !== '' && head2 !== '') {
+    if (pastRep !== '') {
       getBills()
     }
-  }, [head1, head2])
+  }, [pastRep])
 
   return (
     <>
@@ -127,19 +91,10 @@ export default function CompareRepresentatives() {
           <div>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <ModernRepresentative updateHead={updateHead1} />
+                <ModernRepresentative />
               </Grid>
               <Grid item xs={6}>
-                <RepresentativeCardRiding updateHead={updateHead2} />
-              </Grid>
-              <Grid item xs={12}>
-                {dataSet.length ? (
-                  <Grow in={dataSet.length}>
-                    <D3ChartHeadVsHeadContainer data={dataSet} />
-                  </Grow>
-                ) : (
-                    ''
-                  )}
+                <RepresentativeCardRiding updateHead={updatePastRep} />
               </Grid>
             </Grid>
           </div>

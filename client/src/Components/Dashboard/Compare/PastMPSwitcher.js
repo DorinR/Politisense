@@ -105,7 +105,6 @@ export default function PastMPSwitcher(props) {
     // // eslint-disable-next-line no-use-before-define
     const { functionUpdate, ...other } = props
     const classes = useStyles()
-    const theme = useTheme()
     const [mp, setMp] = React.useState([])
     const [dropdownMps, setDropdownMps] = React.useState([])
 
@@ -116,7 +115,9 @@ export default function PastMPSwitcher(props) {
     function handleChange(event) {
         setMp(event.target.value)
         const value = event.target.value
+        console.log(value)
         functionUpdate(value)
+
     }
 
     useEffect(() => {
@@ -137,15 +138,14 @@ export default function PastMPSwitcher(props) {
                     Choose a time period
         </InputLabel>
                 <Select
-                    value={mp}
+                    valudefaule={mp.name}
                     onChange={handleChange}
                     input={<Input />}
                     MenuProps={MenuProps}>
                     {dropdownMps.map(mp => (
-
                         <MenuItem
                             key={mp.name}
-                            value={mp.name}
+                            value={mp}
                             style={{ font: 'white' }}
                             style={getPartyColor(mp.party)}>
                             {mp.name} ({mp.start}-{mp.end})

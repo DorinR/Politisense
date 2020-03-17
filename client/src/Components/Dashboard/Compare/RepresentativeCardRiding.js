@@ -14,6 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import PersonIcon from '@material-ui/icons/Person'
 import { fetchRidingCode } from '../Sidebar/RepresentativeInfo'
 import axios from 'axios'
+import DollarIcon from '@material-ui/icons/Money'
 import Box from '@material-ui/core/Box'
 import RidingShapeContainer from '../Sidebar/RidingShape/RidingShapeContainer'
 import { getAllBillsByHead } from './CompareRepresentatives'
@@ -63,56 +64,20 @@ export default function RepresentativeCard(props) {
     const classes = useStyles()
     const [name, setName] = useState('')
     const [politicalParty, setPoliticalParty] = useState('')
-    const [riding, setRiding] = useState('')
-    const [yearElected, setYearElected] = useState(0)
+    const [imageUrl, setImageUrl] = useState('')
     const [totalBills, setTotalBills] = useState(0)
-    const [ridingCode, setRidingCode] = useState('')
-    const [skeleton] = useState([1, 2, 3, 4, 5])
     const [issuedBills, setIssuedBills] = useState(0)
-    const [partyRole, setPartyRole] = useState('')
-    const [association, setAssociation] = useState('')
 
     const updateNameFromSwitcher = newName => {
-        setName(newName)
-        updateHead(newName)
+        console.log(newName.imageUrl)
+        setName(newName.name)
+        setImageUrl(newName.imageUrl)
+        setPoliticalParty(newName.party)
+        updateHead(newName.name)
     }
 
     useEffect(() => {
-        setPartyRole('Association on foreign affairs')
-        setAssociation('some association')
-        if (name) {
-            async function getRepInfo(name) {
-                const res = await axios.get(
-                    `http://localhost:5000/api/representatives/${name}/getRepresentativesInfo`
-                )
-                return res.data.data
-            }
-            async function getIssuedBillsByHead(head) {
-                const res = await axios.get(
-                    `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
-                )
-                return res.data.data
-            }
-            async function getData(name) {
-                // eslint-disable-next-line
-                const riding = await getRepInfo(name)
-                const bills = await getAllBillsByHead(name)
-                const total = await calculateTotalVotesBills(bills)
-                setTotalBills(total)
-                setRiding(riding.riding)
-                const test = riding.riding
-                setYearElected(riding.yearElected)
-                setPoliticalParty(riding.politicalParty)
-                const ridingCode = await fetchRidingCode(test)
-                setRidingCode(ridingCode)
-                const issuedBillsByHead = await getIssuedBillsByHead(name)
-                if (issuedBillsByHead.length != 0) {
-                    setIssuedBills(issuedBillsByHead.length)
-                }
-            }
-            getData(name)
-        }
-    }, [name, riding, politicalParty, yearElected, issuedBills])
+    }, [name])
 
     return (
         <Grid container spacing={2}>
@@ -124,107 +89,60 @@ export default function RepresentativeCard(props) {
                     <CardContent>
                         <Grid container justify='center'>
                             <Grid item xs={12}>
-                                <RepresentativeImage
-                                    align='center'
-                                    representativeToLoad={name}
-                                />
+                                <Avatar style={{
+                                    marginLeft: 26,
+                                    width: 150,
+                                    height: 150,
+                                    border: '3px solid #41aaa8'
+                                }}
+                                    alt={name} src={imageUrl} className={classes.bigAvatar} />
                             </Grid>
                         </Grid>
-                        {ridingCode ? (
-                            <List>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <MapIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <Box m={1} />
-                                    <div>{partyRole}</div>
-                                    <Box m={1} />
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <MapIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <Box m={1} />
-                                    <div>{association}</div>
-                                    <Box m={1} />
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <PersonIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText></ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <FlagIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText></ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <LocationOnIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText>{capitalize(riding)}</ListItemText>
-                                </ListItem>
-
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <CalendarTodayIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText>Elected in </ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <FormatListNumberedIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText> Total Voted Bills: </ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <AssignmentIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText>
-                                        {' '}
-                                        Total Issued Bills: {issuedBills}
-                                    </ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar className={classes.avatar}>
-                                            <MapIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <Box m={1} />
-                                    <RidingShapeContainer
-                                        ridingCode={ridingCode}
-                                        politicalParty={politicalParty}
-                                    />
-                                    <Box m={1} />
-                                </ListItem>
-                            </List>
-                        ) : (
-                                <Grid item style={{ paddingTop: '10px' }}>
-                                    {skeleton.map(skeleton => {
-                                        return <Skeleton animation={false} />
-                                    })}
-                                </Grid>
-                            )}
+                        <List>
+                            <ListItem>
+                                <ListItemAvatar>
+                                    <Avatar className={classes.avatar}>
+                                        <PersonIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText>{name}</ListItemText>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemAvatar>
+                                    <Avatar className={classes.avatar}>
+                                        <FlagIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText>{politicalParty}</ListItemText>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemAvatar>
+                                    <Avatar className={classes.avatar}>
+                                        <DollarIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText>Total Spending: </ListItemText>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemAvatar>
+                                    <Avatar className={classes.avatar}>
+                                        <FormatListNumberedIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText> Total Voted Bills: {totalBills}</ListItemText>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemAvatar>
+                                    <Avatar className={classes.avatar}>
+                                        <AssignmentIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText>
+                                    {' '}
+                                    Total Issued Bills: {issuedBills}
+                                </ListItemText>
+                            </ListItem>
+                        </List>
                     </CardContent>
                 </Card>
             </Grid>
