@@ -83,6 +83,11 @@ class Firestore {
     return this.createReference(collection)
   }
 
+  PoliticalParty () {
+    const collection = this.legacy ? 'parties' : `${this.parliament}/parties/party`
+    return this.createReference(collection)
+  }
+
   Politician () {
     const collection = this.legacy ? 'politicians' : `${this.parliament}/politicians/politician`
     return this.createReference(collection)

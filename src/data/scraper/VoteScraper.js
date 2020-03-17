@@ -190,14 +190,3 @@ module.exports = {
   Type: Type,
   Topic: Topic
 }
-
-VoteScraper.create({
-  url: 'https://www.ourcommons.ca/Members/en/votes/xml',
-  params: {
-    parliaments: 'all'
-  }
-})
-  .execute()
-  .then(results => {
-    console.log(results)
-  })
