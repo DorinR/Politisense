@@ -52,7 +52,7 @@ function getAllParties(representatives) {
   let parties = []
   let party
   representatives.forEach(rep => {
-    party = capitalize.words(rep.politicalParty)
+    party = capitalize.words(rep.party)
     if (!parties.includes(party)) {
       parties.push(party)
     }
@@ -89,7 +89,7 @@ export default function PartySwitcher(props) {
 
   useEffect(() => {
     async function getData() {
-      const representatives = await fetchAllRepresentatives() // REPLACE WITH NEXT LINE ONCE IMPLEMENTED
+      const representatives = await fetchAllRepresentatives()
       if (representatives) {
         const parties = getAllParties(representatives)
         populateDropdownParties(parties)
