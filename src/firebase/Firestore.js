@@ -245,7 +245,9 @@ class Firestore {
   }
 
   BillClassification () {
-    const collection = this.legacy ? 'bill_classification' : `${this.parliament}/bills/tag`
+    const collection = this.legacy
+      ? 'bill_classification'
+      : `${this.parliament}/bills/tag`
     return this.createReference(collection)
   }
 
@@ -263,12 +265,21 @@ class Firestore {
   }
 
   PoliticalParty () {
+    const collection = this.legacy
+      ? 'parties'
+      : `${this.parliament}/parties/party`
+    return this.createReference(collection)
+  }
+
+  PoliticalParty () {
     const collection = this.legacy ? 'parties' : `${this.parliament}/parties/party`
     return this.createReference(collection)
   }
 
   Politician () {
-    const collection = this.legacy ? 'politicians' : `${this.parliament}/politicians/politician`
+    const collection = this.legacy
+      ? 'politicians'
+      : `${this.parliament}/politicians/politician`
     return this.createReference(collection)
   }
 
@@ -283,7 +294,9 @@ class Firestore {
   }
 
   TfIdfClassification () {
-    const collection = this.legacy ? 'tf_idf_bill' : `${this.parliament}/bills/raw`
+    const collection = this.legacy
+      ? 'tf_idf_bill'
+      : `${this.parliament}/bills/raw`
     return this.createReference(collection)
   }
 
@@ -298,8 +311,14 @@ class Firestore {
   }
 
   VoteRecord () {
-    const collection = this.legacy ? 'voteRecord' : `${this.parliament}/vote_records/vote_record`
+    const collection = this.legacy
+      ? 'voteRecord'
+      : `${this.parliament}/vote_records/vote_record`
     return this.createReference(collection)
+  }
+
+  Party () {
+    return this.createReference('parties')
   }
 
   createReference (collection) {
