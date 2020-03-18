@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function Map() {
+export default function Map () {
   const classes = useStyles()
   const [zoomReset, setZoomReset] = useState(1)
   const [hasZoomBeenChanged, setHasZoomBeenChanged] = useState(false)
@@ -38,7 +38,8 @@ export default function Map() {
         in={hasZoomBeenChanged}
         timeout={500}
         classNames='fade'
-        unmountOnExit>
+        unmountOnExit
+      >
         <Button className={classes.root} onClick={handleZoomReset}>
           {' '}
           Reset Zoom Level{' '}
