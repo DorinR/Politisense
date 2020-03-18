@@ -9,7 +9,7 @@ export default class MapWrapper extends Component {
 
   componentDidMount() {
     this.setState({
-      map: new InteractiveMap(this.refs.chart),
+      map: new InteractiveMap(this.refs.chart, this.props.zoomChangeTracker),
       zoomReset: this.props.zoomReset
     })
   }

@@ -7,9 +7,12 @@ const HEIGHT = 700 - MARGIN.TOP - MARGIN.BOTTOM
 const ZOOM = { MIN: 1, MAX: 300 }
 
 export default class InteractiveMap {
-  constructor(element) {
+  constructor(element, setHasZoomBeenChanged) {
     const vis = this
     vis.active = d3.select(null)
+
+    vis.setZoomChangeStatus = setHasZoomBeenChanged
+    vis.wasZoomChanged = false
 
     const projection = d3
       .geoOrthographic()
@@ -23,7 +26,7 @@ export default class InteractiveMap {
     vis.zoom = d3
       .zoom()
       .scaleExtent([ZOOM.MIN, ZOOM.MAX])
-      .on('zoom', vis.zoomed)
+      .on('zoom', vis.zoomed.bind(this))
 
     vis.path = d3.geoPath().projection(projection)
 
@@ -74,13 +77,20 @@ export default class InteractiveMap {
     })
 
     this.clicked = this.clicked.bind(this)
+    this.reset = this.reset.bind(this)
+    this.zoomed = this.zoomed.bind(this)
   }
 
   clicked(clickEvent) {
+    const vis = this
+    vis.setZoomChangeStatus(true)
+    vis.wasZoomChanged = true
     const clickedRiding = d3
       .selectAll(`[data-id="${clickEvent.properties.ID}"]`)
       .classed('active', true)
-    if (this.active.node() === clickedRiding.node()) return this.reset()
+    if (this.active.node() === clickedRiding.node()) {
+      return this.reset()
+    }
     this.active.classed('active', false)
     this.active = d3
       .selectAll(`[data-id="${clickEvent.properties.ID}"]`)
@@ -107,6 +117,11 @@ export default class InteractiveMap {
   }
 
   reset() {
+    const vis = this
+    setTimeout(() => {
+      vis.setZoomChangeStatus(false)
+      vis.wasZoomChanged = false
+    }, 1000)
     const svg = d3.select('#root_svg')
     this.active.classed('active', false)
     this.active = d3.select(null)
@@ -118,6 +133,10 @@ export default class InteractiveMap {
   }
 
   zoomed() {
+    const vis = this
+    if (!vis.wasZoomChanged) {
+      vis.setZoomChangeStatus(true)
+    }
     d3.select('g').style('stroke-width', 1.5 / d3.event.transform.k + 'px')
     d3.select('g').attr('transform', d3.event.transform)
   }

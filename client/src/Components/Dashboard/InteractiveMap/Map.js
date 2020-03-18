@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
+import { CSSTransition } from 'react-transition-group'
 
 const useStyles = makeStyles({
   root: {
@@ -19,19 +20,30 @@ const useStyles = makeStyles({
 export default function Map() {
   const classes = useStyles()
   const [zoomReset, setZoomReset] = useState(1)
+  const [hasZoomBeenChanged, setHasZoomBeenChanged] = useState(false)
 
   const handleZoomReset = () => {
     setZoomReset((zoomReset + 1) % 2)
   }
 
+  const updateZoomStatus = newState => {
+    setHasZoomBeenChanged(newState)
+  }
+
   return (
     <div>
       <Box m={2} />
-      <Button className={classes.root} onClick={handleZoomReset}>
-        {' '}
-        Reset Zoom Level{' '}
-      </Button>
-      <MapWrapper zoomReset={zoomReset} />
+      <MapWrapper zoomReset={zoomReset} zoomChangeTracker={updateZoomStatus} />
+      <CSSTransition
+        in={hasZoomBeenChanged}
+        timeout={500}
+        classNames='fade'
+        unmountOnExit>
+        <Button className={classes.root} onClick={handleZoomReset}>
+          {' '}
+          Reset Zoom Level{' '}
+        </Button>
+      </CSSTransition>
     </div>
   )
 }

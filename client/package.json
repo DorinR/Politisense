@@ -39,6 +39,7 @@
     "react-social-login-buttons": "^3.0.0",
     "react-svg": "^11.0.3",
     "react-swipeable-views": "^0.13.3",
+    "react-transition-group": "^4.3.0",
     "react-window": "^1.8.5",
     "recharts": "^1.7.1",
     "request": "^2.88.0",
