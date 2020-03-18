@@ -2,15 +2,15 @@ const Action = require('../QueueAction').QueueAction
 const Firestore = require('@firestore').Firestore
 
 const ExpenditureIdToParliament = {
-  'MER2013FY':40,
-  'MER2014FY':41,
-  'MER2015FY':41,
-  'MER2016Q4':42,
-  'MER2017Q4B':42,
-  'MER2018Q4':42,
-  'MER2019Q4':42,
-  'MER2020Q1-1019':43,
-  'MER2020Q2-1023':43,
+  MER2013FY: 40,
+  MER2014FY: 41,
+  MER2015FY: 41,
+  MER2016Q4: 42,
+  MER2017Q4B: 42,
+  MER2018Q4: 42,
+  MER2019Q4: 42,
+  'MER2020Q1-1019': 43,
+  'MER2020Q2-1023': 43
 }
 Object.freeze(ExpenditureIdToParliament)
 
@@ -18,7 +18,7 @@ const Parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
 Object.freeze(Parliaments)
 
 class ExpenditureAfterAction extends Action {
-  constructor (manager){
+  constructor (manager) {
     super()
     this.manager = manager
     this.politicians = this.retrievePoliticians(new Firestore())
@@ -52,6 +52,7 @@ class ExpenditureAfterAction extends Action {
 
   async replaceMemberRiding () {
     this.politicians = await Promise.all(this.politicians)
+    console.log('INFO: replacing riding names with politician ids')
     for (const result of this.manager.result) {
       if (result.data.length === 0) {
         continue
@@ -60,7 +61,7 @@ class ExpenditureAfterAction extends Action {
       const politicians = this.politicians[Parliaments.indexOf(parliament)]
       this.firstPassReplacement(result, politicians, parliament)
 
-      if(this.fallback) {
+      if (this.fallback) {
         this.fallback = false
         const parliament = ExpenditureIdToParliament[result.params.params.Id] - 1
         const politicians = this.politicians[Parliaments.indexOf(parliament)]
@@ -76,7 +77,7 @@ class ExpenditureAfterAction extends Action {
     result.params.parliament = parliament
     result.params.year = ExpenditureAfterAction.computeYear(result.params.params.Id)
     while (index < result.data[0].length) {
-      let record = result.data[0][index]
+      const record = result.data[0][index]
       const riding = ExpenditureAfterAction.stripHyphensFromRecord(record)
       const politician = ExpenditureAfterAction.findPolitician(riding, politicians)
       if (politician) {
@@ -84,12 +85,12 @@ class ExpenditureAfterAction extends Action {
         index++
       } else {
         this.fallback = true
-        this.fallbackRecords.push(...result.data[0].splice(index,1))
+        this.fallbackRecords.push(...result.data[0].splice(index, 1))
       }
     }
   }
 
-  fallbackReplacement(result, politicians, parliament){
+  fallbackReplacement (result, politicians, parliament) {
     for (const record of this.fallbackRecords) {
       const riding = ExpenditureAfterAction.stripHyphensFromRecord(record)
       const politician = ExpenditureAfterAction.findPolitician(riding, politicians)

@@ -17,7 +17,7 @@ class FormatAction extends Actions.Action {
 }
 
 class ExpenditureFetchJob extends AbstractJob {
-  static create(params, cb) {
+  static create (params, cb) {
     const job = new ExpenditureFetchJob(params, cb)
     job
       .addAction(new Actions.FetchAction(params))
@@ -36,4 +36,3 @@ class ExpenditureFetchJob extends AbstractJob {
 module.exports = {
   ExpenditureFetchJob: ExpenditureFetchJob
 }
-

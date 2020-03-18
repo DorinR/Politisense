@@ -1,8 +1,20 @@
 const Model = require('./model/models').Model
 const fs = require('firebase')
 require('firebase/firestore')
+
+var config = {
+  apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
+  authDomain: 'abdulla-2c3a5.firebaseapp.com',
+  databaseURL: 'https://abdulla-2c3a5.firebaseio.com',
+  projectId: 'abdulla-2c3a5',
+  storageBucket: 'abdulla-2c3a5.appspot.com',
+  messagingSenderId: '1084760992823',
+  appId: '1:1084760992823:web:c6402249f92d54372ce3b2'
+}
+Object.freeze(config)
+
 if (!fs.app) {
-  fs.initializeApp(this.config)
+  fs.initializeApp(config)
 }
 
 class _Firestore {
@@ -150,14 +162,14 @@ class Reference {
     if (model instanceof Model) {
       model = Model.serialise(model)
     }
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       this.reference
         .add(model)
         .then(result => {
-          resolve(true)
+          resolve(result.id)
         })
-        .catch(() => {
-          resolve(false)
+        .catch(e => {
+          reject(e)
         })
     })
   }
@@ -231,11 +243,17 @@ class Firestore {
     this.reference = this.firestore.db
     this.firebase = this.firestore.firebase
     this.parliament = 43
+    this.year = 2019
     this.legacy = legacy
   }
 
   forParliament (parliament) {
     this.parliament = parliament
+    return this
+  }
+
+  atYear (year) {
+    this.year = year
     return this
   }
 
@@ -252,7 +270,9 @@ class Firestore {
   }
 
   FinancialRecord () {
-    const collection = this.legacy ? 'financialRecord' : 'financialRecord'
+    const collection = this.legacy
+      ? 'financialRecord'
+      : `${this.parliament}/politicians/expenditure/${this.year}/expenditures`
     return this.createReference(collection)
   }
 
@@ -261,13 +281,6 @@ class Firestore {
       throw new Error('ERROR: collection not available as a legacy collection')
     }
     const collection = 'static/minister_descriptions/description'
-    return this.createReference(collection)
-  }
-
-  PoliticalParty () {
-    const collection = this.legacy
-      ? 'parties'
-      : `${this.parliament}/parties/party`
     return this.createReference(collection)
   }
 

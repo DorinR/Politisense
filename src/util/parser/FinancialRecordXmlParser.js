@@ -43,7 +43,7 @@ class _FinancialCategoryXmlParser extends Parser {
     this.year = year
     this.quarter = quarter
     this.riding = riding
-    this.spendingCategories = [1,2,3,4,5,6,7,8]
+    this.spendingCategories = [1, 2, 3, 4, 5, 6, 7, 8]
   }
 
   get tagName () {
@@ -86,18 +86,13 @@ class _FinancialCategoryXmlParser extends Parser {
     return records
       .flat(Infinity)
       .filter(record => {
-        return (record.parent === '' && this.spendingCategories.some(cat => {return record.category.includes(cat)})) ||
-          (record.parent !== '' && this.spendingCategories.every(cat => {return !record.category.includes(cat)}))
+        return (record.parent === '' && this.spendingCategories.some(cat => { return record.category.includes(cat) })) ||
+          (record.parent !== '' && this.spendingCategories.every(cat => { return !record.category.includes(cat) }))
       })
-
   }
 }
 
 class FinancialReportXmlParser extends Parser {
-  constructor (xml) {
-    super(xml)
-  }
-
   get tagName () {
     return 'Report'
   }
@@ -122,7 +117,7 @@ class FinancialReportXmlParser extends Parser {
     const date = this.getDataInTag('StartDate')
     const year = FinancialReportXmlParser.computeYear(date)
     const quarter = FinancialReportXmlParser.computeQuarter(date)
-    const riding = this.getDataInAttribute('Constituency','name-en')
+    const riding = this.getDataInAttribute('Constituency', 'name-en')
 
     const newXML = this.getXmlInTag('Report')
     return new _FinancialCategoryXmlParser(newXML, year, quarter, riding).getAllFromXml()

@@ -25,9 +25,9 @@ class FinancialRecord extends Model {
     this.quarter = quarter
   }
 
-  static deserialise(json) {
+  static deserialise (json) {
     return Model.deserialise(json,
-      new FinancialRecord('','','',0,0,0)
+      new FinancialRecord('', '', '', 0, 0, 0)
     )
   }
 }
