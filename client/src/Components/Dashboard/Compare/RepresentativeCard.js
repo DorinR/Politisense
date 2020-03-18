@@ -6,7 +6,7 @@ import Skeleton from '@material-ui/lab/Skeleton'
 import CardContent from '@material-ui/core/CardContent'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import RepresentativeImage from '../Sidebar/RepresentativeImage'
-import MpSwitcher from './MpSwitcher'
+import MpSwitcher from './HistoricalComparison/MpSwitcher'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import Avatar from '@material-ui/core/Avatar'
@@ -183,12 +183,12 @@ export default function RepresentativeCard(props) {
                 </ListItem>
               </List>
             ) : (
-              <Grid item style={{ paddingTop: '10px' }}>
-                {skeleton.map(skeleton => {
-                  return <Skeleton animation={false} />
-                })}
-              </Grid>
-            )}
+                <Grid item style={{ paddingTop: '10px' }}>
+                  {skeleton.map(skeleton => {
+                    return <Skeleton animation={false} />
+                  })}
+                </Grid>
+              )}
           </CardContent>
         </Card>
       </Grid>

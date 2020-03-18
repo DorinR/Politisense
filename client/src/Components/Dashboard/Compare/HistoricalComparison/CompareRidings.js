@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
-import D3ChartHeadVsHeadContainer from '../D3ChartHeadVsHeadContainer'
+import D3ChartHeadVsHeadContainer from '../../D3ChartHeadVsHeadContainer'
 import Grow from '@material-ui/core/Grow'
 
 const useStyles = makeStyles(theme => ({

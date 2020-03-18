@@ -138,7 +138,8 @@ export default function PastMPSwitcher(props) {
                     Choose a time period
         </InputLabel>
                 <Select
-                    valudefaule={mp.name}
+                    value={mp}
+                    key={mp.name}
                     onChange={handleChange}
                     input={<Input />}
                     MenuProps={MenuProps}>

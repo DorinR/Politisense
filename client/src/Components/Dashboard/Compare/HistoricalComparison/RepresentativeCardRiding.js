@@ -2,20 +2,28 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
+import Skeleton from '@material-ui/lab/Skeleton'
 import CardContent from '@material-ui/core/CardContent'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import RepresentativeImage from '../Sidebar/RepresentativeImage'
+import RepresentativeImage from '../../Sidebar/RepresentativeImage'
+import PastMPSwitcher from './PastMPSwitcher'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import PersonIcon from '@material-ui/icons/Person'
-import DollarIcon from '@material-ui/icons/Money'
+import { fetchRidingCode } from '../../Sidebar/RepresentativeInfo'
 import axios from 'axios'
-import { getAllBillsByHead } from './CompareRepresentatives'
+import DollarIcon from '@material-ui/icons/Money'
+import Box from '@material-ui/core/Box'
+import RidingShapeContainer from '../../Sidebar/RidingShape/RidingShapeContainer'
+import { getAllBillsByHead } from '../CompareRepresentatives'
 import Grid from '@material-ui/core/Grid'
 import FlagIcon from '@material-ui/icons/Flag'
+import LocationOnIcon from '@material-ui/icons/LocationOn'
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
+import MapIcon from '@material-ui/icons/Map'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 
 const useStyles = makeStyles({
@@ -40,82 +48,54 @@ function capitalize(str) {
     return null
 }
 
-
-async function fetchUserRiding(userEmail) {
-    return axios
-        .get(`/api/users/${userEmail}/getUser`)
+async function fetchParliamentData(parlNum) {
+    return await axios
+        .get(`http://localhost:5000/api/representatives/${parlNum}/getParliamentData`)
         .then(res => {
             if (res.data.success) {
-                return res.data.data.riding
-            }
-        })
-        .catch(console.error)
-}
-
-async function fetchCurrentRepresentative(riding) {
-    let currentRepresentative = {}
-    await axios
-        .get(`/api/representatives/${riding}/getRepresentative`)
-        .then(res => {
-            if (res.data.success) {
-                currentRepresentative = res.data.data
+                return res.data.data
             }
         })
         .catch(err => console.error(err))
-    return currentRepresentative
 }
 
-export default function ModernRepresentative(props) {
+export default function RepresentativeCard(props) {
     const { updateHead, ...other } = props
     const classes = useStyles()
     const [name, setName] = useState('')
+    const [politicalParty, setPoliticalParty] = useState('')
+    const [imageUrl, setImageUrl] = useState('')
     const [totalBills, setTotalBills] = useState(0)
     const [issuedBills, setIssuedBills] = useState(0)
-    const [mp, setMp] = React.useState([])
-    const [currentRepresentative, setCurrentRepresentative] = React.useState([])
-    const [politicalParty, setPoliticalParty] = React.useState([])
 
+    const updateNameFromSwitcher = newName => {
+        console.log(newName.imageUrl)
+        setName(newName.name)
+        setImageUrl(newName.imageUrl)
+        setPoliticalParty(newName.party)
+        updateHead(newName.name)
+    }
 
     useEffect(() => {
-        async function getIssuedBillsByHead(head) {
-            const res = await axios.get(
-                `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
-            )
-            return res.data.data
-        }
-
-        async function getData(mp) {
-            // eslint-disable-next-line
-            const user = JSON.parse(localStorage.getItem('user'))
-            const riding = await fetchUserRiding(user.email)
-            const currentRepresentative = await fetchCurrentRepresentative(riding)
-            const bills = await getAllBillsByHead(currentRepresentative.name)
-            const total = await calculateTotalVotesBills(bills)
-            setTotalBills(total)
-            setCurrentRepresentative(currentRepresentative.name)
-            setPoliticalParty(currentRepresentative.politicalParty)
-            const issuedBillsByHead = await getIssuedBillsByHead(name)
-            if (issuedBillsByHead.length != 0) {
-                setIssuedBills(issuedBillsByHead.length)
-            }
-        }
-        getData(mp)
-        console.log(getData(mp))
-    }, [mp])
+    }, [name])
 
     return (
         <Grid container spacing={2}>
             <Grid item xs={12} align='center'>
+                <PastMPSwitcher functionUpdate={updateNameFromSwitcher} />
             </Grid>
             <Grid item xs={12} align='center'>
                 <Card className={classes.card}>
                     <CardContent>
                         <Grid container justify='center'>
                             <Grid item xs={12}>
-                                <RepresentativeImage
-                                    align='center'
-                                    representativeToLoad={name}
-                                />
+                                <Avatar style={{
+                                    marginLeft: 26,
+                                    width: 150,
+                                    height: 150,
+                                    border: '3px solid #41aaa8'
+                                }}
+                                    alt={name} src={imageUrl} className={classes.bigAvatar} />
                             </Grid>
                         </Grid>
                         <List>
@@ -125,7 +105,7 @@ export default function ModernRepresentative(props) {
                                         <PersonIcon />
                                     </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText>{capitalize(currentRepresentative)}</ListItemText>
+                                <ListItemText>{capitalize(name)}</ListItemText>
                             </ListItem>
                             <ListItem>
                                 <ListItemAvatar>
@@ -168,11 +148,4 @@ export default function ModernRepresentative(props) {
             </Grid>
         </Grid>
     )
-}
-function calculateTotalVotesBills(bills) {
-    let totalBills = 0
-    if (bills) {
-        bills.forEach(bill => totalBills++)
-    }
-    return totalBills
 }
