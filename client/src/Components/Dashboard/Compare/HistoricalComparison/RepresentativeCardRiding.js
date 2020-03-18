@@ -48,15 +48,18 @@ function capitalize(str) {
     return null
 }
 
-async function fetchParliamentData(parlNum) {
-    return await axios
-        .get(`http://localhost:5000/api/representatives/${parlNum}/getParliamentData`)
+async function fetchPastRepresentativesVotes(memberId) {
+    let pastRepresentativesVotes = []
+    await axios
+        .get(`/api/votes${memberId}/getPastRepresentativesVotes`)
         .then(res => {
             if (res.data.success) {
-                return res.data.data
+                pastRepresentativesVotes = res.data.data
             }
         })
         .catch(err => console.error(err))
+    console.log(pastRepresentativesVotes)
+    return pastRepresentativesVotes
 }
 
 export default function RepresentativeCard(props) {
@@ -67,6 +70,7 @@ export default function RepresentativeCard(props) {
     const [imageUrl, setImageUrl] = useState('')
     const [totalBills, setTotalBills] = useState(0)
     const [issuedBills, setIssuedBills] = useState(0)
+    const [pastRepresentativesVotes, setPastRepresentativesVotes] = React.useState([])
 
     const updateNameFromSwitcher = newName => {
         console.log(newName.imageUrl)
@@ -77,6 +81,10 @@ export default function RepresentativeCard(props) {
     }
 
     useEffect(() => {
+        async function getData() {
+            //const pastRepresentativesVotes = await fetchPastRepresentativesVotes(repId)
+        }
+        getData()
     }, [name])
 
     return (

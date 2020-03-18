@@ -11,4 +11,9 @@ router.get(
   controller.getAllVotesByRepresentative
 )
 
+router.get(
+  '/:member/getPastRepresentativeVotes',
+  controller.getPastRepresentativesVotes
+)
+
 module.exports = router
