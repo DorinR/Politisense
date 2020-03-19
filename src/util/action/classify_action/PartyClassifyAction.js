@@ -5,12 +5,21 @@ const PoliticalParty = require('@model').PoliticalParty
 const imageURLs = {}
 imageURLs['bloc québécois'] = 'https://pbs.twimg.com/profile_images/735567130423394310/r33frJKG_400x400.jpg'
 imageURLs['canadian alliance'] = 'https://en.wikipedia.org/wiki/Canadian_Alliance#/media/File:Canadian_Alliance_logo_-_logo_de_l\'Alliance_Canadienne.svg'
+<<<<<<< Updated upstream
 imageURLs.liberal = 'https://pbs.twimg.com/profile_images/1228661726868070401/MirE9eDB_400x400.jpg'
 imageURLs.ndp = 'https://pbs.twimg.com/profile_images/1196465881087455232/hFKPjmeb_400x400.png'
 imageURLs.pc = 'https://en.wikipedia.org/wiki/Progressive_Conservative_Party_of_Canada#/media/File:Parti_PC_Party_Canada_1996.svg'
 imageURLs.reform = 'https://en.wikipedia.org/wiki/Co-operative_Commonwealth_Federation#/media/File:Co-operative_Commonwealth_Federation_logo.png'
 imageURLs.conservative = 'https://pbs.twimg.com/profile_images/1081332155500777472/F-OH6Yz7_400x400.jpg'
 imageURLs.indepedent = 'https://is2-ssl.mzstatic.com/image/thumb/Purple62/v4/12/56/74/125674b7-3a64-439c-194b-770f83e6060e/source/512x512bb.jpg'
+=======
+imageURLs['liberal'] = 'https://pbs.twimg.com/profile_images/1228661726868070401/MirE9eDB_400x400.jpg'
+imageURLs['ndp'] = 'https://pbs.twimg.com/profile_images/1196465881087455232/hFKPjmeb_400x400.png'
+imageURLs['pc'] = 'https://en.wikipedia.org/wiki/Progressive_Conservative_Party_of_Canada#/media/File:Parti_PC_Party_Canada_1996.svg'
+imageURLs['reform'] = 'https://en.wikipedia.org/wiki/Co-operative_Commonwealth_Federation#/media/File:Co-operative_Commonwealth_Federation_logo.png'
+imageURLs['conservative'] = 'https://pbs.twimg.com/profile_images/1081332155500777472/F-OH6Yz7_400x400.jpg'
+imageURLs['independent'] = 'https://is2-ssl.mzstatic.com/image/thumb/Purple62/v4/12/56/74/125674b7-3a64-439c-194b-770f83e6060e/source/512x512bb.jpg'
+>>>>>>> Stashed changes
 imageURLs['green party'] = 'https://www.homelesshub.ca/sites/default/files/greens.png'
 imageURLs['forces et démocratie'] = 'https://en.wikipedia.org/wiki/Strength_in_Democracy#/media/File:Strengthindemocracy.png'
 imageURLs['co-operative commonwealth federation'] = 'https://en.wikipedia.org/wiki/Co-operative_Commonwealth_Federation#/media/File:Co-operative_Commonwealth_Federation_logo.png'
