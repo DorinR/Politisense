@@ -48,18 +48,36 @@ function capitalize(str) {
     return null
 }
 
+// async function fetchPastRepresentativesVotes(memberId) {
+//     let pastRepresentativesVotes = []
+//     await axios
+//         .get(`/api/votes/${memberId}/getPastRepresentativesVotes`)
+//         .then(res => {
+//             if (res.data.success) {
+//                 pastRepresentativesVotes = res.data.data
+//             }
+//         })
+//         .catch(err => console.error(err))
+//     console.log(pastRepresentativesVotes)
+//     return pastRepresentativesVotes
+// }
+
 async function fetchPastRepresentativesVotes(memberId) {
-    let pastRepresentativesVotes = []
-    await axios
-        .get(`/api/votes${memberId}/getPastRepresentativesVotes`)
-        .then(res => {
-            if (res.data.success) {
-                pastRepresentativesVotes = res.data.data
-            }
-        })
-        .catch(err => console.error(err))
-    console.log(pastRepresentativesVotes)
-    return pastRepresentativesVotes
+    const res = await axios.get(`/api/votes/${memberId}/getPastRepresentativesVotes`)
+    return res.data.data
+}
+
+async function fetchPastRepresentativesPairedVotes(memberId) {
+    const res = await axios.get(`/api/votes/${memberId}/getPastRepresentativesPairedVotes`)
+    return res.data.data
+}
+
+function calculateTotalVotesBills(bills) {
+    let totalBills = 0
+    if (bills) {
+        bills.forEach(bill => totalBills++)
+    }
+    return totalBills
 }
 
 export default function RepresentativeCard(props) {
@@ -68,12 +86,12 @@ export default function RepresentativeCard(props) {
     const [name, setName] = useState('')
     const [politicalParty, setPoliticalParty] = useState('')
     const [imageUrl, setImageUrl] = useState('')
-    const [totalBills, setTotalBills] = useState(0)
-    const [issuedBills, setIssuedBills] = useState(0)
-    const [pastRepresentativesVotes, setPastRepresentativesVotes] = React.useState([])
+    const [nbBills, setNbBills] = useState(0)
+    const [nbPairedBills, setNbPairedBills] = useState(0)
+    //const [issuedBills, setIssuedBills] = useState(0)
+    //const [pastRepresentativesVotes, setPastRepresentativesVotes] = React.useState([])
 
     const updateNameFromSwitcher = newName => {
-        console.log(newName.imageUrl)
         setName(newName.name)
         setImageUrl(newName.imageUrl)
         setPoliticalParty(newName.party)
@@ -82,7 +100,13 @@ export default function RepresentativeCard(props) {
 
     useEffect(() => {
         async function getData() {
-            //const pastRepresentativesVotes = await fetchPastRepresentativesVotes(repId)
+            const memberId = 'cP0FiFwOuobtHAMx5wUE'
+            const pastRepresentativesVotes = await fetchPastRepresentativesVotes(memberId)
+            const totalBills = calculateTotalVotesBills(pastRepresentativesVotes)
+            setNbBills(totalBills)
+            const pastRepresentativesPairedVotes = await fetchPastRepresentativesPairedVotes(memberId)
+            const totalPairedBills = calculateTotalVotesBills(pastRepresentativesPairedVotes)
+            setNbPairedBills(totalPairedBills)
         }
         getData()
     }, [name])
@@ -137,7 +161,7 @@ export default function RepresentativeCard(props) {
                                         <FormatListNumberedIcon />
                                     </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText> Total Voted Bills: {totalBills}</ListItemText>
+                                <ListItemText> Total Voted Bills: {nbBills}</ListItemText>
                             </ListItem>
                             <ListItem>
                                 <ListItemAvatar>
@@ -146,8 +170,7 @@ export default function RepresentativeCard(props) {
                                     </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText>
-                                    {' '}
-                                    Total Issued Bills: {issuedBills}
+                                    Total Issued Bills:
                                 </ListItemText>
                             </ListItem>
                         </List>

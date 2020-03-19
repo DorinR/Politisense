@@ -27,42 +27,113 @@ exports.getAllVotesByRepresentative = async (req, res) => {
     .catch(console.error)
 }
 
+// exports.getPastRepresentativesVotes = async (req, res) => {
+//   const representativesVoteAccumulator = []
+//   console.log(`received from frontend: ${req.params.member}`)
+//   const parliaments = [40]
+//   const db = new Firestore(false)
+//   let politiciansVotes = parliaments.map(parl => {
+//     return db
+//       .forParliament(parl)
+//       .Vote()
+//       .where('member', '==', req.params.member)
+//       .select()
+//       .then(snapshot => {
+//         let vote = {}
+//         snapshot.forEach(doc => {
+//           vote = doc.data()
+//           console.log(`vote 1 `, vote)
+//         })
+//         console.log(`vote 2 `, vote)
+//         return vote
+//       })
+//   })
+//   politiciansVotes = await Promise.all(politiciansVotes)
+//   console.log(`politiciansVotes 1 `, politiciansVotes)
+//   politiciansVotes.forEach(pol => {
+//     if (Object.keys(pol).length !== 0) {
+//       representativesVoteAccumulator.push(pol)
+//     }
+//   })
+//   console.log(`politiciansVotes 2 `, politiciansVotes)
+//   console.log(`representativesVoteAccumulator `, representativesVoteAccumulator)
+//   if (representativesVoteAccumulator.length === 0) {
+//     res.status(404).json({
+//       success: false,
+//       message: 'No politicians found for those ridings'
+//     })
+//   } else {
+//     console.log(`representativesVoteAccumulator 2 `, representativesVoteAccumulator)
+//     res.status(200).json({
+//       data: representativesVoteAccumulator,
+//       success: true
+//     })
+//   }
+// }
+
 exports.getPastRepresentativesVotes = async (req, res) => {
-  console.log("TEST PAST RECORDS")
   const representativesVoteAccumulator = []
-  const member = 'cP0FiFwOuobtHAMx5wUE'
+  console.log(`received from frontend: ${req.params.member}`)
   const parliaments = [40]
   const db = new Firestore(false)
-  let politicians = parliaments.map(parl => {
+  let politiciansVotes = parliaments.map(parl => {
     return db
       .forParliament(parl)
       .Vote()
-      .where('member', '==', member)
+      .where('member', '==', req.params.member)
       .select()
       .then(snapshot => {
-        let ret = {}
-        snapshot.forEach(doc => {
-          console.log(doc.data())
-          ret = doc.data()
-        })
-        return ret
+        if (snapshot.empty) {
+          res.status(400).json({
+            success: false,
+            message: 'No Bills Currently Stored'
+          })
+        } else {
+          snapshot.forEach(doc => {
+            representativesVoteAccumulator.push(doc.data())
+          })
+          console.log(`total bills `, representativesVoteAccumulator.length)
+          res.status(200).json({
+            success: true,
+            data: representativesVoteAccumulator
+          })
+        }
       })
+      .catch(console.error)
   })
-  politicians = await Promise.all(politicians)
-  politicians.forEach(pol => {
-    if (Object.keys(pol).length !== 0) {
-      representativesVoteAccumulator.push(pol)
-    }
-  })
-  if (representativesVoteAccumulator.length === 0) {
-    res.status(404).json({
-      success: false,
-      message: 'No politicians found for those ridings'
-    })
-  } else {
-    res.status(200).json({
-      data: representativesAccumulator,
-      success: true
-    })
-  }
 }
+
+exports.getPastRepresentativesPairedVotes = async (req, res) => {
+  const representativesPairedVoteAccumulator = []
+  console.log(`received from frontend: ${req.params.member}`)
+  const parliaments = [36, 37, 38, 39, 40, 41, 42]
+  const db = new Firestore(false)
+  let politiciansVotes = parliaments.map(parl => {
+    return db
+      .forParliament(parl)
+      .Vote()
+      .where('member', '==', req.params.member)
+      .where('paired', '==', true)
+      .select()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          res.status(400).json({
+            success: false,
+            message: 'No Bills Currently Stored'
+          })
+        } else {
+          snapshot.forEach(doc => {
+            representativesPairedVoteAccumulator.push(doc.data())
+          })
+          console.log(`total paired bills `, representativesPairedVoteAccumulator.length)
+          res.status(200).json({
+            success: true,
+            data: representativesPairedVoteAccumulator
+          })
+        }
+      })
+      .catch(console.error)
+  })
+}
+
+

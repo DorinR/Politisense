@@ -16,4 +16,9 @@ router.get(
   controller.getPastRepresentativesVotes
 )
 
+router.get(
+  '/:member/getPastRepresentativesPairedVotes',
+  controller.getPastRepresentativesPairedVotes
+)
+
 module.exports = router

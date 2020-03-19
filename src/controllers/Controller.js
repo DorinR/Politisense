@@ -47,6 +47,9 @@ module.exports = {
   getPastRepresentativesVotes: function (req, res) {
     return VoteController.getPastRepresentativesVotes(req, res)
   },
+  getPastRepresentativesPairedVotes: function (req, res) {
+    return VoteController.getPastRepresentativesPairedVotes(req, res)
+  },
   getAllRepresentatives: function (req, res) {
     return RepresentativeController.getAllRepresentatives(req, res)
   },

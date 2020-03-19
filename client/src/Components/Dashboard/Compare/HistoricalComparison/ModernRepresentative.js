@@ -53,7 +53,7 @@ async function fetchUserRiding(userEmail) {
 }
 
 async function fetchCurrentRepresentative(riding) {
-    let currentRepresentative = {}
+    let currentRepresentative = []
     await axios
         .get(`/api/representatives/${riding}/getRepresentative`)
         .then(res => {
