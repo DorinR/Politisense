@@ -9,11 +9,17 @@ class ExpenditureComputeAction extends Action {
     this.parliament = params.parliament || 43
     this.year = params.year || 2019
     const db = new Firestore().forParliament(this.parliament).atYear(this.year)
-    this.records = ExpenditureComputeAction.retrieveFinancialRecords(db)
+    this.records = ExpenditureComputeAction.retrieveFinancialRecords(db, params.member)
   }
 
-  static retrieveFinancialRecords(db) {
-    return db.FinancialRecord()
+  static retrieveFinancialRecords(db, member = null) {
+    let collection = null
+    if(member) {
+      collection = db.FinancialRecord().where('member', '==', member)
+    } else {
+      collection = db.FinancialRecord()
+    }
+    return collection
       .select()
       .then(snapshot => {
         const docs = []
