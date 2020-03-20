@@ -15,6 +15,7 @@ import {getAllRolesByRep,getRepresentativeId} from "./Roles";
 import {loadingTextTitle} from "./DescriptionDialog";
 import DescriptionDialog from "./DescriptionDialog";
 import {capitalizedName} from "./TableDialog";
+import CountUp from "react-countup";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -94,7 +95,13 @@ const Committees = props => {
                         >
                             Committees
                         </Typography>
-                         <Typography variant="h5">{data? `${data.length} Committees`: 0}</Typography>
+                         {/*<Typography variant="h5">{data? `${data.length} Committees`: 0}</Typography>*/}
+                        <Grid item direction={"row"}>
+                            <Grid container direction={"row"}>
+                                <CountUp style ={{fontSize:27}} end={data? data.length: 0}> </CountUp>
+                                <Typography style ={{marginTop:3, marginLeft:3}} variant="h5"> {"committees"}</Typography>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item>
                         <Avatar className={classes.avatar}>

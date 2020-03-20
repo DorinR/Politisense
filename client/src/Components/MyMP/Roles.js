@@ -11,6 +11,7 @@ import {capitalizedName} from "./TableDialog";
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import {getDescription} from "../Dashboard/General/MinisterHelpDialog";
 import {titleCase} from "../Dashboard/General/GeneralDashboard";
+import CountUp from "react-countup";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -97,7 +98,13 @@ const Roles = props => {
                         >
                             Parliament Roles
                         </Typography>
-                        <Typography variant="h5">{data? `${data.length} roles`: 0}</Typography>
+                        {/*<Typography variant="h5">{data? `${data.length} roles`: 0}</Typography>*/}
+                        <Grid item direction={"row"}>
+                            <Grid container direction={"row"}>
+                                <CountUp style ={{fontSize:27}} end={data? data.length: 0}> </CountUp>
+                                <Typography style ={{marginTop:3, marginLeft:3}} variant="h5"> {"roles" }</Typography>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item>
                         <Avatar className={classes.avatar}>

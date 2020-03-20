@@ -87,7 +87,7 @@ const App = () => {
       <div
         className={clsx({
           [classes.root]: true,
-          [classes.shiftContent]: isDesktop
+          [classes.shiftContent]: isDesktop || true
         })}
       >
         <Sidebar

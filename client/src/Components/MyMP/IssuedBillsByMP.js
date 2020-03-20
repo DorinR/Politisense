@@ -12,6 +12,9 @@ import WorkIcon from '@material-ui/icons/Work';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import {capitalizedName} from "./TableDialog";
+import CountUp from 'react-countup';
+import AnimatedNumber from 'react-animated-number';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,6 +56,7 @@ const IssuedBillsByMP = props => {
     // const [billInfo, setBillInfo] = React.useState([])
     // const [billOpen, setBillOpen] = React.useState(false)
     const [open, setOpen] = React.useState(false)
+    // const [totalBills] =React.useState( props.userRepIssuedBills.length? props.userRepIssuedBills.length)
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -84,7 +88,13 @@ const IssuedBillsByMP = props => {
                         >
                             Sponsored Bills
                         </Typography>
-                        <Typography variant="h5"> {props.userRepIssuedBills? props.userRepIssuedBills.length+" bills" : '0 bills'}</Typography>
+                        <Grid item direction={"row"}>
+                            <Grid container direction={"row"}>
+                                <CountUp style ={{fontSize:27}} end={props.userRepIssuedBills.length}> </CountUp>
+                                <Typography style ={{marginTop:3, marginLeft:3}} variant="h5"> {props.userRepIssuedBills? "  bills" : '0 bills'}</Typography>
+                            </Grid>
+                        </Grid>
+
                     </Grid>
                     <Grid item>
                         <Avatar className={classes.avatar}>
