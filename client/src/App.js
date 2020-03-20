@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint-env node */
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -9,7 +9,6 @@ import {
 } from "react-router-dom";
 import Login from "./Components/Auth/Login";
 import SignUp from "./Components/Auth/SignUp";
-import Navbar from "./Components/Navbar";
 import Logout from "./Components/Logout";
 import UserAccountTabs from "./Components/Dashboard/UserAccount/UserAccountTabs";
 import MapWrapper from "./Components/Dashboard/MapWrapper";
@@ -36,10 +35,7 @@ const useStyles = makeStyles(theme => ({
   shiftContent: {
     paddingLeft: 220
   },
-  // content: {
-  //   height: "100%"
-  // },
-    content: {
+   content: {
         flexGrow: 1,
         height: "100%",
         padding: theme.spacing(3),
@@ -59,21 +55,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const App = () => {
-  // const { children } = props;
   const classes = useStyles();
   const theme = useTheme();
 
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"), {
     defaultMatches: true
   });
-  const [openSidebar, setOpenSidebar] = useState(false);
+  const [openSidebar, setOpenSidebar] = useState(true);
   const handleSidebarOpen = () => {
     setOpenSidebar(true);
   };
   const handleSidebarClose = () => {
     setOpenSidebar(false);
   };
-  const shouldOpenSidebar = isDesktop ? true : openSidebar;
 
   const LoginContainer = () => (
     <div className="container">

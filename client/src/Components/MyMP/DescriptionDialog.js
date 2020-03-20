@@ -22,6 +22,7 @@ import Button from "@material-ui/core/Button";
 import BillDialog from "../Dashboard/BillDialog";
 import {getDescription} from "../Dashboard/General/MinisterHelpDialog";
 import {titleCase} from "../Dashboard/General/GeneralDashboard";
+import {capitalizedName} from "../Dashboard/Utilities/CommonUsedFunctions";
 
 const DialogTitle = withStyles(theme => ({
     root: {
@@ -100,11 +101,7 @@ const DialogActions = withStyles(theme => ({
                     onClose={handleCloseDialog}
                     aria-labelledby="customized-dialog-title"
                     open={open}
-                    // fullScreen={props.fullScreen}
-                    // fullScreen={true}
-                    // width={1000}
                     maxWidth={props.d3Container?"md":"sm"}
-                    // fullWidth={props.d3Container? true: false}
                     fullWidth={true}
                 >
                     <DialogTitle id="customized-dialog-title" onClose={handleCloseDialog}>
@@ -177,17 +174,10 @@ const DialogActions = withStyles(theme => ({
                                                     boxShadow: '0.5rem 0.5rem 2rem 0 rgba(0, 0, 0, 0.2)',
                                                 }}
                                             >
-                                                <h3 style={{ color: '#61b8ff' }}>{ loadingTextTitle(element)}</h3>
+                                                <h3 style={{ color: '#61b8ff' }}>{ capitalizedName(loadingTextTitle(element))}</h3>
                                                 <p>
                                                     {element? element.desc: ""}
                                                 </p>
-                                                {/*<p>*/}
-                                                {/*    Est incididunt sint eu minim dolore mollit velit velit commodo ex nulla*/}
-                                                {/*    exercitation. Veniam velit adipisicing anim excepteur nostrud magna*/}
-                                                {/*    nostrud aliqua dolor. Sunt aute est duis ut nulla officia irure*/}
-                                                {/*    reprehenderit laborum fugiat dolore in elit. Adipisicing do qui duis Lorem*/}
-                                                {/*    est.*/}
-                                                {/*</p>*/}
                                             </TimelineItem>
 
                                         )): ''}

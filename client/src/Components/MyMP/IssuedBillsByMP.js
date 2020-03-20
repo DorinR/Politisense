@@ -90,8 +90,8 @@ const IssuedBillsByMP = props => {
                         </Typography>
                         <Grid item direction={"row"}>
                             <Grid container direction={"row"}>
-                                <CountUp style ={{fontSize:27}} end={props.userRepIssuedBills.length}> </CountUp>
-                                <Typography style ={{marginTop:3, marginLeft:3}} variant="h5"> {props.userRepIssuedBills? "  bills" : '0 bills'}</Typography>
+                                <CountUp style ={{fontSize:27}} end={props.userRepIssuedBills? props.userRepIssuedBills.length : 0}> </CountUp>
+                                <Typography style ={{marginTop:3, marginLeft:3}} variant="h5"> {"bills"}</Typography>
                             </Grid>
                         </Grid>
 
@@ -109,13 +109,13 @@ const IssuedBillsByMP = props => {
                                 className={classes.caption}
                                 variant="caption"
                             >
-                                {props.userRepIssuedBills.length != 0 && props.userRepIssuedBills != null ?
+                                {props.userRepIssuedBills && props.userRepIssuedBills.length != 0 && props.userRepIssuedBills != null ?
                                     'Bill '+ props.userRepIssuedBills[0].billsClassified.number + '-'+
                                     capitalizedName(props.userRepIssuedBills[0].billsClassified.category) : "No bills created"
                                 }
                             </Typography>
                         </li>
-                        {props.userRepIssuedBills.length != 0 && props.userRepIssuedBills != null ?
+                        {props.userRepIssuedBills&& props.userRepIssuedBills.length != 0 && props.userRepIssuedBills != null ?
                         <Button color="primary" size="medium" style={{"fontSize":10 }} onClick={handleClickOpen}>
                                     details
                         </Button> : ""}

@@ -178,7 +178,7 @@ export default function MyMP () {
   return (
       <div>
       <CssBaseline/>
-        {userRepresentative && userRepIssuedBills  && categoryList && userRepresentative && barPieRows && radarData ?
+        {userRepresentative &&  categoryList  && radarData && donutData?
 
             <div className={classes.root}>
               <Grid
@@ -192,7 +192,7 @@ export default function MyMP () {
                     xl={3}
                     xs={12}
                 >
-                  {userRepIssuedBills && categoryList && userRepresentative && barPieRows ? (
+                  {categoryList && userRepresentative ? (
                           <IssuedBillsByMP userRepIssuedBills={userRepIssuedBills}
                                            categoryList={categoryList}
                                            userRepresentative={userRepresentative}
