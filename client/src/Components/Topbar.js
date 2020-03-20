@@ -51,11 +51,17 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'none',
     color: 'white'
   },
+    menuButton: {
+        marginRight: theme.spacing(2),
+    },
+    hide: {
+        display: 'none',
+    },
 
 }));
 
 const Topbar = props => {
-    const { className, onSidebarOpen, ...rest } = props;
+    const { className,open, onSidebarOpen, ...rest } = props;
 
     const classes = useStyles();
 
@@ -70,23 +76,32 @@ const Topbar = props => {
             className={clsx(classes.root, className)}
         >
             <Toolbar>
-               <Link to='/general' className={classes.routerLink}>
                 <div>
                     <Grid container direction="row" alignItems="center">
+                        <Grid item className={classes.flexGrow}>
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={onSidebarOpen}
+                                edge="start"
+                                // className={clsx(classes.menuButton, open && classes.hide)}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        </Grid>
+                        <Link to='/general' className={classes.routerLink}>
                         <Grid item>
                             <AccountBalanceIcon className={classes.icon}/>
                         </Grid>
+                        </Link>
+                        <Link to='/general' className={classes.routerLink}>
                         <Grid item>
                             <Typography variant={"h6"} color={"white"}> Politisense </Typography>
                         </Grid>
+                        </Link>
                     </Grid>
                 </div>
-               </Link>
-                    {/*<Avatar className={classes.avatar}>*/}
-                    {/*    <AccountBalanceIcon className={classes.icon}/>*/}
-                    {/*</Avatar>*/}
-                    {/*<Typography variant={"h4"} color={"white"}> Politisense </Typography>*/}
-                {/*</RouterLink>*/}
+
                 <div className={classes.flexGrow} />
                 <Hidden mdDown>
                         <Button style={{ color:'white', textTransform:'none'}} variant={"text"}
@@ -97,7 +112,7 @@ const Topbar = props => {
                                 to={'/myMp'}>My MP</Button>
                         <Button  style={{ color:'white',textTransform:'none' }} variant={"text"}
                                  component={CustomRouterLinkTopBar}
-                                 to={'headTohead'}>Head To Head</Button>
+                                 to={'/compare'}>Head To Head</Button>
                         <Button style={{ color:'white',textTransform:'none' }} variant={"text"}
                                 component={CustomRouterLinkTopBar}
                                 to={'/map'}>Map</Button>
@@ -121,14 +136,7 @@ const Topbar = props => {
                         </Link>
                     </IconButton>
                 </Hidden>
-                <Hidden lgUp>
-                    <IconButton
-                        color="inherit"
-                        onClick={onSidebarOpen}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                </Hidden>
+
             </Toolbar>
         </AppBar>
     );

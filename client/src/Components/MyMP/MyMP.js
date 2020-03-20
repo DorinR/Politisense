@@ -14,13 +14,14 @@ import IssuedBillsByMP from "./IssuedBillsByMP";
 import Bipartisan from "./Bipartisan";
 import MPActivityDistribution from "./MPActivityDistribution";
 import {getPercentagePartisanIndex} from "../Dashboard/Utilities/CommonUsedFunctions";
+import {useTheme } from '@material-ui/core/styles';
 import {
   CssBaseline
 } from '@material-ui/core';
 import {fetchCategories} from "../Dashboard/Utilities/CommonUsedFunctions";
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(4)
+    padding: theme.spacing(3)
   },
 
 }))
@@ -28,6 +29,7 @@ export default function MyMP () {
   const classes = useStyles()
   const [user, setUser] = useState(null)
   const [barPieRows, setBarPieRows] = React.useState([])
+  const theme = useTheme();
 
   const [categoryList, setCategoryList] = React.useState(null)
   useEffect(() => {
@@ -137,8 +139,11 @@ export default function MyMP () {
         const issuedBillByUserRep = await getAllBillsBySponsorForAllParliaments(
             userRepresentative
         )
-        setUserRepIssuedBills(issuedBillByUserRep)
-         populateIssuedBill(issuedBillByUserRep).then(res => {setBarPieRows(res)})
+        if(issuedBillByUserRep && issuedBillByUserRep != null && issuedBillByUserRep != undefined && issuedBillByUserRep.length != 0){
+          setUserRepIssuedBills(issuedBillByUserRep)
+          populateIssuedBill(issuedBillByUserRep).then(res => {setBarPieRows(res)})
+        }
+
       }
     }
     async function populateIssuedBill (userRepIssuedBills){
@@ -294,7 +299,7 @@ function createDataSetRadar(categories, data) {
   let temp = {};
   const dataSetRadar = {};
   let maxValue = 0;
-
+  console.log(categories)
   categories.forEach(category => {
     let totalvotes = 0
     data.forEach(bill => {
@@ -316,6 +321,7 @@ function createDataSetRadar(categories, data) {
     }
   })
 
+  maxValue=roundUpToNearestInteger(maxValue)
   return [dataSetRadar, maxValue]
 }
 export function getPoliticalPartyFromSponsor(sponsors){
@@ -374,7 +380,6 @@ export function createDataSetDonut(sponsors, mpdata) {
   return [partiesData,bills]
 }
 export async function createDataPieBarTable(categories, data) {
-
   let billsForSpeicificCategory =[]
   let finalArray=[]
   categories.forEach(category => {
@@ -409,3 +414,7 @@ export function AssignColorForEachItem(list){
   return list
 }
 
+export function roundUpToNearestInteger(num){
+  if (num % 10 == 0) return num+5;
+  return (10 - num % 10) + num;
+}

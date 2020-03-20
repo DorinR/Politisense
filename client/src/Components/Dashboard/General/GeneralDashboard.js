@@ -36,7 +36,8 @@ const useStyles = makeStyles(theme => ({
     }
   },
   card: {
-    height: 400
+    height: 350
+    // height: "100%"
   },
   search: {
     marginBottom: '30px',
@@ -65,7 +66,9 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'baseline',
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
+    marginRight: theme.spacing(4)
+
   }
 }))
 
@@ -108,6 +111,7 @@ export async function getMinisters () {
           result[i].id = res.data.data[i].title
         }
       }
+      console.log(result)
       return result
     })
     .catch(err => console.error(err))

@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Dialog from '@material-ui/core/Dialog'
@@ -7,21 +6,21 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import axios from 'axios'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
+export const getDescription = async (ministry) => {
+    return axios
+        .post('api/parliament/getRoleDescription', { ministry: ministry })
+        .then(res => {
+            let desc = ''
+            if (res.data.success) {
+                desc = res.data.data.description
+            }
+            return desc
+        }).catch(console.error)
+}
 export default function MinisterHelpDialog (props) {
   const { onClose, open } = props
   const [text, setText] = React.useState('')
 
-  const getDescription = async (ministry) => {
-    return axios
-      .post('api/parliament/getRoleDescription', { ministry: ministry })
-      .then(res => {
-        let desc = ''
-        if (res.data.success) {
-          desc = res.data.data.description
-        }
-        return desc
-      }).catch(console.error)
-  }
 
   useEffect(() => {
     setText('')

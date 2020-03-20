@@ -11,7 +11,7 @@ export default class BarChartWrapper extends Component {
       case 'budget':
         return new BudgetChartD3(this.refs.chart, this.props.data)
       case 'bar-pie':
-        return new BarPieChart(this.refs.chart, this.props.data, this.props.categories)
+        return new BarPieChart(this.refs.chart,this.props.data, this.props.categories,  this.refs.container,)
       case 'bar':
         return new BarChart(this.refs.chart)
       case 'donut':
@@ -24,7 +24,7 @@ export default class BarChartWrapper extends Component {
 
   render () {
     return (
-      <div>
+      <div ref={"container"}>
         <div ref='chart' id={'chart'} />
       </div>
     )

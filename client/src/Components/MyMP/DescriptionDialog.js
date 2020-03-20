@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -20,6 +20,8 @@ import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import Button from "@material-ui/core/Button";
 import BillDialog from "../Dashboard/BillDialog";
+import {getDescription} from "../Dashboard/General/MinisterHelpDialog";
+import {titleCase} from "../Dashboard/General/GeneralDashboard";
 
 const DialogTitle = withStyles(theme => ({
     root: {
@@ -75,10 +77,8 @@ const DialogActions = withStyles(theme => ({
          setBillOpen(false)
      }
     const handleCloseDialog = () => {
-        console.log(props.data)
         onClose(selectedValue)
     };
-
 
      const handleBillClickOpen = (row,type) => {
          if(row && type=='bar-pie'){
@@ -93,15 +93,19 @@ const DialogActions = withStyles(theme => ({
              setBillOpen(true)
          }
      }
+
         return (
             <div>
                 <Dialog
                     onClose={handleCloseDialog}
                     aria-labelledby="customized-dialog-title"
                     open={open}
-                    fullScreen={props.fullScreen}
-                    maxWidth={"md"}
-                    fullWidth={props.d3Container? true: false}
+                    // fullScreen={props.fullScreen}
+                    // fullScreen={true}
+                    // width={1000}
+                    maxWidth={props.d3Container?"md":"sm"}
+                    // fullWidth={props.d3Container? true: false}
+                    fullWidth={true}
                 >
                     <DialogTitle id="customized-dialog-title" onClose={handleCloseDialog}>
                         {props.explaination? props.explaination.title: props.title}
@@ -110,9 +114,9 @@ const DialogActions = withStyles(theme => ({
                     {props.d3Container?
                         // eslint-disable-next-line react/jsx-no-undef
                         <Grid container>
-                            <Grid item xs={12} lg={12} sm={12} md={12} >
+                            <Grid item xs={12} lg={12} sm={10} md={10} >
                                 <Card style={{height:"100%",display:"flex"}}>
-                                    <CardContent>
+                                    <CardContent >
                                         <BarChartWrapper
                                             type="bar-pie"
                                             data={props.userRepIssuedBills}
@@ -175,19 +179,15 @@ const DialogActions = withStyles(theme => ({
                                             >
                                                 <h3 style={{ color: '#61b8ff' }}>{ loadingTextTitle(element)}</h3>
                                                 <p>
-                                                    Est incididunt sint eu minim dolore mollit velit velit commodo ex nulla
-                                                    exercitation. Veniam velit adipisicing anim excepteur nostrud magna
-                                                    nostrud aliqua dolor. Sunt aute est duis ut nulla officia irure
-                                                    reprehenderit laborum fugiat dolore in elit. Adipisicing do qui duis Lorem
-                                                    est.
+                                                    {element? element.desc: ""}
                                                 </p>
-                                                <p>
-                                                    Est incididunt sint eu minim dolore mollit velit velit commodo ex nulla
-                                                    exercitation. Veniam velit adipisicing anim excepteur nostrud magna
-                                                    nostrud aliqua dolor. Sunt aute est duis ut nulla officia irure
-                                                    reprehenderit laborum fugiat dolore in elit. Adipisicing do qui duis Lorem
-                                                    est.
-                                                </p>
+                                                {/*<p>*/}
+                                                {/*    Est incididunt sint eu minim dolore mollit velit velit commodo ex nulla*/}
+                                                {/*    exercitation. Veniam velit adipisicing anim excepteur nostrud magna*/}
+                                                {/*    nostrud aliqua dolor. Sunt aute est duis ut nulla officia irure*/}
+                                                {/*    reprehenderit laborum fugiat dolore in elit. Adipisicing do qui duis Lorem*/}
+                                                {/*    est.*/}
+                                                {/*</p>*/}
                                             </TimelineItem>
 
                                         )): ''}

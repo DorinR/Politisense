@@ -240,17 +240,12 @@ async function fetchrolesbyID (parliamentNo,id) {
 
 exports.getAllRolesByRep = async (req, res) => {
 
-    let rawData = await Promise.all([
-        fetchRolesByParliament(43,req.params.repName),
-        fetchRolesByParliament(42,req.params.repName),
-        fetchRolesByParliament(41,req.params.repName),
-        fetchRolesByParliament(40,req.params.repName),
-        fetchRolesByParliament(39,req.params.repName),
-        fetchRolesByParliament(38,req.params.repName),
-        fetchRolesByParliament(37,req.params.repName),
-        fetchRolesByParliament(36,req.params.repName),
-    ])
-
+    const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
+    const rawData = await Promise.all(
+        parliaments.map(parliament => {
+            return fetchRolesByParliament(parliament,req.params.repName)
+        })
+    )
         res.status(200).json({
             success: true,
             data: rawData

@@ -47,11 +47,11 @@ const useStyles = makeStyles((theme) => ({
 const IssuedBillsByMP = props => {
     const classes = useStyles();
     const { className, ...rest } = props;
-    const [tableContents, setTableContents] = React.useState([])
-    const [tableDialogOpen, setTableDialogOpen] = React.useState(false)
-    const [expanded, setExpanded] = React.useState(false);
-    const [billInfo, setBillInfo] = React.useState([])
-    const [billOpen, setBillOpen] = React.useState(false)
+    // const [tableContents, setTableContents] = React.useState([])
+    // const [tableDialogOpen, setTableDialogOpen] = React.useState(false)
+    // const [expanded, setExpanded] = React.useState(false);
+    // const [billInfo, setBillInfo] = React.useState([])
+    // const [billOpen, setBillOpen] = React.useState(false)
     const [open, setOpen] = React.useState(false)
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -101,7 +101,7 @@ const IssuedBillsByMP = props => {
                             >
                                 {props.userRepIssuedBills.length != 0 && props.userRepIssuedBills != null ?
                                     'Bill '+ props.userRepIssuedBills[0].billsClassified.number + '-'+
-                                    capitalizedName(props.userRepIssuedBills[0].billsClassified.category) : "no bills created"
+                                    capitalizedName(props.userRepIssuedBills[0].billsClassified.category) : "No bills created"
                                 }
                             </Typography>
                         </li>
@@ -122,8 +122,6 @@ const IssuedBillsByMP = props => {
                                                            d3Container={true}
                                                            userRepIssuedBills ={props.userRepIssuedBills}
                                                            categoryList={props.categoryList}
-                                                           maxWidth={"l"} fullWidth={true}
-                                                           fullScreen={fullScreen}
                                                            rows={props.rows}
             />:<div/>}
 

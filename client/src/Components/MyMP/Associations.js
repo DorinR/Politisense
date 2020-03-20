@@ -86,7 +86,7 @@ const Associations = props => {
                             gutterBottom
                             variant="caption"
                         >
-                            Parliamentary Associations
+                            Associations
                         </Typography>
                         <Typography variant="h5">{data? `${data.length} associations`: 0}</Typography>
 

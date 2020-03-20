@@ -36,9 +36,19 @@ const useStyles = makeStyles(theme => ({
     shapeContainer:{
         marginLeft: theme.spacing(8),
         marginTop: theme.spacing(2),
+    },
+    containerLongRidingName: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        minHeight: 'fit-content',
+    },
+    longRidingName:{
+        color: "white",
+        fontFamily:'work-Sans,sans-serif',
+        textAlign: 'center'
 
-
-    }
+}
 
 }));
 
@@ -65,22 +75,26 @@ const MpProfile = props => {
             // eslint-disable-next-line
             const user = JSON.parse(localStorage.getItem('user'))
             const riding = await fetchUserRiding(user.email)
-            console.log("riding",riding)
             const promises = await Promise.all([
                 fetchRidingCode(riding),
                 fetchRepresentative(riding)
             ])
             const ridingCode = promises[0]
             const { name, politicalParty, yearElected } = promises[1]
-            setData({
+            if(name){
+                setData({
                 name: name,
                 ridingCode: ridingCode,
                 riding: riding,
                 politicalParty: politicalParty,
                 yearElected: yearElected
             })
+
+            }
         }
-        getData()
+            getData()
+
+
     }, [])
 
     useEffect(() => {
@@ -89,7 +103,6 @@ const MpProfile = props => {
         setRiding(data.riding)
         setRidingCode(data.ridingCode)
         setYearElected(data.yearElected)
-        console.log(data)
     }, [data])
 
 
@@ -104,7 +117,14 @@ const MpProfile = props => {
             >
                 {capitalizedName(name)}
             </Typography>
-            <Typography className={classes.fontColorTypography} variant="caption">{'Represents '+ capitalizedName(riding)}</Typography>
+            {riding && riding.length >22 ?
+                <div className={classes.containerLongRidingName}>
+                    <Typography className={classes.fontColorTypography} variant="caption">Represents</Typography>
+                    <Typography className={classes.longRidingName} variant="caption">{capitalizedName(riding)}</Typography>
+                </div>
+                : <Typography className={classes.fontColorTypography} variant="caption">{"Represents: "+capitalizedName(riding)}</Typography>
+            }
+
             <Typography className={classes.fontColorTypography} variant="caption" >{"Political Party: "+ capitalizedName(politicalParty)}</Typography>
             <Typography className={classes.fontColorTypography} variant="caption">{'Total Population: '} { riding? (<RidingPopulation riding={riding} />) :"N/A"}</Typography>
             <Typography className={classes.fontColorTypography} variant="caption">{'Elected: '+ yearElected}</Typography>

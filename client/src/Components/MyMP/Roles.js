@@ -9,6 +9,9 @@ import axios from "axios";
 import {loadingTextTitle} from "./DescriptionDialog";
 import {capitalizedName} from "./TableDialog";
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import {getDescription} from "../Dashboard/General/MinisterHelpDialog";
+import {titleCase} from "../Dashboard/General/GeneralDashboard";
+
 const useStyles = makeStyles(theme => ({
     root: {
         height: '100%'
@@ -49,7 +52,6 @@ const useStyles = makeStyles(theme => ({
 
 const Roles = props => {
     const { className, ...rest } = props;
-
     const classes = useStyles();
     const [open, setOpen]= useState(false)
     const handleOpenAction = ()=>{
@@ -66,7 +68,11 @@ const Roles = props => {
                 const billsByRep = await getRepresentativeId(props.userRepresentative)
                 console.log(billsByRep)
                 const roles= await getAllRolesByRep('role',props.userRepresentative)
-                setData(roles)
+                if(roles && roles.length != 0 && roles != null){
+                    const rolesWithDesc = await getAllDesc(roles)
+                    setData(rolesWithDesc)
+
+                }
             }
         }
         getData()
@@ -163,8 +169,10 @@ export async function getAllRolesByRep (type,repName) {
                 data.forEach(arr =>arrays.push(arr))
                 console.log(arrays)
                 const mpRoles = mergeArrays(type,arrays[0],arrays[1],arrays[2],arrays[3],arrays[4],arrays[5],arrays[6],arrays[7])
+
                 console.log(mpRoles)
-                return mpRoles
+               let mpRolesSorted =sortingBasedOnDate(mpRoles)
+                return mpRolesSorted
             }
         })
         .catch(console.error)
@@ -181,6 +189,26 @@ export async function getRepresentativeId (representative) {
         .catch(console.error)
 }
 
+export async function getAllDesc (arr) {
+    arr.forEach(async (element)=>{
+        element.desc = await getDescription(titleCase(loadingTextTitle(element)))
+        console.log(element.desc)
+    })
+    return arr
+}
 
-
+export function sortingBasedOnDate(arr){
+    arr.sort((a,b)=>{
+        if(a.fromDate == 0 ||b.fromDate == 0){
+            return -1
+        }else{
+            if(a.fromDate > b.fromDate){
+                return -1
+            }else{
+                return 1
+            }
+        }
+    })
+    return arr
+}
 export default Roles;

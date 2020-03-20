@@ -15,7 +15,7 @@ import UserAccountTabs from "./Components/Dashboard/UserAccount/UserAccountTabs"
 import MapWrapper from "./Components/Dashboard/MapWrapper";
 import Questionnaire from "./Components/Questionnaire";
 import MyMP from "./Components/MyMP/MyMP";
-import CategoryDashboard from "./Components/Dashboard/CategoryDashboard";
+import GeneralDashboard from "./Components/Dashboard/General/GeneralDashboard"
 import BillHistoryTable from "./Components/Dashboard/PastBills/BillHistoryTable";
 import BudgetContainer from "./Components/Dashboard/Budget/BudgetContainer";
 import clsx from "clsx";
@@ -34,17 +34,35 @@ const useStyles = makeStyles(theme => ({
     }
   },
   shiftContent: {
-    paddingLeft: 240
+    paddingLeft: 220
   },
-  content: {
-    height: "100%"
-  }
+  // content: {
+  //   height: "100%"
+  // },
+    content: {
+        flexGrow: 1,
+        height: "100%",
+        padding: theme.spacing(3),
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        marginLeft: -220,
+    },
+    contentShift: {
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginLeft: 0,
+    },
 }));
 
 const App = () => {
   // const { children } = props;
   const classes = useStyles();
   const theme = useTheme();
+
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"), {
     defaultMatches: true
   });
@@ -66,7 +84,6 @@ const App = () => {
   );
   const DefaultContainer = () => (
     <div>
-      {/*<Navbar>*/}
       <div
         className={clsx({
           [classes.root]: true,
@@ -75,14 +92,17 @@ const App = () => {
       >
         <Sidebar
           onClose={handleSidebarClose}
-          open={shouldOpenSidebar}
+          open={openSidebar}
           variant={isDesktop ? "persistent" : "temporary"}
+          onSidebarOpen={handleSidebarOpen}
         >
-          {" "}
         </Sidebar>
-        <Topbar onSidebarOpen={handleSidebarOpen} />
+        <Topbar
+            onSidebarOpen={handleSidebarOpen} />
 
-        <div>
+        <div  className={clsx(classes.content, {
+            [classes.contentShift]: openSidebar,
+        })}>
           <Route exact path="/" render={() => <Redirect to="/login" />} />
           <PrivateRoute path="/logout" component={Logout} />
           <PrivateRoute path="/map" component={MapWrapper} />
@@ -95,7 +115,6 @@ const App = () => {
           <PrivateRoute path="/compare" component={CompareContainer} />
         </div>
       </div>
-      {/*</Navbar>*/}
     </div>
   );
 

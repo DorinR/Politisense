@@ -1,8 +1,7 @@
 import * as d3 from 'd3'
 
-function dashboard (element, fData) {
-  //        backgroundColor: '#00bcd4',
-  // let mainSvg = d3.select(element).append(svg)
+function dashboard (element, fData,body) {
+
   const barColor = '#00bcd4'
 
   fData.forEach(function (d) { return d.total })
@@ -10,8 +9,8 @@ function dashboard (element, fData) {
   function histoGram (fD) {
     const hG = {}
     const hGDim = { t: 30, r: 5, b: 30, l:0 }
-    hGDim.w = 550 - hGDim.l - hGDim.r
-    hGDim.h = 300 - hGDim.t - hGDim.b
+    hGDim.w = 490 - hGDim.l - hGDim.r
+    hGDim.h = 250 - hGDim.t - hGDim.b
 
     // create svg for histogram.
     const hGsvg = d3.select(element).append('svg')
@@ -100,15 +99,16 @@ function dashboard (element, fData) {
   function pieChart (pD) {
     const pC = {}
     // const margin =
-    const pieDim = { w: 170, h: 170 }
+    const pieDim = { w: 200, h: 200 }
     pieDim.r = Math.min(pieDim.w, pieDim.h) / 2
 
+    let tranformYAxis = (pieDim.h / 2)-10
     // create svg for pie chart.
     const piesvg = d3.select(element).append('svg')
         .attr('width', pieDim.w).attr('height', pieDim.h)
         // .attr('viewBox',`0 0 ${pieDim.w}/2 (${pieDim.h}/2 ` )
         .append('g')
-        .attr('transform', 'translate(' + ((pieDim.w) / 2 )+ ',' + (pieDim.h / 2) + ')')
+        .attr('transform', 'translate(' + ((pieDim.w) / 2 )+ ',' + tranformYAxis + ')')
     // create function to draw the arcs of the pie slices.
     const arc = d3.arc().outerRadius(pieDim.r - 10).innerRadius(0)
 
@@ -155,13 +155,21 @@ function dashboard (element, fData) {
     const leg = {}
 
     // create table for legend.
-    const legend = d3.select(element).append('table')
+    const legend = d3.select(element)
+        .append('table')
+        .attr("width",200)
+        .attr("height",200)
         .attr('class', 'legend')
         .style('margin-bottom', "76px")
         .style('display', 'inline-block')
         .style('border-collapse', 'collapse')
         .style('border-spacing', 0)
-        // .style('margin-right', "80")
+        .style("padding", "12px 12px 6px")
+        .style("height", "auto")
+        .style("border-radius","4px")
+        .style("border", "1px solid #999")
+        .style("box-sizing","border-box")
+        .style('margin-left', "20")
 
     //margin-bottom:76px;
 
@@ -169,9 +177,9 @@ function dashboard (element, fData) {
     // create one row per segment.
     const tr = legend.append('tbody')
         .selectAll('tr').data(lD).enter().append('tr')
-        .style('border-bottom', '2px solid grey')
+        // .style('border-bottom', '2px solid grey')
 
-    legend.select('tr').style('border-top','2px solid grey')
+    legend.select('tr').style('border-bottom','2px solid grey')
 
     // create the first column for each segment.
     tr.append('td').append('svg')
@@ -192,7 +200,7 @@ function dashboard (element, fData) {
         .text(function (d) { return d3.format(',')(d.freq) + ' bills ' })
         .style('font-size', '13px')
         .style('align','right')
-        .style('width','40px')
+        .style('width','50px')
 
     // create the fourth column for each segment.
     tr.append('td').attr('class', 'legendPerc')
@@ -209,7 +217,7 @@ function dashboard (element, fData) {
       // update the frequencies.
       l.select('.legendFreq').text(function (d) { return d3.format(',')(d.freq) + ' bills ' })
           .style('align','right')
-          .style('width','40px')
+          .style('width','50px')
 
       // update the percentage column.
       l.select('.legendPerc')
@@ -242,9 +250,9 @@ function dashboard (element, fData) {
   const leg = legend(tF) // create the legend.
 }
 export default class BarPieChart {
-  constructor (element, data, categories) {
+  constructor (element, data, categories,body) {
     createData(categories, data).then(results => {
-      dashboard(element, results)
+      dashboard(element, results,body)
     })
   }
 }
@@ -274,4 +282,4 @@ export async function createData (categories, data) {
   return dataArray
 }
 
-function segColor (c) { return { Succeeded: '#20c997', Failed: '#ff6f5e' }[c] }
+function segColor (c) { return { Succeeded: '#34699a', Failed: '#c83660' }[c] }

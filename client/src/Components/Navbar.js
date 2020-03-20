@@ -362,7 +362,7 @@ import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
-import { Drawer, Grid, Toolbar, Typography } from "@material-ui/core";
+import {Drawer, Grid, Hidden, Toolbar, Typography} from "@material-ui/core";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import PeopleIcon from "@material-ui/icons/People";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
@@ -383,6 +383,11 @@ import MpProfile from "./Dashboard/MpProfile";
 import Divider from "@material-ui/core/Divider";
 import MapIcon from "@material-ui/icons/Map";
 import CompareArrowsIcon from "@material-ui/icons/CompareArrows";
+import IconButton from '@material-ui/core/IconButton';
+import {useTheme } from '@material-ui/core/styles';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 export async function fetchUserRiding(userEmail) {
   return axios
@@ -409,7 +414,10 @@ export async function fetchRepresentative(riding) {
 }
 const useStyles = makeStyles(theme => ({
   drawer: {
-    width: 240
+    width: 240,
+    backgroundColor: "#1E2125"
+
+
   },
   root: {
     backgroundColor: "#1E2125",
@@ -443,19 +451,56 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     marginLeft: theme.spacing(2),
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    backgroundColor: "#1E2125",
+    textDecoration: "none",
+    color: "WHITE",
+
+
   },
   divider1: {
     // margin: theme.spacing(2, 0),
     backgroundColor: "grey"
-  }
+  },
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    width: `calc(100% - 240px)`,
+    marginLeft: 240,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: -240,
+  },
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
+  },
+
 }));
 
 const Sidebar = props => {
-  const { open, variant, onClose, className, ...rest } = props;
+  const { open, variant, onClose,onSidebarOpen, className, ...rest } = props;
   const [userRepresentative, setUserRepresentative] = React.useState(null);
   const [riding, setRiding] = useState(null);
   const [user, setUser] = useState(null);
+  const theme = useTheme();
 
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -497,7 +542,7 @@ const Sidebar = props => {
     },
     {
       title: "Head to Head",
-      href: "/products",
+      href: "/compare",
       icon: <CompareArrowsIcon />
     },
     {
@@ -514,6 +559,12 @@ const Sidebar = props => {
       title: "Settings",
       href: "/settings",
       icon: <SettingsIcon />
+    },
+    {
+      title: "Logout",
+      href: "/logout",
+      icon:  <ExitToAppIcon/>
+
     }
   ];
 
@@ -526,24 +577,33 @@ const Sidebar = props => {
         open={open}
         variant={variant}
       >
-        <Link to="/general" className={classes.routerLink}>
           <div className={classes.container}>
             <Grid container direction="row" alignItems="center">
+              <Link to='/general' className={classes.routerLink}>
               <Grid item>
                 <AccountBalanceIcon className={classes.icon} />
               </Grid>
+              </Link>
+              <Link to='/general' className={classes.routerLink}>
               <Grid item>
                 <Typography variant={"h5"} color={"#00bcd4"}>
-                  {" "}
-                  Politisense{" "}
+                  Politisense
                 </Typography>
               </Grid>
+              </Link>
               <Grid item>
-                <AppBar />
+                <Grid item>
+                  <IconButton onClick={onClose}>
+                    {theme.direction === 'ltr' ? <ChevronLeftIcon style={{color:"white", marginLeft:5}} /> : <ChevronRightIcon />}
+                  </IconButton>
+                </Grid>
+                <AppBar position="fixed"
+                        className={clsx(classes.appBar, {
+                          [classes.appBarShift]: open,
+                        })} />
               </Grid>
             </Grid>
           </div>
-        </Link>
         <Divider className={classes.divider1} />
         <div {...rest} className={clsx(classes.root, className)}>
           <ListItemAvatar>
@@ -551,7 +611,6 @@ const Sidebar = props => {
           </ListItemAvatar>
           <MpProfile />
           <Divider className={classes.divider} />
-
           <SidebarNav className={classes.nav} pages={pages} />
         </div>
       </Drawer>

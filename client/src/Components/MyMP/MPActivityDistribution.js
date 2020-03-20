@@ -129,9 +129,9 @@ const MPActivityDistribution = props => {
                 <div className={classes.chartContainer}>
                     <Radar
                         width={400}
-                        height={385}
+                        height={400}
                         padding={30}
-                        domainMax={props.radarData[1]+2}
+                        domainMax={props.radarData[1]}
                         highlighted
                         onHover={point => {
                             if (point) {
