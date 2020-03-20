@@ -35,11 +35,14 @@ export default class D3Chart {
     svg
       .call(zoom)
 
-    d3.json('https://gist.githubusercontent.com/Brideau/2391df60938462571ca9/raw/f5a1f3b47ff671eaf2fb7e7b798bacfc6962606a/canadaprovtopo.json').then(function (data) {
-      console.log(data)
+    d3.json(
+      'https://gist.githubusercontent.com/Khalidbaraka/bf881712a903b5f059f9d9063a54e2ec/raw/b82e1f22995f0ead12010d5adeff35e1b3aba97f/test.json'
+    ).then(function (data) {
       g.selectAll('path')
-        .data(topojson.feature(data, data.objects.canadaprov).features)
-        .enter().append('path')
+        .data(topojson.feature(data, data.objects.ridings).features)
+        .enter()
+        .append('path')
+        .attr('data-id', function (d) { return d.properties.ID })
         .attr('d', path)
         .attr('class', 'feature')
         .style('fill', 'grey')
