@@ -1,9 +1,9 @@
 import * as d3 from 'd3'
 import * as topojson from 'topojson-client'
 
-const MARGIN = { TOP: 10, BOTTOM: 50, LEFT: 50, RIGHT: 10 }
-const WIDTH = 960 - MARGIN.LEFT - MARGIN.RIGHT
-const HEIGHT = 700 - MARGIN.TOP - MARGIN.BOTTOM
+const MARGIN = { TOP: 10, BOTTOM: 0, LEFT: 50, RIGHT: 10 }
+const WIDTH = 1200 - MARGIN.LEFT - MARGIN.RIGHT
+const HEIGHT = 650 - MARGIN.TOP - MARGIN.BOTTOM
 const ZOOM = { MIN: 1, MAX: 300 }
 
 export default class InteractiveMap {
@@ -17,11 +17,9 @@ export default class InteractiveMap {
     const projection = d3
       .geoOrthographic()
       .clipAngle(90)
-      .rotate([98, -60])
-      .scale(600)
-      .translate([500, 200])
-      .scale(730)
-      .translate([WIDTH / 2, HEIGHT / 2])
+      .rotate([98, -64])
+      .scale(850)
+      .translate([WIDTH / 2 - 60, HEIGHT / 2])
 
     vis.zoom = d3
       .zoom()
@@ -33,11 +31,11 @@ export default class InteractiveMap {
     vis.svg = d3
       .select(element)
       .append('svg')
-      .attr('width', WIDTH)
-      .attr('height', HEIGHT)
-      .style('fill', 'white')
+      .style('fill', '#FAFAFA')
       .on('click', vis.stopped, true)
       .attr('id', 'root_svg')
+      .attr('preserveAspectRatio', 'xMinYMin meet')
+      .attr('viewBox', `0 0 ${WIDTH} ${HEIGHT}`)
 
     vis.svg
       .append('rect')
