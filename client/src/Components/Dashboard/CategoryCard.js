@@ -41,8 +41,8 @@ const useStyles = makeStyles(theme => ({
   container: {
     maxHeight: 200
   },
-  header:{
-    backgroundColor:"#f6f6f6"
+  header: {
+    backgroundColor: '#f6f6f6'
   }
 }))
 
@@ -142,7 +142,7 @@ export default function CategoryCard (props) {
       <div>
         <Card className={classes.card}>
           <CardHeader
-              className={classes.header}
+            className={classes.header}
             avatar={setCardLogo()}
             action={
               <div>

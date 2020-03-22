@@ -1,19 +1,19 @@
-import React, { useEffect } from "react";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import { red } from "@material-ui/core/colors";
-import PropTypes from "prop-types";
-import Box from "@material-ui/core/Box";
-import CategoryCard from "./CategoryCard";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import { ConfirmationDialogRaw } from "./CategoryForm";
-import AddIcon from "@material-ui/icons/Add";
-import axios from "axios";
-import { fetchUserRiding } from "../Navbar";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import React, { useEffect } from 'react'
+import Typography from '@material-ui/core/Typography'
+import Grid from '@material-ui/core/Grid'
+import { makeStyles } from '@material-ui/core/styles'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import { red } from '@material-ui/core/colors'
+import PropTypes from 'prop-types'
+import Box from '@material-ui/core/Box'
+import CategoryCard from './CategoryCard'
+import CardActionArea from '@material-ui/core/CardActionArea'
+import { ConfirmationDialogRaw } from './CategoryForm'
+import AddIcon from '@material-ui/icons/Add'
+import axios from 'axios'
+import { fetchUserRiding } from '../Navbar'
+import CircularProgress from '@material-ui/core/CircularProgress'
 /* eslint-disable */
 
 const useStyles = makeStyles(theme => ({

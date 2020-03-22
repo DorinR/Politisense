@@ -1,60 +1,58 @@
 import * as d3 from 'd3'
 
-function dashboard (element, fData,body) {
-
+function dashboard (element, fData, body) {
   const barColor = '#00bcd4'
 
   fData.forEach(function (d) { return d.total })
 
   function histoGram (fD) {
     const hG = {}
-    const hGDim = { t: 30, r: 5, b: 30, l:20 }
+    const hGDim = { t: 30, r: 5, b: 30, l: 20 }
     hGDim.w = 490 - hGDim.l - hGDim.r
     hGDim.h = 250 - hGDim.t - hGDim.b
 
     // create svg for histogram.
     const hGsvg = d3.select(element).append('svg')
-        .attr('width', hGDim.w + hGDim.l + hGDim.r)
-        .attr('height', hGDim.h + hGDim.t + hGDim.b)
-        .append('g')
-        .attr('transform', 'translate(' + hGDim.l + ',' + hGDim.t + ')')
-        .attr('viewBox',`0 0 (${hGDim.w}/2) (${hGDim.h}/2) ` )
+      .attr('width', hGDim.w + hGDim.l + hGDim.r)
+      .attr('height', hGDim.h + hGDim.t + hGDim.b)
+      .append('g')
+      .attr('transform', 'translate(' + hGDim.l + ',' + hGDim.t + ')')
+      .attr('viewBox', `0 0 (${hGDim.w}/2) (${hGDim.h}/2) `)
     // create function for x-axis mapping.
     const x = d3.scaleBand()
-        .domain(fD.map(d => d[0]))
-        .range([0, hGDim.w])
-        .padding(0.6)
+      .domain(fD.map(d => d[0]))
+      .range([0, hGDim.w])
+      .padding(0.6)
 
     // Add x-axis to the histogram svg.
     hGsvg.append('g').attr('class', 'x axis')
-        .attr('transform', 'translate(0,' + hGDim.h + ')')
-        .call(d3.axisBottom(x))
-        .style('font-size', '12px')
-
+      .attr('transform', 'translate(0,' + hGDim.h + ')')
+      .call(d3.axisBottom(x))
+      .style('font-size', '12px')
 
     // Create function for y-axis map.
     const y = d3.scaleLinear().range([hGDim.h, 0])
-        .domain([0, d3.max(fD, function (d) { return d[1] })])
+      .domain([0, d3.max(fD, function (d) { return d[1] })])
 
     // Create bars for histogram to contain rectangles and freq labels.
     const bars = hGsvg.selectAll('.bar').data(fD).enter()
-        .append('g').attr('class', 'bar')
+      .append('g').attr('class', 'bar')
 
     // create the rectangles.
     bars.append('rect')
-        .attr('x', function (d) { return x(d[0]) })
-        .attr('y', function (d) { return y(d[1]) })
-        .attr('width', x.bandwidth())
-        .attr('height', function (d) { return hGDim.h - y(d[1]) })
-        .attr('fill', barColor)
-        .on('mouseover', mouseover)// mouseover is defined below.
-        .on('mouseout', mouseout)// mouseout is defined below.
+      .attr('x', function (d) { return x(d[0]) })
+      .attr('y', function (d) { return y(d[1]) })
+      .attr('width', x.bandwidth())
+      .attr('height', function (d) { return hGDim.h - y(d[1]) })
+      .attr('fill', barColor)
+      .on('mouseover', mouseover)// mouseover is defined below.
+      .on('mouseout', mouseout)// mouseout is defined below.
 
     // Create the frequency labels above the rectangles.
     bars.append('text').text(function (d) { return d3.format(',')(d[1]) })
-        .attr('x', function (d) { return x(d[0]) + x.bandwidth() / 2 })
-        .attr('y', function (d) { return y(d[1]) - 5 })
-        .attr('text-anchor', 'middle')
+      .attr('x', function (d) { return x(d[0]) + x.bandwidth() / 2 })
+      .attr('y', function (d) { return y(d[1]) - 5 })
+      .attr('text-anchor', 'middle')
 
     function mouseover (d) {
       // d3.select(this).attr('fill', "#9852f9")
@@ -83,14 +81,14 @@ function dashboard (element, fData,body) {
 
       // transition the height and color of rectangles.
       bars.select('rect').transition().duration(500)
-          .attr('y', function (d) { return y(d[1]) })
-          .attr('height', function (d) { return hGDim.h - y(d[1]) })
-          .attr('fill', color)
+        .attr('y', function (d) { return y(d[1]) })
+        .attr('height', function (d) { return hGDim.h - y(d[1]) })
+        .attr('fill', color)
 
       // transition the frequency labels location and change value.
       bars.select('text').transition().duration(500)
-          .text(function (d) { return d3.format(',')(d[1]) })
-          .attr('y', function (d) { return y(d[1]) - 5 })
+        .text(function (d) { return d3.format(',')(d[1]) })
+        .attr('y', function (d) { return y(d[1]) - 5 })
     }
     return hG
   }
@@ -102,13 +100,13 @@ function dashboard (element, fData,body) {
     const pieDim = { w: 200, h: 200 }
     pieDim.r = Math.min(pieDim.w, pieDim.h) / 2
 
-    let tranformYAxis = (pieDim.h / 2)-10
+    const tranformYAxis = (pieDim.h / 2) - 10
     // create svg for pie chart.
     const piesvg = d3.select(element).append('svg')
-        .attr('width', pieDim.w).attr('height', pieDim.h)
-        // .attr('viewBox',`0 0 ${pieDim.w}/2 (${pieDim.h}/2 ` )
-        .append('g')
-        .attr('transform', 'translate(' + ((pieDim.w) / 2 )+ ',' + tranformYAxis + ')')
+      .attr('width', pieDim.w).attr('height', pieDim.h)
+    // .attr('viewBox',`0 0 ${pieDim.w}/2 (${pieDim.h}/2 ` )
+      .append('g')
+      .attr('transform', 'translate(' + ((pieDim.w) / 2) + ',' + tranformYAxis + ')')
     // create function to draw the arcs of the pie slices.
     const arc = d3.arc().outerRadius(pieDim.r - 10).innerRadius(0)
 
@@ -117,14 +115,14 @@ function dashboard (element, fData,body) {
 
     // Draw the pie slices.
     piesvg.selectAll('path').data(pie(pD)).enter().append('path').attr('d', arc)
-        .each(function (d) { this._current = d })
-        .style('fill', function (d) { return segColor(d.data.type) })
-        .on('mouseover', mouseover).on('mouseout', mouseout)
+      .each(function (d) { this._current = d })
+      .style('fill', function (d) { return segColor(d.data.type) })
+      .on('mouseover', mouseover).on('mouseout', mouseout)
 
     // create function to update pie-chart. This will be used by histogram.
     pC.update = function (nD) {
       piesvg.selectAll('path').data(pie(nD)).transition().duration(500)
-          .attrTween('d', arcTween)
+        .attrTween('d', arcTween)
     }
     // Utility function to be called on mouseover a pie slice.
     function mouseover (d) {
@@ -156,58 +154,57 @@ function dashboard (element, fData,body) {
 
     // create table for legend.
     const legend = d3.select(element)
-        .append('table')
-        .attr("width",200)
-        .attr("height",200)
-        .attr('class', 'legend')
-        .style('margin-bottom', "76px")
-        .style('display', 'inline-block')
-        .style('border-collapse', 'collapse')
-        .style('border-spacing', 0)
-        .style("padding", "12px 12px 6px")
-        .style("height", "auto")
-        .style("border-radius","4px")
-        .style("border", "1px solid #999")
-        .style("box-sizing","border-box")
-        .style('margin-left', "20")
+      .append('table')
+      .attr('width', 200)
+      .attr('height', 200)
+      .attr('class', 'legend')
+      .style('margin-bottom', '76px')
+      .style('display', 'inline-block')
+      .style('border-collapse', 'collapse')
+      .style('border-spacing', 0)
+      .style('padding', '12px 12px 6px')
+      .style('height', 'auto')
+      .style('border-radius', '4px')
+      .style('border', '1px solid #999')
+      .style('box-sizing', 'border-box')
+      .style('margin-left', '20')
 
-    //margin-bottom:76px;
-
+    // margin-bottom:76px;
 
     // create one row per segment.
     const tr = legend.append('tbody')
-        .selectAll('tr').data(lD).enter().append('tr')
-        // .style('border-bottom', '2px solid grey')
+      .selectAll('tr').data(lD).enter().append('tr')
+    // .style('border-bottom', '2px solid grey')
 
-    legend.select('tr').style('border-bottom','2px solid grey')
+    legend.select('tr').style('border-bottom', '2px solid grey')
 
     // create the first column for each segment.
     tr.append('td').append('svg')
-        .attr('width', '10')
-        .attr('height', '10')
-        .append('rect')
-        .attr('width', '10').attr('height', '10')
-        .attr('fill', function (d) { return segColor(d.type) })
+      .attr('width', '10')
+      .attr('height', '10')
+      .append('rect')
+      .attr('width', '10').attr('height', '10')
+      .attr('fill', function (d) { return segColor(d.type) })
 
     // create the second column for each segment.
     tr.append('td').text(function (d) { return d.type })
-        .style('font-size', '13px')
-        .style('padding',"6px 5px")
-        .style('vertical-align','bottom')
+      .style('font-size', '13px')
+      .style('padding', '6px 5px')
+      .style('vertical-align', 'bottom')
 
     // create the third column for each segment.
     tr.append('td').attr('class', 'legendFreq')
-        .text(function (d) { return d3.format(',')(d.freq) + ' bills' })
-        .style('font-size', '12.5px')
-        .style('align','right')
-        .style('width','70px')
+      .text(function (d) { return d3.format(',')(d.freq) + ' bills' })
+      .style('font-size', '12.5px')
+      .style('align', 'right')
+      .style('width', '70px')
 
     // create the fourth column for each segment.
     tr.append('td').attr('class', 'legendPerc')
-        .text(function (d) {return (getLegend(d, lD)) + '%'})
-        .style('font-size', '13px')
-        .style('align','center')
-        .style('width','40px')
+      .text(function (d) { return (getLegend(d, lD)) + '%' })
+      .style('font-size', '13px')
+      .style('align', 'center')
+      .style('width', '40px')
 
     // Utility function to be used to update the legend.
     leg.update = function (nD) {
@@ -216,15 +213,15 @@ function dashboard (element, fData,body) {
 
       // update the frequencies.
       l.select('.legendFreq').text(function (d) { return d3.format(',')(d.freq) + ' bills' })
-          .style('font-size', '12.5px')
-          .style('align','right')
-          .style('width','70px')
+        .style('font-size', '12.5px')
+        .style('align', 'right')
+        .style('width', '70px')
 
       // update the percentage column.
       l.select('.legendPerc')
-          .text(function (d) { return getLegend(d, nD) + '%' })
-          .style('align','right')
-          .style('width','40px')
+        .text(function (d) { return getLegend(d, nD) + '%' })
+        .style('align', 'right')
+        .style('width', '40px')
     }
 
     function getLegend (d, aD) { // Utility function to compute percentage.
@@ -251,9 +248,9 @@ function dashboard (element, fData,body) {
   const leg = legend(tF) // create the legend.
 }
 export default class BarPieChart {
-  constructor (element, data, categories,body) {
+  constructor (element, data, categories, body) {
     createData(categories, data).then(results => {
-      dashboard(element, results,body)
+      dashboard(element, results, body)
     })
   }
 }
@@ -271,7 +268,6 @@ export async function createData (categories, data) {
         if (bill.voteRecord.yeas > bill.voteRecord.nays) {
           passedBills++
         } else {
-
           failedBills++
         }
       }

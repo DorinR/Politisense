@@ -23,7 +23,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import axios from 'axios'
 const capitalize = require('capitalize')
 
-const Transition = React.forwardRef(function Transition (props, ref) {
+export const Transition = React.forwardRef(function Transition (props, ref) {
   return <Slide direction='up' ref={ref} {...props} />
 })
 

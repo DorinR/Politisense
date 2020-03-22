@@ -6,6 +6,7 @@ export default class D3Chart {
 
     let yeaCounter = 0
     let nayCounter = 0
+    /* eslint-disable */
     let abstainCounter = 0
 
     if (test.length !== 0) {
@@ -19,15 +20,12 @@ export default class D3Chart {
     }
     const totalYesNoVotes = [
       { index: 0, name: 'Yeas', value: yeaCounter },
-      { index: 1, name: 'Nays', value: nayCounter },
-      // { index: 2, name: 'Abstain', value: abstainCounter }
+      { index: 1, name: 'Nays', value: nayCounter }
     ]
 
     const width = 200
     const height = 150
     const opacity = 0.8
-    const opacityHover = 1
-    const otherOpacityOnHover = 0.8
     const radius = Math.min(width, height) / 2
 
     // The d3.pie() function takes in a dataset and creates handy data for us to generate a pie chart in the SVG.
@@ -44,30 +42,13 @@ export default class D3Chart {
       .innerRadius(radius - 20)
       .outerRadius(radius)
 
-    const colors = ['#3282b8','#a1dd70']
+    const colors = ['#3282b8', '#26d06d']
 
     const div = d3.select(element).append('div')
-        .style("position", "absolute")
-        .style("z-index", "10")
-        .style("visibility", "hidden")
-        .text("a simple tooltip");
-      // .attr('class', 'tooltip')
-      // .style('opacity', 1)
-      // .style('testAlign', 'center')
-      // .style('width', '30px')
-      // .style('height', '28px')
-      // .style('padding', '5px')
-      // .style('font', 'sansSerif')
-      // .style('background', 'lightsteelblue')
-      // .style('border', 'solid')
-      // .style('border-radius', '8px')
-      // .style('pointerEvents', 'none')
-      // .style('position', 'absolute')
-      // . style("border-width", "2px")
-      //  .style("border-radius", "5px")
-      //   .style("position", "absolute")
-      //   .style("z-index", "10")
-
+      .style('position', 'absolute')
+      .style('z-index', '10')
+      .style('visibility', 'hidden')
+      .text('a simple tooltip')
 
     // adding svg element
     const svg = d3.select(element).append('svg')
@@ -86,55 +67,30 @@ export default class D3Chart {
       .attr('class', 'arc')
 
     arcs.append('path')
-      .attr('fill', (d, i) => { return  colors[i] })
+      .attr('fill', (d, i) => { return colors[i] })
       .attr('d', createArc)
       .style('opacity', opacity)
       .style('stroke', 'white')
-        .on('mouseover', function (d) {
-          // d3.selectAll('path')
-          //     .style('opacity', otherOpacityOnHover)
-          // d3.select(this)
-          //     .style('opacity', opacityHover)
-         // return div.style("visibility", "visible");}
-          // div.transition()
-          //     .duration(200)
-          //     .style('opacity', 1)
-          // div
-          //     .html("The exact value of<br>this cell is: " + d.value)
-          //     .style("left", (d3.mouse(this)[0]+70) + "px")
-          //     .style("top", (d3.mouse(this)[1]) + "px")
-          //.html("The exact value of<br>this cell is: " + d.value)
-          //       .style("left", (d3.mouse(this)[0]+70) + "px")
-          //       .style("top", (d3.mouse(this)[1]) + "px")
-        }
-        )
-        .on('mouseout', function (d) {
-          // d3.selectAll('path')
-          //     .style('opacity', opacity)
-
-          div.transition()
-              .duration(500)
-              .style('opacity', 0)
-        })
-        .on('touchstart', function (d) {
-          // d3.selectAll('path')
-          //     .style('opacity', otherOpacityOnHover)
-          // d3.select(this)
-          //     .style('opacity', opacityHover)
-
-          div.transition()
-              .duration(200)
-              .style('opacity', 1)
-        })
-        .on("mousemove", function(d){
-          div
-              .style('opacity', 1)
-              .html("The exact value of<br>this cell is: " + d.value)
-              .style("left", (d3.mouse(this)[0]+70) + "px")
-              .style("top", (d3.mouse(this)[1]) + "px")
-
-        })
-
+      .on('mouseover', function (d) {
+      }
+      )
+      .on('mouseout', function (d) {
+        div.transition()
+          .duration(500)
+          .style('opacity', 0)
+      })
+      .on('touchstart', function (d) {
+        div.transition()
+          .duration(200)
+          .style('opacity', 1)
+      })
+      .on('mousemove', function (d) {
+        div
+          .style('opacity', 1)
+          .html('The exact value of<br>this cell is: ' + d.value)
+          .style('left', (d3.mouse(this)[0] + 70) + 'px')
+          .style('top', (d3.mouse(this)[1]) + 'px')
+      })
 
     const legend = d3.select(element).append('div')
       .attr('class', 'legend')
@@ -154,7 +110,7 @@ export default class D3Chart {
       .style('height', '10px')
       .style('width', '10px')
       .style('margin', '5px 5px')
-      .style('background-color', (d, i) =>  colors[i])
+      .style('background-color', (d, i) => colors[i])
 
     keys.append('div')
       .attr('class', 'name')

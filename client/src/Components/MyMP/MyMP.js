@@ -4,32 +4,31 @@ import axios from 'axios'
 import { fetchUserRiding } from '../Navbar'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
-import CategoryDashboard from "../Dashboard/CategoryDashboard";
-import BillHistoryTable from "../Dashboard/PastBills/BillHistoryTable";
-import Budget from "../Dashboard/Budget/Budget";
-import Associations from "./Associations";
-import Roles from "./Roles";
-import Committees from "./Committees";
-import IssuedBillsByMP from "./IssuedBillsByMP";
-import Bipartisan from "./Bipartisan";
-import MPActivityDistribution from "./MPActivityDistribution";
-import {capitalizedName, getPercentagePartisanIndex} from "../Dashboard/Utilities/CommonUsedFunctions";
-import {useTheme } from '@material-ui/core/styles';
+import CategoryDashboard from '../Dashboard/CategoryDashboard'
+import BillHistoryTable from '../Dashboard/PastBills/BillHistoryTable'
+import Budget from '../Dashboard/Budget/Budget'
+import Associations from './Associations'
+import Roles from './Roles'
+import Committees from './Committees'
+import IssuedBillsByMP from './IssuedBillsByMP'
+import Bipartisan from './Bipartisan'
+import MPActivityDistribution from './MPActivityDistribution'
+import { capitalizedName, getPercentagePartisanIndex, fetchCategories } from '../Dashboard/Utilities/CommonUsedFunctions'
+
 import {
   CssBaseline
-} from '@material-ui/core';
-import {fetchCategories} from "../Dashboard/Utilities/CommonUsedFunctions";
+} from '@material-ui/core'
+
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(3)
-  },
+  }
 
 }))
 export default function MyMP () {
   const classes = useStyles()
   const [user, setUser] = useState(null)
   const [barPieRows, setBarPieRows] = React.useState([])
-  const theme = useTheme();
 
   const [categoryList, setCategoryList] = React.useState(null)
   useEffect(() => {
@@ -48,13 +47,13 @@ export default function MyMP () {
 
   async function getAllRepsFromAllParliaments () {
     return axios
-        .get('/api/representatives/getAllRepsFromAllParliaments')
-        .then(res => {
-          if (res.data.success) {
-            return res.data.data
-          }
-        })
-        .catch(console.error)
+      .get('/api/representatives/getAllRepsFromAllParliaments')
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data
+        }
+      })
+      .catch(console.error)
   }
   const [allMPsFromAllParliaments, setAllMPsFromAllParliaments] = React.useState(null)
   useEffect(() => {
@@ -102,13 +101,13 @@ export default function MyMP () {
 
   async function getAllBillsByRepForAllParliaments (head) {
     return axios
-        .get(`/api/bills/${head}/getAllBillsByRepForAllParliaments`)
-        .then(res => {
-          if (res.data.success) {
-            return res.data.data
-          }
-        })
-        .catch(console.error)
+      .get(`/api/bills/${head}/getAllBillsByRepForAllParliaments`)
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data
+        }
+      })
+      .catch(console.error)
   }
   const [radarDataRows, setRadarDataRows] = React.useState(null)
   const [representativeData, setRepresentativeData] = React.useState(null)
@@ -117,10 +116,10 @@ export default function MyMP () {
       if (userRepresentative) {
         const billsByRep = await getAllBillsByRepForAllParliaments(userRepresentative)
         setRepresentativeData(billsByRep)
-        console.log(billsByRep)
-        const radarRows = createRadarRows(billsByRep,categoryList)
-        console.log(radarRows)
-        setRadarDataRows(radarRows)
+        if (categoryList && billsByRep) {
+          const radarRows = createRadarRows(billsByRep, categoryList)
+          setRadarDataRows(radarRows)
+        }
       }
     }
     getData()
@@ -128,53 +127,49 @@ export default function MyMP () {
 
   async function getAllBillsBySponsorForAllParliaments (head) {
     return axios
-        .get(`/api/bills/${head}/getAllBillsBySponsorForAllParliaments`)
-        .then(res => {
-          if (res.data.success) {
-            return res.data.data
-          }
-        })
-        .catch(console.error)
+      .get(`/api/bills/${head}/getAllBillsBySponsorForAllParliaments`)
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data
+        }
+      })
+      .catch(console.error)
   }
   const [userRepIssuedBills, setUserRepIssuedBills] = React.useState(null)
   useEffect(() => {
     async function getData () {
       if (userRepresentative) {
         const issuedBillByUserRep = await getAllBillsBySponsorForAllParliaments(
-            userRepresentative
+          userRepresentative
         )
-        let testing = issuedBillByUserRep.filter((thing, index, self) =>
-            index === self.findIndex((t) => (
-                t.billsClassified.number === thing.billsClassified.number &&  t.billsClassified.category == thing.billsClassified.category
-            ))
+        const testing = issuedBillByUserRep.filter((thing, index, self) =>
+          index === self.findIndex((t) => (
+            t.billsClassified.number === thing.billsClassified.number && t.billsClassified.category === thing.billsClassified.category
+          ))
         )
-        if(testing && testing != null && testing != undefined && testing.length != 0){
+        if (testing && testing !== null && testing !== undefined && testing.length !== 0) {
           setUserRepIssuedBills(testing)
         }
-
       }
     }
 
     getData()
   }, [userRepresentative])
 
-
   useEffect(() => {
-    async function populateIssuedBill (userRepIssuedBills){
-      const dataForTable = await createDataPieBarTable(categoryList,userRepIssuedBills)
+    async function populateIssuedBill (userRepIssuedBills) {
+      const dataForTable = await createDataPieBarTable(categoryList, userRepIssuedBills)
       return dataForTable
     }
     async function getData () {
       if (userRepIssuedBills) {
-        const rows=   await populateIssuedBill(userRepIssuedBills)
+        const rows = await populateIssuedBill(userRepIssuedBills)
         console.log(rows)
         setBarPieRows(rows)
       }
     }
     getData()
   }, [userRepIssuedBills])
-
-
 
   const [donutData, setDonutData] = React.useState(null)
   useEffect(() => {
@@ -215,8 +210,9 @@ export default function MyMP () {
                     xl={3}
                     xs={12}
                 >
-                  {categoryList && userRepresentative ? (
-                          <IssuedBillsByMP userRepIssuedBills={userRepIssuedBills}
+                  {categoryList && userRepresentative && userRepIssuedBills ? (
+                          <IssuedBillsByMP
+                                           userRepIssuedBills={userRepIssuedBills}
                                            categoryList={categoryList}
                                            userRepresentative={userRepresentative}
                                            rows={barPieRows}/>)
@@ -287,7 +283,7 @@ export default function MyMP () {
                     xl={3}
                     xs={12}
                 >
-                  {radarData && categoryList && radarDataRows? (
+                  {radarData && categoryList? (
                       <MPActivityDistribution radarData={radarData} rows ={radarDataRows} categoryList={categoryList}/>):""}
                 </Grid>
                 <Grid
@@ -366,11 +362,11 @@ export function createDataSetDonut(sponsors, mpdata) {
       if (bill.voteRecord.yea === true) {
         sponsors.forEach(sponsor => {
           if (sponsor.name === bill.billData.sponsorName) {
-              if(!(bills && bills.find(element => element.billDetails.billData.number == bill.billData.number))){
+              if(!(bills && bills.find(element => element.billDetails.billData.number === bill.billData.number))){
                 bills.push({billDetails: bill, category: sponsor.party})
               }
             partiesCounters.forEach((party)=> {
-              if(sponsor.party == party.partyType && party.partyType != "" && party.partyType != undefined){
+              if(sponsor.party === party.partyType && party.partyType !== "" && party.partyType !== undefined){
                 party.counter++
               }
             })
@@ -390,7 +386,7 @@ export function createDataSetDonut(sponsors, mpdata) {
     parties[element.partyType]=element.counter
   })
 
-  politicalPartiesFromAllParliaments.filter(element=> element != "" && element!= undefined )
+  politicalPartiesFromAllParliaments.filter(element=> element !== "" && element!== undefined )
 
   partiesData=  partiesData.filter(element=>
     element.label !== undefined && element.label !== "" && element.freq !==0
@@ -415,7 +411,6 @@ export function createDataPieBarTable(categories, data) {
       }
     })
   })
-  console.log(billsForSpecificCategory)
 
   return billsForSpecificCategory
 }
@@ -434,12 +429,11 @@ export function AssignColorForEachItem(list){
 }
 
 export function roundUpToNearestInteger(num){
-  if (num % 10 == 0) return num+5;
+  if (num % 10 === 0) return num+5;
   return (10 - num % 10) + num;
 }
 
 export function pushToArray(arr, obj,category) {
-  console.log(arr,obj,category)
   if(obj.billsClassified){
     if(arr.length !== 0 ){
       const index = arr.findIndex((e) => e.bill.billsClassified.number === obj.billsClassified.number);

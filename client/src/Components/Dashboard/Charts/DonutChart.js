@@ -116,7 +116,6 @@ function createDonut (element, fData, labels) {
         return getLegend(d, nD)
       })
     }
-
   }
   const tF = labels.map(function (d) {
     return { type: d, freq: d3.sum(fData.map(function (t) { return t.freq[d] })) }

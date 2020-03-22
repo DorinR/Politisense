@@ -178,76 +178,74 @@ exports.getRepresentativeId = async (req, res) => {
     })
 }
 
-async function fetchRolesByParliament (parliamentNo,repName) {
-    let id = await fetchIDbyRepName(parliamentNo,repName)
-    if(id){
-        let roles =await fetchrolesbyID(parliamentNo,id)
-        return roles
-    }
-    return []
-}
-
-async function fetchIDbyRepName (parliamentNo,repName) {
-    const db = new Firestore(false).forParliament(parliamentNo)
-    let id =null
-    await db.Politician()
-        .where('name','==',repName)
-        .select()
-        .then(snapshot => {
-
-            if (snapshot.empty) {
-                return "nothing there 1"
-            }
-            snapshot.forEach(doc => {
-                // const name = doc.id
-                id = doc.id
-            })
-
-            return id
-        })
-    return id
-}
-
-async function fetchrolesbyID (parliamentNo,id) {
-    const db = new Firestore(false).forParliament(parliamentNo)
-    const role= db.Role()
-    let roles = []
-   await role.where('politician','==',id)
-        .select()
-        .then(snapshot => {
-            if (snapshot.empty) {
-                return []
-            }
-            snapshot.forEach(doc => {
-                const {fromDate,group,title,toDate,type} = doc.data()
-                let test={
-                    fromDate:fromDate,
-                    group:group,
-                    title:title,
-                    toDate:toDate,
-                    type:type
-                }
-                console.log("im here " + test)
-                roles.push(test)
-            })
-            return roles
-        })
-        .catch(err => {
-            console.log('Error getting documents', err)
-        })
+async function fetchRolesByParliament (parliamentNo, repName) {
+  const id = await fetchIDbyRepName(parliamentNo, repName)
+  if (id) {
+    const roles = await fetchrolesbyID(parliamentNo, id)
     return roles
+  }
+  return []
+}
+
+async function fetchIDbyRepName (parliamentNo, repName) {
+  const db = new Firestore(false).forParliament(parliamentNo)
+  let id = null
+  await db.Politician()
+    .where('name', '==', repName)
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        return 'nothing there 1'
+      }
+      snapshot.forEach(doc => {
+        // const name = doc.id
+        id = doc.id
+      })
+
+      return id
+    })
+  return id
+}
+
+async function fetchrolesbyID (parliamentNo, id) {
+  const db = new Firestore(false).forParliament(parliamentNo)
+  const role = db.Role()
+  const roles = []
+  await role.where('politician', '==', id)
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        return []
+      }
+      snapshot.forEach(doc => {
+        const { fromDate, group, title, toDate, type } = doc.data()
+        const test = {
+          fromDate: fromDate,
+          group: group,
+          title: title,
+          toDate: toDate,
+          type: type
+        }
+        console.log('im here ' + test)
+        roles.push(test)
+      })
+      return roles
+    })
+    .catch(err => {
+      console.log('Error getting documents', err)
+    })
+  return roles
 }
 
 exports.getAllRolesByRep = async (req, res) => {
-
-    const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
-    const rawData = await Promise.all(
-        parliaments.map(parliament => {
-            return fetchRolesByParliament(parliament,req.params.repName)
-        })
-    )
-        res.status(200).json({
-            success: true,
-            data: rawData
-        })
+  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
+  const rawData = await Promise.all(
+    parliaments.map(parliament => {
+      return fetchRolesByParliament(parliament, req.params.repName)
+    })
+  )
+  res.status(200).json({
+    success: true,
+    data: rawData
+  })
 }
