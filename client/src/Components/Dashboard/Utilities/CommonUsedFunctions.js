@@ -1,3 +1,4 @@
+/* eslint-disable */
 import axios from 'axios'
 
 export async function fetchCategories () {
@@ -59,4 +60,37 @@ export function getPercentagePartisanIndex (element, arr) { // Utility function 
   })
   const fraction = ((element.freq / sum) * 100).toFixed(1)
   return fraction
+}
+
+export function loadingTextTitle (element) {
+  let title = null
+  switch (element.type) {
+    case 'parliamentary':
+      title = element.title
+      break
+    case 'association':
+      title = element.group
+      const n = title.indexOf('parliamentary')
+      title = title.slice(0, n)
+      break
+    case 'committee':
+      title = element.group
+      break
+    default:
+      title = ''
+      break
+  }
+  return title
+}
+
+export function loadingTextdata (element) {
+  if (element.fromDate === 0 && element.toDate === 0) {
+    return 'Present'
+  }
+  if (element.fromDate !== 0 && (element.toDate === 0)) {
+    return `${element.fromDate} - Present`
+  }
+  if (element.fromDate !== 0 && (element.toDate !== 0)) {
+    return `${element.fromDate} - ${element.toDate}`
+  }
 }

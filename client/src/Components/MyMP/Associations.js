@@ -6,9 +6,8 @@ import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core'
 import GroupIcon from '@material-ui/icons/Group'
 import Button from '@material-ui/core/Button'
 import { getAllRolesByRep, getRepresentativeId } from './Roles'
-import DescriptionDialog, { loadingTextTitle } from './DescriptionDialog'
-
-import { capitalizedName } from './TableDialog'
+import DescriptionDialog from './DescriptionDialog'
+import { capitalizedName, loadingTextTitle } from '../Dashboard/Utilities/CommonUsedFunctions'
 import CountUp from 'react-countup'
 
 const useStyles = makeStyles(theme => ({

@@ -10,7 +10,7 @@ import {
 import DescriptionDialog from './DescriptionDialog'
 import clsx from 'clsx'
 import WorkIcon from '@material-ui/icons/Work'
-import { capitalizedName } from './TableDialog'
+import { capitalizedName} from "../Dashboard/Utilities/CommonUsedFunctions";
 import CountUp from 'react-countup'
 import { Link } from 'react-router-dom'
 

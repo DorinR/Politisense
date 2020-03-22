@@ -18,7 +18,7 @@ import TableRow from '@material-ui/core/TableRow'
 import TableBody from '@material-ui/core/TableBody'
 import Button from '@material-ui/core/Button'
 import BillDialog from '../Dashboard/BillDialog'
-import { capitalizedName } from '../Dashboard/Utilities/CommonUsedFunctions'
+import { capitalizedName,loadingTextTitle,loadingTextdata } from '../Dashboard/Utilities/CommonUsedFunctions'
 import TextField from '@material-ui/core/TextField'
 
 const DialogTitle = withStyles(theme => ({
@@ -192,39 +192,6 @@ const DescriptionDialog = (props) => {
       </Dialog>
     </div>
   )
-}
-export function loadingTextdata (element) {
-  if (element.fromDate === 0 && element.toDate === 0) {
-    return 'Present'
-  }
-  if (element.fromDate !== 0 && (element.toDate === 0)) {
-    return `${element.fromDate} - Present`
-  }
-  if (element.fromDate !== 0 && (element.toDate !== 0)) {
-    return `${element.fromDate} - ${element.toDate}`
-  }
-}
-
-export function loadingTextTitle (element) {
-  let title = null
-  switch (element.type) {
-    case 'parliamentary':
-      title = element.title
-      break
-    case 'association':
-      title = element.group
-      const n = title.indexOf('parliamentary')
-      title = title.slice(0, n)
-
-      break
-    case 'committee':
-      title = element.group
-      break
-    default:
-      title = ''
-      break
-  }
-  return title
 }
 
 export default DescriptionDialog

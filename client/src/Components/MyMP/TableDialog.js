@@ -12,7 +12,7 @@ import TableBody from '@material-ui/core/TableBody'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import BillDialog from '../Dashboard/BillDialog'
-import { formattingCategory } from '../Dashboard/Utilities/CommonUsedFunctions'
+import { formattingCategory,capitalizedName } from '../Dashboard/Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles({
   avatar: {
@@ -29,17 +29,6 @@ const useStyles = makeStyles({
     fontWeight: 700
   }
 })
-export function capitalizedName (sponsor) {
-  if (sponsor && isNaN(sponsor)) {
-    let name = sponsor
-    name = name.toLowerCase()
-      .split(' ')
-      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-      .join(' ')
-    return name
-  }
-  return null
-}
 
 export default function TableDialog (props) {
   const classes = useStyles()

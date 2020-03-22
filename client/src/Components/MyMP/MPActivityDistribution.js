@@ -152,7 +152,7 @@ MPActivityDistribution.propTypes = {
 
 export default MPActivityDistribution
 
-function createVariablesRadar (categories) {
+export function createVariablesRadar (categories) {
   const lables = []
   categories.forEach(category => {
     const temp = { key: category, label: category }

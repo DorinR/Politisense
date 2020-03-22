@@ -12,9 +12,8 @@ import {
 import Button from '@material-ui/core/Button'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import { getAllRolesByRep, getRepresentativeId } from './Roles'
-import DescriptionDialog, { loadingTextTitle } from './DescriptionDialog'
-
-import { capitalizedName } from './TableDialog'
+import DescriptionDialog from './DescriptionDialog'
+import { loadingTextTitle, capitalizedName } from '../Dashboard/Utilities/CommonUsedFunctions'
 import CountUp from 'react-countup'
 
 const useStyles = makeStyles(theme => ({
