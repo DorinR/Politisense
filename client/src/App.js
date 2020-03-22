@@ -24,6 +24,7 @@ import Sidebar from "./Components/Navbar";
 import Topbar from "./Components/Topbar";
 import CompareContainer from "./Components/Dashboard/Compare/CompareContainer";
 import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
+import IssuedBillsByCategory from "./Components/MyMP/IssuedBillsByCategory";
 const useStyles = makeStyles(theme => ({
   root: {
     paddingTop: 56,
@@ -107,6 +108,8 @@ const App = () => {
           <PrivateRoute path="/votingHistory" component={BillHistoryTable} />
           <PrivateRoute path="/budget" component={BudgetContainer} />
           <PrivateRoute path="/compare" component={CompareContainer} />
+            <PrivateRoute path="/issuedBillsByCategory" component={IssuedBillsByCategory} />
+
         </div>
       </div>
     </div>

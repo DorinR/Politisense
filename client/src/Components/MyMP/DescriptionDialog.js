@@ -23,6 +23,8 @@ import BillDialog from "../Dashboard/BillDialog";
 import {getDescription} from "../Dashboard/General/MinisterHelpDialog";
 import {titleCase} from "../Dashboard/General/GeneralDashboard";
 import {capitalizedName} from "../Dashboard/Utilities/CommonUsedFunctions";
+import TextField from "@material-ui/core/TextField";
+import Container from "@material-ui/core/Container";
 
 const DialogTitle = withStyles(theme => ({
     root: {
@@ -94,8 +96,28 @@ const DialogActions = withStyles(theme => ({
              setBillOpen(true)
          }
      }
+     const handleFilterChange = e => {
+         setFilter(e.target.value)
+     }
+     const [filter, setFilter] = React.useState('')
+     const [filteredRowsByCategory, setFilteredRowsByCategory] = React.useState([])
+     const [rows,setRows] = React.useState( [])
 
-        return (
+
+     useEffect(()=>{
+
+                 let filteredRowsByCategory
+                 if (filter === '') {
+                     filteredRowsByCategory = props.rows
+                 } else {
+                     filteredRowsByCategory = props.rows.filter(row => row.category.toLowerCase().includes(filter.toLowerCase()))
+                 }
+                 setFilteredRowsByCategory(filteredRowsByCategory)
+
+
+     },[filter])
+
+     return (
             <div>
                 <Dialog
                     onClose={handleCloseDialog}
@@ -120,7 +142,9 @@ const DialogActions = withStyles(theme => ({
                                             categories={props.categoryList}
                                         />
                                         <Divider/>
+                                        {filteredRowsByCategory && filteredRowsByCategory.length > 0 ?
                                         <TableContainer >
+                                            <TextField label='Filter by Category'  variant='outlined' onChange={handleFilterChange} color='primary' />
                                             <Table size='medium'  aria-label='simple table'>
                                                 <TableHead>
                                                     <TableRow>
@@ -130,7 +154,7 @@ const DialogActions = withStyles(theme => ({
                                                     </TableRow>
                                                 </TableHead>
                                                 <TableBody stickyHeader>
-                                                    {props.rows.map((row,i)=> (
+                                                    {filteredRowsByCategory.map((row,i)=> (
                                                         row.bill ?
                                                             (
                                                                 <TableRow key={i}>
@@ -147,6 +171,7 @@ const DialogActions = withStyles(theme => ({
                                                 </TableBody>
                                             </Table>
                                         </TableContainer>
+                                            : "NO data"}
                                         <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />
                                     </CardContent>
                                 </Card>

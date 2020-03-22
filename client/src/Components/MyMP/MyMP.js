@@ -13,7 +13,7 @@ import Committees from "./Committees";
 import IssuedBillsByMP from "./IssuedBillsByMP";
 import Bipartisan from "./Bipartisan";
 import MPActivityDistribution from "./MPActivityDistribution";
-import {getPercentagePartisanIndex} from "../Dashboard/Utilities/CommonUsedFunctions";
+import {capitalizedName, getPercentagePartisanIndex} from "../Dashboard/Utilities/CommonUsedFunctions";
 import {useTheme } from '@material-ui/core/styles';
 import {
   CssBaseline
@@ -110,13 +110,17 @@ export default function MyMP () {
         })
         .catch(console.error)
   }
-
+  const [radarDataRows, setRadarDataRows] = React.useState(null)
   const [representativeData, setRepresentativeData] = React.useState(null)
   useEffect(() => {
     async function getData () {
       if (userRepresentative) {
         const billsByRep = await getAllBillsByRepForAllParliaments(userRepresentative)
         setRepresentativeData(billsByRep)
+        console.log(billsByRep)
+        const radarRows = createRadarRows(billsByRep,categoryList)
+        console.log(radarRows)
+        setRadarDataRows(radarRows)
       }
     }
     getData()
@@ -139,19 +143,38 @@ export default function MyMP () {
         const issuedBillByUserRep = await getAllBillsBySponsorForAllParliaments(
             userRepresentative
         )
-        if(issuedBillByUserRep && issuedBillByUserRep != null && issuedBillByUserRep != undefined && issuedBillByUserRep.length != 0){
-          setUserRepIssuedBills(issuedBillByUserRep)
-          populateIssuedBill(issuedBillByUserRep).then(res => {setBarPieRows(res)})
+        let testing = issuedBillByUserRep.filter((thing, index, self) =>
+            index === self.findIndex((t) => (
+                t.billsClassified.number === thing.billsClassified.number &&  t.billsClassified.category == thing.billsClassified.category
+            ))
+        )
+        if(testing && testing != null && testing != undefined && testing.length != 0){
+          setUserRepIssuedBills(testing)
         }
 
       }
     }
+
+    getData()
+  }, [userRepresentative])
+
+
+  useEffect(() => {
     async function populateIssuedBill (userRepIssuedBills){
       const dataForTable = await createDataPieBarTable(categoryList,userRepIssuedBills)
       return dataForTable
     }
+    async function getData () {
+      if (userRepIssuedBills) {
+        const rows=   await populateIssuedBill(userRepIssuedBills)
+        console.log(rows)
+        setBarPieRows(rows)
+      }
+    }
     getData()
-  }, [userRepresentative])
+  }, [userRepIssuedBills])
+
+
 
   const [donutData, setDonutData] = React.useState(null)
   useEffect(() => {
@@ -197,7 +220,7 @@ export default function MyMP () {
                                            categoryList={categoryList}
                                            userRepresentative={userRepresentative}
                                            rows={barPieRows}/>)
-                      : ('nothing')}
+                      : ('')}
                 </Grid>
                 <Grid
                     item
@@ -264,8 +287,8 @@ export default function MyMP () {
                     xl={3}
                     xs={12}
                 >
-                  {radarData && categoryList ? (
-                      <MPActivityDistribution radarData={radarData} rows ={representativeData} categoryList={categoryList}/>):""}
+                  {radarData && categoryList && radarDataRows? (
+                      <MPActivityDistribution radarData={radarData} rows ={radarDataRows} categoryList={categoryList}/>):""}
                 </Grid>
                 <Grid
                     item
@@ -299,7 +322,6 @@ function createDataSetRadar(categories, data) {
   let temp = {};
   const dataSetRadar = {};
   let maxValue = 0;
-  console.log(categories)
   categories.forEach(category => {
     let totalvotes = 0
     data.forEach(bill => {
@@ -344,7 +366,9 @@ export function createDataSetDonut(sponsors, mpdata) {
       if (bill.voteRecord.yea === true) {
         sponsors.forEach(sponsor => {
           if (sponsor.name === bill.billData.sponsorName) {
-              bills.push({billDetails: bill, category: sponsor.party})
+              if(!(bills && bills.find(element => element.billDetails.billData.number == bill.billData.number))){
+                bills.push({billDetails: bill, category: sponsor.party})
+              }
             partiesCounters.forEach((party)=> {
               if(sponsor.party == party.partyType && party.partyType != "" && party.partyType != undefined){
                 party.counter++
@@ -366,39 +390,34 @@ export function createDataSetDonut(sponsors, mpdata) {
     parties[element.partyType]=element.counter
   })
 
-  politicalPartiesFromAllParliaments =politicalPartiesFromAllParliaments.filter(element=> element != "" && element!= undefined )
+  politicalPartiesFromAllParliaments.filter(element=> element != "" && element!= undefined )
 
   partiesData=  partiesData.filter(element=>
     element.label !== undefined && element.label !== "" && element.freq !==0
   )
 
   partiesData.forEach(element => {
+    element.label = capitalizedName(element.label)
     element.value = getPercentagePartisanIndex(element,partiesData)
   })
   partiesData= sortBasedOnLargest(partiesData)
   partiesData = AssignColorForEachItem(partiesData)
   return [partiesData,bills]
 }
-export async function createDataPieBarTable(categories, data) {
-  let billsForSpeicificCategory =[]
-  let finalArray=[]
+
+
+export function createDataPieBarTable(categories, data) {
+  let billsForSpecificCategory =[]
   categories.forEach(category => {
-    let totalBills = 0
     data.forEach(bill => {
       if (bill.billsClassified.category === (category.toLowerCase())) {
-        totalBills++
-        if (bill.voteRecord.yeas > bill.voteRecord.nays) {
-          billsForSpeicificCategory.push({bill:bill,category: category, status:'Passed'})
-        } else {
-          billsForSpeicificCategory.push({bill:bill ,category: category, status:'Failed'})
-        }
+        pushToArray(billsForSpecificCategory,bill,category)
       }
     })
-    if (totalBills !== 0) {
-      finalArray = finalArray.concat(billsForSpeicificCategory)
-    }
   })
-  return finalArray
+  console.log(billsForSpecificCategory)
+
+  return billsForSpecificCategory
 }
 export function sortBasedOnLargest(list){
   return list.sort(function(a, b){
@@ -417,4 +436,67 @@ export function AssignColorForEachItem(list){
 export function roundUpToNearestInteger(num){
   if (num % 10 == 0) return num+5;
   return (10 - num % 10) + num;
+}
+
+export function pushToArray(arr, obj,category) {
+  console.log(arr,obj,category)
+  if(obj.billsClassified){
+    if(arr.length !== 0 ){
+      const index = arr.findIndex((e) => e.bill.billsClassified.number === obj.billsClassified.number);
+      if (index === -1 ) {
+        if (obj.voteRecord.yeas > obj.voteRecord.nays) {
+          arr.push({bill: obj, category: [category], status: 'Passed'})
+        } else {
+          arr.push({bill: obj, category: [category], status: 'Failed'})
+        }
+      } else {
+        let currentCategoryList = arr[index].category
+        let modifiedCategoryList = currentCategoryList.concat([category])
+        let uniqueCategoryList = [...new Set(modifiedCategoryList)]
+        arr[index].category = uniqueCategoryList
+      }
+    }else {
+      if (obj.voteRecord.yeas > obj.voteRecord.nays) {
+        arr.push({bill: obj, category: [category], status: 'Passed'})
+      } else {
+        arr.push({bill: obj, category: [category], status: 'Failed'})
+      }
+    }
+  }else{
+    if(arr.length !== 0 ){
+      const index = arr.findIndex((e) => e.bill.billData.number === obj.billData.number);
+      if (index === -1 ) {
+        if (obj.voteRecord.yea) {
+          arr.push({bill: obj, category: [category], status: 'Yea'})
+        } else {
+          arr.push({bill: obj, category: [category], status: 'Nay'})
+        }
+
+      } else {
+        let currentCategoryList = arr[index].category
+        let modifiedCategoryList = currentCategoryList.concat([category])
+        let uniqueCategoryList = [...new Set(modifiedCategoryList)]
+
+        arr[index].category = uniqueCategoryList
+      }
+    }else {
+      if (obj.voteRecord.yea) {
+        arr.push({bill: obj, category: [category], status: 'Yea'})
+      } else {
+        arr.push({bill: obj, category: [category], status: 'Nay'})
+      }
+    }
+  }
+}
+
+function createRadarRows(bills,categoryList){
+  let rows = []
+  categoryList.forEach(category => {
+    bills.forEach(bill => {
+      if (bill.billData.category === (category.toLowerCase())) {
+        pushToArray(rows,bill,category)
+      }
+    })
+  })
+  return rows
 }

@@ -13,8 +13,8 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import {capitalizedName} from "./TableDialog";
 import CountUp from 'react-countup';
-import AnimatedNumber from 'react-animated-number';
-
+import IssuedBillsByCategory from "./IssuedBillsByCategory";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,20 +50,9 @@ const useStyles = makeStyles((theme) => ({
 const IssuedBillsByMP = props => {
     const classes = useStyles();
     const { className, ...rest } = props;
-    // const [tableContents, setTableContents] = React.useState([])
-    // const [tableDialogOpen, setTableDialogOpen] = React.useState(false)
-    // const [expanded, setExpanded] = React.useState(false);
-    // const [billInfo, setBillInfo] = React.useState([])
-    // const [billOpen, setBillOpen] = React.useState(false)
     const [open, setOpen] = React.useState(false)
-    // const [totalBills] =React.useState( props.userRepIssuedBills.length? props.userRepIssuedBills.length)
     const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    console.log(props.userRepIssuedBills)
-    const handleClickOpen = () => {
-        setOpen(true)
-    };
 
     const handleClose = () => {
         setOpen(false)
@@ -90,7 +79,7 @@ const IssuedBillsByMP = props => {
                         </Typography>
                         <Grid item direction={"row"}>
                             <Grid container direction={"row"}>
-                                <CountUp style ={{fontSize:27}} end={props.userRepIssuedBills? props.userRepIssuedBills.length : 0}> </CountUp>
+                                <CountUp style ={{fontSize:27}} end={props.userRepIssuedBills? totalBillsArray(props.userRepIssuedBills) : 0}> </CountUp>
                                 <Typography style ={{marginTop:3, marginLeft:3}} variant="h5"> {"bills"}</Typography>
                             </Grid>
                         </Grid>
@@ -115,10 +104,19 @@ const IssuedBillsByMP = props => {
                                 }
                             </Typography>
                         </li>
-                        {props.userRepIssuedBills&& props.userRepIssuedBills.length != 0 && props.userRepIssuedBills != null ?
-                        <Button color="primary" size="medium" style={{"fontSize":10 }} onClick={handleClickOpen}>
-                                    details
-                        </Button> : ""}
+                        {props.userRepIssuedBills&& props.userRepIssuedBills.length != 0 && props.userRepIssuedBills != null && props.rows ?
+                            <Link to={{
+                                pathname: '/issuedBillsByCategory',
+                                aboutProps: {
+                                    d3Container: true, rows: props.rows,
+                                    userRepIssuedBills:props.userRepIssuedBills,
+                                    categoryList:props.categoryList
+                                }}} className={classes.routerLink} style={{textDecoration:"none"}}>
+                            <Button color="primary" size="medium" style={{"fontSize":10 }}>
+                             details
+                             </Button>
+                            </Link>
+                            : ""}
                     </div>
                 </Grid>
             </CardContent>
@@ -132,7 +130,7 @@ const IssuedBillsByMP = props => {
                                                            d3Container={true}
                                                            userRepIssuedBills ={props.userRepIssuedBills}
                                                            categoryList={props.categoryList}
-                                                           rows={props.rows}
+                                                           rows={props.rows? props.rows : []}
             />:<div/>}
 
         </Card>
@@ -145,3 +143,13 @@ IssuedBillsByMP.propTypes = {
 };
 
 export default IssuedBillsByMP;
+
+
+export function totalBillsArray(arr){
+    let totalBills = arr.filter((thing, index, self) =>
+        index === self.findIndex((t) => (
+            t.billsClassified.number === thing.billsClassified.number
+        ))
+    )
+    return totalBills.length
+}

@@ -9,7 +9,6 @@ const margin = {top: 30, right: 20, bottom: 30, left: 50}
 export default class D3GaugeChart extends Component {
 
     constructor (element,data) {
-        console.log(data)
         super(element)
         const svg = d3.select(element).append('svg')
         drawChart()
@@ -60,12 +59,6 @@ export default class D3GaugeChart extends Component {
                 return d.data.arc(d);
             }).attr('fill', function (d, i) {
             return i == 0 ? d.data.object.color : i == 1 ?'#dedede':'none'
-            //   return i == 0 ? d.data.object.color : i == 1 ?'#dedede':'none'
-            // return i == 0 ? d.data.object.color : i == 1 ? d.data.object.color : 'none'; (old)
-            // return  d.data.object.color
-            //ededed
-            //rgba(242, 242, 242, 0.85)
-            //dedede
         })
             .style("opacity", (d,i)=>{
                 return i == 0 ? 1 : i == 1 ? 0.3 : 1
@@ -143,7 +136,6 @@ export default class D3GaugeChart extends Component {
             // set the svg dimensions
             svg.attr("width", width)
             .attr('height', width)
-            // .attr('viewBox', `0 0 ${width} (${width})`)
 
         }
         window.addEventListener('resize', drawChart);

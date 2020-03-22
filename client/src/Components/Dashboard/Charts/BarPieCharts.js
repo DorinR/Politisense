@@ -8,7 +8,7 @@ function dashboard (element, fData,body) {
 
   function histoGram (fD) {
     const hG = {}
-    const hGDim = { t: 30, r: 5, b: 30, l:0 }
+    const hGDim = { t: 30, r: 5, b: 30, l:20 }
     hGDim.w = 490 - hGDim.l - hGDim.r
     hGDim.h = 250 - hGDim.t - hGDim.b
 
@@ -197,16 +197,16 @@ function dashboard (element, fData,body) {
 
     // create the third column for each segment.
     tr.append('td').attr('class', 'legendFreq')
-        .text(function (d) { return d3.format(',')(d.freq) + ' bills ' })
-        .style('font-size', '13px')
+        .text(function (d) { return d3.format(',')(d.freq) + ' bills' })
+        .style('font-size', '12.5px')
         .style('align','right')
-        .style('width','50px')
+        .style('width','70px')
 
     // create the fourth column for each segment.
     tr.append('td').attr('class', 'legendPerc')
         .text(function (d) {return (getLegend(d, lD)) + '%'})
         .style('font-size', '13px')
-        .style('align','right')
+        .style('align','center')
         .style('width','40px')
 
     // Utility function to be used to update the legend.
@@ -215,9 +215,10 @@ function dashboard (element, fData,body) {
       const l = legend.select('tbody').selectAll('tr').data(nD)
 
       // update the frequencies.
-      l.select('.legendFreq').text(function (d) { return d3.format(',')(d.freq) + ' bills ' })
+      l.select('.legendFreq').text(function (d) { return d3.format(',')(d.freq) + ' bills' })
+          .style('font-size', '12.5px')
           .style('align','right')
-          .style('width','50px')
+          .style('width','70px')
 
       // update the percentage column.
       l.select('.legendPerc')
@@ -270,6 +271,7 @@ export async function createData (categories, data) {
         if (bill.voteRecord.yeas > bill.voteRecord.nays) {
           passedBills++
         } else {
+
           failedBills++
         }
       }

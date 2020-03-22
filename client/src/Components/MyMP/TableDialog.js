@@ -11,6 +11,7 @@ import TableBody from "@material-ui/core/TableBody";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import BillDialog from "../Dashboard/BillDialog";
+import {formattingCategory} from "../Dashboard/Utilities/CommonUsedFunctions";
 
 const useStyles = makeStyles({
     avatar: {
@@ -64,11 +65,11 @@ export default function TableDialog (props) {
         }
         if(row && type=='radar'){
             let temp = {
-                name: row.billData.number,
-                desc:row.billData.title,
-                link:row.billData.link,
-                sponsor:row.billData.sponsorName,
-                date:row.billData.dateVoted
+                name: row.bill.billData.number,
+                desc:row.bill.billData.title,
+                link:row.bill.billData.link,
+                sponsor:row.bill.billData.sponsorName,
+                date:row.bill.billData.dateVoted
             }
             console.log(temp)
             setBillInfo(temp)
@@ -109,7 +110,6 @@ export default function TableDialog (props) {
                                     props.type=='bipartisan'?
                                             ( <TableRow >
                                                 <TableCell className={classes.titles}>Bill Name</TableCell>
-                                                <TableCell className={classes.titles} align="right">Category</TableCell>
                                                 <TableCell className={classes.titles} align="right">Vote</TableCell>
                                                 <TableCell className={classes.titles} align='right'>Political Party</TableCell>
                                             </TableRow>):
@@ -128,10 +128,10 @@ export default function TableDialog (props) {
                                           <TableRow key={i}>
                                             <TableCell component='th' scope='row'>
                                                 <Button color='primary' onClick={() => handleBillClickOpen(row,props.type)}>
-                                                    <Typography>{row.bill.billsClassified.number}</Typography>
+                                                    <Typography>{row.bill.billData.number}</Typography>
                                                 </Button>
                                             </TableCell>
-                                            <TableCell component='th' scope='row' align='right'><Typography>{capitalizedName(row.category)}</Typography></TableCell>
+                                            <TableCell component='th' scope='row' align='center'><Typography>{row.category.map(category => capitalizedName(formattingCategory(category))+", ")}</Typography></TableCell>
                                             <TableCell align='right'><Typography>{capitalizedName(row.status)} </Typography> </TableCell>
                                           </TableRow>
                                         ):(
@@ -141,9 +141,6 @@ export default function TableDialog (props) {
                                                     <Button color='primary' onClick={() => handleBillClickOpen(row,props.type)}>
                                                         <Typography>{row.billDetails.billData.number}</Typography>
                                                     </Button>
-                                                </TableCell>
-                                                <TableCell component='th' scope='row' align="right">
-                                                   <Typography>{capitalizedName(row.billDetails.billData.category)}</Typography>
                                                 </TableCell>
                                                 <TableCell component='th' scope={'row'} align="right">
                                                    <Typography style= {{color:"green"}}>{row.billDetails.voteRecord.yea == true ? "Yea":"Nay"}</Typography>
