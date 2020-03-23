@@ -21,6 +21,7 @@ import MinisterHelpDialog from './MinisterHelpDialog'
 import TextField from '@material-ui/core/TextField'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import axios from 'axios'
+import { titleCase } from '../Utilities/CommonUsedFunctions'
 const capitalize = require('capitalize')
 
 export const Transition = React.forwardRef(function Transition (props, ref) {
@@ -72,12 +73,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function titleCase (str) {
-  const regex = /(^|\b(?!(and?|at?|the|for|to|but|by|of)\b))\w+/g
-  return str.toLowerCase()
-    .replace(regex, s => s[0].toUpperCase() + s.slice(1))
-}
-
 export function getLink (str) {
   const nameArr = str.split(' ')
   return 'https://pm.gc.ca/en/cabinet/right-honourable-' + nameArr[0] + '-' + nameArr[nameArr.length - 1]
@@ -111,7 +106,6 @@ export async function getMinisters () {
           result[i].id = res.data.data[i].title
         }
       }
-      console.log(result)
       return result
     })
     .catch(err => console.error(err))

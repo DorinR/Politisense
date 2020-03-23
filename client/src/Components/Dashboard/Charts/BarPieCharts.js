@@ -55,7 +55,6 @@ function dashboard (element, fData, body) {
       .attr('text-anchor', 'middle')
 
     function mouseover (d) {
-      // d3.select(this).attr('fill', "#9852f9")
       const st = fData.filter(function (s) { return s.State === d[0] })[0]
       const nD = d3.keys(st.freq).map(function (s) { return { type: s, freq: st.freq[s] } })
 
@@ -66,7 +65,6 @@ function dashboard (element, fData, body) {
 
     function mouseout (d) { // utility function to be called on mouseout.
       // reset the pie-chart and legend.
-      // d3.select(this).attr('fill', barColor)
       pC.update(tF)
       leg.update(tF)
     }
@@ -104,9 +102,9 @@ function dashboard (element, fData, body) {
     // create svg for pie chart.
     const piesvg = d3.select(element).append('svg')
       .attr('width', pieDim.w).attr('height', pieDim.h)
-    // .attr('viewBox',`0 0 ${pieDim.w}/2 (${pieDim.h}/2 ` )
       .append('g')
       .attr('transform', 'translate(' + ((pieDim.w) / 2) + ',' + tranformYAxis + ')')
+
     // create function to draw the arcs of the pie slices.
     const arc = d3.arc().outerRadius(pieDim.r - 10).innerRadius(0)
 
@@ -169,12 +167,9 @@ function dashboard (element, fData, body) {
       .style('box-sizing', 'border-box')
       .style('margin-left', '20')
 
-    // margin-bottom:76px;
-
     // create one row per segment.
     const tr = legend.append('tbody')
       .selectAll('tr').data(lD).enter().append('tr')
-    // .style('border-bottom', '2px solid grey')
 
     legend.select('tr').style('border-bottom', '2px solid grey')
 
@@ -262,7 +257,6 @@ export async function createData (categories, data) {
     let failedBills = 0
     let totalBills = 0
     data.forEach(bill => {
-      // console.log(bill)
       if (bill.billsClassified.category === (category.toLowerCase())) {
         totalBills++
         if (bill.voteRecord.yeas > bill.voteRecord.nays) {
@@ -272,10 +266,8 @@ export async function createData (categories, data) {
         }
       }
     })
-    // if (totalBills !== 0) {
     temp = { State: category, freq: { Succeeded: passedBills, Failed: failedBills }, total: totalBills }
     dataArray.push(temp)
-    // }
   })
   return dataArray
 }

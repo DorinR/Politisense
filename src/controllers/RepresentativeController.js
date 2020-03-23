@@ -1,4 +1,4 @@
-import { mergeArrays } from '../../client/src/Components/Dashboard/Utilities/CommonUsedFunctions'
+import { mergeArrays, checkIsEmptyRawData } from '../../client/src/Components/Dashboard/Utilities/CommonUsedFunctions'
 const Firestore = require('@firestore').Firestore
 
 exports.getImageData = async (req, res) => {
@@ -198,7 +198,6 @@ async function fetchIDbyRepName (parliamentNo, repName) {
         return 'nothing there 1'
       }
       snapshot.forEach(doc => {
-        // const name = doc.id
         id = doc.id
       })
 
@@ -226,7 +225,6 @@ async function fetchrolesbyID (parliamentNo, id) {
           toDate: toDate,
           type: type
         }
-        console.log('im here ' + test)
         roles.push(test)
       })
       return roles
@@ -244,8 +242,16 @@ exports.getAllRolesByRep = async (req, res) => {
       return fetchRolesByParliament(parliament, req.params.repName)
     })
   )
-  res.status(200).json({
-    success: true,
-    data: rawData
-  })
+  if (checkIsEmptyRawData(rawData)) {
+    res.status(200).json({
+      success: true,
+      data: rawData
+    })
+  } else {
+    res.status(404)
+      .json({
+        success: false,
+        message: 'no data found'
+      })
+  }
 }

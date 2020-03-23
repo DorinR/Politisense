@@ -127,7 +127,7 @@ const Budget = props => {
 
   async function fetchUserRiding (userEmail) {
     return axios
-      .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+      .get(`/api/users/${userEmail}/getUser`)
       .then(res => {
         if (res.data.success) {
           return res.data.data.riding
@@ -150,7 +150,7 @@ const Budget = props => {
   async function fetchRepresentative (riding) {
     return axios
       .get(
-                `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+                `/api/representatives/${riding}/getRepresentative`
       )
       .then(res => {
         if (res.data.success) {
@@ -181,7 +181,7 @@ const Budget = props => {
   async function fetchRepresentativeId (representative) {
     return axios
       .get(
-                `http://localhost:5000/api/representatives/${representative}/getRepresentativeId`
+                `/api/representatives/${representative}/getRepresentativeId`
       )
       .then(res => {
         if (res.data.success) {
@@ -205,7 +205,7 @@ const Budget = props => {
   async function getBudgetData (id) {
     return axios
       .get(
-                `http://localhost:5000/api/budgets/budget/${id}`
+                `/api/budgets/budget/${id}`
       )
       .then(res => {
         return res.data.data
@@ -233,10 +233,8 @@ const Budget = props => {
   useEffect(() => {
     if (budgetData.length) {
       const totalMpBudget = computeTotalBudget(budgetData[0].values)
-      console.log(totalMpBudget)
       setTotalMPBudget(formatNumber(totalMpBudget))
       const totalAvgBudget = computeTotalBudget(budgetData[1].values)
-      console.log(totalAvgBudget)
       setpercentage(roundingNumber(computePercentageMpsAvg(totalMpBudget, totalAvgBudget)))
     }
   }, [budgetData])

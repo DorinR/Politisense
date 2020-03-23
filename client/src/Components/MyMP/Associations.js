@@ -5,9 +5,8 @@ import { makeStyles } from '@material-ui/styles'
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core'
 import GroupIcon from '@material-ui/icons/Group'
 import Button from '@material-ui/core/Button'
-import { getAllRolesByRep, getRepresentativeId } from './Roles'
+import { capitalizedName, loadingTextTitle, getAllRolesByRep } from '../Dashboard/Utilities/CommonUsedFunctions'
 import DescriptionDialog from './DescriptionDialog'
-import { capitalizedName, loadingTextTitle } from '../Dashboard/Utilities/CommonUsedFunctions'
 import CountUp from 'react-countup'
 
 const useStyles = makeStyles(theme => ({
@@ -60,8 +59,6 @@ const Associations = props => {
   useEffect(() => {
     async function getData () {
       if (props.userRepresentative) {
-        const billsByRep = await getRepresentativeId(props.userRepresentative)
-        console.log(billsByRep)
         const roles = await getAllRolesByRep('association', props.userRepresentative)
         setData(roles)
       }
@@ -88,7 +85,6 @@ const Associations = props => {
             >
                             Associations
             </Typography>
-            {/* <Typography variant="h5">{data? `${data.length} associations`: 0}</Typography> */}
             <Grid item direction='row'>
               <Grid container direction='row'>
                 <CountUp style={{ fontSize: 27 }} end={data ? data.length : 0}> </CountUp>

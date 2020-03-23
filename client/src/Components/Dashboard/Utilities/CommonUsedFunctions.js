@@ -94,3 +94,112 @@ export function loadingTextdata (element) {
     return `${element.fromDate} - ${element.toDate}`
   }
 }
+
+
+export function checkIsEmptyRawData(arrs){
+  let counter = 0
+  arrs.forEach(arr =>{
+    if(arr.length != 0 && arr != null){
+      counter = counter + arr.length
+    }
+  })
+  if(counter != 0){
+    return true
+  }else {
+    return false
+  }
+}
+
+export function mergeArraysAndFilteringByType (type, ...arrays) {
+  let jointArray = []
+
+  arrays.forEach(array => {
+    jointArray = [...jointArray, ...array]
+  })
+  const test = [...new Set([...jointArray])]
+
+  const testing = test.filter((thing, index, self) =>
+      index === self.findIndex((t) => (
+          t.title === thing.title && t.group === thing.group && t.toDate === thing.toDate && t.fromDate === thing.fromDate
+      ))
+  )
+
+  if (testing.length === 0) {
+    return null
+  }
+  if (type === 'role') {
+    return testing.filter(item => item.group === 'none')
+  }
+  if (type === 'committee') {
+    return testing.filter(item => item.type === 'committee')
+  }
+  if (type === 'association') {
+    return testing.filter(item => item.group.includes('association'))
+  }
+}
+
+export async function getAllRolesByRep (type, repName) {
+  return axios
+      .get(`/api/representatives/${repName}/getAllRolesByRep`)
+      .then(res => {
+        if (res.data.success) {
+          const data = res.data.data
+          const arrays = []
+          data.forEach(arr => arrays.push(arr))
+          const mpRoles = mergeArraysAndFilteringByType(type, arrays[0], arrays[1], arrays[2], arrays[3], arrays[4], arrays[5], arrays[6], arrays[7])
+          const mpRolesSorted = sortingBasedOnDate(mpRoles)
+          return mpRolesSorted
+        }
+      })
+      .catch(console.error)
+}
+export async function getRepresentativeId (representative) {
+  return axios
+      .get(`/api/representatives/${representative}/getRepresentativeId`)
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data
+        }
+      })
+      .catch(console.error)
+}
+
+export async function getAllDesc (arr) {
+  arr.forEach(async (element) => {
+    element.desc = await getDescription(titleCase(loadingTextTitle(element)))
+  })
+  return arr
+}
+
+export function sortingBasedOnDate (arr) {
+  arr.sort((a, b) => {
+    if (a.fromDate === 0 || b.fromDate === 0) {
+      return -1
+    } else {
+      if (a.fromDate > b.fromDate) {
+        return -1
+      } else {
+        return 1
+      }
+    }
+  })
+  return arr
+}
+
+export const getDescription = async (ministry) => {
+  return axios
+      .post('api/parliament/getRoleDescription', { ministry: ministry })
+      .then(res => {
+        let desc = ''
+        if (res.data.success) {
+          desc = res.data.data.description
+        }
+        return desc
+      }).catch(console.error)
+}
+
+export function titleCase (str) {
+  const regex = /(^|\b(?!(and?|at?|the|for|to|but|by|of)\b))\w+/g
+  return str.toLowerCase()
+      .replace(regex, s => s[0].toUpperCase() + s.slice(1))
+}

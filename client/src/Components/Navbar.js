@@ -26,7 +26,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 
 export async function fetchUserRiding (userEmail) {
   return axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+    .get(`/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
         return res.data.data.riding
@@ -38,7 +38,7 @@ export async function fetchUserRiding (userEmail) {
 export async function fetchRepresentative (riding) {
   return axios
     .get(
-      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+      `/api/representatives/${riding}/getRepresentative`
     )
     .then(res => {
       if (res.data.success) {
@@ -92,7 +92,6 @@ const useStyles = makeStyles(theme => ({
 
   },
   divider1: {
-    // margin: theme.spacing(2, 0),
     backgroundColor: 'grey'
   },
   appBar: {

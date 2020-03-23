@@ -11,9 +11,8 @@ import {
 } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
-import { getAllRolesByRep, getRepresentativeId } from './Roles'
+import { loadingTextTitle, capitalizedName, getAllRolesByRep } from '../Dashboard/Utilities/CommonUsedFunctions'
 import DescriptionDialog from './DescriptionDialog'
-import { loadingTextTitle, capitalizedName } from '../Dashboard/Utilities/CommonUsedFunctions'
 import CountUp from 'react-countup'
 
 const useStyles = makeStyles(theme => ({
@@ -62,8 +61,6 @@ const Committees = props => {
   useEffect(() => {
     async function getData () {
       if (props.userRepresentative) {
-        const billsByRep = await getRepresentativeId(props.userRepresentative)
-        console.log(billsByRep)
         const roles = await getAllRolesByRep('committee', props.userRepresentative)
         if (roles.length !== 0) {
           setData(roles)
@@ -73,7 +70,6 @@ const Committees = props => {
     getData()
   }, [props.userRepresentative])
 
-  console.log(data)
   return (
     <Card
       {...rest}

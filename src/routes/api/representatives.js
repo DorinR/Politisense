@@ -34,12 +34,9 @@ router.get('/representative/representative/:name', controller.getImageData)
 // @access Public
 router.get('/:repName/getAllRolesByRep', controller.getAllRolesByRep)
 
-// getAllRolesByRep
 router.get(
   '/getAllRepsFromAllParliaments',
   controller.getAllRepsFromAllParliaments
 )
 
 module.exports = router
-
-// ${head}/getAllRolesByRep

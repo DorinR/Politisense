@@ -89,7 +89,7 @@ export default function MyMP () {
   async function fetchRepresentative (riding) {
     return axios
       .get(
-        `http://localhost:5000/api/representatives/${riding}/getRepresentative`
+        `/api/representatives/${riding}/getRepresentative`
       )
       .then(res => {
         if (res.data.success) {
@@ -164,7 +164,6 @@ export default function MyMP () {
     async function getData () {
       if (userRepIssuedBills) {
         const rows = await populateIssuedBill(userRepIssuedBills)
-        console.log(rows)
         setBarPieRows(rows)
       }
     }
@@ -187,7 +186,6 @@ export default function MyMP () {
   useEffect(() => {
     if (categoryList && representativeData) {
       const data = createDataSetRadar(categoryList, representativeData)
-      console.log(data)
       setRadarData(data)
     }
   }, [representativeData, categoryList])

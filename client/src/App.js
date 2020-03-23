@@ -15,15 +15,12 @@ import MapWrapper from './Components/Dashboard/MapWrapper'
 import Questionnaire from './Components/Questionnaire'
 import MyMP from './Components/MyMP/MyMP'
 import GeneralDashboard from './Components/Dashboard/General/GeneralDashboard'
-import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
-import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
 import clsx from 'clsx'
 import { makeStyles, useTheme } from '@material-ui/styles'
 import { useMediaQuery } from '@material-ui/core'
 import Sidebar from './Components/Navbar'
 import Topbar from './Components/Topbar'
 import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
-import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
 import IssuedBillsByCategory from './Components/MyMP/IssuedBillsByCategory'
 const useStyles = makeStyles(theme => ({
   root: {
@@ -105,12 +102,8 @@ const App = () => {
           <PrivateRoute path='/account' component={UserAccountTabs} />
           <PrivateRoute path='/general' component={GeneralDashboard} />
           <PrivateRoute path='/myMp' component={MyMP} />
-          <PrivateRoute path='/categories' component={CategoryDashboard} />
-          <PrivateRoute path='/votingHistory' component={BillHistoryTable} />
-          <PrivateRoute path='/budget' component={BudgetContainer} />
           <PrivateRoute path='/compare' component={CompareContainer} />
           <PrivateRoute path='/issuedBillsByCategory' component={IssuedBillsByCategory} />
-
         </div>
       </div>
     </div>

@@ -22,7 +22,6 @@ const useStyles = makeStyles({
 })
 
 export default function BillDialog (props) {
-  console.log(props)
   const classes = useStyles()
   const { onClose, selectedValue, open } = props
   const handleClose = () => {

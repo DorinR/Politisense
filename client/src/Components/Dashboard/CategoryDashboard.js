@@ -10,9 +10,6 @@ import { Transition } from './General/GeneralDashboard'
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '`calc(100% - 1px)%'
-    // width: `calc(100% - 20px)`,
-    // [theme.breakpoints.up('lg')]: {
-    //     height: "90%"}
   },
   content: {
     padding: 0
