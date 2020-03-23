@@ -208,7 +208,7 @@ export default function MyMP () {
                     xl={3}
                     xs={12}
                 >
-                  {categoryList && userRepresentative && userRepIssuedBills ? (
+                  {categoryList && userRepresentative ? (
                           <IssuedBillsByMP
                                            userRepIssuedBills={userRepIssuedBills}
                                            categoryList={categoryList}

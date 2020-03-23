@@ -1,11 +1,11 @@
 const Firestore = require('@firestore').Firestore
 // =========== AVG OFFICE COSTS ============
 async function fetchAverageOfficeSpending () {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const officeSpendingItems = []
 
   await db
-    .FinancialRecord()
+    .AverageFinancialPersonalExpenses(2019)
     .where('parent', '==', '8-Offices')
     .select()
     .then(snapshot => {
@@ -38,11 +38,11 @@ function computeAverageOfficeSpending (spendingItems) {
 // =========== AVG ADVERTISING COSTS ============
 
 async function fetchAverageAdvertisingSpending () {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const advertisingSpendingItems = []
 
   await db
-    .FinancialRecord()
+    .AverageFinancialPersonalExpenses(2019)
     .where('category', '==', '6-Advertising')
     .select()
     .then(snapshot => {
@@ -75,11 +75,11 @@ function computeAverageAdvertisingSpending (spendingItems) {
 // =========== AVG EMPLOYEE COSTS ============
 
 async function fetchAverageEmployeeSpending () {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const employeeSpendingItems = []
 
   await db
-    .FinancialRecord()
+    .AverageFinancialPersonalExpenses(2019)
     .where('category', '==', "1-Employees' salaries")
     .select()
     .then(snapshot => {
@@ -112,11 +112,11 @@ module.exports.computeAverageEmployeeSpending = computeAverageEmployeeSpending
 
 // =========== AVG GIFTS COSTS ============
 async function fetchAverageGiftsSpending () {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const giftsSpendingItems = []
 
   await db
-    .FinancialRecord()
+    .AverageFinancialPersonalExpenses(2019)
     .where('category', '==', '5-Gifts')
     .select()
     .then(snapshot => {
@@ -149,11 +149,11 @@ function computeAverageGiftsSpending (spendingItems) {
 // =========== AVG HOSPITALITY COSTS ============
 
 async function fetchAverageHospitalitySpending () {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const hospitalitySpendingItems = []
 
   await db
-    .FinancialRecord()
+    .AverageFinancialPersonalExpenses(2019)
     .where('category', '==', '4-Hospitality')
     .select()
     .then(snapshot => {
@@ -185,11 +185,11 @@ function computeAverageHospitalitySpending (spendingItems) {
 
 // =========== AVG PRINTING COSTS ============
 async function fetchAveragePrintingSpending () {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const printingSpendingItems = []
 
   await db
-    .FinancialRecord()
+    .AverageFinancialPersonalExpenses(2019)
     .where('parent', '==', '7-Printing')
     .select()
     .then(snapshot => {
@@ -221,11 +221,11 @@ function computeAveragePrintingSpending (spendingItems) {
 
 // =========== AVG TRAVEL COSTS ============
 async function fetchAverageTravelSpending () {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const travelSpendingItems = []
 
   await db
-    .FinancialRecord()
+    .AverageFinancialPersonalExpenses(2019)
     .where('parent', '==', '3-Travel')
     .select()
     .then(snapshot => {
@@ -259,11 +259,11 @@ function computeAverageTravelSpending (spendingItems) {
 
 // =========== MP OFFICE COSTS ============
 async function fetchOfficeSpending (repID) {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const officeSpendingItems = []
 
   await db
-    .FinancialRecord()
+    .FinancialPersonalExpenses(2019)
     .where('member', '==', repID)
     .where('parent', '==', '8-Offices')
     .select()
@@ -292,11 +292,11 @@ function computeTotalOfficeSpending (spendingItems) {
 
 // =========== MP TRAVEL COSTS ============
 async function fetchTravelSpending (repID) {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const travelSpendingItems = []
 
   await db
-    .FinancialRecord()
+    .FinancialPersonalExpenses(2019)
     .where('member', '==', repID)
     .where('parent', '==', '3-Travel')
     .select()
@@ -325,11 +325,11 @@ function computeTotalTravelSpending (spendingItems) {
 
 // =========== MP PRINTING COSTS ============
 async function fetchPrintingSpending (repID) {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const printingSpendingItems = []
 
   await db
-    .FinancialRecord()
+    .FinancialPersonalExpenses(2019)
     .where('member', '==', repID)
     .where('parent', '==', '7-Printing')
     .select()
@@ -358,11 +358,11 @@ function computeTotalPrintingSpending (spendingItems) {
 
 // =========== MP ADVERTISING COSTS ============
 async function fetchAdvertisingSpending (repID) {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const advertisingSpendingItems = []
 
   await db
-    .FinancialRecord()
+    .FinancialPersonalExpenses(2019)
     .where('member', '==', repID)
     .where('category', '==', '6-Advertising')
     .select()
@@ -391,11 +391,11 @@ function computeTotalAdvertisingSpending (spendingItems) {
 
 // =========== MP EMPLOYEE COSTS ============
 async function fetchEmployeeSpending (repID) {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const employeeSpendingItems = []
 
   await db
-    .FinancialRecord()
+    .FinancialPersonalExpenses(2019)
     .where('member', '==', repID)
     .where('category', '==', "1-Employees' salaries")
     .select()
@@ -424,11 +424,11 @@ function computeTotalEmployeeSpending (spendingItems) {
 
 // =========== MP GIFTS COSTS ============
 async function fetchGiftsSpending (repID) {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const giftsSpendingItems = []
 
   await db
-    .FinancialRecord()
+    .FinancialPersonalExpenses(2019)
     .where('member', '==', repID)
     .where('category', '==', '5-Gifts')
     .select()
@@ -458,11 +458,11 @@ function computeTotalGiftsSpending (spendingItems) {
 // =========== MP HOSPITALITY COSTS ============
 
 async function fetchHospitalitySpending (repID) {
-  const db = new Firestore()
+  const db = new Firestore(false).forParliament(43)
   const hospitalitySpendingItems = []
 
   await db
-    .FinancialRecord()
+    .FinancialPersonalExpenses(2019)
     .where('member', '==', repID)
     .where('category', '==', '4-Hospitality')
     .select()
