@@ -6,7 +6,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import InfoBubble from '../Utilities/InfoBubble'
-import TEXT_RESOURCES from '../Utilities/InfoBubbleResources'
 
 const useStyles = makeStyles({
   root: {
@@ -63,8 +62,11 @@ export default function Map () {
         </Typography>
         <span className={classes.customTooltip}>
           <InfoBubble
-            title={TEXT_RESOURCES.map.howToUseMap.title}
-            text={TEXT_RESOURCES.map.howToUseMap.body}
+            title='How To Use the Map'
+            text={
+              /* eslint-disable-next-line indent */
+            "Zooming on this map is done the same way you scroll on a webpage. Just use the clickwheel on your mouse or use two fingers on your trackpad. Click on a given riding and the map will automatically zoom-in to the appropriate level. Clicking on the 'Reset Zoom Level' button will bring the zoom level back to what it was at the beginning"
+            }
           />
         </span>
       </Container>

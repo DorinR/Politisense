@@ -1,9 +1,8 @@
 import * as d3 from 'd3'
 import * as topojson from 'topojson-client'
 
-const MARGIN = { TOP: 10, BOTTOM: 0, LEFT: 50, RIGHT: 10 }
-const WIDTH = 1200 - MARGIN.LEFT - MARGIN.RIGHT
-const HEIGHT = 650 - MARGIN.TOP - MARGIN.BOTTOM
+const WIDTH = 1200
+const HEIGHT = 650
 const ZOOM = { MIN: 1, MAX: 300 }
 
 export default class InteractiveMap {
@@ -64,7 +63,7 @@ export default class InteractiveMap {
         .style('fill', 'grey')
         .on('click', vis.clicked)
         .attr('cursor', 'pointer')
-        .on('mouseover', function (d, i) {
+        .on('mouseover', (d, i) => {
           d3.select(this)
             .style('fill', 'red')
             .style('opacity', 1)
