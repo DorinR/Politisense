@@ -1,41 +1,41 @@
 import * as d3 from 'd3'
 
-function dashboard (element, fData, body) {
+function dashboard (element, data) {
   const barColor = '#00bcd4'
 
-  fData.forEach(function (d) { return d.total })
+  data.forEach(function (d) { return d.total })
 
   function histoGram (fD) {
     const hG = {}
-    const hGDim = { t: 30, r: 5, b: 30, l: 20 }
-    hGDim.w = 490 - hGDim.l - hGDim.r
-    hGDim.h = 250 - hGDim.t - hGDim.b
+    const histoGramDimensions = { top: 30, right: 5, back: 30, left: 20 }
+    histoGramDimensions.width = 490 - histoGramDimensions.left - histoGramDimensions.right
+    histoGramDimensions.height = 250 - histoGramDimensions.top - histoGramDimensions.back
 
     // create svg for histogram.
-    const hGsvg = d3.select(element).append('svg')
-      .attr('width', hGDim.w + hGDim.l + hGDim.r)
-      .attr('height', hGDim.h + hGDim.t + hGDim.b)
+    const histoGramSvg = d3.select(element).append('svg')
+      .attr('width', histoGramDimensions.width + histoGramDimensions.left + histoGramDimensions.right)
+      .attr('height', histoGramDimensions.height + histoGramDimensions.top + histoGramDimensions.back)
       .append('g')
-      .attr('transform', 'translate(' + hGDim.l + ',' + hGDim.t + ')')
-      .attr('viewBox', `0 0 (${hGDim.w}/2) (${hGDim.h}/2) `)
+      .attr('transform', 'translate(' + histoGramDimensions.left + ',' + histoGramDimensions.top + ')')
+      .attr('viewBox', `0 0 (${histoGramDimensions.width}/2) (${histoGramDimensions.height}/2) `)
     // create function for x-axis mapping.
     const x = d3.scaleBand()
       .domain(fD.map(d => d[0]))
-      .range([0, hGDim.w])
+      .range([0, histoGramDimensions.width])
       .padding(0.6)
 
     // Add x-axis to the histogram svg.
-    hGsvg.append('g').attr('class', 'x axis')
-      .attr('transform', 'translate(0,' + hGDim.h + ')')
+    histoGramSvg.append('g').attr('class', 'x axis')
+      .attr('transform', 'translate(0,' + histoGramDimensions.height + ')')
       .call(d3.axisBottom(x))
       .style('font-size', '12px')
 
     // Create function for y-axis map.
-    const y = d3.scaleLinear().range([hGDim.h, 0])
+    const y = d3.scaleLinear().range([histoGramDimensions.height, 0])
       .domain([0, d3.max(fD, function (d) { return d[1] })])
 
     // Create bars for histogram to contain rectangles and freq labels.
-    const bars = hGsvg.selectAll('.bar').data(fD).enter()
+    const bars = histoGramSvg.selectAll('.bar').data(fD).enter()
       .append('g').attr('class', 'bar')
 
     // create the rectangles.
@@ -43,96 +43,97 @@ function dashboard (element, fData, body) {
       .attr('x', function (d) { return x(d[0]) })
       .attr('y', function (d) { return y(d[1]) })
       .attr('width', x.bandwidth())
-      .attr('height', function (d) { return hGDim.h - y(d[1]) })
+      .attr('height', (d) => { return histoGramDimensions.height - y(d[1]) })
       .attr('fill', barColor)
-      .on('mouseover', mouseover)// mouseover is defined below.
-      .on('mouseout', mouseout)// mouseout is defined below.
+      .on('mouseover', (d) => mouseover(d))// mouseover is defined below.
+      .on('mouseout', (d) => mouseout(d))// mouseout is defined below.
 
     // Create the frequency labels above the rectangles.
-    bars.append('text').text(function (d) { return d3.format(',')(d[1]) })
+    bars.append('text').text((d) => { return d3.format(',')(d[1]) })
       .attr('x', function (d) { return x(d[0]) + x.bandwidth() / 2 })
       .attr('y', function (d) { return y(d[1]) - 5 })
       .attr('text-anchor', 'middle')
 
-    function mouseover (d) {
-      const st = fData.filter(function (s) { return s.State === d[0] })[0]
-      const nD = d3.keys(st.freq).map(function (s) { return { type: s, freq: st.freq[s] } })
+    const mouseover = (d) => {
+      const state = data.filter((s) => { return s.State === d[0] })[0]
+      const node = d3.keys(state.freq).map(function (s) { return { type: s, freq: state.freq[s] } })
 
       // call update functions of pie-chart and legend.
-      pC.update(nD)
-      leg.update(nD)
+      interactivePieChart.update(node)
+      table.update(node)
     }
 
-    function mouseout (d) { // utility function to be called on mouseout.
+    const mouseout = (d) => { // utility function to be called on mouseout.
       // reset the pie-chart and legend.
-      pC.update(tF)
-      leg.update(tF)
+      interactivePieChart.update(totalFreqForAllStates)
+      table.update(totalFreqForAllStates)
     }
 
     // create function to update the bars. This will be used by pie-chart.
-    hG.update = function (nD, color) {
+    hG.update = (node, color) => {
       // update the domain of the y-axis map to reflect change in frequencies.
-      y.domain([0, d3.max(nD, function (d) { return d[1] })])
+      y.domain([0, d3.max(node, function (d) { return d[1] })])
 
       // Attach the new data to the bars.
-      const bars = hGsvg.selectAll('.bar').data(nD)
+      const bars = histoGramSvg.selectAll('.bar').data(node)
 
       // transition the height and color of rectangles.
       bars.select('rect').transition().duration(500)
         .attr('y', function (d) { return y(d[1]) })
-        .attr('height', function (d) { return hGDim.h - y(d[1]) })
+        .attr('height', function (d) { return histoGramDimensions.height - y(d[1]) })
         .attr('fill', color)
 
       // transition the frequency labels location and change value.
       bars.select('text').transition().duration(500)
-        .text(function (d) { return d3.format(',')(d[1]) })
-        .attr('y', function (d) { return y(d[1]) - 5 })
+        .text((d) => { return d3.format(',')(d[1]) })
+        .attr('y', (d) => { return y(d[1]) - 5 })
     }
     return hG
   }
 
   // function to handle pieChart.
   function pieChart (pD) {
-    const pC = {}
+    const pieChartObj = {}
     // const margin =
-    const pieDim = { w: 200, h: 200 }
-    pieDim.r = Math.min(pieDim.w, pieDim.h) / 2
+    const pieDimensions = { width: 200, height: 200 }
+    pieDimensions.radius = Math.min(pieDimensions.width, pieDimensions.height) / 2
 
-    const tranformYAxis = (pieDim.h / 2) - 10
+    const tranformYAxis = (pieDimensions.height / 2) - 10
     // create svg for pie chart.
     const piesvg = d3.select(element).append('svg')
-      .attr('width', pieDim.w).attr('height', pieDim.h)
+      .attr('width', pieDimensions.width).attr('height', pieDimensions.height)
       .append('g')
-      .attr('transform', 'translate(' + ((pieDim.w) / 2) + ',' + tranformYAxis + ')')
+      .attr('transform', 'translate(' + ((pieDimensions.width) / 2) + ',' + tranformYAxis + ')')
 
     // create function to draw the arcs of the pie slices.
-    const arc = d3.arc().outerRadius(pieDim.r - 10).innerRadius(0)
+    const arc = d3.arc().outerRadius(pieDimensions.radius - 10).innerRadius(0)
 
     // create a function to compute the pie slice angles.
-    const pie = d3.pie().value(function (d) { return d.freq })
+    const pie = d3.pie().value((d) => { return d.freq })
 
     // Draw the pie slices.
     piesvg.selectAll('path').data(pie(pD)).enter().append('path').attr('d', arc)
       .each(function (d) { this._current = d })
-      .style('fill', function (d) { return segColor(d.data.type) })
-      .on('mouseover', mouseover).on('mouseout', mouseout)
+      .style('fill', (d) => { return segColor(d.data.type) })
+      .on('mouseover', (d) => mouseover(d))
+      .on('mouseout', (d) => mouseout(d))
 
     // create function to update pie-chart. This will be used by histogram.
-    pC.update = function (nD) {
-      piesvg.selectAll('path').data(pie(nD)).transition().duration(500)
+    pieChartObj.update = function (node) {
+      piesvg.selectAll('path').data(pie(node)).transition().duration(500)
         .attrTween('d', arcTween)
     }
     // Utility function to be called on mouseover a pie slice.
-    function mouseover (d) {
+    const mouseover = (d) => {
       // call the update function of histogram with new data.
-      hG.update(fData.map(function (v) {
+      barChart.update(data.map((v) => {
         return [v.State, v.freq[d.data.type]]
       }), segColor(d.data.type))
     }
     // Utility function to be called on mouseout a pie slice.
-    function mouseout (d) {
+    const mouseout = (d) => {
       // call the update function of histogram with all data.
-      hG.update(fData.map(function (v) {
+      barChart.update(data.map(function (v) {
         return [v.State, v.total]
       }), barColor)
     }
@@ -141,13 +142,13 @@ function dashboard (element, fData, body) {
     function arcTween (a) {
       const i = d3.interpolate(this._current, a)
       this._current = i(0)
-      return function (t) { return arc(i(t)) }
+      return (t) => { return arc(i(t)) }
     }
-    return pC
+    return pieChartObj
   }
 
   // function to handle legend.
-  function legend (lD) {
+  function legend (data) {
     const leg = {}
 
     // create table for legend.
@@ -168,13 +169,13 @@ function dashboard (element, fData, body) {
       .style('margin-left', '20')
 
     // create one row per segment.
-    const tr = legend.append('tbody')
-      .selectAll('tr').data(lD).enter().append('tr')
+    const tableRow = legend.append('tbody')
+      .selectAll('tr').data(data).enter().append('tr')
 
     legend.select('tr').style('border-bottom', '2px solid grey')
 
     // create the first column for each segment.
-    tr.append('td').append('svg')
+    tableRow.append('td').append('svg')
       .attr('width', '10')
       .attr('height', '10')
       .append('rect')
@@ -182,21 +183,21 @@ function dashboard (element, fData, body) {
       .attr('fill', function (d) { return segColor(d.type) })
 
     // create the second column for each segment.
-    tr.append('td').text(function (d) { return d.type })
+    tableRow.append('td').text(function (d) { return d.type })
       .style('font-size', '13px')
       .style('padding', '6px 5px')
       .style('vertical-align', 'bottom')
 
     // create the third column for each segment.
-    tr.append('td').attr('class', 'legendFreq')
-      .text(function (d) { return d3.format(',')(d.freq) + ' bills' })
+    tableRow.append('td').attr('class', 'legendFreq')
+      .text((d) => { return d3.format(',')(d.freq) + ' bills' })
       .style('font-size', '12.5px')
       .style('align', 'right')
       .style('width', '70px')
 
     // create the fourth column for each segment.
-    tr.append('td').attr('class', 'legendPerc')
-      .text(function (d) { return (getLegend(d, lD)) + '%' })
+    tableRow.append('td').attr('class', 'legendPerc')
+      .text((d) => { return (getLegend(d, data)) + '%' })
       .style('font-size', '13px')
       .style('align', 'center')
       .style('width', '40px')
@@ -207,14 +208,14 @@ function dashboard (element, fData, body) {
       const l = legend.select('tbody').selectAll('tr').data(nD)
 
       // update the frequencies.
-      l.select('.legendFreq').text(function (d) { return d3.format(',')(d.freq) + ' bills' })
+      l.select('.legendFreq').text((d) => { return d3.format(',')(d.freq) + ' bills' })
         .style('font-size', '12.5px')
         .style('align', 'right')
         .style('width', '70px')
 
       // update the percentage column.
       l.select('.legendPerc')
-        .text(function (d) { return getLegend(d, nD) + '%' })
+        .text((d) => { return getLegend(d, nD) + '%' })
         .style('align', 'right')
         .style('width', '40px')
     }
@@ -232,15 +233,15 @@ function dashboard (element, fData, body) {
   }
 
   // calculate total frequency by segment for all state.
-  const tF = ['Succeeded', 'Failed'].map(function (d) {
-    return { type: d, freq: d3.sum(fData.map(function (t) { return t.freq[d] })) }
+  const totalFreqForAllStates = ['Succeeded', 'Failed'].map((d) => {
+    return { type: d, freq: d3.sum(data.map(function (t) { return t.freq[d] })) }
   })
 
   // calculate total frequency by state for all segment.
-  const sF = fData.map(function (d) { return [d.State, d.total] })
-  const hG = histoGram(sF) // create the histogram.
-  const pC = pieChart(tF) // create the pie-chart.
-  const leg = legend(tF) // create the legend.
+  const totalFreqByStateForAllSegment = data.map(function (d) { return [d.State, d.total] })
+  const barChart = histoGram(totalFreqByStateForAllSegment) // create the histogram.
+  const interactivePieChart = pieChart(totalFreqForAllStates) // create the pie-chart.
+  const table = legend(totalFreqForAllStates) // create the legend.
 }
 export default class BarPieChart {
   constructor (element, data, categories, body) {

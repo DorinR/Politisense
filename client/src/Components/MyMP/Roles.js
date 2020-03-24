@@ -63,7 +63,7 @@ const Roles = props => {
     async function getData () {
       if (props.userRepresentative) {
         const roles = await getAllRolesByRep('role', props.userRepresentative)
-        if (roles && roles.length !== 0 && roles !== null) {
+        if (Array.isArray(roles) && roles.length !== 0) {
           const rolesWithDesc = await getAllDesc(roles)
           setData(rolesWithDesc)
         }

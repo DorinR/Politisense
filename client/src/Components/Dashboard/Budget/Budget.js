@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
@@ -224,12 +223,13 @@ const Budget = props => {
         label: 'Average Among MPs',
         values: data.avg
       }
-      setBudgetData([mps, avgs])
+      const labels = data.labels
+      setBudgetData([mps, avgs, labels])
     }
   }, [data, labelMP])
 
-  const [totalMPBudget, setTotalMPBudget] = useState(0)
-  const [percentage, setpercentage] = useState(0)
+  const [totalMPBudget, setTotalMPBudget] = useState(null)
+  const [percentage, setpercentage] = useState(null)
   useEffect(() => {
     if (budgetData.length) {
       const totalMpBudget = computeTotalBudget(budgetData[0].values)
@@ -320,25 +320,24 @@ const Budget = props => {
                         <Grid item>
                           {percentage
                             ? (Math.sign(percentage) === -1
-                              ? <div className={classes.test}>
-                                <ArrowDownwardIcon className={classes.differenceIcon} />
-                                <Typography
-                                  className={classes.differenceValue}
-                                  variant='body2'
-                                >
-                                  {percentage ? Math.abs(percentage) + '%' : '0'}
-                                </Typography>
+                              ? (
+                                <div className={classes.test}>
+                                  <ArrowDownwardIcon className={classes.differenceIcon} />
+                                  <Typography
+                                    className={classes.differenceValue}
+                                    variant='body2'
+                                  >
+                                    {percentage ? Math.abs(percentage) + '%' : '0'}
+                                  </Typography>
                                 </div>
-                              : <div className={classes.test}>
-                                <ArrowUpwardIcon className={classes.positiveIcon} />
-                                <Typography
-                                  className={classes.positiveIcon}
-                                  variant='body2'
-                                >
-                                  {percentage ? percentage + '%' : '0'}
-                                </Typography>
-                                </div>)
-                            : ''}
+                              )
+                              : (
+                                <div className={classes.test}>
+                                  <ArrowUpwardIcon className={classes.positiveIcon} />
+                                  <Typography className={classes.positiveIcon} variant='body2'>{percentage ? percentage + '%' : '0'}</Typography>
+                                </div>
+                              )
+                            ) : ''}
                         </Grid>
                         <Typography
                           style={{ fontSize: 16, marginLeft: 5 }}
@@ -366,11 +365,11 @@ Budget.propTypes = {
 export default Budget
 
 export function computeTotalBudget (items) {
-  let counter = 0
-  items.forEach(item => {
-    counter = counter + item
-  })
+  const counter = items.reduce(sum)
   return counter
+}
+function sum (total, num) {
+  return total + num
 }
 export function formatNumber (num) {
   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')

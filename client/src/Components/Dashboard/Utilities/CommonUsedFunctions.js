@@ -1,4 +1,3 @@
-/* eslint-disable */
 import axios from 'axios'
 
 export async function fetchCategories () {
@@ -69,9 +68,7 @@ export function loadingTextTitle (element) {
       title = element.title
       break
     case 'association':
-      title = element.group
-      const n = title.indexOf('parliamentary')
-      title = title.slice(0, n)
+      title = element.group.slice(0, element.title.indexOf('parliamentary'))
       break
     case 'committee':
       title = element.group
@@ -95,17 +92,16 @@ export function loadingTextdata (element) {
   }
 }
 
-
-export function checkIsEmptyRawData(arrs){
+export function checkIsEmptyRawData (arrs) {
   let counter = 0
-  arrs.forEach(arr =>{
-    if(arr.length != 0 && arr != null){
+  arrs.forEach(arr => {
+    if (arr.length !== 0 && arr !== null) {
       counter = counter + arr.length
     }
   })
-  if(counter != 0){
+  if (counter !== 0) {
     return true
-  }else {
+  } else {
     return false
   }
 }
@@ -119,9 +115,9 @@ export function mergeArraysAndFilteringByType (type, ...arrays) {
   const test = [...new Set([...jointArray])]
 
   const testing = test.filter((thing, index, self) =>
-      index === self.findIndex((t) => (
-          t.title === thing.title && t.group === thing.group && t.toDate === thing.toDate && t.fromDate === thing.fromDate
-      ))
+    index === self.findIndex((t) => (
+      t.title === thing.title && t.group === thing.group && t.toDate === thing.toDate && t.fromDate === thing.fromDate
+    ))
   )
 
   if (testing.length === 0) {
@@ -140,28 +136,18 @@ export function mergeArraysAndFilteringByType (type, ...arrays) {
 
 export async function getAllRolesByRep (type, repName) {
   return axios
-      .get(`/api/representatives/${repName}/getAllRolesByRep`)
-      .then(res => {
-        if (res.data.success) {
-          const data = res.data.data
-          const arrays = []
-          data.forEach(arr => arrays.push(arr))
-          const mpRoles = mergeArraysAndFilteringByType(type, arrays[0], arrays[1], arrays[2], arrays[3], arrays[4], arrays[5], arrays[6], arrays[7])
-          const mpRolesSorted = sortingBasedOnDate(mpRoles)
-          return mpRolesSorted
-        }
-      })
-      .catch(console.error)
-}
-export async function getRepresentativeId (representative) {
-  return axios
-      .get(`/api/representatives/${representative}/getRepresentativeId`)
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data
-        }
-      })
-      .catch(console.error)
+    .get(`/api/representatives/${repName}/getAllRolesByRep`)
+    .then(res => {
+      if (res.data.success) {
+        const data = res.data.data
+        const arrays = []
+        data.forEach(arr => arrays.push(arr))
+        const mpRoles = mergeArraysAndFilteringByType(type, ...arrays)
+        const mpRolesSorted = sortingBasedOnDate(mpRoles)
+        return mpRolesSorted
+      }
+    })
+    .catch(console.error)
 }
 
 export async function getAllDesc (arr) {
@@ -188,18 +174,18 @@ export function sortingBasedOnDate (arr) {
 
 export const getDescription = async (ministry) => {
   return axios
-      .post('api/parliament/getRoleDescription', { ministry: ministry })
-      .then(res => {
-        let desc = ''
-        if (res.data.success) {
-          desc = res.data.data.description
-        }
-        return desc
-      }).catch(console.error)
+    .post('api/parliament/getRoleDescription', { ministry: ministry })
+    .then(res => {
+      let desc = ''
+      if (res.data.success) {
+        desc = res.data.data.description
+      }
+      return desc
+    }).catch(console.error)
 }
 
 export function titleCase (str) {
   const regex = /(^|\b(?!(and?|at?|the|for|to|but|by|of)\b))\w+/g
   return str.toLowerCase()
-      .replace(regex, s => s[0].toUpperCase() + s.slice(1))
+    .replace(regex, s => s[0].toUpperCase() + s.slice(1))
 }

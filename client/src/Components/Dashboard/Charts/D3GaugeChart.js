@@ -3,29 +3,28 @@ import { Component } from 'react'
 let width = null
 let arcSize = null
 let innerRadius = null
-const pi = Math.PI
 
 export default class D3GaugeChart extends Component {
   constructor (element, data) {
     super(element)
     const svg = d3.select(element).append('svg')
     drawChart()
-    const arcs = data.map(function (obj, i) {
+    const arcs = data.map((obj, i) => {
       return d3.arc()
         .innerRadius(i * arcSize + innerRadius)
         .outerRadius((i + 1) * arcSize - (width / 100) + innerRadius)
         .cornerRadius(20)
     })
-    const arcsGrey = data.map(function (obj, i) {
+    const arcsGrey = data.map((obj, i) => {
       return d3.arc()
         .startAngle(0)
-        .endAngle(3 * pi / 2)
+        .endAngle(3 * Math.PI / 2)
         .innerRadius(i * arcSize + innerRadius)
         .outerRadius((i + 1) * arcSize - (width / 100) + innerRadius)
         .cornerRadius(20)
     })
 
-    const pieData = data.map(function (obj, i) {
+    const pieData = data.map((obj, i) => {
       return [
         { value: obj.value * 0.75, arc: arcs[i], object: obj },
         { value: (100 - obj.value) * 0.75, arc: arcsGrey[i], object: obj },
@@ -33,7 +32,7 @@ export default class D3GaugeChart extends Component {
     })
     const pie = d3.pie()
       .sort(null)
-      .value(function (d) {
+      .value((d) => {
         return d.value
       })
     const g = svg.selectAll('g').data(pieData).enter()
@@ -45,17 +44,17 @@ export default class D3GaugeChart extends Component {
       .classed('textClass', true)
       .attr('transform', 'translate(' + ((width / 2) - 25) + ',' + width / 2 + ') rotate(180)')
 
-    g.selectAll('path').data(function (d) {
+    g.selectAll('path').data((d) => {
       return pie(d)
     }).enter().append('path')
-      .attr('id', function (d, i) {
+      .attr('id', (d, i) => {
         if (i === 1) {
           return 'Text' + d.data.object.label
         }
       })
-      .attr('d', function (d) {
+      .attr('d', (d) => {
         return d.data.arc(d)
-      }).attr('fill', function (d, i) {
+      }).attr('fill', (d, i) => {
         return i === 0 ? d.data.object.color : i === 1 ? '#dedede' : 'none'
       })
       .style('opacity', (d, i) => {
@@ -63,8 +62,7 @@ export default class D3GaugeChart extends Component {
       })
 
     svg.selectAll('g').each(function (d, index) {
-      const el = d3.select(this)
-      el.selectAll('path').each(function (r, i) {
+      d3.select(this).selectAll('path').each((r, i) => {
         if (i === 1) {
           r.data.arc.centroid({
             startAngle: r.startAngle + 0.05,
@@ -74,7 +72,7 @@ export default class D3GaugeChart extends Component {
             .attr('font-size', ((5 * width) / 100))
             .attr('dominant-baseline', 'central')
             .append('textPath')
-            .attr('textLength', function (d, i) {
+            .attr('textLength', (d, i) => {
               return 0
             })
         }
@@ -90,20 +88,23 @@ export default class D3GaugeChart extends Component {
             .attr('transform', 'translate(' + (centroidText[0] - ((1.5 * width) / 100)) + ',' + (centroidText[1] + ') rotate(' + (180) + ')'))
             .attr('dominant-baseline', 'central')
         }
-      }).on('mouseover', function (d) {
-        g.append('text')
-          .attr('class', 'test')
-          .attr('transform', ' rotate(' + (180) + ')')
-          .attr('text-anchor', 'middle')
-          .attr('font-size', '1.4em')
-          .attr('y', 10)
-          .text(`${d.data.object.value}%`)
-          .style('display', 'block')
-      })
-        .on('mouseout', function (d) {
-          d3.selectAll('.test').remove()
-        })
+      }).on('mouseover', (d) => mouseover(d))
+        .on('mouseout', (d) => mouseout(d))
     })
+    const mouseover = (d) => {
+      g.append('text')
+        .attr('class', 'label')
+        .attr('transform', ' rotate(' + (180) + ')')
+        .attr('text-anchor', 'middle')
+        .attr('font-size', '1.4em')
+        .attr('y', 10)
+        .text(`${d.data.object.value}%`)
+        .style('display', 'block')
+    }
+
+    const mouseout = () => {
+      d3.selectAll('.label').remove()
+    }
     function drawChart () {
       // reset the width
       if (data.length > 3) {

@@ -3,7 +3,6 @@ const Firestore = require('@firestore').Firestore
 async function fetchAverageOfficeSpending () {
   const db = new Firestore(false).forParliament(43)
   const officeSpendingItems = []
-
   await db
     .AverageFinancialPersonalExpenses(2019)
     .where('parent', '==', '8-Offices')
@@ -255,6 +254,42 @@ function computeAverageTravelSpending (spendingItems) {
   }
 }
 
+// =========== AVG Service Contracts ============
+async function fetchAverageServiceContractsSpending () {
+  const db = new Firestore(false).forParliament(43)
+  const travelSpendingItems = []
+
+  await db
+    .AverageFinancialPersonalExpenses(2019)
+    .where('category', '==', '2-Service Contracts')
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.log('No matching documents.')
+        return
+      }
+      snapshot.forEach(doc => {
+        travelSpendingItems.push(doc.data())
+      })
+    })
+    .catch(err => {
+      console.log('Error getting documents', err)
+    })
+  return travelSpendingItems
+}
+
+function computeAverageServiceContractsSpending (spendingItems) {
+  let total = 0
+  spendingItems.forEach(item => {
+    total += item.amount
+  })
+  if (total >= 0 && !isNaN(total)) {
+    return (total / spendingItems.length) * 7
+  } else {
+    return null
+  }
+}
+
 // =========== MP FULL COSTS ============
 
 // =========== MP OFFICE COSTS ============
@@ -489,6 +524,40 @@ function computeTotalHospitalitySpending (spendingItems) {
   return total
 }
 
+// =========== MP HOSPITALITY COSTS ============
+
+async function fetchServiceContractsSpending (repID) {
+  const db = new Firestore(false).forParliament(43)
+  const hospitalitySpendingItems = []
+
+  await db
+    .FinancialPersonalExpenses(2019)
+    .where('member', '==', repID)
+    .where('category', '==', '2-Service Contracts')
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.log('No matching documents.')
+        return
+      }
+      snapshot.forEach(doc => {
+        hospitalitySpendingItems.push(doc.data())
+      })
+    })
+    .catch(err => {
+      console.log('Error getting documents', err)
+    })
+  return hospitalitySpendingItems
+}
+
+function computeServiceContractsSpending (spendingItems) {
+  let total = 0
+  spendingItems.forEach(item => {
+    total += item.amount
+  })
+  return total
+}
+
 exports.budgetData = async (req, res) => {
   const representativeId = req.params.id
   if (!representativeId) {
@@ -516,7 +585,10 @@ exports.budgetData = async (req, res) => {
     fetchAverageHospitalitySpending(),
     fetchAverageOfficeSpending(),
     fetchAveragePrintingSpending(),
-    fetchAverageTravelSpending()
+    fetchAverageTravelSpending(),
+    fetchAverageServiceContractsSpending(),
+    fetchServiceContractsSpending(representativeId)
+
   ])
   const data = {}
   data.mp = []
@@ -527,6 +599,7 @@ exports.budgetData = async (req, res) => {
   data.mp[4] = Math.round(computeTotalOfficeSpending(rawData[4]))
   data.mp[5] = Math.round(computeTotalPrintingSpending(rawData[5]))
   data.mp[6] = Math.round(computeTotalTravelSpending(rawData[6]))
+  data.mp[7] = Math.round(computeServiceContractsSpending(rawData[15]))
 
   data.avg = []
   data.avg[0] = Math.round(computeAverageEmployeeSpending(rawData[7]))
@@ -536,6 +609,10 @@ exports.budgetData = async (req, res) => {
   data.avg[4] = Math.round(computeAverageOfficeSpending(rawData[11]))
   data.avg[5] = Math.round(computeAveragePrintingSpending(rawData[12]))
   data.avg[6] = Math.round(computeAverageTravelSpending(rawData[13]))
+  data.avg[7] = Math.round(computeAverageServiceContractsSpending(rawData[14]))
+
+  data.labels = ['Employees', 'Advertising', 'Gifts', 'Hospitality', 'Offices', 'Printing', 'Travel', 'Service Contracts']
+
   res.status(200).json({
     success: true,
     data: data

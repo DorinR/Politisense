@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
@@ -103,11 +102,7 @@ const MpProfile = props => {
         {capitalizedName(name)}
       </Typography>
       {riding && riding.length > 22
-        ? <div className={classes.containerLongRidingName}>
-          <Typography className={classes.fontColorTypography} variant='caption'>Represents</Typography>
-          <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(riding)}</Typography>
-          </div>
-        : <Typography className={classes.fontColorTypography} variant='caption'>{'Represents: ' + capitalizedName(riding)}</Typography>}
+        ? (<div className={classes.containerLongRidingName}><Typography className={classes.fontColorTypography} variant='caption'>Represents</Typography><Typography className={classes.longRidingName} variant='caption'>{capitalizedName(riding)}</Typography></div>) : (<Typography className={classes.fontColorTypography} variant='caption'>{'Represents: ' + capitalizedName(riding)}</Typography>)}
 
       <Typography className={classes.fontColorTypography} variant='caption'>{'Political Party: ' + capitalizedName(politicalParty)}</Typography>
       <Typography className={classes.fontColorTypography} variant='caption'>{'Total Population: '} {riding ? (<RidingPopulation riding={riding} />) : 'N/A'}</Typography>

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
@@ -10,7 +9,7 @@ import {
 import DescriptionDialog from './DescriptionDialog'
 import clsx from 'clsx'
 import WorkIcon from '@material-ui/icons/Work'
-import { capitalizedName} from "../Dashboard/Utilities/CommonUsedFunctions";
+import { capitalizedName } from '../Dashboard/Utilities/CommonUsedFunctions'
 import CountUp from 'react-countup'
 import { Link } from 'react-router-dom'
 
@@ -49,7 +48,11 @@ const IssuedBillsByMP = props => {
   const classes = useStyles()
   const { className, ...rest } = props
   const [open, setOpen] = React.useState(false)
-
+  const content = {
+    title: 'Issued Bills By MP',
+    body: 'Issued Bills By Mp are the bills that that Mp sponsered and created about certain topic. ' +
+        'It is an indication how active he or she is in the parliament'
+  }
   const handleClose = () => {
     setOpen(false)
   }
@@ -100,39 +103,37 @@ const IssuedBillsByMP = props => {
               </Typography>
             </li>
             {props.userRepIssuedBills && props.userRepIssuedBills.length !== 0 && props.userRepIssuedBills !== null && props.rows
-              ? <Link
-                to={{
-                  pathname: '/issuedBillsByCategory',
-                  aboutProps: {
-                    userRepresentative: props.userRepresentative,
-                    rows: props.rows,
-                    userRepIssuedBills: props.userRepIssuedBills,
-                    categoryList: props.categoryList
-                  }
-                }} className={classes.routerLink} style={{ textDecoration: 'none' }}
-              >
-                <Button color='primary' size='medium' style={{ fontSize: 10 }}>
+              ? (
+                <Link
+                  to={{
+                    pathname: '/issuedBillsByCategory',
+                    aboutProps: {
+                      userRepresentative: props.userRepresentative,
+                      rows: props.rows,
+                      userRepIssuedBills: props.userRepIssuedBills,
+                      categoryList: props.categoryList
+                    }
+                  }} className={classes.routerLink} style={{ textDecoration: 'none' }}
+                >
+                  <Button color='primary' size='medium' style={{ fontSize: 10 }}>
                              details
-                </Button>
-                </Link>
+                  </Button>
+                </Link>)
               : ''}
           </div>
         </Grid>
       </CardContent>
       {props.userRepIssuedBills && props.rows
-        ? <DescriptionDialog
-          open={open}
-          onClose={handleClose}
-          explaination={{
-            title: 'Issued Bills By MP',
-            body: 'Issued Bills By Mp are the bills that that Mp sponsered and created about certain topic. ' +
-                                                                   'It is an indication how active he or she is in the parliament'
-          }}
-          d3Container
-          userRepIssuedBills={props.userRepIssuedBills}
-          categoryList={props.categoryList}
-          rows={props.rows ? props.rows : []}
-        /> : <div />}
+        ? (
+          <DescriptionDialog
+            open={open}
+            onClose={handleClose}
+            explaination={content}
+            d3Container
+            userRepIssuedBills={props.userRepIssuedBills}
+            categoryList={props.categoryList}
+            rows={props.rows ? props.rows : []}
+          />) : <div />}
 
     </Card>
 

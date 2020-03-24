@@ -38,7 +38,6 @@ const useStyles = makeStyles(theme => ({
   },
   card: {
     height: 350
-    // height: "100%"
   },
   search: {
     marginBottom: '30px',
@@ -108,7 +107,7 @@ export async function getMinisters () {
       }
       return result
     })
-    .catch(err => console.error(err))
+    .catch(console.error)
 }
 
 export async function getPartyInfo () {

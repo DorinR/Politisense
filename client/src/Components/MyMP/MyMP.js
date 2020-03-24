@@ -157,13 +157,9 @@ export default function MyMP () {
   }, [userRepresentative])
 
   useEffect(() => {
-    async function populateIssuedBill (userRepIssuedBills) {
-      const dataForTable = await createDataPieBarTable(categoryList, userRepIssuedBills)
-      return dataForTable
-    }
     async function getData () {
       if (userRepIssuedBills) {
-        const rows = await populateIssuedBill(userRepIssuedBills)
+        const rows = await createDataPieBarTable(categoryList, userRepIssuedBills)
         setBarPieRows(rows)
       }
     }
@@ -173,9 +169,8 @@ export default function MyMP () {
   const [donutData, setDonutData] = React.useState(null)
   useEffect(() => {
     async function getDataForDonutD3 () {
-      let data = []
       if (allMPsFromAllParliaments && representativeData) {
-        data = createDataSetDonut(allMPsFromAllParliaments, representativeData)
+        const data = createDataSetDonut(allMPsFromAllParliaments, representativeData)
         setDonutData(data)
       }
     }
@@ -405,7 +400,7 @@ export function createDataPieBarTable(categories, data) {
   categories.forEach(category => {
     data.forEach(bill => {
       if (bill.billsClassified.category === (category.toLowerCase())) {
-        pushToArray(billsForSpecificCategory,bill,category)
+        pushToArrayUniqueBillsForPieBar(billsForSpecificCategory,bill,category)
       }
     })
   })
@@ -431,8 +426,7 @@ export function roundUpToNearestInteger(num){
   return (10 - num % 10) + num;
 }
 
-export function pushToArray(arr, obj,category) {
-  if(obj.billsClassified){
+export function pushToArrayUniqueBillsForPieBar(arr, obj,category) {
     if(arr.length !== 0 ){
       const index = arr.findIndex((e) => e.bill.billsClassified.number === obj.billsClassified.number);
       if (index === -1 ) {
@@ -454,39 +448,40 @@ export function pushToArray(arr, obj,category) {
         arr.push({bill: obj, category: [category], status: 'Failed'})
       }
     }
-  }else{
-    if(arr.length !== 0 ){
-      const index = arr.findIndex((e) => e.bill.billData.number === obj.billData.number);
-      if (index === -1 ) {
-        if (obj.voteRecord.yea) {
-          arr.push({bill: obj, category: [category], status: 'Yea'})
-        } else {
-          arr.push({bill: obj, category: [category], status: 'Nay'})
-        }
-
-      } else {
-        let currentCategoryList = arr[index].category
-        let modifiedCategoryList = currentCategoryList.concat([category])
-        let uniqueCategoryList = [...new Set(modifiedCategoryList)]
-
-        arr[index].category = uniqueCategoryList
-      }
-    }else {
+}
+export function pushToArrayUniqueBillsForRadar(arr, obj,category) {
+  if(arr.length !== 0 ){
+    const index = arr.findIndex((e) => e.bill.billData.number === obj.billData.number);
+    if (index === -1 ) {
       if (obj.voteRecord.yea) {
         arr.push({bill: obj, category: [category], status: 'Yea'})
       } else {
         arr.push({bill: obj, category: [category], status: 'Nay'})
       }
+
+    } else {
+      let currentCategoryList = arr[index].category
+      let modifiedCategoryList = currentCategoryList.concat([category])
+      let uniqueCategoryList = [...new Set(modifiedCategoryList)]
+
+      arr[index].category = uniqueCategoryList
+    }
+  }else {
+    if (obj.voteRecord.yea) {
+      arr.push({bill: obj, category: [category], status: 'Yea'})
+    } else {
+      arr.push({bill: obj, category: [category], status: 'Nay'})
     }
   }
 }
+
 
 function createRadarRows(bills,categoryList){
   let rows = []
   categoryList.forEach(category => {
     bills.forEach(bill => {
       if (bill.billData.category === (category.toLowerCase())) {
-        pushToArray(rows,bill,category)
+        pushToArrayUniqueBillsForRadar(rows,bill,category)
       }
     })
   })

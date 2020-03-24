@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
@@ -210,7 +209,13 @@ export default function BillHistoryTable (props) {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
   const [open, setOpen] = React.useState(false)
-
+  const content = {
+    title: 'Bill History Table',
+    body: 'This table shows all the bills for this current parliament, ' +
+        'including bills number,' +
+        " bill's type,date voted, your current MP's vote." +
+        ' You can also find more details by clicking on More Details button '
+  }
   const handleClickOpen = () => {
     setOpen(true)
   }
@@ -252,7 +257,6 @@ export default function BillHistoryTable (props) {
 
   return (
     <div className={classes.container}>
-      {/* <Paper className={classes.root}> */}
       <Card
         {...rest}
         className={clsx(classes.root, className)}
@@ -332,15 +336,7 @@ export default function BillHistoryTable (props) {
           open={open}
           onClose={handleClose}
           d3
-          explaination={
-            {
-              title: 'Bill History Table',
-              body: 'This table shows all the bills for this current parliament, ' +
-                    'including bills number,' +
-                    " bill's type,date voted, your current MP's vote." +
-                    ' You can also find more details by clicking on More Details button '
-            }
-          }
+          explaination={content}
           transition={Transition}
         />
       </Card>

@@ -207,7 +207,7 @@ async function fetchIDbyRepName (parliamentNo, repName) {
 }
 
 async function fetchrolesbyID (parliamentNo, id) {
-  const db = new Firestore(false).forParliament(parliamentNo)
+  const db = new Firestore().forParliament(parliamentNo)
   const role = db.Role()
   const roles = []
   await role.where('politician', '==', id)

@@ -133,7 +133,6 @@ module.exports = {
   getImageData: function (req, res) {
     return RepresentativeController.getImageData(req, res)
   },
-  // getAllRolesByRep
   getAllRolesByRep: function (req, res) {
     return RepresentativeController.getAllRolesByRep(req, res)
   },
