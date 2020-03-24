@@ -62,6 +62,10 @@ module.exports = {
     return RepresentativeController.getRepresentativeId(req, res)
   },
 
+  getPastRepresentativeId: function (req, res) {
+    return RepresentativeController.getPastRepresentativeId(req, res)
+  },
+
   getRepresentative: function (req, res) {
     return RepresentativeController.getParliamentData(req, res)
   },

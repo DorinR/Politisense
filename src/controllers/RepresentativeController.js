@@ -27,7 +27,7 @@ exports.getImageData = async (req, res) => {
 }
 
 exports.getRepresentativeByRiding = (req, res) => {
-  console.log(`received from frontend: ${req.params.riding}`)
+  // console.log(`received from frontend: ${req.params.riding}`)
   const db = new Firestore()
   const riding = req.params.riding.toLowerCase()
   return db
@@ -184,4 +184,32 @@ exports.getRepresentativeId = async (req, res) => {
         message: err
       })
     })
+}
+
+exports.getPastRepresentativeId = async (req, res) => {
+  const parliaments = [36, 37, 38, 39, 40, 41, 42]
+  const db = new Firestore(false)
+  parliaments.map(parl => {
+    return db
+      .forParliament(parl)
+      .Politician()
+      .where('name', '==', req.params.name)
+      .where('start', '==', req.body.start)
+      .select()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          console.log(doc.id)
+          res.status(200).json({
+            success: true,
+            data: doc.id
+          })
+        })
+      })
+      .catch(err => {
+        res.status(400).json({
+          success: false,
+          message: err
+        })
+      })
+  })
 }

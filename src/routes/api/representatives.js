@@ -8,6 +8,8 @@ const controller = require('../../controllers/Controller')
 // @access Public
 router.get('/:riding/getRepresentative', controller.getRepresentativeByRiding)
 
+router.post('/:name/getPastRepresentativeId', controller.getPastRepresentativeId)
+
 // @route post api/getAllRepresentatives
 // @desc  get all representatives currently stored in DB
 // @access Public

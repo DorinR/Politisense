@@ -74,7 +74,7 @@ exports.getAllVotesByRepresentative = async (req, res) => {
 exports.getPastRepresentativesVotes = async (req, res) => {
   const representativesVoteAccumulator = []
   console.log(`received from frontend: ${req.params.member}`)
-  const parliaments = [40]
+  const parliaments = [36, 37, 38, 39, 40, 41, 42]
   const db = new Firestore(false)
   let politiciansVotes = parliaments.map(parl => {
     return db
@@ -95,7 +95,7 @@ exports.getPastRepresentativesVotes = async (req, res) => {
           console.log(`total bills `, representativesVoteAccumulator.length)
           res.status(200).json({
             success: true,
-            data: representativesVoteAccumulator
+            data: representativesVoteAccumulator.length
           })
         }
       })
@@ -128,7 +128,7 @@ exports.getPastRepresentativesPairedVotes = async (req, res) => {
           console.log(`total paired bills `, representativesPairedVoteAccumulator.length)
           res.status(200).json({
             success: true,
-            data: representativesPairedVoteAccumulator
+            data: representativesPairedVoteAccumulator.length
           })
         }
       })

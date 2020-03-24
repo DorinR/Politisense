@@ -48,19 +48,10 @@ function capitalize(str) {
     return null
 }
 
-// async function fetchPastRepresentativesVotes(memberId) {
-//     let pastRepresentativesVotes = []
-//     await axios
-//         .get(`/api/votes/${memberId}/getPastRepresentativesVotes`)
-//         .then(res => {
-//             if (res.data.success) {
-//                 pastRepresentativesVotes = res.data.data
-//             }
-//         })
-//         .catch(err => console.error(err))
-//     console.log(pastRepresentativesVotes)
-//     return pastRepresentativesVotes
-// }
+async function fetchPastRepresentativesId(representative, data) {
+    const res = await axios.post(`/api/representatives/${representative}/getPastRepresentativeId`, data)
+    return res.data.data
+}
 
 async function fetchPastRepresentativesVotes(memberId) {
     const res = await axios.get(`/api/votes/${memberId}/getPastRepresentativesVotes`)
@@ -86,12 +77,14 @@ export default function RepresentativeCard(props) {
     const [name, setName] = useState('')
     const [politicalParty, setPoliticalParty] = useState('')
     const [imageUrl, setImageUrl] = useState('')
+    const [start, setStart] = useState('')
     const [nbBills, setNbBills] = useState(0)
     const [nbPairedBills, setNbPairedBills] = useState(0)
     //const [issuedBills, setIssuedBills] = useState(0)
     //const [pastRepresentativesVotes, setPastRepresentativesVotes] = React.useState([])
 
     const updateNameFromSwitcher = newName => {
+        setStart(newName.start)
         setName(newName.name)
         setImageUrl(newName.imageUrl)
         setPoliticalParty(newName.party)
@@ -100,8 +93,11 @@ export default function RepresentativeCard(props) {
 
     useEffect(() => {
         async function getData() {
-            const memberId = 'cP0FiFwOuobtHAMx5wUE'
+            const data = { start: start }
+            const memberId = fetchPastRepresentativesId(name, data)
+            console.log("MEMBER ID ", memberId)
             const pastRepresentativesVotes = await fetchPastRepresentativesVotes(memberId)
+            console.log("PAST REP VOTES ", memberId)
             const totalBills = calculateTotalVotesBills(pastRepresentativesVotes)
             setNbBills(totalBills)
             const pastRepresentativesPairedVotes = await fetchPastRepresentativesPairedVotes(memberId)

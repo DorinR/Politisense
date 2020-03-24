@@ -125,6 +125,7 @@ export default function PastMPSwitcher(props) {
             const user = JSON.parse(localStorage.getItem('user'))
             const riding = await fetchUserRiding(user.email)
             const pastRepresentatives = await fetchPastRepresentatives(riding)
+            console.log(pastRepresentatives)
             populateDropdownMps(pastRepresentatives)
         }
         getData()
