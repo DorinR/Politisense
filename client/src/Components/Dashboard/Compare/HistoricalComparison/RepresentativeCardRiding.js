@@ -2,28 +2,19 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
-import Skeleton from '@material-ui/lab/Skeleton'
 import CardContent from '@material-ui/core/CardContent'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import RepresentativeImage from '../../Sidebar/RepresentativeImage'
 import PastMPSwitcher from './PastMPSwitcher'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import PersonIcon from '@material-ui/icons/Person'
-import { fetchRidingCode } from '../../Sidebar/RepresentativeInfo'
 import axios from 'axios'
 import DollarIcon from '@material-ui/icons/Money'
-import Box from '@material-ui/core/Box'
-import RidingShapeContainer from '../../Sidebar/RidingShape/RidingShapeContainer'
-import { getAllBillsByHead } from '../CompareRepresentatives'
 import Grid from '@material-ui/core/Grid'
 import FlagIcon from '@material-ui/icons/Flag'
-import LocationOnIcon from '@material-ui/icons/LocationOn'
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
-import MapIcon from '@material-ui/icons/Map'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 
 const useStyles = makeStyles({
@@ -53,13 +44,13 @@ async function fetchPastRepresentativesId(representative, data) {
     return res.data.data
 }
 
-async function fetchPastRepresentativesVotes(memberId) {
-    const res = await axios.get(`/api/votes/${memberId}/getPastRepresentativesVotes`)
+async function fetchPastRepresentativesVotes(member) {
+    const res = await axios.get(`/api/votes/${member}/getPastRepresentativesVotes`)
     return res.data.data
 }
 
-async function fetchPastRepresentativesPairedVotes(memberId) {
-    const res = await axios.get(`/api/votes/${memberId}/getPastRepresentativesPairedVotes`)
+async function fetchPastRepresentativesPairedVotes(member) {
+    const res = await axios.get(`/api/votes/${member}/getPastRepresentativesPairedVotes`)
     return res.data.data
 }
 
@@ -80,8 +71,6 @@ export default function RepresentativeCard(props) {
     const [start, setStart] = useState('')
     const [nbBills, setNbBills] = useState(0)
     const [nbPairedBills, setNbPairedBills] = useState(0)
-    //const [issuedBills, setIssuedBills] = useState(0)
-    //const [pastRepresentativesVotes, setPastRepresentativesVotes] = React.useState([])
 
     const updateNameFromSwitcher = newName => {
         setStart(newName.start)
@@ -94,14 +83,18 @@ export default function RepresentativeCard(props) {
     useEffect(() => {
         async function getData() {
             const data = { start: start }
-            const memberId = fetchPastRepresentativesId(name, data)
-            console.log("MEMBER ID ", memberId)
-            const pastRepresentativesVotes = await fetchPastRepresentativesVotes(memberId)
-            console.log("PAST REP VOTES ", memberId)
+            const member = await fetchPastRepresentativesId(name, data)
+            console.log(member)
+            const pastRepresentativesVotes = await fetchPastRepresentativesVotes(member)
+            console.log("TEST TEST")
+            console.log("TOTAL BILLS ", pastRepresentativesVotes)
             const totalBills = calculateTotalVotesBills(pastRepresentativesVotes)
+            console.log("TOTAL BILLS ", totalBills)
             setNbBills(totalBills)
-            const pastRepresentativesPairedVotes = await fetchPastRepresentativesPairedVotes(memberId)
+            const pastRepresentativesPairedVotes = await fetchPastRepresentativesPairedVotes(member)
+            console.log("TOTAL PAIRED BILLS ", pastRepresentativesPairedVotes)
             const totalPairedBills = calculateTotalVotesBills(pastRepresentativesPairedVotes)
+            console.log("TOTAL PAIRED BILLS ", totalPairedBills)
             setNbPairedBills(totalPairedBills)
         }
         getData()

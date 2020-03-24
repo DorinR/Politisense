@@ -7,6 +7,7 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import axios from 'axios'
 import InputLabel from '@material-ui/core/InputLabel'
+import Avatar from '@material-ui/core/Avatar'
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -35,6 +36,19 @@ const MenuProps = {
             width: 350
         }
     }
+}
+
+function capitalize(str) {
+    if (str && isNaN(str)) {
+        let res = str
+        res = res
+            .toLowerCase()
+            .split(' ')
+            .map(s => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ')
+        return res
+    }
+    return null
 }
 
 async function fetchPastRepresentatives(riding) {
@@ -125,7 +139,6 @@ export default function PastMPSwitcher(props) {
             const user = JSON.parse(localStorage.getItem('user'))
             const riding = await fetchUserRiding(user.email)
             const pastRepresentatives = await fetchPastRepresentatives(riding)
-            console.log(pastRepresentatives)
             populateDropdownMps(pastRepresentatives)
         }
         getData()
@@ -150,7 +163,14 @@ export default function PastMPSwitcher(props) {
                             value={mp}
                             style={{ font: 'white' }}
                             style={getPartyColor(mp.party)}>
-                            {mp.name} ({mp.start}-{mp.end})
+                            <Avatar style={{
+                                marginRight: 26,
+                                width: 40,
+                                height: 40,
+                                border: '3px solid #41aaa8'
+                            }}
+                                alt={name} src={mp.imageUrl} className={classes.bigAvatar} />
+                            {capitalize(mp.name)} ({mp.start}-{mp.end})
                         </MenuItem>
                     ))}
                 </Select>

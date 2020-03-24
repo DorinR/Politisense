@@ -71,40 +71,40 @@ exports.getAllVotesByRepresentative = async (req, res) => {
 //   }
 // }
 
-exports.getPastRepresentativesVotes = async (req, res) => {
-  const representativesVoteAccumulator = []
-  console.log(`received from frontend: ${req.params.member}`)
-  const parliaments = [36, 37, 38, 39, 40, 41, 42]
-  const db = new Firestore(false)
-  let politiciansVotes = parliaments.map(parl => {
-    return db
-      .forParliament(parl)
-      .Vote()
-      .where('member', '==', req.params.member)
-      .select()
-      .then(snapshot => {
-        if (snapshot.empty) {
-          res.status(400).json({
-            success: false,
-            message: 'No Bills Currently Stored'
-          })
-        } else {
-          snapshot.forEach(doc => {
-            representativesVoteAccumulator.push(doc.data())
-          })
-          console.log(`total bills `, representativesVoteAccumulator.length)
-          res.status(200).json({
-            success: true,
-            data: representativesVoteAccumulator.length
-          })
-        }
-      })
-      .catch(console.error)
-  })
-}
+// exports.getPastRepresentativesVotes = async (req, res) => {
+//   const representativesVoteAccumulator = []
+//   console.log(`received from frontend: ${req.params.member}`)
+//   const parliaments = [36, 37, 38, 39, 40, 41, 42]
+//   const db = new Firestore(false)
+//   let politiciansVotes = parliaments.map(parl => {
+//     return db
+//       .forParliament(parl)
+//       .Vote()
+//       .where('member', '==', req.params.member)
+//       .select()
+//       .then(snapshot => {
+//         if (snapshot.empty) {
+//           res.status(400).json({
+//             success: false,
+//             message: 'No Bills Currently Stored'
+//           })
+//         } else {
+//           snapshot.forEach(doc => {
+//             representativesVoteAccumulator.push(doc.data())
+//           })
+//           console.log(`total bills `, representativesVoteAccumulator.length)
+//           res.status(200).json({
+//             success: true,
+//             data: representativesVoteAccumulator.length
+//           })
+//         }
+//       })
+//       .catch(console.error)
+//   })
+//   politiciansVotes = await Promise.all(politicians)
+// }
 
 exports.getPastRepresentativesPairedVotes = async (req, res) => {
-  const representativesPairedVoteAccumulator = []
   console.log(`received from frontend: ${req.params.member}`)
   const parliaments = [36, 37, 38, 39, 40, 41, 42]
   const db = new Firestore(false)
@@ -116,24 +116,48 @@ exports.getPastRepresentativesPairedVotes = async (req, res) => {
       .where('paired', '==', true)
       .select()
       .then(snapshot => {
-        if (snapshot.empty) {
-          res.status(400).json({
-            success: false,
-            message: 'No Bills Currently Stored'
-          })
-        } else {
-          snapshot.forEach(doc => {
-            representativesPairedVoteAccumulator.push(doc.data())
-          })
-          console.log(`total paired bills `, representativesPairedVoteAccumulator.length)
-          res.status(200).json({
-            success: true,
-            data: representativesPairedVoteAccumulator.length
-          })
-        }
+        snapshot.forEach(doc => {
+          docs.push(doc.data())
+        })
+        return docs
       })
-      .catch(console.error)
   })
+  Promise.all(politiciansVotes)
+    .then(votes => {
+      res.status(200).json({
+        success: true,
+        data: doc.data()
+      })
+        .catch(console.error)
+    })
 }
 
-
+exports.getPastRepresentativesVotes = async (req, res) => {
+  console.log(`received from frontend: ${req.params.member}`)
+  const parliaments = [36, 37, 38, 39, 40, 41, 42]
+  const db = new Firestore(false)
+  let politiciansVotes = parliaments.map(parl => {
+    return db
+      .forParliament(parl)
+      .Vote()
+      .where('member', '==', req.params.member)
+      .select()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          const docs = []
+          snapshot.forEach(doc => {
+            docs.push(doc.data())
+          })
+          return docs
+        })
+      })
+  })
+  Promise.all(politiciansVotes)
+    .then(votes => {
+      res.status(200).json({
+        success: true,
+        data: doc.data()
+      })
+        .catch(console.error)
+    })
+}

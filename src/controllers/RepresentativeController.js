@@ -27,7 +27,6 @@ exports.getImageData = async (req, res) => {
 }
 
 exports.getRepresentativeByRiding = (req, res) => {
-  // console.log(`received from frontend: ${req.params.riding}`)
   const db = new Firestore()
   const riding = req.params.riding.toLowerCase()
   return db
@@ -120,7 +119,7 @@ exports.getPastRepresentatives = async (req, res) => {
   }
 }
 
-// getRepresentativesInfo
+
 exports.getRepresentativesInfo = (req, res) => {
   const name = req.params.name.toLowerCase()
   let repInfo = {}
@@ -206,10 +205,7 @@ exports.getPastRepresentativeId = async (req, res) => {
         })
       })
       .catch(err => {
-        res.status(400).json({
-          success: false,
-          message: err
-        })
+        console.log('Error getting documents', err)
       })
   })
 }
