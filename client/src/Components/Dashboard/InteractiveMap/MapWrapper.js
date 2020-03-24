@@ -4,7 +4,11 @@ import InteractiveMap from './InteractiveMap'
 export default class MapWrapper extends Component {
   componentDidMount () {
     this.setState({
-      map: new InteractiveMap(this.refs.chart, this.props.zoomChangeTracker),
+      map: new InteractiveMap(
+        this.refs.chart,
+        this.props.zoomChangeTracker,
+        this.props.ridingShapeData
+      ),
       zoomReset: this.props.zoomReset
     })
   }

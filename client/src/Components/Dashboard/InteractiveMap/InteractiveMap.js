@@ -6,12 +6,16 @@ const HEIGHT = 650
 const ZOOM = { MIN: 1, MAX: 300 }
 
 export default class InteractiveMap {
-  constructor (element, setHasZoomBeenChanged) {
+  constructor (element, setHasZoomBeenChanged, ridingShapeData) {
     const vis = this
     vis.active = d3.select(null)
 
     vis.setZoomChangeStatus = setHasZoomBeenChanged
     vis.wasZoomChanged = false
+
+    setTimeout(() => {
+      console.log(vis.setZoomChangeStatus)
+    }, 1000)
 
     const projection = d3
       .geoOrthographic()
@@ -47,31 +51,30 @@ export default class InteractiveMap {
 
     vis.svg.call(vis.zoom)
 
-    d3.json(
-      'https://gist.githubusercontent.com/Khalidbaraka/bf881712a903b5f059f9d9063a54e2ec/raw/b82e1f22995f0ead12010d5adeff35e1b3aba97f/test.json'
-    ).then(function (data) {
-      vis.g
-        .selectAll('path')
-        .data(topojson.feature(data, data.objects.ridings).features)
-        .enter()
-        .append('path')
-        .attr('data-id', function (d) {
-          return d.properties.ID
-        })
-        .attr('d', vis.path)
-        .attr('class', 'feature')
-        .style('fill', 'grey')
-        .on('click', vis.clicked)
-        .attr('cursor', 'pointer')
-        .on('mouseover', (d, i) => {
-          d3.select(this)
-            .style('fill', 'red')
-            .style('opacity', 1)
-        })
-        .on('mouseout', function (d, i) {
-          d3.select(this).style('fill', 'grey')
-        })
-    })
+    vis.g
+      .selectAll('path')
+      .data(
+        topojson.feature(ridingShapeData, ridingShapeData.objects.ridings)
+          .features
+      )
+      .enter()
+      .append('path')
+      .attr('data-id', function (d) {
+        return d.properties.ID
+      })
+      .attr('d', vis.path)
+      .attr('class', 'feature')
+      .style('fill', 'grey')
+      .on('click', vis.clicked.bind(this))
+      .attr('cursor', 'pointer')
+      .on('mouseover', function (d, i) {
+        d3.select(this)
+          .style('fill', 'red')
+          .style('opacity', 1)
+      })
+      .on('mouseout', function (d, i) {
+        d3.select(this).style('fill', 'grey')
+      })
 
     this.clicked = this.clicked.bind(this)
     this.reset = this.reset.bind(this)
