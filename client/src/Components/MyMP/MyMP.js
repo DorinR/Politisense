@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Grid from '@material-ui/core/Grid'
 import axios from 'axios'
-import { fetchUserRiding } from '../Navbar'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import CategoryDashboard from '../Dashboard/CategoryDashboard'
@@ -13,7 +12,7 @@ import Committees from './Committees'
 import IssuedBillsByMP from './IssuedBillsByMP'
 import Bipartisan from './Bipartisan'
 import MPActivityDistribution from './MPActivityDistribution'
-import { capitalizedName, getPercentagePartisanIndex, fetchCategories } from '../Dashboard/Utilities/CommonUsedFunctions'
+import { capitalizedName, getPercentagePartisanIndex, fetchCategories, fetchUserRiding } from '../Dashboard/Utilities/CommonUsedFunctions'
 
 import {
   CssBaseline

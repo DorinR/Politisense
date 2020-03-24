@@ -94,7 +94,6 @@ function dashboard (element, data) {
   // function to handle pieChart.
   function pieChart (pD) {
     const pieChartObj = {}
-    // const margin =
     const pieDimensions = { width: 200, height: 200 }
     pieDimensions.radius = Math.min(pieDimensions.width, pieDimensions.height) / 2
 

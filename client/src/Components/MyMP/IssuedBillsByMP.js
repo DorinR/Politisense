@@ -50,7 +50,7 @@ const IssuedBillsByMP = props => {
   const [open, setOpen] = React.useState(false)
   const content = {
     title: 'Issued Bills By MP',
-    body: 'Issued Bills By Mp are the bills that that Mp sponsered and created about certain topic. ' +
+    body: 'Issued Bills By Mp are the bills that that MP (i.e member of parliament) sponsored and created about certain topic. ' +
         'It is an indication how active he or she is in the parliament'
   }
   const handleClose = () => {
@@ -106,7 +106,7 @@ const IssuedBillsByMP = props => {
               ? (
                 <Link
                   to={{
-                    pathname: '/issuedBillsByCategory',
+                    pathname: '/performance',
                     aboutProps: {
                       userRepresentative: props.userRepresentative,
                       rows: props.rows,

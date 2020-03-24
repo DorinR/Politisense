@@ -18,18 +18,8 @@ export function mergeArrays (rawData) {
       jointArray = [...jointArray, ...array]
     }
   })
-  const test = [...new Set([...jointArray])]
-  return test
-}
-
-export function formatingCategories (categoriesList) {
-  const modifiedArray = categoriesList.map(element => {
-    if (element.includes('-')) {
-      return capitalizedName(element.replace('-', ' '))
-    }
-    return capitalizedName(element)
-  })
-  return modifiedArray
+  const mergedArrays = [...new Set([...jointArray])]
+  return mergedArrays
 }
 
 export function formattingCategory (element) {
@@ -52,7 +42,6 @@ export function capitalizedName (sponsor) {
 }
 
 export function getPercentagePartisanIndex (element, arr) { // Utility function to compute percentage.
-  // Utility function to compute percentage.
   let sum = 0
   arr.forEach(element => {
     sum = sum + element.freq
@@ -112,25 +101,25 @@ export function mergeArraysAndFilteringByType (type, ...arrays) {
   arrays.forEach(array => {
     jointArray = [...jointArray, ...array]
   })
-  const test = [...new Set([...jointArray])]
+  const mergedArrays = [...new Set([...jointArray])]
 
-  const testing = test.filter((thing, index, self) =>
-    index === self.findIndex((t) => (
-      t.title === thing.title && t.group === thing.group && t.toDate === thing.toDate && t.fromDate === thing.fromDate
+  const uniqueElements = mergedArrays.filter((thing, index, self) =>
+    index === self.findIndex((element) => (
+      element.title === thing.title && element.group === thing.group && element.toDate === thing.toDate && element.fromDate === thing.fromDate
     ))
   )
 
-  if (testing.length === 0) {
+  if (uniqueElements.length === 0) {
     return null
   }
   if (type === 'role') {
-    return testing.filter(item => item.group === 'none')
+    return uniqueElements.filter(item => item.group === 'none')
   }
   if (type === 'committee') {
-    return testing.filter(item => item.type === 'committee')
+    return uniqueElements.filter(item => item.type === 'committee')
   }
   if (type === 'association') {
-    return testing.filter(item => item.group.includes('association'))
+    return uniqueElements.filter(item => item.group.includes('association'))
   }
 }
 
@@ -188,4 +177,15 @@ export function titleCase (str) {
   const regex = /(^|\b(?!(and?|at?|the|for|to|but|by|of)\b))\w+/g
   return str.toLowerCase()
     .replace(regex, s => s[0].toUpperCase() + s.slice(1))
+}
+
+export async function fetchUserRiding (userEmail) {
+  return axios
+    .get(`/api/users/${userEmail}/getUser`)
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data.riding
+      }
+    })
+    .catch(console.error)
 }

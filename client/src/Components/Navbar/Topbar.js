@@ -25,7 +25,6 @@ const useStyles = makeStyles(theme => ({
   root: {
     boxShadow: 'none',
     backgroundColor: '#00bcd4'
-    // 43D0C4
   },
   flexGrow: {
     flexGrow: 2
@@ -107,7 +106,7 @@ const Topbar = props => {
           <Button
             style={{ color: 'white', textTransform: 'none' }} variant='text'
             component={CustomRouterLinkTopBar}
-            to='/myMp'
+            to='/myRepresentative'
           >My MP
           </Button>
           <Button
@@ -125,7 +124,6 @@ const Topbar = props => {
           <IconButton>
             <Badge
               badgeContent={notifications.length}
-              // color="primary"
               variant='dot'
             >
               <NotificationsIcon style={{ color: 'white' }} />

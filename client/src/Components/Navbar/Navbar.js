@@ -7,14 +7,14 @@ import DashboardIcon from '@material-ui/icons/Dashboard'
 import PeopleIcon from '@material-ui/icons/People'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import SettingsIcon from '@material-ui/icons/Settings'
-import RepresentativeImage from './Dashboard/Sidebar/RepresentativeImage'
+import RepresentativeImage from '../Dashboard/Sidebar/RepresentativeImage'
 import SidebarNav from './SidebarNav'
 import axios from 'axios'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import AppBar from '@material-ui/core/AppBar'
 import { Link } from 'react-router-dom'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
-import MpProfile from './Dashboard/MpProfile'
+import MpProfile from '../Dashboard/MpProfile'
 import Divider from '@material-ui/core/Divider'
 import MapIcon from '@material-ui/icons/Map'
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows'
@@ -23,17 +23,7 @@ import { useTheme } from '@material-ui/core/styles'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-
-export async function fetchUserRiding (userEmail) {
-  return axios
-    .get(`/api/users/${userEmail}/getUser`)
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data.riding
-      }
-    })
-    .catch(console.error)
-}
+import { fetchUserRiding } from '../Dashboard/Utilities/CommonUsedFunctions'
 
 export async function fetchRepresentative (riding) {
   return axios
@@ -169,7 +159,7 @@ const Sidebar = props => {
     },
     {
       title: 'My MP',
-      href: '/myMp',
+      href: '/myRepresentative',
       icon: <PeopleIcon />
     },
     {

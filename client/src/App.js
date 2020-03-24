@@ -18,8 +18,8 @@ import GeneralDashboard from './Components/Dashboard/General/GeneralDashboard'
 import clsx from 'clsx'
 import { makeStyles, useTheme } from '@material-ui/styles'
 import { useMediaQuery } from '@material-ui/core'
-import Sidebar from './Components/Navbar'
-import Topbar from './Components/Topbar'
+import Sidebar from './Components/Navbar/Navbar'
+import Topbar from './Components/Navbar/Topbar'
 import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
 import IssuedBillsByCategory from './Components/MyMP/IssuedBillsByCategory'
 const useStyles = makeStyles(theme => ({
@@ -101,9 +101,9 @@ const App = () => {
           <PrivateRoute path='/map' component={MapWrapper} />
           <PrivateRoute path='/account' component={UserAccountTabs} />
           <PrivateRoute path='/general' component={GeneralDashboard} />
-          <PrivateRoute path='/myMp' component={MyMP} />
+          <PrivateRoute path='/myRepresentative' component={MyMP} />
           <PrivateRoute path='/compare' component={CompareContainer} />
-          <PrivateRoute path='/issuedBillsByCategory' component={IssuedBillsByCategory} />
+          <PrivateRoute path='/performance' component={IssuedBillsByCategory} />
         </div>
       </div>
     </div>

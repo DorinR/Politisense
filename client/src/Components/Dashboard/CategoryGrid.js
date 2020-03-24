@@ -12,7 +12,7 @@ import CardActionArea from '@material-ui/core/CardActionArea'
 import { ConfirmationDialogRaw } from './CategoryForm'
 import AddIcon from '@material-ui/icons/Add'
 import axios from 'axios'
-import { fetchUserRiding } from '../Navbar'
+import { fetchUserRiding } from './Utilities/CommonUsedFunctions'
 import CircularProgress from '@material-ui/core/CircularProgress'
 /* eslint-disable */
 
