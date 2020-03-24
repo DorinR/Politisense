@@ -6,7 +6,7 @@ if (!fs.app) {
 }
 
 class _Firestore {
-  constructor () {
+  constructor() {
     this.config = {
       apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
       authDomain: 'abdulla-2c3a5.firebaseapp.com',
@@ -27,7 +27,7 @@ class _Firestore {
 }
 
 var instance = null
-function getInstance () {
+function getInstance() {
   if (!instance) {
     instance = new _Firestore()
   }
@@ -35,13 +35,13 @@ function getInstance () {
 }
 
 class Reference {
-  constructor (reference) {
+  constructor(reference) {
     this.reference = reference
     this.modelsOnly = false
     this.query = null
   }
 
-  where (attribute, operator, value) {
+  where(attribute, operator, value) {
     if (!this.query) {
       this.query = this.reference.where(attribute, operator, value)
     }
@@ -49,7 +49,7 @@ class Reference {
     return this
   }
 
-  update (model) {
+  update(model) {
     if (this.modelsOnly && !(model instanceof Model)) {
       throw new Error('Error: Only a model can be updated in firebase')
     } else if (!this.modelsOnly && !(model instanceof Model)) {
@@ -83,7 +83,7 @@ class Reference {
     })
   }
 
-  delete () {
+  delete() {
     let ref = this.reference
     if (this.query) {
       ref = this.query
@@ -112,7 +112,7 @@ class Reference {
     })
   }
 
-  select (attribute, operator, value) {
+  select(attribute, operator, value) {
     let ref = this.reference.get.bind(this.reference)
     if (
       typeof attribute !== 'undefined' &&
@@ -139,7 +139,7 @@ class Reference {
     })
   }
 
-  insert (model) {
+  insert(model) {
     if (this.modelsOnly && typeof !(model instanceof Model)) {
       throw new Error('Error: Only a model can be inserted in firebase')
     } else if (!this.modelsOnly && !(model instanceof Model)) {
@@ -162,7 +162,7 @@ class Reference {
     })
   }
 
-  async innerJoin (key, reference, refKey) {
+  async innerJoin(key, reference, refKey) {
     const left = {}
     const right = {}
 
@@ -226,7 +226,7 @@ class Reference {
 }
 
 class Firestore {
-  constructor (legacy = false) {
+  constructor(legacy = false) {
     this.firestore = getInstance()
     this.reference = this.firestore.db
     this.firebase = this.firestore.firebase
@@ -234,27 +234,29 @@ class Firestore {
     this.legacy = legacy
   }
 
-  forParliament (parliament) {
+  forParliament(parliament) {
     this.parliament = parliament
     return this
   }
 
-  Bill () {
+  Bill() {
     const collection = this.legacy ? 'bills' : `${this.parliament}/bills/bill`
     return this.createReference(collection)
   }
 
-  BillClassification () {
-    const collection = this.legacy ? 'bill_classification' : `${this.parliament}/bills/tag`
+  BillClassification() {
+    const collection = this.legacy
+      ? 'bill_classification'
+      : `${this.parliament}/bills/tag`
     return this.createReference(collection)
   }
 
-  FinancialRecord () {
+  FinancialRecord() {
     const collection = this.legacy ? 'financialRecord' : 'financialRecord'
     return this.createReference(collection)
   }
 
-  MinisterDescription () {
+  MinisterDescription() {
     if (this.legacy) {
       throw new Error('ERROR: collection not available as a legacy collection')
     }
@@ -262,51 +264,63 @@ class Firestore {
     return this.createReference(collection)
   }
 
-  PoliticalParty () {
-    const collection = this.legacy ? 'parties' : `${this.parliament}/parties/party`
+  PoliticalParty() {
+    const collection = this.legacy
+      ? 'parties'
+      : `${this.parliament}/parties/party`
     return this.createReference(collection)
   }
 
-  Politician () {
-    const collection = this.legacy ? 'politicians' : `${this.parliament}/politicians/politician`
+  Politician() {
+    const collection = this.legacy
+      ? 'politicians'
+      : `${this.parliament}/politicians/politician`
     return this.createReference(collection)
   }
 
-  Riding () {
+  Riding() {
     const collection = this.legacy ? 'ridings' : 'static/ridings/riding'
     return this.createReference(collection)
   }
 
-  Role () {
+  Role() {
     const collection = this.legacy ? 'roles' : `${this.parliament}/roles/role`
     return this.createReference(collection)
   }
 
-  TfIdfClassification () {
-    const collection = this.legacy ? 'tf_idf_bill' : `${this.parliament}/bills/raw`
+  TfIdfClassification() {
+    const collection = this.legacy
+      ? 'tf_idf_bill'
+      : `${this.parliament}/bills/raw`
     return this.createReference(collection)
   }
 
-  User () {
+  User() {
     const collection = this.legacy ? 'users' : 'static/users/user'
     return this.createReference(collection)
   }
 
-  Vote () {
+  Vote() {
     const collection = this.legacy ? 'votes' : `${this.parliament}/voters/voter`
     return this.createReference(collection)
   }
 
-  VoteRecord () {
-    const collection = this.legacy ? 'voteRecord' : `${this.parliament}/vote_records/vote_record`
+  VoteRecord() {
+    const collection = this.legacy
+      ? 'voteRecord'
+      : `${this.parliament}/vote_records/vote_record`
     return this.createReference(collection)
   }
 
-  createReference (collection) {
+  RidingShape() {
+    return this.createReference('riding_shapes')
+  }
+
+  createReference(collection) {
     return new Reference(this.reference.collection(collection))
   }
 
-  async close () {
+  async close() {
     await this.firestore.app
       .delete()
       .then(result => {
@@ -318,7 +332,7 @@ class Firestore {
       .catch(e => {})
   }
 
-  static copyCollection (from, to) {
+  static copyCollection(from, to) {
     return new Promise(resolve => {
       from
         .select()

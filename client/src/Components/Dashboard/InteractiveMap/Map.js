@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import InfoBubble from '../Utilities/InfoBubble'
+import axios from 'axios'
 
 const useStyles = makeStyles({
   root: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function Map () {
+export default function Map() {
   const classes = useStyles()
   const [zoomReset, setZoomReset] = useState(1)
   const [hasZoomBeenChanged, setHasZoomBeenChanged] = useState(false)
@@ -47,6 +48,10 @@ export default function Map () {
     setHasZoomBeenChanged(newState)
   }
 
+  useEffect(async () => {
+    const result = await axios.get('/')
+  })
+
   return (
     <div className={classes.mapContainer}>
       <Box m={2} />
@@ -56,8 +61,7 @@ export default function Map () {
           className={classes.customHeaders}
           align='left'
           color='primary'
-          gutterBottom
-        >
+          gutterBottom>
           Explore Canadian Ridings
         </Typography>
         <span className={classes.customTooltip}>
@@ -65,7 +69,7 @@ export default function Map () {
             title='How To Use the Map'
             text={
               /* eslint-disable-next-line indent */
-            "Zooming on this map is done the same way you scroll on a webpage. Just use the clickwheel on your mouse or use two fingers on your trackpad. Click on a given riding and the map will automatically zoom-in to the appropriate level. Clicking on the 'Reset Zoom Level' button will bring the zoom level back to what it was at the beginning"
+              "Zooming on this map is done the same way you scroll on a webpage. Just use the clickwheel on your mouse or use two fingers on your trackpad. Click on a given riding and the map will automatically zoom-in to the appropriate level. Clicking on the 'Reset Zoom Level' button will bring the zoom level back to what it was at the beginning"
             }
           />
         </span>
