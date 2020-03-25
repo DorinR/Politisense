@@ -143,21 +143,29 @@ exports.getPastRepresentativesVotes = async (req, res) => {
       .where('member', '==', req.params.member)
       .select()
       .then(snapshot => {
+        const docs = []
         snapshot.forEach(doc => {
-          const docs = []
-          snapshot.forEach(doc => {
-            docs.push(doc.data())
+          docs.push({
+            data: doc.data(),
+            parliament: parl
           })
-          return docs
         })
+        return docs
       })
   })
+
   Promise.all(politiciansVotes)
     .then(votes => {
       res.status(200).json({
         success: true,
-        data: doc.data()
+        data: votes.flat()
       })
-        .catch(console.error)
+    })
+    .catch(e => {
+      console.error(e)
+      res.status(500).json({
+        success:false,
+        message: e.message
+      })
     })
 }

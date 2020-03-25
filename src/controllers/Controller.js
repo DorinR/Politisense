@@ -136,5 +136,9 @@ module.exports = {
 
   getImageData: function (req, res) {
     return RepresentativeController.getImageData(req, res)
+  },
+
+  getPastRepresentativeVotes: function (req,res) {
+    return VoteController.getPastRepresentativesVotes(req, res)
   }
 }

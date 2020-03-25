@@ -13,7 +13,7 @@ router.get(
 
 router.get(
   '/:member/getPastRepresentativeVotes',
-  controller.getPastRepresentativesVotes
+  controller.getPastRepresentativeVotes
 )
 
 router.get(
