@@ -313,7 +313,8 @@ class Firestore {
   }
 
   RidingShape () {
-    return this.createReference('riding_shapes')
+    const collection = 'static/riding_shapes/shape_data'
+    return this.createReference(collection)
   }
 
   createReference (collection) {
