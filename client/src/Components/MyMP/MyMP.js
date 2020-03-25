@@ -124,6 +124,16 @@ export default function MyMP () {
     getData()
   }, [userRepresentative])
 
+  useEffect(() => {
+    async function getData () {
+      if (categoryList && representativeData) {
+        const radarRows = createRadarRows(representativeData, categoryList)
+        setRadarDataRows(radarRows)
+      }
+    }
+    getData()
+  }, [representativeData])
+
   async function getAllBillsBySponsorForAllParliaments (head) {
     return axios
       .get(`/api/bills/${head}/getAllBillsBySponsorForAllParliaments`)
@@ -134,26 +144,33 @@ export default function MyMP () {
       })
       .catch(console.error)
   }
-  const [userRepIssuedBills, setUserRepIssuedBills] = React.useState(null)
+  const [uniqueIssuedBills, setUniqueIssuedBills] = React.useState(null)
   useEffect(() => {
     async function getData () {
       if (userRepresentative) {
         const issuedBillByUserRep = await getAllBillsBySponsorForAllParliaments(
           userRepresentative
         )
-        const testing = issuedBillByUserRep.filter((thing, index, self) =>
+        const uniqueIssuedBills = issuedBillByUserRep.filter((thing, index, self) =>
           index === self.findIndex((t) => (
             t.billsClassified.number === thing.billsClassified.number && t.billsClassified.category === thing.billsClassified.category
           ))
         )
-        if (testing && testing !== null && testing !== undefined && testing.length !== 0) {
-          setUserRepIssuedBills(testing)
-        }
+        setUniqueIssuedBills(uniqueIssuedBills)
       }
     }
-
     getData()
   }, [userRepresentative])
+
+  const [userRepIssuedBills, setUserRepIssuedBills] = React.useState(null)
+  useEffect(() => {
+    async function getData () {
+      if ((uniqueIssuedBills && uniqueIssuedBills !== null && uniqueIssuedBills !== undefined && uniqueIssuedBills.length !== 0)) {
+        setUserRepIssuedBills(uniqueIssuedBills)
+      }
+    }
+    getData()
+  }, [uniqueIssuedBills])
 
   useEffect(() => {
     async function getData () {
