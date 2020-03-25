@@ -39,18 +39,18 @@ function capitalize(str) {
     return null
 }
 
-async function fetchPastRepresentativesId(representative, data) {
+async function fetchPastRepresentativeId(representative, data) {
     const res = await axios.post(`/api/representatives/${representative}/getPastRepresentativeId`, data)
     return res.data.data
 }
 
-async function fetchPastRepresentativesVotes(member) {
-    const res = await axios.get(`/api/votes/${member}/getPastRepresentativesVotes`)
+async function fetchPastRepresentativeVotes(member) {
+    const res = await axios.get(`/api/votes/${member}/getPastRepresentativeVotes`)
     return res.data.data
 }
 
-async function fetchPastRepresentativesPairedVotes(member) {
-    const res = await axios.get(`/api/votes/${member}/getPastRepresentativesPairedVotes`)
+async function fetchPastRepresentativePairedVotes(member) {
+    const res = await axios.get(`/api/votes/${member}/getPastRepresentativePairedVotes`)
     return res.data.data
 }
 
@@ -83,18 +83,12 @@ export default function RepresentativeCard(props) {
     useEffect(() => {
         async function getData() {
             const data = { start: start }
-            const member = await fetchPastRepresentativesId(name, data)
-            console.log(member)
-            const pastRepresentativesVotes = await fetchPastRepresentativesVotes(member)
-            console.log("TEST TEST")
-            console.log("TOTAL BILLS ", pastRepresentativesVotes)
-            const totalBills = calculateTotalVotesBills(pastRepresentativesVotes)
-            console.log("TOTAL BILLS ", totalBills)
+            const member = await fetchPastRepresentativeId(name, data)
+            const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member)
+            const totalBills = calculateTotalVotesBills(pastRepresentativeVotes)
             setNbBills(totalBills)
-            const pastRepresentativesPairedVotes = await fetchPastRepresentativesPairedVotes(member)
-            console.log("TOTAL PAIRED BILLS ", pastRepresentativesPairedVotes)
-            const totalPairedBills = calculateTotalVotesBills(pastRepresentativesPairedVotes)
-            console.log("TOTAL PAIRED BILLS ", totalPairedBills)
+            const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member)
+            const totalPairedBills = calculateTotalVotesBills(pastRepresentativePairedVotes)
             setNbPairedBills(totalPairedBills)
         }
         getData()
@@ -159,8 +153,7 @@ export default function RepresentativeCard(props) {
                                     </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText>
-                                    Total Issued Bills:
-                                </ListItemText>
+                                    Total Issued Bills: {nbPairedBills} </ListItemText>
                             </ListItem>
                         </List>
                     </CardContent>

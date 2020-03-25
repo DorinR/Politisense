@@ -44,11 +44,11 @@ module.exports = {
   getRepresentativeByRiding: function (req, res) {
     return RepresentativeController.getRepresentativeByRiding(req, res)
   },
-  getPastRepresentativesVotes: function (req, res) {
-    return VoteController.getPastRepresentativesVotes(req, res)
+  getPastRepresentativeVotes: function (req, res) {
+    return VoteController.getPastRepresentativeVotes(req, res)
   },
-  getPastRepresentativesPairedVotes: function (req, res) {
-    return VoteController.getPastRepresentativesPairedVotes(req, res)
+  getPastRepresentativePairedVotes: function (req, res) {
+    return VoteController.getPastRepresentativePairedVotes(req, res)
   },
   getAllRepresentatives: function (req, res) {
     return RepresentativeController.getAllRepresentatives(req, res)
@@ -136,9 +136,5 @@ module.exports = {
 
   getImageData: function (req, res) {
     return RepresentativeController.getImageData(req, res)
-  },
-
-  getPastRepresentativeVotes: function (req,res) {
-    return VoteController.getPastRepresentativesVotes(req, res)
   }
 }

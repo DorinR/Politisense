@@ -61,7 +61,6 @@ async function fetchPastRepresentatives(riding) {
             }
         })
         .catch(err => console.error(err))
-    console.log(pastRepresentatives)
     return pastRepresentatives
 }
 
@@ -110,7 +109,7 @@ function getPartyColor(partyName) {
                 color: 'white'
             }
         default:
-            backgroundColor = 'white'
+            //backgroundColor = 'white'
             break
     }
 }

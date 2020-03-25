@@ -100,7 +100,6 @@ export default function ModernRepresentative(props) {
             }
         }
         getData(mp)
-        console.log(getData(mp))
     }, [mp])
 
     return (
