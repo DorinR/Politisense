@@ -7,8 +7,6 @@ import Typography from '@material-ui/core/Typography'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
-import D3ChartHeadVsHeadContainer from '../../D3ChartHeadVsHeadContainer'
-import Grow from '@material-ui/core/Grow'
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -29,34 +27,31 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function getAllBillsByHead(head) {
+export async function getAllBillsByHead (head) {
   const res = await axios.get(
     `http://localhost:5000/api/bills/${head}/getAllBillsByHead`
   )
   return res.data.data
 }
-export function calcPercent(percent) {
+export function calcPercent (percent) {
   return [percent, 100 - percent]
 }
 
-export default function CompareRepresentatives() {
+export default function CompareRepresentatives () {
+  // eslint-disable-next-line no-use-before-define
   const classes = useStyles()
   const [pastRep, setPastRep] = useState('')
-  const [dataSet, setDataSet] = useState([])
 
   const updatePastRep = rep => {
     if (pastRep === rep || rep === '') {
     } else {
       setPastRep(rep)
-      setDataSet([])
     }
   }
 
   useEffect(() => {
-    async function getBills() {
-      const pastRepBills = await getAllBillsByHead(pastRep, 'pastRep')
-      // const dataset = await getAllData(pastRepBills)
-      // setDataSet(dataset)
+    async function getBills () {
+      await getAllBillsByHead(pastRep, 'pastRep')
     }
 
     if (pastRep !== '') {

@@ -30,7 +30,7 @@ exports.getAllVotesByRepresentative = async (req, res) => {
 exports.getPastRepresentativePairedVotes = async (req, res) => {
   const parliaments = [36, 37, 38, 39, 40, 41, 42]
   const db = new Firestore(false)
-  let politiciansVotes = parliaments.map(parl => {
+  const politiciansVotes = parliaments.map(parl => {
     return db
       .forParliament(parl)
       .Vote()
@@ -67,7 +67,7 @@ exports.getPastRepresentativePairedVotes = async (req, res) => {
 exports.getPastRepresentativeVotes = async (req, res) => {
   const parliaments = [36, 37, 38, 39, 40, 41, 42]
   const db = new Firestore(false)
-  let politiciansVotes = parliaments.map(parl => {
+  const politiciansVotes = parliaments.map(parl => {
     return db
       .forParliament(parl)
       .Vote()

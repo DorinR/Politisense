@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function CompareContainer() {
+export default function CompareContainer () {
   const classes = useStyles()
 
   return (

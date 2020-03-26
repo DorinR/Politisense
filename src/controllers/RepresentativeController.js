@@ -49,7 +49,7 @@ exports.getRepresentativeByRiding = (req, res) => {
     })
     .catch(console.error)
 }
-async function getAllRepsForEachParliament(parliamentNo) {
+async function getAllRepsForEachParliament (parliamentNo) {
   const db = new Firestore(false).forParliament(parliamentNo)
   const politicians = []
   await db.Politician()
@@ -150,7 +150,6 @@ exports.getPastRepresentatives = async (req, res) => {
     })
   }
 }
-
 
 exports.getRepresentativesInfo = (req, res) => {
   const name = req.params.name.toLowerCase()
