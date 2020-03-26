@@ -49,7 +49,7 @@ exports.getRepresentativeByRiding = (req, res) => {
     .catch(console.error)
 }
 async function getAllRepsForEachParliament (parliamentNo) {
-  const db = new Firestore(false).forParliament(parliamentNo)
+  const db = new Firestore().forParliament(parliamentNo)
   const politicians = []
   await db.Politician()
     .select()
@@ -188,7 +188,7 @@ async function fetchRolesByParliament (parliamentNo, repName) {
 }
 
 async function fetchIDbyRepName (parliamentNo, repName) {
-  const db = new Firestore(false).forParliament(parliamentNo)
+  const db = new Firestore().forParliament(parliamentNo)
   let id = null
   await db.Politician()
     .where('name', '==', repName)

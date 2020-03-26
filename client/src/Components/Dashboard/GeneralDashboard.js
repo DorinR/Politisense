@@ -350,7 +350,7 @@ function createDataSetRadar(categories, data) {
 
   return [dataSetRadar, maxValue]
 }
-export function getPoliticalPartyFromSponsor(sponsors){
+ function getPoliticalPartyFromSponsor(sponsors){
   let politicalParties = [...new Set(sponsors.map(item => item.party))]
   return politicalParties
 }
