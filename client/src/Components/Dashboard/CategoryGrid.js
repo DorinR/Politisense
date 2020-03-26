@@ -12,7 +12,7 @@ import CardActionArea from '@material-ui/core/CardActionArea'
 import { ConfirmationDialogRaw } from './CategoryForm'
 import AddIcon from '@material-ui/icons/Add'
 import axios from 'axios'
-import { fetchUserRiding } from '../Navbar'
+import { fetchUserRiding } from './Utilities/CommonUsedFunctions'
 import CircularProgress from '@material-ui/core/CircularProgress'
 /* eslint-disable */
 
@@ -181,8 +181,8 @@ export default function CategoryGrid() {
 
   const addEvent = newValue => {
     const copyCategoryArray = Object.assign([], categoryList)
-    if(newValue.includes(" ")){
-       newValue= newValue.replace(" ","-")
+    if (newValue.includes(" ")) {
+      newValue = newValue.replace(" ", "-")
     }
     copyCategoryArray.push(newValue)
     updateUserCategory(copyCategoryArray)
@@ -234,55 +234,55 @@ export default function CategoryGrid() {
             )
           })
         ) : (
-          <div
-            style={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)'
-            }}>
-            <CircularProgress />
-          </div>
-        )}
+            <div
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)'
+              }}>
+              <CircularProgress />
+            </div>
+          )}
         {(counter === 0 || counter < 3) &&
-        representativeData &&
-        categoryList ? (
-          <Grid item md={4}>
-            <Card className={classes.card}>
-              <CardActionArea>
-                <CardContent>
-                  <div onClick={handleClickListItem}>
-                    <Typography
-                      gutterBottom
-                      variant='h5'
-                      component='h2'
-                      align='center'
-                      style={{ color: 'white' }}>
-                      Add New Category
+          representativeData &&
+          categoryList ? (
+            <Grid item md={4}>
+              <Card className={classes.card}>
+                <CardActionArea>
+                  <CardContent>
+                    <div onClick={handleClickListItem}>
+                      <Typography
+                        gutterBottom
+                        variant='h5'
+                        component='h2'
+                        align='center'
+                        style={{ color: 'white' }}>
+                        Add New Category
                     </Typography>
-                    <div align='center'>
-                      <AddIcon
-                        color='white'
-                        fontSize='large'
-                        style={{ color: 'white', fontSize: 100 }}
-                      />
+                      <div align='center'>
+                        <AddIcon
+                          color='white'
+                          fontSize='large'
+                          style={{ color: 'white', fontSize: 100 }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <ConfirmationDialogRaw
-                    classes={{ paper: classes.paper }}
-                    keepMounted
-                    open={open}
-                    onClose={handleClose}
-                    value={value}
-                    existedcategories={categoryList}
-                  />
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ) : (
-          <div />
-        )}
+                    <ConfirmationDialogRaw
+                      classes={{ paper: classes.paper }}
+                      keepMounted
+                      open={open}
+                      onClose={handleClose}
+                      value={value}
+                      existedcategories={categoryList}
+                    />
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ) : (
+            <div />
+          )}
       </Grid>
     </div>
   )

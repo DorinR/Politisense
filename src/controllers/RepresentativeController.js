@@ -218,7 +218,7 @@ exports.getRepresentativeId = async (req, res) => {
 
 exports.getPastRepresentativeId = async (req, res) => {
   const parliaments = [36, 37, 38, 39, 40, 41, 42]
-  const db = new Firestore(false)
+  const db = new Firestore()
   parliaments.map(parl => {
     return db
       .forParliament(parl)
@@ -228,7 +228,6 @@ exports.getPastRepresentativeId = async (req, res) => {
       .select()
       .then(snapshot => {
         snapshot.forEach(doc => {
-          console.log(doc.id)
           res.status(200).json({
             success: true,
             data: doc.id

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import HeadInfo from './HeadInfo'
-import axios from 'axios'
+import { getAllBillsByHead } from '../../Utilities/CommonUsedFunctions'
 import Typography from '@material-ui/core/Typography'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
@@ -16,10 +16,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function getAllBillsByHead (head) {
-  const res = await axios.get(`/api/bills/${head}/getAllBillsByHead`)
-  return res.data.data
-}
 export function calcPercent (percent) {
   return [percent, 100 - percent]
 }

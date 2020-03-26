@@ -50,3 +50,67 @@ export function capitalizedName (sponsor) {
   }
   return null
 }
+
+export function calculateTotalVotesBills (bills) {
+  let totalBills = 0
+  if (bills) {
+    bills.forEach(bill => totalBills++)
+  }
+  return totalBills
+}
+
+export function getPartyColor (partyName) {
+  switch (partyName) {
+    case 'liberal':
+      return {
+        backgroundColor: '#D71921',
+        color: 'white'
+      }
+    case 'conservative':
+      return {
+        backgroundColor: '#0C499C',
+        color: 'white'
+      }
+    case 'ndp':
+      return {
+        backgroundColor: '#EF7E52',
+        color: 'white'
+      }
+    case 'bloc québécois':
+      return {
+        backgroundColor: '#02819E',
+        color: 'white'
+      }
+    case 'green party':
+      return {
+        backgroundColor: '#2E8724',
+        color: 'white'
+      }
+    case 'independent':
+      return {
+        backgroundColor: 'black',
+        color: 'white'
+      }
+    default:
+      return {
+        backgroundColor: 'white',
+        color: 'white'
+      }
+  }
+}
+
+export async function fetchUserRiding (userEmail) {
+  return axios
+    .get(`/api/users/${userEmail}/getUser`)
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data.riding
+      }
+    })
+    .catch(console.error)
+}
+
+export async function getAllBillsByHead (head) {
+  const res = await axios.get(`/api/bills/${head}/getAllBillsByHead`)
+  return res.data.data
+}

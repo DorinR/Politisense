@@ -23,6 +23,7 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
 import MapIcon from '@material-ui/icons/Map'
 import AssignmentIcon from '@material-ui/icons/Assignment'
+import { capitalizedName } from './Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles({
   card: {
@@ -32,19 +33,6 @@ const useStyles = makeStyles({
     backgroundColor: '#43D0C4'
   }
 })
-
-function capitalize (str) {
-  if (str && isNaN(str)) {
-    let res = str
-    res = res
-      .toLowerCase()
-      .split(' ')
-      .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-      .join(' ')
-    return res
-  }
-  return null
-}
 
 export default function HeadInfo (props) {
   // eslint-disable-next-line no-unused-vars
@@ -145,7 +133,6 @@ export default function HeadInfo (props) {
     getData()
   }, [mp])
 
-  /* eslint-disable */
   return (
     <Grid container spacing={2}>
       <Grid item>
@@ -174,7 +161,7 @@ export default function HeadInfo (props) {
                       <PersonIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>{capitalize(name)}</ListItemText>
+                  <ListItemText>{capitalizedName(name)}</ListItemText>
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
@@ -182,7 +169,7 @@ export default function HeadInfo (props) {
                       <FlagIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>{capitalize(politicalParty)}</ListItemText>
+                  <ListItemText>{capitalizedName(politicalParty)}</ListItemText>
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
@@ -190,7 +177,7 @@ export default function HeadInfo (props) {
                       <LocationOnIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>{capitalize(mp.name)}</ListItemText>
+                  <ListItemText>{capitalizedName(mp.name)}</ListItemText>
                 </ListItem>
 
                 <ListItem>
@@ -236,8 +223,8 @@ export default function HeadInfo (props) {
               </List>
             ) : (
               <Grid item style={{ paddingTop: '10px' }}>
-                {skeleton.map(skeleton => {
-                  return <Skeleton animation={false} />
+                {skeleton.map(skeleton, index => {
+                  return <Skeleton animation={false} value={skeleton} key={skeleton[index]} />
                 })}
               </Grid>
             )}

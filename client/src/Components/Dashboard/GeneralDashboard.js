@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography'
 import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
 import Radar from 'react-d3-radar'
 import axios from 'axios'
-import { fetchUserRiding } from '../Navbar'
+import { fetchUserRiding, fetchCategories, capitalizedName } from './Utilities/CommonUsedFunctions'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import CardContent from '@material-ui/core/CardContent'
@@ -16,7 +16,6 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import List from '@material-ui/core/List'
-import { fetchCategories, capitalizedName } from './Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles({
   card: {
@@ -213,8 +212,8 @@ export default function CategoryDashboard () {
               </CardContent>
             </Card>
           ) : (
-            ''
-          )}
+              ''
+            )}
         </Grid>
 
         {radarData && categoryList ? (
@@ -294,30 +293,30 @@ export default function CategoryDashboard () {
                   </Card>
                 </Grid>
               ) : (
-                ''
-              )}
+                  ''
+                )}
             </Grid>
           </Grid>
         ) : (
-          <div
-            style={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              zIndex: '-2',
-              transform: 'translate(-50%, -50%)'
-            }}>
-            <CircularProgress />
-          </div>
-        )}
+            <div
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                zIndex: '-2',
+                transform: 'translate(-50%, -50%)'
+              }}>
+              <CircularProgress />
+            </div>
+          )}
       </Grid>
     </div>
   )
 }
-function createVariablesRadar(categories){
-  let lables= []
-  categories.forEach(category =>{
-    let temp = {key: category, label:category}
+function createVariablesRadar(categories) {
+  let lables = []
+  categories.forEach(category => {
+    let temp = { key: category, label: category }
     lables.push(temp)
   })
   return lables
@@ -350,7 +349,7 @@ function createDataSetRadar(categories, data) {
 
   return [dataSetRadar, maxValue]
 }
-export function getPoliticalPartyFromSponsor(sponsors){
+export function getPoliticalPartyFromSponsor(sponsors) {
   let politicalParties = [...new Set(sponsors.map(item => item.party))]
   return politicalParties
 }
@@ -359,8 +358,8 @@ export function createDataSetDonut(sponsors, mpdata) {
   let politicalPartiesFromAllParliaments = getPoliticalPartyFromSponsor(sponsors)
   let partiesCounters = []
 
-  politicalPartiesFromAllParliaments.forEach((party,i) => {
-    let temp = {partyType: party, counter: 0}
+  politicalPartiesFromAllParliaments.forEach((party, i) => {
+    let temp = { partyType: party, counter: 0 }
     partiesCounters.push(temp)
   })
 
@@ -369,20 +368,20 @@ export function createDataSetDonut(sponsors, mpdata) {
       if (bill.voteRecord.yea === true) {
         sponsors.forEach(sponsor => {
           if (sponsor.name === bill.billData.sponsorName) {
-           partiesCounters.forEach((party)=> {
-             if(sponsor.party == party.partyType && party.partyType != "" && party.partyType != undefined){
-               party.counter++
-             }
-           })
+            partiesCounters.forEach((party) => {
+              if (sponsor.party == party.partyType && party.partyType != "" && party.partyType != undefined) {
+                party.counter++
+              }
+            })
           }
         })
       }
     })
   }
 
-  partiesCounters.forEach(element=> {
-    parties[element.partyType]=element.counter
+  partiesCounters.forEach(element => {
+    parties[element.partyType] = element.counter
   })
-  politicalPartiesFromAllParliaments =politicalPartiesFromAllParliaments.filter(element=> element != "" && element!= undefined )
-  return [parties,politicalPartiesFromAllParliaments]
+  politicalPartiesFromAllParliaments = politicalPartiesFromAllParliaments.filter(element => element != "" && element != undefined)
+  return [parties, politicalPartiesFromAllParliaments]
 }

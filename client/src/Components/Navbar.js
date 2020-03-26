@@ -27,6 +27,7 @@ import Box from '@material-ui/core/Box'
 import axios from 'axios'
 import politisenseLogo from '../politisenseLogo.png'
 import Button from '@material-ui/core/Button'
+import { fetchUserRiding } from './Dashboard/Utilities/CommonUsedFunctions'
 
 const drawerWidth = 330
 
@@ -131,17 +132,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding (userEmail) {
-  return axios
-    .get(`/api/users/${userEmail}/getUser`)
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data.riding
-      }
-    })
-    .catch(console.error)
-}
-
 export async function fetchRepresentative (riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
@@ -170,7 +160,7 @@ export default function MiniDrawer ({ children }) {
   useEffect(() => {
     handleDrawerOpen()
     async function getData () {
-      /* eslint-disable */
+      // eslint-disable-next-line
       const user = JSON.parse(localStorage.getItem('user'))
       if (user) {
         const riding = await fetchUserRiding(user.email)
@@ -181,7 +171,7 @@ export default function MiniDrawer ({ children }) {
   }, [user])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (riding) {
         const representative = await fetchRepresentative(riding)
         setUserRepresentative(representative)
@@ -316,8 +306,8 @@ export default function MiniDrawer ({ children }) {
             {theme.direction === 'rtl' ? (
               <ChevronRightIcon />
             ) : (
-                <ChevronLeftIcon />
-              )}
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </div>
         <Divider />

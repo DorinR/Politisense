@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import RepresentativeCard from './RepresentativeCard'
-import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
 import D3ChartHeadVsHeadContainer from '../D3ChartHeadVsHeadContainer'
 import Grow from '@material-ui/core/Grow'
+import { getAllBillsByHead } from '../../Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -28,12 +28,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function getAllBillsByHead (head) {
-  const res = await axios.get(
-    `http://localhost:5000/api/bills/${head}/getAllBillsByHead`
-  )
-  return res.data.data
-}
 export function calcPercent (percent) {
   return [percent, 100 - percent]
 }
