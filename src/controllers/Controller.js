@@ -118,5 +118,12 @@ module.exports = {
 
   getImageData: function (req, res) {
     return RepresentativeController.getImageData(req, res)
+  },
+
+  getRidingShapes: function (req, res) {
+    return RidingShapesController.getRidingShapes(req, res)
+  },
+  getRidingByRidingCode: function (req, res) {
+    return RidingController.getRidingByRidingCode(req, res)
   }
 }
