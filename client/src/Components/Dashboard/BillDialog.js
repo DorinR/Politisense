@@ -13,23 +13,14 @@ import LinkIcon from '@material-ui/icons/Link'
 import PersonIcon from '@material-ui/icons/Person'
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import Link from '@material-ui/core/Link'
+import { capitalizedName } from './Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles({
   avatar: {
     backgroundColor: '#43D0C4'
   }
 })
-export function capitalizedName (sponsor) {
-  if (sponsor && isNaN(sponsor)) {
-    let name = sponsor
-    name = name.toLowerCase()
-      .split(' ')
-      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-      .join(' ')
-    return name
-  }
-  return null
-}
+
 export default function BillDialog (props) {
   const classes = useStyles()
   const { onClose, selectedValue, open } = props

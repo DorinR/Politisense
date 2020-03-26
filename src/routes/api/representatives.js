@@ -9,6 +9,10 @@ const controller = require('../../controllers/Controller')
 router.get('/:riding/getRepresentative', controller.getRepresentativeByRiding)
 
 router.post('/:name/getPastRepresentativeId', controller.getPastRepresentativeId)
+// @route post api/representatives/:riding/getRepresentative
+// @desc  get representative by riding
+// @access Public
+router.get('/getCabinetMinisters', controller.getCabinetMinisters)
 
 // @route post api/getAllRepresentatives
 // @desc  get all representatives currently stored in DB
@@ -31,5 +35,7 @@ router.get(
 )
 
 router.get('/representative/representative/:name', controller.getImageData)
+
+router.get('/getAllRepsFromAllParliaments', controller.getAllRepsFromAllParliaments)
 
 module.exports = router

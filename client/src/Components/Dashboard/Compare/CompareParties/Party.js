@@ -44,9 +44,7 @@ const useStyles = makeStyles(theme => ({
 
 async function getPartyData(party) {
   return axios
-    .get(
-      `http://localhost:5000/api/parties/${party.toLowerCase()}/getAllPartydata`
-    )
+    .get(`/api/parties/${party.toLowerCase()}/getAllPartydata`)
     .then(res => {
       if (res.data.success) {
         return res.data.data
@@ -57,9 +55,7 @@ async function getPartyData(party) {
 
 async function getNumberOfBillsSponsoredByParty(party) {
   return axios
-    .get(
-      `http://localhost:5000/api/bills/${party.toLowerCase()}/getNumberOfBillsSponsoredByParty`
-    )
+    .get(`/api/bills/${party.toLowerCase()}/getNumberOfBillsSponsoredByParty`)
     .then(res => {
       if (res.data.success) {
         return res.data.data
@@ -71,7 +67,7 @@ async function getNumberOfBillsSponsoredByParty(party) {
 async function getSpendingItemsForParty(party) {
   return axios
     .get(
-      `http://localhost:5000/api/financialRecords/${party.toLowerCase()}/getAllSpendingItemsForParty`
+      `/api/financialRecords/${party.toLowerCase()}/getAllSpendingItemsForParty`
     )
     .then(res => {
       if (res.data.success) {
@@ -320,7 +316,13 @@ export default function Party(props) {
                       <FlagIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>{capitalize(party)}</ListItemText>
+                  <ListItemText>
+                    {'Party: '}
+                    <ColoredText
+                      text={capitalize.words(party)}
+                      color={iconColor}
+                    />
+                  </ListItemText>
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>

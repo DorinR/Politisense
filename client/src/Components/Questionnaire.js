@@ -18,6 +18,7 @@ import FormLabel from '@material-ui/core/FormLabel'
 import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 import { Redirect } from 'react-router'
+import { fetchCategories, formattingCategory } from './Dashboard/Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -81,16 +82,6 @@ export default function HorizontalLinearStepper (props) {
   const [activeStep, setActiveStep] = useState(0)
   const steps = getSteps()
   // eslint-disable-next-line no-unused-vars
-  const [options, setOptions] = useState([
-    'Economics',
-    'Social Issues',
-    'Trade',
-    'Healthcare',
-    'Human Rights',
-    'Business',
-    'Religion',
-    'Criminal'
-  ])
   const [category1, setCatergory1] = useState('Economics')
   const [category2, setCatergory2] = useState('')
   const [errors, setErrors] = useState({ postalCode: '' })
@@ -103,6 +94,16 @@ export default function HorizontalLinearStepper (props) {
   const handleChangeCategory2 = event => {
     setCatergory2(event.target.value)
   }
+
+  const [options, setOptions] = useState([])
+  React.useEffect(() => {
+    async function getCategoryList () {
+      const categories = await fetchCategories()
+      setOptions(categories)
+    }
+    getCategoryList()
+  }, [])
+
   function getStepContent (step) {
     switch (step) {
       case 0:
@@ -119,46 +120,15 @@ export default function HorizontalLinearStepper (props) {
                   value={category1}
                   onChange={handleChangeCategory1}
                 >
-                  <FormControlLabel
-                    value='Economics'
-                    control={<Radio />}
-                    label='Economics'
-                  />
-                  <FormControlLabel
-                    value='Social Issues'
-                    control={<Radio />}
-                    label='Social Issues'
-                  />
-                  <FormControlLabel
-                    value='Healthcare'
-                    control={<Radio />}
-                    label='Healthcare'
-                  />
-                  <FormControlLabel
-                    value='Trade'
-                    control={<Radio />}
-                    label='Trade'
-                  />
-                  <FormControlLabel
-                    value='Human Rights'
-                    control={<Radio />}
-                    label='Human Rights'
-                  />
-                  <FormControlLabel
-                    value='Business'
-                    control={<Radio />}
-                    label='Business'
-                  />
-                  <FormControlLabel
-                    value='Religion'
-                    control={<Radio />}
-                    label='Religion'
-                  />
-                  <FormControlLabel
-                    value='Criminal'
-                    control={<Radio />}
-                    label='Criminal'
-                  />
+                  {options ? options.map((option, key) => (
+                    <FormControlLabel
+                      key={key}
+                      value={option}
+                      control={<Radio />}
+                      label={formattingCategory(option)}
+                    />)
+                  )
+                    : ''}
                 </RadioGroup>
               </FormControl>
             </CardContent>
@@ -184,7 +154,7 @@ export default function HorizontalLinearStepper (props) {
                         <FormControlLabel
                           value={option}
                           control={<Radio />}
-                          label={option}
+                          label={formattingCategory(option)}
                           key={option}
                         />
                       ) : null
