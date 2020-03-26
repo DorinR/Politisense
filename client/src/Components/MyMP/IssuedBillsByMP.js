@@ -9,7 +9,7 @@ import {
 import DescriptionDialog from './DescriptionDialog'
 import clsx from 'clsx'
 import WorkIcon from '@material-ui/icons/Work'
-import { capitalizedName } from '../Dashboard/Utilities/CommonUsedFunctions'
+import { capitalizedName, totalBillsArray } from '../Dashboard/Utilities/CommonUsedFunctions'
 import CountUp from 'react-countup'
 import { Link } from 'react-router-dom'
 
@@ -97,12 +97,12 @@ const IssuedBillsByMP = props => {
                 className={classes.caption}
                 variant='caption'
               >
-                {props.userRepIssuedBills && props.userRepIssuedBills.length !== 0 && props.userRepIssuedBills !== null
-                  ? 'Bill ' + props.userRepIssuedBills[0].billsClassified.number + '-' +
-                                    capitalizedName(props.userRepIssuedBills[0].billsClassified.category) : 'No bills created'}
+                {props.userRepIssuedBills && props.userRepIssuedBills.length !== 0 && props.rows
+                  ? `Bill ${props.userRepIssuedBills[0].billsClassified.number}- ${capitalizedName(props.userRepIssuedBills[0].billsClassified.category)}` : 'No bills created'}
+
               </Typography>
             </li>
-            {props.userRepIssuedBills && props.userRepIssuedBills.length !== 0 && props.userRepIssuedBills !== null && props.rows
+            {props.userRepIssuedBills && props.userRepIssuedBills.length !== 0 && props.rows
               ? (
                 <Link
                   to={{
@@ -145,12 +145,3 @@ IssuedBillsByMP.propTypes = {
 }
 
 export default IssuedBillsByMP
-
-export function totalBillsArray (arr) {
-  const totalBills = arr.filter((thing, index, self) =>
-    index === self.findIndex((t) => (
-      t.billsClassified.number === thing.billsClassified.number
-    ))
-  )
-  return totalBills.length
-}

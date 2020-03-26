@@ -189,3 +189,34 @@ export async function fetchUserRiding (userEmail) {
     })
     .catch(console.error)
 }
+
+export async function fetchRidingCode (riding) {
+  return axios
+    .get(`/api/ridings/getRidingCode/${encodeURI(riding)}`)
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data.code
+      }
+    })
+    .catch(console.error)
+}
+
+export async function fetchRepresentative (riding) {
+  return axios
+    .get(`/api/representatives/${riding}/getRepresentative`)
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+    .catch(console.error)
+}
+
+export function totalBillsArray (arr) {
+  const totalBills = arr.filter((thing, index, self) =>
+    index === self.findIndex((t) => (
+      t.billsClassified.number === thing.billsClassified.number
+    ))
+  )
+  return totalBills.length
+}

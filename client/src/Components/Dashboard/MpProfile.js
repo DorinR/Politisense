@@ -3,9 +3,15 @@ import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
 import { Typography } from '@material-ui/core'
-import { fetchRidingCode, fetchUserRiding, fetchRepresentative } from './Sidebar/RepresentativeInfo'
+import {
+  fetchRidingCode,
+  fetchUserRiding,
+  fetchRepresentative,
+  loadingTextdata
+  , capitalizedName
+} from '../Dashboard/Utilities/CommonUsedFunctions'
 import RidingPopulation from './Sidebar/RidingPopulation/RidingPopulation'
-import { capitalizedName } from './Utilities/CommonUsedFunctions'
+
 import RidingShapeContainer from './Sidebar/RidingShape/RidingShapeContainer'
 
 const useStyles = makeStyles(theme => ({
@@ -54,7 +60,8 @@ const MpProfile = props => {
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
   const [riding, setRiding] = useState('')
-  const [yearElected, setYearElected] = useState(1000)
+  const [startDate, setStartDate] = useState(0)
+  const [endDate, setEndDate] = useState(0)
   const [ridingCode, setRidingCode] = useState('')
   const [data, setData] = useState({})
 
@@ -68,14 +75,15 @@ const MpProfile = props => {
         fetchRepresentative(riding)
       ])
       const ridingCode = promises[0]
-      const { name, politicalParty, yearElected } = promises[1]
+      const { name, party, start, end } = promises[1]
       if (name) {
         setData({
+          end: end,
           name: name,
           ridingCode: ridingCode,
           riding: riding,
-          politicalParty: politicalParty,
-          yearElected: yearElected
+          party: party,
+          start: start
         })
       }
     }
@@ -84,10 +92,11 @@ const MpProfile = props => {
 
   useEffect(() => {
     setName(data.name)
-    setPoliticalParty(data.politicalParty)
+    setPoliticalParty(data.party)
     setRiding(data.riding)
     setRidingCode(data.ridingCode)
-    setYearElected(data.yearElected)
+    setStartDate(data.start)
+    setEndDate(data.end)
   }, [data])
 
   return (
@@ -106,7 +115,7 @@ const MpProfile = props => {
 
       <Typography className={classes.fontColorTypography} variant='caption'>{'Political Party: ' + capitalizedName(politicalParty)}</Typography>
       <Typography className={classes.fontColorTypography} variant='caption'>{'Total Population: '} {riding ? (<RidingPopulation riding={riding} />) : 'N/A'}</Typography>
-      <Typography className={classes.fontColorTypography} variant='caption'>{'Elected: ' + yearElected}</Typography>
+      <Typography className={classes.fontColorTypography} variant='caption'>{`Member Since: ${loadingTextdata({ fromDate: startDate, toDate: endDate })}`}</Typography>
       <div className={classes.shapeContainer}>
         <RidingShapeContainer
           ridingCode={ridingCode}

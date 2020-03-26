@@ -8,7 +8,7 @@ import RidingShapeContainer from './RidingShape/RidingShapeContainer'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import RidingPopulation from './RidingPopulation/RidingPopulation'
-import axios from 'axios'
+import { fetchUserRiding, fetchRepresentative, fetchRidingCode } from '../Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   customCardContent: {
@@ -25,41 +25,6 @@ const useStyles = makeStyles(theme => ({
     textTransform: 'capitalize'
   }
 }))
-
-export async function fetchRidingCode (riding) {
-  return axios
-    .get(`/api/ridings/getRidingCode/${encodeURI(riding)}`)
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data.code
-      }
-    })
-    .catch(console.error)
-}
-
-export async function fetchUserRiding (userEmail) {
-  return axios
-    .get(`/api/users/${userEmail}/getUser`, {
-      params: { repinfo: userEmail }
-    })
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data.riding
-      }
-    })
-    .catch(console.error)
-}
-
-export async function fetchRepresentative (riding) {
-  return axios
-    .get(`/api/representatives/${riding}/getRepresentative`)
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data
-      }
-    })
-    .catch(console.error)
-}
 
 export default function RepresentativeInfo (props) {
   const classes = useStyles()

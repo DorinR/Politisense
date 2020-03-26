@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -12,7 +11,7 @@ import TableBody from '@material-ui/core/TableBody'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import BillDialog from '../Dashboard/BillDialog'
-import { formattingCategory,capitalizedName } from '../Dashboard/Utilities/CommonUsedFunctions'
+import { formattingCategory, capitalizedName } from '../Dashboard/Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles({
   avatar: {
@@ -82,16 +81,20 @@ export default function TableDialog (props) {
             )
               : (
                 props.type === 'bipartisan'
-                  ? (<TableRow>
-                    <TableCell className={classes.titles}>Bill Name</TableCell>
-                    <TableCell className={classes.titles} align='right'>Vote</TableCell>
-                    <TableCell className={classes.titles} align='right'>Political Party</TableCell>
-                     </TableRow>)
-                  : <TableRow>
-                    <TableCell className={classes.titles}>Bill Name</TableCell>
-                    <TableCell className={classes.titles} align='center'>Category</TableCell>
-                    <TableCell className={classes.titles} align='right'>Vote</TableCell>
+                  ? (
+                    <TableRow>
+                      <TableCell className={classes.titles}>Bill Name</TableCell>
+                      <TableCell className={classes.titles} align='right'>Vote</TableCell>
+                      <TableCell className={classes.titles} align='right'>Political Party</TableCell>
                     </TableRow>
+                  )
+                  : (
+                    <TableRow>
+                      <TableCell className={classes.titles}>Bill Name</TableCell>
+                      <TableCell className={classes.titles} align='center'>Category</TableCell>
+                      <TableCell className={classes.titles} align='right'>Vote</TableCell>
+                    </TableRow>
+                  )
               )}
           </TableHead>
           {(props.rows.length) > 0 ? (
@@ -122,33 +125,35 @@ export default function TableDialog (props) {
                     </TableRow>
                   ) : (
                     !row.voteRecord
-                      ? <TableRow key={i}>
-                        <TableCell component='th' scope='row'>
-                          <Button color='primary' onClick={() => handleBillClickOpen(row, props.type)}>
-                            <Typography>{row.billDetails.billData.number}</Typography>
-                          </Button>
-                        </TableCell>
-                        <TableCell component='th' scope='row' align='right'>
-                          <Typography style={{ color: 'green' }}>{row.billDetails.voteRecord.yea === true ? 'Yea' : 'Nay'}</Typography>
-                        </TableCell>
-                        <TableCell component='th' scope='row' align='right'>
-                          <Typography>{capitalizedName(row.category)}</Typography>
-                        </TableCell>
-                      </TableRow>
-                      : <TableRow key={i}>
-                        <TableCell component='th' scope='row'>
-                          <Button color='primary' onClick={() => handleBillClickOpen(row, 'radar')}>
-                            <Typography>{row.voteRecord.billNumber}</Typography>
-                          </Button>
-                        </TableCell>
-                        <TableCell align='center' component='th' scope='row'>
-                          <Typography>{capitalizedName(row.billData.category)}</Typography>
-                        </TableCell>
-                        <TableCell align='right'>
-                          <Typography style={row.voteRecord.yea === true ? { color: 'green' } : { color: 'red' }}>{row.voteRecord.yea === true ? 'Yea' : 'Nay'}
-                          </Typography>
-                        </TableCell>
-                        </TableRow>
+                      ? (
+                        <TableRow key={i}>
+                          <TableCell component='th' scope='row'>
+                            <Button color='primary' onClick={() => handleBillClickOpen(row, props.type)}>
+                              <Typography>{row.billDetails.billData.number}</Typography>
+                            </Button>
+                          </TableCell>
+                          <TableCell component='th' scope='row' align='right'>
+                            <Typography style={{ color: 'green' }}>{row.billDetails.voteRecord.yea === true ? 'Yea' : 'Nay'}</Typography>
+                          </TableCell>
+                          <TableCell component='th' scope='row' align='right'>
+                            <Typography>{capitalizedName(row.category)}</Typography>
+                          </TableCell>
+                        </TableRow>)
+                      : (
+                        <TableRow key={i}>
+                          <TableCell component='th' scope='row'>
+                            <Button color='primary' onClick={() => handleBillClickOpen(row, 'radar')}>
+                              <Typography>{row.voteRecord.billNumber}</Typography>
+                            </Button>
+                          </TableCell>
+                          <TableCell align='center' component='th' scope='row'>
+                            <Typography>{capitalizedName(row.billData.category)}</Typography>
+                          </TableCell>
+                          <TableCell align='right'>
+                            <Typography style={row.voteRecord.yea === true ? { color: 'green' } : { color: 'red' }}>{row.voteRecord.yea === true ? 'Yea' : 'Nay'}
+                            </Typography>
+                          </TableCell>
+                        </TableRow>)
                   )
 
               ))}

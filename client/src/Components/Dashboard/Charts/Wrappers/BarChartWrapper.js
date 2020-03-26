@@ -3,7 +3,7 @@ import BarPieChart from '../BarPieCharts'
 import BarChart from '../BarChart'
 import D3Chart from '../D3Chart'
 import BudgetChartD3 from '../BudgetChartD3'
-import D3GaugeChart from '../D3GaugeChart'
+import RadialD3Chart from '../RadialD3Chart'
 export default class BarChartWrapper extends Component {
   componentDidMount () {
     switch (this.props.type) {
@@ -14,7 +14,7 @@ export default class BarChartWrapper extends Component {
       case 'bar':
         return new BarChart(this.refs.chart)
       case 'gauge':
-        return new D3GaugeChart(this.refs.chart, this.props.data)
+        return new RadialD3Chart(this.refs.chart, this.props.data)
       default: return new D3Chart(this.refs.chart, this.props.data, this.props.categoryType)
     }
   }

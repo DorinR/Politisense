@@ -4,7 +4,7 @@ let width = null
 let arcSize = null
 let innerRadius = null
 
-export default class D3GaugeChart extends Component {
+export default class RadialD3Chart extends Component {
   constructor (element, data) {
     super(element)
     const svg = d3.select(element).append('svg')
@@ -35,16 +35,16 @@ export default class D3GaugeChart extends Component {
       .value((d) => {
         return d.value
       })
-    const g = svg.selectAll('g').data(pieData).enter()
+    const chartContainer = svg.selectAll('g').data(pieData).enter()
       .append('g')
       .attr('transform', 'translate(' + (((width) / 2) - 25) + ',' + ((width) / 2) + ') rotate(180)')
 
-    const gText = svg.selectAll('g.textClass').data([{}]).enter()
+    const labels = svg.selectAll('g.textClass').data([{}]).enter()
       .append('g')
       .classed('textClass', true)
       .attr('transform', 'translate(' + ((width / 2) - 25) + ',' + width / 2 + ') rotate(180)')
 
-    g.selectAll('path').data((d) => {
+    chartContainer.selectAll('path').data((d) => {
       return pie(d)
     }).enter().append('path')
       .attr('id', (d, i) => {
@@ -68,7 +68,7 @@ export default class D3GaugeChart extends Component {
             startAngle: r.startAngle + 0.05,
             endAngle: r.startAngle + 0.001 + 0.05
           })
-          g.append('text')
+          chartContainer.append('text')
             .attr('font-size', ((5 * width) / 100))
             .attr('dominant-baseline', 'central')
             .append('textPath')
@@ -82,7 +82,7 @@ export default class D3GaugeChart extends Component {
             endAngle: r.startAngle
           })
           const lableObj = r.data.object
-          gText.append('text')
+          labels.append('text')
             .attr('font-size', ((4 * width) / 100))
             .text(lableObj.label)
             .attr('transform', 'translate(' + (centroidText[0] - ((1.5 * width) / 100)) + ',' + (centroidText[1] + ') rotate(' + (180) + ')'))
@@ -92,7 +92,7 @@ export default class D3GaugeChart extends Component {
         .on('mouseout', (d) => mouseout(d))
     })
     const mouseover = (d) => {
-      g.append('text')
+      chartContainer.append('text')
         .attr('class', 'label')
         .attr('transform', ' rotate(' + (180) + ')')
         .attr('text-anchor', 'middle')

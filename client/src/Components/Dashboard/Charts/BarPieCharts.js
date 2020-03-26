@@ -251,7 +251,6 @@ export default class BarPieChart {
 }
 export async function createData (categories, data) {
   const dataArray = []
-  let temp = {}
   categories.forEach(category => {
     let passedBills = 0
     let failedBills = 0
@@ -266,8 +265,7 @@ export async function createData (categories, data) {
         }
       }
     })
-    temp = { State: category, freq: { Succeeded: passedBills, Failed: failedBills }, total: totalBills }
-    dataArray.push(temp)
+    dataArray.push({ State: category, freq: { Succeeded: passedBills, Failed: failedBills }, total: totalBills })
   })
   return dataArray
 }

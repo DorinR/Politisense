@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-env node */
 import React, { useState } from 'react'
 import {
   BrowserRouter as Router,
@@ -25,10 +23,7 @@ import IssuedBillsByCategory from './Components/MyMP/IssuedBillsByCategory'
 const useStyles = makeStyles(theme => ({
   root: {
     paddingTop: 56,
-    height: '100%',
-    [theme.breakpoints.up('sm')]: {
-      paddingTop: 64
-    }
+    height: '100%'
   },
   shiftContent: {
     paddingLeft: 220
@@ -112,12 +107,10 @@ const App = () => {
   const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route
       {...rest}
-      render={props =>
+      render={props =>// eslint-disable-next-line
         localStorage.getItem('user') ? (
           <Component {...props} />
-        ) : (
-          <Redirect to='/login' /> // eslint-disable-next-line
-        )}
+        ) : (<Redirect to='/login' />)}
     />
   )
 

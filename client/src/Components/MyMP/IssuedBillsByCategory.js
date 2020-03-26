@@ -119,7 +119,7 @@ const IssuedBillsByCategory = (props) => {
   useEffect(() => {
     if (rows) {
       let filteredRowsByCategory
-      if (filter === '' || rows.findIndex(ele => ele.category === filter) === -1 || filter === undefined) {
+      if (!filter || filter === '' || !rows.find(ele => ele.category === filter)) {
         filteredRowsByCategory = rows
       } else {
         filteredRowsByCategory = rows.filter(row => row.category.toLowerCase().includes(filter.toLowerCase()))

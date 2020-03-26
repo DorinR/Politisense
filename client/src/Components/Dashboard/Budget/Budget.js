@@ -364,7 +364,7 @@ Budget.propTypes = {
 
 export default Budget
 
-export function computeTotalBudget (items) {
+function computeTotalBudget (items) {
   const counter = items.reduce(sum)
   return counter
 }
@@ -375,10 +375,10 @@ export function formatNumber (num) {
   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 }
 
-export function computePercentageMpsAvg (mpsBudget, avgBudget) {
+function computePercentageMpsAvg (mpsBudget, avgBudget) {
   return ((mpsBudget - avgBudget) / avgBudget) * 100
 }
 
-export function roundingNumber (num) {
+function roundingNumber (num) {
   return num.toFixed(0)
 }
