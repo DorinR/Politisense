@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect } from 'react'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Input from '@material-ui/core/Input'
@@ -36,8 +37,8 @@ const MenuProps = {
   }
 }
 
-async function fetchAllRepresentatives () {
-  await axios
+async function fetchAllRepresentatives() {
+  return await axios
     .get('http://localhost:5000/api/representatives/getAllRepresentatives')
     .then(res => {
       if (res.data.success) {
@@ -47,8 +48,8 @@ async function fetchAllRepresentatives () {
     .catch(err => console.error(err))
 }
 
-function getAllParties (representatives) {
-  const parties = []
+function getAllParties(representatives) {
+  let parties = []
   let party
   representatives.forEach(rep => {
     party = capitalize.words(rep.party)
@@ -59,7 +60,7 @@ function getAllParties (representatives) {
   return parties
 }
 
-function getStyles (selectedParty, party, theme) {
+function getStyles(selectedParty, party, theme) {
   return {
     fontWeight:
       selectedParty === party
@@ -68,26 +69,26 @@ function getStyles (selectedParty, party, theme) {
   }
 }
 
-export default function PartySwitcher (props) {
+export default function PartySwitcher(props) {
   // eslint-disable-next-line no-use-before-define
-  const { functionUpdate } = props
+  const { functionUpdate, ...other } = props
   const classes = useStyles()
   const theme = useTheme()
   const [selectedParty, setSelectedParty] = React.useState([])
   const [dropdownParties, setDropdownParties] = React.useState([])
 
-  function populateDropdownParties (parties) {
+  function populateDropdownParties(parties) {
     setDropdownParties(parties)
   }
 
-  function handleChange (event) {
+  function handleChange(event) {
     setSelectedParty(event.target.value)
     const value = event.target.value
     functionUpdate(value)
   }
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const representatives = await fetchAllRepresentatives()
       if (representatives) {
         const parties = getAllParties(representatives)
@@ -107,14 +108,12 @@ export default function PartySwitcher (props) {
           value={selectedParty}
           onChange={handleChange}
           input={<Input />}
-          MenuProps={MenuProps}
-        >
+          MenuProps={MenuProps}>
           {dropdownParties.map(party => (
             <MenuItem
               key={party}
               value={party}
-              style={getStyles(selectedParty, party, theme)}
-            >
+              style={getStyles(selectedParty, party, theme)}>
               {party}
             </MenuItem>
           ))}

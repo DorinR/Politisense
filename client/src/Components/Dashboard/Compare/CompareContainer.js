@@ -1,6 +1,5 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import CompareRepresentatives from './CompareRepresentatives'
 import CompareParties from './CompareParties/CompareParties'
 import CompareRidings from './HistoricalComparison/CompareRidings'
 import Box from '@material-ui/core/Box'
@@ -17,8 +16,6 @@ export default function CompareContainer () {
 
   return (
     <div className={classes.container}>
-      <CompareRepresentatives />
-      <Box m={15} />
       <CompareRidings />
       <Box m={15} />
       <CompareParties />

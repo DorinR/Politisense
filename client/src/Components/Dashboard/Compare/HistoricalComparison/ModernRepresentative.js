@@ -17,6 +17,8 @@ import Grid from '@material-ui/core/Grid'
 import FlagIcon from '@material-ui/icons/Flag'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
 import AssignmentIcon from '@material-ui/icons/Assignment'
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box'
 
 const useStyles = makeStyles({
     card: {
@@ -65,6 +67,45 @@ async function fetchCurrentRepresentative(riding) {
     return currentRepresentative
 }
 
+function getPartyColor(partyName) {
+
+    switch (partyName) {
+        case 'liberal':
+            return {
+                backgroundColor: '#D71921',
+                color: 'white'
+            }
+        case 'conservative':
+            return {
+                backgroundColor: '#0C499C',
+                color: 'white'
+            }
+        case 'ndp':
+            return {
+                backgroundColor: '#EF7E52',
+                color: 'white'
+            }
+        case 'bloc québécois':
+            return {
+                backgroundColor: '#02819E',
+                color: 'white'
+            }
+        case 'green party':
+            return {
+                backgroundColor: '#2E8724',
+                color: 'white'
+            }
+        case 'independent':
+            return {
+                backgroundColor: 'black',
+                color: 'white'
+            }
+        default:
+            //backgroundColor = 'white'
+            break
+    }
+}
+
 export default function ModernRepresentative(props) {
     const { updateHead, ...other } = props
     const classes = useStyles()
@@ -93,7 +134,8 @@ export default function ModernRepresentative(props) {
             const total = await calculateTotalVotesBills(bills)
             setTotalBills(total)
             setCurrentRepresentative(currentRepresentative.name)
-            setPoliticalParty(currentRepresentative.politicalParty)
+            setPoliticalParty(currentRepresentative.party)
+            console.log(currentRepresentative.party)
             const issuedBillsByHead = await getIssuedBillsByHead(name)
             if (issuedBillsByHead.length != 0) {
                 setIssuedBills(issuedBillsByHead.length)
@@ -119,9 +161,11 @@ export default function ModernRepresentative(props) {
                             </Grid>
                         </Grid>
                         <List>
+                            <Button variant="contained" fullWidth="true" style={getPartyColor(politicalParty)}>Profile</Button>
+                            <Box m={3} />
                             <ListItem>
                                 <ListItemAvatar>
-                                    <Avatar className={classes.avatar}>
+                                    <Avatar style={getPartyColor(politicalParty)}>
                                         <PersonIcon />
                                     </Avatar>
                                 </ListItemAvatar>
@@ -129,23 +173,33 @@ export default function ModernRepresentative(props) {
                             </ListItem>
                             <ListItem>
                                 <ListItemAvatar>
-                                    <Avatar className={classes.avatar}>
+                                    <Avatar style={getPartyColor(politicalParty)}>
                                         <FlagIcon />
                                     </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText>{capitalize(politicalParty)}</ListItemText>
                             </ListItem>
+                            <Box m={2} />
+                            <Button variant="contained" fullWidth="true" style={getPartyColor(politicalParty)}>
+                                Spending
+                            </Button>
+                            <Box m={2} />
                             <ListItem>
                                 <ListItemAvatar>
-                                    <Avatar className={classes.avatar}>
+                                    <Avatar style={getPartyColor(politicalParty)}>
                                         <DollarIcon />
                                     </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText>Total Spending: </ListItemText>
                             </ListItem>
+                            <Box m={2} />
+                            <Button variant="contained" fullWidth="true" style={getPartyColor(politicalParty)}>
+                                Legislative Performance
+                            </Button>
+                            <Box m={2} />
                             <ListItem>
                                 <ListItemAvatar>
-                                    <Avatar className={classes.avatar}>
+                                    <Avatar style={getPartyColor(politicalParty)}>
                                         <FormatListNumberedIcon />
                                     </Avatar>
                                 </ListItemAvatar>
@@ -153,7 +207,7 @@ export default function ModernRepresentative(props) {
                             </ListItem>
                             <ListItem>
                                 <ListItemAvatar>
-                                    <Avatar className={classes.avatar}>
+                                    <Avatar style={getPartyColor(politicalParty)}>
                                         <AssignmentIcon />
                                     </Avatar>
                                 </ListItemAvatar>
