@@ -15,7 +15,7 @@ export default class ChartWrapper extends Component {
 
   componentDidMount () {
     // eslint-disable-next-line no-new
-    new CanadaMap(this.refs.mapHolder)
+    new CanadaMap(this.refs.mapHolde,this.props.data)
 
   }
 
@@ -29,7 +29,10 @@ export default class ChartWrapper extends Component {
               <div id="closebutton">
                 <button className="icon" border="0">Close</button>
               </div>
-              <div id="value"></div>
+              <svg id={"testing"} width='200' height='200'> </svg>
+              <div id="value">
+              </div>
+
             </div>
           </div>
           <div id="map-wrapper">

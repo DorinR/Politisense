@@ -3,7 +3,7 @@ import * as topojson from 'topojson-client'
 
 
 export default class D3Chart {
-  constructor () {
+  constructor (element,externalData) {
     // const width = 960
     // const height = 600
     let data1;
@@ -60,13 +60,25 @@ export default class D3Chart {
         .attr('data-id', function (d) { return d.properties.ID })
         .attr("class", "riding")
         .attr("fill", "#d8d8d8")
-        .on('click', clicked)
+        .on('click',d=> clicked(d,externalData))
 
-       function clicked(d) {
+       function clicked(d,externalData) {
+          let politicanInfo = ""
+         externalData[1].forEach(element=>{
+           console.log("codes are !",element.code,d.properties.ID)
 
+           if(element.code == d.properties.FEDUID){
+             console.log("code matched!",element.code,d.properties.FEDUID)
+             externalData[0].forEach(politician=>{
+               if(politician.riding == element.nameEnglish){
+                 politicanInfo=politician
+                 console.log(politician)
+               }
+             })
+           }
+         })
          console.log(d.properties.ID)
-         remoateactivate(d.properties.ID);
-
+         remoateactivate(d.properties.ID,politicanInfo);
          let bounds = path.bounds(d),
              dx = bounds[1][0] - bounds[0][0],
              dy = bounds[1][1] - bounds[0][1],
@@ -179,7 +191,7 @@ export default class D3Chart {
       d3.selectAll('.riding')
           .attr("fill", function(d,i) { return colours(winnerById.get(d.properties.ID)) })
 
-       function tooltipcontent(m) {
+       function tooltipcontent(m,politicianInfo) {
          let test
          let  r = data[1].Election.Riding[m]
          let candidatecontent = ''
@@ -217,22 +229,45 @@ export default class D3Chart {
          };
          console.log(r,totalVotes,candidatecontent,votesCounted)
 
+         let polticainRow = '<tr class="candidateline"><td class="candidate-name">' + politicianInfo.name + '</td> <td class="candidate-votes">' + politicianInfo.party + '</td><td class="candidate-percentage">' + politicianInfo.riding + '</td></tr>';
+         // console.log(politicianInfo.imageUR,imgCompnent)
+          let imgCompnent = '<image alt ="nothing" height="200" width="100" xlink:href={' +politicianInfo.imageUrl + '} />'
+         // imgCompnent
+         let testing = d3.select("#testing")
+
+            testing.selectAll("image").data([]).remove()
+         // testing.enter()
+          console.log(testing)
+         //
+         testing.append('image')
+             .attr('xlink:href', politicianInfo.imageUrl)
+             .attr('width', 200)
+             .attr('height', 200)
+
+
          d3.select("#tooltip")
              .select("#value")
              .html(function(){
-               return "<div class='tooltiptop'><p class='ridingname'>" + (r.RNE) +  "</p><p class='pollsrepoted'>" + (r.PollsRep) + " of " + (r.TotalPolls) + " polls reporting</p></div><table class='candidatebox'><tr class='candidateline'><th class='nametitle'>Name (top 5)</th><th>Votes</th><th>%</th></tr>" + candidatecontent + "</table>";
+               return "<div class='tooltiptop'>" +
+                   "<p class='ridingname'> Representative Info </p>" +
+                   "<table class='candidatebox'>" +
+                   "<tr class='candidateline'>" +
+                   "<th class='nametitle'>Name: </th>" +
+                   "<th>Party </th>" +
+                   "<th>Riding</th>" +
+                   "</tr>" +polticainRow + "</table>";
              });
          // })
        };
 
 
 
-       function remoateactivate(ridingid) {
+       function remoateactivate(ridingid,politicianInfo) {
          let a = d3.select(".riding[data-id='" + ridingid + "']");
          a.node().parentNode.appendChild(a.node());
          d3.select('.activenode').classed('activenode',false);
          a.classed('activenode',true);
-         tooltipcontent(ridingid);
+         tooltipcontent(ridingid,politicianInfo);
          d3.selectAll("#tooltip").classed("hidden", false);
        };
 
@@ -647,23 +682,6 @@ export default class D3Chart {
         .attr("x", function (d) { return projection([-76.46,44.21])[0]; })
         .attr("y", function (d) { return projection([-76.46,44.21])[1]; })
         .text("Kingston");
-
-
-    // getdata()
-
-
-    //  function getdata() {
-    //
-    //    d3.json("https://gist.githubusercontent.com/Khalidbaraka/1bc8de5575e0ec9afd39e77c183cdb76/raw/466dae553f273727592551233fbe4a7a5b48038e/testing.json", function(dataFromServer) {
-    //
-    //
-    //
-    //
-    //    });
-    //
-    // }
-
-
 
     //Zoom control Working!
 
