@@ -220,3 +220,211 @@ export function totalBillsArray (arr) {
   )
   return totalBills.length
 }
+
+export function formatNumber (num) {
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+}
+
+export function createVariablesRadar (categories) {
+  const lables = []
+  categories.forEach(category => {
+    lables.push({ key: category, label: category })
+  })
+  return lables
+}
+
+export function createDataSetRadar (categories, data) {
+  const dataArray = []
+  let temp = {}
+  const dataSetRadar = {}
+  let maxValue = 0
+  categories.forEach(category => {
+    let totalvotes = 0
+    data.forEach(bill => {
+      if (bill.billData.category === category.toLowerCase()) {
+        totalvotes++
+      }
+    })
+    const categorySmallLetter = category.toLowerCase().trim()
+    temp = { category: categorySmallLetter, value: totalvotes }
+    dataArray.push(temp)
+  })
+
+  dataArray.forEach(category => {
+    if (category.value > maxValue) {
+      maxValue = category.value
+    }
+    if (category.category) {
+      dataSetRadar[category.category] = category.value
+    }
+  })
+
+  maxValue = roundUpToNearestInteger(maxValue)
+  return [dataSetRadar, maxValue]
+}
+export function getPoliticalPartyFromSponsor (sponsors) {
+  const politicalParties = [...new Set(sponsors.map(item => item.party))]
+  return politicalParties
+}
+
+export function createPartyCountersForBiPartisanIndex (politicalPartiesFromAllParliaments) {
+  const partiesCounters = []
+  politicalPartiesFromAllParliaments.forEach((party) => {
+    partiesCounters.push({ partyType: party, counter: 0 })
+  })
+  return partiesCounters
+}
+export function getBillsForBiPartisanIndex (mpdata, sponsors) {
+  const bills = []
+  mpdata.forEach(bill => {
+    if (bill.voteRecord.yea === true) {
+      sponsors.forEach(sponsor => {
+        if (sponsor.name === bill.billData.sponsorName) {
+          if (!(bills && bills.find(element => element.billDetails.billData.number === bill.billData.number))) {
+            bills.push({ billDetails: bill, category: sponsor.party })
+          }
+        }
+      })
+    }
+  })
+  return bills
+}
+
+export function getPartiesDataForBiPartisanIndex (mpdata, sponsors, partiesCounters) {
+  const partiesData = []
+  mpdata.forEach(bill => {
+    if (bill.voteRecord.yea === true) {
+      sponsors.forEach(sponsor => {
+        if (sponsor.name === bill.billData.sponsorName) {
+          partiesCounters.forEach((party) => {
+            if (sponsor.party === party.partyType && party.partyType !== '' && party.partyType !== undefined) {
+              party.counter++
+            }
+          })
+        }
+      })
+    }
+  })
+  partiesCounters.forEach(element => {
+    partiesData.push({ label: element.partyType, freq: element.counter, value: 0 })
+  })
+  return partiesData
+}
+
+export function formattingPartiesData (partiesData) {
+  partiesData = partiesData.filter(element =>
+    element.label !== undefined && element.label !== '' && element.freq !== 0
+  )
+  partiesData.forEach(element => {
+    element.label = capitalizedName(element.label)
+    element.value = getPercentagePartisanIndex(element, partiesData)
+  })
+  partiesData = sortBasedOnLargest(partiesData)
+  partiesData = AssignColorForEachItem(partiesData)
+
+  return partiesData
+}
+
+export function createDataSetDonut (sponsors, mpdata) {
+  const politicalPartiesFromAllParliaments = getPoliticalPartyFromSponsor(sponsors)
+  let bills = []
+  let partiesData = []
+  const partiesCounters = createPartyCountersForBiPartisanIndex(politicalPartiesFromAllParliaments)
+  if (mpdata.length) {
+    bills = getBillsForBiPartisanIndex(mpdata, sponsors)
+    partiesData = getPartiesDataForBiPartisanIndex(mpdata, sponsors, partiesCounters)
+  }
+  partiesData = formattingPartiesData(partiesData)
+  return [partiesData, bills]
+}
+
+export function createDataPieBarTable (categories, data) {
+  const billsForSpecificCategory = []
+  categories.forEach(category => {
+    data.forEach(bill => {
+      if (bill.billsClassified.category === (category.toLowerCase())) {
+        pushToArrayUniqueBillsForPieBar(billsForSpecificCategory, bill, category)
+      }
+    })
+  })
+
+  return billsForSpecificCategory
+}
+export function sortBasedOnLargest (list) {
+  return list.sort(function (a, b) {
+    return a.value - b.value
+  })
+}
+export function AssignColorForEachItem (list) {
+  const colors = ['#32afa9', '#556fb5', '#00818a', '#293462', '#7189bf', '#d45079']
+
+  list.forEach((item, index) => {
+    item.color = colors[index]
+  })
+  return list
+}
+
+export function roundUpToNearestInteger (num) {
+  if (num % 10 === 0) return num + 5
+  return (10 - num % 10) + num
+}
+
+export function pushToArrayUniqueBillsForPieBar (arr, obj, category) {
+  if (arr.length !== 0) {
+    const index = arr.findIndex((e) => e.bill.billsClassified.number === obj.billsClassified.number)
+    if (index === -1) {
+      if (obj.voteRecord.yeas > obj.voteRecord.nays) {
+        arr.push({ bill: obj, category: [category], status: 'Passed' })
+      } else {
+        arr.push({ bill: obj, category: [category], status: 'Failed' })
+      }
+    } else {
+      const currentCategoryList = arr[index].category
+      const modifiedCategoryList = currentCategoryList.concat([category])
+      const uniqueCategoryList = [...new Set(modifiedCategoryList)]
+      arr[index].category = uniqueCategoryList
+    }
+  } else {
+    if (obj.voteRecord.yeas > obj.voteRecord.nays) {
+      arr.push({ bill: obj, category: [category], status: 'Passed' })
+    } else {
+      arr.push({ bill: obj, category: [category], status: 'Failed' })
+    }
+  }
+}
+export function pushToArrayUniqueBillsForRadar (arr, obj, category) {
+  if (arr.length !== 0) {
+    const index = arr.findIndex((e) => e.bill.billData.number === obj.billData.number)
+    if (index === -1) {
+      if (obj.voteRecord.yea) {
+        arr.push({ bill: obj, category: [category], status: 'Yea' })
+      } else {
+        arr.push({ bill: obj, category: [category], status: 'Nay' })
+      }
+    } else {
+      const currentCategoryList = arr[index].category
+      const modifiedCategoryList = currentCategoryList.concat([category])
+      const uniqueCategoryList = [...new Set(modifiedCategoryList)]
+
+      arr[index].category = uniqueCategoryList
+    }
+  } else {
+    if (obj.voteRecord.yea) {
+      arr.push({ bill: obj, category: [category], status: 'Yea' })
+    } else {
+      arr.push({ bill: obj, category: [category], status: 'Nay' })
+    }
+  }
+}
+
+export function createRadarRows (bills, categoryList) {
+  const rows = []
+  categoryList.forEach(category => {
+    bills.forEach(bill => {
+      if (bill.billData.category === (category.toLowerCase())) {
+        pushToArrayUniqueBillsForRadar(rows, bill, category)
+      }
+    })
+  })
+  return rows
+}

@@ -18,7 +18,7 @@ import DescriptionDialog from './DescriptionDialog'
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
 import TableDialog from './TableDialog'
 import Slide from '@material-ui/core/Slide'
-
+import { createVariablesRadar } from '../Dashboard/Utilities/CommonUsedFunctions'
 export const Transition = React.forwardRef(function Transition (props, ref) {
   return <Slide direction='up' ref={ref} {...props} />
 })
@@ -151,11 +151,3 @@ MPActivityDistribution.propTypes = {
 }
 
 export default MPActivityDistribution
-
-function createVariablesRadar (categories) {
-  const lables = []
-  categories.forEach(category => {
-    lables.push({ key: category, label: category })
-  })
-  return lables
-}

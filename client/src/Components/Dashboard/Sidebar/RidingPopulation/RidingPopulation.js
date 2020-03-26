@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { formatNumber } from '../../Budget/Budget'
+import { formatNumber } from '../../Utilities/CommonUsedFunctions'
 
 export async function fetchPopulation (riding) {
   return axios

@@ -17,6 +17,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
+import { formatNumber } from '../Utilities/CommonUsedFunctions'
+
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%'
@@ -370,9 +372,6 @@ function computeTotalBudget (items) {
 }
 function sum (total, num) {
   return total + num
-}
-export function formatNumber (num) {
-  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 }
 
 function computePercentageMpsAvg (mpsBudget, avgBudget) {
