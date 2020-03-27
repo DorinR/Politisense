@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import Poll from 'react-polls';
 import Card from 'react-bootstrap/Card'
-import Container from 'react-bootstrap/Container'
+import Button from 'react-bootstrap/Button'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Row from 'react-bootstrap/Row'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
-import Col from 'react-bootstrap/Col'
+import ListGroup from 'react-bootstrap/ListGroup'
 import axios from 'axios'
-
 
 // Declaring poll question and answers
 const pollQuestion = 'Is react-polls useful?'
@@ -67,7 +66,7 @@ class PollsMainPage extends Component {
         return (
             <div>
                 <Row style={{ height: '1.5rem' }}></Row>
-                <InputGroup className="mb-3" style={{ width: '20rem' }}>
+                <InputGroup className="mb-3" style={{ width: '40rem' }}>
                     <InputGroup.Prepend>
                         <InputGroup.Text id="search" ></InputGroup.Text>
                     </InputGroup.Prepend>
@@ -75,11 +74,14 @@ class PollsMainPage extends Component {
                         placeholder="Filter Through Bills"
                         aria-label="Search"
                         aria-describedby="basic-addon1"
+                        style={{ width: '15rem' }}
                     />
+                    <Button variant="warning" >My Voting History</Button>
+                    <Button variant="info" >Most Popular Bills</Button>
                 </InputGroup>
-                <ul>
+                <ListGroup>
                     {this.state.legislativeObjects.map(eachData => {
-                        return (<li>
+                        return (<ListGroup.Item>
                             <Card style={{ width: '40rem' }}>
                                 <Card.Body>
                                     <Card.Title>{eachData.title}</Card.Title>
@@ -88,13 +90,15 @@ class PollsMainPage extends Component {
                                         <small className="text-muted">{eachData.date}</small>
                                     </Card.Text>
                                     <Card.Text>{eachData.description}</Card.Text>
-                                    <Poll answers={pollAnswers} onVote={this.handleVote} />
+                                    {/* <Poll answers={pollAnswers} onVote={this.handleVote} /> */}
+                                    <Button variant="success">For</Button>{' '}
+                                    <Button variant="danger">Against</Button>
                                 </Card.Body>
                             </Card>
                             <Row style={{ height: '1.5rem' }}></Row>
-                        </li>)
+                        </ListGroup.Item>)
                     })}
-                </ul>
+                </ListGroup>
             </div>
 
         );
