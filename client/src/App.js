@@ -54,8 +54,7 @@ const App = () => {
           <Component {...props} />
         ) : (
           <Redirect to='/login' /> // eslint-disable-next-line
-        )
-      }
+        )}
     />
   )
 
