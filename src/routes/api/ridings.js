@@ -13,5 +13,5 @@ router.get('/getRidingCode/:riding', controller.getRidingCode)
 // @access Public
 router.get('/getRidingPopulation/:riding', controller.getRidingPopulation)
 
-router.get('/getRidingByRidingCode',controller.getRidingByRidingCode)
+router.get('/getRidingByRidingCode', controller.getRidingByRidingCode)
 module.exports = router

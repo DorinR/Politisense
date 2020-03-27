@@ -57,108 +57,69 @@ exports.getRidingPopulation = (req, res) => {
     )
 }
 
-exports.getRidingByRidingCode = async (req,res)=>{
-    let ridings= []
-    const db43 = new Firestore(false).forParliament(43)
-    let pol = db43.Politician()
-    let politicans = await getAllPoliticiansParl43()
-    let ride = await getAllRidings()
+exports.getRidingByRidingCode = async (req, res) => {
+  const politicans = await getAllPoliticiansParl43()
+  const ridings = await getAllRidings()
 
+  if (politicans.length && ridings.length) {
     res.status(200).json({
-        success: true,
-        data: [politicans,ride]
+      success: true,
+      data: [politicans, ridings]
     })
+  }
 
-    // console.log("politicans.length",politicans.length,politicans[0],ride.l)
-    // const db = new Firestore()
-    // await db.Riding()
-    //     .innerJoin("nameEnglish",politicans,"riding")
-    //     .select()
-    //     .then(snapshot => {
-    //         if (snapshot.empty) {
-    //             res.status(404).json({
-    //                 success: false,
-    //                 message: 'inner join not found By Code provided'
-    //             })
-    //         }
-    //         snapshot.forEach(doc => {
-    //             console.log(doc.data())
-    //             ridings.push(doc.data())
-    //         })
-    //         res.status(200).json({
-    //             success: true,
-    //             data: ridings
-    //         })
-    //     })
-    //     .catch(err =>
-    //         res.status(400).json({
-    //             success: false,
-    //             message: err
-    //         })
-    //     )
+  async function getAllPoliticiansParl43 () {
+    const politicains = []
+    const db43 = new Firestore().forParliament(43)
 
-    // let result =[]
-    // ride.innerJoin('nameEnglish',politicans,'riding')
-    //     .then(snapshot => {
-    //         if (snapshot.empty) {
-    //             res.status(404).json({
-    //                 success: false,
-    //                 message: 'inner join not found By Code provided'
-    //             })
-    //         }
-    //         snapshot.forEach(doc => {
-    //             console.log(doc.data())
-    //             result.push(doc.data())
-    //         })
-    //         res.status(200).json({
-    //             success: true,
-    //             data: result
-    //         })
-    //     })
-    //     .catch(err =>
-    //         res.status(400).json({
-    //             success: false,
-    //             message: err
-    //         })
-    //     )
-
-}
-
-async function getAllPoliticiansParl43(){
-    let politicains = []
-    const db43 = new Firestore(false).forParliament(43)
-
-    await db43.Politician().select()
-        .then(snapshot => {
-            if (snapshot.empty) {
-                console.log("NO politicans")
-               return []
-            }
-            snapshot.forEach(doc => {
-              politicains.push(doc.data())
-            })
+    await db43
+      .Politician()
+      .select()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          res.status(404).json({
+            success: false,
+            message: 'No politicians found'
+          })
+          return []
+        }
+        snapshot.forEach(doc => {
+          politicains.push(doc.data())
         })
-        .catch(err => console.log("NO politicans",err)
-        )
+      })
+      .catch(err => {
+        res.status(400).json({
+          success: false,
+          message: err
+        })
+      })
     return politicains
-}
+  }
 
-async function getAllRidings(){
-    let ridings = []
+  async function getAllRidings () {
+    const ridings = []
     const db = new Firestore()
-    await db.Riding()
-        .select()
-        .then(snapshot => {
-            if (snapshot.empty) {
-               console.log("no ridings")
-                return []
-            }
-            snapshot.forEach(doc => {
-              ridings.push(doc.data())
-            })
+    await db
+      .Riding()
+      .select()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          res.status(404).json({
+            success: false,
+            message: 'No ridings found'
+          })
+          return []
+        }
+        snapshot.forEach(doc => {
+          ridings.push(doc.data())
         })
-        .catch(err =>
-            console.log("invlaid parameters")
-        )
+      })
+      .catch(err => {
+        res.status(400).json({
+          success: false,
+          message: err
+        })
+      })
     return ridings
+  }
 }
