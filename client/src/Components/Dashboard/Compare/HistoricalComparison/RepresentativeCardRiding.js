@@ -28,6 +28,17 @@ const useStyles = makeStyles({
   }
 })
 
+async function getPartyData (party) {
+  return axios
+    .get(`/api/parties/${party.toLowerCase()}/getAllPartydata`)
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+    .catch(console.error)
+}
+
 async function fetchPastRepresentativeId (representative, data) {
   const res = await axios.post(`/api/representatives/${representative}/getPastRepresentativeId`, data)
   return res.data.data
@@ -43,8 +54,7 @@ async function fetchPastRepresentativePairedVotes (member) {
   return res.data.data
 }
 
-export default function RepresentativeCard (props) {
-  const updateHead = props
+export default function RepresentativeCard () {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -52,19 +62,21 @@ export default function RepresentativeCard (props) {
   const [start, setStart] = useState('')
   const [nbBills, setNbBills] = useState(0)
   const [nbPairedBills, setNbPairedBills] = useState(0)
+  const [partyImageUrl, setPartyImageUrl] = useState('')
 
   const updateNameFromSwitcher = newName => {
     setStart(newName.start)
     setName(newName.name)
     setImageUrl(newName.imageUrl)
     setPoliticalParty(newName.party)
-    updateHead(newName.name)
   }
 
   useEffect(() => {
     async function getData () {
       const data = { start: start }
       const member = await fetchPastRepresentativeId(name, data)
+      const partyData = await getPartyData(politicalParty)
+      setPartyImageUrl(partyData.imageUrl)
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member)
       const totalBills = calculateTotalVotesBills(pastRepresentativeVotes)
       setNbBills(totalBills)
@@ -84,7 +96,20 @@ export default function RepresentativeCard (props) {
         <Card className={classes.card}>
           <CardContent>
             <Grid container justify='center'>
-              <Grid item xs={12}>
+              <Grid item xs={3}>
+                <Avatar
+                  alt='Party Logo'
+                  src={partyImageUrl}
+                  className={classes.bigAvatar}
+                  style={{
+                    marginLeft: 12,
+                    width: 100,
+                    height: 100,
+                    border: '3px solid #41aaa8'
+                  }}
+                />
+              </Grid>
+              <Grid item xs={9}>
                 <Avatar
                   style={{
                     marginLeft: 26,

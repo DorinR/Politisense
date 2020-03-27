@@ -29,16 +29,26 @@ const useStyles = makeStyles({
 })
 
 async function fetchCurrentRepresentative (riding) {
-  let currentRepresentative = []
-  await axios
+  return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
       if (res.data.success) {
-        currentRepresentative = res.data.data
+        return res.data.data
+      }
+      return null
+    })
+    .catch(console.error)
+}
+
+async function getPartyData (party) {
+  return axios
+    .get(`/api/parties/${party.toLowerCase()}/getAllPartydata`)
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
       }
     })
-    .catch(err => console.error(err))
-  return currentRepresentative
+    .catch(console.error)
 }
 
 export default function ModernRepresentative () {
@@ -49,6 +59,7 @@ export default function ModernRepresentative () {
   const [mp] = React.useState([])
   const [currentRepresentative, setCurrentRepresentative] = React.useState([])
   const [politicalParty, setPoliticalParty] = React.useState([])
+  const [partyImageUrl, setPartyImageUrl] = useState('')
 
   useEffect(() => {
     async function getIssuedBillsByHead (head) {
@@ -68,6 +79,8 @@ export default function ModernRepresentative () {
       setTotalBills(total)
       setCurrentRepresentative(currentRepresentative.name)
       setPoliticalParty(currentRepresentative.party)
+      const partyData = await getPartyData(currentRepresentative.party)
+      setPartyImageUrl(partyData.imageUrl)
       const issuedBillsByHead = await getIssuedBillsByHead(name)
       if (issuedBillsByHead.length !== 0) {
         setIssuedBills(issuedBillsByHead.length)
@@ -83,7 +96,20 @@ export default function ModernRepresentative () {
         <Card className={classes.card}>
           <CardContent>
             <Grid container justify='center'>
-              <Grid item xs={12}>
+              <Grid item xs={3}>
+                <Avatar
+                  alt='Party Logo'
+                  src={partyImageUrl}
+                  className={classes.bigAvatar}
+                  style={{
+                    marginLeft: 12,
+                    width: 100,
+                    height: 100,
+                    border: '3px solid #41aaa8'
+                  }}
+                />
+              </Grid>
+              <Grid item xs={9}>
                 <RepresentativeImage
                   align='center'
                   representativeToLoad={name}

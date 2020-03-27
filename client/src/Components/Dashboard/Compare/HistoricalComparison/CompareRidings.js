@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import ModernRepresentative from './ModernRepresentative'
 import RepresentativeCardRiding from './RepresentativeCardRiding'
-import axios from 'axios'
+import { getAllBillsByHead } from '../../Utilities/CommonUsedFunctions'
 import Typography from '@material-ui/core/Typography'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
@@ -26,16 +26,6 @@ const useStyles = makeStyles(theme => ({
     paddingTop: '20px'
   }
 }))
-
-export async function getAllBillsByHead (head) {
-  const res = await axios.get(
-    `http://localhost:5000/api/bills/${head}/getAllBillsByHead`
-  )
-  return res.data.data
-}
-export function calcPercent (percent) {
-  return [percent, 100 - percent]
-}
 
 export default function CompareRepresentatives () {
   // eslint-disable-next-line no-use-before-define

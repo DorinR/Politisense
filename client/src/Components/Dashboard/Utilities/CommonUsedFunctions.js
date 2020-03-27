@@ -114,3 +114,7 @@ export async function getAllBillsByHead (head) {
   const res = await axios.get(`/api/bills/${head}/getAllBillsByHead`)
   return res.data.data
 }
+
+export function calcPercent (percent) {
+  return [percent, 100 - percent]
+}
