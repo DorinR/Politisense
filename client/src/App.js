@@ -12,14 +12,14 @@ import SignUp from './Components/Auth/SignUp'
 import Navbar from './Components/Navbar'
 import Logout from './Components/Logout'
 import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
-import MapWrapper from './Components/Map/MapWrapper'
 import Questionnaire from './Components/Questionnaire'
 import GeneralDashboard from './Components/Dashboard/GeneralDashboard'
 import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
 import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
 import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
 import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
-import MapContainer from "./Components/Map/MapContainer";
+import MapContainer from './Components/Map/MapContainer'
+
 const App = () => {
   const LoginContainer = () => (
     <div className='container'>
@@ -54,7 +54,8 @@ const App = () => {
           <Component {...props} />
         ) : (
           <Redirect to='/login' /> // eslint-disable-next-line
-        )}
+        )
+      }
     />
   )
 
