@@ -46,53 +46,54 @@ exports.index = (req, res) => {
 }
 
 async function rawClassifications (req, res) {
-  const db = new Firestore(false).forParliament(req.params.parliament)
+  const db = new Firestore().forParliament(req.params.parliament)
   const raws = db.TfIdfClassification()
   const bills = db.Bill()
 
   let data = await bills.innerJoin('_id', raws, 'bill')
   data = data.map(datum => {
     return {
-      id: datum.id_bill,
-      number: datum.number_bill,
-      title: datum.title_bill,
-      text: datum.text_bill,
-      link: datum.link_bill,
-      dateVoted: datum.dateVoted_bill,
-      sponsorName: datum.sponsorName_bill,
-      raw: datum.raw_raw
+      id: datum.id,
+      number: datum.number,
+      title: datum.title,
+      text: datum.text,
+      link: datum.link,
+      dateVoted: datum.dateVoted,
+      sponsorName: datum.sponsorName,
+      raw: datum.raw
     }
   })
   Utils.success(res, data, 'Bill Data with Raw TF-IDF Classifications')
 }
 
 async function derivedClassifications (req, res) {
-  const db = new Firestore(false).forParliament(req.params.parliament)
+  const db = new Firestore().forParliament(req.params.parliament)
   const tags = db.BillClassification()
   const bills = db.Bill()
 
   let data = await bills.innerJoin('_id', tags, 'bill')
-  data = data.map(datum => {
+  data = data
+    .map(datum => {
     return {
-      id: datum.id_bill,
-      number: datum.number_bill,
-      title: datum.title_bill,
-      text: datum.text_bill,
-      link: datum.link_bill,
-      dateVoted: datum.dateVoted_bill,
-      sponsorName: datum.sponsorName_bill,
-      category: datum.category_tag
+      id: datum.id,
+      number: datum.number,
+      title: datum.title,
+      text: datum.text,
+      link: datum.link,
+      dateVoted: datum.dateVoted,
+      sponsorName: datum.sponsorName,
+      category: datum.category
     }
   })
   Utils.success(res, data, 'Bill Data with Derived Classifications')
 }
 
 async function billRecords (req, res) {
-  const bills = new Firestore(false)
+  const bills = new Firestore()
     .forParliament(req.params.parliament)
     .Bill()
   const data = await Utils.records(bills)
-  Utils.success(res, data, 'Bill Records')
+  Utils.success(res, data.map(datum => { return datum.data }), 'Bill Records')
 }
 
 async function politicianRecords (req, res) {
@@ -100,7 +101,7 @@ async function politicianRecords (req, res) {
     .forParliament(req.params.parliament)
     .Politician()
   const data = await Utils.records(politicians)
-  Utils.success(res, data, 'Politician Records')
+  Utils.success(res, data.map(datum => { return datum.data }), 'Politician Records')
 }
 
 async function politicianRoles (req, res) {
@@ -109,38 +110,39 @@ async function politicianRoles (req, res) {
   const roles = db.Role()
 
   let data = await politicians.innerJoin('_id', roles, 'politician')
-  data = data.map(datum => {
+  data = data
+    .map(datum => {
     return {
-      name: datum.name_politician,
-      party: datum.party_politician,
-      electedFrom: datum.start_politician,
-      electedTo: datum.end_politician !== 0 ? datum.end_politician : 'current',
-      roleFrom: datum.fromDate_role,
-      roleTo: datum.toDate_role !== 0 ? datum.toDate_role : 'current',
-      riding: datum.riding_politician,
-      imageUrl: datum.imageUrl_politician,
-      group: datum.group_role,
-      title: datum.title_role,
-      type: datum.type_role
+      name: datum.name,
+      party: datum.party,
+      electedFrom: datum.start,
+      electedTo: datum.end !== 0 ? datum.end : 'current',
+      roleFrom: datum.fromDate,
+      roleTo: datum.toDate !== 0 ? datum.toDate : 'current',
+      riding: datum.riding,
+      imageUrl: datum.imageUrl,
+      group: datum.group,
+      title: datum.title,
+      type: datum.type
     }
   })
   Utils.success(res, data, 'Politician Data with Roles')
 }
 
 async function politicianFinancials (req, res) {
-  const db = new Firestore(false).forParliament(req.params.parliament)
+  const db = new Firestore(true).forParliament(req.params.parliament)
   const politicians = db.Politician()
   const financials = db.FinancialRecord()
 
   let data = await politicians.innerJoin('_id', financials, 'member')
   data = data.map(datum => {
     return {
-      name: datum.name_politician,
-      party: datum.party_politician,
-      electedFrom: datum.start_politician,
-      electedTo: datum.end_politician !== 0 ? datum.end_politician : 'current',
-      riding: datum.riding_politician,
-      imageUrl: datum.imageUrl_politician,
+      name: datum.name,
+      party: datum.party,
+      electedFrom: datum.start,
+      electedTo: datum.end !== 0 ? datum.end : 'current',
+      riding: datum.riding,
+      imageUrl: datum.imageUrl,
       amount: datum.amount,
       category: datum.category,
       parent: datum.parent,
@@ -156,37 +158,48 @@ async function voteRecords (req, res) {
     .forParliament(req.params.parliament)
     .VoteRecord()
   const data = await Utils.records(voteRecords)
-  Utils.success(res, data, 'Vote Records')
+  Utils.success(res, data.map(datum => { return datum.data }), 'Vote Records')
 }
 
 async function voters (req, res) {
   const db = new Firestore(false).forParliament(req.params.parliament)
   const voteRecords = db.VoteRecord()
   const voters = db.Vote()
-  const politicians = db.Politician()
-  let data = await voteRecords
-    .innerJoin('_id', voters, 'vote')
-    .innerJoin('member_voter', politicians, '_id')
 
+  let promises = await Promise.all([
+    Utils.records(db.Politician()),
+    voteRecords.innerJoin('_id', voters, 'vote')
+    ])
+  const politicians = promises[0]
+  const members = {}
+  politicians.forEach(politician => {
+    members[`${politician.id}`] = politician.data
+  })
+  console.log(members)
+  let data = promises[1]
+  data = data
+    .filter(datum => {
+      return Object.keys(members).includes(datum.member)
+    })
+  console.log(data)
   data = data.map(datum => {
     return {
-      name: datum.name_politician,
-      party: datum.party_politician,
-      electedTo: datum.start_politician,
-      electedFrom: datum.end_politician !== 0 ? datum.end_politician : 'current',
-      riding: datum.riding_politician,
-      imageUrl: datum.imageUrl_politician,
-      yea: datum.yea_voter,
-      paired: datum.paired_voter,
-      id: datum.id_vote_record,
-      number: datum.billNumber_vote_record,
-      assent: datum.assent_vote_record,
-      yeas: datum.yeas_vote_record,
-      nays: datum.nays_vote_record,
-      bill: datum[`name_${voteRecords.reference.id}`]
+      name: members[datum.member].name,
+      party: members[datum.member].party,
+      electedTo: members[datum.member].start,
+      electedFrom: members[datum.member].end !== 0 ? members[datum.member].end : 'current',
+      riding: members[datum.member].riding,
+      imageUrl: members[datum.member].imageUrl,
+      yea: datum.yea,
+      paired: datum.paired,
+      id: datum.id,
+      number: datum.billNumber,
+      assent: datum.assent,
+      yeas: datum.yeas,
+      nays: datum.nays,
     }
   })
-  Utils.success(res, data, 'Politician Data with Financial Records')
+  Utils.success(res, data, 'Politician Data with Voting Records')
 }
 
 async function ridingRecords (req, res) {
@@ -194,7 +207,7 @@ async function ridingRecords (req, res) {
     .forParliament(req.params.parliament)
     .Riding()
   const data = await Utils.records(ridings)
-  Utils.success(res, data, 'Riding Records')
+  Utils.success(res, data.map(datum => { return datum.data }), 'Riding Records')
 }
 
 const UpdateDirector = {
@@ -237,7 +250,7 @@ exports.update = async (req, res) => {
 
   const admins = db.Admin().where('email', '==', req.body.email)
   let admin = await Utils.records(admins)
-  admin = admin[0]
+  admin = admin[0].data
 
   console.log(req.body)
   console.log(admin)

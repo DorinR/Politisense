@@ -1,19 +1,10 @@
-const Model = require('./firebase').Models.Model
+const Model = require('./model/models').Model
 
 class Reference {
-  constructor (reference, refString) {
-    this.referenceString = refString
+  constructor (reference) {
     this.reference = reference
     this.modelsOnly = false
     this.query = null
-  }
-
-  id () {
-    return this.reference.id
-  }
-
-  hierarchy () {
-    return this.referenceString.split('/')
   }
 
   where (attribute, operator, value) {
@@ -125,15 +116,14 @@ class Reference {
     if (model instanceof Model) {
       model = Model.serialise(model)
     }
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       this.reference
         .add(model)
         .then(result => {
-          resolve(result.id)
+          resolve(true)
         })
-        .catch((e) => {
-          console.error(e)
-          reject(e)
+        .catch(() => {
+          resolve(false)
         })
     })
   }
@@ -141,6 +131,14 @@ class Reference {
   async innerJoin (key, reference, refKey) {
     const left = {}
     const right = {}
+
+    const fetch = (snapshot, container, suffix) => {
+      snapshot.forEach(doc => {
+        const data = doc.data()
+        data[`_id${suffix}`] = doc.id
+        container[doc.id] = data
+      })
+    }
 
     await this.select().then(snapshot => {
       fetch(snapshot, left, `_${this.reference.id}`)
@@ -156,116 +154,41 @@ class Reference {
       refKey = `${refKey}_${reference.reference.id}`
     }
 
-    return cartesianProduct(left, key, this.reference.id, right, refKey, reference.reference.id)
-  }
-}
+    const join = []
 
-class DataReference {
-  constructor (suffix, data = []) {
-    this.suffix = suffix
-    this.data = data || []
-  }
-
-  id () {
-    return this.suffix
-  }
-
-  forEach (fn) {
-    return this.data.forEach(fn)
-  }
-
-  map (fn) {
-    return this.data.map(fn)
-  }
-
-  async innerJoin (key, reference, refKey) {
-    const left = format(this.data, this.suffix)
-    const right = {}
-
-    if (key === '_id') {
-      key = `${key}_${this.suffix}`
-    }
-    if (refKey === '_id') {
-      refKey = `${refKey}_${reference.reference.id}`
-    }
-
-    await reference.select().then(snapshot => {
-      fetch(snapshot, right, `_${reference.reference.id}`)
-    })
-    return cartesianProduct(left, key, this.suffix, right, refKey, reference.reference.id)
-  }
-}
-
-function format (data, suffix) {
-  const container = {}
-  data.forEach(datum => {
-    if (hasIDKey(datum, suffix)) {
-      container[`_id${suffix}`] = datum
-    } else {
-      throw new Error('ERROR: data reference instance does not have an id property')
-    }
-  })
-}
-
-function hasIDKey (datum, suffix) {
-  return Object.keys(datum).some(key => {
-    return key === `_id${suffix}`
-  })
-}
-
-function fetch (snapshot, container, suffix) {
-  snapshot.forEach(doc => {
-    const data = doc.data()
-    data[`_id${suffix}`] = doc.id
-    container[doc.id] = data
-  })
-}
-
-function cartesianProduct (left, key, leftName, right, refKey, rightName) {
-  const join = []
-
-  Object.keys(left).forEach(leftKey => {
-    const leftDoc = left[leftKey]
-    const leftKeys = Object.keys(leftDoc)
-    if (!leftKeys.includes(key) && key !== `_id_${leftName}`) {
-      console.warn(
-        `Current collection: ${this.reference.id} contains items without key: ${key} `
-      )
-    }
-    Object.keys(right).forEach(rightKey => {
-      const rightDoc = right[rightKey]
-      const rightKeys = Object.keys(rightDoc)
-      if (
-        !rightKeys.includes(refKey) &&
-        refKey !== `_id_${rightName}`
-      ) {
+    Object.keys(left).forEach(leftKey => {
+      const leftDoc = left[leftKey]
+      const leftKeys = Object.keys(leftDoc)
+      if (!leftKeys.includes(key) && key !== `_id_${this.reference.id}`) {
         console.warn(
-          `Current collection: ${rightName} contains items without key: ${refKey} `
+          `Current collection: ${this.reference.id} does not contain items with key: ${key} `
         )
       }
-      if (leftDoc[key] === rightDoc[refKey]) {
-        const joined = {}
-        leftKeys.forEach(k => {
-          if (rightKeys.includes(k)) {
+      Object.keys(right).forEach(rightKey => {
+        const rightDoc = right[rightKey]
+        const rightKeys = Object.keys(rightDoc)
+        if (
+          !rightKeys.includes(refKey) &&
+          refKey !== `_id_${reference.reference.id}`
+        ) {
+          console.warn(
+            `Current collection: ${reference.reference.id} does not contain items with key: ${refKey} `
+          )
+        }
+        if (leftDoc[key] === rightDoc[refKey]) {
+          const joined = {}
+          leftKeys.forEach(k => {
             joined[k] = leftDoc[k]
-          } else {
-            joined[`${k}_${leftName}`] = leftDoc[k]
-          }
-        })
-        rightKeys.forEach(k => {
-          if (leftKeys.includes(k)) {
+          })
+          rightKeys.forEach(k => {
             joined[k] = rightDoc[k]
-          } else {
-            joined[`${k}_${rightName}`] = rightDoc[k]
-          }
-        })
-        join.push(joined)
-      }
+          })
+          join.push(joined)
+        }
+      })
     })
-  })
-  return new DataReference(`_${leftName}`, join)
+    return join
+  }
 }
 
-module.exports = {
-  Reference: Reference
-}
+module.exports.Reference = Reference
