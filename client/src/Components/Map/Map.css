@@ -6,22 +6,14 @@
 }
 
 .right-sidebar {
-  float: right;
-  margin-left: 10px;
-  width: 25%;
+  /* float: right; */
+  /* margin-left: 10px; */
+  /* width: 25%; */
 }
 
 svg#map {
   width: 100% !important;
-}
-
-#map-wrapper {
-  width: calc(100% - 368px);
-  position: relative;
-  display: block;
-  float: left;
-  overflow: hidden;
-  /*margin-left: 100px;*/
+  height: 80%;
 }
 
 .background {
@@ -227,15 +219,11 @@ svg#map {
   position: absolute;
   height: auto;
   z-index: 97;
-  right: 0;
-  top: 0;
-  margin: 16px;
+  right: 26%;
+  top: 17px;
 }
 
 .zoom-button {
-  margin: 0 0 8px;
-  width: 40px;
-  height: 40px;
   cursor: pointer;
   position: relative;
 }
@@ -424,11 +412,6 @@ svg#map {
     height: 14px;
   }
 
-  .right-sidebar {
-    margin-left: 24px;
-    width: 270px;
-  }
-
   .selection-holder {
     padding-bottom: 12px;
   }
@@ -441,9 +424,9 @@ svg#map {
     font-size: 12px;
   }
 
-  #map-wrapper {
+  /* #map-wrapper {
     width: calc(100% - 294px);
-  }
+  } */
 
   .map-legend {
     margin-bottom: 16px;
@@ -516,11 +499,11 @@ svg#map {
     padding-bottom: 4px;
   }
 
-  #map-wrapper {
+  /* #map-wrapper {
     width: 100%;
     float: none;
     margin: 0 0 16px;
-  }
+  } */
 
   #map {
     min-height: 0;
