@@ -1,619 +1,614 @@
 #map-holder {
-    width: 100%;
-    position: relative;
+  width: 100%;
+  position: relative;
+  margin-left: 0px !important;
+  margin-top: 0px !important;
 }
 
 .right-sidebar {
-    float: right;
-    margin-left: 24px;
-    width: 344px;
+  float: right;
+  margin-left: 10px;
+  width: 25%;
+}
+
+svg#map {
+  width: 100% !important;
 }
 
 #map-wrapper {
-    width: calc(100% - 368px);
-    position: relative;
-    display: block;
-    float: left;
-    overflow: hidden;
-    /*margin-left: 100px;*/
+  width: calc(100% - 368px);
+  position: relative;
+  display: block;
+  float: left;
+  overflow: hidden;
+  /*margin-left: 100px;*/
 }
 
 .background {
-    fill: none;
-    pointer-events: all;
+  fill: none;
+  pointer-events: all;
 }
 
 .riding {
-    stroke: #fafafa;
-    stroke-width: 0.5px;
-    vector-effect: non-scaling-stroke;
+  stroke: #fafafa;
+  stroke-width: 0.5px;
+  vector-effect: non-scaling-stroke;
 }
 
 .activenode {
-    stroke: #000;
-    stroke-width: 2px;
+  stroke: #000;
+  stroke-width: 1px;
+  /* stroke-dasharray: 20; */
+  /* animation: dash 10s linear; */
+  animation: glow 1s ease alternate infinite;
 }
 
+@keyframes glow {
+  from {
+    stroke-opacity: 100%;
+    fill-opacity: 100%;
+  }
+  to {
+    stroke-opacity: 100%;
+    fill-opacity: 70%;
+  }
+}
 
 .city-label {
-    font-size: 13px;
-    text-anchor: middle;
-    fill: #fff;
-    text-anchor: middle;
-    pointer-events: none;
+  font-size: 13px;
+  text-anchor: middle;
+  fill: #fff;
+  text-anchor: middle;
+  pointer-events: none;
 }
 
 .city-label-background {
-    stroke: #000;
-    stroke-width: 4px;
-    stroke-opacity: 0.6;
-    stroke-linejoin: round;
-    stroke-linecap: round;
+  stroke: #000;
+  stroke-width: 4px;
+  stroke-opacity: 0.6;
+  stroke-linejoin: round;
+  stroke-linecap: round;
 }
 
-.first-tier, .second-tier {
-    display: none;
+.first-tier,
+.second-tier {
+  display: none;
 }
 
 .placement-text {
-    font-size: 100px;
-    text-anchor: middle;
-    pointer-events: none;
-    opacity: 0;
+  font-size: 100px;
+  text-anchor: middle;
+  pointer-events: none;
+  opacity: 0;
 }
 
 #map {
-    transform: translateZ(0);
-    width: 100%;
-    display: block;
+  transform: translateZ(0);
+  width: 100%;
+  display: block;
 }
 
 #menuselection {
-    display: block;
-    width: auto;
-    height: auto;
-    font-size: 16px;
+  display: block;
+  width: auto;
+  height: auto;
+  font-size: 16px;
 }
 
 /*TOOLTIP*/
 
 #tooltip {
-    height: auto;
-    padding: 12px 12px 6px;
-    border: 1px solid #999;
-    z-index: 100;
-    border-radius: 4px;
-    top: auto;
-    width: auto;
-    width: 100%;
-    margin: 0;
-    box-sizing: border-box;
-    z-index: 1000;
+  height: auto;
+  padding: 12px 12px 6px;
+  border: 1px solid #999;
+  z-index: 100;
+  border-radius: 4px;
+  top: auto;
+  width: auto;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  z-index: 1000;
 }
 
 .hidden {
-    display: none;
-    pointer-events: none !important;
+  display: none;
+  pointer-events: none !important;
 }
 
 #tooltip #closebutton {
-    float: right;
-    position: relative;
-    margin-top: -4px;
-    margin-right: -4px;
-    height: 30px;
-    width: 30px;
-    border-radius: 100%;
-    cursor: pointer;
-    display: none;
+  float: right;
+  position: relative;
+  margin-top: -4px;
+  margin-right: -4px;
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+  cursor: pointer;
+  display: none;
 }
 
 #tooltip #closebutton .icon {
-    position: absolute;
+  position: absolute;
 
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    width: 24px;
-    height: 24px;
-
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
 }
 
 #tooltip p {
-    padding-bottom: 5px;
-    margin: 0;
-    line-height: 1em;
+  padding-bottom: 5px;
+  margin: 0;
+  line-height: 1em;
 }
 
 #tooltip p.ridingname {
-    font-size: 20px;
-    font-weight: bold;
-    color: #444;
-    padding-bottom: 6px;
-    line-height: 1.2em;
+  font-size: 20px;
+  font-weight: bold;
+  color: #444;
+  padding-bottom: 6px;
+  line-height: 1.2em;
 }
 
 #tooltip p.pollsrepoted {
-    font-size: 14px;
-    color: #666;
-    padding-bottom: 16px;
-    line-height: 1em;
+  font-size: 14px;
+  color: #666;
+  padding-bottom: 16px;
+  line-height: 1em;
 }
 
 #tooltip .candidatebox {
-    border-collapse: collapse;
-    color: #666;
-    width: 100%;
+  border-collapse: collapse;
+  color: #666;
+  width: 100%;
 }
 
-#tooltip .candidatebox th, #tooltip .candidatebox td {
-    border-bottom: 1px solid #c7c7c7;
+#tooltip .candidatebox th,
+#tooltip .candidatebox td {
+  border-bottom: 1px solid #c7c7c7;
 }
 
 #tooltip .candidatebox tr:last-of-type td {
-    border-bottom: none;
+  border-bottom: none;
 }
 
-
 #tooltip .candidateline th {
-    font-size: 12px;
-    text-align: left;
-    padding: 0 10px 4px 0;
-    font-weight: 400;
-    text-transform: uppercase;
-    line-height: 1em;
+  font-size: 12px;
+  text-align: left;
+  padding: 0 10px 4px 0;
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 1em;
 }
 
 #tooltip .candidateline td {
-    font-size: 14px;
-    line-height: 1.2em;
-    padding: 8px 0 6px;
-    vertical-align: top;
+  font-size: 14px;
+  line-height: 1.2em;
+  padding: 8px 0 6px;
+  vertical-align: top;
 }
 
 #tooltip .candidateline td span {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 #tooltip .candidateline td span.echeck img {
-    height: 16px;
-    width: 13px;
-    vertical-align: text-bottom;
-    margin: 0 -12px 0 0;
+  height: 16px;
+  width: 13px;
+  vertical-align: text-bottom;
+  margin: 0 -12px 0 0;
 }
 
-#tooltip .candidateline td.candidate-name, #tooltip .candidateline td.candidate-votes  {
-    padding-right: 16px;
+#tooltip .candidateline td.candidate-name,
+#tooltip .candidateline td.candidate-votes {
+  padding-right: 16px;
 }
 
 #tooltip .candidateline td.candidate-name {
-    padding-left: 14px;
+  padding-left: 14px;
 }
 
 .party-marker {
-    width: 8px;
-    height: 8px;
-    float: left;
-    margin: 4px 0 0 -14px;
-    border-radius: 4px;
-    background-color: #a5a5a5;
+  width: 8px;
+  height: 8px;
+  float: left;
+  margin: 4px 0 0 -14px;
+  border-radius: 4px;
+  background-color: #a5a5a5;
 }
 
-
 /*END OF TOOLTIP*/
-
-
 
 /*ZOOM*/
 
 .zoom-buttons {
-    position: absolute;
-    height: auto;
-    z-index: 97;
-    right: 0;
-    top: 0;
-    margin: 16px;
+  position: absolute;
+  height: auto;
+  z-index: 97;
+  right: 0;
+  top: 0;
+  margin: 16px;
 }
 
 .zoom-button {
-    margin: 0 0 8px;
-    width: 40px;
-    height: 40px;
-    background-color: #999;
-    border-radius: 100%;
-    cursor: pointer;
-    position: relative;
-    opacity: 0.9;
+  margin: 0 0 8px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  position: relative;
 }
 
 .zoom-button-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    fill: #fff;
-    width: 24px;
-    height: 24px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  fill: #fff;
+  width: 24px;
+  height: 24px;
 }
 
 .disable {
-    opacity: 0.3;
-    pointer-events: none;
+  opacity: 0.3;
+  pointer-events: none;
 }
 
 /*END OF ZOOM*/
 
-
 /*LEGEND STYLING*/
 
 .map-legend {
-    margin-bottom: 24px;
-    display: flex;
+  margin-bottom: 24px;
+  display: flex;
 }
 
 .map-legend-party-box {
-    width: 20%;
-    padding: 0 4px 0 0;
-    margin: 0;
+  width: 20%;
+  padding: 0 4px 0 0;
+  margin: 0;
 }
 
 .leadbox {
-    width: 100%;
-    height: 12px;
-    font-size: 11px;
-    vertical-align: top;
-    display: block;
-    margin-bottom: 2px;
+  width: 100%;
+  height: 12px;
+  font-size: 11px;
+  vertical-align: top;
+  display: block;
+  margin-bottom: 2px;
 }
 
 .winbox {
-    width: 100%;
-    height: 12px;
-    font-size: 11px;
-    vertical-align: top;
-    display: block;
+  width: 100%;
+  height: 12px;
+  font-size: 11px;
+  vertical-align: top;
+  display: block;
 }
 
 .legend-label {
-    line-height: 16px;
-    font-size: 12px;
-    text-transform: uppercase;
-    color: #666;
-    display: block;
-    margin: 0;
-    width: 100%;
-    text-align: center;
+  line-height: 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #666;
+  display: block;
+  margin: 0;
+  width: 100%;
+  text-align: center;
 }
 
 .map-legend-label-box {
-    padding: 16px 6px 0 0;
-    width: 38px;
-
+  padding: 16px 6px 0 0;
+  width: 38px;
 }
 
 .box-label {
-    color: #666;
-    text-align: right;
-    font-size: 12px;
-    line-height: 12px;
-    text-transform: uppercase;
-    margin: 0;
+  color: #666;
+  text-align: right;
+  font-size: 12px;
+  line-height: 12px;
+  text-transform: uppercase;
+  margin: 0;
 }
 
 #win {
-    margin-top: 3px;
+  margin-top: 3px;
 }
-
-
 
 #libpartybox .leadbox {
-    background-color: #EC9599;
+  background-color: #ec9599;
 }
 
-#libpartybox .winbox, .markerLIB {
-    background-color: #da3037;
+#libpartybox .winbox,
+.markerLIB {
+  background-color: #da3037;
 }
 
 #conpartybox .leadbox {
-    background-color: #97AAC4;
-;
+  background-color: #97aac4;
 }
 
-#conpartybox .winbox, .markerCON {
-    background-color: #335A8C;
+#conpartybox .winbox,
+.markerCON {
+  background-color: #335a8c;
 }
 
 #ndppartybox .leadbox {
-    background-color: #FBC684;
+  background-color: #fbc684;
 }
 
-#ndppartybox .winbox, .markerNDP {
-    background-color: #f7900e;
+#ndppartybox .winbox,
+.markerNDP {
+  background-color: #f7900e;
 }
 
 #grnpartybox .leadbox {
-    background-color: #A4D1AA;
+  background-color: #a4d1aa;
 }
 
-#grnpartybox .winbox, .markerGRN {
-    background-color: #4da659;
+#grnpartybox .winbox,
+.markerGRN {
+  background-color: #4da659;
 }
 
 #bqpartybox .leadbox {
-    background-color: #95D1DD;
+  background-color: #95d1dd;
 }
 
-#bqpartybox .winbox, .markerBQ {
-    background-color: #2fa4bc;
+#bqpartybox .winbox,
+.markerBQ {
+  background-color: #2fa4bc;
 }
 
 #ppcpartybox .leadbox {
-    background-color: #A99EC2;
+  background-color: #a99ec2;
 }
 
-#ppcpartybox .winbox, .markerPPC {
-    background-color: #564288;
+#ppcpartybox .winbox,
+.markerPPC {
+  background-color: #564288;
 }
 
 #indpartybox .leadbox {
-    background-color: #CACACA;
+  background-color: #cacaca;
 }
 
 #indpartybox .winbox {
-    background-color: #999999;
+  background-color: #999999;
 }
 
-
-
 #logo {
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 40px;
-    display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 40px;
+  display: block;
 }
 
 #mobilelogo {
-    display: none;
-    height: 36px;
+  display: none;
+  height: 36px;
 }
-
 
 @media (max-width: 935px) {
+  .tallybox {
+    padding: 0 0 4px;
+  }
 
+  .barpartybox {
+    padding: 0 20px 0 0;
+  }
 
-    .tallybox {
-        padding: 0 0 4px;
-    }
+  .partylabelholder {
+    height: 14px;
+  }
 
-    .barpartybox {
-        padding: 0 20px 0 0;
-    }
+  .partylabel {
+    display: none;
+  }
 
-    .partylabelholder {
-        height: 14px;
-    }
+  .partylabelmobile {
+    font-size: 14px;
+    line-height: 14px;
+    display: inline-block;
+    margin: 0 auto;
+  }
 
-    .partylabel {
-        display: none;
-    }
+  #checkmark {
+    height: 14px;
+  }
 
-    .partylabelmobile {
-        font-size: 14px;
-        line-height: 14px;
-        display: inline-block;
-        margin: 0 auto;
-    }
+  #checkmark svg {
+    width: 12px;
+    height: 14px;
+  }
 
-    #checkmark {
-        height: 14px;
-    }
+  .right-sidebar {
+    margin-left: 24px;
+    width: 270px;
+  }
 
-    #checkmark svg {
-        width: 12px;
-        height: 14px;
-    }
+  .selection-holder {
+    padding-bottom: 12px;
+  }
 
-    .right-sidebar {
-        margin-left: 24px;
-        width: 270px;
-    }
+  #searchboxtitle {
+    font-size: 16px;
+  }
 
-    .selection-holder {
-        padding-bottom: 12px;
-    }
+  #searchboxinstructions {
+    font-size: 12px;
+  }
 
-    #searchboxtitle {
-        font-size: 16px;
+  #map-wrapper {
+    width: calc(100% - 294px);
+  }
 
-    }
+  .map-legend {
+    margin-bottom: 16px;
+  }
 
-    #searchboxinstructions {
-        font-size: 12px;
-    }
+  #map {
+    min-height: 340px;
+  }
 
-    #map-wrapper {
-        width: calc(100% - 294px);
-    }
+  .zoom-buttons {
+    margin: 12px;
+  }
 
-    .map-legend {
-        margin-bottom: 16px;
-    }
+  #tooltip p.ridingname {
+    font-size: 16px;
+    padding-bottom: 4px;
+  }
 
-    #map {
-        min-height: 340px;
-    }
+  #tooltip p.pollsrepoted {
+    font-size: 11px;
+    padding-bottom: 8px;
+  }
 
+  #tooltip .candidateline th {
+    font-size: 11px;
+  }
 
-    .zoom-buttons {
-        margin: 12px;
-    }
+  #tooltip .candidateline td {
+    font-size: 12px;
+    padding: 6px 0 4px;
+  }
 
+  #tooltip .candidateline td span {
+    font-size: 11px;
+  }
 
-    #tooltip p.ridingname {
-        font-size: 16px;
-        padding-bottom: 4px;
-    }
+  #tooltip .candidateline td span.echeck img {
+    height: 14px;
+    width: 12px;
+  }
 
-    #tooltip p.pollsrepoted {
-        font-size: 11px;
-        padding-bottom: 8px;
-    }
-
-    #tooltip .candidateline th {
-        font-size: 11px;
-    }
-
-    #tooltip .candidateline td {
-        font-size: 12px;
-        padding: 6px 0 4px;
-    }
-
-    #tooltip .candidateline td span {
-        font-size: 11px;
-    }
-
-    #tooltip .candidateline td span.echeck img {
-        height: 14px;
-        width: 12px;
-    }
-
-    .party-marker {
-        margin: 3px 0 0 -14px;
-    }
-
+  .party-marker {
+    margin: 3px 0 0 -14px;
+  }
 }
 
-
 @media (max-width: 768px) {
+  .waffle-holder {
+    padding: 0 0 8px;
+  }
 
-    .waffle-holder {
-        padding: 0 0 8px;
-    }
+  .right-sidebar {
+    float: none;
+    width: 100%;
+    margin-left: 0;
+  }
 
-    .right-sidebar {
-        float: none;
-        width: 100%;
-        margin-left: 0;
-    }
+  .selection-holder {
+    float: none;
+    padding-bottom: 8px;
+  }
 
-    .selection-holder {
-        float: none;
-        padding-bottom: 8px;
-    }
+  #searchboxtitle {
+    font-size: 14px;
+    padding-bottom: 2px;
+  }
 
-    #searchboxtitle {
-        font-size: 14px;
-        padding-bottom: 2px;
+  #searchboxinstructions {
+    font-size: 12px;
+    padding-bottom: 4px;
+  }
 
-    }
+  #map-wrapper {
+    width: 100%;
+    float: none;
+    margin: 0 0 16px;
+  }
 
-    #searchboxinstructions {
-        font-size: 12px;
-        padding-bottom: 4px;
-    }
+  #map {
+    min-height: 0;
+  }
 
-    #map-wrapper {
-        width: 100%;
-        float: none;
-        margin: 0 0 16px;
-    }
+  .tallybox {
+    padding: 0;
+  }
 
-    #map {
-        min-height: 0;
-    }
+  #tallyboxtitle {
+    margin: 0;
+    font-size: 12px;
+    fill: #222;
+    display: block;
+    line-height: 1em;
+    padding-bottom: 6px;
+  }
 
+  .barpartybox {
+    padding: 0 4px 2px 0;
+    width: 13%;
+  }
 
-    .tallybox {
-        padding: 0;
+  .partylogo {
+    width: 30px;
+  }
 
-    }
+  .partylabelholder {
+    margin-bottom: 2px;
+  }
 
-    #tallyboxtitle {
-        margin: 0;
-        font-size: 12px;
-        fill: #222;
-        display: block;
-        line-height: 1em;
-        padding-bottom: 6px;
+  .partylabelmobile {
+    font-size: 13px;
+    line-height: 13px;
+  }
 
-    }
+  .partyseats {
+    font-size: 16px;
+    letter-spacing: 0.5px;
+  }
 
-    .barpartybox {
-        padding: 0 4px 2px 0;
-        width: 13%;
-    }
+  #checkmark {
+    height: 13px;
+    width: 0px;
+  }
 
-    .partylogo {
-        width: 30px;
-    }
+  #checkmark svg {
+    height: 13px;
+    width: 8px;
+  }
 
-    .partylabelholder {
-        margin-bottom: 2px;
-    }
+  .winninglinelabel,
+  .reportinglabel {
+    font-size: 11px;
+  }
 
-    .partylabelmobile {
-        font-size: 13px;
-        line-height: 13px;
-    }
+  #tooltip {
+    width: calc(100% - 12px);
+    max-width: none;
+    margin: 0 6px;
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 8px 8px 4px;
+    box-shadow: 0px 0px 1px #888888;
+    border: none;
+  }
 
-    .partyseats {
-        font-size: 16px;
-        letter-spacing: 0.5px;
+  #tooltip #closebutton {
+    display: block;
+  }
 
-    }
+  .zoom-buttons {
+    margin: 8px;
+  }
 
-    #checkmark {
-        height: 13px;
-        width: 0px;
-    }
+  #menuselection {
+    width: 100%;
+  }
 
-    #checkmark svg {
-        height: 13px;
-        width: 8px;
-    }
+  #logo {
+    display: none;
+  }
 
-
-    .winninglinelabel, .reportinglabel {
-        font-size: 11px;
-    }
-
-
-    #tooltip {
-        width: calc(100% - 12px);
-        max-width: none;
-        margin: 0 6px;
-        position: absolute;
-        bottom: 0;
-        background-color: rgba(255, 255, 255, 0.95);
-        padding: 8px 8px 4px;
-        box-shadow: 0px 0px 1px #888888;
-        border: none;
-    }
-
-    #tooltip #closebutton {
-        display: block;
-    }
-
-
-    .zoom-buttons {
-        margin: 8px;
-    }
-
-
-    #menuselection {
-        width: 100%;
-    }
-
-    #logo {
-        display: none;
-    }
-
-    #mobilelogo {
-        position: static;
-        display: block;
-        margin: 0 auto;
-        padding-bottom: 8px;
-
-    }
+  #mobilelogo {
+    position: static;
+    display: block;
+    margin: 0 auto;
+    padding-bottom: 8px;
+  }
 }
