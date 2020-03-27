@@ -14,6 +14,7 @@ imageURLs['indepedent'] = 'https://is2-ssl.mzstatic.com/image/thumb/Purple62/v4/
 imageURLs['forces et démocratie'] = 'https://en.wikipedia.org/wiki/Strength_in_Democracy#/media/File:Strengthindemocracy.png'
 imageURLs['co-operative commonwealth federation'] = 'https://en.wikipedia.org/wiki/Co-operative_Commonwealth_Federation#/media/File:Co-operative_Commonwealth_Federation_logo.png'
 imageURLs['people\'s party'] = 'https://en.wikipedia.org/wiki/People%27s_Party_of_Canada#/media/File:PPC-logo-en.png'
+imageURLs['green party'] = 'https://www.homelesshub.ca/sites/default/files/greens.png'
 Object.freeze(imageURLs)
 
 class PartyClassificationAction extends Action {

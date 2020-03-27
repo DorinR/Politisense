@@ -61,36 +61,8 @@ export default class RadialD3Chart extends Component {
         return i === 0 ? 1 : i === 1 ? 0.3 : 1
       })
 
-    svg.selectAll('g').each(function (d, index) {
-      d3.select(this).selectAll('path').each((r, i) => {
-        if (i === 1) {
-          r.data.arc.centroid({
-            startAngle: r.startAngle + 0.05,
-            endAngle: r.startAngle + 0.001 + 0.05
-          })
-          chartContainer.append('text')
-            .attr('font-size', ((5 * width) / 100))
-            .attr('dominant-baseline', 'central')
-            .append('textPath')
-            .attr('textLength', (d, i) => {
-              return 0
-            })
-        }
-        if (i === 0) {
-          const centroidText = r.data.arc.centroid({
-            startAngle: r.startAngle,
-            endAngle: r.startAngle
-          })
-          const lableObj = r.data.object
-          labels.append('text')
-            .attr('font-size', ((4 * width) / 100))
-            .text(lableObj.label)
-            .attr('transform', 'translate(' + (centroidText[0] - ((1.5 * width) / 100)) + ',' + (centroidText[1] + ') rotate(' + (180) + ')'))
-            .attr('dominant-baseline', 'central')
-        }
-      }).on('mouseover', (d) => mouseover(d))
-        .on('mouseout', (d) => mouseout(d))
-    })
+    assigningLabelsForEachPartyArc()
+    showingBiPartisanValueOnceHoveredOnEachPartyArc()
     const mouseover = (d) => {
       chartContainer.append('text')
         .attr('class', 'label')
@@ -104,6 +76,49 @@ export default class RadialD3Chart extends Component {
 
     const mouseout = () => {
       d3.selectAll('.label').remove()
+    }
+
+    function assigningLabelsForEachPartyArc () {
+      svg.selectAll('g').each(function (d, index) {
+        d3.select(this).selectAll('path').each((r, i) => {
+          switch (i) {
+            case 0: {
+              const centroidText = r.data.arc.centroid({
+                startAngle: r.startAngle,
+                endAngle: r.startAngle
+              })
+              const lableObj = r.data.object
+              labels.append('text')
+                .attr('font-size', ((4 * width) / 100))
+                .text(lableObj.label)
+                .attr('transform', 'translate(' + (centroidText[0] - ((1.5 * width) / 100)) + ',' + (centroidText[1] + ') rotate(' + (180) + ')'))
+                .attr('dominant-baseline', 'central')
+              break }
+            case 1: {
+              r.data.arc.centroid({
+                startAngle: r.startAngle + 0.05,
+                endAngle: r.startAngle + 0.001 + 0.05
+              })
+              chartContainer.append('text')
+                .attr('font-size', ((5 * width) / 100))
+                .attr('dominant-baseline', 'central')
+                .append('textPath')
+                .attr('textLength', (d, i) => {
+                  return 0
+                })
+              break
+            }
+          }
+        })
+      })
+    }
+
+    function showingBiPartisanValueOnceHoveredOnEachPartyArc () {
+      svg.selectAll('g').each(function (d, index) {
+        d3.select(this).selectAll('path')
+          .on('mouseover', (d) => mouseover(d))
+          .on('mouseout', (d) => mouseout(d))
+      })
     }
     function drawChart () {
       // reset the width
