@@ -5,7 +5,6 @@ import Typography from '@material-ui/core/Typography'
 import BarChartWrapper from './Charts/Wrappers/BarChartWrapper'
 import Radar from 'react-d3-radar'
 import axios from 'axios'
-import { fetchUserRiding } from '../Navbar/Navbar'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import CardContent from '@material-ui/core/CardContent'
@@ -16,7 +15,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import List from '@material-ui/core/List'
-import { fetchCategories, capitalizedName } from './Utilities/CommonUsedFunctions'
+import { fetchCategories, capitalizedName,fetchUserRiding } from './Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles({
   card: {

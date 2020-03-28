@@ -23,20 +23,8 @@ import { useTheme } from '@material-ui/core/styles'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import { fetchUserRiding } from '../Dashboard/Utilities/CommonUsedFunctions'
+import { fetchUserRiding ,fetchRepresentative} from '../Dashboard/Utilities/CommonUsedFunctions'
 
-export async function fetchRepresentative (riding) {
-  return axios
-    .get(
-      `/api/representatives/${riding}/getRepresentative`
-    )
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data.name
-      }
-    })
-    .catch(console.error)
-}
 const useStyles = makeStyles(theme => ({
   drawer: {
     width: 240,
