@@ -7,6 +7,7 @@ const RidingController = require('./RidingController')
 const PartyController = require('./PartyController')
 const FinancialRecordController = require('./FinancialRecordController')
 const BudgetController = require('./BudgetController')
+const ActivityVotingController = require('./ActivityVotingController')
 const ParliamentController = require('./ParliamentController')
 
 module.exports = {
@@ -135,6 +136,14 @@ module.exports = {
   },
   getAllRolesByRep: function (req, res) {
     return RepresentativeController.getAllRolesByRep(req, res)
+  },
+
+  index: function (req, res) {
+    return ActivityVotingController.index(req, res)
+  },
+
+  vote: function (req, res) {
+    return ActivityVotingController.vote(req, res)
   },
 
   fetchCategories: function (req, res) {

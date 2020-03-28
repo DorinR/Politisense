@@ -46,11 +46,7 @@ class VoteXmlParser extends XmlDataParser {
   }
 
   passesFilters () {
-    return true // this.isInCurrentParliament() && this.isVoteForBill() && this.isFinalDecision()
-  }
-
-  isVoteForBill () {
-    return this.getDataInTag('BillNumberCode', true) !== ''
+    return true
   }
 
   isInCurrentParliament () {
