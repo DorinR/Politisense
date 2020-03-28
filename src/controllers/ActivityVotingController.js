@@ -45,11 +45,9 @@ module.exports.vote = async (req, res) => {
 
   let activity = await utils.getExistingActivity(req, res)
   if(activity && Object.keys(activity).length === 0) {
-    console.log('inserting new activity')
     activity = await utils.insertNewActivity(req, res)
   }
   if (!activity) {
-    console.log('error finding activity')
     return
   }
 

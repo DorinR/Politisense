@@ -149,10 +149,10 @@ export function replaceNewVotesWithExisting (activity, activityMap) {
 }
 export function addHasVotedTag(activity, voteMap) {
   if (Object.keys(voteMap).includes(activity.id)) {
-    activity.data.user_has_voted = true
+    activity.data.userHasVoted = true
     return activity.data
   }
-  activity.user_has_voted = false
+  activity.userHasVoted = false
   return activity
 }
 
@@ -198,7 +198,7 @@ export function getExistingActivity(req, res) {
 
 export function insertNewActivity(req, res) {
   const activity = req.body.activity
-  delete activity.user_has_voted
+  delete activity.userHasVoted
   return new Firestore()
     .LegislativeActivity()
     .insert(activity)
