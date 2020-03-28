@@ -17,7 +17,7 @@ const divStyle = {
 export default class ChartWrapper extends Component {
   componentDidMount () {
     // eslint-disable-next-line no-new
-    new CanadaMap(this.refs.mapHolde, this.props.data)
+    new CanadaMap(this.props.data)
   }
 
   render () {
