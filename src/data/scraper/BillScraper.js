@@ -1,6 +1,6 @@
 require('module-alias/register')
 const Components = require('@manager')
-const Errors = require('./error/errors')
+const Errors = require('../error/errors')
 const flatten = require('flat')
 
 const Chambers = {
