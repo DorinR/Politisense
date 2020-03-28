@@ -8,6 +8,7 @@ const PartyController = require('./PartyController')
 const FinancialRecordController = require('./FinancialRecordController')
 const BudgetController = require('./BudgetController')
 const ActivityVotingController = require('./ActivityVotingController')
+const ParliamentController = require('./ParliamentController')
 
 module.exports = {
   userSignup: function (req, res) {
@@ -51,6 +52,18 @@ module.exports = {
 
   getRepresentativeId: function (req, res) {
     return RepresentativeController.getRepresentativeId(req, res)
+  },
+
+  getCabinetMinisters: function (req, res) {
+    return ParliamentController.getCabinetMinisters(req, res)
+  },
+
+  getPartyInfo: function (req, res) {
+    return ParliamentController.getPartyInfo(req, res)
+  },
+
+  getRoleDescription: function (req, res) {
+    return ParliamentController.getRoleDescription(req, res)
   },
 
   getAllBills: function (req, res) {
