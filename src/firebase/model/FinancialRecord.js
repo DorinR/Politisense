@@ -24,6 +24,12 @@ class FinancialRecord extends Model {
     this.year = year
     this.quarter = quarter
   }
+
+  static deserialise (json) {
+    return Model.deserialise(json,
+      new FinancialRecord('', '', '', 0, 0, 0)
+    )
+  }
 }
 
 module.exports.FinancialRecord = FinancialRecord
