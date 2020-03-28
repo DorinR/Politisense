@@ -201,7 +201,6 @@ export default function MiniDrawer ({ children }) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      {/* <image xlinkHref={} */}
       <AppBar
         position='fixed'
         className={clsx(classes.appBar, {
