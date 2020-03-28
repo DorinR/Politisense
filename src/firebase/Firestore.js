@@ -10,7 +10,7 @@ const config = {
   storageBucket: 'abdulla-2c3a5.appspot.com',
   messagingSenderId: '1084760992823',
   appId: '1:1084760992823:web:c6402249f92d54372ce3b2'
-};
+}
 Object.freeze(config)
 if (!fs.app) {
   fs.initializeApp(config)
@@ -160,10 +160,6 @@ class Firestore {
     Firestore.legacyCollectionError(this.legacy)
     const collection = 'static/map_support_data/map_support_data'
     return this.createReference(collection)
-  }
-
-  Party () {
-    return this.createReference('parties')
   }
 
   createReference (collection) {

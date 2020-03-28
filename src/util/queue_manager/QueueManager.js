@@ -118,31 +118,36 @@ class QueueManager {
     while (!await this.stop()) {
       let job = null
       try {
+        await this.lock.acquire()
         job = this.queue.dequeue()
         this.activeJobs.push(job)
-        await this.lock.acquire()
         this.activeJobCount++
         this.lock.release()
       } catch (e) {
+        this.lock.release()
         await this.waitForActiveJobs(e)
         continue
       }
-      job.execute()
-        .then(this.accumulate.bind(this))
-        .then(this.log)
-        .catch(this.error)
-        .finally(async () => {
-          await this.lock.acquire()
-          job.done = true
-          this.activeJobCount--
-          this.lock.release()
-          await this.waitForActiveJobs()
-        })
+      this.runJob(job)
     }
+    this.pruneCompletedJobs()
+  }
+
+  runJob (job) {
+    return job.execute()
+      .then(this.accumulate.bind(this))
+      .then(this.log)
+      .catch(this.error)
+      .finally(async () => {
+        await this.lock.acquire()
+        job.done = true
+        this.activeJobCount--
+        this.lock.release()
+        await this.waitForActiveJobs()
+      })
   }
 
   async waitForActiveJobs (e) {
-    this.pruneCompletedJobs()
     await QueueManager.wait(this.waitPeriod)
     if (e) {
       console.debug(`INFO: ${e.message}, waiting for links to return..`)

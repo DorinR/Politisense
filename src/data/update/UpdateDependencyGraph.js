@@ -38,6 +38,11 @@ const Links = {
   classification: {
     url: 'nil',
     collection: db.BillClassification
+  },
+
+  finance: {
+    url: 'https://www.ourcommons.ca/PublicDisclosure/MemberExpenditures.aspx',
+    collection: db.FinancialRecord
   }
 }
 Object.freeze(Links)
@@ -52,7 +57,7 @@ const RegisteredVertices = {
   raw: new TypeVertex(Runners.ClassificationRunner, Links.raw),
   roles: new TypeVertex(Scrapers.RoleScraper.RoleScraper, Links.role),
 
-  // finances: new TypeVertex('finances'),
+  finances: new TypeVertex(Scrapers.ExpendituresScraper, Links.finance),
   // parties: new TypeVertex('parties'),
 
   root: new TypeVertex('root', 'nil'),

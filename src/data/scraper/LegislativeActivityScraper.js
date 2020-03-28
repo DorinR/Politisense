@@ -2,7 +2,7 @@ require('module-alias/register')
 const QueueUtils = require('@manager')
 const QueueManager = QueueUtils.QueueManager
 const StartAction = QueueUtils.Start.LegislativeActivity
-const StopAction = QueueUtils.Stop.GenericStopAction
+const StopAction = QueueUtils.Stop.Generic
 const ErrorAction = QueueUtils.Error.ParseErrorAction
 
 // eslint-disable-next-line
@@ -14,13 +14,6 @@ class LegislativeActivityScraper extends QueueManager {
       .setStopAction(new StopAction(manager))
       .setErrorAction(new ErrorAction(manager))
     return manager
-  }
-
-  accumulate (result) {
-    if (result) {
-      this.result.push(result)
-    }
-    return result
   }
 
   constructor (wait = 1000) {

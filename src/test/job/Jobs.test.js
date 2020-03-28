@@ -80,7 +80,7 @@ describe('Jobs', () => {
     Assert.equal(job.registry[1], 'Wrapped BillPDFFetchRunner')
 
     Assert.equal(job.actions[2].name, 'bound perform')
-    Assert.equal(job.registry[2], 'ClassificationAction')
+    Assert.equal(job.registry[2], 'BillClassificationAction')
 
     Assert.equal(job.actions[3].name, 'bound perform')
     Assert.equal(job.registry[3], 'QueryResponseAdapterAction')

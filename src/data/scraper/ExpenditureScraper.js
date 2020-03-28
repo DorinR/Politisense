@@ -1,27 +1,14 @@
 require('module-alias/register')
 const Components = require('@manager')
 const flatten = require('flat')
-
-const Year = {
-  current: {
-    // Q1:'MER2020Q1-1019',
-    Q2: 'MER2020Q2-1023'
-  },
-  2018: 'MER2019Q4',
-  2017: 'MER2018Q4',
-  2016: 'MER2017Q4B',
-  2015: 'MER2016Q4',
-  2014: 'MER2015FY',
-  2013: 'MER2014FY',
-  2012: 'MER2013FY'
-}
+const Parameters = require('@parameter').ExpenditureParameters
 
 class ExpenditureScraper extends Components.QueueManager {
   static create (params, wait = 5000) {
     const manager = new ExpenditureScraper(params, wait)
     manager
       .setStartAction(new Components.Start.Expenditure(manager))
-      .setStopAction(new Components.Stop.GenericStopAction(manager))
+      .setStopAction(new Components.Stop.Generic(manager))
       .setAfterAction(new Components.After.Expenditure(manager))
       .setErrorAction(new Components.Error.ParseErrorAction(manager))
     return manager
@@ -38,7 +25,7 @@ class ExpenditureScraper extends Components.QueueManager {
   }
 
   createYears (years) {
-    const valid = Object.values(flatten(Year))
+    const valid = Object.values(flatten(Parameters.Year))
     if (typeof years === 'undefined' || years === 'all') {
       this.years = valid
     } else if (Array.isArray(years)) {
@@ -59,13 +46,6 @@ class ExpenditureScraper extends Components.QueueManager {
         }
       })
     })
-  }
-
-  accumulate (result) {
-    if (result) {
-      this.result.push(result)
-    }
-    return result
   }
 }
 

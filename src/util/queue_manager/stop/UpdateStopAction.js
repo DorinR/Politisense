@@ -13,11 +13,11 @@ class UpdateStopAction extends QueueAction {
 
   async shouldStop () {
     if (this.maxDepth === -1) {
-      this.maxDepth = this.manager.updateJobQueue.length + 1
+      this.maxDepth = this.manager.updateJobQueue.length
     }
-    const done = this.manager.activeJobs.length === 0 && this.manager.result.length > 0
+    const done = this.manager.queue.size() === 0 && this.manager.result.length > 0
     if (done && this.manager.updateJobQueue.length !== 0) {
-      console.log(`INFO: ${UpdateStopAction.name}: queueing level ${this.maxDepth++} updates (${this.maxDepth} total)`)
+      console.log(`INFO: ${UpdateStopAction.name}: queueing level ${this.maxDepth - this.manager.updateJobQueue.length + 1} updates (${this.manager.updateJobQueue[0].length} total)`)
       this.manager.updateJobQueue[0].forEach(job => {
         this.manager.queue.enqueue(job)
       })

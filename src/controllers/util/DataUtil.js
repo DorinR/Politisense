@@ -39,9 +39,9 @@ function records (reference) {
         const res = []
         snapshot.forEach(doc => {
           res.push({
-              data: doc.data(),
-              id: doc.id
-            })
+            data: doc.data(),
+            id: doc.id
+          })
         })
         resolve(res)
       })

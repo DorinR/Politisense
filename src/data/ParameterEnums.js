@@ -127,6 +127,21 @@ const Politician = {
     Yukon: 'YT'
   }
 }
+const Expenditure = {
+  Year: {
+    current: {
+      // Q1:'MER2020Q1-1019',
+      Q2: 'MER2020Q2-1023'
+    },
+    2018: 'MER2019Q4',
+    2017: 'MER2018Q4',
+    2016: 'MER2017Q4B',
+    2015: 'MER2016Q4',
+    2014: 'MER2015FY',
+    2013: 'MER2014FY',
+    2012: 'MER2013FY'
+  }
+}
 
 const Vote = {
 
@@ -255,6 +270,7 @@ module.exports = {
   BillParameters: Object.freeze(Bill),
   PoliticianParameters: Object.freeze(Politician),
   VoteParameters: Object.freeze(Vote),
+  ExpenditureParameters: Object.freeze(Expenditure),
   Parliament: Object.freeze(Parliament),
   UpdateNode: Object.freeze(Updates)
 }

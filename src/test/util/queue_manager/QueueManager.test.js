@@ -297,14 +297,6 @@ describe('QueueManager.js', () => {
     done()
   })
 
-  test('QueueManager.js::waitForActiveJobs prunes completed jobs', async (done) => {
-    let called = false
-    undertest.pruneCompletedJobs = () => { called = true }
-    await undertest.waitForActiveJobs()
-    Assert(called)
-    done()
-  })
-
   test('QueueManager.js::waitForActiveJobs waits to yield cycles', async (done) => {
     let called = false
     QueueManager.wait = () => { called = true }

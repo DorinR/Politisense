@@ -30,6 +30,24 @@ class UpdatePipelineManager extends QueueManager {
     this.params = param
     this.queryCount = 1
   }
+
+  async run () {
+    while (!await this.stop()) {
+      let job = null
+      try {
+        await this.lock.acquire()
+        job = this.queue.dequeue()
+        this.activeJobs.push(job)
+        this.activeJobCount++
+        this.lock.release()
+      } catch (e) {
+        this.lock.release()
+        await this.waitForActiveJobs(e)
+        continue
+      }
+      await this.runJob(job)
+    }
+  }
 }
 
 module.exports = {

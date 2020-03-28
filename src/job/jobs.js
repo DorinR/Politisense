@@ -11,5 +11,5 @@ module.exports = {
   VoteParticipantFetchJob: require('./VoteParticipantFetchJob').VoteParticipantFetchJob,
   BillFetchJob: require('./BillFetchJob').BillFetchJob,
   LegislativeActivityFetchJob: require('./LegislativeActivityFetchJob').LegislativeActivityFetchJob,
-  ExpenditureFetchJob:require('./ExpenditureFetchJob').ExpenditureFetchJob
+  ExpenditureFetchJob: require('./ExpenditureFetchJob').ExpenditureFetchJob
 }

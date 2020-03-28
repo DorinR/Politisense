@@ -40,7 +40,7 @@ exports.index = (req, res) => {
   try {
     IndexDirector[type][category](req, res)
   } catch (e) {
-    console.log(e.message)
+    console.error(e.message)
     Utils.error(res, 'Invalid Parameters passed to data API')
   }
 }
@@ -74,17 +74,17 @@ async function derivedClassifications (req, res) {
   let data = await bills.innerJoin('_id', tags, 'bill')
   data = data
     .map(datum => {
-    return {
-      id: datum.id,
-      number: datum.number,
-      title: datum.title,
-      text: datum.text,
-      link: datum.link,
-      dateVoted: datum.dateVoted,
-      sponsorName: datum.sponsorName,
-      category: datum.category
-    }
-  })
+      return {
+        id: datum.id,
+        number: datum.number,
+        title: datum.title,
+        text: datum.text,
+        link: datum.link,
+        dateVoted: datum.dateVoted,
+        sponsorName: datum.sponsorName,
+        category: datum.category
+      }
+    })
   Utils.success(res, data, 'Bill Data with Derived Classifications')
 }
 
@@ -112,20 +112,20 @@ async function politicianRoles (req, res) {
   let data = await politicians.innerJoin('_id', roles, 'politician')
   data = data
     .map(datum => {
-    return {
-      name: datum.name,
-      party: datum.party,
-      electedFrom: datum.start,
-      electedTo: datum.end !== 0 ? datum.end : 'current',
-      roleFrom: datum.fromDate,
-      roleTo: datum.toDate !== 0 ? datum.toDate : 'current',
-      riding: datum.riding,
-      imageUrl: datum.imageUrl,
-      group: datum.group,
-      title: datum.title,
-      type: datum.type
-    }
-  })
+      return {
+        name: datum.name,
+        party: datum.party,
+        electedFrom: datum.start,
+        electedTo: datum.end !== 0 ? datum.end : 'current',
+        roleFrom: datum.fromDate,
+        roleTo: datum.toDate !== 0 ? datum.toDate : 'current',
+        riding: datum.riding,
+        imageUrl: datum.imageUrl,
+        group: datum.group,
+        title: datum.title,
+        type: datum.type
+      }
+    })
   Utils.success(res, data, 'Politician Data with Roles')
 }
 
@@ -166,22 +166,20 @@ async function voters (req, res) {
   const voteRecords = db.VoteRecord()
   const voters = db.Vote()
 
-  let promises = await Promise.all([
+  const promises = await Promise.all([
     Utils.records(db.Politician()),
     voteRecords.innerJoin('_id', voters, 'vote')
-    ])
+  ])
   const politicians = promises[0]
   const members = {}
   politicians.forEach(politician => {
     members[`${politician.id}`] = politician.data
   })
-  console.log(members)
   let data = promises[1]
   data = data
     .filter(datum => {
       return Object.keys(members).includes(datum.member)
     })
-  console.log(data)
   data = data.map(datum => {
     return {
       name: members[datum.member].name,
@@ -196,7 +194,7 @@ async function voters (req, res) {
       number: datum.billNumber,
       assent: datum.assent,
       yeas: datum.yeas,
-      nays: datum.nays,
+      nays: datum.nays
     }
   })
   Utils.success(res, data, 'Politician Data with Voting Records')
@@ -252,8 +250,6 @@ exports.update = async (req, res) => {
   let admin = await Utils.records(admins)
   admin = admin[0].data
 
-  console.log(req.body)
-  console.log(admin)
   if (!auth.compare(`${req.body.password}${admin.random}`, admin.password)) {
     Utils.error(res, 'Authentication Failed', 401)
     return
@@ -267,6 +263,14 @@ exports.update = async (req, res) => {
     Utils.error(res, 'No parameters passed to data API for updating')
     return
   }
+
+  if (admin.updating) {
+    Utils.error(res, 'Currently Updating collections, cannot start another update', 401)
+    return
+  } else {
+    await db.Admin().where('email', '==', req.body.email).update({ updating: true })
+  }
+
   let root = Parameters.None
   try {
     root = UpdateDirector[type][category]
@@ -274,11 +278,21 @@ exports.update = async (req, res) => {
       throw new Error('Invalid update parameter passed')
     }
   } catch (e) {
-    console.log(e.message)
+    console.error(e.message)
     Utils.error(res, 'Invalid Parameters passed to data API for updating')
     return
   }
   updateFromProvidedNode(root, process.env)
+    .then(code => {
+      console.log(`INFO: update process exited with code: ${code}`)
+      console.log('INFO: removing update lock')
+    })
+    .catch(e => {
+      console.error(e)
+    })
+    .finally(async () => {
+      await db.Admin().where('email', '==', req.body.email).update({ updating: false })
+    })
   Utils.success(res, {
     dependencies: root
   }, `Successfully started update at ${root} node on server`)
@@ -286,16 +300,17 @@ exports.update = async (req, res) => {
 
 const child = require('child_process')
 
-function updateFromProvidedNode (root, opts) {
+async function updateFromProvidedNode (root, opts) {
   const opt = Object.create(opts)
-  opts.NODE_OPTIONS = '--max-old-space-size=8192'
-
-  const process = child.fork('src/data/update/UpdateScript.js', opt)
-  process.send({ node: root })
-  process.on('error', (err) => {
-    console.log(err)
-  })
-  process.on('close', (code) => {
-    console.log(`Closed with code ${code}`)
+  opts.NODE_OPTIONS = '--max-old-space-size=16384'
+  return new Promise((resolve, reject) => {
+    const process = child.fork('src/data/update/UpdateScript.js', opt)
+    process.send({ node: root })
+    process.on('error', (err) => {
+      reject(err)
+    })
+    process.on('close', (code) => {
+      resolve(code)
+    })
   })
 }

@@ -19,7 +19,7 @@ module.exports = {
   BillTagCreationAction: require('./classify_action/BillTagCreationAction').BillTagCreationAction,
   BillLinkFetchAdapterAction: require('./adapter_action/BillLinkFetchAdapterAction').BillLinkFetchAdapterAction,
   RoleFetchLinkAdapterAction: require('./adapter_action/RoleFetchLinkAdapterAction').RoleFetchLinkAdapterAction,
-  PoliticianAfterAdapterAction: require('./adapter_action/PoliticianAfterAdapterAction').PoliticianAfterAdapterAction,
   RoleQueryResponseAdapterAction: require('./adapter_action/RoleQueryResponseAdapterAction').RoleQueryResponseAdapterAction,
+  PoliticianAfterAdapterAction: require('./adapter_action/PoliticianAfterAdapterAction').PoliticianAfterAdapterAction,
   ExpenditureComputeAction: require('./classify_action/ExpenditureComputeAction').ExpenditureComputeAction
 }
