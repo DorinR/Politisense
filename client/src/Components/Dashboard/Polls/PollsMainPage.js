@@ -85,9 +85,9 @@ class PollsMainPage extends Component {
                             <Card style={{ width: '40rem' }}>
                                 <Card.Body>
                                     <Card.Title>{eachData.title}</Card.Title>
-                                    <Card.Link href="#">{eachData.link}</Card.Link>
+                                    <a href={eachData.link}>{eachData.link}</a>
                                     <Card.Text>
-                                        <small className="text-muted">{eachData.date}</small>
+                                        <small className="text-muted">Retrieved on: {eachData.date}</small>
                                     </Card.Text>
                                     <Card.Text>{eachData.description}</Card.Text>
                                     {/* <Poll answers={pollAnswers} onVote={this.handleVote} /> */}
