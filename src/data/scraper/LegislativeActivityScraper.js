@@ -44,3 +44,7 @@ class LegislativeActivityScraper extends QueueManager {
     this.queryCount = this.params.length
   }
 }
+
+module.exports = {
+  LegislativeActivityScraper: LegislativeActivityScraper
+}
