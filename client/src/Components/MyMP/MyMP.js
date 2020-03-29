@@ -12,7 +12,7 @@ import Committees from './Committees'
 import IssuedBillsByMP from './IssuedBillsByMP'
 import Bipartisan from './Bipartisan'
 import MPActivityDistribution from './MPActivityDistribution'
-import { fetchCategories, fetchUserRiding, createDataSetDonut, createDataPieBarTable, createRadarRows, createDataSetRadar } from '../Dashboard/Utilities/CommonUsedFunctions'
+import { fetchCategories, fetchUserRiding, fetchRepresentative, createDataSetDonut, createDataPieBarTable, createRadarRows, createDataSetRadar } from '../Dashboard/Utilities/CommonUsedFunctions'
 
 import {
   CssBaseline
@@ -79,24 +79,11 @@ export default function MyMP () {
     async function getData () {
       if (riding) {
         const representative = await fetchRepresentative(riding)
-        setUserRepresentative(representative)
+        setUserRepresentative(representative.name)
       }
     }
     getData()
   }, [riding])
-
-  async function fetchRepresentative (riding) {
-    return axios
-      .get(
-        `/api/representatives/${riding}/getRepresentative`
-      )
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data.name
-        }
-      })
-      .catch(console.error)
-  }
 
   async function getAllBillsByRepForAllParliaments (head) {
     return axios

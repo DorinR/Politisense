@@ -9,7 +9,6 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import SettingsIcon from '@material-ui/icons/Settings'
 import RepresentativeImage from '../Dashboard/Sidebar/RepresentativeImage'
 import SidebarNav from './SidebarNav'
-import axios from 'axios'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import AppBar from '@material-ui/core/AppBar'
 import { Link } from 'react-router-dom'
@@ -23,7 +22,7 @@ import { useTheme } from '@material-ui/core/styles'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import { fetchUserRiding ,fetchRepresentative} from '../Dashboard/Utilities/CommonUsedFunctions'
+import { fetchUserRiding, fetchRepresentative } from '../Dashboard/Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   drawer: {
@@ -132,7 +131,7 @@ const Sidebar = props => {
     async function getData () {
       if (riding) {
         const representative = await fetchRepresentative(riding)
-        setUserRepresentative(representative)
+        setUserRepresentative(representative.name)
       }
     }
     getData()

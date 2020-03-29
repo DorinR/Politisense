@@ -207,10 +207,11 @@ async function fetchIDbyRepName (parliamentNo, repName) {
 }
 
 async function fetchrolesbyID (parliamentNo, id) {
-  const db = new Firestore().forParliament(parliamentNo)
-  const role = db.Role()
   const roles = []
-  await role.where('politician', '==', id)
+  return new Firestore()
+    .forParliament(parliamentNo)
+    .Role()
+    .where('politician', '==', id)
     .select()
     .then(snapshot => {
       if (snapshot.empty) {
@@ -232,7 +233,6 @@ async function fetchrolesbyID (parliamentNo, id) {
     .catch(err => {
       console.log('Error getting documents', err)
     })
-  return roles
 }
 
 exports.getAllRolesByRep = async (req, res) => {

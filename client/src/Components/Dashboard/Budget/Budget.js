@@ -17,7 +17,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
-import { formatNumber } from '../Utilities/CommonUsedFunctions'
+import { formatNumber, fetchRepresentative, fetchUserRiding, fetchRepresentativeId } from '../Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -94,9 +94,9 @@ const Budget = props => {
   const open = Boolean(anchorEl)
 
   const options = [
-    'Quarter 1',
-    'Quarter 2',
-    'Quarter 3'
+    '2019',
+    '2018',
+    '2017'
   ]
 
   const ITEM_HEIGHT = 48
@@ -126,40 +126,16 @@ const Budget = props => {
     getData()
   }, [user])
 
-  async function fetchUserRiding (userEmail) {
-    return axios
-      .get(`/api/users/${userEmail}/getUser`)
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data.riding
-        }
-      })
-      .catch(console.error)
-  }
-
   const [representative, setRepresentative] = useState(null)
   useEffect(() => {
     async function getData () {
       if (riding) {
         const rep = await fetchRepresentative(riding)
-        setRepresentative(rep)
+        setRepresentative(rep.name)
       }
     }
     getData()
   }, [riding])
-
-  async function fetchRepresentative (riding) {
-    return axios
-      .get(
-                `/api/representatives/${riding}/getRepresentative`
-      )
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data.name
-        }
-      })
-      .catch(console.error)
-  }
 
   const [labelMP, setLabelMP] = useState(null)
   useEffect(() => {
@@ -178,19 +154,6 @@ const Budget = props => {
     }
     getData()
   }, [representative])
-
-  async function fetchRepresentativeId (representative) {
-    return axios
-      .get(
-                `/api/representatives/${representative}/getRepresentativeId`
-      )
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data
-        }
-      })
-      .catch(console.error)
-  }
 
   const [data, setData] = useState(null)
   useEffect(() => {

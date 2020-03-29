@@ -57,7 +57,7 @@ export function loadingTextTitle (element) {
       title = element.title
       break
     case 'association':
-      title = element.group.slice(0, element.title.indexOf('parliamentary'))
+      title = element.group.slice(0, element.group.indexOf('parliamentary'))
       break
     case 'committee':
       title = element.group
@@ -427,4 +427,17 @@ export function createRadarRows (bills, categoryList) {
     })
   })
   return rows
+}
+
+export async function fetchRepresentativeId (representative) {
+  return axios
+    .get(
+          `/api/representatives/${representative}/getRepresentativeId`
+    )
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+    .catch(console.error)
 }
