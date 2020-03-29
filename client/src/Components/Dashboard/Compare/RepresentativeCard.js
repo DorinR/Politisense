@@ -59,6 +59,8 @@ export default function RepresentativeCard(props) {
   const [issuedBills, setIssuedBills] = useState(0)
 
   const updateNameFromSwitcher = newName => {
+    console.log('WORKING ONE')
+    console.log(newName)
     setName(newName)
     updateHead(newName)
   }
@@ -183,12 +185,12 @@ export default function RepresentativeCard(props) {
                 </ListItem>
               </List>
             ) : (
-                <Grid item style={{ paddingTop: '10px' }}>
-                  {skeleton.map(skeleton => {
-                    return <Skeleton animation={false} />
-                  })}
-                </Grid>
-              )}
+              <Grid item style={{ paddingTop: '10px' }}>
+                {skeleton.map(skeleton => {
+                  return <Skeleton animation={false} />
+                })}
+              </Grid>
+            )}
           </CardContent>
         </Card>
       </Grid>

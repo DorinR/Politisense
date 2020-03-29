@@ -7,7 +7,11 @@ import Select from '@material-ui/core/Select'
 import axios from 'axios'
 import InputLabel from '@material-ui/core/InputLabel'
 import Avatar from '@material-ui/core/Avatar'
-import { fetchUserRiding, capitalizedName, getPartyColor } from '../../Utilities/CommonUsedFunctions'
+import {
+  fetchUserRiding,
+  capitalizedName,
+  getPartyColor
+} from '../../Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -38,7 +42,7 @@ const MenuProps = {
   }
 }
 
-async function fetchPastRepresentatives (riding) {
+async function fetchPastRepresentatives(riding) {
   let pastRepresentatives = []
   await axios
     .get(`/api/representatives/${riding}/getPastRepresentatives`)
@@ -51,30 +55,35 @@ async function fetchPastRepresentatives (riding) {
   return pastRepresentatives
 }
 
-export default function PastMPSwitcher (props) {
+export default function PastMPSwitcher(props) {
   // eslint-disable-next-line
-    const { functionUpdate, ...other } = props
+  const { functionUpdate, ...other } = props
   const classes = useStyles()
   const [mp, setMp] = React.useState([])
   const [dropdownMps, setDropdownMps] = React.useState([])
 
-  async function populateDropdownMps (mps) {
+  async function populateDropdownMps(mps) {
     setDropdownMps(mps)
   }
 
-  function handleChange (event) {
+  function handleChange(event) {
+    console.log(`MP being set to ${event.target.value}`)
     setMp(event.target.value)
     const value = event.target.value
     functionUpdate(value)
   }
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       // eslint-disable-next-line
-            const user = JSON.parse(localStorage.getItem('user'))
+      const user = JSON.parse(localStorage.getItem('user'))
       const riding = await fetchUserRiding(user.email)
       const pastRepresentatives = await fetchPastRepresentatives(riding)
-      populateDropdownMps(pastRepresentatives)
+      const pastRepresentativeNames = []
+      pastRepresentatives.forEach(i => {
+        pastRepresentativeNames.push(i.name)
+      })
+      populateDropdownMps(pastRepresentativeNames)
     }
     getData()
   }, [mp])
@@ -83,31 +92,16 @@ export default function PastMPSwitcher (props) {
     <div>
       <FormControl className={classes.formControl}>
         <InputLabel id='demo-simple-select-disabled-label'>
-                    Choose a time period
+          Choose a time period
         </InputLabel>
         <Select
           value={mp}
-          key={mp.name}
           onChange={handleChange}
           input={<Input />}
-          MenuProps={MenuProps}
-        >
-          {dropdownMps.map(mp => (
-            <MenuItem
-              key={mp.name}
-              value={mp}
-              style={getPartyColor(mp.party)}
-            >
-              <Avatar
-                style={{
-                  marginRight: 26,
-                  width: 40,
-                  height: 40,
-                  border: '3px solid #41aaa8'
-                }}
-                src={mp.imageUrl} className={classes.bigAvatar}
-              />
-              {capitalizedName(mp.name)} ({mp.start}-{mp.end})
+          MenuProps={MenuProps}>
+          {dropdownMps.map(representative => (
+            <MenuItem key={representative} value={representative}>
+              {representative}
             </MenuItem>
           ))}
         </Select>

@@ -17,7 +17,11 @@ import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import Button from '@material-ui/core/Button'
 import Box from '@material-ui/core/Box'
-import { capitalizedName, getPartyColor, calculateTotalVotesBills } from '../../Utilities/CommonUsedFunctions'
+import {
+  capitalizedName,
+  getPartyColor,
+  calculateTotalVotesBills
+} from '../../Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles({
   card: {
@@ -28,7 +32,7 @@ const useStyles = makeStyles({
   }
 })
 
-async function getPartyData (party) {
+async function getPartyData(party) {
   return axios
     .get(`/api/parties/${party.toLowerCase()}/getAllPartydata`)
     .then(res => {
@@ -39,22 +43,27 @@ async function getPartyData (party) {
     .catch(console.error)
 }
 
-async function fetchPastRepresentativeId (representative, data) {
-  const res = await axios.post(`/api/representatives/${representative}/getPastRepresentativeId`, data)
+async function fetchPastRepresentativeId(representative, data) {
+  const res = await axios.post(
+    `/api/representatives/${representative}/getPastRepresentativeId`,
+    data
+  )
   return res.data.data
 }
 
-async function fetchPastRepresentativeVotes (member) {
+async function fetchPastRepresentativeVotes(member) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativeVotes`)
   return res.data.data
 }
 
-async function fetchPastRepresentativePairedVotes (member) {
-  const res = await axios.get(`/api/votes/${member}/getPastRepresentativePairedVotes`)
+async function fetchPastRepresentativePairedVotes(member) {
+  const res = await axios.get(
+    `/api/votes/${member}/getPastRepresentativePairedVotes`
+  )
   return res.data.data
 }
 
-export default function RepresentativeCard () {
+export default function RepresentativeCard() {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -65,14 +74,16 @@ export default function RepresentativeCard () {
   const [partyImageUrl, setPartyImageUrl] = useState('')
 
   const updateNameFromSwitcher = newName => {
-    setStart(newName.start)
-    setName(newName.name)
-    setImageUrl(newName.imageUrl)
-    setPoliticalParty(newName.party)
+    console.log('PARENT COMPONENT')
+    console.log(newName)
+    // setStart(newName.start)
+    setName(newName)
+    // setImageUrl(newName.imageUrl)
+    // setPoliticalParty(newName.party)
   }
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const data = { start: start }
       const member = await fetchPastRepresentativeId(name, data)
       const partyData = await getPartyData(politicalParty)
@@ -80,8 +91,12 @@ export default function RepresentativeCard () {
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member)
       const totalBills = calculateTotalVotesBills(pastRepresentativeVotes)
       setNbBills(totalBills)
-      const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member)
-      const totalPairedBills = calculateTotalVotesBills(pastRepresentativePairedVotes)
+      const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(
+        member
+      )
+      const totalPairedBills = calculateTotalVotesBills(
+        pastRepresentativePairedVotes
+      )
       setNbPairedBills(totalPairedBills)
     }
     getData()
@@ -117,12 +132,19 @@ export default function RepresentativeCard () {
                     height: 150,
                     border: '3px solid #41aaa8'
                   }}
-                  alt={name} src={imageUrl} className={classes.bigAvatar}
+                  alt={name}
+                  src={imageUrl}
+                  className={classes.bigAvatar}
                 />
               </Grid>
             </Grid>
             <List>
-              <Button variant='contained' fullWidth='true' style={getPartyColor(politicalParty)}>Profile</Button>
+              <Button
+                variant='contained'
+                fullWidth='true'
+                style={getPartyColor(politicalParty)}>
+                Profile
+              </Button>
               <Box m={3} />
               <ListItem>
                 <ListItemAvatar>
@@ -141,7 +163,10 @@ export default function RepresentativeCard () {
                 <ListItemText>{capitalizedName(politicalParty)}</ListItemText>
               </ListItem>
               <Box m={2} />
-              <Button variant='contained' fullWidth='true' style={getPartyColor(politicalParty)}>
+              <Button
+                variant='contained'
+                fullWidth='true'
+                style={getPartyColor(politicalParty)}>
                 Spending
               </Button>
               <Box m={2} />
@@ -154,7 +179,10 @@ export default function RepresentativeCard () {
                 <ListItemText>Total Spending: </ListItemText>
               </ListItem>
               <Box m={2} />
-              <Button variant='contained' fullWidth='true' style={getPartyColor(politicalParty)}>
+              <Button
+                variant='contained'
+                fullWidth='true'
+                style={getPartyColor(politicalParty)}>
                 Legislative Performance
               </Button>
               <Box m={2} />
@@ -172,9 +200,7 @@ export default function RepresentativeCard () {
                     <AssignmentIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText>
-                  Total Issued Bills: {nbPairedBills}
-                </ListItemText>
+                <ListItemText>Total Issued Bills: {nbPairedBills}</ListItemText>
               </ListItem>
             </List>
           </CardContent>

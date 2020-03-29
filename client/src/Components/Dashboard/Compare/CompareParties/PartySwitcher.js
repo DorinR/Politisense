@@ -92,6 +92,9 @@ export default function PartySwitcher(props) {
       const representatives = await fetchAllRepresentatives()
       if (representatives) {
         const parties = getAllParties(representatives)
+        parties.forEach(i => {
+          console.log(i)
+        })
         populateDropdownParties(parties)
       }
     }

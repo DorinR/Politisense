@@ -280,6 +280,8 @@ export default function Party(props) {
   }, [party])
 
   const updatePartyFromSwitcher = newParty => {
+    console.log('WORKING ONE')
+    console.log(newParty)
     setLoadingComplete(false)
     setIsDoneLoadingBillsData(false)
     setIsDoneLoadingSpendingData(false)
