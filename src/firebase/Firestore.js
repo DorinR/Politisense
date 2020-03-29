@@ -295,20 +295,6 @@ class Firestore {
     return this.createReference(collection)
   }
 
-  FinancialPersonalExpenses (year) {
-    const collection = this.legacy
-      ? 'politicians'
-      : `${this.parliament}/politicians/expenditure/${year}/expenditures`
-    return this.createReference(collection)
-  }
-
-  AverageFinancialPersonalExpenses (year) {
-    const collection = this.legacy
-      ? 'politicians'
-      : `${this.parliament}/politicians/expenditure/${year}/averages`
-    return this.createReference(collection)
-  }
-
   LegislativeActivityVote () {
     Firestore.legacyCollectionError(this.legacy)
     return this.createReference(

@@ -22,7 +22,7 @@ function fetchAverageExpenditures (parliament = 43, year = 2019) {
           return 0
         })
         .map(doc => {
-          return Math.round(doc.amount)
+          return { amount: Math.round(doc.amount), category: (doc.category).substr(2) }
         })
     })
     .catch(console.error)
@@ -48,8 +48,6 @@ function fetchMemberExpenditures (member, parliament = 43, year = 2019) {
 }
 
 exports.budgetData = async (req, res) => {
-  const labels = ['Employees', 'Service Contracts', 'Travel', 'Hospitality', 'Gifts', 'Advertising', 'Printing', 'Offices']
-
   const representativeId = req.params.id
   if (!representativeId) {
     res.status(404).json({
@@ -57,23 +55,29 @@ exports.budgetData = async (req, res) => {
       data: {
         mp: [],
         avg: [],
-        labels: labels
+        labels: []
       }
     })
     return
   }
-
   const [average, member] = await Promise.all([
     fetchAverageExpenditures(),
     fetchMemberExpenditures(representativeId)
   ])
 
   if (member && average) {
+    const labels = average.map(item => {
+      if (item.category.includes('Employees')) {
+        return item.category.substr(0, 9)
+      }
+      return item.category
+    })
+    const avgCategoriesValues = average.map(item => item.amount)
     res.status(200).json({
       success: true,
       data: {
         mp: member,
-        avg: average,
+        avg: avgCategoriesValues,
         labels: labels
       }
     })
@@ -83,7 +87,7 @@ exports.budgetData = async (req, res) => {
       data: {
         mp: [],
         avg: [],
-        labels: labels
+        labels: []
       }
     })
   }
