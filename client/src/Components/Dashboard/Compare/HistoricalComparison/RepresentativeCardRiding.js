@@ -28,7 +28,7 @@ const useStyles = makeStyles({
   }
 })
 
-async function getPartyData (party) {
+async function getPartyData(party) {
   return axios
     .get(`/api/parties/${party.toLowerCase()}/getAllPartydata`)
     .then(res => {
@@ -39,22 +39,22 @@ async function getPartyData (party) {
     .catch(console.error)
 }
 
-async function fetchPastRepresentativeId (representative, data) {
+async function fetchPastRepresentativeId(representative, data) {
   const res = await axios.post(`/api/representatives/${representative}/getPastRepresentativeId`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeVotes (member) {
+async function fetchPastRepresentativeVotes(member) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativeVotes`)
   return res.data.data
 }
 
-async function fetchPastRepresentativePairedVotes (member) {
+async function fetchPastRepresentativePairedVotes(member) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativePairedVotes`)
   return res.data.data
 }
 
-export default function RepresentativeCard () {
+export default function RepresentativeCard() {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -72,7 +72,7 @@ export default function RepresentativeCard () {
   }
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const data = { start: start }
       const member = await fetchPastRepresentativeId(name, data)
       const partyData = await getPartyData(politicalParty)
@@ -151,7 +151,7 @@ export default function RepresentativeCard () {
                     <DollarIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText>Total Spending: </ListItemText>
+                <ListItemText>Total Spending: N/A</ListItemText>
               </ListItem>
               <Box m={2} />
               <Button variant='contained' fullWidth='true' style={getPartyColor(politicalParty)}>

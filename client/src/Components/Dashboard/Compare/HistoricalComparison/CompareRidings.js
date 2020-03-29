@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
+import InfoBubble from '../../Utilities/InfoBubble'
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -14,11 +15,9 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(8, 0, 6)
   },
   customHeaders: {
-    color: '#42AAA8',
     fontWeight: 'bold',
     fontStyle: 'italic',
     fontSize: '3em',
-    textDecoration: 'underline',
     marginLeft: '-46px'
   },
   customTooltip: {
@@ -27,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function CompareRepresentatives () {
+export default function CompareRepresentatives() {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles()
   const [pastRep, setPastRep] = useState('')
@@ -40,7 +39,7 @@ export default function CompareRepresentatives () {
   }
 
   useEffect(() => {
-    async function getBills () {
+    async function getBills() {
       await getAllBillsByHead(pastRep, 'pastRep')
     }
 
@@ -48,6 +47,9 @@ export default function CompareRepresentatives () {
       getBills()
     }
   }, [pastRep])
+
+  const compareHistoricalExplanationTitle = 'Riding History'
+  const compareHistoricalExplanationDescription = `Have a look at the historical data of past MPs of your riding!`
 
   return (
     <>
@@ -64,6 +66,12 @@ export default function CompareRepresentatives () {
             >
               Riding History
             </Typography>
+            <span className={classes.customTooltip}>
+              <InfoBubble
+                title={compareHistoricalExplanationTitle}
+                text={compareHistoricalExplanationDescription}
+              />
+            </span>
           </Container>
           <Typography
             variant='h5'
