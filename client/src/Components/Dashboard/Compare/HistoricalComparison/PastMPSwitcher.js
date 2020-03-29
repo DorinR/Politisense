@@ -38,7 +38,7 @@ const MenuProps = {
   }
 }
 
-async function fetchPastRepresentatives (riding) {
+async function fetchPastRepresentatives(riding) {
   let pastRepresentatives = []
   await axios
     .get(`/api/representatives/${riding}/getPastRepresentatives`)
@@ -51,27 +51,27 @@ async function fetchPastRepresentatives (riding) {
   return pastRepresentatives
 }
 
-export default function PastMPSwitcher (props) {
+export default function PastMPSwitcher(props) {
   // eslint-disable-next-line
-    const { functionUpdate, ...other } = props
+  const { functionUpdate, ...other } = props
   const classes = useStyles()
   const [mp, setMp] = React.useState([])
   const [dropdownMps, setDropdownMps] = React.useState([])
 
-  async function populateDropdownMps (mps) {
+  async function populateDropdownMps(mps) {
     setDropdownMps(mps)
   }
 
-  function handleChange (event) {
+  function handleChange(event) {
     setMp(event.target.value)
     const value = event.target.value
     functionUpdate(value)
   }
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       // eslint-disable-next-line
-            const user = JSON.parse(localStorage.getItem('user'))
+      const user = JSON.parse(localStorage.getItem('user'))
       const riding = await fetchUserRiding(user.email)
       const pastRepresentatives = await fetchPastRepresentatives(riding)
       populateDropdownMps(pastRepresentatives)
@@ -83,7 +83,7 @@ export default function PastMPSwitcher (props) {
     <div>
       <FormControl className={classes.formControl}>
         <InputLabel id='demo-simple-select-disabled-label'>
-                    Choose a time period
+          Choose a time period
         </InputLabel>
         <Select
           value={mp}

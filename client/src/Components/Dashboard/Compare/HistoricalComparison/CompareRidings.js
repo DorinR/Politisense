@@ -61,7 +61,7 @@ export default function CompareRepresentatives() {
               style={{ display: 'inline-block' }}
               className={classes.customHeaders}
               align='left'
-              color='textPrimary'
+              color='primary'
               gutterBottom
             >
               Riding History
@@ -73,14 +73,6 @@ export default function CompareRepresentatives() {
               />
             </span>
           </Container>
-          <Typography
-            variant='h5'
-            align='center'
-            color='textSecondary'
-            paragraph
-          >
-            Have a look at the historical data of past MPs of your riding!
-          </Typography>
           <div>
             <Grid container spacing={2}>
               <Grid item xs={6}>

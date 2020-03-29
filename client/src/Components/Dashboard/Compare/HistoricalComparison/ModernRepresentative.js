@@ -16,8 +16,9 @@ import Grid from '@material-ui/core/Grid'
 import FlagIcon from '@material-ui/icons/Flag'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
 import AssignmentIcon from '@material-ui/icons/Assignment'
-import Button from '@material-ui/core/Button'
 import Box from '@material-ui/core/Box'
+import DividerBlock from '../../Utilities/DividerBlock'
+import ColoredText from '../../Utilities/ColoredText'
 
 const useStyles = makeStyles({
   card: {
@@ -25,6 +26,9 @@ const useStyles = makeStyles({
   },
   avatar: {
     backgroundColor: '#43D0C4'
+  },
+  card: {
+    width: 420
   }
 })
 
@@ -116,7 +120,7 @@ export default function ModernRepresentative() {
               </Grid>
             </Grid>
             <List>
-              <Button variant='contained' fullWidth='true' style={getPartyColor(politicalParty)}>Profile</Button>
+              <DividerBlock text='Profile' color={getPartyColor(politicalParty).backgroundColor} />
               <Box m={3} />
               <ListItem>
                 <ListItemAvatar>
@@ -135,9 +139,7 @@ export default function ModernRepresentative() {
                 <ListItemText>{capitalizedName(politicalParty)}</ListItemText>
               </ListItem>
               <Box m={2} />
-              <Button variant='contained' fullWidth='true' style={getPartyColor(politicalParty)}>
-                Spending
-              </Button>
+              <DividerBlock text='Spending' color={getPartyColor(politicalParty).backgroundColor} />
               <Box m={2} />
               <ListItem>
                 <ListItemAvatar>
@@ -148,9 +150,13 @@ export default function ModernRepresentative() {
                 <ListItemText>Total Spending: N/A</ListItemText>
               </ListItem>
               <Box m={2} />
-              <Button variant='contained' fullWidth='true' style={getPartyColor(politicalParty)}>
-                Legislative Performance
-              </Button>
+              <DividerBlock
+                text='Legislative'
+                color={getPartyColor(politicalParty).backgroundColor}
+                infoBubbleTitle={'Number of Bills Sponsored by Members of this Party'}
+                infoBubbleText={'This is a breakdown of the number of bills that were sponsored by members of the given party. We can see the total number of bills that were sponsored, as well as the portion of those that passed and entered into law, and the portion of those that were not voted into law. To see details about the bills your representative has voted on, go to the "My MP" tab'}
+                infoBubbleColor={'white'}
+              />
               <Box m={2} />
               <ListItem>
                 <ListItemAvatar>
@@ -158,7 +164,9 @@ export default function ModernRepresentative() {
                     <FormatListNumberedIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText> Total Voted Bills: {totalBills}</ListItemText>
+                <ListItemText>
+                  Total Voted Bills: <ColoredText text={totalBills} color={getPartyColor(politicalParty).backgroundColor} />
+                </ListItemText>
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
@@ -168,7 +176,7 @@ export default function ModernRepresentative() {
                 </ListItemAvatar>
                 <ListItemText>
                   {' '}
-                  Total Issued Bills: {issuedBills}
+                  Total Issued Bills: <ColoredText text={issuedBills} color={getPartyColor(politicalParty).backgroundColor} />
                 </ListItemText>
               </ListItem>
             </List>
