@@ -67,7 +67,6 @@ export default class BudgetChartD3 {
       })
       .on('mouseleave', function (i, d) {
         d3.select(this).attr('fill', (d, i) => {
-          console.log('the index is ' + i)
           return segColor[prevIndex % budgetData.series.length]
         })
       })
