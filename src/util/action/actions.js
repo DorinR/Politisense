@@ -16,5 +16,6 @@ module.exports = {
   FormatAction: require('./FormatAction').FormatAction,
   BillClassificationAction: require('./classify_action/BillClassifyAction').BillClassificationAction,
   FileOutputAction: require('./classify_action/FileOutputAction').FileOutputAction,
-  BillTagCreationAction: require('./classify_action/BillTagCreationAction').BillTagCreationAction
+  BillTagCreationAction: require('./classify_action/BillTagCreationAction').BillTagCreationAction,
+  ExpenditureComputeAction: require('./classify_action/ExpenditureComputeAction').ExpenditureComputeAction
 }

@@ -1,6 +1,4 @@
-
 const utils = require('./util/ActivityVotingUtils')
-const Firestore = require('@firestore').Firestore
 
 module.exports.index = async (req, res) => {
   if (!utils.validateRequestParameters(req, res)) {
@@ -31,7 +29,6 @@ module.exports.index = async (req, res) => {
   utils.success(res, 'successfully retrieved activity list', newActivities)
 }
 
-
 module.exports.vote = async (req, res) => {
   if (!utils.validateRequestParameters(req, res) || !utils.validateUserVotingParameters(req, res)) {
     return
@@ -44,7 +41,7 @@ module.exports.vote = async (req, res) => {
   user.vote = req.body.vote
 
   let activity = await utils.getExistingActivity(req, res)
-  if(activity && Object.keys(activity).length === 0) {
+  if (activity && Object.keys(activity).length === 0) {
     activity = await utils.insertNewActivity(req, res)
   }
   if (!activity) {
@@ -54,7 +51,7 @@ module.exports.vote = async (req, res) => {
   if (await utils.canUserVoteOnActivity(user, activity)) {
     await utils.insertNewVote(user, activity)
     await utils.countVote(user, activity)
-    utils.success(res, 'vote successfully registered',{})
+    utils.success(res, 'vote successfully registered', {})
   } else {
     utils.error(res, 400, 'cannot vote on this activity or have already voted')
   }

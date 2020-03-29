@@ -52,7 +52,7 @@ export function retrieveUser (res, email) {
         error(res, 400, 'User is not Unique')
         return null
       }
-      if(snapshot.empty) {
+      if (snapshot.empty) {
         error(res, 400, 'user does not exist')
         return null
       }
@@ -84,7 +84,7 @@ export function validateRequestParameters (req, res) {
   return true
 }
 
-export function validateUser(req,res) {
+export function validateUser (req, res) {
   return retrieveUser(res, req.body.user.email)
 }
 
@@ -97,7 +97,7 @@ export function getUserActivityVotes (userID) {
   return records(savedActivitiesCollection)
 }
 
-export function getSavedActivities() {
+export function getSavedActivities () {
   return records(new Firestore().LegislativeActivity())
 }
 
@@ -117,7 +117,7 @@ export function userVoteExistsMap (userVotes) {
   return voteMap
 }
 
-export function getActivityRecords(req, res, user) {
+export function getActivityRecords (req, res, user) {
   return Promise.all([
     getNewActivities(),
     getUserActivityVotes(user.id),
@@ -147,7 +147,7 @@ export function replaceNewVotesWithExisting (activity, activityMap) {
     return activity
   }
 }
-export function addHasVotedTag(activity, voteMap) {
+export function addHasVotedTag (activity, voteMap) {
   if (Object.keys(voteMap).includes(activity.id)) {
     activity.data.userHasVoted = true
     return activity.data
@@ -156,12 +156,12 @@ export function addHasVotedTag(activity, voteMap) {
   return activity
 }
 
-export function validateUserVotingParameters(req,res) {
+export function validateUserVotingParameters (req, res) {
   if (!req.body.activity || !req.body.activity.title || !req.body.activity.description) {
     error(res, 400, 'No activity, or incomplete activity Provided')
   } else if (!req.body.vote) {
     error(res, 400, 'Must supply a vote result')
-  }else if(!req.body.user || ! req.body.user.email) {
+  } else if (!req.body.user || !req.body.user.email) {
     error(res, 400, 'Must supply valid user')
   } else {
     return true
@@ -169,13 +169,13 @@ export function validateUserVotingParameters(req,res) {
   return false
 }
 
-export function getExistingActivity(req, res) {
-  const title = req.body.activity.title;
+export function getExistingActivity (req, res) {
+  const title = req.body.activity.title
   const description = req.body.activity.description
   return new Firestore()
     .LegislativeActivity()
     .where('title', '==', title)
-    .where('description', '==',description)
+    .where('description', '==', description)
     .select()
     .then(snapshot => {
       if (snapshot.size > 1) {
@@ -196,7 +196,7 @@ export function getExistingActivity(req, res) {
     })
 }
 
-export function insertNewActivity(req, res) {
+export function insertNewActivity (req, res) {
   const activity = req.body.activity
   delete activity.userHasVoted
   return new Firestore()
@@ -215,7 +215,7 @@ export function insertNewActivity(req, res) {
     })
 }
 
-export function canUserVoteOnActivity(user, activity){
+export function canUserVoteOnActivity (user, activity) {
   const db = new Firestore()
   return db.LegislativeActivityVote()
     .where('user', '==', user.id)
@@ -230,7 +230,7 @@ export function canUserVoteOnActivity(user, activity){
     })
 }
 
-export function insertNewVote(user, activity) {
+export function insertNewVote (user, activity) {
   return new Firestore()
     .LegislativeActivityVote()
     .insert(
@@ -243,13 +243,13 @@ export function countVote (user, activity) {
     .LegislativeActivity()
     .where('title', '==', activity.data.title)
     .where('description', '==', activity.data.description)
-    if(user.vote === 'yes') {
-      return collection.update({
-        yes: activity.data.yes + 1
-      })
-    } else if (user.vote === 'no'){
-      return collection.update({
-        no: activity.data.no + 1
-      })
-    }
+  if (user.vote === 'yes') {
+    return collection.update({
+      yes: activity.data.yes + 1
+    })
+  } else if (user.vote === 'no') {
+    return collection.update({
+      no: activity.data.no + 1
+    })
+  }
 }

@@ -3,6 +3,7 @@ const Parser = require('@parser').XmlDataParser
 const LegislativeActivity = require('@model').LegislativeActivity
 
 class _LegislativeActivityXmlParser extends Parser {
+  // eslint-disable-next-line no-useless-constructor
   constructor (xml) {
     super(xml)
   }

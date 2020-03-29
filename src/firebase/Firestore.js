@@ -257,6 +257,12 @@ class Firestore {
     return this
   }
 
+  AverageExpenditure () {
+    Firestore.legacyCollectionError(this.legacy)
+    const collection = `${this.parliament}/politicians/expenditure/${this.year}/averages`
+    return this.createReference(collection)
+  }
+
   Bill () {
     const collection = this.legacy ? 'bills' : `${this.parliament}/bills/bill`
     return this.createReference(collection)
