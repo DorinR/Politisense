@@ -257,8 +257,8 @@ class Firestore {
     return this
   }
 
-  AverageExpenditure() {
-    Firestore.checkCollection(this.legacy)
+  AverageExpenditure () {
+    Firestore.legacyCollectionError(this.legacy)
     const collection = `${this.parliament}/politicians/expenditure/${this.year}/averages`
     return this.createReference(collection)
   }

@@ -4,7 +4,7 @@ const Firestore = require('@firestore').Firestore
 const FinancialRecord = require('@model').FinancialRecord
 
 class ExpenditureComputeAction extends Action {
-  constructor (params = {}){
+  constructor (params = {}) {
     super()
     this.parliament = params.parliament || 43
     this.year = params.year || 2019
@@ -12,9 +12,9 @@ class ExpenditureComputeAction extends Action {
     this.records = ExpenditureComputeAction.retrieveFinancialRecords(db, params.member)
   }
 
-  static retrieveFinancialRecords(db, member = null) {
+  static retrieveFinancialRecords (db, member = null) {
     let collection = null
-    if(member) {
+    if (member) {
       collection = db.FinancialRecord().where('member', '==', member)
     } else {
       collection = db.FinancialRecord()
@@ -32,7 +32,7 @@ class ExpenditureComputeAction extends Action {
         return docs
       })
       .then(docs => {
-        return docs.filter(doc => {return Object.keys(doc).length !== 0})
+        return docs.filter(doc => { return Object.keys(doc).length !== 0 })
       })
   }
 
@@ -42,10 +42,10 @@ class ExpenditureComputeAction extends Action {
 
   async computeAverages () {
     this.records = await Promise.resolve(this.records)
-    let averages = {}
-      this.records.forEach(record => {
-       ExpenditureComputeAction.addAmountTo(averages, record.data)
-      })
+    const averages = {}
+    this.records.forEach(record => {
+      ExpenditureComputeAction.addAmountTo(averages, record.data)
+    })
     return Object.keys(averages)
       .map(category => {
         const json = {
@@ -55,30 +55,30 @@ class ExpenditureComputeAction extends Action {
           member: 'average',
           year: this.year,
           quarter: 0
-      }
-      return FinancialRecord.deserialise(json)
-    })
+        }
+        return FinancialRecord.deserialise(json)
+      })
       .filter(average => {
         return !(average.parent === '' && average.category === '')
       })
-      .sort((a,b) => {
-      if(a.parent < b.parent) return -1
-      if(a.parent > b.parent) return 1
-      if(a.category < b.category) return -1
-      if(a.category > b.category) return 1
-      return 0
-    })
+      .sort((a, b) => {
+        if (a.parent < b.parent) return -1
+        if (a.parent > b.parent) return 1
+        if (a.category < b.category) return -1
+        if (a.category > b.category) return 1
+        return 0
+      })
   }
 
-  static addAmountTo(averages, record) {
+  static addAmountTo (averages, record) {
     const category = record.category
     const parent = record.parent
-    ExpenditureComputeAction.AddTo(averages,record,category, parent)
-    ExpenditureComputeAction.AddTo(averages,record,parent, '')
+    ExpenditureComputeAction.AddTo(averages, record, category, parent)
+    ExpenditureComputeAction.AddTo(averages, record, parent, '')
   }
 
-  static AddTo(averages, record, category, parent) {
-    if(averages[category]){
+  static AddTo (averages, record, category, parent) {
+    if (averages[category]) {
       averages[category].amount += record.amount
       averages[category].count++
     } else {

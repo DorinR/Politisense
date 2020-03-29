@@ -1,7 +1,7 @@
 const Firestore = require('@firestore').Firestore
 const ExpenditureComputeAction = require('@action').ExpenditureComputeAction
 
-function fetchAverageExpenditures(parliament = 43, year = 2019) {
+function fetchAverageExpenditures (parliament = 43, year = 2019) {
   return new Firestore()
     .forParliament(parliament)
     .atYear(year)
@@ -13,13 +13,13 @@ function fetchAverageExpenditures(parliament = 43, year = 2019) {
         docs.push(doc.data())
       })
       return docs
-        .filter(doc => {return doc.parent === ''})
-        .map(doc => {return doc.amount})
+        .filter(doc => { return doc.parent === '' })
+        .map(doc => { return doc.amount })
     })
     .catch(console.error)
 }
 
-function fetchMemberExpenditures(member, parliament = 43, year = 2019) {
+function fetchMemberExpenditures (member, parliament = 43, year = 2019) {
   return new ExpenditureComputeAction({
     parliament: parliament,
     year: year,
@@ -27,10 +27,9 @@ function fetchMemberExpenditures(member, parliament = 43, year = 2019) {
   })
     .perform()
     .then(results => {
-      console.log(results)
       return results
-        .filter(result => {return result.parent === ''})
-        .map(doc => {return doc.amount})
+        .filter(result => { return result.parent === '' })
+        .map(doc => { return doc.amount })
     })
     .catch(console.error)
 }
@@ -53,7 +52,7 @@ exports.budgetData = async (req, res) => {
     fetchMemberExpenditures(representativeId)
   ])
 
-  if(member && average){
+  if (member && average) {
     res.status(200).json({
       success: true,
       data: {
@@ -70,6 +69,4 @@ exports.budgetData = async (req, res) => {
       }
     })
   }
-
-
 }
