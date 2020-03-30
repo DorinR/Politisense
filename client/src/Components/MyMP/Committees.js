@@ -90,9 +90,9 @@ const Committees = props => {
                             Committees
             </Typography>
             <Grid item direction='row'>
-              <Grid container direction='row'>
-                <CountUp style={{ fontSize: 27 }} end={data ? data.length : 0}> </CountUp>
-                <Typography style={{ marginTop: 3, marginLeft: 3 }} variant='h5'> {'committees'}</Typography>
+              <Grid container direction='row' alignItems="center">
+                <Grid item><CountUp style={{ fontSize: 27 }} end={data ? data.length : 0}> </CountUp></Grid>
+                <Grid item><Typography style={{ marginLeft: 3 }} variant='h5'> {'committees'}</Typography></Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -110,10 +110,11 @@ const Committees = props => {
             >
               {(data !== null) ? `${capitalizedName(loadingTextTitle(data[0]))}` : 'This MP is not a member of any'}
             </Typography>
+            {data && data.length != 0
+                ? <Button color='primary'  style={{ fontSize:"0.625em" }} onClick={handleOpenAction}>details</Button>
+                : ''}
           </li>
-          {data
-            ? <Button color='primary' size='medium' style={{ fontSize: 10 }} onClick={handleOpenAction}>details</Button>
-            : ''}
+
           <DescriptionDialog open={open} onClose={handleCloseAction} data={data || []} title='Committees' />
         </div>
       </CardContent>

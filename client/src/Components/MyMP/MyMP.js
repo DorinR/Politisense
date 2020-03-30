@@ -257,7 +257,7 @@ export default function MyMP () {
               >
                 <div>
                   {donutData && representativeData ? (
-                    <Bipartisan data={donutData[0]} rows={donutData[1]} title='gauge' />) : 'donutData is null'}
+                    <Bipartisan data={donutData[0]} rows={donutData[1]} title='gauge' />) : ''}
                 </div>
               </Grid>
               <Grid

@@ -92,9 +92,9 @@ const Roles = props => {
                             Parliament Roles
             </Typography>
             <Grid item direction='row'>
-              <Grid container direction='row'>
-                <CountUp style={{ fontSize: 27 }} end={data ? data.length : 0}> </CountUp>
-                <Typography style={{ marginTop: 3, marginLeft: 3 }} variant='h5'> {'roles'}</Typography>
+              <Grid container direction='row' alignItems="center">
+                <Grid item><CountUp style={{ fontSize: 27 }} end={data ? data.length : 0}> </CountUp></Grid>
+                <Grid item><Typography style={{ marginLeft: 3 }} variant='h5'> {'roles'}</Typography></Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -110,12 +110,13 @@ const Roles = props => {
               className={classes.caption}
               variant='caption'
             >
-              {data ? (`${capitalizedName(loadingTextTitle(data[0]))}`) : 'This MP doesnt have roles'}
+              {data && data.length != 0  ? (`${capitalizedName(loadingTextTitle(data[0]))}`) : 'This MP doesnt have roles'}
             </Typography>
+            {data && data.length != 0  ? <Button color='primary' style={{ fontSize:"0.625em"}} onClick={handleOpenAction}>details</Button> : ''}
+            <DescriptionDialog open={open} onClose={handleCloseAction} data={data || []} title='Roles' />
           </li>
 
-          {data ? <Button color='primary' size='medium' style={{ fontSize: 10 }} onClick={handleOpenAction}>details</Button> : ''}
-          <DescriptionDialog open={open} onClose={handleCloseAction} data={data || []} title='Roles' />
+
         </div>
       </CardContent>
     </Card>

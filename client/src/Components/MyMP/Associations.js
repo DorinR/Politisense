@@ -13,7 +13,8 @@ const useStyles = makeStyles(theme => ({
   root: {
     height: '100%',
     backgroundColor: '#00bcd4',
-    color: theme.palette.primary.contrastText
+    color: theme.palette.primary.contrastText,
+    minWidth: 200
   },
   content: {
     alignItems: 'center',
@@ -86,9 +87,9 @@ const Associations = props => {
                             Associations
             </Typography>
             <Grid item direction='row'>
-              <Grid container direction='row'>
-                <CountUp style={{ fontSize: 27 }} end={data ? data.length : 0}> </CountUp>
-                <Typography style={{ marginTop: 3, marginLeft: 3 }} variant='h5'> {'associations'}</Typography>
+              <Grid container direction='row'alignItems="center">
+                <Grid item><CountUp style={{ fontSize: 26 }} end={data ? data.length : 0}> </CountUp></Grid>
+                <Grid item><Typography style={{ marginLeft: 3 }} variant='h5'> {'associations'}</Typography></Grid>
               </Grid>
             </Grid>
 
@@ -105,10 +106,10 @@ const Associations = props => {
               className={classes.caption}
               variant='caption'
             >
-              {data ? (`${capitalizedName(loadingTextTitle(data[0]))}`) : 'This MP is not a member of any'}
+              {data && data.length != 0 ? (`${capitalizedName(loadingTextTitle(data[0]))}`) : 'This MP is not a member of any'}
             </Typography>
+            {data && data.length != 0  ? <Button size='2' style={{ color: 'white', fontSize:"0.625em" }} onClick={handleOpenAction}>details</Button> : ''}
           </li>
-          {data ? <Button color='primary' size='medium' style={{ fontSize: 10, color: 'white' }} onClick={handleOpenAction}>details</Button> : ''}
           <DescriptionDialog open={open} onClose={handleCloseAction} data={data || []} title='Parliamentary Associations' />
         </div>
       </CardContent>
