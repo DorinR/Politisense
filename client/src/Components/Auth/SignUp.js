@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
@@ -47,23 +47,26 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export async function signupAPICall (user) {
-  let result = ''
-  await axios.post('/api/users/checkIfUserExists', user).then(res => {
-    result = res
-  })
-  return result
+  return axios
+    .post('/api/users/checkIfUserExists', user)
+    .then(res => {
+      console.log(res)
+      return !res.data.success
+    })
+    .catch(console.error)
 }
 
-export default function SignUp () {
+export default function SignUp (props) {
   const classes = useStyles()
-  const [registered, setRegistered] = useState(false)
+  console.log(props)
+  const refs = {}
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
-  const [firstname, setFirstname] = useState('')
+  const [firstname, setFirstname] = useState(props && props.location && props.location.state && props.location.state.user ? props.location.state.user.firstname : '')
+  console.log(firstname)
   const [lastname, setLastname] = useState('')
   const [validForm, setValidForm] = useState(false)
-  const [user, setUser] = useState({})
   const [errors, setErrors] = useState({
     firstname: '',
     lastname: '',
@@ -78,7 +81,16 @@ export default function SignUp () {
     }
   }
 
-  const handleSubmit = e => {
+  useEffect(() => {
+    if (props && props.location && props.location.state && props.location.state.user) {
+      setFirstname(props.location.state.user.firstname)
+      setLastname(props.location.state.user.lastname)
+      setEmail(props.location.state.user.email)
+    }
+
+  },[props])
+
+  const handleSubmit = async e => {
     e.preventDefault()
     const user = {
       firstname: firstname,
@@ -86,12 +98,11 @@ export default function SignUp () {
       email: email,
       password: password
     }
-    setUser(user)
     const nameFormat = /^[a-z ,.'-]+$/i
     // eslint-disable-next-line no-useless-escape
     const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     const passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
-    const errors = {}
+    let errors = {}
     const nameError = 'Invalid name format, Please use only letters or hyphens'
     errors.firstname = !user.firstname.match(nameFormat) ? nameError : ''
     errors.lastname = !user.lastname.match(nameFormat) ? nameError : ''
@@ -102,31 +113,31 @@ export default function SignUp () {
     errors.passwordConfirm = !(user.password === passwordConfirm)
       ? 'Passwords do not match, please re-enter confirmation password'
       : ''
-    if (
-      errors.firstname === '' &&
-      errors.lastname === '' &&
-      errors.email === '' &&
-      errors.password === '' &&
-      errors.passwordConfirm === ''
-    ) {
-      signupAPICall(user).then(res => {
-        if (res.data.success === false) {
-          setRegistered(true)
-        } else {
-          errors.email = 'Already taken'
-          setErrors(errors)
-          return <Redirect to={{ pathname: '/signup', state: { user: '' } }} />
+    let registered = false
+    if (errors.firstname === '' && errors.lastname === '' && errors.email === '' && errors.password === '' && errors.passwordConfirm === '') {
+      errors = {}
+      registered = await signupAPICall(user)
+      console.log(registered)
+      if(!registered) {
+        errors.email = 'Already taken'
+      }
+    }
+
+    if(Object.keys(errors).length > 0) {
+      setErrors(errors)
+    } else {
+      // eslint-disable-next-line no-undef
+      localStorage.setItem('user', JSON.stringify(user))
+      props.history.push({
+        pathname: '/question',
+        state: {
+          user: user
         }
       })
-    } else {
-      setErrors(errors)
     }
+
   }
-  if (registered) {
-    // eslint-disable-next-line no-undef
-    localStorage.setItem('user', JSON.stringify(user.email))
-    return <Redirect to={{ pathname: '/question', state: { user: user } }} />
-  }
+
   return (
     <div>
       <div className={classes.root}>
@@ -150,7 +161,12 @@ export default function SignUp () {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  onChange={e => setFirstname(e.target.value)}
+                  onChange={e => {
+                    setFirstname(e.target.value)
+                    refs.fname.value = e.target.value
+                  }}
+                  ref={(el) => {refs['fname'] = el}}
+                  value={firstname ? firstname : ''}
                   autoComplete='fname'
                   name='firstname'
                   variant='outlined'
@@ -165,7 +181,12 @@ export default function SignUp () {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  onChange={e => setLastname(e.target.value)}
+                  onChange={e => {
+                    setLastname(e.target.value)
+                    refs.lname.value = e.target.value
+                  }}
+                  ref={(el) => {refs['lname'] = el}}
+                  value={lastname ? lastname : ''}
                   variant='outlined'
                   required
                   fullWidth
@@ -179,7 +200,12 @@ export default function SignUp () {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  onChange={e => setEmail(e.target.value)}
+                  onChange={e => {
+                    setEmail(e.target.value)
+                    refs.email.value = e.target.value
+                  }}
+                  ref={(el) => {refs['email'] = el}}
+                  value={email ? email : ''}
                   variant='outlined'
                   required
                   fullWidth
@@ -194,6 +220,7 @@ export default function SignUp () {
               <Grid item xs={12}>
                 <TextField
                   onChange={e => setPassword(e.target.value)}
+                  ref={(el) => {refs['password'] = el}}
                   variant='outlined'
                   required
                   fullWidth
@@ -201,6 +228,7 @@ export default function SignUp () {
                   label='Password'
                   type='password'
                   id='password'
+
                   placeholder='8 characters, at least one letter and one digit'
                   autoComplete='current-password'
                   error={errors.password !== ''}
@@ -210,6 +238,7 @@ export default function SignUp () {
               <Grid item xs={12}>
                 <TextField
                   onChange={e => setPasswordConfirm(e.target.value)}
+                  ref={(el) => {refs['passwordConfirm'] = el}}
                   variant='outlined'
                   required
                   fullWidth
