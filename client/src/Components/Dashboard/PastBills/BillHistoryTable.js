@@ -11,6 +11,7 @@ import BillDetails from './BillDetails'
 import clsx from 'clsx'
 import { fetchRepresentative, fetchUserRiding } from '../Utilities/CommonUsedFunctions'
 import axios from 'axios'
+import { TableSortLabel } from '@material-ui/core'
 import {
   Card,
   CardHeader,
@@ -46,7 +47,7 @@ function createData (number, dateVoted, title, vote, moreInfo) {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%',
+    width: '100%'
   },
   tableWrapper: {
     maxHeight: 410,
@@ -75,10 +76,10 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-async function votingHistory(representative){
+async function votingHistory (representative) {
   return axios.get(`api/representatives/representative/voting-history/${representative}`)
     .then(res => {
-      if(res.data.success) {
+      if (res.data.success) {
         return res.data.data
       }
       return []
@@ -105,6 +106,32 @@ function generateTableRows (bills) {
   })
 }
 
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
 export default function BillHistoryTable (props) {
   const { className, ...rest } = props
   const classes = useStyles()
@@ -125,34 +152,44 @@ export default function BillHistoryTable (props) {
     setOpen(false)
   }
 
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property)
+  }
+
+  const [order, setOrder] = React.useState('desc');
+  const [orderBy, setOrderBy] = React.useState('dateVoted');
+  const onRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
   const [user, setUser] = React.useState(null)
   useEffect(() => {
-    if(!user){
+    if (!user) {
       // eslint-disable-next-line no-undef
       const usr = JSON.parse(localStorage.getItem('user'))
       setUser(usr)
     }
-  },[user])
+  }, [user])
 
   const [representative, setRepresentative] = React.useState(null)
   useEffect(() => {
-    async function getData() {
-      if(user && !representative) {
+    async function getData () {
+      if (user && !representative) {
         const riding = await fetchUserRiding(user.email)
         const rep = await fetchRepresentative(riding)
         setRepresentative(rep)
       }
     }
     getData()
-  },[user, representative])
+  }, [user, representative])
 
   const [rows, setRows] = React.useState([])
   useEffect(() => {
     async function getData () {
-      if(rows.length === 0 && representative) {
-        console.log('setting rows now')
+      if (rows.length === 0 && representative) {
         const bills = await votingHistory(representative)
-        console.log('rows set')
         const rows = generateTableRows(bills)
         setRows(rows)
       }
@@ -204,32 +241,42 @@ export default function BillHistoryTable (props) {
             <Table stickyheader='true'>
               <TableHead>
                 <TableRow>
-                  {columns.map(column => (
+                  {columns.map((column, index) => (
                     <TableCell
                       key={column.id}
                       align={column.align}
                       style={{ minWidth: column.minWidth }}
                     >
-                      {column.label}
+                      {index < columns.length - 1 ? (
+                        <TableSortLabel
+                          active={orderBy === column.id}
+                          direction={orderBy === column.id ? order : 'asc'}
+                          onClick={createSortHandler(column.id)}
+                        >
+                          {column.label}
+                        </TableSortLabel>
+                      ) : (
+                        `${column.label}`
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows
+                {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, i) => {
+                  .map((row, index) => {
                     return (
                       <TableRow
                         hover
                         role='checkbox'
                         tabIndex={-1}
-                        key={i}
+                        key={index}
                       >
-                        {columns.map((column, i) => {
+                        {columns.map(column => {
                           const value = row[column.id]
                           return (
-                            <TableCell key={i} align={column.align}>
+                            <TableCell key={column.id} align={column.align}>
                               {column.format && typeof value === 'number'
                                 ? column.format(value)
                                 : value}
