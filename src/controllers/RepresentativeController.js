@@ -181,11 +181,11 @@ exports.getRepresentativeId = async (req, res) => {
 }
 
 exports.votingHistory = async (req, res) => {
-  if(!req.params.representative) {
+  if (!req.params.representative) {
     Utils.error(res, 400, 'invalid request')
     return
   }
-  const parliaments = [36,37,38,39,40,41,42,43]
+  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
   const allBills = parliaments.map(parliament => {
     return new Firestore()
       .forParliament(parliament)
@@ -204,7 +204,7 @@ exports.votingHistory = async (req, res) => {
             return getMemberIDInParliament(snapshot)
           })
           .then(id => {
-            if(!id) resolve([])
+            if (!id) resolve([])
             return joinVotesToVoteRecords(id, parliament)
           })
           .then(votes => {
@@ -214,7 +214,6 @@ exports.votingHistory = async (req, res) => {
           .then(votes => {
             return votes.map(createExpectedRecord)
               .filter(isRecordComplete)
-              .sort(compareDate)
           })
           .then(resolve)
       })
@@ -228,8 +227,8 @@ exports.votingHistory = async (req, res) => {
     })
 }
 
-function getMemberIDInParliament(snapshot){
-  if(snapshot.empty || snapshot.size > 1) {
+function getMemberIDInParliament (snapshot) {
+  if (snapshot.empty || snapshot.size > 1) {
     return null
   }
   let id = null
@@ -239,7 +238,7 @@ function getMemberIDInParliament(snapshot){
   return id
 }
 
-function addBillData(votes, allBills, index){
+function addBillData (votes, allBills, index) {
   const voteMap = mapVotesByBill(votes)
   const billIDs = Object.keys(voteMap)
   return Promise.resolve(allBills[index])
@@ -249,7 +248,7 @@ function addBillData(votes, allBills, index){
     })
 }
 
-function joinVotesToVoteRecords(id, parliament) {
+function joinVotesToVoteRecords (id, parliament) {
   const db = new Firestore().forParliament(parliament)
   const memberVotes = db.Vote().where('member', '==', id)
   return db.VoteRecord()
@@ -259,15 +258,15 @@ function joinVotesToVoteRecords(id, parliament) {
     })
 }
 
-function addBillDataToMap(voteMap, billIDs, snapshot) {
+function addBillDataToMap (voteMap, billIDs, snapshot) {
   snapshot.forEach(doc => {
-    if(billIDs.includes(doc.id)) {
+    if (billIDs.includes(doc.id)) {
       voteMap[doc.id].bill = doc.data()
     }
   })
 }
 
-function mapVotesByBill(votes){
+function mapVotesByBill (votes) {
   const voteMap = {}
   votes.forEach(vote => {
     voteMap[vote.bill] = vote
@@ -275,7 +274,7 @@ function mapVotesByBill(votes){
   return voteMap
 }
 
-function createExpectedRecord(vote){
+function createExpectedRecord (vote) {
   return {
     number: vote.billNumber,
     title: vote.bill.title,
@@ -285,18 +284,10 @@ function createExpectedRecord(vote){
     sponsorName: vote.sponsorAffiliations,
     result: vote.yeas > vote.nays,
     vote: vote.yea,
-    paired: vote.paired,
+    paired: vote.paired
   }
 }
 
-function isRecordComplete(vote) {
+function isRecordComplete (vote) {
   return vote.dateVoted && vote.number
-}
-
-function compareDate(a,b) {
-  const dateA = Date.parse(a.date)
-  const dateB = Date.parse(b.date)
-  if(dateA > dateB) return -1
-  if(dateA < dateB) return 1
-  return 0
 }

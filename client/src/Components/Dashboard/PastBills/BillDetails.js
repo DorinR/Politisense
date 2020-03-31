@@ -105,9 +105,12 @@ export default function BillDetails (props) {
               </Avatar>
             </ListItemAvatar>
             <ListItemText>
-              <Link href={props.linkToFullText} target='_blank' rel='noopener'>
+              {props.linkToFullText !== '' ? (<Link href={props.linkToFullText} target='_blank' rel='noopener'>
                 {props.linkToFullText}
-              </Link>
+              </Link>)
+                : (
+                  'Full Text Not Available'
+                )}
             </ListItemText>
           </ListItem>
           <ListItem>
@@ -117,7 +120,7 @@ export default function BillDetails (props) {
               </Avatar>
             </ListItemAvatar>
             <ListItemText>
-              Sponsored by {capitalizedName(props.sponsor)}
+              {props.sponsor ? (`Sponsored by ${capitalizedName(props.sponsor)}`) : ('Sponsor Not Available')}
             </ListItemText>
           </ListItem>
           <ListItem>
