@@ -58,21 +58,32 @@ exports.getRidingPopulation = (req, res) => {
 }
 
 exports.getRidingByRidingCode = async (req, res) => {
-  const politicans = await getAllPoliticiansParl43()
-  const ridings = await getAllRidings()
-
-  if (politicans.length && ridings.length) {
-    res.status(200).json({
-      success: true,
-      data: [politicans, ridings]
+  Promise.all([getAllPoliticiansParl43(), getAllRidings()])
+    .then(result => {
+      if (!result[0].length || !result[1].length) {
+        res.status(404).json({
+          success: false,
+          message: 'Data not found'
+        })
+      }
+      if (result[0].length && result[1].length) {
+        res.status(200).json({
+          success: true,
+          data: result
+        })
+      }
     })
-  }
+    .catch(err => {
+      res.status(400).json({
+        success: false,
+        message: err
+      })
+    })
 
   async function getAllPoliticiansParl43 () {
-    const politicains = []
-    const db43 = new Firestore().forParliament(43)
+    const politicians = []
 
-    await db43
+    return new Firestore()
       .Politician()
       .select()
       .then(snapshot => {
@@ -84,8 +95,9 @@ exports.getRidingByRidingCode = async (req, res) => {
           return []
         }
         snapshot.forEach(doc => {
-          politicains.push(doc.data())
+          politicians.push(doc.data())
         })
+        return politicians
       })
       .catch(err => {
         res.status(400).json({
@@ -93,13 +105,12 @@ exports.getRidingByRidingCode = async (req, res) => {
           message: err
         })
       })
-    return politicains
   }
 
   async function getAllRidings () {
     const ridings = []
-    const db = new Firestore()
-    await db
+
+    return new Firestore()
       .Riding()
       .select()
       .then(snapshot => {
@@ -113,6 +124,7 @@ exports.getRidingByRidingCode = async (req, res) => {
         snapshot.forEach(doc => {
           ridings.push(doc.data())
         })
+        return ridings
       })
       .catch(err => {
         res.status(400).json({
@@ -120,6 +132,5 @@ exports.getRidingByRidingCode = async (req, res) => {
           message: err
         })
       })
-    return ridings
   }
 }

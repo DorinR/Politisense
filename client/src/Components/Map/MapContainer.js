@@ -5,6 +5,7 @@ import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import InfoBubble from '../Dashboard/Utilities/InfoBubble'
+import CenteredCircularProgress from '../Dashboard/Utilities/CenteredCircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles({
@@ -42,7 +43,7 @@ export default function MapContainer () {
 
   useEffect(() => {
     async function fetchData () {
-      await axios
+      return axios
         .get('/api/ridings/getRidingByRidingCode')
         .then(res => {
           if (res.data.success) {
@@ -56,7 +57,7 @@ export default function MapContainer () {
 
   useEffect(() => {
     async function fetchData () {
-      await axios
+      return axios
         .get('/api/mapSupportData/shape/getMapSupportData')
         .then(res => {
           if (res.data.success) {
@@ -70,7 +71,7 @@ export default function MapContainer () {
 
   useEffect(() => {
     async function fetchData () {
-      await axios
+      return axios
         .get('/api/mapSupportData/electionResults/getMapSupportData')
         .then(res => {
           if (res.data.success) {
@@ -106,14 +107,14 @@ export default function MapContainer () {
         </span>
       </Container>
       <Container>
-        {ridingCodes !== null && ridingCodes !== undefined ? (
+        {ridingCodes && shapeData && ridingMpData ? (
           <MapWrapper
             ridingCodes={ridingCodes}
             shapeData={shapeData}
             ridingMpData={ridingMpData}
           />
         ) : (
-          ''
+          <CenteredCircularProgress />
         )}
       </Container>
     </div>
