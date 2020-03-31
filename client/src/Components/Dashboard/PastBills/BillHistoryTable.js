@@ -46,7 +46,7 @@ function createData (number, dateVoted, title, vote, moreInfo) {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%'
+    width: '100%',
   },
   tableWrapper: {
     maxHeight: 410,
