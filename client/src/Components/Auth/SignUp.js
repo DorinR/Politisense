@@ -87,8 +87,7 @@ export default function SignUp (props) {
       setLastname(props.location.state.user.lastname)
       setEmail(props.location.state.user.email)
     }
-
-  },[props])
+  }, [props])
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -118,12 +117,12 @@ export default function SignUp (props) {
       errors = {}
       registered = await signupAPICall(user)
       console.log(registered)
-      if(!registered) {
+      if (!registered) {
         errors.email = 'Already taken'
       }
     }
 
-    if(Object.keys(errors).length > 0) {
+    if (Object.keys(errors).length > 0) {
       setErrors(errors)
     } else {
       // eslint-disable-next-line no-undef
@@ -135,7 +134,6 @@ export default function SignUp (props) {
         }
       })
     }
-
   }
 
   return (
@@ -165,8 +163,8 @@ export default function SignUp (props) {
                     setFirstname(e.target.value)
                     refs.fname.value = e.target.value
                   }}
-                  ref={(el) => {refs['fname'] = el}}
-                  value={firstname ? firstname : ''}
+                  ref={(el) => { refs.fname = el }}
+                  value={firstname || ''}
                   autoComplete='fname'
                   name='firstname'
                   variant='outlined'
@@ -185,8 +183,8 @@ export default function SignUp (props) {
                     setLastname(e.target.value)
                     refs.lname.value = e.target.value
                   }}
-                  ref={(el) => {refs['lname'] = el}}
-                  value={lastname ? lastname : ''}
+                  ref={(el) => { refs.lname = el }}
+                  value={lastname || ''}
                   variant='outlined'
                   required
                   fullWidth
@@ -204,8 +202,8 @@ export default function SignUp (props) {
                     setEmail(e.target.value)
                     refs.email.value = e.target.value
                   }}
-                  ref={(el) => {refs['email'] = el}}
-                  value={email ? email : ''}
+                  ref={(el) => { refs.email = el }}
+                  value={email || ''}
                   variant='outlined'
                   required
                   fullWidth
@@ -220,7 +218,7 @@ export default function SignUp (props) {
               <Grid item xs={12}>
                 <TextField
                   onChange={e => setPassword(e.target.value)}
-                  ref={(el) => {refs['password'] = el}}
+                  ref={(el) => { refs.password = el }}
                   variant='outlined'
                   required
                   fullWidth
@@ -238,7 +236,7 @@ export default function SignUp (props) {
               <Grid item xs={12}>
                 <TextField
                   onChange={e => setPasswordConfirm(e.target.value)}
-                  ref={(el) => {refs['passwordConfirm'] = el}}
+                  ref={(el) => { refs.passwordConfirm = el }}
                   variant='outlined'
                   required
                   fullWidth
