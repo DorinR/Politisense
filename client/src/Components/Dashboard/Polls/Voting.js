@@ -21,8 +21,15 @@ const useStyles = makeStyles({
 })
 
 async function fetchRecentBills() {
-    const res = axios.get(`http://localhost:5000/api/bills/getUpcomingBills`)
-    return res.data.data
+    return axios
+        .get(`http://localhost:5000/api/bills/getUpcomingBills`)
+        .then(res => {
+            if (res.data.success) {
+                return res.data.data
+            }
+            return null
+        })
+        .catch(console.error)
 }
 
 
@@ -40,7 +47,7 @@ export default function Voting() {
             const recentLegislativeActivities = await fetchRecentBills()
             setRecentBills(recentLegislativeActivities)
             console.log(recentLegislativeActivities)
-            console.log(recentLegislativeActivities.bills[0], data[0])
+            //console.log(recentLegislativeActivities.bills[0])
         }
         getData()
     }, [name])
@@ -50,11 +57,11 @@ export default function Voting() {
             <List className={classes.root}>
                 {recentBills.map(bills => (
                     <ListItem>
-                        <ListItemAvatar>
+                        {/* <ListItemAvatar>
                             <Avatar>
                                 <ImageIcon />
                             </Avatar>
-                        </ListItemAvatar>
+                        </ListItemAvatar> */}
                         <ListItemText primary={bills.title} secondary={bills.date} />
                     </ListItem>
                 ))}
