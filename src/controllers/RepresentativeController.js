@@ -185,91 +185,119 @@ exports.votingHistory = async (req, res) => {
     return
   }
   const parliaments = [36,37,38,39,40,41,42,43]
-  const votes = Promise.all(
-      parliaments.map(parliament => {
-        return new Firestore()
+  const allBills = parliaments.map(parliament => {
+    return new Firestore()
+      .forParliament(parliament)
+      .Bill()
+      .select()
+  })
+  Promise.all(
+    parliaments.map(parliament => {
+      return new Promise(resolve => {
+        new Firestore()
           .forParliament(parliament)
           .Politician()
           .where('name', '==', req.params.representative)
           .select()
           .then(snapshot => {
-            if(snapshot.empty || snapshot.size > 1) {
-              return null
-            }
-            let id = null
-            snapshot.forEach(doc => {
-              id = doc.id
-            })
-            return id
+            return getMemberIDInParliament(snapshot)
           })
           .then(id => {
-            const db = new Firestore().forParliament(parliament)
-            const memberVotes = db.Vote().where('member', '==', id)
-            return db.VoteRecord()
-              .innerJoin('_id', memberVotes, 'vote')
-              .then(results => {
-                return results
-              })
+            if(!id) resolve([])
+            return joinVotesToVoteRecords(id, parliament)
           })
           .then(votes => {
-            const voteMap = {}
-            votes.forEach(vote =>
-            {
-               voteMap[vote.bill] = vote
-            })
-            const billsIDs = Object.keys(voteMap)
-            return new Firestore()
-              .forParliament(parliament)
-              .Bill()
-              .select()
-              .then(snapshot => {
-                snapshot.forEach(doc => {
-                  if(billsIDs.includes(doc.id)) {
-                    voteMap[doc.id].bill = doc.data()
-                  }
-                })
-                return Object.values(voteMap)
-              })
+            const index = parliaments.indexOf(parliament)
+            return addBillData(votes, allBills, index)
           })
           .then(votes => {
-            return votes.map(vote => {
-              return {
-                number: vote.billNumber,
-                title: vote.bill.title,
-                dateVoted: vote.bill.dateVoted,
-                link: vote.bill.link,
-                name: vote.name,
-                sponsorName: vote.sponsorAffiliations,
-                result: vote.yeas > vote.nays,
-                vote: vote.yea,
-                paired: vote.paired,
-              }
-            })
-              .filter(vote => {
-                return vote.dateVoted && vote.number
-              })
-              .sort((a,b) => {
-                const dateA = Date.parse(a.date)
-                const dateB = Date.parse(b.date)
-                if(dateA < dateB) return -1
-                if(dateA > dateB) return 1
-                return 0
-              })
+            return votes.map(createExpectedRecord)
+              .filter(isRecordComplete)
+              .sort(compareDate)
           })
-
+          .then(resolve)
       })
-    )
-    .then(votes =>{
-      return votes.flat()
-    })
+    }))
     .then(votes => {
-      Utils.success(res, 'successfully retrieved votes', votes)
+      Utils.success(res, 'successfully retrieved votes', votes.flat())
     })
     .catch(e => {
       console.error(e)
       Utils.error(res, 500, 'internal server error')
     })
+}
 
+function getMemberIDInParliament(snapshot){
+  if(snapshot.empty || snapshot.size > 1) {
+    return null
+  }
+  let id = null
+  snapshot.forEach(doc => {
+    id = doc.id
+  })
+  return id
+}
+
+function addBillData(votes, allBills, index){
+  const voteMap = mapVotesByBill(votes)
+  const billIDs = Object.keys(voteMap)
+  return Promise.resolve(allBills[index])
+    .then(snapshot => {
+      addBillDataToMap(voteMap, billIDs, snapshot)
+      return Object.values(voteMap)
+    })
+}
+
+function joinVotesToVoteRecords(id, parliament) {
+  const db = new Firestore().forParliament(parliament)
+  const memberVotes = db.Vote().where('member', '==', id)
+  return db.VoteRecord()
+    .innerJoin('_id', memberVotes, 'vote')
+    .then(results => {
+      return results
+    })
+}
+
+function addBillDataToMap(voteMap, billIDs, snapshot) {
+  snapshot.forEach(doc => {
+    if(billIDs.includes(doc.id)) {
+      voteMap[doc.id].bill = doc.data()
+    }
+  })
+}
+
+function mapVotesByBill(votes){
+  const voteMap = {}
+  votes.forEach(vote => {
+    voteMap[vote.bill] = vote
+  })
+  return voteMap
+}
+
+function createExpectedRecord(vote){
+  return {
+    number: vote.billNumber,
+    title: vote.bill.title,
+    dateVoted: vote.bill.dateVoted,
+    link: vote.bill.link,
+    name: vote.name,
+    sponsorName: vote.sponsorAffiliations,
+    result: vote.yeas > vote.nays,
+    vote: vote.yea,
+    paired: vote.paired,
+  }
+}
+
+function isRecordComplete(vote) {
+  return vote.dateVoted && vote.number
+}
+
+function compareDate(a,b) {
+  const dateA = Date.parse(a.date)
+  const dateB = Date.parse(b.date)
+  if(dateA > dateB) return -1
+  if(dateA < dateB) return 1
+  return 0
 }
 
 async function fetchRolesByParliament (parliamentNo, repName) {
