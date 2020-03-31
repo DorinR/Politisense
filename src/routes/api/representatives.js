@@ -31,4 +31,6 @@ router.get('/representative/representative/:name', controller.getImageData)
 
 router.get('/getAllRepsFromAllParliaments', controller.getAllRepsFromAllParliaments)
 
+router.get('/representative/voting-history/:representative', controller.representativeVotingHistory)
+
 module.exports = router

@@ -18,7 +18,8 @@ export default function RidingPopulation (props) {
   useEffect(() => {
     async function getData () {
       if (props.riding) {
-        setPopulation(await fetchPopulation(props.riding))
+        const pop = await fetchPopulation(props.riding)
+        setPopulation(pop)
       }
     }
     getData()

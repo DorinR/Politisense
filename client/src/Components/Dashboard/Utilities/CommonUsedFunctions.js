@@ -50,3 +50,27 @@ export function capitalizedName (sponsor) {
   }
   return null
 }
+
+export async function fetchUserRiding (userEmail) {
+  return axios
+    .get(`/api/users/${userEmail}/getUser`, { params: { billhistory: userEmail } })
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data.riding
+      }
+      return null
+    })
+    .catch(console.error)
+}
+
+export async function fetchRepresentative (riding) {
+  return axios
+    .get(`/api/representatives/${riding}/getRepresentative`)
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data.name
+      }
+      return null
+    })
+    .catch(console.error)
+}
