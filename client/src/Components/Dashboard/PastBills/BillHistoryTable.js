@@ -5,9 +5,11 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TablePagination from '@material-ui/core/TablePagination'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import TableRow from '@material-ui/core/TableRow'
 import BillDetails from './BillDetails'
 import clsx from 'clsx'
+import { fetchRepresentative, fetchUserRiding } from '../Utilities/CommonUsedFunctions'
 import axios from 'axios'
 import {
   Card,
@@ -36,14 +38,11 @@ const columns = [
     minWidth: 170,
     align: 'right'
   }
-
 ]
 
 function createData (number, dateVoted, title, vote, moreInfo) {
   return { number, dateVoted, title, vote, moreInfo }
 }
-
-let rows = []
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -76,85 +75,25 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding (userEmail) {
-  let result = ''
-  await axios
-    .get(`/api/users/${userEmail}/getUser`, {
-      params: { billhistory: userEmail }
-    })
+async function votingHistory(representative){
+  return axios.get(`api/representatives/representative/voting-history/${representative}`)
     .then(res => {
-      if (res.data.success) {
-        const riding = res.data.data.riding
-        result = riding
-      }
-    })
-    .catch(err => console.log(err))
-  return result
-}
-
-export async function fetchRepresentative (riding) {
-  let result = ''
-  await axios
-    .get(`/api/representatives/${riding}/getRepresentative`)
-    .then(res => {
-      if (res.data.success) {
-        const representative = res.data.data.name
-        result = representative
-      }
-    })
-    .catch(err => console.log(err))
-  return result
-}
-
-export function fetchAllBills () {
-  return axios
-    .get('/api/bills/getAllBills')
-    .then(res => {
-      if (res.data.success) {
+      if(res.data.success) {
         return res.data.data
       }
+      return []
     })
     .catch(console.error)
-}
-
-export async function fetchRepresentativeId (representative) {
-  return axios
-    .get(`/api/representatives/${representative}/getRepresentativeId`)
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data
-      }
-    })
-    .catch(console.error)
-}
-
-export async function fetchRepresentativeVotes (representativeId) {
-  return axios
-    .get(`/api/votes/${representativeId}/getAllVotesByRepresentative`)
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data
-      }
-    })
-}
-
-export async function fetchAllVoteRecords () {
-  return axios.get('/api/voteRecord/getAllVoteRecords').then(res => {
-    if (res.data.success) {
-      return res.data.data
-    }
-  })
 }
 
 function generateTableRows (bills) {
-  rows = []
-  bills.forEach(bill => {
-    const { number, dateVoted, title, sponsorName, link, vote } = bill
-    const tableRow = createData(
+  return bills.map(bill => {
+    const { number, dateVoted, title, sponsorName, link, vote, name } = bill
+    return createData(
       number,
       dateVoted,
-      title,
-      vote,
+      name.split(',')[0],
+      (vote === true ? 'Yea' : 'Nay'),
       <BillDetails
         title={title}
         sponsor={sponsorName}
@@ -163,44 +102,7 @@ function generateTableRows (bills) {
         dateVoted={dateVoted}
       />
     )
-    rows.push(tableRow)
   })
-}
-
-function assembleBillObjects (bills, voteRecords, votesByRepresentative) {
-  bills.forEach(bill => {
-    bill.vote = getRepresentativeVote(
-      bill.id,
-      voteRecords,
-      votesByRepresentative
-    )
-  })
-
-  return bills
-}
-
-function getRepresentativeVote (billNumber, voteRecords, votesByRepresentative) {
-  let targetVoteRecord = {}
-  voteRecords.forEach(voteRecord => {
-    if (voteRecord.bill === billNumber) {
-      targetVoteRecord = voteRecord
-    }
-  })
-  let targetBillVote = null
-  votesByRepresentative.forEach(vote => {
-    if (vote.vote === targetVoteRecord.id) {
-      targetBillVote = vote.yea
-    }
-  })
-  let vote = 'Nay'
-  if (targetBillVote) {
-    vote = 'Yea'
-  }
-  if (targetBillVote == null) {
-    vote = 'Unknown'
-  }
-
-  return vote
 }
 
 export default function BillHistoryTable (props) {
@@ -223,28 +125,40 @@ export default function BillHistoryTable (props) {
     setOpen(false)
   }
 
+  const [user, setUser] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    if(!user){
       // eslint-disable-next-line no-undef
-      const user = JSON.parse(localStorage.getItem('user'))
-      const riding = await fetchUserRiding(user.email)
-      // eslint-disable-next-line
-      const representative = await fetchRepresentative(riding)
-      const representativeId = await fetchRepresentativeId(representative)
-      const votesByRepresentative = await fetchRepresentativeVotes(
-        representativeId
-      )
-      const bills = await fetchAllBills()
-      const voteRecords = await fetchAllVoteRecords()
-      const fullBills = assembleBillObjects(
-        bills,
-        voteRecords,
-        votesByRepresentative
-      )
-      generateTableRows(fullBills)
+      const usr = JSON.parse(localStorage.getItem('user'))
+      setUser(usr)
+    }
+  },[user])
+
+  const [representative, setRepresentative] = React.useState(null)
+  useEffect(() => {
+    async function getData() {
+      if(user && !representative) {
+        const riding = await fetchUserRiding(user.email)
+        const rep = await fetchRepresentative(riding)
+        setRepresentative(rep)
+      }
     }
     getData()
-  }, [])
+  },[user, representative])
+
+  const [rows, setRows] = React.useState([])
+  useEffect(() => {
+    async function getData () {
+      if(rows.length === 0 && representative) {
+        console.log('setting rows now')
+        const bills = await votingHistory(representative)
+        console.log('rows set')
+        const rows = generateTableRows(bills)
+        setRows(rows)
+      }
+    }
+    getData()
+  }, [rows, representative])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -257,6 +171,18 @@ export default function BillHistoryTable (props) {
 
   return (
     <div className={classes.container}>
+      {rows.length === 0 ? (
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            zIndex: '-2',
+            transform: 'translate(-50%, -50%)'
+          }}>
+          <CircularProgress />
+        </div>
+      ) : (
       <Card
         {...rest}
         className={clsx(classes.root, className)}
@@ -317,7 +243,7 @@ export default function BillHistoryTable (props) {
             </Table>
           </div>
           <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
+            rowsPerPageOptions={[10, 20, 30]}
             component='div'
             count={rows.length}
             rowsPerPage={rowsPerPage}
@@ -339,7 +265,7 @@ export default function BillHistoryTable (props) {
           explaination={content}
           transition={Transition}
         />
-      </Card>
+      </Card>)}
     </div>
   )
 }
