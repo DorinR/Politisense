@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function CompareRepresentatives() {
+export default function CompareRepresentatives () {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles()
   const [pastRep, setPastRep] = useState('')
@@ -39,7 +39,7 @@ export default function CompareRepresentatives() {
   }
 
   useEffect(() => {
-    async function getBills() {
+    async function getBills () {
       await getAllBillsByHead(pastRep, 'pastRep')
     }
 
@@ -49,7 +49,7 @@ export default function CompareRepresentatives() {
   }, [pastRep])
 
   const compareHistoricalExplanationTitle = 'Riding History'
-  const compareHistoricalExplanationDescription = `Have a look at the historical data of past MPs of your riding!`
+  const compareHistoricalExplanationDescription = 'Have a look at the historical data of past MPs of your riding!'
 
   return (
     <>

@@ -21,9 +21,6 @@ import DividerBlock from '../../Utilities/DividerBlock'
 import ColoredText from '../../Utilities/ColoredText'
 
 const useStyles = makeStyles({
-  card: {
-    width: 350
-  },
   avatar: {
     backgroundColor: '#43D0C4'
   },
@@ -32,7 +29,7 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchCurrentRepresentative(riding) {
+async function fetchCurrentRepresentative (riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
@@ -44,7 +41,7 @@ async function fetchCurrentRepresentative(riding) {
     .catch(console.error)
 }
 
-async function getPartyData(party) {
+async function getPartyData (party) {
   return axios
     .get(`/api/parties/${party.toLowerCase()}/getAllPartydata`)
     .then(res => {
@@ -55,7 +52,7 @@ async function getPartyData(party) {
     .catch(console.error)
 }
 
-export default function ModernRepresentative() {
+export default function ModernRepresentative () {
   const classes = useStyles()
   const [name] = useState('')
   const [totalBills, setTotalBills] = useState(0)
@@ -66,20 +63,20 @@ export default function ModernRepresentative() {
   const [partyImageUrl, setPartyImageUrl] = useState('')
 
   useEffect(() => {
-    async function getIssuedBillsByHead(head) {
+    async function getIssuedBillsByHead (head) {
       const res = await axios.get(
         `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
       )
       return res.data.data
     }
 
-    async function getData(mp) {
+    async function getData (mp) {
       // eslint-disable-next-line
       const user = JSON.parse(localStorage.getItem('user'))
       const riding = await fetchUserRiding(user.email)
       const currentRepresentative = await fetchCurrentRepresentative(riding)
       const bills = await getAllBillsByHead(currentRepresentative.name)
-      const total = await calculateTotalVotesBills(bills)
+      const total = calculateTotalVotesBills(bills)
       setTotalBills(total)
       setCurrentRepresentative(currentRepresentative.name)
       setPoliticalParty(currentRepresentative.party)
@@ -90,7 +87,9 @@ export default function ModernRepresentative() {
         setIssuedBills(issuedBillsByHead.length)
       }
     }
-    getData(mp)
+    if (currentRepresentative) {
+      getData()
+    }
   }, [mp])
 
   return (
@@ -153,9 +152,9 @@ export default function ModernRepresentative() {
               <DividerBlock
                 text='Legislative'
                 color={getPartyColor(politicalParty).backgroundColor}
-                infoBubbleTitle={'Number of Bills Sponsored by Members of this Party'}
+                infoBubbleTitle='Number of Bills Sponsored by Members of this Party'
                 infoBubbleText={'This is a breakdown of the number of bills that were sponsored by members of the given party. We can see the total number of bills that were sponsored, as well as the portion of those that passed and entered into law, and the portion of those that were not voted into law. To see details about the bills your representative has voted on, go to the "My MP" tab'}
-                infoBubbleColor={'white'}
+                infoBubbleColor='white'
               />
               <Box m={2} />
               <ListItem>

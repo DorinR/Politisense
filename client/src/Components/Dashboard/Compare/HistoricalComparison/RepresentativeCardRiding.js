@@ -15,17 +15,12 @@ import Grid from '@material-ui/core/Grid'
 import FlagIcon from '@material-ui/icons/Flag'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
 import AssignmentIcon from '@material-ui/icons/Assignment'
-import Button from '@material-ui/core/Button'
 import Box from '@material-ui/core/Box'
 import { capitalizedName, getPartyColor, calculateTotalVotesBills } from '../../Utilities/CommonUsedFunctions'
 import DividerBlock from '../../Utilities/DividerBlock'
-import InfoBubble from '../../Utilities/InfoBubble'
 import ColoredText from '../../Utilities/ColoredText'
 
 const useStyles = makeStyles({
-  card: {
-    width: 350
-  },
   avatar: {
     backgroundColor: '#43D0C4'
   },
@@ -34,7 +29,7 @@ const useStyles = makeStyles({
   }
 })
 
-async function getPartyData(party) {
+async function getPartyData (party) {
   return axios
     .get(`/api/parties/${party.toLowerCase()}/getAllPartydata`)
     .then(res => {
@@ -45,22 +40,22 @@ async function getPartyData(party) {
     .catch(console.error)
 }
 
-async function fetchPastRepresentativeId(representative, data) {
+async function fetchPastRepresentativeId (representative, data) {
   const res = await axios.post(`/api/representatives/${representative}/getPastRepresentativeId`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeVotes(member, data) {
+async function fetchPastRepresentativeVotes (member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativeVotes`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativePairedVotes(member, data) {
+async function fetchPastRepresentativePairedVotes (member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativePairedVotes`, data)
   return res.data.data
 }
 
-export default function RepresentativeCard() {
+export default function RepresentativeCard () {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -78,19 +73,21 @@ export default function RepresentativeCard() {
   }
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const data = { start: start }
       const member = await fetchPastRepresentativeId(name, data)
       const partyData = await getPartyData(politicalParty)
-      setPartyImageUrl(partyData.imageUrl)
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, data)
-      const totalBills = calculateTotalVotesBills(pastRepresentativeVotes)
-      setNbBills(totalBills)
       const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, data)
+      const totalBills = calculateTotalVotesBills(pastRepresentativeVotes)
       const totalPairedBills = calculateTotalVotesBills(pastRepresentativePairedVotes)
+      setPartyImageUrl(partyData.imageUrl)
+      setNbBills(totalBills)
       setNbPairedBills(totalPairedBills)
     }
-    getData()
+    if (name) {
+      getData()
+    }
   }, [name])
 
   return (
@@ -161,9 +158,9 @@ export default function RepresentativeCard() {
               <DividerBlock
                 text='Legislative'
                 color={getPartyColor(politicalParty).backgroundColor}
-                infoBubbleTitle={'Number of Bills Sponsored by Members of this Party'}
+                infoBubbleTitle='Number of Bills Sponsored by Members of this Party'
                 infoBubbleText={'This is a breakdown of the number of bills that were sponsored by members of the given party. We can see the total number of bills that were sponsored, as well as the portion of those that passed and entered into law, and the portion of those that were not voted into law. To see details about the bills your representative has voted on, go to the "My MP" tab'}
-                infoBubbleColor={'white'}
+                infoBubbleColor='white'
               />
               <Box m={2} />
               <ListItem>
