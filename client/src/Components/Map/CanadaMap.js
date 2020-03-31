@@ -3,7 +3,7 @@ import * as topojson from 'topojson-client'
 import { PARTY_COLORS } from '../../Components/Dashboard/Sidebar/RidingShape/partyColors'
 
 export default class D3Chart {
-  constructor (externalData) {
+  constructor(externalData, shapeData, ridingMpData) {
     const ridingRepresentative = d3.map()
     const width = parseInt(d3.select('#map-wrapper').style('width'))
     const mapRatio = 0.75
@@ -46,7 +46,7 @@ export default class D3Chart {
       d3.json(
         'https://gist.githubusercontent.com/DorinR/e20f4d42c2d78724cce0705a14e573d3/raw/a78ab5c4725a60a83507e08e060e27786e945d64/electionResult'
       )
-    ]).then(function (data) {
+    ]).then(function(data) {
       g.append('g')
         .attr('class', 'ridings')
         .selectAll('path')
@@ -54,7 +54,7 @@ export default class D3Chart {
         .enter()
         .append('path')
         .attr('d', path)
-        .attr('data-id', function (d) {
+        .attr('data-id', function(d) {
           return d.properties.ID
         })
         .attr('class', 'riding')
@@ -77,14 +77,14 @@ export default class D3Chart {
         })
       }
 
-      d3.selectAll('.riding').attr('fill', function (d, i) {
+      d3.selectAll('.riding').attr('fill', function(d, i) {
         return (
           '#' +
           PARTY_COLORS[ridingRepresentative.get(d.properties.ID)].substring(3)
         )
       })
 
-      function clicked (clickedShape, ridingData) {
+      function clicked(clickedShape, ridingData) {
         let representativeInfo = ''
         ridingData[1].forEach(riding => {
           if (riding.code === parseInt(clickedShape.properties.FEDUID)) {
@@ -116,7 +116,7 @@ export default class D3Chart {
           )
       }
 
-      function displayRepresentativeInfo (m, politicianInfo) {
+      function displayRepresentativeInfo(m, politicianInfo) {
         const r = data[1].Election.Riding[m]
         // eslint-disable-next-line no-unused-vars
         let candidatecontent = ''
@@ -187,7 +187,7 @@ export default class D3Chart {
 
         d3.select('#tooltip')
           .select('#value')
-          .html(function () {
+          .html(function() {
             return (
               "<div class='tooltiptop'>" +
               "<p class='ridingname'> Representative Info </p>" +
@@ -203,7 +203,7 @@ export default class D3Chart {
           })
       }
 
-      function selectRiding (ridingId, representativeInfo) {
+      function selectRiding(ridingId, representativeInfo) {
         const selectedRiding = d3.select(".riding[data-id='" + ridingId + "']")
         selectedRiding.node().parentNode.appendChild(selectedRiding.node())
         d3.select('.activenode').classed('activenode', false)
@@ -213,21 +213,21 @@ export default class D3Chart {
       }
     })
 
-    function zoomin () {
+    function zoomin() {
       map
         .transition()
         .duration(500)
         .call(zoom.scaleBy, 2)
     }
 
-    function zoomout () {
+    function zoomout() {
       map
         .transition()
         .duration(500)
         .call(zoom.scaleBy, 0.5)
     }
 
-    function reset () {
+    function reset() {
       map
         .transition()
         .duration(500)
@@ -235,7 +235,7 @@ export default class D3Chart {
       d3.select('.activenode').classed('activenode', false)
     }
 
-    function zoomed () {
+    function zoomed() {
       g.attr('transform', d3.event.transform)
       const k = d3.event.transform.k
 

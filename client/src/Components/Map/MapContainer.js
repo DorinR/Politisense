@@ -34,19 +34,53 @@ const useStyles = makeStyles({
   }
 })
 
-export default function MapContainer () {
+export default function MapContainer() {
   const classes = useStyles()
   const [data, setData] = useState(null)
+  const [shapeData, setShapeData] = useState('')
+  const [ridingMpData, setRidingMpData] = useState('')
 
   useEffect(() => {
-    async function fetchData () {
+    async function fetchData() {
       await axios
-        .get('http://localhost:5000/api/ridings/getRidingByRidingCode')
+        .get('/api/ridings/getRidingByRidingCode')
         .then(res => {
           if (res.data.success) {
             setData(res.data.data)
-            console.log(res)
+            console.log(res.data.data)
             return res.data.data
+          }
+        })
+        .catch(console.error)
+    }
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    async function fetchData() {
+      await axios
+        .get('/api/mapSupportData/shape/getMapSupportData')
+        .then(res => {
+          if (res.data.success) {
+            console.log('shape data:')
+            console.log(res.data.data)
+            setShapeData(res.data.data)
+          }
+        })
+        .catch(console.error)
+    }
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    async function fetchData() {
+      await axios
+        .get('/api/mapSupportData/electionResults/getMapSupportData')
+        .then(res => {
+          if (res.data.success) {
+            console.log('riding data:')
+            console.log(res.data.data)
+            setRidingMpData(res.data.data)
           }
         })
         .catch(console.error)
@@ -63,8 +97,7 @@ export default function MapContainer () {
           className={classes.customHeaders}
           align='left'
           color='primary'
-          gutterBottom
-        >
+          gutterBottom>
           Explore Canadian Ridings
         </Typography>
         <span className={classes.customTooltip}>
@@ -72,13 +105,21 @@ export default function MapContainer () {
             title='How To Use the Map'
             text={
               /* eslint-disable-next-line indent */
-            "Zooming on this map is done the same way you scroll on a webpage. Just use the clickwheel on your mouse or use two fingers on your trackpad. Click on a given riding and the map will automatically zoom-in to the appropriate level. Clicking on the 'Reset Zoom Level' button will bring the zoom level back to what it was at the beginning"
+              "Zooming on this map is done the same way you scroll on a webpage. Just use the clickwheel on your mouse or use two fingers on your trackpad. Click on a given riding and the map will automatically zoom-in to the appropriate level. Clicking on the 'Reset Zoom Level' button will bring the zoom level back to what it was at the beginning"
             }
           />
         </span>
       </Container>
       <Container>
-        {data !== null && data !== undefined ? <MapWrapper data={data} /> : ''}
+        {data !== null && data !== undefined ? (
+          <MapWrapper
+            data={data}
+            shapeData={shapeData}
+            ridingMpData={ridingMpData}
+          />
+        ) : (
+          ''
+        )}
       </Container>
     </div>
   )
