@@ -59,17 +59,17 @@ exports.getRidingPopulation = (req, res) => {
 
 exports.getRidingByRidingCode = async (req, res) => {
   Promise.all([getAllPoliticiansParl43(), getAllRidings()])
-    .then(result => {
-      if (!result[0].length || !result[1].length) {
+    .then(([politicians, ridings]) => {
+      if (!politicians.length || !ridings.length) {
         res.status(404).json({
           success: false,
           message: 'Data not found'
         })
       }
-      if (result[0].length && result[1].length) {
+      if (politicians.length && ridings.length) {
         res.status(200).json({
           success: true,
-          data: result
+          data: [politicians, ridings]
         })
       }
     })
@@ -81,12 +81,11 @@ exports.getRidingByRidingCode = async (req, res) => {
     })
 
   async function getAllPoliticiansParl43 () {
-    const politicians = []
-
     return new Firestore()
       .Politician()
       .select()
       .then(snapshot => {
+        const politicians = []
         if (snapshot.empty) {
           res.status(404).json({
             success: false,
@@ -108,12 +107,11 @@ exports.getRidingByRidingCode = async (req, res) => {
   }
 
   async function getAllRidings () {
-    const ridings = []
-
     return new Firestore()
       .Riding()
       .select()
       .then(snapshot => {
+        const ridings = []
         if (snapshot.empty) {
           res.status(404).json({
             success: false,

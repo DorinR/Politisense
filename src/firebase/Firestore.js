@@ -313,6 +313,9 @@ class Firestore {
   }
 
   MapSupportData () {
+    console.warn(
+      'WARNING: MapSupportData Controller does not support legacy mode.'
+    )
     const collection = 'static/map_support_data/map_support_data'
     return this.createReference(collection)
   }
