@@ -249,7 +249,6 @@ const Budget = props => {
       <Divider />
       <CardContent>
         <Container maxWidth='sm'>
-
           <Grid
             container
             direction='row'
@@ -257,7 +256,7 @@ const Budget = props => {
           >
             <Grid item>
               <div className={classes.container1}>
-                <list>
+                <List>
                   <ListItem>
                     <ListItemAvatar>
                       <Avatar className={classes.avatar1}>
@@ -268,11 +267,11 @@ const Budget = props => {
                       <Typography style={{ fontSize: 16 }}>{totalMPBudget ? 'Total : $' + totalMPBudget : 'Total: $0'}</Typography>
                     </ListItemText>
                   </ListItem>
-                </list>
+                </List>
               </div>
             </Grid>
             <Grid item>
-              <div className={classes.containerBox}>
+              <div className={classes.container1}>
                 <List>
                   <ListItem>
                     <ListItemAvatar>

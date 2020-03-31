@@ -2,39 +2,42 @@ import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
-import { Drawer, Grid, Typography } from '@material-ui/core'
+import { Drawer, Typography, ListItem, useMediaQuery } from '@material-ui/core'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import PeopleIcon from '@material-ui/icons/People'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
-import SettingsIcon from '@material-ui/icons/Settings'
 import RepresentativeImage from '../Dashboard/Sidebar/RepresentativeImage'
 import SidebarNav from './SidebarNav'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import AppBar from '@material-ui/core/AppBar'
-import { Link } from 'react-router-dom'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import MpProfile from '../Dashboard/MpProfile'
 import Divider from '@material-ui/core/Divider'
 import MapIcon from '@material-ui/icons/Map'
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows'
-import IconButton from '@material-ui/core/IconButton'
 import { useTheme } from '@material-ui/core/styles'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { fetchUserRiding, fetchRepresentative } from '../Dashboard/Utilities/CommonUsedFunctions'
+import AppBar from '@material-ui/core/AppBar'
 
 const useStyles = makeStyles(theme => ({
   drawer: {
     width: 240,
-    backgroundColor: '#1E2125'
-
+    backgroundColor: '#1E2125',
+    flexGrow: 1
+  },
+  drawerXl: {
+    width: 300,
+    backgroundColor: '#1E2125',
+    flexGrow: 1
   },
   root: {
     backgroundColor: '#1E2125',
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
+    width: '100%',
     padding: theme.spacing(2)
   },
   divider: {
@@ -100,6 +103,19 @@ const useStyles = makeStyles(theme => ({
       duration: theme.transitions.duration.enteringScreen
     }),
     marginLeft: 0
+  },
+  shiftContentXLMode: {
+    paddingLeft: 280
+  },
+  contentXlMode: {
+    flexGrow: 1,
+    height: '100%',
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    }),
+    marginLeft: -280
   }
 
 }))
@@ -110,7 +126,9 @@ const Sidebar = props => {
   const [riding, setRiding] = useState(null)
   const [user, setUser] = useState(null)
   const theme = useTheme()
-
+  const isxlScreen = useMediaQuery(theme.breakpoints.up('xl'), {
+    defaultMatches: true
+  })
   useEffect(() => {
     // eslint-disable-next-line no-undef
     const user = JSON.parse(localStorage.getItem('user'))
@@ -165,11 +183,6 @@ const Sidebar = props => {
       icon: <AccountBoxIcon />
     },
     {
-      title: 'Settings',
-      href: '/settings',
-      icon: <SettingsIcon />
-    },
-    {
       title: 'Logout',
       href: '/logout',
       icon: <ExitToAppIcon />
@@ -181,40 +194,17 @@ const Sidebar = props => {
     <div>
       <Drawer
         anchor='left'
-        classes={{ paper: classes.drawer }}
+        classes={{ paper: isxlScreen ? classes.drawerXl : classes.drawer }}
         onClose={onClose}
         open={open}
         variant={variant}
       >
-        <div className={classes.container}>
-          <Grid container direction='row' alignItems='center'>
-            <Link to='/general' className={classes.routerLink}>
-              <Grid item>
-                <AccountBalanceIcon className={classes.icon} />
-              </Grid>
-            </Link>
-            <Link to='/general' className={classes.routerLink}>
-              <Grid item>
-                <Typography variant='h5' color='#00bcd4'>
-                  Politisense
-                </Typography>
-              </Grid>
-            </Link>
-            <Grid item>
-              <Grid item>
-                <IconButton onClick={onClose}>
-                  {theme.direction === 'ltr' ? <ChevronLeftIcon style={{ color: 'white', marginLeft: 5 }} /> : <ChevronRightIcon />}
-                </IconButton>
-              </Grid>
-              <AppBar
-                position='fixed'
-                className={clsx(classes.appBar, {
-                  [classes.appBarShift]: open
-                })}
-              />
-            </Grid>
-          </Grid>
-        </div>
+        <ListItem style={{ paddingTop: '6%' }}>
+          <AccountBalanceIcon className={classes.icon} />
+          <Typography variant='h6' style={{ color: 'white' }}>Politisense</Typography>
+          {theme.direction === 'ltr' ? <ChevronLeftIcon style={!isxlScreen ? { color: 'white', marginLeft: '20%' } : { color: 'white', marginLeft: '40%' }} onClick={onClose} /> : <ChevronRightIcon />}
+        </ListItem>
+        <AppBar position='fixed' className={clsx(classes.appBar, { [classes.appBarShift]: { open } })} />
         <Divider className={classes.divider1} />
         <div {...rest} className={clsx(classes.root, className)}>
           <ListItemAvatar>

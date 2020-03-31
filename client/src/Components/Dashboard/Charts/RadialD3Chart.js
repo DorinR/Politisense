@@ -1,8 +1,8 @@
 import * as d3 from 'd3'
 import { Component } from 'react'
-let width,
- arcSize ,
- innerRadius =0
+let width
+let arcSize
+let innerRadius = 0
 
 export default class RadialD3Chart extends Component {
   constructor (element, data) {
@@ -124,13 +124,17 @@ export default class RadialD3Chart extends Component {
       // reset the width
       let containerWidth = 0
       if (data.length > 3) {
-         containerWidth = parseInt(d3.select(element).style('width'), 10) + 67
-        if(containerWidth) {width= containerWidth} else{width=400}
+        containerWidth = parseInt(d3.select(element).style('width'), 10) + 67
+        if (!isNaN(containerWidth)) { width = containerWidth } else { width = 400 }
         arcSize = (4 * width / 100)
         innerRadius = arcSize * 3
       } else {
-        containerWidth=parseInt(d3.select(element).style('width'), 10) + 80
-        if(containerWidth) {width= containerWidth} else{width=400}
+        containerWidth = parseInt(d3.select(element).style('width'), 10) + 80
+        if (!isNaN(containerWidth)) {
+          width = containerWidth
+        } else {
+          width = 400
+        }
         arcSize = (6 * width / 100)
         innerRadius = arcSize * 3
       }
@@ -141,4 +145,3 @@ export default class RadialD3Chart extends Component {
     window.addEventListener('resize', drawChart)
   }
 }
-

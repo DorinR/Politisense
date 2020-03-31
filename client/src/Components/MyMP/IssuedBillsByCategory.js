@@ -145,14 +145,14 @@ const IssuedBillsByCategory = (props) => {
                         <HelpOutlineIcon onClick={handleClickOpen} />
                       </IconButton>
                     }
-                    title={'Sponsored Bills by ' + capitalizedName(props.location.aboutProps.userRepresentative)}
+                    title={'Sponsored Bills by ' + capitalizedName(props.location.aboutProps.representative)}
                   />
                   <Divider />
                   <CardContent>
                     <BarChartWrapper
                       type='bar-pie'
-                      data={props.location.aboutProps.userRepIssuedBills}
-                      categories={props.location.aboutProps.categoryList}
+                      data={props.location.aboutProps.issuedbills}
+                      categories={props.location.aboutProps.categorylist}
                     />
                     <Divider />
                     <br />

@@ -28,7 +28,8 @@ const useStyles = makeStyles(theme => ({
   name: {
     marginTop: theme.spacing(1),
     color: 'white',
-    fontFamily: 'work-Sans,sans-serif'
+    fontFamily: 'work-Sans,sans-serif',
+    textAlign: 'center'
 
   },
   fontColorTypography: {
@@ -48,8 +49,13 @@ const useStyles = makeStyles(theme => ({
   longRidingName: {
     color: 'white',
     fontFamily: 'work-Sans,sans-serif',
+    minHeight: 'fit-content',
     textAlign: 'center'
 
+  },
+  item: {
+    paddingTop: 0,
+    paddingBottom: 0
   }
 
 }))
@@ -110,12 +116,26 @@ const MpProfile = props => {
       >
         {capitalizedName(name)}
       </Typography>
-      {riding && riding.length > 22
-        ? (<div className={classes.containerLongRidingName}><Typography className={classes.fontColorTypography} variant='caption'>Represents</Typography><Typography className={classes.longRidingName} variant='caption'>{capitalizedName(riding)}</Typography></div>) : (<Typography className={classes.fontColorTypography} variant='caption'>{'Represents: ' + capitalizedName(riding)}</Typography>)}
+      {riding ? riding.length > 22
+        ? (
+          <div className={classes.containerLongRidingName}>
+            <Typography className={classes.fontColorTypography} variant='caption'>Represents</Typography>
+            <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(riding)}</Typography>
+          </div>) : (<Typography className={classes.fontColorTypography} variant='caption'>{'Represents: ' + capitalizedName(riding)}</Typography>)
+        : (<Typography className={classes.fontColorTypography} variant='caption'>Represents</Typography>)}
 
-      <Typography className={classes.fontColorTypography} variant='caption'>{'Political Party: ' + capitalizedName(politicalParty)}</Typography>
-      <Typography className={classes.fontColorTypography} variant='caption'>{'Total Population: '} {riding ? (<RidingPopulation riding={riding} />) : 'N/A'}</Typography>
-      <Typography className={classes.fontColorTypography} variant='caption'>{`Member Since: ${loadingTextdata({ fromDate: startDate, toDate: endDate })}`}</Typography>
+      {politicalParty ? politicalParty.length > 15
+        ? (
+          <div className={classes.containerLongRidingName}>
+            <Typography className={classes.fontColorTypography} variant='caption'>Political Party:</Typography>
+            <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(politicalParty)}</Typography>
+          </div>
+        )
+        : (<Typography className={classes.fontColorTypography} variant='caption'>{'Political Party: ' + capitalizedName(politicalParty)}</Typography>)
+        : (<Typography className={classes.fontColorTypography} variant='caption'>Political Party: </Typography>)}
+
+      <Typography className={classes.fontColorTypography} variant='caption'>{'Total Population: '} {riding ? (<RidingPopulation riding={riding} />) : ''}</Typography>
+      <Typography className={classes.fontColorTypography} variant='caption'>{'Member Since: '} {startDate ? loadingTextdata({ fromDate: startDate, toDate: endDate }) : ''}</Typography>
       <div className={classes.shapeContainer}>
         <RidingShapeContainer
           ridingCode={ridingCode}
@@ -123,6 +143,7 @@ const MpProfile = props => {
         />
       </div>
     </div>
+
   )
 }
 

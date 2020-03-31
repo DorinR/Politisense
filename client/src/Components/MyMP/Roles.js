@@ -61,7 +61,7 @@ const Roles = props => {
   const [data, setData] = useState(null)
   useEffect(() => {
     async function getData () {
-      if (props.userRepresentative) {
+      if (props.userRepresentative !== null && props.userRepresentative !== null) {
         const roles = await getAllRolesByRep('role', props.userRepresentative)
         if (Array.isArray(roles) && roles.length !== 0) {
           const rolesWithDesc = await getAllDesc(roles)
@@ -92,7 +92,7 @@ const Roles = props => {
                             Parliament Roles
             </Typography>
             <Grid item direction='row'>
-              <Grid container direction='row' alignItems="center">
+              <Grid container direction='row' alignItems='center'>
                 <Grid item><CountUp style={{ fontSize: 27 }} end={data ? data.length : 0}> </CountUp></Grid>
                 <Grid item><Typography style={{ marginLeft: 3 }} variant='h5'> {'roles'}</Typography></Grid>
               </Grid>
@@ -110,12 +110,11 @@ const Roles = props => {
               className={classes.caption}
               variant='caption'
             >
-              {data && data.length != 0  ? (`${capitalizedName(loadingTextTitle(data[0]))}`) : 'This MP doesnt have roles'}
+              {data && data.length !== 0 ? (`${capitalizedName(loadingTextTitle(data[0]))}`) : 'This MP doesnt have roles'}
             </Typography>
-            {data && data.length != 0  ? <Button color='primary' style={{ fontSize:"0.625em"}} onClick={handleOpenAction}>details</Button> : ''}
+            {data && data.length !== 0 ? <Button color='primary' style={{ fontSize: '0.625em' }} onClick={handleOpenAction}>details</Button> : ''}
             <DescriptionDialog open={open} onClose={handleCloseAction} data={data || []} title='Roles' />
           </li>
-
 
         </div>
       </CardContent>

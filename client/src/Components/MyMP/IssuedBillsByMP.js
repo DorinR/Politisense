@@ -77,9 +77,9 @@ const IssuedBillsByMP = props => {
                             Sponsored Bills
             </Typography>
             <Grid item direction='row'>
-              <Grid container direction='row' alignItems="center">
-                <Grid item> <CountUp style={{ fontSize: 26 }} end={props.userRepIssuedBills ? totalBillsArray(props.userRepIssuedBills) : 0}> </CountUp></Grid>
-                <Grid item><Typography style={{marginLeft: "5%" }} variant='h5'> {'bills'}</Typography></Grid>
+              <Grid container direction='row' alignItems='center'>
+                <Grid item> <CountUp style={{ fontSize: 26 }} end={props.issuedbills ? totalBillsArray(props.issuedbills) : 0}> </CountUp></Grid>
+                <Grid item><Typography style={{ marginLeft: '5%' }} variant='h5'> {'bills'}</Typography></Grid>
               </Grid>
             </Grid>
 
@@ -97,28 +97,28 @@ const IssuedBillsByMP = props => {
                 className={classes.caption}
                 variant='caption'
               >
-                {props.userRepIssuedBills && props.userRepIssuedBills.length !== 0 && props.rows
-                  ? `Bill ${props.userRepIssuedBills[0].billsClassified.number}- ${capitalizedName(props.userRepIssuedBills[0].billsClassified.category)}` : 'No bills created'}
+                {props.issuedbills && props.issuedbills.length !== 0 && props.rows
+                  ? `Bill ${props.issuedbills[0].billsClassified.number}- ${capitalizedName(props.issuedbills[0].billsClassified.category)}` : 'No bills created'}
 
               </Typography>
-              {props.userRepIssuedBills && props.userRepIssuedBills.length !== 0 && props.rows
-                  ? (
-                      <Link
-                          to={{
-                            pathname: '/performance',
-                            aboutProps: {
-                              userRepresentative: props.userRepresentative,
-                              rows: props.rows,
-                              userRepIssuedBills: props.userRepIssuedBills,
-                              categoryList: props.categoryList
-                            }
-                          }} className={classes.routerLink} style={{ textDecoration: 'none' }}
-                      >
-                        <Button color='primary' style={{ fontSize:"0.625em" }}>
+              {props.issuedbills && props.issuedbills.length !== 0 && props.rows
+                ? (
+                  <Link
+                    to={{
+                      pathname: '/performance',
+                      aboutProps: {
+                        representative: props.representative,
+                        rows: props.rows,
+                        issuedbills: props.issuedbills,
+                        categorylist: props.categorylist
+                      }
+                    }} className={classes.routerLink} style={{ textDecoration: 'none' }}
+                  >
+                    <Button color='primary' style={{ fontSize: '0.625em' }}>
                           details
-                        </Button>
-                      </Link>)
-                  : ''}
+                    </Button>
+                  </Link>)
+                : ''}
             </li>
           </div>
         </Grid>

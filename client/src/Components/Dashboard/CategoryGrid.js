@@ -5,8 +5,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import { red } from '@material-ui/core/colors'
-import PropTypes from 'prop-types'
-import Box from '@material-ui/core/Box'
 import CategoryCard from './CategoryCard'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import { ConfirmationDialogRaw } from './CategoryForm'
@@ -50,28 +48,6 @@ const useStyles = makeStyles(theme => ({
     right: theme.spacing(3)
   }
 }))
-
-function TabPanel (props) {
-  const { children, value, index, ...other } = props
-  return (
-    <Typography
-      component='div'
-      role='tabpanel'
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      <Box p={3}>{children}</Box>
-    </Typography>
-  )
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired
-}
 
 export default function CategoryGrid () {
   const classes = useStyles()

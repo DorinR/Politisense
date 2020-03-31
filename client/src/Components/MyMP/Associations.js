@@ -59,7 +59,7 @@ const Associations = props => {
   const [data, setData] = useState(null)
   useEffect(() => {
     async function getData () {
-      if (props.userRepresentative) {
+      if (props.userRepresentative !== null) {
         const roles = await getAllRolesByRep('association', props.userRepresentative)
         setData(roles)
       }
@@ -87,7 +87,7 @@ const Associations = props => {
                             Associations
             </Typography>
             <Grid item direction='row'>
-              <Grid container direction='row'alignItems="center">
+              <Grid container direction='row' alignItems='center'>
                 <Grid item><CountUp style={{ fontSize: 26 }} end={data ? data.length : 0}> </CountUp></Grid>
                 <Grid item><Typography style={{ marginLeft: 3 }} variant='h5'> {'associations'}</Typography></Grid>
               </Grid>
@@ -106,9 +106,9 @@ const Associations = props => {
               className={classes.caption}
               variant='caption'
             >
-              {data && data.length != 0 ? (`${capitalizedName(loadingTextTitle(data[0]))}`) : 'This MP is not a member of any'}
+              {data && data.length !== 0 ? (`${capitalizedName(loadingTextTitle(data[0]))}`) : 'This MP is not a member of any'}
             </Typography>
-            {data && data.length != 0  ? <Button size='2' style={{ color: 'white', fontSize:"0.625em" }} onClick={handleOpenAction}>details</Button> : ''}
+            {data && data.length !== 0 ? <Button style={{ color: 'white', fontSize: '0.625em' }} onClick={handleOpenAction}>details</Button> : ''}
           </li>
           <DescriptionDialog open={open} onClose={handleCloseAction} data={data || []} title='Parliamentary Associations' />
         </div>

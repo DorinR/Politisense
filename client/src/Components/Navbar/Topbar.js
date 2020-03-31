@@ -1,14 +1,13 @@
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef } from 'react'
 import { Link as RouterLink, Link } from 'react-router-dom'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
 import {
-  AppBar, Toolbar, Badge, Hidden, IconButton, Grid,
+  AppBar, Toolbar, Hidden, IconButton, Grid,
   Typography
 } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
-import NotificationsIcon from '@material-ui/icons/NotificationsOutlined'
 import InputIcon from '@material-ui/icons/Input'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 
@@ -61,8 +60,6 @@ const Topbar = props => {
   const { className, open, onSidebarOpen, ...rest } = props
 
   const classes = useStyles()
-
-  const [notifications] = useState([])
 
   return (
     <AppBar
@@ -121,14 +118,6 @@ const Topbar = props => {
             to='/map'
           >Map
           </Button>
-          <IconButton>
-            <Badge
-              badgeContent={notifications.length}
-              variant='dot'
-            >
-              <NotificationsIcon style={{ color: 'white' }} />
-            </Badge>
-          </IconButton>
           <IconButton
             className={classes.signOutButton}
           >

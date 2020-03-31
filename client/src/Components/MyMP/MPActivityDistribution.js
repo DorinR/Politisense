@@ -95,7 +95,7 @@ const MPActivityDistribution = props => {
               width={400}
               height={400}
               padding={60}
-              domainMax={props.radarData[1]}
+              domainMax={props.radardata[1]}
               highlighted
               onHover={point => {
                 if (point) {
@@ -103,10 +103,10 @@ const MPActivityDistribution = props => {
                 }
               }}
               data={{
-                variables: createVariablesRadar(props.categoryList),
+                variables: createVariablesRadar(props.categorylist),
                 sets: [
                   {
-                    values: props.radarData[0]
+                    values: props.radardata[0]
                   }
                 ]
               }}

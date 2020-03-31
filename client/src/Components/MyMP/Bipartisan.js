@@ -78,8 +78,8 @@ const Bipartisan = props => {
             title: classes.title
           }}
           action={
-            <IconButton aria-label='settings'>
-              <HelpOutlineRoundedIcon onClick={handleClickOpen} />
+            <IconButton aria-label='settings' onClick={handleClickOpen}>
+              <HelpOutlineRoundedIcon />
             </IconButton>
           }
           title='BiPartisan Index'

@@ -20,6 +20,8 @@ import Topbar from './Components/Navbar/Topbar'
 import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
 import IssuedBillsByCategory from './Components/MyMP/IssuedBillsByCategory'
 import Map from './Components/Dashboard/InteractiveMap/Map'
+const drawerWidth = 220
+const drawerWidthXlMode = 250
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     height: '100%'
   },
   shiftContent: {
-    paddingLeft: 220
+    paddingLeft: drawerWidth
   },
   content: {
     flexGrow: 1,
@@ -37,7 +39,7 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     }),
-    marginLeft: -220
+    marginLeft: -drawerWidth
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
@@ -45,14 +47,33 @@ const useStyles = makeStyles(theme => ({
       duration: theme.transitions.duration.enteringScreen
     }),
     marginLeft: 0
+  },
+  shiftContentXLMode: {
+    paddingLeft: drawerWidthXlMode + 10
+  },
+  contentXlMode: {
+    flexGrow: 1,
+    height: '100%',
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    }),
+    marginLeft: -drawerWidthXlMode
   }
+
 }))
 
 const App = () => {
   const classes = useStyles()
   const theme = useTheme()
-
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
+  const isxlScreen = useMediaQuery(theme.breakpoints.up('xl'), {
+    defaultMatches: true
+  })
+  const isDesktop = useMediaQuery(theme.breakpoints.down('lg'), {
+    defaultMatches: true
+  })
+  const mobileVersion = useMediaQuery(theme.breakpoints.down('md'), {
     defaultMatches: true
   })
   const [openSidebar, setOpenSidebar] = useState(true)
@@ -75,20 +96,22 @@ const App = () => {
       <div
         className={clsx({
           [classes.root]: true,
-          [classes.shiftContent]: isDesktop || true
+          [classes.shiftContent]: isDesktop,
+          [classes.shiftContentXLMode]: isxlScreen
         })}
       >
         <Sidebar
           onClose={handleSidebarClose}
           open={openSidebar}
-          variant={isDesktop ? 'persistent' : 'temporary'}
+          variant={isxlScreen ? 'persistent' : isDesktop && !mobileVersion ? 'persistent' : 'temporary'}
           onSidebarOpen={handleSidebarOpen}
         />
         <Topbar onSidebarOpen={handleSidebarOpen} />
 
         <div
           className={clsx(classes.content, {
-            [classes.contentShift]: openSidebar
+            [classes.contentShift]: isDesktop && openSidebar,
+            [classes.shiftContentXLMode]: isxlScreen && openSidebar
           })}
         >
           <Route exact path='/' render={() => <Redirect to='/login' />} />

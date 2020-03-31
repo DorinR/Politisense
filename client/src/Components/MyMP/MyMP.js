@@ -204,9 +204,9 @@ export default function MyMP () {
               >
                 {categoryList && userRepresentative ? (
                   <IssuedBillsByMP
-                    userRepIssuedBills={userRepIssuedBills}
-                    categoryList={categoryList}
-                    userRepresentative={userRepresentative}
+                    issuedbills={userRepIssuedBills}
+                    categorylist={categoryList}
+                    representative={userRepresentative}
                     rows={barPieRows}
                   />)
                   : ('')}
@@ -277,7 +277,7 @@ export default function MyMP () {
                 xs={12}
               >
                 {radarData && categoryList ? (
-                  <MPActivityDistribution radarData={radarData} rows={radarDataRows} categoryList={categoryList} />) : ''}
+                  <MPActivityDistribution radardata={radarData} rows={radarDataRows} categorylist={categoryList} />) : ''}
               </Grid>
               <Grid
                 item

@@ -179,9 +179,9 @@ export default function CategoryCard (props) {
                   </TableRow>
                 </TableHead>
                 {(rows && rows.length) > 0 ? (
-                  <TableBody stickyHeader>
-                    {rows.map(row => (
-                      <TableRow key={row.name}>
+                  <TableBody stickyheader='true'>
+                    {rows.map((row, i) => (
+                      <TableRow key={i}>
                         <TableCell component='th' scope='row'>
                           <Button color='primary' onClick={() => handleBillClickOpen(row)}><Typography>{row.name}</Typography></Button>
                         </TableCell>

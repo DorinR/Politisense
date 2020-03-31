@@ -275,7 +275,7 @@ export default function BillHistoryTable (props) {
         <Divider />
         <CardContent className={classes.content}>
           <div className={classes.tableWrapper}>
-            <Table stickyHeader>
+            <Table stickyheader='true'>
               <TableHead>
                 <TableRow>
                   {columns.map(column => (
@@ -292,18 +292,19 @@ export default function BillHistoryTable (props) {
               <TableBody>
                 {rows
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map(row => {
+                  .map((row, i) => {
                     return (
                       <TableRow
                         hover
                         role='checkbox'
                         tabIndex={-1}
-                        key={row.code}
+                        key={i}
+                        // key={row.code}
                       >
-                        {columns.map(column => {
+                        {columns.map((column, i) => {
                           const value = row[column.id]
                           return (
-                            <TableCell key={column.id} align={column.align}>
+                            <TableCell key={i} align={column.align}>
                               {column.format && typeof value === 'number'
                                 ? column.format(value)
                                 : value}

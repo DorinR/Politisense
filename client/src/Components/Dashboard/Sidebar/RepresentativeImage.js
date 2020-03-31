@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Avatar from '@material-ui/core/Avatar'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import axios from 'axios'
+import { useMediaQuery } from '@material-ui/core'
 
 export async function fetchUserRiding (userEmail) {
   return axios
@@ -27,7 +28,13 @@ export async function fetchRepresentative (riding) {
 
 const useStyles = makeStyles(theme => ({
   bigAvatar: {
-    marginLeft: 45,
+    marginLeft: theme.spacing(6),
+    width: 100,
+    height: 100,
+    border: '3px solid #00bcd4'
+  },
+  bigAvatarXL: {
+    marginLeft: theme.spacing(10),
     width: 100,
     height: 100,
     border: '3px solid #00bcd4'
@@ -37,6 +44,10 @@ const useStyles = makeStyles(theme => ({
 export default function RepresentativeImage (props) {
   const classes = useStyles()
   const [user, setUser] = useState(null)
+  const theme = useTheme()
+  const isxlScreen = useMediaQuery(theme.breakpoints.up('xl'), {
+    defaultMatches: true
+  })
   useEffect(() => {
     // eslint-disable-next-line no-undef
     const user = JSON.parse(localStorage.getItem('user'))
@@ -75,5 +86,5 @@ export default function RepresentativeImage (props) {
     }
   }, [representative])
 
-  return <Avatar alt={name} src={imageUrl} className={classes.bigAvatar} />
+  return <Avatar alt={name} src={imageUrl} className={isxlScreen ? classes.bigAvatarXL : classes.bigAvatar} />
 }

@@ -56,8 +56,14 @@ export function loadingTextTitle (element) {
     case 'parliamentary':
       title = element.title
       break
-    case 'association':
-      title = element.group.slice(0, element.group.indexOf('parliamentary'))
+      // eslint-disable-next-line no-lone-blocks
+    case 'association': {
+      if (element.group.includes('inter-')) {
+        title = element.group.slice(0, element.group.indexOf('inter-'))
+      } else {
+        title = element.group.slice(0, element.group.indexOf('parliamentary'))
+      }
+    }
       break
     case 'committee':
       title = element.group
@@ -66,6 +72,7 @@ export function loadingTextTitle (element) {
       title = ''
       break
   }
+
   return title
 }
 
@@ -140,9 +147,9 @@ export async function getAllRolesByRep (type, repName) {
 }
 
 export async function getAllDesc (arr) {
-  arr.forEach(async (element) => {
+  for (const element of arr) {
     element.desc = await getDescription(titleCase(loadingTextTitle(element)))
-  })
+  }
   return arr
 }
 
@@ -162,6 +169,7 @@ export function sortingBasedOnDate (arr) {
 }
 
 export const getDescription = async (ministry) => {
+  console.log(ministry)
   return axios
     .post('api/parliament/getRoleDescription', { ministry: ministry })
     .then(res => {
