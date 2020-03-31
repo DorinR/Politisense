@@ -36,7 +36,7 @@ const useStyles = makeStyles({
 
 export default function MapContainer () {
   const classes = useStyles()
-  const [data, setData] = useState(null)
+  const [ridingCodes, setRidingCodes] = useState(null)
   const [shapeData, setShapeData] = useState('')
   const [ridingMpData, setRidingMpData] = useState('')
 
@@ -46,9 +46,7 @@ export default function MapContainer () {
         .get('/api/ridings/getRidingByRidingCode')
         .then(res => {
           if (res.data.success) {
-            setData(res.data.data)
-            console.log(res.data.data)
-            return res.data.data
+            setRidingCodes(res.data.data)
           }
         })
         .catch(console.error)
@@ -62,8 +60,6 @@ export default function MapContainer () {
         .get('/api/mapSupportData/shape/getMapSupportData')
         .then(res => {
           if (res.data.success) {
-            console.log('shape data:')
-            console.log(res.data.data)
             setShapeData(res.data.data)
           }
         })
@@ -78,8 +74,6 @@ export default function MapContainer () {
         .get('/api/mapSupportData/electionResults/getMapSupportData')
         .then(res => {
           if (res.data.success) {
-            console.log('riding data:')
-            console.log(res.data.data)
             setRidingMpData(res.data.data)
           }
         })
@@ -112,9 +106,9 @@ export default function MapContainer () {
         </span>
       </Container>
       <Container>
-        {data !== null && data !== undefined ? (
+        {ridingCodes !== null && ridingCodes !== undefined ? (
           <MapWrapper
-            ridingCodes={data}
+            ridingCodes={ridingCodes}
             shapeData={shapeData}
             ridingMpData={ridingMpData}
           />

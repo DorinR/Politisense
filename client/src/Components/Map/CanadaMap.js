@@ -164,14 +164,16 @@ export default class D3Chart {
         politicianInfo.riding +
         '</td></tr>'
 
-      const testing = d3.select('#testing')
+      const representativeInfoContainer = d3.select(
+        '#representativeInfoContainer'
+      )
 
-      testing
+      representativeInfoContainer
         .selectAll('image')
         .data([])
         .remove()
 
-      testing
+      representativeInfoContainer
         .append('image')
         .attr('xlink:href', politicianInfo.imageUrl)
         .attr('width', 200)

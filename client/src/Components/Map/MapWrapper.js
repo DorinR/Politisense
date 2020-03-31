@@ -66,7 +66,11 @@ export default class ChartWrapper extends Component {
             <Grid item xs={3}>
               <div className='right-sidebar'>
                 <div id='tooltip' className='hidden'>
-                  <svg id='testing' width='200' height='200'>
+                  <svg
+                    id='representativeInfoContainer'
+                    width='200'
+                    height='200'
+                  >
                     {' '}
                   </svg>
                   <div id='value' />
