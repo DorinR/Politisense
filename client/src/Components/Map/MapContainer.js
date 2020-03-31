@@ -34,14 +34,14 @@ const useStyles = makeStyles({
   }
 })
 
-export default function MapContainer() {
+export default function MapContainer () {
   const classes = useStyles()
   const [data, setData] = useState(null)
   const [shapeData, setShapeData] = useState('')
   const [ridingMpData, setRidingMpData] = useState('')
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData () {
       await axios
         .get('/api/ridings/getRidingByRidingCode')
         .then(res => {
@@ -57,7 +57,7 @@ export default function MapContainer() {
   }, [])
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData () {
       await axios
         .get('/api/mapSupportData/shape/getMapSupportData')
         .then(res => {
@@ -73,7 +73,7 @@ export default function MapContainer() {
   }, [])
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData () {
       await axios
         .get('/api/mapSupportData/electionResults/getMapSupportData')
         .then(res => {
@@ -97,7 +97,8 @@ export default function MapContainer() {
           className={classes.customHeaders}
           align='left'
           color='primary'
-          gutterBottom>
+          gutterBottom
+        >
           Explore Canadian Ridings
         </Typography>
         <span className={classes.customTooltip}>
@@ -105,7 +106,7 @@ export default function MapContainer() {
             title='How To Use the Map'
             text={
               /* eslint-disable-next-line indent */
-              "Zooming on this map is done the same way you scroll on a webpage. Just use the clickwheel on your mouse or use two fingers on your trackpad. Click on a given riding and the map will automatically zoom-in to the appropriate level. Clicking on the 'Reset Zoom Level' button will bring the zoom level back to what it was at the beginning"
+            "Zooming on this map is done the same way you scroll on a webpage. Just use the clickwheel on your mouse or use two fingers on your trackpad. Click on a given riding and the map will automatically zoom-in to the appropriate level. Clicking on the 'Reset Zoom Level' button will bring the zoom level back to what it was at the beginning"
             }
           />
         </span>
@@ -113,7 +114,7 @@ export default function MapContainer() {
       <Container>
         {data !== null && data !== undefined ? (
           <MapWrapper
-            data={data}
+            ridingCodes={data}
             shapeData={shapeData}
             ridingMpData={ridingMpData}
           />

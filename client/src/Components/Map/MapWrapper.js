@@ -15,16 +15,16 @@ const divStyle = {
 }
 
 export default class ChartWrapper extends Component {
-  componentDidMount() {
+  componentDidMount () {
     // eslint-disable-next-line no-new
     new CanadaMap(
-      this.props.data,
+      this.props.ridingCodes,
       this.props.shapeData,
       this.props.ridingMpData
     )
   }
 
-  render() {
+  render () {
     return (
       <div>
         <div style={divStyle} id='map-holder' ref='mapHolder'>
@@ -41,7 +41,8 @@ export default class ChartWrapper extends Component {
                   </div>
                   <div
                     className='zoom-button zoombutton-out disable'
-                    id='zoomout'>
+                    id='zoomout'
+                  >
                     <Tooltip title='Zoom-Out' placement='left'>
                       <IconButton>
                         <RemoveCircleIcon fontSize='large' />
@@ -50,7 +51,8 @@ export default class ChartWrapper extends Component {
                   </div>
                   <div
                     className='zoom-button zoombutton-out disable'
-                    id='reset'>
+                    id='reset'
+                  >
                     <Tooltip title='Reset to Default' placement='left'>
                       <IconButton>
                         <CachedIcon fontSize='large' />
