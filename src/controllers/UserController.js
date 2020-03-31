@@ -181,24 +181,24 @@ exports.updateUser = (req, res) => {
 const Utils = require('./util/ActivityVotingUtils')
 
 exports.setRiding = async (req, res) => {
-  if(!req.body || !req.body.postalCode) {
+  if (!req.body || !req.body.postalCode) {
     Utils.error(res, 412, 'invalid request body')
   }
   const postalCode = req.body.postalCode.replace(/\s/g, '').toUpperCase()
   const ridingID = await new Promise((resolve, reject) => {
-      represent.postalCode(
-        postalCode + '/?sets=federal-electoral-districts',
-        async (err, data) => {
-          if (err) reject(err)
-          if (data) resolve(data.boundaries_centroid[0].external_id)
-        })
-    })
+    represent.postalCode(
+      postalCode + '/?sets=federal-electoral-districts',
+      async (err, data) => {
+        if (err) reject(err)
+        if (data) resolve(data.boundaries_centroid[0].external_id)
+      })
+  })
     .catch(e => {
       console.error(e.message)
       return null
     })
 
-  if(!ridingID) {
+  if (!ridingID) {
     Utils.error(res, 200, 'Invalid postal code')
     return
   }
@@ -208,7 +208,7 @@ exports.setRiding = async (req, res) => {
     .where('code', '==', Number(ridingID))
     .select()
     .then(snapshot => {
-      if(snapshot.empty || snapshot.size > 1) {
+      if (snapshot.empty || snapshot.size > 1) {
         throw new Error('Too many ridings found')
       }
       let name = ''
