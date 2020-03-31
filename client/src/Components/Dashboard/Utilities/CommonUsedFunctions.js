@@ -99,6 +99,45 @@ export function getPartyColor (partyName) {
   }
 }
 
+export function getPortraitColor (partyName) {
+  switch (partyName) {
+    case 'liberal':
+      return {
+        marginRight: 26,
+        width: 40,
+        height: 40,
+        border: '4px solid #D71921'
+      }
+    case 'conservative':
+      return {
+        border: '3px solid #41aaa8'
+      }
+    case 'ndp':
+      return {
+        marginRight: 26,
+        width: 40,
+        height: 40,
+        border: '4px solid #EF7E52'
+      }
+    case 'bloc québécois':
+      return {
+        border: '3px solid #41aaa8'
+      }
+    case 'green party':
+      return {
+        border: '3px solid #41aaa8'
+      }
+    case 'independent':
+      return {
+        border: '3px solid #41aaa8'
+      }
+    default:
+      return {
+        border: '3px solid white'
+      }
+  }
+}
+
 export async function fetchUserRiding (userEmail) {
   return axios
     .get(`/api/users/${userEmail}/getUser`)

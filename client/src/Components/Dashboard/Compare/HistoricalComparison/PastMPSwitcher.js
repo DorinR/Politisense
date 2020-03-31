@@ -7,7 +7,7 @@ import Select from '@material-ui/core/Select'
 import axios from 'axios'
 import InputLabel from '@material-ui/core/InputLabel'
 import Avatar from '@material-ui/core/Avatar'
-import { fetchUserRiding, capitalizedName, getPartyColor } from '../../Utilities/CommonUsedFunctions'
+import { fetchUserRiding, capitalizedName, getPortraitColor } from '../../Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -96,15 +96,9 @@ export default function PastMPSwitcher (props) {
             <MenuItem
               key={mp.name}
               value={mp}
-              style={getPartyColor(mp.party)}
             >
               <Avatar
-                style={{
-                  marginRight: 26,
-                  width: 40,
-                  height: 40,
-                  border: '3px solid #41aaa8'
-                }}
+                style={getPortraitColor(mp.party)}
                 src={mp.imageUrl} className={classes.bigAvatar}
               />
               {capitalizedName(mp.name)} ({mp.start}-{mp.end})

@@ -110,7 +110,8 @@ export default function RepresentativeCard () {
                     height: 100,
                     border: '3px solid #41aaa8'
                   }}
-                />
+                ><FlagIcon />
+                </Avatar>
               </Grid>
               <Grid item xs={9}>
                 <Avatar
