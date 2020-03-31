@@ -79,30 +79,30 @@ function generateTableRows (bills) {
   })
 }
 
-function descendingComparator(a, b, orderBy) {
+function descendingComparator (a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
-    return -1;
+    return -1
   }
   if (b[orderBy] > a[orderBy]) {
-    return 1;
+    return 1
   }
-  return 0;
+  return 0
 }
 
-function getComparator(order, orderBy) {
+function getComparator (order, orderBy) {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+    : (a, b) => -descendingComparator(a, b, orderBy)
 }
 
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
+function stableSort (array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index])
   stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
+    const order = comparator(a[0], b[0])
+    if (order !== 0) return order
+    return a[1] - b[1]
+  })
+  return stabilizedThis.map((el) => el[0])
 }
 
 export default function BillHistoryTable () {
@@ -114,13 +114,13 @@ export default function BillHistoryTable () {
     onRequestSort(event, property)
   }
 
-  const [order, setOrder] = React.useState('desc');
-  const [orderBy, setOrderBy] = React.useState('dateVoted');
+  const [order, setOrder] = React.useState('desc')
+  const [orderBy, setOrderBy] = React.useState('dateVoted')
   const onRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+    const isAsc = orderBy === property && order === 'asc'
+    setOrder(isAsc ? 'desc' : 'asc')
+    setOrderBy(property)
+  }
 
   const [user, setUser] = React.useState(null)
   useEffect(() => {
@@ -198,9 +198,9 @@ export default function BillHistoryTable () {
                         >
                           {column.label}
                         </TableSortLabel>
-                          ) : (
+                      ) : (
                             `${column.label}`
-                            )}
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>

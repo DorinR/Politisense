@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
@@ -105,12 +105,13 @@ export default function BillDetails (props) {
               </Avatar>
             </ListItemAvatar>
             <ListItemText>
-              {props.linkToFullText !== '' ? (<Link href={props.linkToFullText} target='_blank' rel='noopener'>
-                {props.linkToFullText}
-              </Link>)
-                : (
-                  'Full Text Not Available'
-                )}
+              {props.linkToFullText !== '' ? (
+                <Link href={props.linkToFullText} target='_blank' rel='noopener'>
+                  View Full Text
+                </Link>
+              ) : (
+                'Full Text Not Available'
+              )}
             </ListItemText>
           </ListItem>
           <ListItem>
@@ -120,7 +121,11 @@ export default function BillDetails (props) {
               </Avatar>
             </ListItemAvatar>
             <ListItemText>
-              {props.sponsor ? (`Sponsored by ${capitalizedName(props.sponsor)}`) : ('Sponsor Not Available')}
+              {props.sponsor ? (
+                `Sponsored by ${capitalizedName(props.sponsor)}`
+              ) : (
+                'Sponsor Not Available'
+              )}
             </ListItemText>
           </ListItem>
           <ListItem>
@@ -129,7 +134,9 @@ export default function BillDetails (props) {
                 <CalendarTodayIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText>Voted on {props.dateVoted}</ListItemText>
+            <ListItemText>
+              Voted on {props.dateVoted}
+            </ListItemText>
           </ListItem>
         </List>
       </Dialog>
