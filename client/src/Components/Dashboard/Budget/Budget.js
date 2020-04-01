@@ -315,8 +315,10 @@ const Budget = props => {
             </Grid>
           </Grid>
         </Container>
-        {budgetData.length
-          ? <MDBHorizontalBar data={budgetData} /> : ''}
+        <Container maxWidth='md'>
+          {budgetData.length
+            ? <MDBHorizontalBar data={budgetData} /> : ''}
+        </Container>
       </CardContent>
     </Card>
   )

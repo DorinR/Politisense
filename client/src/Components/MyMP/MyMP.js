@@ -243,7 +243,7 @@ export default function MyMP () {
                 item
                 lg={8}
                 md={12}
-                xl={9}
+                xl={8}
                 xs={12}
               >
                 <Budget />
@@ -252,7 +252,7 @@ export default function MyMP () {
                 item
                 lg={4}
                 md={6}
-                xl={3}
+                xl={4}
                 xs={12}
               >
                 <div>
@@ -264,7 +264,7 @@ export default function MyMP () {
                 item
                 lg={12}
                 md={12}
-                xl={9}
+                xl={12}
                 xs={12}
               >
                 <CategoryDashboard />
@@ -273,7 +273,7 @@ export default function MyMP () {
                 item
                 lg={4}
                 md={6}
-                xl={3}
+                xl={4}
                 xs={12}
               >
                 {radarData && categoryList ? (
@@ -283,7 +283,7 @@ export default function MyMP () {
                 item
                 lg={8}
                 md={12}
-                xl={9}
+                xl={8}
                 xs={12}
               >
                 <BillHistoryTable />
