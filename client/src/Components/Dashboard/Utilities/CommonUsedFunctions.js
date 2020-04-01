@@ -110,7 +110,10 @@ export function getPortraitColor (partyName) {
       }
     case 'conservative':
       return {
-        border: '3px solid #41aaa8'
+        marginRight: 26,
+        width: 40,
+        height: 40,
+        border: '3px solid #0C499C'
       }
     case 'ndp':
       return {
@@ -121,18 +124,30 @@ export function getPortraitColor (partyName) {
       }
     case 'bloc québécois':
       return {
-        border: '3px solid #41aaa8'
+        marginRight: 26,
+        width: 40,
+        height: 40,
+        border: '3px solid #02819E'
       }
     case 'green party':
       return {
-        border: '3px solid #41aaa8'
+        marginRight: 26,
+        width: 40,
+        height: 40,
+        border: '3px solid #2E8724'
       }
     case 'independent':
       return {
-        border: '3px solid #41aaa8'
+        marginRight: 26,
+        width: 40,
+        height: 40,
+        border: '3px solid black'
       }
     default:
       return {
+        marginRight: 26,
+        width: 40,
+        height: 40,
         border: '3px solid white'
       }
   }
