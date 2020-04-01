@@ -1,11 +1,11 @@
-import React, { forwardRef } from 'react'
-import { Link as RouterLink, Link } from 'react-router-dom'
+import React from 'react'
+import { Link } from 'react-router-dom'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
 import {
   AppBar, Toolbar, Hidden, IconButton, Grid,
-  Typography
+  Typography,
 } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import InputIcon from '@material-ui/icons/Input'
@@ -13,13 +13,6 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 
 import Button from '@material-ui/core/Button'
 
-const CustomRouterLinkTopBar = forwardRef((props, ref) => (
-  <div
-    ref={ref}
-  >
-    <RouterLink {...props} />
-  </div>
-))
 const useStyles = makeStyles(theme => ({
   root: {
     boxShadow: 'none',
@@ -96,25 +89,25 @@ const Topbar = props => {
         <Hidden mdDown>
           <Button
             style={{ color: 'white', textTransform: 'none' }} variant='text'
-            component={CustomRouterLinkTopBar}
+            component={Link}
             to='/general'
           >General
           </Button>
           <Button
             style={{ color: 'white', textTransform: 'none' }} variant='text'
-            component={CustomRouterLinkTopBar}
+            component={Link}
             to='/myRepresentative'
           >My MP
           </Button>
           <Button
             style={{ color: 'white', textTransform: 'none' }} variant='text'
-            component={CustomRouterLinkTopBar}
+            component={Link}
             to='/compare'
           >Head To Head
           </Button>
           <Button
             style={{ color: 'white', textTransform: 'none' }} variant='text'
-            component={CustomRouterLinkTopBar}
+            component={Link}
             to='/map'
           >Map
           </Button>

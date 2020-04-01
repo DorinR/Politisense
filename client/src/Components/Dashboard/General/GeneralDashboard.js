@@ -345,7 +345,7 @@ export default function GeneralDashboard () {
         TransitionComponent={Transition}
         onClose={handleClose}
       >
-        <DialogTitle>What is a {parties['status']} government?</DialogTitle>
+        <DialogTitle>What is a {parties['status'] ? parties['status'] : ''} government?</DialogTitle>
         <DialogContent>
           {parties['status'] === 'Minority' ?
               <DialogContentText>
