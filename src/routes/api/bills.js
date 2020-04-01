@@ -19,11 +19,11 @@ router.get('/:head/getVotedBillsByMP', controller.getVotedBillsByMP)
 // @route post api/bills/getAllBillsByRep
 // @desc  get bill by bill ID
 // @access Public
-router.get('/:head/getAllBillsByRep', controller.getAllBillsByRep)
+router.get('/:head/getAllBillsByRepForAllParliaments', controller.getAllBillsByRepForAllParliaments)
 
 router.get(
-  '/:head/getAllBillsBySponsorName',
-  controller.getAllBillsBySponsorName
+  '/:head/getAllBillsBySponsorForAllParliaments',
+  controller.getAllBillsBySponsorForAllParliaments
 )
 
 // @route get api/bills/getAllBillsSponsoredByParty
@@ -33,5 +33,8 @@ router.get(
   '/:party/getNumberOfBillsSponsoredByParty',
   controller.getNumberOfBillsSponsoredByParty
 )
-
+router.get(
+  '/fetchCategories',
+  controller.fetchCategories
+)
 module.exports = router

@@ -12,5 +12,6 @@ module.exports = {
   Role: require('./Role').Role,
   PoliticalParty: require('./Party').PoliticalParty,
   Description: require('./Description').Description,
-  LegislativeActivity: require('./LegislativeActivity').LegislativeActivity
+  LegislativeActivity: require('./LegislativeActivity').LegislativeActivity,
+  ActivityVote: require('./ActivityVote').ActivityVote
 }

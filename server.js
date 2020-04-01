@@ -28,6 +28,8 @@ app.use('/api/budgets', require('./src/routes/api/budgets'))
 app.use('/api/parties', require('./src/routes/api/parties'))
 app.use('/api/financialRecords', require('./src/routes/api/financialRecords'))
 app.use('/api/mapSupportData', require('./src/routes/api/mapSupportData'))
+app.use('/api/voting', require('./src/routes/api/voting'))
+app.use('/api/parliament', require('./src/routes/api/parliament'))
 
 // deployment configuration
 const PORT = process.env.PORT || 5000

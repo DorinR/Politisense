@@ -1,6 +1,6 @@
 require('module-alias/register')
 const Components = require('@manager')
-const Errors = require('./error/errors')
+const Errors = require('../error/errors')
 const flatten = require('flat')
 
 const Chambers = {
@@ -314,14 +314,3 @@ module.exports = {
   BillTypes: BillTypes,
   BillStatuses: BillStatuses
 }
-
-BillScraper.create({
-  url: 'https://www.parl.ca/LegisInfo/Home.aspx',
-  parliaments: [35, 36, 37, 38, 39, 40, 41, 42, 43],
-  sessions: [1, 2, 3]
-})
-  .execute()
-  .then(results => {
-    console.log(results)
-  })
-  .catch(console.error)

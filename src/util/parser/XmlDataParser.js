@@ -1,7 +1,4 @@
-const Action = require('../action/actions')
 const DataNotFoundError = require('./XmlParserError').DataNotFoundError
-const LinkScraperAction = Action.LinkScraperAction
-
 const cheerio = require('cheerio')
 
 class XmlDataParser {
@@ -81,7 +78,6 @@ class XmlDataParser {
     try {
       json = this.buildJson()
     } catch (e) {
-      console.debug(e.message)
       return null
     }
 
@@ -118,18 +114,6 @@ class XmlDataParser {
 
   hasData () {
     return this.isTagInXml(this.tagName)
-  }
-
-  _getHtmlFromLink (link) {
-    return new LinkScraperAction(link).perform()
-      .then(res => {
-        return res.body
-      }).then(html => {
-        return html
-      }).catch(e => {
-        console.error(e.message)
-        return ''
-      })
   }
 }
 

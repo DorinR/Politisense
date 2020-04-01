@@ -156,7 +156,7 @@ export default function CategoryGrid() {
 
   async function getAllBillsByRep(head) {
     return axios
-      .get(`/api/bills/${head}/getAllBillsByRep`)
+      .get(`/api/bills/${head}/getAllBillsByRepForAllParliaments`)
       .then(res => {
         if (res.data.success) {
           return res.data.data
@@ -181,6 +181,9 @@ export default function CategoryGrid() {
 
   const addEvent = newValue => {
     const copyCategoryArray = Object.assign([], categoryList)
+    if(newValue.includes(" ")){
+       newValue= newValue.replace(" ","-")
+    }
     copyCategoryArray.push(newValue)
     updateUserCategory(copyCategoryArray)
       .then(res => {
@@ -271,7 +274,7 @@ export default function CategoryGrid() {
                     open={open}
                     onClose={handleClose}
                     value={value}
-                    existedCategories={categoryList}
+                    existedcategories={categoryList}
                   />
                 </CardContent>
               </CardActionArea>
