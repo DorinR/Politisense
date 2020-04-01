@@ -10,6 +10,15 @@ const useStyles = makeStyles(theme => ({
             width: '25ch',
         },
     },
+    votingHistory: {
+        backgroundColor: '#FFC300',
+        marginTop: 20
+    },
+    mostPopular: {
+        backgroundColor: '#1C53AC',
+        color: 'white',
+        marginTop: 20
+    }
 }));
 
 export default function PollsNavbar() {
@@ -18,8 +27,8 @@ export default function PollsNavbar() {
     return (
         <form className={classes.root} noValidate autoComplete="off">
             <TextField id="standard-basic" label="Filter through bills" />
-            <Button variant="contained">My Voting History</Button>
-            <Button variant="contained" color="primary">Most Popular Bills</Button>
+            <Button className={classes.votingHistory}>My Voting History</Button>
+            <Button className={classes.mostPopular}>Most Popular Bills</Button>
         </form>
     );
 }
