@@ -14,6 +14,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
+import { getIpPostalCode } from './GetIpAddress'
 
 const useStyles = makeStyles({
     card: {
@@ -79,18 +80,39 @@ async function fetchRecentBills() {
         .catch(console.error)
 }
 
+export async function fetchUserData(userEmail) {
+    let result = ''
+    await axios
+        .get(`http://localhost:5000/api/users/${userEmail}/getUser`,
+            { params: { changepassword: userEmail } })
+        .then(res => {
+            if (res.data.success) {
+                const user = res.data.data
+                result = user
+            }
+        })
+        .catch(err => console.log(err))
+    return result
+}
+
 
 export default function Voting() {
     const classes = useStyles()
     const [name, setName] = useState('')
     const [recentBills, setRecentBills] = useState([])
+    const [storagePostalCode, setStoragePostalCode] = useState('')
+    const [ipPostalCode, setIpPostalCode] = useState('')
     const preventDefault = (event) => event.preventDefault();
 
     useEffect(() => {
         async function getData() {
             const user = JSON.parse(localStorage.getItem('user'))
+            const fullUserDetails = await fetchUserData(user.email)
+            const postalCode = fullUserDetails.postalCode.substring(0, 3)
+            setStoragePostalCode(postalCode)
+            const ipAddress = await getIpPostalCode()
+            setIpPostalCode(ipAddress)
             const recentLegislativeActivities = await fetchRecentBills()
-            console.log(recentLegislativeActivities[0].data[0])
             setRecentBills(recentLegislativeActivities[0].data[0])
         }
         getData()
@@ -130,10 +152,11 @@ export default function Voting() {
                                 <Alert className={classes.alert} severity="error">Read the bill properly. Once you cast your vote,
                                 it cannot be undone!
                                 </Alert>
-                                <form noValidate autoComplete="off">
-                                    <Button className={classes.for}>For</Button>
-                                    <Button className={classes.against}>Against</Button>
-                                </form>
+                                {storagePostalCode == ipPostalCode ?
+                                    <form noValidate autoComplete="off">
+                                        <Button className={classes.for}>For</Button>
+                                        <Button className={classes.against}>Against</Button>
+                                    </form> : ''}
                             </CardContent>
                         </Card>
                     </ListItem>

@@ -18,6 +18,16 @@ export async function getIpInfo() {
     });
 }
 
+
+export async function getIpPostalCode() {
+    return axios.get('https://ipapi.co/json/').then((response) => {
+        let data = response.data;
+        return data.postal
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
 class GetIpAddress extends Component {
 
     constructor(props) {
