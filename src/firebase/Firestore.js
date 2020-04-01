@@ -289,18 +289,24 @@ class Firestore {
   }
 
   PoliticalParty () {
-    const collection = this.legacy ? 'parties' : `${this.parliament}/parties/party`
+    const collection = this.legacy
+      ? 'parties'
+      : `${this.parliament}/parties/party`
     return this.createReference(collection)
   }
 
   LegislativeActivityVote () {
     Firestore.legacyCollectionError(this.legacy)
-    return this.createReference(`${this.parliament}/legislative_activities/vote`)
+    return this.createReference(
+      `${this.parliament}/legislative_activities/vote`
+    )
   }
 
   LegislativeActivity () {
     Firestore.legacyCollectionError(this.legacy)
-    return this.createReference(`${this.parliament}/legislative_activities/activity`)
+    return this.createReference(
+      `${this.parliament}/legislative_activities/activity`
+    )
   }
 
   Politician () {
@@ -341,6 +347,14 @@ class Firestore {
     const collection = this.legacy
       ? 'voteRecord'
       : `${this.parliament}/vote_records/vote_record`
+    return this.createReference(collection)
+  }
+
+  MapSupportData () {
+    console.warn(
+      'WARNING: MapSupportData Controller does not support legacy mode.'
+    )
+    const collection = 'static/map_support_data/map_support_data'
     return this.createReference(collection)
   }
 

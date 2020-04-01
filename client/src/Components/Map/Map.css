@@ -1,0 +1,65 @@
+#map-holder {
+  width: 100%;
+  position: relative;
+  margin-left: 0px !important;
+  margin-top: 0px !important;
+}
+
+svg#map {
+  width: 100% !important;
+  height: 80%;
+}
+
+.riding {
+  stroke: #fafafa;
+  stroke-width: 0.5px;
+  vector-effect: non-scaling-stroke;
+  cursor: pointer;
+}
+
+.activenode {
+  stroke: #000;
+  stroke-width: 1px;
+  animation: glow 1s ease alternate infinite;
+  cursor: default;
+}
+
+@keyframes glow {
+  from {
+    stroke-opacity: 100%;
+    fill-opacity: 100%;
+  }
+  to {
+    stroke-opacity: 100%;
+    fill-opacity: 70%;
+  }
+}
+
+#map {
+  transform: translateZ(0);
+  width: 100%;
+  display: block;
+}
+
+.hidden {
+  display: none;
+  pointer-events: none !important;
+}
+
+.zoom-buttons {
+  position: absolute;
+  height: auto;
+  z-index: 97;
+  right: 26%;
+  top: 17px;
+}
+
+.zoom-button {
+  cursor: pointer;
+  position: relative;
+}
+
+.disable {
+  opacity: 0.3;
+  pointer-events: none;
+}

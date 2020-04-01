@@ -7,6 +7,7 @@ const RidingController = require('./RidingController')
 const PartyController = require('./PartyController')
 const FinancialRecordController = require('./FinancialRecordController')
 const BudgetController = require('./BudgetController')
+const MapSupportDataController = require('./MapSupportDataController')
 const ActivityVotingController = require('./ActivityVotingController')
 const ParliamentController = require('./ParliamentController')
 
@@ -133,6 +134,15 @@ module.exports = {
 
   getImageData: function (req, res) {
     return RepresentativeController.getImageData(req, res)
+  },
+
+  getRidingByRidingCode: function (req, res) {
+    return RidingController.getRidingByRidingCode(req, res)
+  },
+
+  // Map support data
+  getMapSupportData: function (req, res) {
+    return MapSupportDataController.getMapSupportData(req, res)
   },
 
   index: function (req, res) {
