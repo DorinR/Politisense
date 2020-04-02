@@ -3,7 +3,7 @@ const Parser = require('@parser').XmlDataParser
 const LegislativeActivity = require('@model').LegislativeActivity
 
 class _LegislativeActivityXmlParser extends Parser {
-  constructor (xml){
+  constructor (xml) {
     super(xml)
   }
 
@@ -28,12 +28,12 @@ class _LegislativeActivityXmlParser extends Parser {
   }
 
   buildJson () {
-      const json = {
+    const json = {
       number: '',
       title: this.getDataInTag('title').trim(),
       link: this.getDataInTag('link').trim(),
       description: this.getDataInTag('description').trim(),
-      date: this.getDataInTag('pubDate').trim(),
+      date: this.getDataInTag('pubDate').trim()
     }
     return LegislativeActivity.deserialise(json)
   }
@@ -78,7 +78,7 @@ class LegislativeActivityXmlParser extends Parser {
     return this.parser.getAllFromXml()
   }
 
-  buildJson() {
+  buildJson () {
     return this.parser.buildJson()
   }
 }

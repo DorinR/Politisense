@@ -17,7 +17,7 @@ exports.getUpcomingBills = async (req, res) => {
         success: false,
         data: e.message
       })
-  })
+    })
 }
 
 exports.getAllBillsByHead = (req, res) => {

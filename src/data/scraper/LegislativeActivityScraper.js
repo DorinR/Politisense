@@ -6,7 +6,7 @@ const StopAction = QueueUtils.Stop.GenericStopAction
 const ErrorAction = QueueUtils.Error.ParseErrorAction
 
 class LegislativeActivityScraper extends QueueManager {
-  static create(wait = 1000) {
+  static create (wait = 1000) {
     const manager = new LegislativeActivityScraper(wait)
     manager
       .setStartAction(new StartAction(manager))

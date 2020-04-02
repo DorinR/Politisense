@@ -5,12 +5,12 @@ const FireStore = fs.Firestore
 const cheerio = require('cheerio')
 
 class ExpendituresScraper {
-  constructor(fp) {
+  constructor (fp) {
     this.reader = new FileReader(fp)
     this.parser = null
   }
 
-  async createExpenditureRecords() {
+  async createExpenditureRecords () {
     return this.reader.perform()
       .then(this.createParser.bind(this))
       .then(this.expendituresByMember.bind(this))
@@ -20,8 +20,8 @@ class ExpendituresScraper {
       .catch(this.handleErrors.bind(this))
   }
 
-  createParser(xml) {
-    //console.debug('INFO: creating parser..')
+  createParser (xml) {
+    // console.debug('INFO: creating parser..')
     this.parser = cheerio.load(xml, {
       normalizeWhitespace: true,
       xmlMode: true
@@ -29,8 +29,8 @@ class ExpendituresScraper {
     return this.parser
   }
 
-  expendituresByMember(parser) {
-    //console.debug('INFO: finding expenditures by member...')
+  expendituresByMember (parser) {
+    // console.debug('INFO: finding expenditures by member...')
     const memberExpenditures = []
     const expenditureReports = parser('MemberExpenditureReports').children('Report')
     expenditureReports.each((index, report) => {
@@ -44,29 +44,29 @@ class ExpendituresScraper {
     return memberExpenditures
   }
 
-  findDateInReport(report) {
+  findDateInReport (report) {
     const date = report.children.find((elem) => {
       return elem.name === 'StartDate'
     })
     return date.children[0].data
   }
 
-  findRidingInReport(report) {
+  findRidingInReport (report) {
     const constituency = report.children.find((elem) => {
       return elem.name === 'Constituency'
     })
     return constituency.attribs['name-en']
   }
 
-  createContent(report) {
+  createContent (report) {
     const categories = report.children.find((elem) => {
       return elem.name === 'ExpenditureCategories'
     })
     return categories
   }
 
-  memberExpendituresByCategory(memberExpenditures) {
-    //console.debug('INFO: Parsing for expense categories of each member..')
+  memberExpendituresByCategory (memberExpenditures) {
+    // console.debug('INFO: Parsing for expense categories of each member..')
     memberExpenditures.forEach(report => {
       report.content.children.forEach((category) => {
         report.categories.push(category)
@@ -75,8 +75,8 @@ class ExpendituresScraper {
     return memberExpenditures
   }
 
-  findExpenditureSubCategories(categoryExpenditures) {
-    //console.debug('INFO: Parsing for expense subcategories of each member..')
+  findExpenditureSubCategories (categoryExpenditures) {
+    // console.debug('INFO: Parsing for expense subcategories of each member..')
     categoryExpenditures.forEach(report => {
       const categories = report.categories
       categories.forEach(cat => {
@@ -87,13 +87,13 @@ class ExpendituresScraper {
     return categoryExpenditures
   }
 
-  findSubCategories(category, report) {
+  findSubCategories (category, report) {
     category.children.forEach((subcategory) => {
       this.filterSubCategories(category, subcategory, report)
     })
   }
 
-  filterSubCategories(category, subcat, report) {
+  filterSubCategories (category, subcat, report) {
     if (subcat.name !== 'SubCategories') {
       return
     }
@@ -105,13 +105,13 @@ class ExpendituresScraper {
     })
   }
 
-  async produceFinancialCategories(results) {
+  async produceFinancialCategories (results) {
     const ret = await this.generateFinancialRecords(results)
     return ret
   }
 
-  async generateFinancialRecords(records) {
-    //console.debug('INFO: Producing financial records..')
+  async generateFinancialRecords (records) {
+    // console.debug('INFO: Producing financial records..')
     const financialRecords = []
     await Promise.all(
       records.map(async (record) => {
@@ -123,7 +123,7 @@ class ExpendituresScraper {
                 fr = this.createFinancialRecord(id, record.date, cat)
                 financialRecords.push(fr)
               } catch (e) {
-                //console.debug('DEBUG: ' + e.message)
+                // console.debug('DEBUG: ' + e.message)
               }
             })
           })
@@ -132,7 +132,7 @@ class ExpendituresScraper {
     return financialRecords
   }
 
-  createFinancialRecord(id, date, category) {
+  createFinancialRecord (id, date, category) {
     const year = this.computeYear(date)
     const quarter = this.computeQuarter(date)
     const name = this.getCategoryName(category)
@@ -147,7 +147,7 @@ class ExpendituresScraper {
     return new FinancialRecord(id, parent, name, amount, year, quarter)
   }
 
-  retrievePolitician(riding) {
+  retrievePolitician (riding) {
     const fs = new FireStore()
     return fs.Politician()
       .where('riding', '==', riding.toLowerCase())
@@ -167,26 +167,26 @@ class ExpendituresScraper {
       })
   }
 
-  computeQuarter(date) {
+  computeQuarter (date) {
     return Number(date.substring(6, 6)) % 3 + 1
   }
 
-  computeYear(date) {
+  computeYear (date) {
     return Number(date.substring(0, 4))
   }
 
-  getCategoryName(category) {
+  getCategoryName (category) {
     return category.attribs['name-en']
   }
 
-  getCategorySpendingAmount(category) {
+  getCategorySpendingAmount (category) {
     const total = category.children.find(elem => {
       return elem.name === 'Total'
     })
     return Number(total.attribs.value)
   }
 
-  handleErrors(e) {
+  handleErrors (e) {
     throw e
   }
 }

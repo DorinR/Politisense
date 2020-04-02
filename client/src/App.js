@@ -18,7 +18,7 @@ import GeneralDashboard from './Components/Dashboard/GeneralDashboard'
 import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
 import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
 import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
-//import PollsMainPage from './Components/Dashboard/Polls/PollsMainPage'
+// import PollsMainPage from './Components/Dashboard/Polls/PollsMainPage'
 import LegislativeActivities from './Components/Dashboard/Polls/LegislativeActivities'
 
 const App = () => {
@@ -54,7 +54,7 @@ const App = () => {
         localStorage.getItem('user') ? (
           <Component {...props} />
         ) : (
-            <Redirect to='/login' /> // eslint-disable-next-line
+          <Redirect to='/login' /> // eslint-disable-next-line
           )}
     />
   )

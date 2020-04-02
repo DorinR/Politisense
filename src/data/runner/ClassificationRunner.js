@@ -6,7 +6,7 @@ const StopAction = Utils.QueueManager.Stop.GenericStopAction
 const Throw = Utils.QueueManager.Error.Throw
 
 class ClassificationRunner extends QueueManager {
-  static create(params, wait = 30000) {
+  static create (params, wait = 30000) {
     const manager = new ClassificationRunner(params, wait)
     manager
       .setStartAction(new StartAction(manager))
@@ -15,14 +15,14 @@ class ClassificationRunner extends QueueManager {
     return manager
   }
 
-  accumulate(result) {
+  accumulate (result) {
     if (result) {
       this.result.push(result)
     }
     return result
   }
 
-  constructor(params, wait = 30000) {
+  constructor (params, wait = 30000) {
     super(wait)
     this.params = [params]
     this.queryCount = this.params.length

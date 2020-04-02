@@ -6,7 +6,7 @@ const StopAction = Utils.QueueManager.Stop.GenericStopAction
 const Throw = Utils.QueueManager.Error.ParseErrorAction
 
 class RoleScraper extends QueueManager {
-  static create(params, wait = 5000) {
+  static create (params, wait = 5000) {
     const manager = new RoleScraper(params, wait)
     manager
       .setStartAction(new StartAction(manager))
@@ -15,7 +15,7 @@ class RoleScraper extends QueueManager {
     return manager
   }
 
-  constructor(params, wait = 5000) {
+  constructor (params, wait = 5000) {
     super(wait)
     this.parliaments = []
     this.setParliaments(params.parliaments)
@@ -23,14 +23,14 @@ class RoleScraper extends QueueManager {
     this.createQueries(params.url)
   }
 
-  accumulate(result) {
+  accumulate (result) {
     if (result) {
       this.result.push(result)
     }
     return result
   }
 
-  setParliaments(parliaments) {
+  setParliaments (parliaments) {
     if (typeof parliaments === 'undefined' ||
       (typeof parliaments === typeof ' ' && parliaments.toLowerCase().includes('all'))) {
       this.parliaments.push(...[35, 36, 37, 38, 39, 40, 41, 42, 43])
@@ -41,7 +41,7 @@ class RoleScraper extends QueueManager {
     }
   }
 
-  createQueries(url) {
+  createQueries (url) {
     this.parliaments.forEach(parl => {
       this.params.push({
         url: url,

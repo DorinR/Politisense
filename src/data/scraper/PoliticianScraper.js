@@ -41,7 +41,7 @@ const provinceKeys = [
 ]
 
 class PoliticianScraper extends QueueManager {
-  static create(params, wait = 5000) {
+  static create (params, wait = 5000) {
     const manager = new PoliticianScraper(params, wait)
     manager
       .setStartAction(new StartAction(manager))
@@ -51,7 +51,7 @@ class PoliticianScraper extends QueueManager {
     return manager
   }
 
-  constructor(params, wait = 5000) {
+  constructor (params, wait = 5000) {
     super(wait)
     this.parliaments = []
     this.setParliaments(params.parliaments)
@@ -69,21 +69,21 @@ class PoliticianScraper extends QueueManager {
     this.maxQueryCount = this.queryCount
   }
 
-  async run() {
+  async run () {
     await super.run()
     this.finish()
   }
 
-  accumulate(result) {
+  accumulate (result) {
     this.result.push(result)
     return result
   }
 
-  finish() {
+  finish () {
     console.log(`INFO: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
-  setParliaments(parliaments) {
+  setParliaments (parliaments) {
     if (typeof parliaments === 'undefined' ||
       (typeof parliaments === typeof '' && parliaments.toLowerCase().includes('all'))) {
       this.parliaments.push('all')
@@ -94,7 +94,7 @@ class PoliticianScraper extends QueueManager {
     }
   }
 
-  setCaucuses(caucuses) {
+  setCaucuses (caucuses) {
     if (typeof caucuses === 'undefined' ||
       (typeof caucuses === typeof ' ' && caucuses.toLowerCase().includes('all'))) {
       this.caucuses.push('all')
@@ -106,7 +106,7 @@ class PoliticianScraper extends QueueManager {
     }
   }
 
-  setProvinces(provinces) {
+  setProvinces (provinces) {
     if (typeof provinces === 'undefined' ||
       (typeof provinces === typeof ' ' && provinces.toLowerCase().includes('all'))) {
       this.provinces.push('all')
@@ -117,7 +117,7 @@ class PoliticianScraper extends QueueManager {
     }
   }
 
-  setGenders(genders) {
+  setGenders (genders) {
     if (typeof genders === 'undefined' ||
       (typeof genders === typeof ' ' && genders.toLowerCase().includes('all'))) {
       this.genders.push('all')
@@ -131,7 +131,7 @@ class PoliticianScraper extends QueueManager {
     }
   }
 
-  setLastNamePrefixes(lastNamePrefixes) {
+  setLastNamePrefixes (lastNamePrefixes) {
     if (typeof lastNamePrefixes === 'undefined' ||
       (typeof lastNamePrefixes === typeof ' ' && lastNamePrefixes.toLowerCase().includes('all'))) {
       this.lastNamePrefixes.push('')
@@ -145,7 +145,7 @@ class PoliticianScraper extends QueueManager {
     }
   }
 
-  createQueries(url) {
+  createQueries (url) {
     this.parliaments.forEach(parliament => {
       this.caucuses.forEach(caucus => {
         this.provinces.forEach(province => {

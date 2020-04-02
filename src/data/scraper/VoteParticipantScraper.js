@@ -14,7 +14,7 @@ const Sessions = [1, 2, 3]
 Object.freeze(Sessions)
 
 class VoteParticipantScraper extends QueueManager {
-  static create(params, wait = 5000) {
+  static create (params, wait = 5000) {
     const manager = new VoteParticipantScraper(params, wait)
     manager
       .setBeforeAction(new BeforeAction(manager))
@@ -25,14 +25,14 @@ class VoteParticipantScraper extends QueueManager {
     return manager
   }
 
-  accumulate(result) {
+  accumulate (result) {
     if (result) {
       this.result.push(result)
     }
     return result
   }
 
-  constructor(params, wait = 5000) {
+  constructor (params, wait = 5000) {
     super(wait)
     this.parliaments = []
     this.createParliaments(params.parliaments)
@@ -42,7 +42,7 @@ class VoteParticipantScraper extends QueueManager {
     this.createParams(params.url)
   }
 
-  createParliaments(parliaments) {
+  createParliaments (parliaments) {
     if (!parliaments || parliaments === 'all') {
       this.parliaments = Parliaments
     } else if (parliaments instanceof Array) {
@@ -50,7 +50,7 @@ class VoteParticipantScraper extends QueueManager {
     }
   }
 
-  createSessions(sessions) {
+  createSessions (sessions) {
     if (!sessions || sessions === 'all') {
       this.sessions = Sessions
     } else if (sessions instanceof Array) {
@@ -58,7 +58,7 @@ class VoteParticipantScraper extends QueueManager {
     }
   }
 
-  createParams(url) {
+  createParams (url) {
     this.parliaments.forEach(parl => {
       this.sessions.forEach(session => {
         this.params.push({

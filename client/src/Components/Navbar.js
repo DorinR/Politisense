@@ -131,7 +131,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding(userEmail) {
+export async function fetchUserRiding (userEmail) {
   return axios
     .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
     .then(res => {
@@ -142,7 +142,7 @@ export async function fetchUserRiding(userEmail) {
     .catch(console.error)
 }
 
-export async function fetchRepresentative(riding) {
+export async function fetchRepresentative (riding) {
   return axios.get(
     `http://localhost:5000/api/representatives/${riding}/getRepresentative`
   )
@@ -154,14 +154,14 @@ export async function fetchRepresentative(riding) {
     .catch(console.error)
 }
 
-export default function MiniDrawer({ children }) {
+export default function MiniDrawer ({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const [userRepresentative, setUserRepresentative] = React.useState(null)
   const [riding, setRiding] = useState(null)
   const [user, setUser] = useState(null)
-  const [userCountry, setUserCountry] = useState("")
+  const [userCountry, setUserCountry] = useState('')
 
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -170,7 +170,7 @@ export default function MiniDrawer({ children }) {
   }, [])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (user) {
         const riding = await fetchUserRiding(user.email)
         const country = await getIpInfo()
@@ -183,7 +183,7 @@ export default function MiniDrawer({ children }) {
   }, [user])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (riding) {
         const representative = await fetchRepresentative(riding)
         const country = await getIpInfo()
@@ -267,15 +267,15 @@ export default function MiniDrawer({ children }) {
               Map
             </Button>
           </Link>
-          {userCountry && userCountry == 'Canada' ?
-            <Link to='/polls' className={classes.navbarCustomFont}>
+          {userCountry && userCountry === 'Canada'
+            ? <Link to='/polls' className={classes.navbarCustomFont}>
               <Button
                 variant='contained'
                 color='primary'
                 className={classes.navbarCustomButton}
               >
                 Polls
-            </Button>
+              </Button>
             </Link> : ''}
 
           <Typography style={{ flex: 1 }} />
@@ -322,8 +322,8 @@ export default function MiniDrawer({ children }) {
             {theme.direction === 'rtl' ? (
               <ChevronRightIcon />
             ) : (
-                <ChevronLeftIcon />
-              )}
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </div>
         <Divider />
