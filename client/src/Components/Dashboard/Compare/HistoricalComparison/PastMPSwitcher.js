@@ -7,10 +7,10 @@ import Select from '@material-ui/core/Select'
 import axios from 'axios'
 import InputLabel from '@material-ui/core/InputLabel'
 import Avatar from '@material-ui/core/Avatar'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import Typography from '@material-ui/core/Typography'
 import { fetchUserRiding, capitalizedName, getPortraitColor } from '../../Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
@@ -42,7 +42,7 @@ const MenuProps = {
   }
 }
 
-async function fetchPastRepresentatives(riding) {
+async function fetchPastRepresentatives (riding) {
   let pastRepresentatives = []
   await axios
     .get(`/api/representatives/${riding}/getPastRepresentatives`)
@@ -55,19 +55,18 @@ async function fetchPastRepresentatives(riding) {
   return pastRepresentatives
 }
 
-export default function PastMPSwitcher(props) {
+export default function PastMPSwitcher (props) {
   // eslint-disable-next-line
   const { functionUpdate, ...other } = props
   const classes = useStyles()
   const [mp, setMp] = React.useState([])
   const [dropdownMps, setDropdownMps] = React.useState([])
 
-
-  async function populateDropdownMps(mps) {
+  async function populateDropdownMps (mps) {
     setDropdownMps(mps)
   }
 
-  function getRep(reps, start) {
+  function getRep (reps, start) {
     let mp = {}
     for (let i = 0; i < reps.length; i++) {
       if (reps[i].start === start) {
@@ -77,14 +76,14 @@ export default function PastMPSwitcher(props) {
     return mp
   }
 
-  function handleChange(event) {
+  function handleChange (event) {
     setMp(event.target.value)
-    let mp = getRep(dropdownMps, event.target.value)
+    const mp = getRep(dropdownMps, event.target.value)
     functionUpdate(mp)
   }
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       // eslint-disable-next-line
       const user = JSON.parse(localStorage.getItem('user'))
       const riding = await fetchUserRiding(user.email)
@@ -112,7 +111,7 @@ export default function PastMPSwitcher(props) {
               key={mp.start}
               value={mp.start}
             >
-              <ListItem alignItems="flex-start">
+              <ListItem alignItems='flex-start'>
                 <ListItemAvatar>
                   <Avatar
                     style={getPortraitColor(mp.party)}
@@ -121,25 +120,25 @@ export default function PastMPSwitcher(props) {
                 </ListItemAvatar>
                 <ListItemText
                   primary={
-                    <React.Fragment>
+                    <>
                       <Typography>
                         {capitalizedName(mp.name)}
                       </Typography>
-                    </React.Fragment>
+                    </>
                   }
                   secondary={
-                    <React.Fragment>
+                    <>
                       <Typography
-                        component="span"
-                        variant="body2"
+                        component='span'
+                        variant='body2'
                         className={classes.inline}
-                        color="textPrimary"
+                        color='textPrimary'
                       >
                         ({mp.start}-{mp.end})
                       </Typography>
-                    </React.Fragment>
-                  }>
-                </ListItemText>
+                    </>
+                  }
+                />
               </ListItem>
             </MenuItem>
           ))}

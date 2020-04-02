@@ -29,22 +29,22 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchPastRepresentativeId(representative, data) {
+async function fetchPastRepresentativeId (representative, data) {
   const res = await axios.post(`/api/representatives/${representative}/getPastRepresentativeId`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeVotes(member, data) {
+async function fetchPastRepresentativeVotes (member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativeVotes`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativePairedVotes(member, data) {
+async function fetchPastRepresentativePairedVotes (member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativePairedVotes`, data)
   return res.data.data
 }
 
-export default function RepresentativeCard() {
+export default function RepresentativeCard () {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -62,7 +62,7 @@ export default function RepresentativeCard() {
   }
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const data = { start: start }
       const member = await fetchPastRepresentativeId(name, data)
       const partyData = await getPartyData(politicalParty)

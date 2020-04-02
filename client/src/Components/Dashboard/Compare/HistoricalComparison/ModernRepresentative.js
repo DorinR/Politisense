@@ -29,7 +29,7 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchCurrentRepresentative(riding) {
+async function fetchCurrentRepresentative (riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
@@ -41,7 +41,7 @@ async function fetchCurrentRepresentative(riding) {
     .catch(console.error)
 }
 
-export default function ModernRepresentative() {
+export default function ModernRepresentative () {
   const classes = useStyles()
   const [name] = useState('')
   const [totalBills, setTotalBills] = useState(0)
@@ -52,14 +52,14 @@ export default function ModernRepresentative() {
   const [partyImageUrl, setPartyImageUrl] = useState('')
 
   useEffect(() => {
-    async function getIssuedBillsByHead(head) {
+    async function getIssuedBillsByHead (head) {
       const res = await axios.get(
         `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
       )
       return res.data.data
     }
 
-    async function getData(mp) {
+    async function getData (mp) {
       // eslint-disable-next-line
       const user = JSON.parse(localStorage.getItem('user'))
       const riding = await fetchUserRiding(user.email)

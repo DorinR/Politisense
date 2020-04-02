@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export async function fetchCategories() {
+export async function fetchCategories () {
   return axios
     .get('/api/bills/fetchCategories')
     .then(res => {
@@ -10,7 +10,7 @@ export async function fetchCategories() {
     })
 }
 
-export function mergeArrays(rawData) {
+export function mergeArrays (rawData) {
   let jointArray = []
 
   rawData.forEach(array => {
@@ -22,7 +22,7 @@ export function mergeArrays(rawData) {
   return test
 }
 
-export function formatingCategories(categoriesList) {
+export function formatingCategories (categoriesList) {
   const modifiedArray = categoriesList.map(element => {
     if (element.includes('-')) {
       return capitalizedName(element.replace('-', ' '))
@@ -32,14 +32,14 @@ export function formatingCategories(categoriesList) {
   return modifiedArray
 }
 
-export function formattingCategory(element) {
+export function formattingCategory (element) {
   if (element.includes('-')) {
     return capitalizedName(element.replace('-', ' '))
   }
   return capitalizedName(element)
 }
 
-export function capitalizedName(sponsor) {
+export function capitalizedName (sponsor) {
   if (sponsor && isNaN(sponsor)) {
     let name = sponsor
     name = name.toLowerCase()
@@ -51,7 +51,7 @@ export function capitalizedName(sponsor) {
   return null
 }
 
-export function calculateTotalVotesBills(bills) {
+export function calculateTotalVotesBills (bills) {
   let totalBills = 0
   if (bills) {
     bills.forEach(bill => totalBills++)
@@ -59,7 +59,7 @@ export function calculateTotalVotesBills(bills) {
   return totalBills
 }
 
-export function getPartyColor(partyName) {
+export function getPartyColor (partyName) {
   switch (partyName) {
     case 'liberal':
       return {
@@ -99,7 +99,7 @@ export function getPartyColor(partyName) {
   }
 }
 
-export function getPortraitColor(partyName) {
+export function getPortraitColor (partyName) {
   switch (partyName) {
     case 'liberal':
       return {
@@ -143,7 +143,7 @@ export function getPortraitColor(partyName) {
         marginBottom: 10,
         width: 50,
         height: 50,
-        border: '3px solid black',
+        border: '3px solid black'
       }
     default:
       return {
@@ -155,7 +155,7 @@ export function getPortraitColor(partyName) {
   }
 }
 
-export async function fetchUserRiding(userEmail) {
+export async function fetchUserRiding (userEmail) {
   return axios
     .get(`/api/users/${userEmail}/getUser`)
     .then(res => {
@@ -166,16 +166,16 @@ export async function fetchUserRiding(userEmail) {
     .catch(console.error)
 }
 
-export async function getAllBillsByHead(head) {
+export async function getAllBillsByHead (head) {
   const res = await axios.get(`/api/bills/${head}/getAllBillsByHead`)
   return res.data.data
 }
 
-export function calcPercent(percent) {
+export function calcPercent (percent) {
   return [percent, 100 - percent]
 }
 
-export async function getPartyData(party) {
+export async function getPartyData (party) {
   return axios
     .get(`/api/parties/${party.toLowerCase()}/getAllPartydata`)
     .then(res => {
