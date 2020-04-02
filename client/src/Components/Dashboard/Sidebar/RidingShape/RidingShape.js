@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { fallbackSvg } from './fallbackSvg'
 import { PARTY_COLORS } from './partyColors'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Grid from '@material-ui/core/Grid'
 
 const mapshaper = require('mapshaper-with-patch')
 
@@ -46,14 +48,36 @@ export function addColorFillToRidingShape (svg, color) {
 
 export default function RidingShape (props) {
   const classes = useStyles()
-  const [svgData, setSvgData] = React.useState('')
+  const [code, setCode] = React.useState(null)
+  useEffect(() =>{
+    if(!code || (code && props.code !== code)) {
+      setCode(props.code)
+      setSvgData(null)
+      setCoordinates(null)
+      setParty(null)
+    }
+  },[code, props.code])
 
+  const [coordinates, setCoordinates] = React.useState(null)
+  useEffect(()=> {
+    if(!coordinates) {
+      setCoordinates(props.ridingShapeCoordinates)
+    }
+  },[code, coordinates, props.ridingShapeCoordinates])
+
+  const [party, setParty] = React.useState(null)
   useEffect(() => {
-    if (props.ridingShapeCoordinates && props.politicalParty) {
-      const thisPartyColor = PARTY_COLORS[props.politicalParty]
+    if(!party || (party && props.politicalParty !== party)) {
+      setParty(props.politicalParty)
+    }
+  }, [party, props.politicalParty])
 
+  const [svgData, setSvgData] = React.useState(null)
+  useEffect(() => {
+    if (coordinates && party && !svgData) {
+      const thisPartyColor = PARTY_COLORS[party]
       // convert geoJSON data to svg shape and set fill color to the party color
-      const input = props.ridingShapeCoordinates
+      const input = coordinates
       const cmd = '-i point.json -o svg-data=* format=SVG'
       mapshaper.applyCommands(cmd, { 'point.json': input }, function (err, out) {
         if (err) {
@@ -76,13 +100,23 @@ export default function RidingShape (props) {
         setSvgData(coloredSvgTestable)
       })
     }
-  }, [props.ridingShapeCoordinates, props.politicalParty])
+  }, [coordinates, party, svgData])
 
   return (
-    <img
-      src={`data:image/svg+xml;utf8,${svgData}`}
-      alt='riding shape'
-      className={classes.customRidingShape}
-    />
+    <div>
+    {svgData ? (
+        <img
+          src={`data:image/svg+xml;utf8,${svgData}`}
+          alt='riding shape'
+          className={classes.customRidingShape}
+        />
+      ) : (
+      <Grid container alignItems='center' justify='center'>
+        <Grid item>
+          <CircularProgress/>
+        </Grid>
+      </Grid>
+      )}
+    </div>
   )
 }
