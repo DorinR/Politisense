@@ -49,26 +49,27 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function CategoryGrid () {
+export default function CategoryGrid (props) {
   const classes = useStyles()
 
-  const [user, setUser] = React.useState(null)
-  useEffect(() => {
-    // eslint-disable-next-line no-undef
-    const user = JSON.parse(localStorage.getItem('user'))
-    setUser(user)
-  }, [])
-
+  // const [user, setUser] = React.useState(null)
+  // useEffect(() => {
+  //   // eslint-disable-next-line no-undef
+  //   const user = JSON.parse(localStorage.getItem('user'))
+  //   setUser(user)
+  // }, [])
+// user has to be sent
+  //representativeData
   const [categoryList, setCategoryList] = React.useState(null)
   useEffect(() => {
     async function getData () {
-      if (user) {
-        const interests = await getUserInterests(user.email)
+      if (props.user) {
+        const interests = await getUserInterests(props.user)
         setCategoryList(interests)
       }
     }
     getData()
-  }, [user])
+  }, [props])
 
   async function getUserInterests (email) {
     return axios
@@ -86,27 +87,27 @@ export default function CategoryGrid () {
     }
   }, [categoryList])
 
-  const [riding, setRiding] = React.useState(null)
-  useEffect(() => {
-    async function getData () {
-      if (user) {
-        const riding = await fetchUserRiding(user.email)
-        setRiding(riding)
-      }
-    }
-    getData()
-  }, [user])
-
-  const [userRepresentative, setUserRepresentative] = React.useState(null)
-  useEffect(() => {
-    async function getData () {
-      if (riding) {
-        const representative = await fetchRepresentative(riding)
-        setUserRepresentative(representative)
-      }
-    }
-    getData()
-  }, [riding])
+  // const [riding, setRiding] = React.useState(null)
+  // useEffect(() => {
+  //   async function getData () {
+  //     if (user) {
+  //       const riding = await fetchUserRiding(user.email)
+  //       setRiding(riding)
+  //     }
+  //   }
+  //   getData()
+  // }, [user])
+  //
+  // const [userRepresentative, setUserRepresentative] = React.useState(null)
+  // useEffect(() => {
+  //   async function getData () {
+  //     if (riding) {
+  //       const representative = await fetchRepresentative(riding)
+  //       setUserRepresentative(representative)
+  //     }
+  //   }
+  //   getData()
+  // }, [riding])
 
   async function fetchRepresentative (riding) {
     return axios
@@ -118,17 +119,17 @@ export default function CategoryGrid () {
       })
       .catch(console.error)
   }
-
-  const [representativeData, setRepresentativeData] = React.useState(null)
-  useEffect(() => {
-    async function getData () {
-      if (userRepresentative) {
-        const representative = await getAllBillsByRep(userRepresentative)
-        setRepresentativeData(representative)
-      }
-    }
-    getData()
-  }, [userRepresentative])
+  // representativeData representativeData
+  // const [representativeData, setRepresentativeData] = React.useState(null)
+  // useEffect(() => {
+  //   async function getData () {
+  //     if (userRepresentative) {
+  //       const representative = await getAllBillsByRep(userRepresentative)
+  //       setRepresentativeData(representative)
+  //     }
+  //   }
+  //   getData()
+  // }, [userRepresentative])
 
   async function getAllBillsByRep (head) {
     return axios
@@ -141,7 +142,7 @@ export default function CategoryGrid () {
       .catch(console.error)
   }
 
-  const [value] = React.useState('')
+  const [value] = React.useState(false)
   const deleteEvent = index => {
     const copyCategoryArray = Object.assign([], categoryList)
     copyCategoryArray.splice(index, 1)
@@ -174,7 +175,7 @@ export default function CategoryGrid () {
   async function updateUserCategory (categoryList) {
     return axios
       .post('/api/users/updateUserCategory', {
-        email: user.email,
+        email: props.user,
         categoryList: categoryList
       })
       .catch(console.error)
@@ -195,7 +196,7 @@ export default function CategoryGrid () {
   return (
     <div className={classes.container}>
       <Grid container spacing={2}>
-        {representativeData && categoryList ? (
+        {props.representativedata && categoryList ? (
           categoryList.map((category, index) => {
             return (
               <Grid item xs={4} key={categoryList[index]}>
@@ -203,8 +204,8 @@ export default function CategoryGrid () {
                   id={index}
                   title={category}
                   delete={deleteEvent}
-                  representative={representativeData}
-                  data={representativeData}
+                  representative={props.representativedata}
+                  data={props.representativedata}
                 />
               </Grid>
             );
@@ -222,7 +223,7 @@ export default function CategoryGrid () {
           </div>
         )}
         {(counter === 0 || counter < 3) &&
-        representativeData &&
+        props.representativedata &&
         categoryList ? (
           <Grid item md={4}>
             <Card className={classes.card}>
@@ -240,7 +241,6 @@ export default function CategoryGrid () {
                     </Typography>
                     <div align="center">
                       <AddIcon
-                        color="white"
                         fontSize="large"
                         style={{ color: "white", fontSize: 100 }}
                       />
@@ -253,6 +253,7 @@ export default function CategoryGrid () {
                     onClose={handleClose}
                     value={value}
                     existedcategories={categoryList}
+                    allcategories ={props.categorylist}
                   />
                 </CardContent>
               </CardActionArea>

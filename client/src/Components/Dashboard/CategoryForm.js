@@ -16,14 +16,16 @@ export function ConfirmationDialogRaw (props) {
   const radioGroupRef = React.useRef(null)
 
   const [categoryList, setCategoryList] = React.useState(null)
-
   React.useEffect(() => {
-    async function getCategoryList () {
-      const categories = await fetchCategories()
-      setCategoryList(categories)
+    // async function getCategoryList () {
+    //   const categories = await fetchCategories()
+    //   setCategoryList(categories)
+    // }
+    // getCategoryList()
+    if(props.allcategories){
+      setCategoryList(props.allcategories)
     }
-    getCategoryList()
-  }, [])
+  }, [props])
 
   React.useEffect(() => {
     if (!open) {
@@ -96,5 +98,4 @@ export function ConfirmationDialogRaw (props) {
 ConfirmationDialogRaw.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  value: PropTypes.string.isRequired
 }

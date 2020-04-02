@@ -18,14 +18,18 @@ import { useTheme } from '@material-ui/core/styles'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import { fetchUserRiding, fetchRepresentative } from '../Dashboard/Utilities/CommonUsedFunctions'
+import {fetchUserRiding, fetchRepresentative, fetchRidingCode} from '../Dashboard/Utilities/CommonUsedFunctions'
 import AppBar from '@material-ui/core/AppBar'
-
+import Topbar from "./Topbar";
+import Avatar from "@material-ui/core/Avatar";
+const drawerWidth = 220
+const drawerWidthXlMode = 250
 const useStyles = makeStyles(theme => ({
   drawer: {
     width: 240,
     backgroundColor: '#1E2125',
-    flexGrow: 1
+    flexGrow: 1,
+    
   },
   drawerXl: {
     width: 300,
@@ -88,6 +92,9 @@ const useStyles = makeStyles(theme => ({
       duration: theme.transitions.duration.enteringScreen
     })
   },
+  shiftContent: {
+    paddingLeft: drawerWidth
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -95,7 +102,7 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     }),
-    marginLeft: -240
+    marginLeft: -drawerWidth
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
@@ -105,7 +112,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 0
   },
   shiftContentXLMode: {
-    paddingLeft: 280
+    paddingLeft: drawerWidthXlMode+10
   },
   contentXlMode: {
     flexGrow: 1,
@@ -115,20 +122,47 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     }),
-    marginLeft: -280
+    marginLeft: -drawerWidthXlMode
+  },
+  toolbar: {
+    paddingTop:theme.spacing(4)
+  },
+  bigAvatar: {
+    marginLeft: theme.spacing(8),
+    width: 100,
+    height: 100,
+    border: '3px solid #00bcd4',
+  },
+  bigAvatarXL: {
+    marginLeft: theme.spacing(10),
+    width: 100,
+    height: 100,
+    border: '3px solid #00bcd4',
   }
 
 }))
-
 const Sidebar = props => {
-  const { open, variant, onClose, onSidebarOpen, className, ...rest } = props
-  const [userRepresentative, setUserRepresentative] = React.useState(null)
+  const classes = useStyles()
+  const theme = useTheme()
   const [riding, setRiding] = useState(null)
   const [user, setUser] = useState(null)
-  const theme = useTheme()
+
   const isxlScreen = useMediaQuery(theme.breakpoints.up('xl'), {
     defaultMatches: true
   })
+  const isDesktop = useMediaQuery(theme.breakpoints.down('lg'), {
+    defaultMatches: true
+  })
+  const mobileVersion = useMediaQuery(theme.breakpoints.down('md'), {
+    defaultMatches: true
+  })
+  const [openSidebar, setOpenSidebar] = useState(true)
+  const handleSidebarOpen = () => {
+    setOpenSidebar(true)
+  }
+  const handleSidebarClose = () => {
+    setOpenSidebar(false)
+  }
   useEffect(() => {
     // eslint-disable-next-line no-undef
     const user = JSON.parse(localStorage.getItem('user'))
@@ -145,16 +179,32 @@ const Sidebar = props => {
     getData()
   }, [user])
 
+  const [data,setData]= useState(null)
   useEffect(() => {
     async function getData () {
       if (riding) {
-        const representative = await fetchRepresentative(riding)
-        setUserRepresentative(representative.name)
+        const promises = await Promise.all([
+          fetchRidingCode(riding),
+          fetchRepresentative(riding)
+        ])
+        const ridingCode = promises[0]
+        const { name, party, start, end,imageUrl } = promises[1]
+        console.log(promises[1])
+        if (name) {
+          setData({
+            end: end,
+            name: name,
+            ridingCode: ridingCode,
+            riding: riding,
+            party: party,
+            start: start,
+            imageUrl:imageUrl
+          })
+        }
       }
     }
     getData()
   }, [riding])
-  const classes = useStyles()
 
   const pages = [
     {
@@ -189,32 +239,48 @@ const Sidebar = props => {
 
     }
   ]
-
   return (
     <div>
+      <Topbar onSidebarOpen={handleSidebarOpen} />
       <Drawer
         anchor='left'
         classes={{ paper: isxlScreen ? classes.drawerXl : classes.drawer }}
-        onClose={onClose}
-        open={open}
-        variant={variant}
+        onClose={handleSidebarClose}
+        open={openSidebar}
+        variant={isxlScreen ? 'persistent' : isDesktop && !mobileVersion ? 'persistent' : 'temporary'}
       >
         <ListItem style={{ paddingTop: '6%' }}>
           <AccountBalanceIcon className={classes.icon} />
           <Typography variant='h6' style={{ color: 'white' }}>Politisense</Typography>
-          {theme.direction === 'ltr' ? <ChevronLeftIcon style={!isxlScreen ? { color: 'white', marginLeft: '20%' } : { color: 'white', marginLeft: '40%' }} onClick={onClose} /> : <ChevronRightIcon />}
+          {theme.direction === 'ltr' ? <ChevronLeftIcon style={!isxlScreen ? { color: 'white', marginLeft: '20%' } : { color: 'white', marginLeft: '40%' }} onClick={handleSidebarClose} /> : <ChevronRightIcon />}
         </ListItem>
-        <AppBar position='fixed' className={clsx(classes.appBar, { [classes.appBarShift]: { open } })} />
+        <AppBar position='fixed' className={clsx(classes.appBar, { [classes.appBarShift]: openSidebar  })} />
         <Divider className={classes.divider1} />
-        <div {...rest} className={clsx(classes.root, className)}>
-          <ListItemAvatar>
-            <RepresentativeImage representativeToLoad={userRepresentative} />
+        <div>
+          <ListItemAvatar style={{ paddingTop: theme.spacing(1)}}>
+            { <Avatar alt={data? data.name:''} src={data?data.imageUrl:''} className={isxlScreen ? classes.bigAvatarXL : classes.bigAvatar} /> }
           </ListItemAvatar>
-          <MpProfile />
+          <MpProfile data={data} />
           <Divider className={classes.divider} />
           <SidebarNav className={classes.nav} pages={pages} />
         </div>
       </Drawer>
+      <div
+        className={clsx({
+          [classes.toolbar]: true,
+          [classes.shiftContent]: isDesktop,
+          [classes.shiftContentXLMode]: isxlScreen
+        })}
+      >
+      <main  className={clsx(classes.content, {
+        [classes.contentShift]: isDesktop && openSidebar,
+        [classes.shiftContentXLMode]: isxlScreen && openSidebar
+      })}>
+        <div>
+        {props.children}
+        </div>
+      </main>
+      </div>
     </div>
   )
 }
@@ -222,7 +288,6 @@ const Sidebar = props => {
 Sidebar.propTypes = {
   className: PropTypes.string,
   onClose: PropTypes.func,
-  open: PropTypes.bool.isRequired,
   variant: PropTypes.string.isRequired
 }
 

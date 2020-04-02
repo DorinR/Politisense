@@ -76,7 +76,7 @@ const IssuedBillsByMP = props => {
             >
                             Sponsored Bills
             </Typography>
-            <Grid item direction='row'>
+            <Grid item>
               <Grid container direction='row' alignItems='center'>
                 <Grid item> <CountUp style={{ fontSize: 26 }} end={props.issuedbills ? totalBillsArray(props.issuedbills) : 0}> </CountUp></Grid>
                 <Grid item><Typography style={{ marginLeft: '5%' }} variant='h5'> {'bills'}</Typography></Grid>

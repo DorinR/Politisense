@@ -174,8 +174,8 @@ export default function CategoryCard (props) {
               <Table className={classes.table} size='small' aria-label='a dense table'>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Bill Name</TableCell>
-                    <TableCell align='right'>Vote</TableCell>
+                    <TableCell>{"Bill Name"}</TableCell>
+                    <TableCell align='right'>{"Vote"}</TableCell>
                   </TableRow>
                 </TableHead>
                 {(rows && rows.length) > 0 ? (
@@ -185,7 +185,7 @@ export default function CategoryCard (props) {
                         <TableCell component='th' scope='row'>
                           <Button color='primary' onClick={() => handleBillClickOpen(row)}><Typography>{row.name}</Typography></Button>
                         </TableCell>
-                        <TableCell align='right'>{row.vote === 'yea' ? <Typography>Yea</Typography> : <Typography>Nay</Typography>}</TableCell>
+                        <TableCell align='right'>{row.vote === 'yea' ? <Typography>{"Yea"}</Typography> : <Typography>{"Nay"}</Typography>}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>) : ''}

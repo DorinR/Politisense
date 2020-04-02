@@ -35,12 +35,21 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     height: '100%',
     padding: theme.spacing(3),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    marginLeft: -drawerWidth
+    overflow: 'auto',
+
+    // transition: theme.transitions.create('margin', {
+    //   easing: theme.transitions.easing.sharp,
+    //   duration: theme.transitions.duration.leavingScreen
+    // }),
+    // marginLeft: -drawerWidth
   },
+  //
+  // content: {
+  //   flexGrow: 1,
+  //   height: '100vh',
+  //   overflow: 'auto',
+  // }
+
   contentShift: {
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
@@ -65,24 +74,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const App = () => {
-  const classes = useStyles()
-  const theme = useTheme()
-  const isxlScreen = useMediaQuery(theme.breakpoints.up('xl'), {
-    defaultMatches: true
-  })
-  const isDesktop = useMediaQuery(theme.breakpoints.down('lg'), {
-    defaultMatches: true
-  })
-  const mobileVersion = useMediaQuery(theme.breakpoints.down('md'), {
-    defaultMatches: true
-  })
-  const [openSidebar, setOpenSidebar] = useState(true)
-  const handleSidebarOpen = () => {
-    setOpenSidebar(true)
-  }
-  const handleSidebarClose = () => {
-    setOpenSidebar(false)
-  }
 
   const LoginContainer = () => (
     <div className='container'>
@@ -93,26 +84,26 @@ const App = () => {
   )
   const DefaultContainer = () => (
     <div>
-      <div
-        className={clsx({
-          [classes.root]: true,
-          [classes.shiftContent]: isDesktop,
-          [classes.shiftContentXLMode]: isxlScreen
-        })}
-      >
+      {/*<div*/}
+      {/*  // className={clsx({*/}
+      {/*  //   [classes.root]: true,*/}
+      {/*  //   [classes.shiftContent]: isDesktop,*/}
+      {/*  //   [classes.shiftContentXLMode]: isxlScreen*/}
+      {/*  // })}*/}
+      {/*>*/}
         <Sidebar
-          onClose={handleSidebarClose}
-          open={openSidebar}
-          variant={isxlScreen ? 'persistent' : isDesktop && !mobileVersion ? 'persistent' : 'temporary'}
-          onSidebarOpen={handleSidebarOpen}
-        />
-        <Topbar onSidebarOpen={handleSidebarOpen} />
+          // onClose={handleSidebarClose}
+          // open={openSidebar}
+          // variant={isxlScreen ? 'persistent' : isDesktop && !mobileVersion ? 'persistent' : 'temporary'}
+          // onSidebarOpen={handleSidebarOpen}
+        >
+        {/*<Topbar onSidebarOpen={handleSidebarOpen} />*/}
 
         <div
-          className={clsx(classes.content, {
-            [classes.contentShift]: isDesktop && openSidebar,
-            [classes.shiftContentXLMode]: isxlScreen && openSidebar
-          })}
+          // className={clsx(classes.content, {
+          //   [classes.contentShift]: isDesktop && openSidebar,
+          //   [classes.shiftContentXLMode]: isxlScreen && openSidebar
+          // })}
         >
           <Route exact path='/' render={() => <Redirect to='/login' />} />
           <PrivateRoute path='/logout' component={Logout} />
@@ -123,8 +114,9 @@ const App = () => {
           <PrivateRoute path='/compare' component={CompareContainer} />
           <PrivateRoute path='/performance' component={IssuedBillsByCategory} />
         </div>
+        </Sidebar>
       </div>
-    </div>
+    // </div>
   )
 
   const PrivateRoute = ({ component: Component, ...rest }) => (

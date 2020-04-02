@@ -52,14 +52,16 @@ export default function CategoryDashboard (props) {
           }}
           title="MP's Voting Record Based on your interests "
           action={
-            <IconButton aria-label='settings'>
-              <HelpOutlineIcon onClick={handleClickOpen} />
+            <IconButton aria-label='settings' onClick={handleClickOpen}>
+              <HelpOutlineIcon />
             </IconButton>
           }
         />
         <Divider />
         <CardContent>
-          <CategoryGrid />
+          {props.user && props.representativedata ?
+              <CategoryGrid user = {props.user } representativedata = { props.representativedata} categorylist = {props.categorylist}/> : "" }
+
         </CardContent>
         <DescriptionDialog
           open={open}

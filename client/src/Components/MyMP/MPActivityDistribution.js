@@ -81,8 +81,8 @@ const MPActivityDistribution = props => {
           title: classes.title
         }}
         action={
-          <IconButton aria-label='settings'>
-            <HelpOutlineIcon onClick={handleClickOpen} />
+          <IconButton aria-label='settings' onClick={handleClickOpen}>
+            <HelpOutlineIcon/>
           </IconButton>
         }
         title="MP's Activity Distribution"

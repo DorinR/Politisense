@@ -71,39 +71,18 @@ const MpProfile = props => {
   const [ridingCode, setRidingCode] = useState('')
   const [data, setData] = useState({})
 
-  useEffect(() => {
-    async function getData () {
-      // eslint-disable-next-line
-            const user = JSON.parse(localStorage.getItem('user'))
-      const riding = await fetchUserRiding(user.email)
-      const promises = await Promise.all([
-        fetchRidingCode(riding),
-        fetchRepresentative(riding)
-      ])
-      const ridingCode = promises[0]
-      const { name, party, start, end } = promises[1]
-      if (name) {
-        setData({
-          end: end,
-          name: name,
-          ridingCode: ridingCode,
-          riding: riding,
-          party: party,
-          start: start
-        })
-      }
-    }
-    getData()
-  }, [])
 
   useEffect(() => {
-    setName(data.name)
-    setPoliticalParty(data.party)
-    setRiding(data.riding)
-    setRidingCode(data.ridingCode)
-    setStartDate(data.start)
-    setEndDate(data.end)
-  }, [data])
+    if(props.data){
+      setName(props.data.name)
+      setPoliticalParty(props.data.party)
+      setRiding(props.data.riding)
+      setRidingCode(props.data.ridingCode)
+      setStartDate(props.data.start)
+      setEndDate(props.data.end)
+    }
+
+  }, [props.data])
 
   return (
     <div
@@ -134,7 +113,7 @@ const MpProfile = props => {
         : (<Typography className={classes.fontColorTypography} variant='caption'>{'Political Party: ' + capitalizedName(politicalParty)}</Typography>)
         : (<Typography className={classes.fontColorTypography} variant='caption'>Political Party: </Typography>)}
 
-      <Typography className={classes.fontColorTypography} variant='caption'>{'Total Population: '} {riding ? (<RidingPopulation riding={riding} />) : ''}</Typography>
+      <Typography className={classes.fontColorTypography} variant='caption'>{'Total Population: '} {props.riding ? (<RidingPopulation riding={riding} />) : ''}</Typography>
       <Typography className={classes.fontColorTypography} variant='caption'>{'Member Since: '} {startDate ? loadingTextdata({ fromDate: startDate, toDate: endDate }) : ''}</Typography>
       <div className={classes.shapeContainer}>
         <RidingShapeContainer

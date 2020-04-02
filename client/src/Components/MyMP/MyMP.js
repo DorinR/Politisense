@@ -28,7 +28,6 @@ export default function MyMP () {
   const classes = useStyles()
   const [user, setUser] = useState(null)
   const [barPieRows, setBarPieRows] = React.useState([])
-
   const [categoryList, setCategoryList] = React.useState(null)
   useEffect(() => {
     async function getData () {
@@ -266,8 +265,7 @@ export default function MyMP () {
                 md={12}
                 xl={12}
                 xs={12}
-              >
-                <CategoryDashboard />
+              >{user && representativeData && categoryList? <CategoryDashboard user={user.email} representativedata={representativeData} categorylist={categoryList}/> : ""}
               </Grid>
               <Grid
                 item

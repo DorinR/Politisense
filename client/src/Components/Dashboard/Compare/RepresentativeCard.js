@@ -97,7 +97,6 @@ export default function RepresentativeCard(props) {
       getData(name)
     }
   }, [name, riding, politicalParty, yearElected, issuedBills])
-
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} align='center'>
