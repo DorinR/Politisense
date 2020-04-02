@@ -12,6 +12,7 @@ import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Alert from '@material-ui/lab/Alert'
 import { getIpPostalCode } from './GetIpAddress'
 
@@ -94,24 +95,24 @@ export async function fetchUserData(userEmail) {
     return result
 }
 
-export async function registerVote() {
-    await axios.post(`http://localhost:5000/api/voting/vote`,
-        {
-            body: {
-                user: { email: userEmail },
-                activity: { description: description, title: title },
-                vote: vote
-            }
-        })
-        .then(res => {
-            if (res.data.success) {
-                const vote = res.data.data
-                result = vote
-            }
-        })
-        .catch(err => console.log(err))
-    return result
-}
+// export async function registerVote(userEmail, description, title, vote) {
+//     await axios.post(`http://localhost:5000/api/voting/vote`,
+//         {
+//             body: {
+//                 user: { email: userEmail },
+//                 activity: { description: description, title: title },
+//                 vote: vote
+//             }
+//         })
+//         .then(res => {
+//             if (res.data.success) {
+//                 const vote = res.data.data
+//                 result = vote
+//             }
+//         })
+//         .catch(err => console.log(err))
+//     return result
+// }
 
 export default function Voting() {
     const classes = useStyles()
@@ -120,6 +121,11 @@ export default function Voting() {
     const [storagePostalCode, setStoragePostalCode] = useState('')
     const [ipPostalCode, setIpPostalCode] = useState('')
     const preventDefault = (event) => event.preventDefault()
+
+    const registerVoteTest = (event) => {
+        event.preventDefault()
+        alert("Clicked!!")
+    }
 
     useEffect(() => {
         async function getData() {
@@ -169,10 +175,10 @@ export default function Voting() {
                                     it cannot be undone!
                     </Alert> : ''}
                                 {storagePostalCode === ipPostalCode
-                                    ? <form noValidate autoComplete='off'>
-                                        <Button className={classes.for}>For</Button>
-                                        <Button className={classes.against}>Against</Button>
-                                    </form> : ''}
+                                    ? <ButtonGroup>
+                                        <Button value='yes' className={classes.for} onClick={registerVoteTest}>For</Button>
+                                        <Button value='no' className={classes.against}>Against</Button>
+                                    </ButtonGroup> : ''}
                             </CardContent>
                         </Card>
                     </ListItem>
