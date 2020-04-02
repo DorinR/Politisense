@@ -24,6 +24,7 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
 import MapIcon from '@material-ui/icons/Map'
 import AssignmentIcon from '@material-ui/icons/Assignment'
+
 const useStyles = makeStyles({
   card: {
     width: 350
@@ -57,6 +58,7 @@ export default function RepresentativeCard(props) {
   const [ridingCode, setRidingCode] = useState('')
   const [skeleton] = useState([1, 2, 3, 4, 5])
   const [issuedBills, setIssuedBills] = useState(0)
+  const [representative, setRepresentative] = useState(null)
 
   const updateNameFromSwitcher = newName => {
     setName(newName)
@@ -79,14 +81,15 @@ export default function RepresentativeCard(props) {
       }
       async function getData(name) {
         // eslint-disable-next-line
-        const riding = await getRepInfo(name)
+        const rep = await getRepInfo(name)
+        setRepresentative(rep)
         const bills = await getAllBillsByHead(name)
         const total = await calculateTotalVotesBills(bills)
         setTotalBills(total)
-        setRiding(riding.riding)
-        const test = riding.riding
-        setYearElected(riding.yearElected)
-        setPoliticalParty(riding.politicalParty)
+        setRiding(representative.riding)
+        const test = representative.riding
+        setYearElected(representative.yearElected)
+        setPoliticalParty(representative.politicalParty)
         const ridingCode = await fetchRidingCode(test)
         setRidingCode(ridingCode)
         const issuedBillsByHead = await getIssuedBillsByHead(name)
@@ -108,10 +111,12 @@ export default function RepresentativeCard(props) {
           <CardContent>
             <Grid container justify='center'>
               <Grid item xs={12}>
-                <RepresentativeImage
-                  align='center'
-                  representativeToLoad={name}
-                />
+                {representative ? (
+                  <RepresentativeImage
+                    align='center'
+                    representative={representative}
+                  />
+                ) : null}
               </Grid>
             </Grid>
             {ridingCode ? (

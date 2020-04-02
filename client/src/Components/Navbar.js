@@ -149,7 +149,6 @@ export async function fetchRepresentative (riding) {
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
       if (res.data.success) {
-        console.log(res.data.data)
         return res.data.data
       }
     })
@@ -350,13 +349,7 @@ export default function MiniDrawer ({ children }) {
               onChange={riding => { setRiding(riding) }}
             />
           </ListItem>
-        ) : (
-          <Grid container alignItems='center' justify='center'>
-            <Grid item>
-              <CircularProgress/>
-            </Grid>
-          </Grid>
-        )}
+        ) : null}
         <Divider />
         <List>
           <Link to='/logout' className={classes.routerLink}>

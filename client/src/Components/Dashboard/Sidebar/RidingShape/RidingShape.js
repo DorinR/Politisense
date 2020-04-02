@@ -48,7 +48,6 @@ export function addColorFillToRidingShape (svg, color) {
 
 export default function RidingShape (props) {
   const classes = useStyles()
-  console.log(props)
   const [code, setCode] = React.useState(null)
   useEffect(() =>{
     if(!code || (code && props.code !== code)) {
@@ -77,7 +76,6 @@ export default function RidingShape (props) {
   useEffect(() => {
     if (coordinates && party && !svgData) {
       const thisPartyColor = PARTY_COLORS[party]
-      console.log(coordinates)
       // convert geoJSON data to svg shape and set fill color to the party color
       const input = coordinates
       const cmd = '-i point.json -o svg-data=* format=SVG'

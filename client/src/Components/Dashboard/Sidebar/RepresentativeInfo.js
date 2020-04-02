@@ -47,7 +47,6 @@ export default function RepresentativeInfo (props) {
     async function getData() {
       if(props.riding) {
         const code = await fetchRidingCode(props.riding)
-        console.log(code)
         setRidingCode(code)
       }
     }
@@ -82,7 +81,7 @@ export default function RepresentativeInfo (props) {
               onChange={props.onChange}
             />
           ) : (
-            <Grid container alignItems='center'>
+            <Grid container alignItems='center' justify='center'>
               <Grid item>
                 <CircularProgress/>
               </Grid>
