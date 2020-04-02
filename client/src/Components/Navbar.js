@@ -27,6 +27,8 @@ import Box from '@material-ui/core/Box'
 import axios from 'axios'
 import politisenseLogo from '../politisenseLogo.png'
 import Button from '@material-ui/core/Button'
+import { CircularProgress } from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
 
 const drawerWidth = 330
 
@@ -147,7 +149,8 @@ export async function fetchRepresentative (riding) {
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
       if (res.data.success) {
-        return res.data.data.name
+        console.log(res.data.data)
+        return res.data.data
       }
     })
     .catch(console.error)
@@ -322,17 +325,38 @@ export default function MiniDrawer ({ children }) {
           <ListItemIcon>
             <PersonIcon className={classes.politisenseIcon} />
           </ListItemIcon>
-          {open ? (
+          {open && userRepresentative && user && riding? (
             <ListItemAvatar>
-              <RepresentativeImage representativeToLoad={userRepresentative} />
+              <RepresentativeImage
+                representative={userRepresentative}
+                user={user}
+                riding={riding}
+              />
             </ListItemAvatar>
-          ) : null}
+          ) : (
+            <Grid container alignItems='center' justify='center'>
+              <Grid item>
+                <CircularProgress/>
+              </Grid>
+            </Grid>
+          )}
         </ListItem>
-        {open ? (
+        {open && riding && user && userRepresentative ? (
           <ListItem>
-            <RepresentativeInfo representativeToLoad={userRepresentative} />
+            <RepresentativeInfo
+              representative={userRepresentative}
+              user={user}
+              riding={riding}
+              onChange={riding => { setRiding(riding) }}
+            />
           </ListItem>
-        ) : null}
+        ) : (
+          <Grid container alignItems='center' justify='center'>
+            <Grid item>
+              <CircularProgress/>
+            </Grid>
+          </Grid>
+        )}
         <Divider />
         <List>
           <Link to='/logout' className={classes.routerLink}>
