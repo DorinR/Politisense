@@ -1,5 +1,7 @@
 import { Authentication as Auth, Firestore } from '@firestore'
 import represent from 'represent'
+const nodemailer = require('nodemailer')
+import crypto from 'crypto'
 
 exports.checkIfUserExists = (req, res) => {
   const email = req.body.email
@@ -25,6 +27,72 @@ exports.checkIfUserExists = (req, res) => {
       }
     })
     .catch(console.error)
+}
+
+exports.generateResetLink = (req, res) => {
+    const token = crypto.randomBytes(20).toString('hex')
+    const email = req.body.email
+    new Firestore().User()
+        .where('email', '==', email)
+        .update({resetPasswordToken: token, resetPasswordExpires: Date.now()+ 3600000})
+        .then(/*process the query result*/)
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user:`politisenseapp@gmail.com`,
+            pass: `abc123$$$`
+        }
+    })
+    const mailOptions = {
+        from: 'politisense@gmail.com',
+        to: email,
+        subject: 'Link to password reset',
+        text:   `http://localhost:3000/reset/${token}`
+    }
+    transporter.sendMail(mailOptions,(err,response) => {
+        if(err){
+            console.log(err)
+        } else {
+            res.json({
+                success: true,
+                data: 'email sent'
+            })
+        }
+    })
+}
+
+exports.checkTokenValid = (req, res) => {
+    const token = req.body.token
+    const db = new Firestore()
+    let user = {}
+    db.User()
+        .where('resetPasswordToken', '==', token)
+        .select()
+        .then(snapshot => {
+            if (snapshot.empty || snapshot.size < 1) {
+                res.json({
+                    success: false,
+                    data: {}
+                })
+            } else {
+                snapshot.forEach(doc => {
+                    user = doc.data()
+                })
+                console.log('exp: ' + user.resetPasswordExpires + ' ' + 'now: ' + Date.now())
+                if(user.resetPasswordExpires > Date.now()){
+                    res.json({
+                        success: true,
+                        data: user
+                    })
+                } else{
+                    res.json({
+                        success: false,
+                        data: user
+                    })
+                }
+            }
+        })
+        .catch(console.error)
 }
 
 exports.getUserInterests = (req, res) => {
@@ -140,6 +208,36 @@ exports.getUserByEmail = (req, res) => {
       })
       console.error(err)
     })
+}
+
+exports.getEmailbyToken = (req, res) => {
+    const userEmail = req.params.userEmail
+    const db = new Firestore()
+    db.User()
+        .where('email', '==', userEmail)
+        .select()
+        .then(snapshot => {
+            if (snapshot.empty) {
+                res.status(404).json({
+                    message: 'user not found',
+                    success: false
+                })
+            } else {
+                snapshot.forEach(doc => {
+                    res.json({
+                        success: true,
+                        data: doc.data()
+                    })
+                })
+            }
+        })
+        .catch(err => {
+            res.status(404).json({
+                message: 'UserController.js',
+                success: false
+            })
+            console.error(err)
+        })
 }
 
 exports.updateUser = (req, res) => {

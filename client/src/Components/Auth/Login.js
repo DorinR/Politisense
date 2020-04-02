@@ -234,7 +234,7 @@ export default function Login(props) {
                   <Grid item xs>
                     <Link
                       variant='body2'
-                      to='/signup'
+                      to='/reset'
                       className={classes.routerLink}>
                       Forgot password?
                     </Link>

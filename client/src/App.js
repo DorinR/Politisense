@@ -9,6 +9,8 @@ import {
 } from 'react-router-dom'
 import Login from './Components/Auth/Login'
 import SignUp from './Components/Auth/SignUp'
+import Reset from './Components/Auth/Reset'
+import ResetPW from './Components/Auth/ResetPW'
 import Navbar from './Components/Navbar'
 import Logout from './Components/Logout'
 import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
@@ -25,6 +27,8 @@ const App = () => {
     <div className='container'>
       <Route exact path='/' render={() => <Redirect to='/login' />} />
       <Route path='/signup' component={SignUp} />
+      <Route exact path='/reset' component={Reset} />
+      <Route wxact path='/reset/:token' component={ResetPW} />
       <Route path='/login' component={Login} />
     </div>
   )
@@ -63,6 +67,8 @@ const App = () => {
       <Switch>
         <Route exact path='/(login)' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
+        <Route exact path='/reset' component={LoginContainer} />
+        <Route exact path='/reset/:token' component={LoginContainer} />
         <Route exact path='/question' component={Questionnaire} />
         <Route component={DefaultContainer} />
       </Switch>
