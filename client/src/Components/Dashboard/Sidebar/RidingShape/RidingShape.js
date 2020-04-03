@@ -49,25 +49,25 @@ export function addColorFillToRidingShape (svg, color) {
 export default function RidingShape (props) {
   const classes = useStyles()
   const [code, setCode] = React.useState(null)
-  useEffect(() =>{
-    if(!code || (code && props.code !== code)) {
+  useEffect(() => {
+    if (!code || (code && props.code !== code)) {
       setCode(props.code)
       setSvgData(null)
       setCoordinates(null)
       setParty(null)
     }
-  },[code, props.code])
+  }, [code, props.code])
 
   const [coordinates, setCoordinates] = React.useState(null)
-  useEffect(()=> {
-    if(!coordinates) {
+  useEffect(() => {
+    if (!coordinates) {
       setCoordinates(props.ridingShapeCoordinates)
     }
-  },[code, coordinates, props.ridingShapeCoordinates])
+  }, [code, coordinates, props.ridingShapeCoordinates])
 
   const [party, setParty] = React.useState(null)
   useEffect(() => {
-    if(!party || (party && props.politicalParty !== party)) {
+    if (!party || (party && props.politicalParty !== party)) {
       setParty(props.politicalParty)
     }
   }, [party, props.politicalParty])
@@ -104,18 +104,18 @@ export default function RidingShape (props) {
 
   return (
     <div>
-    {svgData ? (
+      {svgData ? (
         <img
           src={`data:image/svg+xml;utf8,${svgData}`}
           alt='riding shape'
           className={classes.customRidingShape}
         />
       ) : (
-      <Grid container alignItems='center' justify='center'>
-        <Grid item>
-          <CircularProgress/>
+        <Grid container alignItems='center' justify='center'>
+          <Grid item>
+            <CircularProgress />
+          </Grid>
         </Grid>
-      </Grid>
       )}
     </div>
   )

@@ -20,10 +20,10 @@ export async function fetchRidingShape (ridingCode) {
 export default function RidingShapeContainer (props) {
   const [ridingCode, setRidingCode] = useState(null)
   useEffect(() => {
-    if(props.ridingCode && props.ridingCode !== ridingCode) {
+    if (props.ridingCode && props.ridingCode !== ridingCode) {
       setRidingCode(props.ridingCode)
     }
-  },[ridingCode, props.ridingCode])
+  }, [ridingCode, props.ridingCode])
 
   const [ridingShape, setRidingShape] = useState(null)
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function RidingShapeContainer (props) {
         setRidingShape(ridingShape)
       }
     }
-      getData()
+    getData()
   }, [ridingCode])
 
   return (
@@ -45,10 +45,10 @@ export default function RidingShapeContainer (props) {
           politicalParty={props.politicalParty}
           code={ridingCode}
         />
-        ) : (
+      ) : (
         <Grid container alignItems='center' justify='center'>
           <Grid item>
-            <CircularProgress/>
+            <CircularProgress />
           </Grid>
         </Grid>
       )}

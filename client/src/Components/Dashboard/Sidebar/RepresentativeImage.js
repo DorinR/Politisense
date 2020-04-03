@@ -36,11 +36,11 @@ const useStyles = makeStyles(theme => ({
 
 export default function RepresentativeImage (props) {
   const classes = useStyles()
-  return(
-  <div>
-    {props.representative ? (
-    <Avatar alt={props.representative.name} src={props.representative.imageUrl} className={classes.bigAvatar} />
-  ) : null}
-  </div>
-)
+  return (
+    <div>
+      {props.representative ? (
+        <Avatar alt={props.representative.name} src={props.representative.imageUrl} className={classes.bigAvatar} />
+      ) : null}
+    </div>
+  )
 }

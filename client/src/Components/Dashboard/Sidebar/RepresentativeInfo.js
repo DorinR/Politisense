@@ -44,8 +44,8 @@ export default function RepresentativeInfo (props) {
 
   const [ridingCode, setRidingCode] = useState(null)
   useEffect(() => {
-    async function getData() {
-      if(props.riding) {
+    async function getData () {
+      if (props.riding) {
         const code = await fetchRidingCode(props.riding)
         setRidingCode(code)
       }
@@ -83,7 +83,7 @@ export default function RepresentativeInfo (props) {
           ) : (
             <Grid container alignItems='center' justify='center'>
               <Grid item>
-                <CircularProgress/>
+                <CircularProgress />
               </Grid>
             </Grid>
           )}
@@ -96,7 +96,7 @@ export default function RepresentativeInfo (props) {
           ) : (
             <Grid container alignItems='center' justify='center'>
               <Grid item>
-                <CircularProgress/>
+                <CircularProgress />
               </Grid>
             </Grid>
           )}
@@ -114,7 +114,7 @@ export default function RepresentativeInfo (props) {
           ) : (
             <Grid container alignItems='center' justify='center'>
               <Grid item>
-                <CircularProgress/>
+                <CircularProgress />
               </Grid>
             </Grid>
           )}

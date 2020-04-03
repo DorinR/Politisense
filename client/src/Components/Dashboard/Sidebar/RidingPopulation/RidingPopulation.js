@@ -28,10 +28,10 @@ export default function RidingPopulation (props) {
 
   return (
     <span>
-    {population ? (
+      {population ? (
         <span>{population}</span>
       ) : (
-      <span><LinearProgress/></span>
+        <span><LinearProgress /></span>
       )}
     </span>
   )

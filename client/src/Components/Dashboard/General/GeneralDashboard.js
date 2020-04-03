@@ -81,8 +81,6 @@ export function getLink (str) {
   return 'https://pm.gc.ca/en/cabinet/right-honourable-' + nameArr[0] + '-' + nameArr[nameArr.length - 1]
 }
 
-
-
 export default function GeneralDashboard () {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
@@ -121,7 +119,7 @@ export default function GeneralDashboard () {
             result[i].description = [res.data.data[i].fromDate, res.data.data[i].riding, 'https://pm.gc.ca/en/cabinet/honourable' + linkName]
 
             result[i].id = res.data.data[i].title
-            result[i].data =res.data.data[i]
+            result[i].data = res.data.data[i]
           }
         }
         return result
@@ -301,7 +299,7 @@ export default function GeneralDashboard () {
               ) : (
                 <Grid container alignItems='center' justify='center'>
                   <Grid item>
-                    <CircularProgress/>
+                    <CircularProgress />
                   </Grid>
                 </Grid>
               )}

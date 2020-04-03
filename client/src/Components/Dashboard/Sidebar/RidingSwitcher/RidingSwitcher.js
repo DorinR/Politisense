@@ -57,8 +57,8 @@ async function fetchAllRepresentatives () {
 export function getAllRidings (representatives) {
   return representatives
     .map(rep => {
-    return rep.riding.replace(/\u2013|\u2014/g, '-')
-  })
+      return rep.riding.replace(/\u2013|\u2014/g, '-')
+    })
     .sort()
 }
 
@@ -88,7 +88,7 @@ export default function RidingSwitcher (props) {
   const [representatives, setRepresentatives] = React.useState(null)
   useEffect(() => {
     async function getData () {
-      if(!representatives) {
+      if (!representatives) {
         const reps = await fetchAllRepresentatives()
         setRepresentatives(reps)
       }
@@ -98,19 +98,17 @@ export default function RidingSwitcher (props) {
 
   const [ridings, setRidings] = React.useState(null)
   useEffect(() => {
-    if(representatives && !ridings) {
+    if (representatives && !ridings) {
       const allRidings = getAllRidings(representatives)
       setRidings(allRidings)
     }
-  },[representatives, ridings])
-
+  }, [representatives, ridings])
 
   const handleChange = event => {
     updateUserRiding(props.user.email, event.target.value)
-      .then((resp)=> {
+      .then((resp) => {
         props.onChange(event.target.value)
       })
-
   }
 
   return (
@@ -137,7 +135,7 @@ export default function RidingSwitcher (props) {
       ) : (
         <Grid container alignItems='center' justify='center'>
           <Grid item>
-            <CircularProgress/>
+            <CircularProgress />
           </Grid>
         </Grid>
       )}

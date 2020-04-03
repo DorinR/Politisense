@@ -324,7 +324,7 @@ export default function MiniDrawer ({ children }) {
           <ListItemIcon>
             <PersonIcon className={classes.politisenseIcon} />
           </ListItemIcon>
-          {open && userRepresentative && user && riding? (
+          {open && userRepresentative && user && riding ? (
             <ListItemAvatar>
               <RepresentativeImage
                 representative={userRepresentative}
@@ -335,7 +335,7 @@ export default function MiniDrawer ({ children }) {
           ) : (
             <Grid container alignItems='center' justify='center'>
               <Grid item>
-                <CircularProgress/>
+                <CircularProgress />
               </Grid>
             </Grid>
           )}
