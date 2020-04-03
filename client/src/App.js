@@ -47,9 +47,8 @@ const App = () => {
       {...rest}
       render={(
         props
-      ) => // eslint-disable-next-line
-          localStorage.getItem('user') ? (<Component {...props} />) : (<Redirect to='/login' />)}
-    />
+      ) =>// eslint-disable-next-line
+        localStorage.getItem('user') ? (<Component {...props} />) : (<Redirect to='/login' />)}/>
   )
 
   return (
