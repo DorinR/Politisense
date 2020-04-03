@@ -143,16 +143,6 @@ module.exports = {
     return RidingController.getRidingByRidingCode(req, res)
   },
 
-  // Map support data
-  getMapSupportData: function (req, res) {
-    return MapSupportDataController.getMapSupportData(req, res)
-  },
-
-  getRidingByRidingCode: function (req, res) {
-    return RidingController.getRidingByRidingCode(req, res)
-  },
-
-  // Map support data
   getMapSupportData: function (req, res) {
     return MapSupportDataController.getMapSupportData(req, res)
   },
