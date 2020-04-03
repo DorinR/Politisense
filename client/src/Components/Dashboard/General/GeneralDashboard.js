@@ -1,3 +1,4 @@
+/* eslint-env react */
 import React, { useEffect } from 'react'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
@@ -7,20 +8,17 @@ import Typography from '@material-ui/core/Typography'
 import Link from '@material-ui/core/Link'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
-import HelpIcon from '@material-ui/icons/Help'
-import Dialog from '@material-ui/core/Dialog'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
 import Slide from '@material-ui/core/Slide'
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
 import CardContent from '@material-ui/core/CardContent'
 import 'typeface-roboto'
+// eslint-disable-next-line
+import HelpIcon from '@material-ui/icons/Help'
 import RepresentativeImage from '../Sidebar/RepresentativeImage'
 import MinisterHelpDialog from './MinisterHelpDialog'
 import TextField from '@material-ui/core/TextField'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import axios from 'axios'
+import SeatingPlan from './SeatingPlan'
 
 const capitalize = require('capitalize')
 
@@ -227,49 +225,18 @@ export default function GeneralDashboard () {
 
   return (
     <Grid>
-      {ministers && ministers.length > 0 && parties && parties.length
-        ? <div>
+      {ministers && ministers.length > 0 && parties && parties.length > 0 ? (
+        <div>
           <CssBaseline />
           <Container maxWidth='sm' component='main' className={classes.content}>
             <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
             Your Government
             </Typography>
           </Container>
-          <Container maxWidth='md' component='main'>
-            <Grid container>
-              <Grid item xs={4}>
-                <Typography variant='h5' color='textPrimary'>
-                Current Government
-                </Typography>
-                <Typography variant='h4' color='textPrimary'>
-                  <span style={{ fontWeight: 'bold', color: parties.current.color }}>{titleCase(parties.current.name)} {parties.status} </span><HelpIcon className={classes.help} color='primary' onClick={handleClickOpen} />
-                </Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant='h5' color='textPrimary' gutterBottom>
-                  Seats in Parliament
-                </Typography>
-                <Grid container>
-                  <Grid item xs={9}>
-                    {parties.map((party) =>
-                      Array.apply(null, { length: party.proportionalSeats }).map((e, i) => (
-                        <span key={i}><FiberManualRecordIcon style={{ fontSize: 30, color: party.color }} /></span>))
-                    )}
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant='body2' color='textPrimary'>
-                      <span style={{ color: '#43D0C4' }}>Total</span> 338
-                    </Typography>
-                    {parties.map((party) =>
-                      <Typography key={party.name} variant='body2' color='textPrimary'>
-                        <span style={{ color: party.color, fontWeight: 'bold' }}>{capitalize.words(party.name)}</span> {party.seats}
-                      </Typography>
-                    )}
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Container>
+          <SeatingPlan
+            partiesToUse={parties}
+            classes={classes}
+          />
           <Container className={classes.prime}>
             <Card>
               <CardHeader
@@ -305,7 +272,6 @@ export default function GeneralDashboard () {
               )}
             </Card>
           </Container>
-          {/* eslint-disable */}
       <Container>
         <TextField label='Filter by Ministry' className={classes.search} variant='outlined' onChange={handleFilterChange} color='primary' />
         <Grid container spacing={5} alignItems='flex-end'>
@@ -355,30 +321,6 @@ export default function GeneralDashboard () {
             <CircularProgress/>
           </div>}
       <MinisterHelpDialog ministry={currentMinistry} open={ministerOpen} onClose={handleMinisterClose} transition={Transition} />
-      <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        onClose={handleClose}
-      >
-        <DialogTitle>What is a {parties['status']} government?</DialogTitle>
-        <DialogContent>
-          {parties['status'] === 'Minority' ?
-              <DialogContentText>
-                In Canada's parliamentary system of responsible government, minority governments occur when no party has a majority of seats in the legislature.
-                Typically, but not necessarily, the party with a plurality of seats forms the government.
-                In a minority situation, governments must rely on the support of other parties to stay in power, providing less stability than a majority government.
-                In Canada, political parties rarely form official coalition governments to form a majority.
-              </DialogContentText>
-              :
-              <DialogContentText>
-                A majority government refers to one or multiple governing parties that hold an absolute majority of seats in legislature.
-                This is as opposed to a minority government, where the largest party in a legislature only has a plurality of seats.
-                A majority government is usually assured of having its legislation passed and rarely, if ever, has to fear being defeated in parliament, a state
-                also known as a working majority. In contrast, a minority government must constantly bargain for support from other parties in order to pass
-                legislation and avoid being defeated on motions of no confidence.
-              </DialogContentText>}
-        </DialogContent>
-      </Dialog>
     </Grid>
   )
 }
