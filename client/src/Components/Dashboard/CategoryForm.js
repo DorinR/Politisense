@@ -8,26 +8,24 @@ import Dialog from '@material-ui/core/Dialog'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import Radio from '@material-ui/core/Radio'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import { fetchCategories, formattingCategory } from './Utilities/CommonUsedFunctions'
+import { formattingCategory } from './Utilities/CommonUsedFunctions'
 
 export function ConfirmationDialogRaw (props) {
   const { onClose, value: valueProp, open, ...other } = props
   const [value, setValue] = React.useState(valueProp)
   const radioGroupRef = React.useRef(null)
-
   const [categoryList, setCategoryList] = React.useState(null)
+
   React.useEffect(() => {
-    // async function getCategoryList () {
-    //   const categories = await fetchCategories()
-    //   setCategoryList(categories)
-    // }
-    // getCategoryList()
-    if(props.allcategories){
+    if (props.allcategories) {
       setCategoryList(props.allcategories)
     }
   }, [props])
 
   React.useEffect(() => {
+    const removalExistedCategoriesFromOptions = (existedCategories) => {
+      setOptions(categoryList.filter((el) => !existedCategories.includes(el)))
+    }
     if (!open) {
       setValue(valueProp)
     }
@@ -37,9 +35,6 @@ export function ConfirmationDialogRaw (props) {
   }, [valueProp, open, props.existedcategories, categoryList])
 
   const [options, setOptions] = React.useState(null)
-  const removalExistedCategoriesFromOptions = (existedCategories) => {
-    setOptions(categoryList.filter((el) => !existedCategories.includes(el)))
-  }
 
   const handleEntering = () => {
     if (radioGroupRef.current != null) {
@@ -97,5 +92,5 @@ export function ConfirmationDialogRaw (props) {
 
 ConfirmationDialogRaw.propTypes = {
   onClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
+  open: PropTypes.bool.isRequired
 }

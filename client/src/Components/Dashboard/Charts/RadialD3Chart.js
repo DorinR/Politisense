@@ -99,6 +99,7 @@ export default class RadialD3Chart extends Component {
                 startAngle: r.startAngle + 0.05,
                 endAngle: r.startAngle + 0.001 + 0.05
               })
+
               chartContainer.append('text')
                 .attr('font-size', ((5 * width) / 100))
                 .attr('dominant-baseline', 'central')
@@ -108,6 +109,7 @@ export default class RadialD3Chart extends Component {
                 })
               break
             }
+            default: return 0
           }
         })
       })

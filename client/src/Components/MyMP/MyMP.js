@@ -24,7 +24,8 @@ const useStyles = makeStyles(theme => ({
   }
 
 }))
-export default function MyMP () {
+
+export default function MyMP (props) {
   const classes = useStyles()
   const [user, setUser] = useState(null)
   const [barPieRows, setBarPieRows] = React.useState([])
@@ -114,7 +115,7 @@ export default function MyMP () {
       }
     }
     getData()
-  }, [representativeData])
+  }, [representativeData, categoryList])
 
   async function getAllBillsBySponsorForAllParliaments (head) {
     return axios
@@ -162,7 +163,7 @@ export default function MyMP () {
       }
     }
     getData()
-  }, [userRepIssuedBills])
+  }, [userRepIssuedBills, categoryList])
 
   const [donutData, setDonutData] = React.useState(null)
   useEffect(() => {
@@ -217,7 +218,7 @@ export default function MyMP () {
                 xl={3}
                 xs={12}
               >
-                {userRepresentative ? <Roles userRepresentative={userRepresentative} /> : ''}
+                {userRepresentative ? <Roles user={userRepresentative} /> : ''}
               </Grid>
               <Grid
                 item
@@ -226,7 +227,7 @@ export default function MyMP () {
                 xl={3}
                 xs={12}
               >
-                {userRepresentative ? <Committees userRepresentative={userRepresentative} /> : ''}
+                {userRepresentative ? <Committees user={userRepresentative} /> : ''}
 
               </Grid>
               <Grid
@@ -236,7 +237,7 @@ export default function MyMP () {
                 xl={3}
                 xs={12}
               >
-                {userRepresentative ? <Associations userRepresentative={userRepresentative} /> : ''}
+                {userRepresentative ? <Associations user={userRepresentative} /> : ''}
               </Grid>
               <Grid
                 item
@@ -265,7 +266,7 @@ export default function MyMP () {
                 md={12}
                 xl={12}
                 xs={12}
-              >{user && representativeData && categoryList? <CategoryDashboard user={user.email} representativedata={representativeData} categorylist={categoryList}/> : ""}
+              >{user && representativeData && categoryList ? <CategoryDashboard user={user.email} representativedata={representativeData} categorylist={categoryList} /> : ''}
               </Grid>
               <Grid
                 item

@@ -36,7 +36,7 @@ export default function InfoBubble (props) {
     if (props.color) {
       setColor(props.color)
     }
-  })
+  }, [props.color])
 
   return (
     <span>

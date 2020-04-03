@@ -10,7 +10,6 @@ import CardActionArea from '@material-ui/core/CardActionArea'
 import { ConfirmationDialogRaw } from './CategoryForm'
 import AddIcon from '@material-ui/icons/Add'
 import axios from 'axios'
-import { fetchUserRiding } from './Utilities/CommonUsedFunctions'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 const useStyles = makeStyles(theme => ({
@@ -51,15 +50,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function CategoryGrid (props) {
   const classes = useStyles()
-
-  // const [user, setUser] = React.useState(null)
-  // useEffect(() => {
-  //   // eslint-disable-next-line no-undef
-  //   const user = JSON.parse(localStorage.getItem('user'))
-  //   setUser(user)
-  // }, [])
-// user has to be sent
-  //representativeData
   const [categoryList, setCategoryList] = React.useState(null)
   useEffect(() => {
     async function getData () {
@@ -86,61 +76,6 @@ export default function CategoryGrid (props) {
       setCounter(categoryList.length)
     }
   }, [categoryList])
-
-  // const [riding, setRiding] = React.useState(null)
-  // useEffect(() => {
-  //   async function getData () {
-  //     if (user) {
-  //       const riding = await fetchUserRiding(user.email)
-  //       setRiding(riding)
-  //     }
-  //   }
-  //   getData()
-  // }, [user])
-  //
-  // const [userRepresentative, setUserRepresentative] = React.useState(null)
-  // useEffect(() => {
-  //   async function getData () {
-  //     if (riding) {
-  //       const representative = await fetchRepresentative(riding)
-  //       setUserRepresentative(representative)
-  //     }
-  //   }
-  //   getData()
-  // }, [riding])
-
-  async function fetchRepresentative (riding) {
-    return axios
-      .get(`/api/representatives/${riding}/getRepresentative`)
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data.name
-        }
-      })
-      .catch(console.error)
-  }
-  // representativeData representativeData
-  // const [representativeData, setRepresentativeData] = React.useState(null)
-  // useEffect(() => {
-  //   async function getData () {
-  //     if (userRepresentative) {
-  //       const representative = await getAllBillsByRep(userRepresentative)
-  //       setRepresentativeData(representative)
-  //     }
-  //   }
-  //   getData()
-  // }, [userRepresentative])
-
-  async function getAllBillsByRep (head) {
-    return axios
-      .get(`/api/bills/${head}/getAllBillsByRepForAllParliaments`)
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data
-        }
-      })
-      .catch(console.error)
-  }
 
   const [value] = React.useState(false)
   const deleteEvent = index => {

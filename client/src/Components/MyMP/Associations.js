@@ -59,13 +59,13 @@ const Associations = props => {
   const [data, setData] = useState(null)
   useEffect(() => {
     async function getData () {
-      if (props.userRepresentative !== null) {
-        const roles = await getAllRolesByRep('association', props.userRepresentative)
+      if (props.user !== null) {
+        const roles = await getAllRolesByRep('association', props.user)
         setData(roles)
       }
     }
     getData()
-  }, [props.userRepresentative])
+  }, [props.user])
 
   return (
     <Card
@@ -86,7 +86,7 @@ const Associations = props => {
             >
                             Associations
             </Typography>
-            <Grid item direction='row'>
+            <Grid item>
               <Grid container direction='row' alignItems='center'>
                 <Grid item><CountUp style={{ fontSize: 26 }} end={data ? data.length : 0}> </CountUp></Grid>
                 <Grid item><Typography style={{ marginLeft: 3 }} variant='h5'> {'associations'}</Typography></Grid>

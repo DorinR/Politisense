@@ -244,7 +244,7 @@ export default function BillHistoryTable (props) {
       generateTableRows(fullBills)
     }
     getData()
-  },[])
+  }, [])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -267,8 +267,8 @@ export default function BillHistoryTable (props) {
           }}
           title='Voting History'
           action={
-            <IconButton aria-label='settings'onClick={handleClickOpen}>
-              <HelpOutlineIcon  />
+            <IconButton aria-label='settings' onClick={handleClickOpen}>
+              <HelpOutlineIcon />
             </IconButton>
           }
         />

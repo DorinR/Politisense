@@ -59,8 +59,8 @@ export default function CategoryDashboard (props) {
         />
         <Divider />
         <CardContent>
-          {props.user && props.representativedata ?
-              <CategoryGrid user = {props.user } representativedata = { props.representativedata} categorylist = {props.categorylist}/> : "" }
+          {props.user && props.representativedata
+            ? <CategoryGrid user={props.user} representativedata={props.representativedata} categorylist={props.categorylist} /> : ''}
 
         </CardContent>
         <DescriptionDialog

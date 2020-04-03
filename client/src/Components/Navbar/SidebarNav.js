@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
-import { Link } from "react-router-dom";
+import { withRouter } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -11,15 +11,15 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     padding: '10px 8px',
     justifyContent: 'flex-start',
-    fontWeight: theme.typography.fontWeightMedium,
+    fontWeight: theme.typography.fontWeightMedium
   },
   icon: {
-    color: theme.palette.icon,
     width: 24,
     height: 24,
     display: 'flex',
     alignItems: 'center',
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
+    color: 'white'
   },
   active: {
     color: 'white',
@@ -30,33 +30,30 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const SidebarNav = props => {
-  const { pages, className, ...rest } = props
+const SidebarNav = withRouter((props) => {
+  const { pages, className } = props
 
   const classes = useStyles()
 
   return (
     <List
-      {...rest}
       className={clsx(classes.root, className)}
     >
       {pages.map(page => (
         <ListItem
           button
           className={classes.item}
-          activeClassName={classes.active}
           disableGutters
-          to={page.href}
-          component={Link}
+          onClick={() => { props.history.push(page.href) }}
           key={page.title}
         >
-          <ListItemIcon activeClassName={classes.active} className={classes.icon}>{page.icon} </ListItemIcon>
+          <ListItemIcon className={classes.icon}>{page.icon}</ListItemIcon>
           <ListItemText className={classes.icon}>{page.title}</ListItemText>
         </ListItem>
       ))}
     </List>
   )
-}
+})
 
 SidebarNav.propTypes = {
   className: PropTypes.string,

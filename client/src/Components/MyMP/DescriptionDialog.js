@@ -88,7 +88,7 @@ const DescriptionDialog = (props) => {
       filteredRowsByCategory = props.rows.filter(row => row.category.toLowerCase().includes(filter.toLowerCase()))
     }
     setFilteredRowsByCategory(filteredRowsByCategory)
-  }, [filter])
+  }, [filter, props.rows])
 
   return (
     <div>

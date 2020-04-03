@@ -114,7 +114,7 @@ const IssuedBillsByCategory = (props) => {
     if (props.location.aboutProps) {
       setRows(props.location.aboutProps.rows)
     }
-  }, [])
+  }, [props.location.aboutProps])
 
   useEffect(() => {
     if (rows) {
@@ -141,8 +141,8 @@ const IssuedBillsByCategory = (props) => {
                       title: classes.title
                     }}
                     action={
-                      <IconButton aria-label='settings'>
-                        <HelpOutlineIcon onClick={handleClickOpen} />
+                      <IconButton aria-label='settings' onClick={handleClickOpen}>
+                        <HelpOutlineIcon />
                       </IconButton>
                     }
                     title={'Sponsored Bills by ' + capitalizedName(props.location.aboutProps.representative)}
@@ -164,11 +164,11 @@ const IssuedBillsByCategory = (props) => {
                             <TableHead>
                               <TableRow>
                                 <TableCell>Bill Name</TableCell>
-                                <TableCell align='center'> Category </TableCell>
+                                <TableCell align='center'>Category</TableCell>
                                 <TableCell align='right'>Bill Status</TableCell>
                               </TableRow>
                             </TableHead>
-                            <TableBody stickyHeader>
+                            <TableBody>
                               {filteredRowsByCategory.map((row, i) => (
                                 row.bill
                                   ? (

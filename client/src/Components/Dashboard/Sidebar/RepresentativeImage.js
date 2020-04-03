@@ -42,7 +42,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function RepresentativeImage (props) {
-  console.log(props.representativeToLoad)
   const classes = useStyles()
   const [user, setUser] = useState(null)
   const theme = useTheme()

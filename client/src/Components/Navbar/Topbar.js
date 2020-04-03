@@ -1,11 +1,11 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
 import {
-  AppBar, Toolbar, Hidden, IconButton, Grid,
-  Typography,
+  AppBar, Toolbar, Hidden, IconButton,
+  Typography, ListItem, List
 } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import InputIcon from '@material-ui/icons/Input'
@@ -49,20 +49,23 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-const Topbar = props => {
-  const { className, open, onSidebarOpen, ...rest } = props
+const flexContainer = {
+  display: 'flex',
+  flexDirection: 'row',
+  padding: 0
+}
 
+const Topbar = withRouter((props) => {
+  const { className, onSidebarOpen } = props
   const classes = useStyles()
-
   return (
     <AppBar
-      {...rest}
       className={clsx(classes.root, className)}
     >
       <Toolbar>
         <div>
-          <Grid container direction='row' alignItems='center'>
-            <Grid item className={classes.flexGrow}>
+          <List style={flexContainer}>
+            <ListItem>
               <IconButton
                 color='inherit'
                 aria-label='open drawer'
@@ -71,59 +74,57 @@ const Topbar = props => {
               >
                 <MenuIcon />
               </IconButton>
-            </Grid>
-            <Link to='/general' className={classes.routerLink}>
-              <Grid item>
-                <AccountBalanceIcon className={classes.icon} />
-              </Grid>
-            </Link>
-            <Link to='/general' className={classes.routerLink}>
-              <Grid item>
-                <Typography variant='h6' color='white'> Politisense </Typography>
-              </Grid>
-            </Link>
-          </Grid>
+            </ListItem>
+            {props.open === false
+              ? (
+                <ListItem button onClick={() => { props.history.push({ pathname: '/general' }) }}>
+                  <AccountBalanceIcon className={classes.icon} />
+                  <Typography variant='h6' style={{ color: 'white' }}>Politisense</Typography>
+                </ListItem>
+              )
+              : (
+                <ListItem>
+                  <AccountBalanceIcon className={classes.icon} />
+                  <Typography variant='h6' style={{ color: 'white' }}>Politisense</Typography>
+                </ListItem>
+              )}
+          </List>
         </div>
 
         <div className={classes.flexGrow} />
         <Hidden mdDown>
           <Button
             style={{ color: 'white', textTransform: 'none' }} variant='text'
-            component={Link}
-            to='/general'
+            onClick={() => { props.history.push('/general') }}
           >General
           </Button>
           <Button
             style={{ color: 'white', textTransform: 'none' }} variant='text'
-            component={Link}
-            to='/myRepresentative'
+            onClick={() => { props.history.push('/myRepresentative') }}
           >My MP
           </Button>
           <Button
             style={{ color: 'white', textTransform: 'none' }} variant='text'
-            component={Link}
-            to='/compare'
+            onClick={() => { props.history.push('/compare') }}
           >Head To Head
           </Button>
           <Button
             style={{ color: 'white', textTransform: 'none' }} variant='text'
-            component={Link}
-            to='/map'
+            onClick={() => { props.history.push('/map') }}
           >Map
           </Button>
           <IconButton
             className={classes.signOutButton}
+            onClick={() => { props.history.push('/logout') }}
           >
-            <Link to='/logout' className={classes.routerLink}>
-              <InputIcon style={{ color: 'white' }} />
-            </Link>
+            <InputIcon style={{ color: 'white' }} />
           </IconButton>
         </Hidden>
 
       </Toolbar>
     </AppBar>
   )
-}
+})
 
 Topbar.propTypes = {
   className: PropTypes.string,

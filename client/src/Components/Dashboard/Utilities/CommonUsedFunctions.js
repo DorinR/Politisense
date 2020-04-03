@@ -169,7 +169,6 @@ export function sortingBasedOnDate (arr) {
 }
 
 export const getDescription = async (ministry) => {
-  console.log(ministry)
   return axios
     .post('api/parliament/getRoleDescription', { ministry: ministry })
     .then(res => {

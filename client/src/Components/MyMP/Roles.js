@@ -61,8 +61,8 @@ const Roles = props => {
   const [data, setData] = useState(null)
   useEffect(() => {
     async function getData () {
-      if (props.userRepresentative !== null && props.userRepresentative !== null) {
-        const roles = await getAllRolesByRep('role', props.userRepresentative)
+      if (props.user !== null && props.user !== null) {
+        const roles = await getAllRolesByRep('role', props.user)
         if (Array.isArray(roles) && roles.length !== 0) {
           const rolesWithDesc = await getAllDesc(roles)
           setData(rolesWithDesc)
@@ -70,7 +70,7 @@ const Roles = props => {
       }
     }
     getData()
-  }, [props.userRepresentative])
+  }, [props.user])
 
   return (
     <Card
@@ -91,7 +91,7 @@ const Roles = props => {
             >
                             Parliament Roles
             </Typography>
-            <Grid item direction='row'>
+            <Grid item>
               <Grid container direction='row' alignItems='center'>
                 <Grid item><CountUp style={{ fontSize: 27 }} end={data ? data.length : 0}> </CountUp></Grid>
                 <Grid item><Typography style={{ marginLeft: 3 }} variant='h5'> {'roles'}</Typography></Grid>

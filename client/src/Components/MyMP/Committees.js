@@ -60,15 +60,15 @@ const Committees = props => {
   const [data, setData] = useState(null)
   useEffect(() => {
     async function getData () {
-      if (props.userRepresentative) {
-        const roles = await getAllRolesByRep('committee', props.userRepresentative)
+      if (props.user) {
+        const roles = await getAllRolesByRep('committee', props.user)
         if (roles.length !== 0) {
           setData(roles)
         }
       }
     }
     getData()
-  }, [props.userRepresentative])
+  }, [props.user])
 
   return (
     <Card
@@ -89,7 +89,7 @@ const Committees = props => {
             >
                             Committees
             </Typography>
-            <Grid item direction='row'>
+            <Grid item>
               <Grid container direction='row' alignItems='center'>
                 <Grid item><CountUp style={{ fontSize: 27 }} end={data ? data.length : 0}> </CountUp></Grid>
                 <Grid item><Typography style={{ marginLeft: 3 }} variant='h5'> {'committees'}</Typography></Grid>

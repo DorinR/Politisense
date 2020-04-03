@@ -3,16 +3,9 @@ import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
 import { Typography } from '@material-ui/core'
-import {
-  fetchRidingCode,
-  fetchUserRiding,
-  fetchRepresentative,
-  loadingTextdata
-  , capitalizedName
-} from '../Dashboard/Utilities/CommonUsedFunctions'
-import RidingPopulation from './Sidebar/RidingPopulation/RidingPopulation'
-
-import RidingShapeContainer from './Sidebar/RidingShape/RidingShapeContainer'
+import { loadingTextdata, capitalizedName } from '../Dashboard/Utilities/CommonUsedFunctions'
+import RidingPopulation from '../Dashboard/Sidebar/RidingPopulation/RidingPopulation'
+import RidingShapeContainer from '../Dashboard/Sidebar/RidingShape/RidingShapeContainer'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -69,11 +62,9 @@ const MpProfile = props => {
   const [startDate, setStartDate] = useState(0)
   const [endDate, setEndDate] = useState(0)
   const [ridingCode, setRidingCode] = useState('')
-  const [data, setData] = useState({})
-
 
   useEffect(() => {
-    if(props.data){
+    if (props.data) {
       setName(props.data.name)
       setPoliticalParty(props.data.party)
       setRiding(props.data.riding)
@@ -81,7 +72,6 @@ const MpProfile = props => {
       setStartDate(props.data.start)
       setEndDate(props.data.end)
     }
-
   }, [props.data])
 
   return (
