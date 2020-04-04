@@ -44,14 +44,7 @@ async function fetchPastRepresentativePairedVotes(member, data) {
   return res.data.data
 }
 
-async function fetchParliamentNumber(member) {
-  const res = await axios.get(`/api/representatives/${member}/getParliamentNumber`)
-  return res.data.data
-}
-
 async function fetchPastRepresentativeSpending(member, data) {
-  console.log("member ", member)
-  console.log("data ", data)
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
   console.log("res data", res.data.data)
   return res.data.data
@@ -96,17 +89,16 @@ export default function RepresentativeCard() {
   useEffect(() => {
     async function getData() {
       const data = { start: start }
-      const parliamentData = { parliament: 42, year: 2017 }
       const member = await fetchPastRepresentativeId(name, data)
-      // const pastParliament = getParliamentSession(2011)
-      // console.log("MP in parliament ", pastParliament)
       const partyData = await getPartyData(politicalParty)
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, data)
-      const pastParliament = pastRepresentativeVotes[0].parliament
-      console.log("parliament number ", pastParliament)
+      const parliamentSession = pastRepresentativeVotes[0].parliament
+      const parliamentData = { parliament: parliamentSession, year: 2017 }
       const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, data)
       const totalBills = calculateTotalVotesBills(pastRepresentativeVotes)
       const totalPairedBills = calculateTotalVotesBills(pastRepresentativePairedVotes)
+      const expenses = await fetchPastRepresentativeSpending(member, parliamentData)
+      console.log("expenses:", expenses)
       setPartyImageUrl(partyData.imageUrl)
       setNbBills(totalBills)
       setNbPairedBills(totalPairedBills)

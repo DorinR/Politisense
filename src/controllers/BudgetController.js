@@ -46,9 +46,13 @@ exports.fetchMemberExpenditures = async (req, res) => {
   })
     .perform()
     .then(results => {
+      console.log("results ", results)
       return results
         .filter(result => { return result.parent === '' })
-        .map(doc => { return doc.amount })
+        .map(doc => {
+          console.log('document amount ', doc.amount)
+          return doc.amount
+        })
     })
     .catch(console.error)
 }
