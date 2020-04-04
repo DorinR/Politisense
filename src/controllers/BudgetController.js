@@ -51,10 +51,13 @@ exports.fetchMemberExpenditures = async (req, res) => {
         .filter(result => { return result.parent === '' })
         .map(doc => {
           console.log('document amount ', doc.amount)
+          res.status(200).json({
+            success: true,
+            data: doc.amount
+          })
           return doc.amount
         })
     })
-    .catch(console.error)
 }
 
 exports.budgetData = async (req, res) => {

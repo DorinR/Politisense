@@ -46,8 +46,11 @@ async function fetchPastRepresentativePairedVotes(member, data) {
 
 async function fetchPastRepresentativeSpending(member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
-  console.log("res data", res.data.data)
-  return res.data.data
+    .then(res => {
+      console.log("res ", res.data.data)
+      return res.data.data
+    })
+    .catch(console.error)
 }
 
 function getStartYear(parlSession) {
@@ -62,7 +65,6 @@ function getStartYear(parlSession) {
       return 'no financial data for this parliament session'
   }
 }
-
 
 export default function RepresentativeCard() {
   const classes = useStyles()
@@ -82,10 +84,6 @@ export default function RepresentativeCard() {
     setPoliticalParty(newName.party)
   }
 
-  // const expenses = await fetchPastRepresentativeSpending(member, parliamentData)
-  // console.log("expenses:", expenses)
-  // setTotalExpenses(expenses)
-
   useEffect(() => {
     async function getData() {
       const data = { start: start }
@@ -94,13 +92,21 @@ export default function RepresentativeCard() {
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, data)
       const parliamentSession = pastRepresentativeVotes[0].parliament
       const startYear = getStartYear(parliamentSession)
-      console.log(startYear)
-      const parliamentData = { parliament: parliamentSession, year: startYear }
+      const parliamentData1 = { parliament: parliamentSession, year: startYear }
+      const parliamentData2 = { parliament: parliamentSession, year: startYear + 1 }
+      const parliamentData3 = { parliament: parliamentSession, year: startYear + 2 }
+      const parliamentData4 = { parliament: parliamentSession, year: startYear + 3 }
       const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, data)
       const totalBills = calculateTotalVotesBills(pastRepresentativeVotes)
       const totalPairedBills = calculateTotalVotesBills(pastRepresentativePairedVotes)
-      const expenses = await fetchPastRepresentativeSpending(member, parliamentData)
-      console.log("expenses:", expenses)
+      const expensesYear1 = await fetchPastRepresentativeSpending(member, parliamentData1)
+      const expensesYear2 = await fetchPastRepresentativeSpending(member, parliamentData2)
+      const expensesYear3 = await fetchPastRepresentativeSpending(member, parliamentData3)
+      const expensesYear4 = await fetchPastRepresentativeSpending(member, parliamentData4)
+      console.log("year 1", expensesYear1)
+      console.log("year 2", expensesYear2)
+      console.log("year 3", expensesYear3)
+      console.log("year 4", expensesYear4)
       setPartyImageUrl(partyData.imageUrl)
       setNbBills(totalBills)
       setNbPairedBills(totalPairedBills)
