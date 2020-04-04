@@ -167,5 +167,9 @@ module.exports = {
 
   getAllRepsFromAllParliaments: function (req, res) {
     return RepresentativeController.getAllRepsFromAllParliaments(req, res)
+  },
+
+  fetchMemberExpenditures: function (req, res) {
+    return BudgetController.fetchMemberExpenditures(req, res)
   }
 }

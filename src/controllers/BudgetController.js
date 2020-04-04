@@ -1,7 +1,7 @@
 const Firestore = require('@firestore').Firestore
 const ExpenditureComputeAction = require('@action').ExpenditureComputeAction
 
-function fetchAverageExpenditures (parliament = 43, year = 2019) {
+function fetchAverageExpenditures(parliament = 43, year = 2019) {
   return new Firestore()
     .forParliament(parliament)
     .atYear(year)
@@ -19,11 +19,14 @@ function fetchAverageExpenditures (parliament = 43, year = 2019) {
     .catch(console.error)
 }
 
-function fetchMemberExpenditures (member, parliament = 43, year = 2019) {
+//(member, parliament = 43, year = 2019)
+
+exports.fetchMemberExpenditures = async (req, res) => {
+  console.log("from frontend member:", req.params.member)
+  console.log("from frontend parliament:", req.body.parliament)
   return new ExpenditureComputeAction({
-    parliament: parliament,
-    year: year,
-    member: member
+    parliament: req.body.parliament,
+    member: req.params.member
   })
     .perform()
     .then(results => {

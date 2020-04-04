@@ -29,22 +29,30 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchPastRepresentativeId (representative, data) {
+async function fetchPastRepresentativeId(representative, data) {
   const res = await axios.post(`/api/representatives/${representative}/getPastRepresentativeId`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeVotes (member, data) {
+async function fetchPastRepresentativeVotes(member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativeVotes`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativePairedVotes (member, data) {
+async function fetchPastRepresentativePairedVotes(member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativePairedVotes`, data)
   return res.data.data
 }
 
-export default function RepresentativeCard () {
+async function fetchPastRepresentativeSpending(member, data) {
+  console.log("member ", member)
+  console.log("data ", data)
+  const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
+  console.log("res data", res.data.data)
+  return res.data.data
+}
+
+export default function RepresentativeCard() {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -53,6 +61,7 @@ export default function RepresentativeCard () {
   const [nbBills, setNbBills] = useState(0)
   const [nbPairedBills, setNbPairedBills] = useState(0)
   const [partyImageUrl, setPartyImageUrl] = useState('')
+  const [totalExpenses, setTotalExpenses] = useState(0)
 
   const updateNameFromSwitcher = newName => {
     setStart(newName.start)
@@ -62,14 +71,21 @@ export default function RepresentativeCard () {
   }
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
+      console.log("TEST")
       const data = { start: start }
+      const parliamentData = { parliament: 42 }
       const member = await fetchPastRepresentativeId(name, data)
       const partyData = await getPartyData(politicalParty)
+      console.log("party data", partyData)
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, data)
       const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, data)
       const totalBills = calculateTotalVotesBills(pastRepresentativeVotes)
+      console.log("votes ", totalBills)
       const totalPairedBills = calculateTotalVotesBills(pastRepresentativePairedVotes)
+      const expenses = await fetchPastRepresentativeSpending(member, parliamentData)
+      console.log("expenses:", expenses)
+      setTotalExpenses(expenses)
       setPartyImageUrl(partyData.imageUrl)
       setNbBills(totalBills)
       setNbPairedBills(totalPairedBills)
@@ -142,7 +158,7 @@ export default function RepresentativeCard () {
                     <DollarIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText>Total Spending: N/A</ListItemText>
+                <ListItemText>Total Spending: {totalExpenses} <ColoredText text={totalExpenses} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
               </ListItem>
               <Box m={2} />
               <DividerBlock
@@ -159,7 +175,7 @@ export default function RepresentativeCard () {
                     <FormatListNumberedIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText> Total Voted Bills: <ColoredText text={nbBills} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                <ListItemText> Total Voted Bills: {nbBills}<ColoredText text={nbBills} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
@@ -168,7 +184,7 @@ export default function RepresentativeCard () {
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText>
-                  Total Issued Bills: <ColoredText text={nbPairedBills} color={getPartyColor(politicalParty).backgroundColor} />
+                  Total Issued Bills: {nbPairedBills}<ColoredText text={nbPairedBills} color={getPartyColor(politicalParty).backgroundColor} />
                 </ListItemText>
               </ListItem>
             </List>
