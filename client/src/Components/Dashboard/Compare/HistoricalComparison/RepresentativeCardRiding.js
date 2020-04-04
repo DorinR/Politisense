@@ -44,6 +44,11 @@ async function fetchPastRepresentativePairedVotes(member, data) {
   return res.data.data
 }
 
+async function fetchParliamentNumber(member) {
+  const res = await axios.get(`/api/representatives/${member}/getParliamentNumber`)
+  return res.data.data
+}
+
 async function fetchPastRepresentativeSpending(member, data) {
   console.log("member ", member)
   console.log("data ", data)
@@ -70,22 +75,22 @@ export default function RepresentativeCard() {
     setPoliticalParty(newName.party)
   }
 
+  // const expenses = await fetchPastRepresentativeSpending(member, parliamentData)
+  // console.log("expenses:", expenses)
+  // setTotalExpenses(expenses)
+
   useEffect(() => {
     async function getData() {
-      console.log("TEST")
       const data = { start: start }
-      const parliamentData = { parliament: 42 }
+      const parliamentData = { parliament: 42, year: 2017 }
       const member = await fetchPastRepresentativeId(name, data)
+      const pastParliament = await fetchParliamentNumber(member)
+      console.log("MP in parliament ", pastParliament)
       const partyData = await getPartyData(politicalParty)
-      console.log("party data", partyData)
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, data)
       const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, data)
       const totalBills = calculateTotalVotesBills(pastRepresentativeVotes)
-      console.log("votes ", totalBills)
       const totalPairedBills = calculateTotalVotesBills(pastRepresentativePairedVotes)
-      const expenses = await fetchPastRepresentativeSpending(member, parliamentData)
-      console.log("expenses:", expenses)
-      setTotalExpenses(expenses)
       setPartyImageUrl(partyData.imageUrl)
       setNbBills(totalBills)
       setNbPairedBills(totalPairedBills)
@@ -158,7 +163,7 @@ export default function RepresentativeCard() {
                     <DollarIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText>Total Spending: {totalExpenses} <ColoredText text={totalExpenses} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                <ListItemText>Total Spending: </ListItemText>
               </ListItem>
               <Box m={2} />
               <DividerBlock
@@ -175,7 +180,7 @@ export default function RepresentativeCard() {
                     <FormatListNumberedIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText> Total Voted Bills: {nbBills}<ColoredText text={nbBills} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                <ListItemText> Total Voted Bills: <ColoredText text={nbBills} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
@@ -184,7 +189,7 @@ export default function RepresentativeCard() {
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText>
-                  Total Issued Bills: {nbPairedBills}<ColoredText text={nbPairedBills} color={getPartyColor(politicalParty).backgroundColor} />
+                  Total Issued Bills: <ColoredText text={nbPairedBills} color={getPartyColor(politicalParty).backgroundColor} />
                 </ListItemText>
               </ListItem>
             </List>
