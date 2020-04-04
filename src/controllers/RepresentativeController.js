@@ -49,7 +49,7 @@ exports.getRepresentativeByRiding = (req, res) => {
     })
     .catch(console.error)
 }
-async function getAllRepsForEachParliament (parliamentNo) {
+async function getAllRepsForEachParliament(parliamentNo) {
   const db = new Firestore(false).forParliament(parliamentNo)
   const politicians = []
   await db.Politician()
@@ -239,3 +239,43 @@ exports.getPastRepresentativeId = async (req, res) => {
       })
   })
 }
+
+exports.getParliamentNumber = async (req, res) => {
+  console.log("from frontend member Parl:", req.params.member)
+  const parliaments = [36, 37, 38, 39, 40, 41, 42]
+  const db = new Firestore()
+  parliaments.map(parl => {
+    return db
+      .forParliament(parl)
+      .Politician()
+      .where(db.FieldPath.documentId(), '==', req.params.member)
+      .select()
+      .then(snapshot => {
+        const docs = []
+        snapshot.forEach(doc => {
+          console.log("parl:", parl)
+          docs.push({
+            data: doc.data(),
+            parliament: parl
+          })
+        })
+        return parl
+      })
+  })
+
+  Promise.all(parliaments)
+    .then(doc => {
+      res.status(200).json({
+        success: true,
+        data: doc
+      })
+    })
+    .catch(e => {
+      console.error(e)
+      res.status(500).json({
+        success: false,
+        message: e.message
+      })
+    })
+}
+

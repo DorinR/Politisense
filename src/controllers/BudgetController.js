@@ -20,13 +20,29 @@ function fetchAverageExpenditures(parliament = 43, year = 2019) {
 }
 
 //(member, parliament = 43, year = 2019)
+// function fetchMemberExpenditures(member, parliament = 42, year = 2017) {
+//   return new ExpenditureComputeAction({
+//     parliament: parliament,
+//     year: year,
+//     member: member
+//   })
+//     .perform()
+//     .then(results => {
+//       return results
+//         .filter(result => { return result.parent === '' })
+//         .map(doc => { return doc.amount })
+//     })
+//     .catch(console.error)
+// }
 
 exports.fetchMemberExpenditures = async (req, res) => {
   console.log("from frontend member:", req.params.member)
   console.log("from frontend parliament:", req.body.parliament)
+  console.log("from frontend parliament:", req.body.year)
   return new ExpenditureComputeAction({
     parliament: req.body.parliament,
-    member: req.params.member
+    member: req.params.member,
+    year: req.body.year
   })
     .perform()
     .then(results => {
