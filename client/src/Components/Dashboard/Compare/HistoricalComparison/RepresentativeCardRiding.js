@@ -50,14 +50,14 @@ async function fetchPastRepresentativeSpending(member, data) {
   return res.data.data
 }
 
-function getParliamentSession(startYear) {
-  switch (startYear) {
-    case 2019:
-      return 43
-    case 2015:
-      return 42
-    case 2011:
-      return 41
+function getStartYear(parlSession) {
+  switch (parlSession) {
+    case 43:
+      return 2019
+    case 42:
+      return 2015
+    case 41:
+      return 2011
     default:
       return 'no financial data for this parliament session'
   }
@@ -93,7 +93,9 @@ export default function RepresentativeCard() {
       const partyData = await getPartyData(politicalParty)
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, data)
       const parliamentSession = pastRepresentativeVotes[0].parliament
-      const parliamentData = { parliament: parliamentSession, year: 2017 }
+      const startYear = getStartYear(parliamentSession)
+      console.log(startYear)
+      const parliamentData = { parliament: parliamentSession, year: startYear }
       const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, data)
       const totalBills = calculateTotalVotesBills(pastRepresentativeVotes)
       const totalPairedBills = calculateTotalVotesBills(pastRepresentativePairedVotes)
