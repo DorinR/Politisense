@@ -58,11 +58,21 @@ const Roles = props => {
     setOpen(false)
   }
 
+  const [representative, setRepresentative] = useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (props.representative !== null && props.representative !== representative) {
+        setRepresentative(props.representative)
+      }
+    }
+    getData()
+  }, [props.representative])
+
   const [data, setData] = useState(null)
   useEffect(() => {
     async function getData () {
-      if (props.user !== null && props.user !== null) {
-        const roles = await getAllRolesByRep('role', props.user)
+      if (representative) {
+        const roles = await getAllRolesByRep('role', representative)
         if (Array.isArray(roles) && roles.length !== 0) {
           const rolesWithDesc = await getAllDesc(roles)
           setData(rolesWithDesc)
@@ -70,7 +80,7 @@ const Roles = props => {
       }
     }
     getData()
-  }, [props.user])
+  }, [representative])
 
   return (
     <Card

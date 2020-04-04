@@ -57,18 +57,28 @@ const Committees = props => {
     setOpen(false)
   }
 
+  const [representative, setRepresentative] = useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (props.representative !== null && props.representative !== representative) {
+        setRepresentative(props.representative)
+      }
+    }
+    getData()
+  }, [props.representative])
+
   const [data, setData] = useState(null)
   useEffect(() => {
     async function getData () {
-      if (props.user) {
-        const roles = await getAllRolesByRep('committee', props.user)
+      if (representative) {
+        const roles = await getAllRolesByRep('committee', representative)
         if (roles.length !== 0) {
           setData(roles)
         }
       }
     }
     getData()
-  }, [props.user])
+  }, [representative])
 
   return (
     <Card

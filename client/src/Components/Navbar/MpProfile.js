@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
@@ -56,61 +56,47 @@ const useStyles = makeStyles(theme => ({
 const MpProfile = props => {
   const { className, ...rest } = props
   const classes = useStyles()
-  const [name, setName] = useState('')
-  const [politicalParty, setPoliticalParty] = useState('')
-  const [riding, setRiding] = useState('')
-  const [startDate, setStartDate] = useState(0)
-  const [endDate, setEndDate] = useState(0)
-  const [ridingCode, setRidingCode] = useState('')
-
-  useEffect(() => {
-    if (props.data) {
-      setName(props.data.name)
-      setPoliticalParty(props.data.party)
-      setRiding(props.data.riding)
-      setRidingCode(props.data.ridingCode)
-      setStartDate(props.data.start)
-      setEndDate(props.data.end)
-    }
-  }, [props.data])
-
   return (
-    <div
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
-      <Typography
-        className={classes.name}
-        variant='h6'
-      >
-        {capitalizedName(name)}
-      </Typography>
-      {riding ? riding.length > 22
-        ? (
-          <div className={classes.containerLongRidingName}>
-            <Typography className={classes.fontColorTypography} variant='caption'>Represents</Typography>
-            <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(riding)}</Typography>
-          </div>) : (<Typography className={classes.fontColorTypography} variant='caption'>{'Represents: ' + capitalizedName(riding)}</Typography>)
-        : (<Typography className={classes.fontColorTypography} variant='caption'>Represents</Typography>)}
+    <div>
+      {props.data ? (
+        <div
+          {...rest}
+          className={clsx(classes.root, className)}
+        >
+          <Typography
+            className={classes.name}
+            variant='h6'
+          >
+            {props.data.name ? capitalizedName(props.data.name) : ''}
+          </Typography>
+          {props.data.riding ? props.data.riding.length > 22
+            ? (
+              <div className={classes.containerLongRidingName}>
+                <Typography className={classes.fontColorTypography} variant='caption'>Represents</Typography>
+                <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(props.data.riding)}</Typography>
+              </div>) : (<Typography className={classes.fontColorTypography} variant='caption'>{'Represents: ' + capitalizedName(props.data.riding)}</Typography>)
+            : (<Typography className={classes.fontColorTypography} variant='caption'>Represents</Typography>)}
 
-      {politicalParty ? politicalParty.length > 15
-        ? (
-          <div className={classes.containerLongRidingName}>
-            <Typography className={classes.fontColorTypography} variant='caption'>Political Party:</Typography>
-            <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(politicalParty)}</Typography>
+          {props.data.party ? props.data.party.length > 15
+            ? (
+              <div className={classes.containerLongRidingName}>
+                <Typography className={classes.fontColorTypography} variant='caption'>Political Party:</Typography>
+                <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(props.data.party)}</Typography>
+              </div>
+            )
+            : (<Typography className={classes.fontColorTypography} variant='caption'>{'Political Party: ' + capitalizedName(props.data.party)}</Typography>)
+            : (<Typography className={classes.fontColorTypography} variant='caption'>Political Party: </Typography>)}
+
+          <Typography className={classes.fontColorTypography} variant='caption'>{'Total Population: '} {props.data.riding ? (<RidingPopulation riding={props.data.riding} />) : ''}</Typography>
+          <Typography className={classes.fontColorTypography} variant='caption'>{'Member Since: '} {props.data.start ? loadingTextdata({ fromDate: props.data.start, toDate: props.data.end }) : ''}</Typography>
+          <div className={classes.shapeContainer}>
+            <RidingShapeContainer
+              ridingCode={props.data.ridingCode}
+              politicalParty={props.data.party}
+            />
           </div>
-        )
-        : (<Typography className={classes.fontColorTypography} variant='caption'>{'Political Party: ' + capitalizedName(politicalParty)}</Typography>)
-        : (<Typography className={classes.fontColorTypography} variant='caption'>Political Party: </Typography>)}
-
-      <Typography className={classes.fontColorTypography} variant='caption'>{'Total Population: '} {props.riding ? (<RidingPopulation riding={riding} />) : ''}</Typography>
-      <Typography className={classes.fontColorTypography} variant='caption'>{'Member Since: '} {startDate ? loadingTextdata({ fromDate: startDate, toDate: endDate }) : ''}</Typography>
-      <div className={classes.shapeContainer}>
-        <RidingShapeContainer
-          ridingCode={ridingCode}
-          politicalParty={politicalParty}
-        />
-      </div>
+        </div>
+      ) : ('')}
     </div>
 
   )

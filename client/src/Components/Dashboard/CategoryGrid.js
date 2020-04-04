@@ -54,12 +54,12 @@ export default function CategoryGrid (props) {
   useEffect(() => {
     async function getData () {
       if (props.user) {
-        const interests = await getUserInterests(props.user)
+        const interests = await getUserInterests(props.user.email)
         setCategoryList(interests)
       }
     }
     getData()
-  }, [props])
+  }, [props.user])
 
   async function getUserInterests (email) {
     return axios
@@ -110,7 +110,7 @@ export default function CategoryGrid (props) {
   async function updateUserCategory (categoryList) {
     return axios
       .post('/api/users/updateUserCategory', {
-        email: props.user,
+        email: props.user.email,
         categoryList: categoryList
       })
       .catch(console.error)

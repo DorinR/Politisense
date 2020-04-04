@@ -56,16 +56,26 @@ const Associations = props => {
     setOpen(false)
   }
 
+  const [representative, setRepresentative] = useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (props.representative !== null && props.representative !== representative) {
+        setRepresentative(props.representative)
+      }
+    }
+    getData()
+  }, [props.representative])
+
   const [data, setData] = useState(null)
   useEffect(() => {
     async function getData () {
-      if (props.user !== null) {
-        const roles = await getAllRolesByRep('association', props.user)
+      if (representative) {
+        const roles = await getAllRolesByRep('association', representative)
         setData(roles)
       }
     }
     getData()
-  }, [props.user])
+  }, [representative])
 
   return (
     <Card

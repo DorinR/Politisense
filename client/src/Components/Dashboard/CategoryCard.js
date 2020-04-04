@@ -26,7 +26,7 @@ import { formattingCategory } from './Utilities/CommonUsedFunctions'
 const useStyles = makeStyles(theme => ({
   media: {
     height: 0,
-    paddingTop: '56.25%' // 16:9
+    paddingTop: '56.25%'
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -177,7 +177,21 @@ export default function CategoryCard (props) {
                     <TableCell>Bill Name</TableCell>
                     <TableCell align='right'>Vote</TableCell>
                   </TableRow>
-                </TableHead>{(rows && rows.length) > 0 ? (<TableBody stickyheader='true'>{rows.map((row, i) => (<TableRow key={i}><TableCell component='th' scope='row'><Button color='primary' onClick={() => handleBillClickOpen(row)}><Typography>{row.name}</Typography></Button></TableCell><TableCell align='right'>{row.vote === 'yea' ? <Typography>Yea</Typography> : <Typography>Nay</Typography>}</TableCell></TableRow>))}</TableBody>) : null}
+                </TableHead>{(rows && rows.length) > 0
+                  ? (
+                    <TableBody stickyheader='true'>
+                      {rows.map((row, i) => (
+                        <TableRow key={i}>
+                          <TableCell component='th' scope='row'>
+                            <Button color='primary' onClick={() => handleBillClickOpen(row)}>
+                              <Typography>{row.name}</Typography>
+                            </Button>
+                          </TableCell>
+                          <TableCell align='right'>{row.vote === 'yea'
+                            ? <Typography>Yea</Typography> : <Typography>Nay</Typography>}
+                          </TableCell>
+                        </TableRow>))}
+                    </TableBody>) : null}
               </Table>
             </TableContainer>
           </CardContent>

@@ -189,7 +189,7 @@ const Sidebar = withRouter((props) => {
         ])
         const ridingCode = promises[0]
         const { name, party, start, end, imageUrl } = promises[1]
-        if (name) {
+        if (promises[0] && promises[1]) {
           setData({
             end: end,
             name: name,

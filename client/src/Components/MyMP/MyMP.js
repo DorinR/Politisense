@@ -218,7 +218,7 @@ export default function MyMP (props) {
                 xl={3}
                 xs={12}
               >
-                {userRepresentative ? <Roles user={userRepresentative} /> : ''}
+                {userRepresentative ? <Roles representative={userRepresentative} /> : ''}
               </Grid>
               <Grid
                 item
@@ -227,7 +227,7 @@ export default function MyMP (props) {
                 xl={3}
                 xs={12}
               >
-                {userRepresentative ? <Committees user={userRepresentative} /> : ''}
+                {userRepresentative ? <Committees representative={userRepresentative} /> : ''}
 
               </Grid>
               <Grid
@@ -237,7 +237,7 @@ export default function MyMP (props) {
                 xl={3}
                 xs={12}
               >
-                {userRepresentative ? <Associations user={userRepresentative} /> : ''}
+                {userRepresentative ? <Associations representative={userRepresentative} /> : ''}
               </Grid>
               <Grid
                 item
@@ -266,7 +266,7 @@ export default function MyMP (props) {
                 md={12}
                 xl={12}
                 xs={12}
-              >{user && representativeData && categoryList ? <CategoryDashboard user={user.email} representativedata={representativeData} categorylist={categoryList} /> : ''}
+              >{user && representativeData && categoryList ? <CategoryDashboard user={user} representativedata={representativeData} categorylist={categoryList} /> : ''}
               </Grid>
               <Grid
                 item
