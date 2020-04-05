@@ -33,12 +33,11 @@ function fetchAverageExpenditures(parliament = 43, year = 2019) {
 //         .map(doc => { return doc.amount })
 //     })
 //     .catch(console.error)
-// }
+// } console.log('document amount ', doc.amount)
 
 exports.fetchMemberExpenditures = async (req, res) => {
-  console.log("from frontend member:", req.params.member)
-  console.log("from frontend parliament:", req.body.parliament)
-  console.log("from frontend parliament:", req.body.year)
+  console.log("value from frontend", req.params.member)
+  const amountAccumulator = []
   return new ExpenditureComputeAction({
     parliament: req.body.parliament,
     member: req.params.member,
@@ -47,16 +46,16 @@ exports.fetchMemberExpenditures = async (req, res) => {
     .perform()
     .then(results => {
       console.log("results ", results)
-      return results
-        .filter(result => { return result.parent === '' })
-        .map(doc => {
-          console.log('document amount ', doc.amount)
-          res.status(200).json({
-            success: true,
-            data: doc.amount
-          })
-          return doc.amount
+      results
+        .filter(result => {
+          result.parent === ''
         })
+        .map(doc => {
+          console.log("amountAccumulator ", amountAccumulator)
+          amountAccumulator.push(doc.amount)
+        })
+      res.status(200).json({ success: true, data: amountAccumulator })
+      return amountAccumulator
     })
 }
 
