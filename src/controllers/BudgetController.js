@@ -36,8 +36,6 @@ function fetchAverageExpenditures(parliament = 43, year = 2019) {
 // } console.log('document amount ', doc.amount)
 
 exports.fetchMemberExpenditures = async (req, res) => {
-  console.log("value from frontend", req.params.member)
-  const amountAccumulator = []
   return new ExpenditureComputeAction({
     parliament: req.body.parliament,
     member: req.params.member,
@@ -45,18 +43,22 @@ exports.fetchMemberExpenditures = async (req, res) => {
   })
     .perform()
     .then(results => {
-      console.log("results ", results)
-      results
-        .filter(result => {
-          result.parent === ''
-        })
+      const amountAccumulator = []
+      return results
+        .filter(result => { return result.parent === '' })
         .map(doc => {
-          console.log("amountAccumulator ", amountAccumulator)
+          console.log('document amount ', doc.amount)
           amountAccumulator.push(doc.amount)
+          console.log(amountAccumulator)
         })
-      res.status(200).json({ success: true, data: amountAccumulator })
-      return amountAccumulator
+        .then(
+          res.status(200).json({
+            success: true,
+            data: amountAccumulator.flat()
+          })
+        )
     })
+    .catch(console.error)
 }
 
 exports.budgetData = async (req, res) => {

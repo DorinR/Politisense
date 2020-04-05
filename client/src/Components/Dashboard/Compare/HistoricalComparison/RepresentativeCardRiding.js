@@ -47,8 +47,11 @@ async function fetchPastRepresentativePairedVotes(member, data) {
 async function fetchPastRepresentativeSpending(member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
     .then(res => {
-      console.log("res ", res.data.data)
-      return res.data.data
+      const yearlySpending = res.data.data
+      const totalAmount = yearlySpending.reduce((a, b) => a + b, 0)
+      const totalAmountRound = Math.floor(totalAmount)
+      console.log("total ", totalAmountRound)
+      return totalAmountRound
     })
     .catch(console.error)
 }
@@ -103,10 +106,8 @@ export default function RepresentativeCard() {
       const expensesYear2 = await fetchPastRepresentativeSpending(member, parliamentData2)
       const expensesYear3 = await fetchPastRepresentativeSpending(member, parliamentData3)
       const expensesYear4 = await fetchPastRepresentativeSpending(member, parliamentData4)
-      console.log("year 1", expensesYear1)
-      console.log("year 2", expensesYear2)
-      console.log("year 3", expensesYear3)
-      console.log("year 4", expensesYear4)
+      const expensesTerm = (expensesYear1 + expensesYear2 + expensesYear3 + expensesYear4)
+      setTotalExpenses(expensesTerm)
       setPartyImageUrl(partyData.imageUrl)
       setNbBills(totalBills)
       setNbPairedBills(totalPairedBills)
@@ -179,7 +180,7 @@ export default function RepresentativeCard() {
                     <DollarIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText>Total Spending: </ListItemText>
+                <ListItemText>Total Spending: {totalExpenses}</ListItemText>
               </ListItem>
               <Box m={2} />
               <DividerBlock
