@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/styles'
-import { Drawer, Typography, ListItem, useMediaQuery, List } from '@material-ui/core'
+import { Drawer, Typography, ListItem, List } from '@material-ui/core'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import PeopleIcon from '@material-ui/icons/People'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
@@ -36,9 +36,21 @@ const useStyles = makeStyles(theme => ({
   drawer: {
     width: 240,
     backgroundColor: '#1E2125',
-    flexGrow: 1
-
+    flexGrow: 1,
+    [theme.breakpoints.up('xl')]: {
+      width: 300
+    }
   },
+  chevronLeftIcon: {
+    color: 'white',
+    [theme.breakpoints.up('xl')]: {
+      marginLeft: '60%'
+    },
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: '40%'
+    }
+  },
+
   drawerXl: {
     width: 300,
     backgroundColor: '#1E2125',
@@ -58,8 +70,8 @@ const useStyles = makeStyles(theme => ({
     width: 56
   },
   icon: {
-    height: 40,
-    width: 40,
+    height: 45,
+    width: 45,
     color: '#00bcd4'
   },
   routerLink: {
@@ -85,15 +97,27 @@ const useStyles = makeStyles(theme => ({
     })
   },
   appBarShift: {
-    width: 'calc(100% - 240px)',
-    marginLeft: 240,
+    [theme.breakpoints.up('xl')]: {
+      width: `calc(100% - ${drawerWidthXlMode + 20})`,
+      marginLeft: drawerWidthXlMode
+    },
+    [theme.breakpoints.down('lg')]: {
+      width: `calc(100% - ${drawerWidth + 500})`,
+      marginLeft: drawerWidth + 30
+    },
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen
     })
+
   },
   shiftContent: {
-    paddingLeft: drawerWidth
+    [theme.breakpoints.up('xl')]: {
+      paddingLeft: drawerWidthXlMode + 10
+    },
+    [theme.breakpoints.down('lg')]: {
+      paddingLeft: drawerWidth
+    }
   },
   content: {
     flexGrow: 1,
@@ -128,34 +152,39 @@ const useStyles = makeStyles(theme => ({
     paddingTop: theme.spacing(4)
   },
   bigAvatar: {
-    marginLeft: theme.spacing(9),
-    width: 100,
-    height: 100,
-    border: '3px solid #00bcd4'
+    [theme.breakpoints.up('xl')]: {
+      marginLeft: theme.spacing(12),
+      width: 100,
+      height: 100,
+      border: '3px solid #00bcd4'
+    },
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: theme.spacing(9),
+      width: 100,
+      height: 100,
+      border: '3px solid #00bcd4'
+    }
   },
   bigAvatarXL: {
     marginLeft: theme.spacing(12),
     width: 100,
     height: 100,
     border: '3px solid #00bcd4'
-  }
+  },
+  flexContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: 0,
+    [theme.breakpoints.down('lg')]: {
+      paddingTop: theme.spacing(1)
+    }
 
+  }
 }))
 const Sidebar = withRouter((props) => {
   const classes = useStyles()
   const theme = useTheme()
-  const [riding, setRiding] = useState(null)
   const [user, setUser] = useState(null)
-
-  const isxlScreen = useMediaQuery(theme.breakpoints.up('xl'), {
-    defaultMatches: true
-  })
-  const isDesktop = useMediaQuery(theme.breakpoints.down('lg'), {
-    defaultMatches: true
-  })
-  const mobileVersion = useMediaQuery(theme.breakpoints.down('md'), {
-    defaultMatches: true
-  })
   const [openSidebar, setOpenSidebar] = useState(true)
   const handleSidebarOpen = () => {
     setOpenSidebar(true)
@@ -169,6 +198,8 @@ const Sidebar = withRouter((props) => {
     setUser(user)
   }, [])
 
+  const [riding, setRiding] = useState(undefined)
+  // const prevRiding = usePrevious(riding)
   useEffect(() => {
     async function getData () {
       if (user) {
@@ -178,11 +209,11 @@ const Sidebar = withRouter((props) => {
     }
     getData()
   }, [user])
-
   const [data, setData] = useState(null)
+  const logicalCondition = (data && riding && riding !== data.riding) || (!data && riding)
   useEffect(() => {
     async function getData () {
-      if (riding) {
+      if (logicalCondition) {
         const promises = await Promise.all([
           fetchRidingCode(riding),
           fetchRepresentative(riding)
@@ -203,7 +234,7 @@ const Sidebar = withRouter((props) => {
       }
     }
     getData()
-  }, [riding])
+  }, [riding, data, logicalCondition])
 
   const pages = [
     {
@@ -238,35 +269,32 @@ const Sidebar = withRouter((props) => {
 
     }
   ]
-  const flexContainer = {
-    display: 'flex',
-    flexDirection: 'row',
-    padding: 0
-  }
+
   return (
+
     <div>
       <Topbar onSidebarOpen={handleSidebarOpen} open={openSidebar} />
       <Drawer
         anchor='left'
-        classes={{ paper: isxlScreen ? classes.drawerXl : classes.drawer }}
+        classes={{ paper: classes.drawer }}
         onClose={handleSidebarClose}
         open={openSidebar}
-        variant={isxlScreen ? 'persistent' : isDesktop && !mobileVersion ? 'persistent' : 'temporary'}
+        variant='persistent'
       >
-        <List style={flexContainer}>
+        <List className={classes.flexContainer}>
           <ListItem button onClick={() => { props.history.push({ pathname: '/general' }) }}>
             <AccountBalanceIcon className={classes.icon} />
-            <Typography variant='h6' style={{ color: 'white' }}>Politisense</Typography>
+            <Typography variant='h5' style={{ color: 'white' }}>Politisense</Typography>
           </ListItem>
           <ListItem>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon style={!isxlScreen ? { color: 'white', marginLeft: '20%' } : { color: 'white', marginLeft: '40%' }} onClick={handleSidebarClose} /> : <ChevronRightIcon />}
+            {theme.direction === 'ltr' ? <ChevronLeftIcon className={classes.chevronLeftIcon} onClick={handleSidebarClose} /> : <ChevronRightIcon />}
           </ListItem>
         </List>
         <AppBar position='fixed' className={clsx(classes.appBar, { [classes.appBarShift]: openSidebar })} />
         <Divider className={classes.divider1} />
         <div>
           <ListItemAvatar style={{ paddingTop: theme.spacing(1) }}>
-            {<Avatar alt={data ? data.name : ''} src={data ? data.imageUrl : ''} className={isxlScreen ? classes.bigAvatarXL : classes.bigAvatar} />}
+            {<Avatar alt={data ? data.name : ''} src={data ? data.imageUrl : ''} className={classes.bigAvatar} />}
           </ListItemAvatar>
           <MpProfile data={data} />
           <Divider className={classes.divider} />
@@ -276,19 +304,18 @@ const Sidebar = withRouter((props) => {
       <div
         className={clsx({
           [classes.toolbar]: true,
-          [classes.shiftContent]: isDesktop,
-          [classes.shiftContentXLMode]: isxlScreen
+          [classes.shiftContent]: true
         })}
       >
         <main className={clsx(classes.content, {
-          [classes.contentShift]: isDesktop && openSidebar,
-          [classes.shiftContentXLMode]: isxlScreen && openSidebar
+          [classes.contentShift]: openSidebar
         })}
         >
           <div>
             {props.children}
           </div>
         </main>
+
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import { useEffect, useRef } from 'react'
 export async function fetchCategories () {
   return axios
     .get('/api/bills/fetchCategories')
@@ -447,4 +447,12 @@ export async function fetchRepresentativeId (representative) {
       }
     })
     .catch(console.error)
+}
+
+export function usePrevious (value) {
+  const ref = useRef()
+  useEffect(() => {
+    ref.current = value
+  })
+  return ref.current
 }

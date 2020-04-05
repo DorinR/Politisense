@@ -13,7 +13,6 @@ import IssuedBillsByMP from './IssuedBillsByMP'
 import Bipartisan from './Bipartisan'
 import MPActivityDistribution from './MPActivityDistribution'
 import { fetchCategories, fetchUserRiding, fetchRepresentative, createDataSetDonut, createDataPieBarTable, createRadarRows, createDataSetRadar } from '../Dashboard/Utilities/CommonUsedFunctions'
-
 import {
   CssBaseline
 } from '@material-ui/core'
@@ -22,7 +21,6 @@ const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(3)
   }
-
 }))
 
 export default function MyMP (props) {
@@ -108,7 +106,7 @@ export default function MyMP (props) {
   }, [userRepresentative])
 
   useEffect(() => {
-    async function getData () {
+    function getData () {
       if (categoryList && representativeData) {
         const radarRows = createRadarRows(representativeData, categoryList)
         setRadarDataRows(radarRows)
@@ -147,7 +145,7 @@ export default function MyMP (props) {
 
   const [userRepIssuedBills, setUserRepIssuedBills] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    function getData () {
       if ((uniqueIssuedBills && uniqueIssuedBills.length !== 0)) {
         setUserRepIssuedBills(uniqueIssuedBills)
       }
@@ -156,9 +154,9 @@ export default function MyMP (props) {
   }, [uniqueIssuedBills])
 
   useEffect(() => {
-    async function getData () {
+    function getData () {
       if (userRepIssuedBills) {
-        const rows = await createDataPieBarTable(categoryList, userRepIssuedBills)
+        const rows = createDataPieBarTable(categoryList, userRepIssuedBills)
         setBarPieRows(rows)
       }
     }
@@ -167,7 +165,7 @@ export default function MyMP (props) {
 
   const [donutData, setDonutData] = React.useState(null)
   useEffect(() => {
-    async function getDataForDonutD3 () {
+    function getDataForDonutD3 () {
       if (allMPsFromAllParliaments && representativeData) {
         const data = createDataSetDonut(allMPsFromAllParliaments, representativeData)
         setDonutData(data)
@@ -228,7 +226,6 @@ export default function MyMP (props) {
                 xs={12}
               >
                 {userRepresentative ? <Committees representative={userRepresentative} /> : ''}
-
               </Grid>
               <Grid
                 item

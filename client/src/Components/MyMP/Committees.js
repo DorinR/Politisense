@@ -60,12 +60,12 @@ const Committees = props => {
   const [representative, setRepresentative] = useState(null)
   useEffect(() => {
     async function getData () {
-      if (props.representative !== null && props.representative !== representative) {
+      if (props.representative !== representative) {
         setRepresentative(props.representative)
       }
     }
     getData()
-  }, [props.representative])
+  }, [props.representative, representative])
 
   const [data, setData] = useState(null)
   useEffect(() => {

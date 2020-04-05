@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
@@ -56,9 +56,18 @@ const useStyles = makeStyles(theme => ({
 const MpProfile = props => {
   const { className, ...rest } = props
   const classes = useStyles()
+
+  const [data, setData] = useState(null)
+  useEffect(() => {
+    if (props.data !== data) {
+      console.log(props.data, data)
+      setData(props.data)
+    }
+  }, [props.data, data])
+
   return (
     <div>
-      {props.data ? (
+      {data ? (
         <div
           {...rest}
           className={clsx(classes.root, className)}
@@ -67,32 +76,32 @@ const MpProfile = props => {
             className={classes.name}
             variant='h6'
           >
-            {props.data.name ? capitalizedName(props.data.name) : ''}
+            {data.name ? capitalizedName(data.name) : ''}
           </Typography>
-          {props.data.riding ? props.data.riding.length > 22
+          {data.riding ? data.riding.length > 22
             ? (
               <div className={classes.containerLongRidingName}>
                 <Typography className={classes.fontColorTypography} variant='caption'>Represents</Typography>
-                <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(props.data.riding)}</Typography>
-              </div>) : (<Typography className={classes.fontColorTypography} variant='caption'>{'Represents: ' + capitalizedName(props.data.riding)}</Typography>)
+                <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(data.riding)}</Typography>
+              </div>) : (<Typography className={classes.fontColorTypography} variant='caption'>{'Represents: ' + capitalizedName(data.riding)}</Typography>)
             : (<Typography className={classes.fontColorTypography} variant='caption'>Represents</Typography>)}
 
-          {props.data.party ? props.data.party.length > 15
+          {data.party ? data.party.length > 15
             ? (
               <div className={classes.containerLongRidingName}>
                 <Typography className={classes.fontColorTypography} variant='caption'>Political Party:</Typography>
-                <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(props.data.party)}</Typography>
+                <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(data.party)}</Typography>
               </div>
             )
-            : (<Typography className={classes.fontColorTypography} variant='caption'>{'Political Party: ' + capitalizedName(props.data.party)}</Typography>)
+            : (<Typography className={classes.fontColorTypography} variant='caption'>{'Political Party: ' + capitalizedName(data.party)}</Typography>)
             : (<Typography className={classes.fontColorTypography} variant='caption'>Political Party: </Typography>)}
 
-          <Typography className={classes.fontColorTypography} variant='caption'>{'Total Population: '} {props.data.riding ? (<RidingPopulation riding={props.data.riding} />) : ''}</Typography>
-          <Typography className={classes.fontColorTypography} variant='caption'>{'Member Since: '} {props.data.start ? loadingTextdata({ fromDate: props.data.start, toDate: props.data.end }) : ''}</Typography>
+          <Typography className={classes.fontColorTypography} variant='caption'>{'Total Population: '} {data.riding ? (<RidingPopulation riding={data.riding} />) : ''}</Typography>
+          <Typography className={classes.fontColorTypography} variant='caption'>{'Member Since: '} {data.start ? loadingTextdata({ fromDate: data.start, toDate: data.end }) : ''}</Typography>
           <div className={classes.shapeContainer}>
             <RidingShapeContainer
-              ridingCode={props.data.ridingCode}
-              politicalParty={props.data.party}
+              ridingCode={data.ridingCode}
+              politicalParty={data.party}
             />
           </div>
         </div>

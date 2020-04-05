@@ -4,13 +4,12 @@ import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
 import {
-  AppBar, Toolbar, Hidden, IconButton,
+  AppBar, Toolbar, IconButton,
   Typography, ListItem, List
 } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import InputIcon from '@material-ui/icons/Input'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
-
 import Button from '@material-ui/core/Button'
 
 const useStyles = makeStyles(theme => ({
@@ -19,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#00bcd4'
   },
   flexGrow: {
-    flexGrow: 2
+    flexGrow: 1
   },
   signOutButton: {
     marginLeft: theme.spacing(1)
@@ -92,35 +91,32 @@ const Topbar = withRouter((props) => {
         </div>
 
         <div className={classes.flexGrow} />
-        <Hidden mdDown>
-          <Button
-            style={{ color: 'white', textTransform: 'none' }} variant='text'
-            onClick={() => { props.history.push('/general') }}
-          >General
-          </Button>
-          <Button
-            style={{ color: 'white', textTransform: 'none' }} variant='text'
-            onClick={() => { props.history.push('/myRepresentative') }}
-          >My MP
-          </Button>
-          <Button
-            style={{ color: 'white', textTransform: 'none' }} variant='text'
-            onClick={() => { props.history.push('/compare') }}
-          >Head To Head
-          </Button>
-          <Button
-            style={{ color: 'white', textTransform: 'none' }} variant='text'
-            onClick={() => { props.history.push('/map') }}
-          >Map
-          </Button>
-          <IconButton
-            className={classes.signOutButton}
-            onClick={() => { props.history.push('/logout') }}
-          >
-            <InputIcon style={{ color: 'white' }} />
-          </IconButton>
-        </Hidden>
-
+        <Button
+          style={{ color: 'white', textTransform: 'none' }} variant='text'
+          onClick={() => { props.history.push('/general') }}
+        >General
+        </Button>
+        <Button
+          style={{ color: 'white', textTransform: 'none' }} variant='text'
+          onClick={() => { props.history.push('/myRepresentative') }}
+        >My MP
+        </Button>
+        <Button
+          style={{ color: 'white', textTransform: 'none' }} variant='text'
+          onClick={() => { props.history.push('/compare') }}
+        >Head To Head
+        </Button>
+        <Button
+          style={{ color: 'white', textTransform: 'none' }} variant='text'
+          onClick={() => { props.history.push('/map') }}
+        >Map
+        </Button>
+        <IconButton
+          className={classes.signOutButton}
+          onClick={() => { props.history.push('/logout') }}
+        >
+          <InputIcon style={{ color: 'white' }} />
+        </IconButton>
       </Toolbar>
     </AppBar>
   )

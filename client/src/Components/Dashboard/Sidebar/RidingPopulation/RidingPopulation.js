@@ -15,15 +15,24 @@ export async function fetchPopulation (riding) {
 
 export default function RidingPopulation (props) {
   const [population, setPopulation] = useState('')
-
+  const [riding, setRiding] = useState(null)
   useEffect(() => {
     async function getData () {
-      if (props.riding) {
-        setPopulation(formatNumber(await fetchPopulation(props.riding)))
+      if (props.riding && props.riding !== riding) {
+        setRiding(props.riding)
       }
     }
     getData()
-  })
+  }, [props.riding, riding])
+
+  useEffect(() => {
+    async function getData () {
+      if (riding) {
+        setPopulation(formatNumber(await fetchPopulation(riding)))
+      }
+    }
+    getData()
+  }, [riding])
 
   return population
 }

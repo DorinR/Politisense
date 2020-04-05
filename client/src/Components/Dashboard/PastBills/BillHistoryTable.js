@@ -299,7 +299,6 @@ export default function BillHistoryTable (props) {
                         role='checkbox'
                         tabIndex={-1}
                         key={i}
-                        // key={row.code}
                       >
                         {columns.map((column, i) => {
                           const value = row[column.id]
