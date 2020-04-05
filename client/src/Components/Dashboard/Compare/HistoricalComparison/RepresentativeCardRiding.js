@@ -47,6 +47,9 @@ async function fetchPastRepresentativePairedVotes(member, data) {
 async function fetchPastRepresentativeSpending(member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
     .then(res => {
+      console.log(res)
+      console.log(res.data)
+      console.log(res.data.data)
       const yearlySpending = res.data.data
       const totalAmount = yearlySpending.reduce((a, b) => a + b, 0)
       const totalAmountRound = Math.floor(totalAmount)
@@ -78,7 +81,10 @@ export default function RepresentativeCard() {
   const [nbBills, setNbBills] = useState(0)
   const [nbPairedBills, setNbPairedBills] = useState(0)
   const [partyImageUrl, setPartyImageUrl] = useState('')
-  const [totalExpenses, setTotalExpenses] = useState(0)
+  const [totalExpensesYear1, setTotalExpensesYear1] = useState(0)
+  const [totalExpensesYear2, setTotalExpensesYear2] = useState(0)
+  const [totalExpensesYear3, setTotalExpensesYear3] = useState(0)
+  const [totalExpensesYear4, setTotalExpensesYear4] = useState(0)
 
   const updateNameFromSwitcher = newName => {
     setStart(newName.start)
@@ -103,11 +109,15 @@ export default function RepresentativeCard() {
       const totalBills = calculateTotalVotesBills(pastRepresentativeVotes)
       const totalPairedBills = calculateTotalVotesBills(pastRepresentativePairedVotes)
       const expensesYear1 = await fetchPastRepresentativeSpending(member, parliamentData1)
+      console.log(expensesYear1)
+      console.log(fetchPastRepresentativeSpending(member, parliamentData1))
       const expensesYear2 = await fetchPastRepresentativeSpending(member, parliamentData2)
       const expensesYear3 = await fetchPastRepresentativeSpending(member, parliamentData3)
       const expensesYear4 = await fetchPastRepresentativeSpending(member, parliamentData4)
-      const expensesTerm = (expensesYear1 + expensesYear2 + expensesYear3 + expensesYear4)
-      setTotalExpenses(expensesTerm)
+      setTotalExpensesYear1(expensesYear1)
+      setTotalExpensesYear2(expensesYear2)
+      setTotalExpensesYear3(expensesYear3)
+      setTotalExpensesYear4(expensesYear4)
       setPartyImageUrl(partyData.imageUrl)
       setNbBills(totalBills)
       setNbPairedBills(totalPairedBills)
@@ -180,7 +190,7 @@ export default function RepresentativeCard() {
                     <DollarIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText>Total Spending: {totalExpenses}</ListItemText>
+                <ListItemText>Year 1: {totalExpensesYear1}</ListItemText>
               </ListItem>
               <Box m={2} />
               <DividerBlock
