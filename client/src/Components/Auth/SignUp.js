@@ -50,7 +50,6 @@ export async function signupAPICall (user) {
   return axios
     .post('/api/users/checkIfUserExists', user)
     .then(res => {
-      console.log(res)
       return !res.data.success
     })
     .catch(console.error)
@@ -58,13 +57,11 @@ export async function signupAPICall (user) {
 
 export default function SignUp (props) {
   const classes = useStyles()
-  console.log(props)
   const refs = {}
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
   const [firstname, setFirstname] = useState(props && props.location && props.location.state && props.location.state.user ? props.location.state.user.firstname : '')
-  console.log(firstname)
   const [lastname, setLastname] = useState('')
   const [validForm, setValidForm] = useState(false)
   const [errors, setErrors] = useState({
@@ -116,7 +113,6 @@ export default function SignUp (props) {
     if (errors.firstname === '' && errors.lastname === '' && errors.email === '' && errors.password === '' && errors.passwordConfirm === '') {
       errors = {}
       registered = await signupAPICall(user)
-      console.log(registered)
       if (!registered) {
         errors.email = 'Already taken'
       }

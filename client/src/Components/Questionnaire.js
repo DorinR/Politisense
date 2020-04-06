@@ -224,7 +224,6 @@ export default function HorizontalLinearStepper (props) {
   }
 
   const handleNext = async () => {
-    console.log(user)
     let valid = true
     if (activeStep === steps.length - 2) {
       valid = category2
