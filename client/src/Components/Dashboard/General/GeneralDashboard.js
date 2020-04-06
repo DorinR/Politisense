@@ -135,46 +135,46 @@ export default function GeneralDashboard () {
           for (let i = 0; i < res.data.data.length; i++) {
             result[i] = {}
 
-            result[i].name = res.data.data[i].name
-            result[i].seats = res.data.data[i].seats
-            result[i].proportionalSeats = Math.ceil(res.data.data[i].seats / 8)
-            switch (res.data.data[i].name) {
-              case 'liberal':
-                result[i].color = '#D71921'
-                break
-              case 'conservative':
-                result[i].color = '#0C499C'
-                break
-              case 'ndp':
-                result[i].color = '#EF7E52'
-                break
-              case 'bloc québécois':
-                result[i].color = '#02819E'
-                break
-              case 'green party':
-                result[i].color = '#2E8724'
-                break
-              case 'independent':
-                result[i].color = '#78D7CE'
-                break
-              default:
-                result[i].color = 'white'
-            }
-            if (res.data.data[i].seats > max) {
-              max = res.data.data[i].seats
-              result.current = result[i]
-            }
+          result[i].name = res.data.data[i].name
+          result[i].seats = res.data.data[i].seats
+          result[i].proportionalSeats = res.data.data[i].seats
+          switch (res.data.data[i].name) {
+            case 'liberal':
+              result[i].color = '#D71921'
+              break
+            case 'conservative':
+              result[i].color = '#0C499C'
+              break
+            case 'ndp':
+              result[i].color = '#EF7E52'
+              break
+            case 'bloc québécois':
+              result[i].color = '#02819E'
+              break
+            case 'green party':
+              result[i].color = '#2E8724'
+              break
+            case 'independent':
+              result[i].color = '#78D7CE'
+              break
+            default:
+              result[i].color = 'white'
           }
-          if (max >= 170) {
-            result.status = 'Majority'
-          } else {
-            result.status = 'Minority'
+          if (res.data.data[i].seats > max) {
+            max = res.data.data[i].seats
+            result.current = result[i]
           }
-          return result
         }
-      })
-      .catch(console.error)
-  }
+        if (max >= 170) {
+          result.status = 'Majority'
+        } else {
+          result.status = 'Minority'
+        }
+        return result
+      }
+    })
+    .catch(console.error)
+}
 
   useEffect(() => {
     async function getData () {
