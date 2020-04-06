@@ -108,7 +108,7 @@ function ChangeAccountPassword (props) {
   const [user] = useState({})
   const [errors, setErrors] = useState({
     password: '',
-    passwordConfirm: '',
+    passwordConfirm: ''
   })
 
   useEffect(() => {
