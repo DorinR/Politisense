@@ -11,7 +11,6 @@ router.post('/setRiding', controller.setRiding)
 router.post('/checkIfUserExists', controller.checkIfUserExists)
 router.post('/generateResetLink', controller.generateResetLink)
 router.post('/checkTokenValid', controller.checkTokenValid)
-router.post('/getEmailbyToken', controller.getEmailbyToken)
 
 // @route post api/users/signup
 // @desc  signup User

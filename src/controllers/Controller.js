@@ -38,9 +38,6 @@ module.exports = {
   generateResetLink: function (req, res) {
     return UserController.generateResetLink(req, res)
   },
-  getEmailbyToken: function (req, res) {
-    return UserController.getEmailbyToken(req, res)
-  },
   checkTokenValid: function (req, res) {
     return UserController.checkTokenValid(req, res)
   },

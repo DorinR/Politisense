@@ -1,7 +1,7 @@
 import { Authentication as Auth, Firestore } from '@firestore'
 import represent from 'represent'
-const nodemailer = require('nodemailer')
 import crypto from 'crypto'
+const nodemailer = require('nodemailer')
 
 exports.checkIfUserExists = (req, res) => {
   const email = req.body.email
@@ -30,69 +30,72 @@ exports.checkIfUserExists = (req, res) => {
 }
 
 exports.generateResetLink = (req, res) => {
-    const token = crypto.randomBytes(20).toString('hex')
-    const email = req.body.email
-    new Firestore().User()
-        .where('email', '==', email)
-        .update({resetPasswordToken: token, resetPasswordExpires: Date.now()+ 3600000})
-        .then(/*process the query result*/)
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user:`politisenseapp@gmail.com`,
-            pass: `abc123$$$`
-        }
-    })
-    const mailOptions = {
-        from: 'politisense@gmail.com',
-        to: email,
-        subject: 'Link to password reset',
-        text:   `http://localhost:3000/reset/${token}`
+  const token = crypto.randomBytes(20).toString('hex')
+  const email = req.body.email
+  new Firestore().User()
+    .where('email', '==', email)
+    .update({ resetPasswordToken: token, resetPasswordExpires: Date.now() + 3600000 })
+    .then(/* process the query result */)
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'politisenseapp@gmail.com',
+      pass: 'abc123$$$'
     }
-    transporter.sendMail(mailOptions,(err,response) => {
-        if(err){
-            console.log(err)
-        } else {
-            res.json({
-                success: true,
-                data: 'email sent'
-            })
-        }
-    })
+  })
+  const mailOptions = {
+    from: 'politisense@gmail.com',
+    to: email,
+    subject: 'Link to Password Reset',
+    text:
+            'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+            'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n' +
+            `http://localhost:3031/reset/${token}\n\n` +
+            'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+  }
+  transporter.sendMail(mailOptions, (err) => {
+    if (err) {
+      console.log(err)
+    } else {
+      res.json({
+        success: true,
+        data: 'email sent'
+      })
+    }
+  })
 }
 
 exports.checkTokenValid = (req, res) => {
-    const token = req.body.token
-    const db = new Firestore()
-    let user = {}
-    db.User()
-        .where('resetPasswordToken', '==', token)
-        .select()
-        .then(snapshot => {
-            if (snapshot.empty || snapshot.size < 1) {
-                res.json({
-                    success: false,
-                    data: {}
-                })
-            } else {
-                snapshot.forEach(doc => {
-                    user = doc.data()
-                })
-                console.log('exp: ' + user.resetPasswordExpires + ' ' + 'now: ' + Date.now())
-                if(user.resetPasswordExpires > Date.now()){
-                    res.json({
-                        success: true,
-                        data: user
-                    })
-                } else{
-                    res.json({
-                        success: false,
-                        data: user
-                    })
-                }
-            }
+  const token = req.body.token
+  const db = new Firestore()
+  let user = {}
+  db.User()
+    .where('resetPasswordToken', '==', token)
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty || snapshot.size < 1) {
+        res.json({
+          success: false,
+          data: {}
         })
-        .catch(console.error)
+      } else {
+        snapshot.forEach(doc => {
+          user = doc.data()
+        })
+        if (user.resetPasswordExpires > Date.now()) {
+          res.json({
+            success: true,
+            data: user
+          })
+        } else {
+          res.json({
+            success: false,
+            data: user
+          })
+        }
+      }
+    })
+    .catch(console.error)
 }
 
 exports.getUserInterests = (req, res) => {
@@ -208,36 +211,6 @@ exports.getUserByEmail = (req, res) => {
       })
       console.error(err)
     })
-}
-
-exports.getEmailbyToken = (req, res) => {
-    const userEmail = req.params.userEmail
-    const db = new Firestore()
-    db.User()
-        .where('email', '==', userEmail)
-        .select()
-        .then(snapshot => {
-            if (snapshot.empty) {
-                res.status(404).json({
-                    message: 'user not found',
-                    success: false
-                })
-            } else {
-                snapshot.forEach(doc => {
-                    res.json({
-                        success: true,
-                        data: doc.data()
-                    })
-                })
-            }
-        })
-        .catch(err => {
-            res.status(404).json({
-                message: 'UserController.js',
-                success: false
-            })
-            console.error(err)
-        })
 }
 
 exports.updateUser = (req, res) => {

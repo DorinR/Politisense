@@ -10,7 +10,7 @@ import {
 import Login from './Components/Auth/Login'
 import SignUp from './Components/Auth/SignUp'
 import Reset from './Components/Auth/Reset'
-import ResetPW from './Components/Auth/ResetPW'
+import ResetForm from './Components/Auth/ResetForm'
 import Navbar from './Components/Navbar'
 import Logout from './Components/Logout'
 import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
@@ -28,7 +28,7 @@ const App = () => {
       <Route exact path='/' render={() => <Redirect to='/login' />} />
       <Route path='/signup' component={SignUp} />
       <Route exact path='/reset' component={Reset} />
-      <Route wxact path='/reset/:token' component={ResetPW} />
+      <Route wxact path='/reset/:token' component={ResetForm} />
       <Route path='/login' component={Login} />
     </div>
   )
