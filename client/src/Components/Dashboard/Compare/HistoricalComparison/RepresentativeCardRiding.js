@@ -46,17 +46,8 @@ async function fetchPastRepresentativePairedVotes(member, data) {
 
 async function fetchPastRepresentativeSpending(member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
-    .then(res => {
-      console.log(res)
-      console.log(res.data)
-      console.log(res.data.data)
-      const yearlySpending = res.data.data
-      const totalAmount = yearlySpending.reduce((a, b) => a + b, 0)
-      const totalAmountRound = Math.floor(totalAmount)
-      console.log("total ", totalAmountRound)
-      return totalAmountRound
-    })
-    .catch(console.error)
+  console.log(res.data.data)
+  return res.data.data
 }
 
 function getStartYear(parlSession) {
@@ -81,10 +72,7 @@ export default function RepresentativeCard() {
   const [nbBills, setNbBills] = useState(0)
   const [nbPairedBills, setNbPairedBills] = useState(0)
   const [partyImageUrl, setPartyImageUrl] = useState('')
-  const [totalExpensesYear1, setTotalExpensesYear1] = useState(0)
-  const [totalExpensesYear2, setTotalExpensesYear2] = useState(0)
-  const [totalExpensesYear3, setTotalExpensesYear3] = useState(0)
-  const [totalExpensesYear4, setTotalExpensesYear4] = useState(0)
+  const [totalExpensesYear, setTotalExpensesYear] = useState(0)
 
   const updateNameFromSwitcher = newName => {
     setStart(newName.start)
@@ -101,23 +89,13 @@ export default function RepresentativeCard() {
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, data)
       const parliamentSession = pastRepresentativeVotes[0].parliament
       const startYear = getStartYear(parliamentSession)
-      const parliamentData1 = { parliament: parliamentSession, year: startYear }
-      const parliamentData2 = { parliament: parliamentSession, year: startYear + 1 }
-      const parliamentData3 = { parliament: parliamentSession, year: startYear + 2 }
-      const parliamentData4 = { parliament: parliamentSession, year: startYear + 3 }
+      const parliamentData = { parliament: parliamentSession, year: startYear }
       const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, data)
       const totalBills = calculateTotalVotesBills(pastRepresentativeVotes)
       const totalPairedBills = calculateTotalVotesBills(pastRepresentativePairedVotes)
-      const expensesYear1 = await fetchPastRepresentativeSpending(member, parliamentData1)
-      console.log(expensesYear1)
-      console.log(fetchPastRepresentativeSpending(member, parliamentData1))
-      const expensesYear2 = await fetchPastRepresentativeSpending(member, parliamentData2)
-      const expensesYear3 = await fetchPastRepresentativeSpending(member, parliamentData3)
-      const expensesYear4 = await fetchPastRepresentativeSpending(member, parliamentData4)
-      setTotalExpensesYear1(expensesYear1)
-      setTotalExpensesYear2(expensesYear2)
-      setTotalExpensesYear3(expensesYear3)
-      setTotalExpensesYear4(expensesYear4)
+      const expensesYear = await fetchPastRepresentativeSpending(member, parliamentData)
+      console.log(expensesYear)
+      setTotalExpensesYear(expensesYear)
       setPartyImageUrl(partyData.imageUrl)
       setNbBills(totalBills)
       setNbPairedBills(totalPairedBills)
@@ -190,7 +168,31 @@ export default function RepresentativeCard() {
                     <DollarIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText>Year 1: {totalExpensesYear1}</ListItemText>
+                <ListItemText>Year 1: <ColoredText text={Math.floor(totalExpensesYear[0]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar style={getPartyColor(politicalParty)}>
+                    <DollarIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText>Year 2: <ColoredText text={Math.floor(totalExpensesYear[1]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar style={getPartyColor(politicalParty)}>
+                    <DollarIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText>Year 3: <ColoredText text={Math.floor(totalExpensesYear[2]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar style={getPartyColor(politicalParty)}>
+                    <DollarIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText>Year 4: <ColoredText text={Math.floor(totalExpensesYear[3]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
               </ListItem>
               <Box m={2} />
               <DividerBlock
