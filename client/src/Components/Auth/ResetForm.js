@@ -107,13 +107,8 @@ function ChangeAccountPassword (props) {
   const [fetchedUserDetails, setFetchedUserDetails] = useState('')
   const [user] = useState({})
   const [errors, setErrors] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
     password: '',
     passwordConfirm: '',
-    previousPassword: '',
-    userEnteredPreviousPassword: ''
   })
 
   useEffect(() => {
