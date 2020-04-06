@@ -35,7 +35,6 @@ exports.generateResetLink = (req, res) => {
   new Firestore().User()
     .where('email', '==', email)
     .update({ resetPasswordToken: token, resetPasswordExpires: Date.now() + 3600000 })
-    .then(/* process the query result */)
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -55,7 +54,7 @@ exports.generateResetLink = (req, res) => {
   }
   transporter.sendMail(mailOptions, (err) => {
     if (err) {
-      console.log(err)
+      res.status(400).json({ success: false, message: err })
     } else {
       res.json({
         success: true,
@@ -74,24 +73,15 @@ exports.checkTokenValid = (req, res) => {
     .select()
     .then(snapshot => {
       if (snapshot.empty || snapshot.size < 1) {
-        res.json({
-          success: false,
-          data: {}
-        })
+        res.status(200).json({ success: false, message: 'no token available', data: {} })
       } else {
         snapshot.forEach(doc => {
           user = doc.data()
         })
         if (user.resetPasswordExpires > Date.now()) {
-          res.json({
-            success: true,
-            data: user
-          })
+          res.status(200).json({ success: true, data: user })
         } else {
-          res.json({
-            success: false,
-            data: user
-          })
+          res.status(200).json({ success: false, message: 'expired token', data: {} })
         }
       }
     })

@@ -12,8 +12,7 @@ import { withSnackbar } from 'notistack'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-
-import CircularProgress from '@material-ui/core/CircularProgress'
+import CenteredCircularProgress from '../Dashboard/Utilities/CenteredCircularProgress'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -62,11 +61,11 @@ const useStyles = makeStyles(theme => ({
 
 export async function checkTokenValid (token) {
   return axios
-    .post('/api/users/checkTokenValid', { token })
+    .post('/api/users/checkTokenValid', { token: token })
     .then(res => {
       return res.data
     })
-    .catch(err => console.log(err))
+    .catch(console.error)
 }
 
 export async function fetchUserData (userEmail) {
@@ -88,12 +87,6 @@ export async function updatePassword (user, newPassword) {
   user.password = newPassword
   axios
     .post('/api/users/updateUser', user)
-    .then(res => {
-      console.log(res)
-      if (res.data.success) {
-        console.log('password update was successful')
-      }
-    })
     .catch(err => console.log(err))
 }
 
@@ -235,15 +228,7 @@ function ChangeAccountPassword (props) {
                           </Link>
                    </Box>}
           </div>
-        : <div style={{
-          position: 'absolute',
-          left: '50%',
-          top: '50%',
-          transform: 'translate(-50%, -50%)'
-        }}
-          >
-          <CircularProgress />
-        </div>}
+        : <CenteredCircularProgress/>}
     </div>
   )
 }
