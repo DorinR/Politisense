@@ -1,5 +1,7 @@
 const Firestore = require('@firestore').Firestore
 const ExpenditureComputeAction = require('@action').ExpenditureComputeAction
+const Utils = require('./util/ActivityVotingUtils')
+
 
 function fetchAverageExpenditures(parliament = 43, year = 2019) {
   return new Firestore()
@@ -19,46 +21,47 @@ function fetchAverageExpenditures(parliament = 43, year = 2019) {
     .catch(console.error)
 }
 
-//(member, parliament = 43, year = 2019)
-// function fetchMemberExpenditures(member, parliament = 42, year = 2017) {
-//   return new ExpenditureComputeAction({
-//     parliament: parliament,
-//     year: year,
-//     member: member
-//   })
-//     .perform()
-//     .then(results => {
-//       return results
-//         .filter(result => { return result.parent === '' })
-//         .map(doc => { return doc.amount })
-//     })
-//     .catch(console.error)
-// } console.log('document amount ', doc.amount)
-
-exports.fetchMemberExpenditures = async (req, res) => {
+function fetchMemberExpenditures(member, parliament = 43, year = 2019) {
   return new ExpenditureComputeAction({
-    parliament: req.body.parliament,
-    member: req.params.member,
-    year: req.body.year
+    parliament: parliament,
+    year: year,
+    member: member
   })
     .perform()
     .then(results => {
-      const amountAccumulator = []
       return results
         .filter(result => { return result.parent === '' })
-        .map(doc => {
-          console.log('document amount ', doc.amount)
-          amountAccumulator.push(doc.amount)
-          console.log(amountAccumulator)
-        })
-        .then(
-          res.status(200).json({
-            success: true,
-            data: amountAccumulator.flat()
-          })
-        )
+        .map(doc => { return doc.amount })
     })
     .catch(console.error)
+}
+
+exports.pastMemberExpenditures = async (req, res) => {
+  const ParliamentToYears = {
+    40: [2012],
+    41: [2013, 2014],
+    42: [2015,2016,2017,2018],
+    43: [2019]
+  }
+  const parliament = req.body.parliament
+  const years = ParliamentToYears[`${parliament}`]
+  Promise.all(
+    years.map(year => {
+      return fetchMemberExpenditures(req.params.member, parliament, year)
+    })
+  )
+    .then(expenditures => {
+      return expenditures.map(expenditure => {
+        return expenditure.reduce((a,b) => {return a + b})
+      })
+    })
+    .then(data => {
+      Utils.success(res, 'expenditures retreived', data)
+    })
+    .catch(e => {
+      console.log(e)
+      Utils.error(res, 500, 'unspecified server error')
+    })
 }
 
 exports.budgetData = async (req, res) => {

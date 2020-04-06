@@ -170,7 +170,7 @@ module.exports = {
   },
 
   fetchMemberExpenditures: function (req, res) {
-    return BudgetController.fetchMemberExpenditures(req, res)
+    return BudgetController.pastMemberExpenditures(req, res)
   },
 
   getParliamentNumber: function (req, res) {
