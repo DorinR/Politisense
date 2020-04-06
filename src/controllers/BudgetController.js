@@ -40,7 +40,7 @@ exports.pastMemberExpenditures = async (req, res) => {
   const ParliamentToYears = {
     40: [2012],
     41: [2013, 2014],
-    42: [2015,2016,2017,2018],
+    42: [2015, 2016, 2017, 2018],
     43: [2019]
   }
   const parliament = req.body.parliament
@@ -52,7 +52,7 @@ exports.pastMemberExpenditures = async (req, res) => {
   )
     .then(expenditures => {
       return expenditures.map(expenditure => {
-        return expenditure.reduce((a,b) => {return a + b})
+        return expenditure.reduce((a, b) => { return a + b })
       })
     })
     .then(data => {

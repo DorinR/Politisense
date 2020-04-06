@@ -42,7 +42,7 @@ const MenuProps = {
   }
 }
 
-async function fetchPastRepresentatives (riding) {
+async function fetchPastRepresentatives(riding) {
   let pastRepresentatives = []
   await axios
     .get(`/api/representatives/${riding}/getPastRepresentatives`)
@@ -55,18 +55,18 @@ async function fetchPastRepresentatives (riding) {
   return pastRepresentatives
 }
 
-export default function PastMPSwitcher (props) {
+export default function PastMPSwitcher(props) {
   // eslint-disable-next-line
   const { functionUpdate, ...other } = props
   const classes = useStyles()
   const [mp, setMp] = React.useState([])
   const [dropdownMps, setDropdownMps] = React.useState([])
 
-  async function populateDropdownMps (mps) {
+  async function populateDropdownMps(mps) {
     setDropdownMps(mps)
   }
 
-  function getRep (reps, start) {
+  function getRep(reps, start) {
     let mp = {}
     for (let i = 0; i < reps.length; i++) {
       if (reps[i].start === start) {
@@ -76,14 +76,14 @@ export default function PastMPSwitcher (props) {
     return mp
   }
 
-  function handleChange (event) {
+  function handleChange(event) {
     setMp(event.target.value)
     const mp = getRep(dropdownMps, event.target.value)
     functionUpdate(mp)
   }
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       // eslint-disable-next-line
       const user = JSON.parse(localStorage.getItem('user'))
       const riding = await fetchUserRiding(user.email)

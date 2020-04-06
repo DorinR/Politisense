@@ -16,7 +16,7 @@ import FlagIcon from '@material-ui/icons/Flag'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import Box from '@material-ui/core/Box'
-import { capitalizedName, getPartyColor, calculateTotalVotesBills, getPartyData } from '../../Utilities/CommonUsedFunctions'
+import { capitalizedName, getPartyColor, calculateTotalVotesBills, getPartyData, numericalStyling } from '../../Utilities/CommonUsedFunctions'
 import DividerBlock from '../../Utilities/DividerBlock'
 import ColoredText from '../../Utilities/ColoredText'
 
@@ -58,6 +58,14 @@ function getStartYear(parlSession) {
       return 2015
     case 41:
       return 2011
+    case 40:
+      return 2008
+    case 39:
+      return 2006
+    case 38:
+      return 2004
+    case 37:
+      return 2001
     default:
       return 'no financial data for this parliament session'
   }
@@ -73,6 +81,7 @@ export default function RepresentativeCard() {
   const [nbPairedBills, setNbPairedBills] = useState(0)
   const [partyImageUrl, setPartyImageUrl] = useState('')
   const [totalExpensesYear, setTotalExpensesYear] = useState(0)
+  const [startTerm, setStartTerm] = useState(0)
 
   const updateNameFromSwitcher = newName => {
     setStart(newName.start)
@@ -99,6 +108,7 @@ export default function RepresentativeCard() {
       setPartyImageUrl(partyData.imageUrl)
       setNbBills(totalBills)
       setNbPairedBills(totalPairedBills)
+      setStartTerm(startYear)
     }
     if (name) {
       getData()
@@ -107,7 +117,9 @@ export default function RepresentativeCard() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} align='center'>
+      <Grid item xs={12} align='center' style={{
+        height: 115
+      }}>
         <PastMPSwitcher functionUpdate={updateNameFromSwitcher} />
       </Grid>
       <Grid item xs={12} align='center'>
@@ -160,40 +172,49 @@ export default function RepresentativeCard() {
                 <ListItemText>{capitalizedName(politicalParty)}</ListItemText>
               </ListItem>
               <Box m={2} />
-              <DividerBlock text='Spending' color={getPartyColor(politicalParty).backgroundColor} />
+              <DividerBlock text='Spending'
+                color={getPartyColor(politicalParty).backgroundColor}
+                infoBubbleTitle='Cumulative spending'
+                infoBubbleText={'Only available data is displayed'}
+                infoBubbleColor='white'
+              />
               <Box m={2} />
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar style={getPartyColor(politicalParty)}>
-                    <DollarIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText>Year 1: <ColoredText text={Math.floor(totalExpensesYear[0]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar style={getPartyColor(politicalParty)}>
-                    <DollarIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText>Year 2: <ColoredText text={Math.floor(totalExpensesYear[1]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar style={getPartyColor(politicalParty)}>
-                    <DollarIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText>Year 3: <ColoredText text={Math.floor(totalExpensesYear[2]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar style={getPartyColor(politicalParty)}>
-                    <DollarIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText>Year 4: <ColoredText text={Math.floor(totalExpensesYear[3]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
-              </ListItem>
+              {numericalStyling(totalExpensesYear[0]) !== 'NaN' ? (
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar style={getPartyColor(politicalParty)}>
+                      <DollarIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>Year 1 : <ColoredText text={numericalStyling(totalExpensesYear[0])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                </ListItem>) : ''}
+              {numericalStyling(totalExpensesYear[1]) !== 'NaN' ? (
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar style={getPartyColor(politicalParty)}>
+                      <DollarIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>Year 3 : <ColoredText text={numericalStyling(totalExpensesYear[1])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                </ListItem>) : ''}
+              {numericalStyling(totalExpensesYear[2]) !== 'NaN' ? (
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar style={getPartyColor(politicalParty)}>
+                      <DollarIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>Year 3 : <ColoredText text={numericalStyling(totalExpensesYear[2])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                </ListItem>) : ''}
+              {numericalStyling(totalExpensesYear[3]) !== 'NaN' ? (
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar style={getPartyColor(politicalParty)}>
+                      <DollarIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>Year 4 : <ColoredText text={numericalStyling(totalExpensesYear[3])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                </ListItem>) : ''}
               <Box m={2} />
               <DividerBlock
                 text='Legislative'

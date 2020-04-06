@@ -11,7 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import PersonIcon from '@material-ui/icons/Person'
 import DollarIcon from '@material-ui/icons/Money'
 import axios from 'axios'
-import { getAllBillsByHead, capitalizedName, fetchUserRiding, calculateTotalVotesBills, getPartyColor, getPartyData } from '../../Utilities/CommonUsedFunctions'
+import { getAllBillsByHead, capitalizedName, fetchUserRiding, calculateTotalVotesBills, getPartyColor, getPartyData, numericalStyling } from '../../Utilities/CommonUsedFunctions'
 import Grid from '@material-ui/core/Grid'
 import FlagIcon from '@material-ui/icons/Flag'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
@@ -41,6 +41,23 @@ async function fetchCurrentRepresentative(riding) {
     .catch(console.error)
 }
 
+async function fetchRepresentativeId(representative) {
+  return axios
+    .get(`/api/representatives/${representative}/getRepresentativeId`)
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+    .catch(console.error)
+}
+
+async function fetchRepresentativeSpending(member, data) {
+  const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
+  console.log(res.data.data)
+  return res.data.data
+}
+
 export default function ModernRepresentative() {
   const classes = useStyles()
   const [name] = useState('')
@@ -50,6 +67,7 @@ export default function ModernRepresentative() {
   const [currentRepresentative, setCurrentRepresentative] = React.useState([])
   const [politicalParty, setPoliticalParty] = React.useState([])
   const [partyImageUrl, setPartyImageUrl] = useState('')
+  const [spending, setSpending] = useState(0)
 
   useEffect(() => {
     async function getIssuedBillsByHead(head) {
@@ -64,6 +82,11 @@ export default function ModernRepresentative() {
       const user = JSON.parse(localStorage.getItem('user'))
       const riding = await fetchUserRiding(user.email)
       const currentRepresentative = await fetchCurrentRepresentative(riding)
+      const member = await fetchRepresentativeId(currentRepresentative.name)
+      const parliamentData = { parliament: 43 }
+      const spending = await fetchRepresentativeSpending(member, parliamentData)
+      console.log("spending  ", spending)
+      setSpending(spending)
       const bills = await getAllBillsByHead(currentRepresentative.name)
       const total = calculateTotalVotesBills(bills)
       setTotalBills(total)
@@ -83,8 +106,8 @@ export default function ModernRepresentative() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} align='center'>
-        <Card className={classes.card} style={{ marginTop: 65 }}>
+      <Grid item xs={12} align='center' style={{ marginTop: 57 }}>
+        <Card className={classes.card} style={{ marginTop: 57 }}>
           <CardContent>
             <Grid container justify='center'>
               <Grid item xs={3}>
@@ -127,7 +150,12 @@ export default function ModernRepresentative() {
                 <ListItemText>{capitalizedName(politicalParty)}</ListItemText>
               </ListItem>
               <Box m={2} />
-              <DividerBlock text='Spending' color={getPartyColor(politicalParty).backgroundColor} />
+              <DividerBlock text='Spending'
+                color={getPartyColor(politicalParty).backgroundColor}
+                infoBubbleTitle='Cumulative spending to this point in time'
+                infoBubbleText={'Only available data is displayed'}
+                infoBubbleColor='white'
+              />
               <Box m={2} />
               <ListItem>
                 <ListItemAvatar>
@@ -135,7 +163,7 @@ export default function ModernRepresentative() {
                     <DollarIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText>Total Spending: N/A</ListItemText>
+                <ListItemText>Expenditures Up to Date : <ColoredText text={numericalStyling(spending)} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
               </ListItem>
               <Box m={2} />
               <DividerBlock
