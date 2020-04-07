@@ -9,22 +9,22 @@ import axios from 'axios'
 import InputLabel from '@material-ui/core/InputLabel'
 import capitalize from 'capitalize'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(0),
     minWidth: 250,
-    maxWidth: 500
+    maxWidth: 500,
   },
   chips: {
     display: 'flex',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   chip: {
-    margin: 2
+    margin: 2,
   },
   noLabel: {
-    marginTop: theme.spacing(3)
-  }
+    marginTop: theme.spacing(3),
+  },
 }))
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -32,26 +32,26 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 9 + ITEM_PADDING_TOP,
-      width: 350
-    }
-  }
+      width: 350,
+    },
+  },
 }
 
 async function fetchAllRepresentatives() {
   return await axios
-    .get('http://localhost:5000/api/representatives/getAllRepresentatives')
-    .then(res => {
+    .get('/api/representatives/getAllRepresentatives')
+    .then((res) => {
       if (res.data.success) {
         return res.data.data
       }
     })
-    .catch(err => console.error(err))
+    .catch((err) => console.error(err))
 }
 
 function getAllParties(representatives) {
   let parties = []
   let party
-  representatives.forEach(rep => {
+  representatives.forEach((rep) => {
     party = capitalize.words(rep.party)
     if (!parties.includes(party)) {
       parties.push(party)
@@ -65,7 +65,7 @@ function getStyles(selectedParty, party, theme) {
     fontWeight:
       selectedParty === party
         ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium
+        : theme.typography.fontWeightMedium,
   }
 }
 
@@ -109,7 +109,7 @@ export default function PartySwitcher(props) {
           onChange={handleChange}
           input={<Input />}
           MenuProps={MenuProps}>
-          {dropdownParties.map(party => (
+          {dropdownParties.map((party) => (
             <MenuItem
               key={party}
               value={party}

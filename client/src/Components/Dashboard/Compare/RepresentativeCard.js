@@ -26,11 +26,11 @@ import MapIcon from '@material-ui/icons/Map'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 const useStyles = makeStyles({
   card: {
-    width: 350
+    width: 350,
   },
   avatar: {
-    backgroundColor: '#43D0C4'
-  }
+    backgroundColor: '#43D0C4',
+  },
 })
 
 function capitalize(str) {
@@ -39,7 +39,7 @@ function capitalize(str) {
     res = res
       .toLowerCase()
       .split(' ')
-      .map(s => s.charAt(0).toUpperCase() + s.substring(1))
+      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
       .join(' ')
     return res
   }
@@ -58,7 +58,7 @@ export default function RepresentativeCard(props) {
   const [skeleton] = useState([1, 2, 3, 4, 5])
   const [issuedBills, setIssuedBills] = useState(0)
 
-  const updateNameFromSwitcher = newName => {
+  const updateNameFromSwitcher = (newName) => {
     setName(newName)
     updateHead(newName)
   }
@@ -67,13 +67,13 @@ export default function RepresentativeCard(props) {
     if (name) {
       async function getRepInfo(name) {
         const res = await axios.get(
-          `http://localhost:5000/api/representatives/${name}/getRepresentativesInfo`
+          `/api/representatives/${name}/getRepresentativesInfo`
         )
         return res.data.data
       }
       async function getIssuedBillsByHead(head) {
         const res = await axios.get(
-          `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
+          `/api/bills/${head}/getAllBillsBySponsorName`
         )
         return res.data.data
       }
@@ -184,7 +184,7 @@ export default function RepresentativeCard(props) {
               </List>
             ) : (
               <Grid item style={{ paddingTop: '10px' }}>
-                {skeleton.map(skeleton => {
+                {skeleton.map((skeleton) => {
                   return <Skeleton animation={false} />
                 })}
               </Grid>
@@ -198,7 +198,7 @@ export default function RepresentativeCard(props) {
 function calculateTotalVotesBills(bills) {
   let totalBills = 0
   if (bills) {
-    bills.forEach(bill => totalBills++)
+    bills.forEach((bill) => totalBills++)
   }
   return totalBills
 }
