@@ -95,6 +95,12 @@ export async function fetchUserData(userEmail) {
     return result
 }
 
+async function retrieveVote(data) {
+    const res = await axios.post(`http://localhost:5000/api/voting/vote/`, data)
+    console.log(res.data.data)
+    return res.data.data
+}
+
 // export async function registerVote(userEmail, description, title, vote) {
 //     await axios.post(`http://localhost:5000/api/voting/vote`,
 //         {
@@ -136,7 +142,16 @@ export default function Voting() {
             const ipAddress = await getIpPostalCode()
             setIpPostalCode(ipAddress)
             const recentLegislativeActivities = await fetchRecentBills()
-            setRecentBills(recentLegislativeActivities[0].data[0])
+            const listBills = recentLegislativeActivities[0].data[0]
+            setRecentBills(listBills)
+            console.log(listBills)
+            const votingData = {
+                user: { email: fullUserDetails },
+                activity: { description: listBills[0].description, title: listBills[0].title },
+                vote: 'yes'
+            }
+            const getUserVote = await retrieveVote(votingData)
+            console.log(getUserVote)
         }
         getData()
     }, [name])
