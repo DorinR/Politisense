@@ -6,6 +6,7 @@ class FileOutputAction extends Action {
   constructor (params) {
     super()
     this.params = params
+    this.fs = fs
   }
 
   perform (result) {
@@ -15,7 +16,7 @@ class FileOutputAction extends Action {
       content: result.data
     })
     return new Promise((resolve, reject) => {
-      fs.writeFile(fp, Buffer.from(out), (err) => {
+      this.fs.writeFile(fp, Buffer.from(out), (err) => {
         if (err) {
           reject(err)
         }

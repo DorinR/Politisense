@@ -1,30 +1,18 @@
 const Mutex = require('async-sema').Sema
 const Queue = require('@queue').Queue
-const Action = require('@manager').QueueAction
+const Action = require('./QueueAction').QueueAction
 const DecorationError = require('@action').Errors.ActionDecorationError
 
 class QueueManager {
   constructor (waitPeriod = 1000) {
     this.error = console.error
-    this.log = (result) => {
-      let message
-      if (result instanceof Object) {
-        message = `INFO: job finished, found ${result.data ? result.data.length : 0} potential results`
-      } else if (result) {
-        message = `INFO: job finished, found ${result ? result.length : 0} potential results`
-      }
-
-      if (message) {
-        console.log(message)
-      }
-      return result
-    }
     this.activeJobs = []
     this.activeJobCount = 0
     this.queue = new Queue()
     this.waitPeriod = waitPeriod
     this.result = []
     this.lock = new Mutex(1)
+    this.registry = {}
   }
 
   start () {
@@ -36,11 +24,15 @@ class QueueManager {
   }
 
   before () {
-    console.log('Before action not specified')
+    console.warn('Before action not specified')
   }
 
   after () {
-    console.log('After action not specified')
+    console.warn('After action not specified')
+  }
+
+  log (result) {
+    return result
   }
 
   async execute () {
@@ -53,6 +45,7 @@ class QueueManager {
       })
     await this.run()
     await this.after()
+    this.finish()
     return this.result
   }
 
@@ -63,89 +56,98 @@ class QueueManager {
   }
 
   accumulate (result) {
-    result.forEach(entry => {
-      this.result.push(entry)
-    })
+    if (result) {
+      this.result.push(result)
+    }
     return result
   }
 
+  finish () {
+    console.debug('WARN: No Finish Message Specified')
+  }
+
   setStartAction (action) {
-    if (!(action instanceof Action)) {
-      throw new DecorationError(action)
-    }
+    QueueManager.check(action)
     this.start = action.perform.bind(action)
+    this.registry.start = action.constructor.name
     return this
   }
 
   setErrorAction (action) {
-    if (!(action instanceof Action)) {
-      throw new DecorationError(action)
-    }
+    QueueManager.check(action)
     this.error = action.perform.bind(action)
+    this.registry.error = action.constructor.name
     return this
   }
 
   setLogAction (action) {
-    if (!(action instanceof Action)) {
-      throw new DecorationError(action)
-    }
+    QueueManager.check(action)
     this.log = action.perform.bind(action)
+    this.registry.log = action.constructor.name
     return this
   }
 
   setStopAction (action) {
-    if (!(action instanceof Action)) {
-      throw new DecorationError(action)
-    }
+    QueueManager.check(action)
     this.stop = action.perform.bind(action)
+    this.registry.stop = action.constructor.name
     return this
   }
 
   setBeforeAction (action) {
-    if (!(action instanceof Action)) {
-      throw new DecorationError(action)
-    }
+    QueueManager.check(action)
     this.before = action.perform.bind(action)
+    this.registry.before = action.constructor.name
     return this
   }
 
   setAfterAction (action) {
-    if (!(action instanceof Action)) {
-      throw new DecorationError(action)
-    }
+    QueueManager.check(action)
     this.after = action.perform.bind(action)
+    this.registry.after = action.constructor.name
     return this
   }
 
-  async run () {
-    while (!this.stop()) {
-      let job = null
-      try {
-        job = this.queue.dequeue()
-        this.activeJobs.push(job)
-        await this.lock.acquire()
-        this.activeJobCount++
-        this.lock.release()
-      } catch (e) {
-        await this.waitForActiveJobs(e)
-        continue
-      }
-      job.execute()
-        .then(this.accumulate.bind(this))
-        .then(this.log)
-        .catch(this.error)
-        .finally(async () => {
-          await this.lock.acquire()
-          job.done = true
-          this.activeJobCount--
-          this.lock.release()
-          await this.waitForActiveJobs()
-        })
+  static check (action) {
+    if (!(action instanceof Action)) {
+      throw new DecorationError(action)
     }
   }
 
-  async waitForActiveJobs (e) {
+  async run () {
+    while (!await this.stop()) {
+      let job = null
+      try {
+        await this.lock.acquire()
+        job = this.queue.dequeue()
+        this.activeJobs.push(job)
+        this.activeJobCount++
+        this.lock.release()
+      } catch (e) {
+        this.lock.release()
+        await this.waitForActiveJobs(e)
+        continue
+      }
+      this.runJob(job)
+    }
     this.pruneCompletedJobs()
+  }
+
+  runJob (job) {
+    return job.execute()
+      .then(this.accumulate.bind(this))
+      .then(this.log)
+      .catch(this.error)
+      .finally(async () => {
+        await this.lock.acquire()
+        job.done = true
+        this.activeJobCount--
+        this.lock.release()
+        await this.waitForActiveJobs()
+      })
+  }
+
+  async waitForActiveJobs (e) {
     await QueueManager.wait(this.waitPeriod)
     if (e) {
       console.debug(`INFO: ${e.message}, waiting for links to return..`)
@@ -157,8 +159,10 @@ class QueueManager {
   pruneCompletedJobs () {
     let currentIndex = 0
     while (currentIndex < this.activeJobs.length) {
-      if (this.activeJobs[currentIndex].done === true) {
+      if (this.activeJobs[currentIndex].done === true && currentIndex !== 0) {
         this.activeJobs.splice(currentIndex)
+      } else if (this.activeJobs[currentIndex].done === true && currentIndex === 0) {
+        this.activeJobs.shift()
       } else {
         currentIndex++
       }

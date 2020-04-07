@@ -1,21 +1,18 @@
-const QueueActions = require('../actions')
-const QueueAction = QueueActions.QueueAction
+const QueueAction = require('../QueueAction').QueueAction
 const Firestore = require('@firestore').Firestore
 
-const Parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
-Object.freeze(Parliaments)
+const Parliaments = require('@parameter').Parliament.Number
 
 class BillLinkFetchBeforeAction extends QueueAction {
   constructor (manager) {
     super()
     this.manager = manager
-    this.bills = this.retrieveBills()
+    this.bills = this.retrieveBills(new Firestore(false))
   }
 
-  retrieveBills () {
+  retrieveBills (db) {
     return Parliaments.map(parl => {
-      return new Firestore(false)
-        .forParliament(parl)
+      return db.forParliament(parl)
         .Bill()
         .select()
         .then(snapshot => {
@@ -26,6 +23,7 @@ class BillLinkFetchBeforeAction extends QueueAction {
               id: doc.id
             })
           })
+          console.debug(`INFO: ${BillLinkFetchBeforeAction.name}: retrieved ${bills.length} bills.`)
           return bills
         })
         .then(bills => {
@@ -46,14 +44,17 @@ class BillLinkFetchBeforeAction extends QueueAction {
     const params = []
     this.manager.params.forEach(param => {
       const parliament = this.bills[Parliaments.indexOf(param.parliament)]
-      parliament.forEach(bill => {
-        params.push({
-          bill: bill.id,
-          url: bill.data.link,
-          parliament: param.parliament
+      if (parliament) {
+        parliament.forEach(bill => {
+          params.push({
+            bill: bill.id,
+            url: bill.data.link,
+            parliament: param.parliament
+          })
         })
-      })
+      }
     })
+    console.log(`INFO: ${BillLinkFetchBeforeAction.name}: Parameter Query set changed to ${this.manager.params.length} from ${params.length}`)
     this.manager.params = params
     this.manager.queryCount = params.length
   }

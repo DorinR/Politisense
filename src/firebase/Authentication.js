@@ -64,6 +64,10 @@ class Auth {
     this.auth = new _Auth()
   }
 
+  compare (salt, hash) {
+    return this.auth.compare(salt, hash)
+  }
+
   authenticate (type) {
     return this.auth.authenticate(type)
   }

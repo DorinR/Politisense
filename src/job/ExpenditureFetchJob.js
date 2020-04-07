@@ -1,5 +1,5 @@
 const Actions = require('@action')
-const AbstractJob = require('../util/Job').AbstractJob
+const AbstractJob = require('./Job').AbstractJob
 const ExpenditureParser = require('@parser').FinancialRecordXmlParser
 
 class FormatAction extends Actions.Action {

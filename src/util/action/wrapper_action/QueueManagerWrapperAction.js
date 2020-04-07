@@ -1,4 +1,4 @@
-const QueueManager = require('@manager').QueueManager
+const QueueManager = require('../../queue_manager/QueueManager').QueueManager
 const DecorationError = require('../error/errors').ActionDecorationError
 const Action = require('../JobAction').AbstractJobAction
 
@@ -9,6 +9,7 @@ class QueueManagerWrapperAction extends Action {
       throw new DecorationError(QueueManagerType)
     }
     this.create = QueueManagerType.create
+    this.wrapped = 'Wrapped ' + QueueManagerType.name
     this.params = params
   }
 
