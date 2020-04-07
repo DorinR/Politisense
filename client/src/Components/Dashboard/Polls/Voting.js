@@ -127,11 +127,7 @@ export default function Voting() {
     const [storagePostalCode, setStoragePostalCode] = useState('')
     const [ipPostalCode, setIpPostalCode] = useState('')
     const preventDefault = (event) => event.preventDefault()
-
-    const registerVoteTest = (event) => {
-        event.preventDefault()
-        alert("Clicked!!")
-    }
+    const [vote, setVote] = useState('')
 
     useEffect(() => {
         async function getData() {
@@ -145,16 +141,21 @@ export default function Voting() {
             const listBills = recentLegislativeActivities[0].data[0]
             setRecentBills(listBills)
             console.log(listBills)
-            const votingData = {
-                user: { email: fullUserDetails },
-                activity: { description: listBills[0].description, title: listBills[0].title },
-                vote: 'yes'
-            }
-            const getUserVote = await retrieveVote(votingData)
-            console.log(getUserVote)
         }
         getData()
     }, [name])
+
+    const registerYesVote = (event) => {
+        event.preventDefault()
+        alert("Yes Clicked!!")
+        setVote('Yes')
+    }
+
+    const registerNoVote = (event) => {
+        event.preventDefault()
+        alert("No CLicked!!")
+        setVote('No')
+    }
 
     return (
         <Grid item xs={12} align='center'>
@@ -191,8 +192,11 @@ export default function Voting() {
                     </Alert> : ''}
                                 {storagePostalCode === ipPostalCode
                                     ? <ButtonGroup>
-                                        <Button value='yes' className={classes.for} onClick={registerVoteTest}>For</Button>
-                                        <Button value='no' className={classes.against}>Against</Button>
+                                        <Button className={classes.for} onClick={registerYesVote}>For</Button>
+                                        <Button className={classes.against} onClick={registerNoVote}>Against</Button>
+                                        <Typography variant='body2' component='p'>
+                                            You voted {vote}
+                                        </Typography>
                                     </ButtonGroup> : ''}
                             </CardContent>
                         </Card>
