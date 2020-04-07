@@ -148,7 +148,7 @@ export default function Reset () {
         </Snackbar>
         <Snackbar open={openError} autoHideDuration={6000} onClose={handleCloseError}>
           <Alert onClose={handleCloseError} severity='error'>
-                        The email you entered does not exist
+                        Invalid email
           </Alert>
         </Snackbar>
         <div className={classes.paper}>
@@ -170,6 +170,7 @@ export default function Reset () {
                   autoComplete='email'
                   error={errors.email !== ''}
                   helperText={errors.email}
+                  inputProps={{ maxLength: 50 }}
                 />
               </Grid>
             </Grid>
