@@ -27,8 +27,7 @@ import Box from '@material-ui/core/Box'
 import axios from 'axios'
 import politisenseLogo from '../politisenseLogo.png'
 import Button from '@material-ui/core/Button'
-import { CircularProgress } from '@material-ui/core'
-import Grid from '@material-ui/core/Grid'
+import CenteredCircularProgress from './Dashboard/Utilities/CenteredCircularProgress'
 
 const drawerWidth = 330
 
@@ -333,11 +332,7 @@ export default function MiniDrawer ({ children }) {
               />
             </ListItemAvatar>
           ) : (
-            <Grid container alignItems='center' justify='center'>
-              <Grid item>
-                <CircularProgress />
-              </Grid>
-            </Grid>
+            <CenteredCircularProgress />
           )}
         </ListItem>
         {open && riding && user && userRepresentative ? (

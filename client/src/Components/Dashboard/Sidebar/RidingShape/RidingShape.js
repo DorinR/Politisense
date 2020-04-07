@@ -2,8 +2,7 @@ import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { fallbackSvg } from './fallbackSvg'
 import { PARTY_COLORS } from './partyColors'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Grid from '@material-ui/core/Grid'
+import CenteredCircularProgress from '../../Utilities/CenteredCircularProgress'
 
 const mapshaper = require('mapshaper-with-patch')
 
@@ -111,11 +110,7 @@ export default function RidingShape (props) {
           className={classes.customRidingShape}
         />
       ) : (
-        <Grid container alignItems='center' justify='center'>
-          <Grid item>
-            <CircularProgress />
-          </Grid>
-        </Grid>
+        <CenteredCircularProgress />
       )}
     </div>
   )

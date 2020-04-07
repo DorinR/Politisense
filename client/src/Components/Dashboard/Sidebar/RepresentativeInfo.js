@@ -8,9 +8,8 @@ import RidingShapeContainer from './RidingShape/RidingShapeContainer'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import RidingPopulation from './RidingPopulation/RidingPopulation'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import axios from 'axios'
-import Grid from '@material-ui/core/Grid'
+import CenteredCircularProgress from '../Utilities/CenteredCircularProgress'
 
 const useStyles = makeStyles(theme => ({
   customCardContent: {
@@ -81,11 +80,7 @@ export default function RepresentativeInfo (props) {
               onChange={props.onChange}
             />
           ) : (
-            <Grid container alignItems='center' justify='center'>
-              <Grid item>
-                <CircularProgress />
-              </Grid>
-            </Grid>
+            <CenteredCircularProgress />
           )}
           <Box m={1} />
           {ridingCode && props.representative.party ? (
@@ -94,11 +89,7 @@ export default function RepresentativeInfo (props) {
               politicalParty={props.representative.party}
             />
           ) : (
-            <Grid container alignItems='center' justify='center'>
-              <Grid item>
-                <CircularProgress />
-              </Grid>
-            </Grid>
+            <CenteredCircularProgress />
           )}
           <Box m={1} />
         </CardContent>
@@ -112,11 +103,7 @@ export default function RepresentativeInfo (props) {
           {props.riding ? (
             <RidingPopulation riding={props.riding} />
           ) : (
-            <Grid container alignItems='center' justify='center'>
-              <Grid item>
-                <CircularProgress />
-              </Grid>
-            </Grid>
+            <CenteredCircularProgress />
           )}
         </CardContent>
       </Card>

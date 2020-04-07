@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import RidingShape from './RidingShape'
 import Box from '@material-ui/core/Box'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Grid from '@material-ui/core/Grid'
+import CenteredCircularProgress from '../../Utilities/CenteredCircularProgress'
 
 export async function fetchRidingShape (ridingCode) {
   try {
@@ -46,11 +45,7 @@ export default function RidingShapeContainer (props) {
           code={ridingCode}
         />
       ) : (
-        <Grid container alignItems='center' justify='center'>
-          <Grid item>
-            <CircularProgress />
-          </Grid>
-        </Grid>
+        <CenteredCircularProgress />
       )}
       <Box mx='auto' />
     </div>

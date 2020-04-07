@@ -87,13 +87,13 @@ export default function RepresentativeCard(props) {
         const total = await calculateTotalVotesBills(bills)
         setTotalBills(total)
         setRiding(representative.riding)
-        const test = representative.riding
+        const riding = representative.riding
         setYearElected(representative.yearElected)
         setPoliticalParty(representative.politicalParty)
-        const ridingCode = await fetchRidingCode(test)
+        const ridingCode = await fetchRidingCode(riding)
         setRidingCode(ridingCode)
         const issuedBillsByHead = await getIssuedBillsByHead(name)
-        if (issuedBillsByHead.length != 0) {
+        if (issuedBillsByHead.length !== 0) {
           setIssuedBills(issuedBillsByHead.length)
         }
       }

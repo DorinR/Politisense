@@ -5,8 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import axios from 'axios'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Grid from '@material-ui/core/Grid'
+import CenteredCircularProgress from '../../Utilities/CenteredCircularProgress'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -132,13 +131,7 @@ export default function RidingSwitcher (props) {
             ))}
           </Select>
         </FormControl>
-      ) : (
-        <Grid container alignItems='center' justify='center'>
-          <Grid item>
-            <CircularProgress />
-          </Grid>
-        </Grid>
-      )}
+      ) : (<CenteredCircularProgress />)}
     </div>
   )
 }

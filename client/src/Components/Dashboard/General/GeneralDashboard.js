@@ -157,7 +157,7 @@ export default function GeneralDashboard () {
                 result[i].color = '#2E8724'
                 break
               case 'independent':
-                result[i].color = 'black'
+                result[i].color = '#78D7CE'
                 break
               default:
                 result[i].color = 'white'
