@@ -3,7 +3,7 @@ const ClassificationAction = require('../util/action/classify_action/BillClassif
 const BillPDFFetchRunner = require('../data/runner/BillPDFFetchRunner').BillPDFFetchRunner
 const BillLinkFetchRunner = require('../data/runner/BillLinkFetchRunner').BillLinkFetchRunner
 const AbstractJob = require('./Job').AbstractJob
-const FormatAction = require('../util/action/adapter_action/QueryResponseAdapterAction').QueryResponseAdapterAction
+const FormatAction = require('../util/action/adapter_action/ClassificationResultAdapterAction').ClassificationResultAdapterAction
 
 class ClassificationJob extends AbstractJob {
   constructor (params, callback) {

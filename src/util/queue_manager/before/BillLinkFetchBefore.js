@@ -7,7 +7,7 @@ class BillLinkFetchBeforeAction extends QueueAction {
   constructor (manager) {
     super()
     this.manager = manager
-    this.bills = this.retrieveBills(new Firestore(false))
+    this.bills = this.retrieveBills(new Firestore())
   }
 
   retrieveBills (db) {
@@ -57,6 +57,7 @@ class BillLinkFetchBeforeAction extends QueueAction {
     console.log(`INFO: ${BillLinkFetchBeforeAction.name}: Parameter Query set changed to ${this.manager.params.length} from ${params.length}`)
     this.manager.params = params
     this.manager.queryCount = params.length
+    this.manager.maxQueryCount = params.length
   }
 }
 

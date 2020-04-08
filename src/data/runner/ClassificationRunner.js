@@ -17,6 +17,12 @@ class ClassificationRunner extends Components.QueueManager {
     console.log(`INFO: ${ClassificationRunner.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
+  accumulate (results) {
+    super.accumulate(results)
+    this.result = this.result.flat()
+    return this.result
+  }
+
   constructor (params, wait = 30000) {
     super(wait)
     if (!(params instanceof Object)) {
