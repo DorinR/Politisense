@@ -36,6 +36,12 @@ module.exports = {
   checkIfUserExists: function (req, res) {
     return UserController.checkIfUserExists(req, res)
   },
+  activateAccount: function (req, res) {
+    return UserController.activateAccount(req, res)
+  },
+  generateActivationLink: function (req, res) {
+    return UserController.generateActivationLink(req, res)
+  },
   getUserInterests: function (req, res) {
     return UserController.getUserInterests(req, res)
   },

@@ -198,7 +198,7 @@ export default function HorizontalLinearStepper (props) {
             // eslint-disable-next-line no-undef
             localStorage.setItem('user', JSON.stringify(userToSignup))
             await axios.post('/api/users/signup', userToSignup)
-            props.history.push('/dashboard')
+            props.history.push('/login')
           } else {
             console.log('Could not fetch riding')
           }

@@ -151,7 +151,7 @@ export default function Login(props) {
     const user = { email: email, password: password }
     // eslint-disable-next-line no-useless-escape
     const errors = {}
-    errors.email = !checkEmailFormat(user.email) ? 'Invalid email' : ''
+    errors.email = !checkEmailFormat(user.email) ? 'Invalid email or account has not been verified' : ''
     errors.password =
       password === '' || password == null ? 'Please enter a password' : ''
     if (errors.email === '' && errors.password === '') {

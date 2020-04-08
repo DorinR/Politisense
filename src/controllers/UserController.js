@@ -1,5 +1,7 @@
 import { Authentication as Auth, Firestore } from '@firestore'
 import represent from 'represent'
+import crypto from 'crypto'
+const nodemailer = require('nodemailer')
 
 exports.checkIfUserExists = (req, res) => {
   const email = req.body.email
@@ -51,14 +53,67 @@ exports.getUserInterests = (req, res) => {
     .catch(console.error)
 }
 
+exports.activateAccount = (req, res) => {
+    const token = req.body.token
+    new Firestore().User()
+        .where('verifyToken', '==', token)
+        .update({ verified: 'true'})
+        .then( result => {
+            res.json({
+                success: true,
+                data: 'verified'
+            })
+            }).catch(console.error)
+}
+
+exports.generateActivationLink = (req, res) => {
+    const token = crypto.randomBytes(20).toString('hex')
+    const email = req.body.email
+    new Firestore().User()
+        .where('email', '==', email)
+        .update({ verifyToken: token})
+        .then( result => {
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: `politisenseapp@gmail.com`,
+                    pass: `abc123$$$`
+                }
+            })
+            const mailOptions = {
+                from: 'politisense@gmail.com',
+                to: email,
+                subject: 'Link to Activate Account',
+                text:
+                    'Please visit the following link to activate your account.\n\n' +
+                    `http://localhost:3000/activate/${token}\n\n` +
+                    'If you did not request this, please ignore this email.\n'
+            }
+            transporter.sendMail(mailOptions, (err) => {
+                if (err) {
+                    res.status(400).json({ success: false, message: err })
+                } else {
+                    res.json({
+                        success: true,
+                        data: 'email sent'
+                    })
+                }
+            })
+            }
+        )
+}
+
 exports.userSignup = async (req, res) => {
+    const token = crypto.randomBytes(20).toString('hex')
   const user = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     email: req.body.email,
     postalCode: req.body.postalCode,
     categories: req.body.categories,
-    riding: req.body.riding
+    riding: req.body.riding,
+    verifyToken: token,
+    verified: false
   }
   if (req.body.password) {
     user.password = Auth.hashPassword(req.body.password)
@@ -75,6 +130,32 @@ exports.userSignup = async (req, res) => {
           .User()
           .insert(user)
           .then(() => {
+              const transporter = nodemailer.createTransport({
+                  service: 'gmail',
+                  auth: {
+                      user: `politisenseapp@gmail.com`,
+                      pass: `abc123$$$`
+                  }
+              })
+              const mailOptions = {
+                  from: 'politisense@gmail.com',
+                  to: user.email,
+                  subject: 'Link to Activate Account',
+                  text:
+                      'Please visit the following link to activate your account.\n\n' +
+                      `http://localhost:3000/activate/${token}\n\n` +
+                      'If you did not request this, please ignore this email.\n'
+              }
+              transporter.sendMail(mailOptions, (err) => {
+                  if (err) {
+                      res.status(400).json({ success: false, message: err })
+                  } else {
+                      res.json({
+                          success: true,
+                          data: 'email sent'
+                      })
+                  }
+              })
             res.json({
               success: true
             })
