@@ -140,28 +140,31 @@ export default function Voting() {
             const recentLegislativeActivities = await fetchRecentBills()
             const listBills = recentLegislativeActivities[0].data[0]
             setRecentBills(listBills)
-            console.log(listBills)
         }
         getData()
     }, [name])
 
-    const registerYesVote = (event) => {
+    const registerButtonClick = (event, title, description) => {
         event.preventDefault()
-        alert("Yes Clicked!!")
-        setVote('Yes')
-    }
+        console.log("title ", title)
+        console.log("description ", description)
+        console.log(" vote ", event.currentTarget.value)
+        if (event.currentTarget.value === 'yes') {
+            console.log("for value ", event.currentTarget.value)
+            alert("Yes Clicked!!")
+        }
+        if (event.currentTarget.value === 'no') {
+            console.log("for value ", event.currentTarget.value)
+            alert("No Clicked!!")
+        }
 
-    const registerNoVote = (event) => {
-        event.preventDefault()
-        alert("No CLicked!!")
-        setVote('No')
     }
 
     return (
         <Grid item xs={12} align='center'>
             <List className={classes.root}>
-                {recentBills.map(bills => (
-                    <ListItem>
+                {recentBills.map((bills, index) => (
+                    <ListItem key={index} value={bills}>
                         <ListItemAvatar>
                             <Avatar src='http://www.pngall.com/wp-content/uploads/2016/07/Canada-Leaf-PNG-Clipart.png' />
                         </ListItemAvatar>
@@ -176,7 +179,7 @@ export default function Voting() {
                                 <CardActions>
                                     <Typography className={classes.details}>
                                         Get more details
-                  </Typography>
+                                    </Typography>
                                     <Typography className={classes.link}>
                                         <Link href='#' onClick={preventDefault} className={classes.link}>
                                             {bills.link}
@@ -189,14 +192,11 @@ export default function Voting() {
                                 {storagePostalCode === ipPostalCode
                                     ? <Alert className={classes.alert} severity='error'>Read the bill properly. Once you cast your vote,
                                     it cannot be undone!
-                    </Alert> : ''}
+                                 </Alert> : ''}
                                 {storagePostalCode === ipPostalCode
                                     ? <ButtonGroup>
-                                        <Button className={classes.for} onClick={registerYesVote}>For</Button>
-                                        <Button className={classes.against} onClick={registerNoVote}>Against</Button>
-                                        <Typography variant='body2' component='p'>
-                                            You voted {vote}
-                                        </Typography>
+                                        <Button value='yes' className={classes.for} onClick={(event) => registerButtonClick(event, bills.title, bills.description)}>For</Button>
+                                        <Button value='no' className={classes.against} >Against</Button>
                                     </ButtonGroup> : ''}
                             </CardContent>
                         </Card>
