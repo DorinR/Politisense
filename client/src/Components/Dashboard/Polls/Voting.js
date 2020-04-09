@@ -95,31 +95,6 @@ export async function fetchUserData(userEmail) {
     return result
 }
 
-async function retrieveVote(data) {
-    const res = await axios.post(`http://localhost:5000/api/voting/vote/`, data)
-    console.log(res.data.data)
-    return res.data.data
-}
-
-// export async function registerVote(userEmail, description, title, vote) {
-//     await axios.post(`http://localhost:5000/api/voting/vote`,
-//         {
-//             body: {
-//                 user: { email: userEmail },
-//                 activity: { description: description, title: title },
-//                 vote: vote
-//             }
-//         })
-//         .then(res => {
-//             if (res.data.success) {
-//                 const vote = res.data.data
-//                 result = vote
-//             }
-//         })
-//         .catch(err => console.log(err))
-//     return result
-// }
-
 export default function Voting() {
     const classes = useStyles()
     const [name, setName] = useState('')
@@ -127,14 +102,15 @@ export default function Voting() {
     const [storagePostalCode, setStoragePostalCode] = useState('')
     const [ipPostalCode, setIpPostalCode] = useState('')
     const preventDefault = (event) => event.preventDefault()
-    const [vote, setVote] = useState('')
+    const [userEmail, setUserEmail] = useState('')
     const [hasNotClicked, setHasNotClicked] = useState([])
 
     useEffect(() => {
         async function getData() {
             const user = JSON.parse(localStorage.getItem('user'))
-            const fullUserDetails = await fetchUserData(user.email)
-            const postalCode = fullUserDetails.postalCode.substring(0, 3)
+            const email = await fetchUserData(user.email)
+            const postalCode = email.postalCode.substring(0, 3)
+            setUserEmail(email)
             setStoragePostalCode(postalCode)
             const ipAddress = await getIpPostalCode()
             setIpPostalCode(ipAddress)
@@ -161,11 +137,27 @@ export default function Voting() {
             alert("No Clicked!!")
         }
 
-        setHasNotClicked([...hasNotClicked, index])
-
+        registerVote(userEmail, description, title, event.currentTarget.value, index)
     }
 
-    console.log("hasNotClicked", hasNotClicked)
+    async function registerVote(userEmail, description, title, vote, index) {
+        await axios.post(`http://localhost:5000/api/voting/vote`,
+            {
+                body: {
+                    user: { email: userEmail },
+                    activity: { description: description, title: title },
+                    vote: vote
+                }
+            })
+            .then(res => {
+                if (res.data.success) {
+                    // const vote = res.data.data
+                    // result = vote
+                    setHasNotClicked([...hasNotClicked, index])
+                }
+            })
+            .catch(err => console.log(err))
+    }
 
     return (
         <Grid item xs={12} align='center'>
