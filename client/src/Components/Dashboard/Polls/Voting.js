@@ -128,6 +128,7 @@ export default function Voting() {
     const [ipPostalCode, setIpPostalCode] = useState('')
     const preventDefault = (event) => event.preventDefault()
     const [vote, setVote] = useState('')
+    const [hasNotClicked, setHasNotClicked] = useState(true)
 
     useEffect(() => {
         async function getData() {
@@ -144,11 +145,12 @@ export default function Voting() {
         getData()
     }, [name])
 
-    const registerButtonClick = (event, title, description) => {
+    const registerButtonClick = (event, title, description, index) => {
         event.preventDefault()
         console.log("title ", title)
         console.log("description ", description)
         console.log(" vote ", event.currentTarget.value)
+        console.log(" index ", index)
         if (event.currentTarget.value === 'yes') {
             console.log("for value ", event.currentTarget.value)
             alert("Yes Clicked!!")
@@ -157,7 +159,7 @@ export default function Voting() {
             console.log("for value ", event.currentTarget.value)
             alert("No Clicked!!")
         }
-
+        setHasNotClicked(false)
     }
 
     return (
@@ -193,10 +195,10 @@ export default function Voting() {
                                     ? <Alert className={classes.alert} severity='error'>Read the bill properly. Once you cast your vote,
                                     it cannot be undone!
                                  </Alert> : ''}
-                                {storagePostalCode === ipPostalCode
+                                {storagePostalCode === ipPostalCode && hasNotClicked
                                     ? <ButtonGroup>
-                                        <Button value='yes' className={classes.for} onClick={(event) => registerButtonClick(event, bills.title, bills.description)}>For</Button>
-                                        <Button value='no' className={classes.against} >Against</Button>
+                                        <Button value='yes' className={classes.for} onClick={(event) => registerButtonClick(event, bills.title, bills.description, index)}>For</Button>
+                                        <Button value='no' className={classes.against} onClick={(event) => registerButtonClick(event, bills.title, bills.description, index)}>Against</Button>
                                     </ButtonGroup> : ''}
                             </CardContent>
                         </Card>
