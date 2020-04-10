@@ -1,9 +1,15 @@
-module.exports.BillLinkFetchJob = require('./BillLinkFetchJob').BillLinkFetchJob
-module.exports.BillPDFFetchJob = require('./BillPDFFetchJob').PDFRetrievalJob
-module.exports.ScrapeJob = require('./ScrapeJob').ScrapeJob
-module.exports.PoliticianFetchJob = require('./PoliticianFetchJob').PoliticianFetchJob
-module.exports.RoleFetchJob = require('./RoleFetchJob').RoleFetchJob
-module.exports.ClassificationJob = require('./ClassificationJob').ClassificationJob
-module.exports.BillFetchJob = require('./BillFetchJob').BillFetchJob
-module.exports.VoteRecordFetchJob = require('./VoteRecordFetchJob').VoteRecordFetchJob
-module.exports.VoteParticipantFetchJob = require('./VoteParticipantFetchJob').VoteParticipantFetchJob
+module.exports = {
+  Job: require('./Job').AbstractJob,
+  BillLinkFetchJob: require('./BillLinkFetchJob').BillLinkFetchJob,
+  BillPDFFetchJob: require('./BillPDFFetchJob').PDFRetrievalJob,
+  ScrapeJob: require('./ScrapeJob').ScrapeJob,
+  PoliticianFetchJob: require('./PoliticianFetchJob').PoliticianFetchJob,
+  RoleFetchJob: require('./RoleFetchJob').RoleFetchJob,
+  ClassificationJob: require('./ClassificationJob').ClassificationJob,
+  CategoryGenerationJob: require('./CategoryGenerationJob').CategoryGenerationJob,
+  VoteRecordFetchJob: require('./VoteRecordFetchJob').VoteRecordFetchJob,
+  VoteParticipantFetchJob: require('./VoteParticipantFetchJob').VoteParticipantFetchJob,
+  BillFetchJob: require('./BillFetchJob').BillFetchJob,
+  LegislativeActivityFetchJob: require('./LegislativeActivityFetchJob').LegislativeActivityFetchJob,
+  ExpenditureFetchJob: require('./ExpenditureFetchJob').ExpenditureFetchJob
+}

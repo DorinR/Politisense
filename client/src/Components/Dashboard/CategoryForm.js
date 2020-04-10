@@ -8,24 +8,35 @@ import Dialog from '@material-ui/core/Dialog'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import Radio from '@material-ui/core/Radio'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-
-const allCategories = ['Human Rights', 'Criminal', 'Economics', 'Religion', 'Trade', 'Business', 'Social Issues', 'Healthcare']
+import { fetchCategories, formattingCategory } from './Utilities/CommonUsedFunctions'
 
 export function ConfirmationDialogRaw (props) {
   const { onClose, value: valueProp, open, ...other } = props
   const [value, setValue] = React.useState(valueProp)
-  const [options, setOptions] = React.useState(allCategories)
   const radioGroupRef = React.useRef(null)
+
+  const [categoryList, setCategoryList] = React.useState(null)
+
   React.useEffect(() => {
-    setOptions(allCategories)
+    async function getCategoryList () {
+      const categories = await fetchCategories()
+      setCategoryList(categories)
+    }
+    getCategoryList()
+  }, [])
+
+  React.useEffect(() => {
     if (!open) {
       setValue(valueProp)
     }
-    removalExistedCategoriesFromOptions(props.existedCategories)
-  }, [valueProp, open, props.existedCategories])
+    if (categoryList) {
+      removalExistedCategoriesFromOptions(props.existedcategories)
+    }
+  }, [valueProp, open, props.existedcategories, categoryList])
 
+  const [options, setOptions] = React.useState(null)
   const removalExistedCategoriesFromOptions = (existedCategories) => {
-    setOptions(allCategories.filter((el) => !existedCategories.includes(el)))
+    setOptions(categoryList.filter((el) => !existedCategories.includes(el)))
   }
 
   const handleEntering = () => {
@@ -65,9 +76,9 @@ export function ConfirmationDialogRaw (props) {
           value={value}
           onChange={handleChange}
         >
-          {options.map(option => (
-            <FormControlLabel value={option} key={option} control={<Radio />} label={option} />
-          ))}
+          {options ? options.map(option => (
+            <FormControlLabel value={option} key={option} control={<Radio />} label={formattingCategory(option)} />
+          )) : ''}
         </RadioGroup>
       </DialogContent>
       <DialogActions>

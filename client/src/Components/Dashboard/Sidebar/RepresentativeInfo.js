@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 
 export async function fetchRidingCode (riding) {
   return axios
-    .get(`http://localhost:5000/api/ridings/getRidingCode/${encodeURI(riding)}`)
+    .get(`/api/ridings/getRidingCode/${encodeURI(riding)}`)
     .then(res => {
       if (res.data.success) {
         return res.data.data.code
@@ -39,8 +39,9 @@ export async function fetchRidingCode (riding) {
 
 export async function fetchUserRiding (userEmail) {
   return axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`,
-      { params: { repinfo: userEmail } })
+    .get(`/api/users/${userEmail}/getUser`, {
+      params: { repinfo: userEmail }
+    })
     .then(res => {
       if (res.data.success) {
         return res.data.data.riding
@@ -51,9 +52,7 @@ export async function fetchUserRiding (userEmail) {
 
 export async function fetchRepresentative (riding) {
   return axios
-    .get(
-      `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-    )
+    .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
       if (res.data.success) {
         return res.data.data
@@ -81,14 +80,15 @@ export default function RepresentativeInfo (props) {
         fetchRepresentative(riding)
       ])
       const ridingCode = promises[0]
-      const { name, politicalParty, yearElected } = promises[1]
-      setData({
+      const { name, party, start } = promises[1]
+      const data = {
         name: name,
         ridingCode: ridingCode,
         riding: riding,
-        politicalParty: politicalParty,
-        yearElected: yearElected
-      })
+        politicalParty: party,
+        yearElected: start
+      }
+      setData(data)
     }
     getData()
   }, [])

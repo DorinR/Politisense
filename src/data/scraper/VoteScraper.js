@@ -1,102 +1,21 @@
 require('module-alias/register')
-const Utils = require('@utils')
-const QueueManager = Utils.QueueManager.QueueManager
-const StartAction = Utils.QueueManager.Start.StartVoteRecordScrape
-const StopAction = Utils.QueueManager.Stop.GenericStopAction
-const Throw = Utils.QueueManager.Error.ParseErrorAction
-const AfterAction = Utils.QueueManager.After.VoteAfterAction
+const Components = require('@manager')
 const flatten = require('flat')
+const Parameters = require('@parameter')
 
-const Outcome = {
-  passed: 15,
-  failed: 16,
-  tied: 17
-}
-
-const Parliament = {
-  43: {
-    1: 153
-  },
-
-  42: {
-    1: 152
-  },
-
-  41: {
-    2: 151,
-    1: 150
-  },
-
-  40: {
-    3: 147,
-    2: 145,
-    1: 143
-  },
-
-  39: {
-    1: 142
-  },
-
-  38: {
-    1: 140
-  }
-}
-
-const Type = {
-  government: {
-    house: 3,
-    senate: {
-      public: 80760,
-      private: 80761,
-      other: 80759
-    }
-  },
-  private: 4
-}
-
-const Topic = {
-  budget: {
-    policy: 'E',
-    appropriations: 'W'
-  },
-  committee: {
-    report: 'K'
-  },
-
-  motion: {
-    government: 'G',
-    routine: 'R',
-    opposition: 'O',
-    private: 'M'
-  },
-
-  statutory: 'L',
-  other: 'X'
-}
-Object.freeze(Outcome)
-Object.freeze(Topic)
-Object.freeze(Type)
-Object.freeze(Parliament)
-
-class VoteScraper extends QueueManager {
-  static create (params, wait = 5000) {
+class VoteScraper extends Components.QueueManager {
+  static create(params, wait = 5000) {
     const manager = new VoteScraper(params, wait)
     manager
-      .setStartAction(new StartAction(manager))
-      .setStopAction(new StopAction(manager))
-      .setAfterAction(new AfterAction(manager))
-      .setErrorAction(new Throw(manager))
+      .setStartAction(new Components.Start.VoteRecord(manager))
+      .setStopAction(new Components.Stop.Generic(manager))
+      .setAfterAction(new Components.After.Vote(manager))
+      .setErrorAction(new Components.Error.Parse(manager))
+      .setLogAction(new Components.Log.Typed(VoteScraper))
     return manager
   }
 
-  accumulate (result) {
-    if (result) {
-      this.result.push(result)
-    }
-    return result
-  }
-
-  constructor (params, wait = 5000) {
+  constructor(params, wait = 5000) {
     super(wait)
     this.parliamentSessions = []
     this.createParliamentSessions(params.parliamentSessions)
@@ -108,53 +27,59 @@ class VoteScraper extends QueueManager {
     this.createMotionPrefixes(params.topics)
     this.params = []
     this.createParams(params.url)
+    this.queryCount = this.params.length
+    this.maxQueryCount = this.queryCount
   }
 
-  createParliamentSessions (parliamentSessions) {
-    const validEntries = Object.values(flatten(Parliament))
-    if (!parliamentSessions || parliamentSessions === 'all') {
+  finish() {
+    console.log(`INFO: ${VoteScraper.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
+  }
+
+  createParliamentSessions(parliamentSessions) {
+    const validEntries = Object.values(flatten(Parameters.VoteParameters.Parliament))
+    if (!parliamentSessions || parliamentSessions === 'all' || !Array.isArray(parliamentSessions)) {
       this.parliamentSessions = validEntries
-    } else if (parliamentSessions instanceof Array) {
+    } else if (Array.isArray(parliamentSessions)) {
       this.parliamentSessions = parliamentSessions.filter(parl => {
         return validEntries.includes(parl)
       })
     }
   }
 
-  createBillDocumentTypes (types) {
-    const validEntries = Object.values(flatten(Type))
-    if (!types || types === 'all') {
+  createBillDocumentTypes(types) {
+    const validEntries = Object.values(flatten(Parameters.VoteParameters.Type))
+    if (!types || types === 'all' || !Array.isArray(types)) {
       this.billDocumentTypes = ['']
-    } else if (types instanceof Array) {
+    } else if (Array.isArray(types)) {
       this.billDocumentTypes = types.filter(type => {
         return validEntries.includes(type)
       })
     }
   }
 
-  createVoteResults (voteResults) {
-    const validEntries = Object.values(Outcome)
-    if (!voteResults || voteResults === 'all') {
+  createVoteResults(voteResults) {
+    const validEntries = Object.values(Parameters.VoteParameters.Outcome)
+    if (!voteResults || voteResults === 'all' || !Array.isArray(voteResults)) {
       this.voteResults = ['']
-    } else if (voteResults instanceof Array) {
+    } else if (Array.isArray(voteResults)) {
       this.voteResults = voteResults.filter(result => {
         return validEntries.includes(result)
       })
     }
   }
 
-  createMotionPrefixes (prefixes) {
-    const validEntries = Object.values(flatten(Type))
-    if (!prefixes || prefixes === 'all') {
+  createMotionPrefixes(prefixes) {
+    const validEntries = Object.values(flatten(Parameters.VoteParameters.Topic))
+    if (!prefixes || prefixes === 'all' || !Array.isArray(prefixes)) {
       this.motionPrefixes = ['']
-    } else if (prefixes instanceof Array) {
+    } else if (Array.isArray(prefixes)) {
       this.motionPrefixes = prefixes.filter(prefix => {
         return validEntries.includes(prefix)
       })
     }
   }
 
-  createParams (url) {
+  createParams(url) {
     this.parliamentSessions.forEach(parl => {
       this.billDocumentTypes.forEach(type => {
         this.voteResults.forEach(result => {
@@ -183,10 +108,4 @@ class VoteScraper extends QueueManager {
   }
 }
 
-module.exports = {
-  VoteScraper: VoteScraper,
-  Outcome: Outcome,
-  Parliament: Parliament,
-  Type: Type,
-  Topic: Topic
-}
+module.exports.VoteScraper = VoteScraper

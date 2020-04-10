@@ -17,7 +17,7 @@ import LinkIcon from '@material-ui/icons/Link'
 import PersonIcon from '@material-ui/icons/Person'
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import Link from '@material-ui/core/Link'
-import { capitalizedName } from '../BillDialog'
+import { capitalizedName } from '../Utilities/CommonUsedFunctions'
 
 const styles = theme => ({
   root: {

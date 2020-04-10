@@ -131,9 +131,9 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding (userEmail) {
+export async function fetchUserRiding(userEmail) {
   return axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`)
+    .get(`/api/users/${userEmail}/getUser`)
     .then(res => {
       if (res.data.success) {
         return res.data.data.riding
@@ -142,10 +142,9 @@ export async function fetchUserRiding (userEmail) {
     .catch(console.error)
 }
 
-export async function fetchRepresentative (riding) {
-  return axios.get(
-    `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-  )
+export async function fetchRepresentative(riding) {
+  return axios
+    .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
       if (res.data.success) {
         return res.data.data.name
@@ -154,7 +153,7 @@ export async function fetchRepresentative (riding) {
     .catch(console.error)
 }
 
-export default function MiniDrawer ({ children }) {
+export default function MiniDrawer({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -170,7 +169,7 @@ export default function MiniDrawer ({ children }) {
   }, [])
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (user) {
         const riding = await fetchUserRiding(user.email)
         const country = await getIpInfo()
@@ -183,7 +182,7 @@ export default function MiniDrawer ({ children }) {
   }, [user])
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (riding) {
         const representative = await fetchRepresentative(riding)
         const country = await getIpInfo()
@@ -247,6 +246,15 @@ export default function MiniDrawer ({ children }) {
               className={classes.navbarCustomButton}
             >
               Voting History
+            </Button>
+          </Link>
+          <Link to='/compare' className={classes.navbarCustomFont}>
+            <Button
+              variant='contained'
+              color='primary'
+              className={classes.navbarCustomButton}
+            >
+              Compare
             </Button>
           </Link>
           <Link to='/budget' className={classes.navbarCustomFont}>
@@ -322,8 +330,8 @@ export default function MiniDrawer ({ children }) {
             {theme.direction === 'rtl' ? (
               <ChevronRightIcon />
             ) : (
-              <ChevronLeftIcon />
-            )}
+                <ChevronLeftIcon />
+              )}
           </IconButton>
         </div>
         <Divider />

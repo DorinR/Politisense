@@ -27,7 +27,7 @@ class SelectionAction extends JobAction {
         this.raw.push(item)
       }
     })
-    console.log(`INFO: Found ${this.selected.length} desired links and ${this.raw.length} other links`)
+    console.debug(`INFO: Found ${this.selected.length} desired links and ${this.raw.length} other links`)
     return {
       other: this.raw,
       selected: this.selected

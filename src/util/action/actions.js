@@ -13,8 +13,13 @@ module.exports = {
   HandleDownloadErrorAction: require('./error_action/HandleDownloadErrorAction').HandleDownloadErrorAction,
   ParserWrapperAction: require('./wrapper_action/ParserWrapperAction').ParserWrapperAction,
   Errors: require('./error/errors'),
-  FormatAction: require('./FormatAction').FormatAction,
-  ClassifyAction: require('./classify_action/ClassifyAction').ClassificationAction,
+  QueryResponseAdapterAction: require('./adapter_action/QueryResponseAdapterAction').QueryResponseAdapterAction,
+  BillClassificationAction: require('./classify_action/BillClassifyAction').BillClassificationAction,
   FileOutputAction: require('./classify_action/FileOutputAction').FileOutputAction,
-  BillTagCreationAction: require('./classify_action/BillTagCreationAction').BillTagCreationAction
+  BillTagCreationAction: require('./classify_action/BillTagCreationAction').BillTagCreationAction,
+  BillLinkFetchAdapterAction: require('./adapter_action/BillLinkFetchAdapterAction').BillLinkFetchAdapterAction,
+  RoleFetchLinkAdapterAction: require('./adapter_action/RoleFetchLinkAdapterAction').RoleFetchLinkAdapterAction,
+  RoleQueryResponseAdapterAction: require('./adapter_action/RoleQueryResponseAdapterAction').RoleQueryResponseAdapterAction,
+  PoliticianAfterAdapterAction: require('./adapter_action/PoliticianAfterAdapterAction').PoliticianAfterAdapterAction,
+  ExpenditureComputeAction: require('./classify_action/ExpenditureComputeAction').ExpenditureComputeAction
 }

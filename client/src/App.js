@@ -12,14 +12,15 @@ import SignUp from './Components/Auth/SignUp'
 import Navbar from './Components/Navbar'
 import Logout from './Components/Logout'
 import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
-import MapWrapper from './Components/Dashboard/MapWrapper'
 import Questionnaire from './Components/Questionnaire'
-import GeneralDashboard from './Components/Dashboard/GeneralDashboard'
+import GeneralDashboard from './Components/Dashboard/General/GeneralDashboard'
 import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
 import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
 import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
 // import PollsMainPage from './Components/Dashboard/Polls/PollsMainPage'
 import LegislativeActivities from './Components/Dashboard/Polls/LegislativeActivities'
+import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
+import MapContainer from './Components/Map/MapContainer'
 
 const App = () => {
   const LoginContainer = () => (
@@ -35,13 +36,14 @@ const App = () => {
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
           <PrivateRoute path='/logout' component={Logout} />
-          <PrivateRoute path='/map' component={MapWrapper} />
           <PrivateRoute path='/polls' component={LegislativeActivities} />
+          <PrivateRoute path='/map' component={MapContainer} />
           <PrivateRoute path='/account' component={UserAccountTabs} />
           <PrivateRoute path='/general' component={GeneralDashboard} />
           <PrivateRoute path='/categories' component={CategoryDashboard} />
           <PrivateRoute path='/votingHistory' component={BillHistoryTable} />
           <PrivateRoute path='/budget' component={BudgetContainer} />
+          <PrivateRoute path='/compare' component={CompareContainer} />
         </div>
       </Navbar>
     </div>
@@ -54,7 +56,7 @@ const App = () => {
         localStorage.getItem('user') ? (
           <Component {...props} />
         ) : (
-          <Redirect to='/login' /> // eslint-disable-next-line
+            <Redirect to='/login' /> // eslint-disable-next-line
           )}
     />
   )

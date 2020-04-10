@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import { capitalizedName } from '../BillDialog'
+import { capitalizedName } from '../Utilities/CommonUsedFunctions'
 
 const segColor = ['#eb4d55', '#43D0C4']
 export default class BudgetChartD3 {
@@ -67,7 +67,6 @@ export default class BudgetChartD3 {
       })
       .on('mouseleave', function (i, d) {
         d3.select(this).attr('fill', (d, i) => {
-          console.log('the index is ' + i)
           return segColor[prevIndex % budgetData.series.length]
         })
       })

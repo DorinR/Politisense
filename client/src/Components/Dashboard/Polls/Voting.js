@@ -115,6 +115,7 @@ export default function Voting() {
             const ipAddress = await getIpPostalCode()
             setIpPostalCode(ipAddress)
             const recentLegislativeActivities = await fetchRecentBills()
+            console.log(" recentLegislativeActivities ", recentLegislativeActivities)
             const listBills = recentLegislativeActivities[0].data[0]
             setRecentBills(listBills)
         }

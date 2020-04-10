@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function TabPanel (props) {
+function TabPanel(props) {
   const { children, value, index, ...other } = props
   return (
     <Typography
@@ -61,8 +61,7 @@ function TabPanel (props) {
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
       aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
+      {...other}>
       <Box p={3}>{children}</Box>
     </Typography>
   )
@@ -74,7 +73,7 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired
 }
 
-export default function CategoryGrid () {
+export default function CategoryGrid() {
   const classes = useStyles()
 
   const [user, setUser] = React.useState(null)
@@ -86,7 +85,7 @@ export default function CategoryGrid () {
 
   const [categoryList, setCategoryList] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (user) {
         const interests = await getUserInterests(user.email)
         setCategoryList(interests)
@@ -95,9 +94,9 @@ export default function CategoryGrid () {
     getData()
   }, [user])
 
-  async function getUserInterests (email) {
+  async function getUserInterests(email) {
     return axios
-      .post('http://localhost:5000/api/users/getUserInterests', { email: email })
+      .post('/api/users/getUserInterests', { email: email })
       .then(res => {
         return res.data.data.categories
       })
@@ -113,7 +112,7 @@ export default function CategoryGrid () {
 
   const [riding, setRiding] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (user) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -124,7 +123,7 @@ export default function CategoryGrid () {
 
   const [userRepresentative, setUserRepresentative] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (riding) {
         const representative = await fetchRepresentative(riding)
         setUserRepresentative(representative)
@@ -133,11 +132,9 @@ export default function CategoryGrid () {
     getData()
   }, [riding])
 
-  async function fetchRepresentative (riding) {
+  async function fetchRepresentative(riding) {
     return axios
-      .get(
-        `http://localhost:5000/api/representatives/${riding}/getRepresentative`
-      )
+      .get(`/api/representatives/${riding}/getRepresentative`)
       .then(res => {
         if (res.data.success) {
           return res.data.data.name
@@ -148,7 +145,7 @@ export default function CategoryGrid () {
 
   const [representativeData, setRepresentativeData] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (userRepresentative) {
         const representative = await getAllBillsByRep(userRepresentative)
         setRepresentativeData(representative)
@@ -157,9 +154,9 @@ export default function CategoryGrid () {
     getData()
   }, [userRepresentative])
 
-  async function getAllBillsByRep (head) {
+  async function getAllBillsByRep(head) {
     return axios
-      .get(`http://localhost:5000/api/bills/${head}/getAllBillsByRep`)
+      .get(`/api/bills/${head}/getAllBillsByRepForAllParliaments`)
       .then(res => {
         if (res.data.success) {
           return res.data.data
@@ -169,11 +166,11 @@ export default function CategoryGrid () {
   }
 
   const [value] = React.useState('')
-  const deleteEvent = (index) => {
+  const deleteEvent = index => {
     const copyCategoryArray = Object.assign([], categoryList)
     copyCategoryArray.splice(index, 1)
     updateUserCategory(copyCategoryArray)
-      .then((res) => {
+      .then(res => {
         if (res.data.success) {
           setCategoryList(copyCategoryArray)
           setCounter(counter - 1)
@@ -182,8 +179,11 @@ export default function CategoryGrid () {
       .catch(console.error)
   }
 
-  const addEvent = (newValue) => {
+  const addEvent = newValue => {
     const copyCategoryArray = Object.assign([], categoryList)
+    if(newValue.includes(" ")){
+       newValue= newValue.replace(" ","-")
+    }
     copyCategoryArray.push(newValue)
     updateUserCategory(copyCategoryArray)
       .then(res => {
@@ -195,9 +195,12 @@ export default function CategoryGrid () {
       .catch(console.error)
   }
 
-  async function updateUserCategory (categoryList) {
+  async function updateUserCategory(categoryList) {
     return axios
-      .post('http://localhost:5000/api/users/updateUserCategory', { email: user.email, categoryList: categoryList })
+      .post('/api/users/updateUserCategory', {
+        email: user.email,
+        categoryList: categoryList
+      })
       .catch(console.error)
   }
 
@@ -216,42 +219,54 @@ export default function CategoryGrid () {
   return (
     <div className={classes.container}>
       <Grid container spacing={2}>
-        {
-          representativeData && categoryList
-            ? categoryList.map((category, index) => {
-              return (
-                <Grid item xs={4} key={categoryList[index]}>
-                  <CategoryCard
-                    id={index}
-                    title={category}
-                    delete={deleteEvent}
-                    representative={representativeData}
-                    data={representativeData}
-                  />
-                </Grid>
-              )
-            })
-            : <div style={{
+        {representativeData && categoryList ? (
+          categoryList.map((category, index) => {
+            return (
+              <Grid item xs={4} key={categoryList[index]}>
+                <CategoryCard
+                  id={index}
+                  title={category}
+                  delete={deleteEvent}
+                  representative={representativeData}
+                  data={representativeData}
+                />
+              </Grid>
+            )
+          })
+        ) : (
+          <div
+            style={{
               position: 'absolute',
               left: '50%',
               top: '50%',
-              transform: 'translate(-50%, -50%)' }}
-            >
-              <CircularProgress/>
-            </div>
-        }
-        {((counter === 0 || counter < 3) && representativeData && categoryList)
-          ? <Grid item md={4}>
+              transform: 'translate(-50%, -50%)'
+            }}>
+            <CircularProgress />
+          </div>
+        )}
+        {(counter === 0 || counter < 3) &&
+        representativeData &&
+        categoryList ? (
+          <Grid item md={4}>
             <Card className={classes.card}>
               <CardActionArea>
                 <CardContent>
                   <div onClick={handleClickListItem}>
-                    <Typography gutterBottom variant='h5' component='h2' align='center' style={{ color: 'white' }}>
+                    <Typography
+                      gutterBottom
+                      variant='h5'
+                      component='h2'
+                      align='center'
+                      style={{ color: 'white' }}>
                       Add New Category
                     </Typography>
-                      <div align='center'>
-                        <AddIcon color='white' fontSize='large' style={{ color: 'white', fontSize: 100 }}/>
-                      </div>
+                    <div align='center'>
+                      <AddIcon
+                        color='white'
+                        fontSize='large'
+                        style={{ color: 'white', fontSize: 100 }}
+                      />
+                    </div>
                   </div>
                   <ConfirmationDialogRaw
                     classes={{ paper: classes.paper }}
@@ -259,12 +274,15 @@ export default function CategoryGrid () {
                     open={open}
                     onClose={handleClose}
                     value={value}
-                    existedCategories={categoryList}/>
+                    existedcategories={categoryList}
+                  />
                 </CardContent>
               </CardActionArea>
             </Card>
           </Grid>
-          : <div/>}
+        ) : (
+          <div />
+        )}
       </Grid>
     </div>
   )
