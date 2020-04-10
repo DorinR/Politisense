@@ -14,11 +14,11 @@ describe('BillPDFFetchRunner.js', () => {
   })
 
   test('BillPDFFetchRunner.js::create adds correct actions', async (done) => {
-    const undertest = BillPDFFetchRunner.create({
+    const undertest = BillPDFFetchRunner.create([{
       url: 'test-url.com',
       parliament: 43,
       id: ' '
-    })
+    }])
     const registry = undertest.registry
     Assert.equal(Object.values(registry).length, 4)
     Assert.equal(registry.start, 'BillPDFFetchStartAction')
@@ -30,11 +30,11 @@ describe('BillPDFFetchRunner.js', () => {
 
   test('BillPDFFetchRunner.js throws on invalid parliament', async (done) => {
     try {
-      BillPDFFetchRunner.create({
+      BillPDFFetchRunner.create([{
         url: 'test-url.com',
         parliaments: ' ',
         id: ' '
-      })
+      }])
     } catch (e) {
       if (e instanceof chai.AssertionError) {
         throw e
@@ -49,10 +49,10 @@ describe('BillPDFFetchRunner.js', () => {
 
   test('BillPDFFetchRunner.js throws on no bill', async (done) => {
     try {
-      BillPDFFetchRunner.create({
+      BillPDFFetchRunner.create([{
         url: 'test-url.com',
         parliaments: 43
-      })
+      }])
     } catch (e) {
       if (e instanceof chai.AssertionError) {
         throw e
@@ -67,10 +67,10 @@ describe('BillPDFFetchRunner.js', () => {
 
   test('BillPDFFetchRunner.js throws on no url', async (done) => {
     try {
-      BillPDFFetchRunner.create({
+      BillPDFFetchRunner.create([{
         parliaments: 43,
         bill: ''
-      })
+      }])
     } catch (e) {
       if (e instanceof chai.AssertionError) {
         throw e

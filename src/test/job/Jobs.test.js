@@ -83,7 +83,7 @@ describe('Jobs', () => {
     Assert.equal(job.registry[2], 'BillClassificationAction')
 
     Assert.equal(job.actions[3].name, 'bound perform')
-    Assert.equal(job.registry[3], 'QueryResponseAdapterAction')
+    Assert.equal(job.registry[3], 'ClassificationResultAdapterAction')
     done()
   })
 
