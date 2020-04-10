@@ -130,7 +130,7 @@ const Politician = {
 const Expenditure = {
   Year: {
     // Q1:'MER2020Q1-1019'
-    2019: 'MER2020Q2-1023', //Q2 YTD
+    2019: 'MER2020Q2-1023', // Q2 YTD
     2018: 'MER2019Q4',
     2017: 'MER2018Q4',
     2016: 'MER2017Q4B',
@@ -142,13 +142,13 @@ const Expenditure = {
 
   YearToParliament: {
     'MER2020Q2-1023': 43,
-    'MER2019Q4': 42,
-    'MER2018Q4': 42,
-    'MER2017Q4B': 42,
-    'MER2016Q4': 42,
-    'MER2015FY': 41,
-    'MER2014FY': 41,
-    'MER2013FY': 40,
+    MER2019Q4: 42,
+    MER2018Q4: 42,
+    MER2017Q4B: 42,
+    MER2016Q4: 42,
+    MER2015FY: 41,
+    MER2014FY: 41,
+    MER2013FY: 40
   }
 }
 
@@ -272,7 +272,8 @@ const Updates = {
   TfIdf: 'raw',
   Category: 'classifications',
   All: 'root',
-  None: 'leaf'
+  None: 'leaf',
+  Finance: 'finances'
 }
 
 module.exports = {

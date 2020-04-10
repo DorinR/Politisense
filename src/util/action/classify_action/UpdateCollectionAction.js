@@ -2,7 +2,6 @@ const Action = require('../JobAction').AbstractJobAction
 const Firestore = require('@firestore').Firestore
 const Model = require('@firestore').Models.Model
 const Parameters = require('@parameter')
-const Mutex = require('async-sema').Sema
 
 class UpdateCollectionAction extends Action {
   constructor (params) {
@@ -12,7 +11,7 @@ class UpdateCollectionAction extends Action {
   }
 
   async perform (results) {
-    if(results.length === 0) {
+    if (results.length === 0) {
       return []
     }
     UpdateCollectionAction.removeDuplicates(results)
@@ -21,7 +20,11 @@ class UpdateCollectionAction extends Action {
         let { params, data } = result
         data = UpdateCollectionAction.getData(data)
         const parliament = UpdateCollectionAction.getParliament(params)
-        const db = new Firestore().forParliament(parliament)
+        const db = new Firestore()
+          .forParliament(parliament)
+        if (params && params.year) {
+          db.atYear(params.year)
+        }
         let collection = this.collection
         collection = collection.bind(db)
         UpdateCollectionAction.createNewCollectionReference(db, collection)
@@ -34,24 +37,24 @@ class UpdateCollectionAction extends Action {
     )
   }
 
-  static sanitiseCollection(parliament, collection) {
+  static sanitiseCollection (parliament, collection) {
     return collection()
       .delete()
   }
 
-  static removeDuplicates(results) {
+  static removeDuplicates (results) {
     let i = 0
     while (i < results.length) {
-      let { params, data } = results[i]
+      const { params, data } = results[i]
       let j = 0
       while (j < results.length) {
-        if(i === j) {
+        if (i === j) {
           j++
           continue
         }
-        if(UpdateCollectionAction.getParliament(params) === UpdateCollectionAction.getParliament(results[j].params)) {
+        if (UpdateCollectionAction.getParliament(params) === UpdateCollectionAction.getParliament(results[j].params)) {
           data.push(...results[j].data)
-          results.splice(j,1)
+          results.splice(j, 1)
         } else {
           j++
         }
@@ -60,7 +63,7 @@ class UpdateCollectionAction extends Action {
     }
   }
 
-  addData(db, collection, data) {
+  addData (db, collection, data) {
     let first = true
     return Promise.all(
       data.map(datum => {
@@ -105,7 +108,7 @@ class UpdateCollectionAction extends Action {
     let ref = db.reference.collection(hierarchy[0])
     ref = ref.doc(hierarchy[1])
     ref = ref.collection(hierarchy[2])
-    if(hierarchy.includes('expenditure')) {
+    if (hierarchy.includes('expenditure')) {
       ref = ref.doc(hierarchy[3])
       ref = ref.collection(hierarchy[4])
     }

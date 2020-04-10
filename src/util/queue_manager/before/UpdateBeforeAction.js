@@ -36,7 +36,7 @@ class UpdateBeforeAction extends QueueAction {
         UpdateBeforeAction.addActions(job, params, vertex)
       }
       let smallerParams
-      if(vertex.type.name === 'RoleScraper' || vertex.type.name === 'VoteParticipantScraper') {
+      if (vertex.type.name === 'RoleScraper' || vertex.type.name === 'VoteParticipantScraper') {
         smallerParams = params.parliaments.map(parliament => {
           return {
             sessions: params.sessions,
@@ -47,11 +47,11 @@ class UpdateBeforeAction extends QueueAction {
           }
         })
       }
-      if(vertex.type.name === 'ExpenditureScraper') {
+      if (vertex.type.name === 'ExpenditureScraper') {
         smallerParams = params.years.map(year => {
           return {
             sessions: params.sessions,
-            parliaments: Parameters.ExpenditureParameters.YearToParliament[year],
+            parliaments: [Parameters.ExpenditureParameters.YearToParliament[year]],
             parliamentSessions: params.parliamentSessions,
             url: params.url,
             collection: params.collection,
@@ -59,7 +59,7 @@ class UpdateBeforeAction extends QueueAction {
           }
         })
       }
-      if(vertex.type.name === 'ExpenditureScraper' ||
+      if (vertex.type.name === 'ExpenditureScraper' ||
          vertex.type.name === 'RoleScraper' ||
          vertex.type.name === 'VoteParticipantScraper') {
         const jobs = smallerParams.map(param => {
@@ -71,7 +71,6 @@ class UpdateBeforeAction extends QueueAction {
       } else {
         this.manager.updateJobQueue[index].push(job)
       }
-
     })
     console.log(`INFO: ${UpdateBeforeAction.name}: structured updates into ${this.manager.updateJobQueue.length} phases`)
   }

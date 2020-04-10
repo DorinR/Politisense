@@ -10,7 +10,7 @@ class ExpenditureScraper extends Components.QueueManager {
       .setStartAction(new Components.Start.Expenditure(manager))
       .setStopAction(new Components.Stop.Generic(manager))
       .setAfterAction(new Components.After.Expenditure(manager))
-      .setErrorAction(new Components.Error.ParseErrorAction(manager))
+      .setErrorAction(new Components.Error.Parse(manager))
     return manager
   }
 

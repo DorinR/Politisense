@@ -8,10 +8,10 @@ class ClassificationResultAdapterAction extends Action {
     this.params = params
   }
 
-  async perform(results) {
+  async perform (results) {
     return Parliaments.map(parliament => {
       const data = results
-        .filter(result => { return result.parliament === parliament && result.raw})
+        .filter(result => { return result.parliament === parliament && result.raw })
         .map(result => { return new TfIdfClassification(result.bill, result.raw) })
       return {
         params: { parliament: parliament },

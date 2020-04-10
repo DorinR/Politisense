@@ -2,20 +2,8 @@
 const assert = require('chai').assert
 const Parsers = require('../../../util/parser/parsers')
 const BillXmlParser = Parsers.BillXmlParser
-const ParliamentNotSetError = Parsers.ParliamentNotSetError
 
 describe('BillXmlParser', () => {
-  it('should return null if the bill does not have Royal Assent', () => {
-    const nonRoyalAssentBill = { currentStage: 'BillDefeated' }
-    const xml = genBillXml([nonRoyalAssentBill])
-
-    let parser = new BillXmlParser(xml, { mustHaveRoyalAssent: true })
-    assert.isNull(parser.xmlToJson())
-
-    parser = new BillXmlParser(xml)
-    assert.isNotNull(parser.xmlToJson())
-  })
-
   it('should return specified bill info from xml', () => {
     const billXmlParams = {
       id: 9002286,
@@ -56,27 +44,10 @@ describe('BillXmlParser', () => {
     assert.isEmpty(bills)
   })
 
-  it('should return null if bill is not of parliament', () => {
-    const xml = genBillXml([{}])
-
-    const parliamentThatDoesntMatchBill = {
-      number: 41,
-      session: 2
-    }
-
-    let parser = new BillXmlParser(xml, { mustBeInCurrentParliament: true }, parliamentThatDoesntMatchBill)
-    const bill = parser.xmlToJson()
-    assert.isNull(bill)
-
-    parser = new BillXmlParser(xml, { mustBeInCurrentParliament: true })
-    assert.throws(() => { parser.xmlToJson() }, ParliamentNotSetError)
-  })
-})
-
-function genBillXml (billList) {
-  let xml = '<Bills>'
-  billList.forEach((bill, i) => {
-    const billXml = `<Bill id="${bill.id || i}">
+  function genBillXml (billList) {
+    let xml = '<Bills>'
+    billList.forEach((bill, i) => {
+      const billXml = `<Bill id="${bill.id || i}">
         <BillIntroducedDate>${bill.introducedDate || '2017-06-06T10:08:07'}</BillIntroducedDate>
         <ParliamentSession parliamentNumber="${bill.parliamentNumber || 42}" sessionNumber="${bill.sessionNumber || 1}"/>
         <BillNumber prefix="${bill.numPrefix || 'C'}" number="${bill.numNumber || 51}"/>
@@ -110,8 +81,9 @@ function genBillXml (billList) {
         </Publications>
         <Events laagCurrentStage="${bill.currentStage || 'RoyalAssentGiven'}">Empty</Events>
     </Bill>`
-    xml += billXml
-  })
-  xml += '</Bills>'
-  return xml
-}
+      xml += billXml
+    })
+    xml += '</Bills>'
+    return xml
+  }
+})
