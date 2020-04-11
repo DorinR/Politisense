@@ -17,10 +17,13 @@ import Button from '@material-ui/core/Button'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import TableDialog from './TableDialog'
 import { Transition } from '../Dashboard/General/GeneralDashboard'
+import RadialD3Chart from "../Dashboard/Charts/RadialD3Chart";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    height: '100%'
+    height: 'auto',
+    width: 'auto',
+
   },
   chartContainer: {
     position: 'relative',
@@ -66,13 +69,9 @@ const Bipartisan = props => {
   const handleClose = () => {
     setOpen(false)
   }
-
   return (
     <div>
-      <Card
-        {...rest}
-        className={clsx(classes.root, className)}
-      >
+      <Card {...rest} className={clsx(classes.root, className)}>
         <CardHeader
           classes={{
             title: classes.title
@@ -85,15 +84,12 @@ const Bipartisan = props => {
           title='BiPartisan Index'
         />
         <Divider />
-        <CardContent>
-          <CardActionArea>
-            <div className={classes.chartContainer}>
-              <BarChartWrapper
-                type={props.title}
+        <CardContent className={classes.root} >
+          <div>
+          <RadialD3Chart
                 data={props.data}
               />
-            </div>
-          </CardActionArea>
+          </div>
         </CardContent>
         <Divider />
         <CardActions className={classes.actions}>

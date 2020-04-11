@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
-import { Container, Card, CardContent, Grid, Typography, Avatar, CardHeader, Divider } from '@material-ui/core'
+import {Container, Card, CardContent, Grid, Typography, Avatar, CardHeader, Divider, Hidden,Button} from '@material-ui/core'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import axios from 'axios'
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
@@ -18,7 +18,10 @@ import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import { formatNumber, fetchRepresentative, fetchUserRiding, fetchRepresentativeId } from '../Utilities/CommonUsedFunctions'
-
+import MoneyIcon from '@material-ui/icons/Money';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%'
@@ -76,7 +79,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1)
   },
   container1: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(0)
   },
   button: {
     display: 'block',
@@ -92,7 +95,13 @@ const Budget = props => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
-
+  const [openBudgetChart,setOpenBudgetChart]= React.useState(false)
+  const handleClosingChartDialog = ()=>{
+    setOpenBudgetChart(false)
+  }
+  const handleOpeningChartDialog = ()=>{
+    setOpenBudgetChart(true)
+  }
   const options = [
     '2019',
     '2018',
@@ -205,7 +214,95 @@ const Budget = props => {
   }, [budgetData])
 
   return (
-    <Card
+      <div>
+   <Hidden mdUp>
+       <Card
+           {...rest}
+           className={clsx(classes.root, className)}
+       >
+           <CardContent>
+               <Grid
+                   container
+                   justify="space-between"
+               >
+                   <Grid item>
+                       <Typography
+                           className={classes.title}
+                           color="textSecondary"
+                           gutterBottom
+                           variant="caption"
+                       >
+                           BUDGET
+                       </Typography>
+                       <Typography variant="h5">{totalMPBudget? "$"+totalMPBudget : "$0"}</Typography>
+                   </Grid>
+                   <Grid item>
+                       <Avatar className={classes.avatar}>
+                           <MoneyIcon className={classes.icon} />
+                       </Avatar>
+                   </Grid>
+               </Grid>
+               <Grid container direction={"row"} >
+                   <div className={classes.difference}>
+                       <Grid item>
+                           {percentage ?
+                               ( Math.sign(percentage) == -1 ?
+                                   <div className={classes.test}>
+                                       <ArrowDownwardIcon className={classes.differenceIcon} />
+                                       <Typography
+                                           className={classes.differenceValue}
+                                           variant="body2"
+                                       >
+                                           {percentage? Math.abs(percentage) +"%": "0"}
+                                       </Typography>
+                                   </div>
+                                   :
+                                   <div className={classes.test}>
+                                       <ArrowUpwardIcon className={classes.positiveIcon} />
+                                       <Typography
+                                           className={classes.positiveIcon}
+                                           variant="body2"
+                                       >
+                                           {percentage? percentage +"%": "0"}
+                                       </Typography>
+                                   </div> )
+                               : ""
+                           }
+                       </Grid>
+                       <Typography
+                           className={classes.caption}
+                           variant="caption"
+                       >{"than average"}
+                       </Typography>
+                       {budgetData?
+                           (<Button color="primary" size="medium" style={{"fontSize":10 }} onClick={handleOpeningChartDialog} > details </Button>)
+                           :''}
+                   </div>
+               </Grid>
+             <Dialog
+                 open={openBudgetChart}
+                 keepMounted
+                 onClose={handleClosingChartDialog}
+                 aria-labelledby="alert-dialog-slide-title"
+                 aria-describedby="alert-dialog-slide-description"
+                 maxWidth={'md'}
+                 fullWidth
+             >
+               <DialogTitle id="alert-dialog-slide-title" style={{textAlign:"center"}}>{"Budget"}</DialogTitle>
+               <Divider/>
+               <DialogContent>
+                 <Container maxWidth='xl'>
+                   {budgetData.length
+                       ? <MDBHorizontalBar data={budgetData} /> : ''}
+                 </Container>
+               </DialogContent>
+             </Dialog>
+
+           </CardContent>
+       </Card>
+   </Hidden>
+    <Hidden smDown>
+      <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
@@ -247,7 +344,7 @@ const Budget = props => {
         }
       />
       <Divider />
-      <CardContent>
+      <CardContent style={{paddingTop:0}}>
         <Container maxWidth='sm'>
           <Grid
             container
@@ -315,12 +412,14 @@ const Budget = props => {
             </Grid>
           </Grid>
         </Container>
-        <Container maxWidth='md'>
+        <Container maxWidth='lg'>
           {budgetData.length
             ? <MDBHorizontalBar data={budgetData} /> : ''}
         </Container>
       </CardContent>
     </Card>
+      </Hidden>
+      </div>
   )
 }
 

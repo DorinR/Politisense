@@ -19,11 +19,10 @@ export default class BarChartWrapper extends Component {
     }
   }
 
+
   render () {
     return (
-      <div ref='container'>
         <div ref='chart' id='chart' />
-      </div>
     )
   }
 }
