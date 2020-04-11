@@ -135,7 +135,7 @@ export default function Reset () {
         <AppBar position='static'>
           <Toolbar>
             <Typography variant='h6' className={classes.title}>
-                            Activation Link
+                            Activation link
             </Typography>
           </Toolbar>
         </AppBar>
