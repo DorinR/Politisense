@@ -10,19 +10,17 @@ import {
   Divider,
   CardActions
 } from '@material-ui/core'
-import BarChartWrapper from '../Dashboard/Charts/Wrappers/BarChartWrapper'
 import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded'
 import DescriptionDialog from './DescriptionDialog'
 import Button from '@material-ui/core/Button'
-import CardActionArea from '@material-ui/core/CardActionArea'
 import TableDialog from './TableDialog'
 import { Transition } from '../Dashboard/General/GeneralDashboard'
-import RadialD3Chart from "../Dashboard/Charts/RadialD3Chart";
+import RadialD3Chart from '../Dashboard/Charts/RadialD3Chart'
 
 const useStyles = makeStyles(theme => ({
   root: {
     height: 'auto',
-    width: 'auto',
+    width: 'auto'
 
   },
   chartContainer: {
@@ -84,11 +82,11 @@ const Bipartisan = props => {
           title='BiPartisan Index'
         />
         <Divider />
-        <CardContent className={classes.root} >
+        <CardContent className={classes.root}>
           <div>
-          <RadialD3Chart
-                data={props.data}
-              />
+            <RadialD3Chart
+              data={props.data}
+            />
           </div>
         </CardContent>
         <Divider />

@@ -11,7 +11,7 @@ import { ConfirmationDialogRaw } from './CategoryForm'
 import AddIcon from '@material-ui/icons/Add'
 import axios from 'axios'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import {Hidden} from "@material-ui/core";
+import { Hidden } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -47,10 +47,10 @@ const useStyles = makeStyles(theme => ({
     bottom: theme.spacing(2),
     right: theme.spacing(3)
   },
-  xsMode:{
-      direction:"column",
-      justify:"center",
-      alignItems: "center"
+  xsMode: {
+    direction: 'column',
+    justify: 'center',
+    alignItems: 'center'
 
   }
 }))

@@ -1,56 +1,56 @@
-import React, { useEffect, useState } from "react";
-import ListItemText from "@material-ui/core/ListItemText";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Box from "@material-ui/core/Box";
-import RidingSwitcher from "./RidingSwitcher/RidingSwitcher";
-import RidingShapeContainer from "./RidingShape/RidingShapeContainer";
-import { makeStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
-import RidingPopulation from "./RidingPopulation/RidingPopulation";
-import axios from "axios";
-import CenteredCircularProgress from "../Utilities/CenteredCircularProgress";
+import React, { useEffect, useState } from 'react'
+import ListItemText from '@material-ui/core/ListItemText'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import Box from '@material-ui/core/Box'
+import RidingSwitcher from './RidingSwitcher/RidingSwitcher'
+import RidingShapeContainer from './RidingShape/RidingShapeContainer'
+import { makeStyles } from '@material-ui/core/styles'
+import { Typography } from '@material-ui/core'
+import RidingPopulation from './RidingPopulation/RidingPopulation'
+import axios from 'axios'
+import CenteredCircularProgress from '../Utilities/CenteredCircularProgress'
 
 const useStyles = makeStyles((theme) => ({
   customCardContent: {
     padding: 5,
-    paddingBottom: "5px!important",
-    backgroundColor: "#f7f7f7",
+    paddingBottom: '5px!important',
+    backgroundColor: '#f7f7f7'
   },
   customHeadingText: {
-    color: "#41aaa8",
-    fontStyle: "italic",
-    fontWeight: "bold",
+    color: '#41aaa8',
+    fontStyle: 'italic',
+    fontWeight: 'bold'
   },
   customTextFormatting: {
-    textTransform: "capitalize",
-  },
-}));
+    textTransform: 'capitalize'
+  }
+}))
 
-export async function fetchRidingCode(riding) {
+export async function fetchRidingCode (riding) {
   return axios
     .get(`/api/ridings/getRidingCode/${encodeURI(riding)}`)
     .then((res) => {
       if (res.data.success) {
-        return res.data.data.code;
+        return res.data.data.code
       }
     })
-    .catch(console.error);
+    .catch(console.error)
 }
 
-export default function RepresentativeInfo(props) {
-  const classes = useStyles();
+export default function RepresentativeInfo (props) {
+  const classes = useStyles()
 
-  const [ridingCode, setRidingCode] = useState(null);
+  const [ridingCode, setRidingCode] = useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (props.riding) {
-        const code = await fetchRidingCode(props.riding);
-        setRidingCode(code);
+        const code = await fetchRidingCode(props.riding)
+        setRidingCode(code)
       }
     }
-    getData();
-  }, [props.riding, ridingCode]);
+    getData()
+  }, [props.riding, ridingCode])
 
   return (
     <ListItemText>
@@ -121,5 +121,5 @@ export default function RepresentativeInfo(props) {
         </CardContent>
       </Card>
     </ListItemText>
-  );
+  )
 }

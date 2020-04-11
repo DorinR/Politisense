@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
-import {Container, Card, CardContent, Grid, Typography, Avatar, CardHeader, Divider, Hidden,Button} from '@material-ui/core'
+import { Container, Card, CardContent, Grid, Typography, Avatar, CardHeader, Divider, Hidden, Button } from '@material-ui/core'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import axios from 'axios'
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
@@ -18,10 +18,10 @@ import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import { formatNumber, fetchRepresentative, fetchUserRiding, fetchRepresentativeId } from '../Utilities/CommonUsedFunctions'
-import MoneyIcon from '@material-ui/icons/Money';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import MoneyIcon from '@material-ui/icons/Money'
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%'
@@ -95,11 +95,11 @@ const Budget = props => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
-  const [openBudgetChart,setOpenBudgetChart]= React.useState(false)
-  const handleClosingChartDialog = ()=>{
+  const [openBudgetChart, setOpenBudgetChart] = React.useState(false)
+  const handleClosingChartDialog = () => {
     setOpenBudgetChart(false)
   }
-  const handleOpeningChartDialog = ()=>{
+  const handleOpeningChartDialog = () => {
     setOpenBudgetChart(true)
   }
   const options = [
@@ -214,212 +214,214 @@ const Budget = props => {
   }, [budgetData])
 
   return (
-      <div>
-   <Hidden mdUp>
-       <Card
-           {...rest}
-           className={clsx(classes.root, className)}
-       >
-           <CardContent>
-               <Grid
-                   container
-                   justify="space-between"
-               >
-                   <Grid item>
-                       <Typography
-                           className={classes.title}
-                           color="textSecondary"
-                           gutterBottom
-                           variant="caption"
-                       >
+    <div>
+      <Hidden mdUp>
+        <Card
+          {...rest}
+          className={clsx(classes.root, className)}
+        >
+          <CardContent>
+            <Grid
+              container
+              justify='space-between'
+            >
+              <Grid item>
+                <Typography
+                  className={classes.title}
+                  color='textSecondary'
+                  gutterBottom
+                  variant='caption'
+                >
                            BUDGET
-                       </Typography>
-                       <Typography variant="h5">{totalMPBudget? "$"+totalMPBudget : "$0"}</Typography>
-                   </Grid>
-                   <Grid item>
-                       <Avatar className={classes.avatar}>
-                           <MoneyIcon className={classes.icon} />
-                       </Avatar>
-                   </Grid>
-               </Grid>
-               <Grid container direction={"row"} >
-                   <div className={classes.difference}>
-                       <Grid item>
-                           {percentage ?
-                               ( Math.sign(percentage) == -1 ?
-                                   <div className={classes.test}>
-                                       <ArrowDownwardIcon className={classes.differenceIcon} />
-                                       <Typography
-                                           className={classes.differenceValue}
-                                           variant="body2"
-                                       >
-                                           {percentage? Math.abs(percentage) +"%": "0"}
-                                       </Typography>
-                                   </div>
-                                   :
-                                   <div className={classes.test}>
-                                       <ArrowUpwardIcon className={classes.positiveIcon} />
-                                       <Typography
-                                           className={classes.positiveIcon}
-                                           variant="body2"
-                                       >
-                                           {percentage? percentage +"%": "0"}
-                                       </Typography>
-                                   </div> )
-                               : ""
-                           }
-                       </Grid>
-                       <Typography
-                           className={classes.caption}
-                           variant="caption"
-                       >{"than average"}
-                       </Typography>
-                       {budgetData?
-                           (<Button color="primary" size="medium" style={{"fontSize":10 }} onClick={handleOpeningChartDialog} > details </Button>)
-                           :''}
-                   </div>
-               </Grid>
-             <Dialog
-                 open={openBudgetChart}
-                 keepMounted
-                 onClose={handleClosingChartDialog}
-                 aria-labelledby="alert-dialog-slide-title"
-                 aria-describedby="alert-dialog-slide-description"
-                 maxWidth={'md'}
-                 fullWidth
-             >
-               <DialogTitle id="alert-dialog-slide-title" style={{textAlign:"center"}}>{"Budget"}</DialogTitle>
-               <Divider/>
-               <DialogContent>
-                 <Container maxWidth='xl'>
-                   {budgetData.length
-                       ? <MDBHorizontalBar data={budgetData} /> : ''}
-                 </Container>
-               </DialogContent>
-             </Dialog>
-
-           </CardContent>
-       </Card>
-   </Hidden>
-    <Hidden smDown>
-      <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
-      <CardHeader
-        classes={{
-          title: classes.title
-        }}
-        title='Budget'
-        action={
-          <div>
-            <IconButton
-              aria-label='more'
-              aria-controls='long-menu'
-              aria-haspopup='true'
-              onClick={handleClick}
-            >
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              id='long-menu'
-              anchorEl={anchorEl}
+                </Typography>
+                <Typography variant='h5'>{totalMPBudget ? '$' + totalMPBudget : '$0'}</Typography>
+              </Grid>
+              <Grid item>
+                <Avatar className={classes.avatar}>
+                  <MoneyIcon className={classes.icon} />
+                </Avatar>
+              </Grid>
+            </Grid>
+            <Grid container direction='row'>
+              <div className={classes.difference}>
+                <Grid item>
+                  {percentage
+                    ? (Math.sign(percentage) === -1
+                      ? (
+                        <div className={classes.test}>
+                          <ArrowDownwardIcon className={classes.differenceIcon} />
+                          <Typography
+                            className={classes.differenceValue}
+                            variant='body2'
+                          >
+                            {percentage ? Math.abs(percentage) + '%' : '0'}
+                          </Typography>
+                        </div>)
+                      : (
+                        <div className={classes.test}>
+                          <ArrowUpwardIcon className={classes.positiveIcon} />
+                          <Typography
+                            className={classes.positiveIcon}
+                            variant='body2'
+                          >
+                            {percentage ? percentage + '%' : '0'}
+                          </Typography>
+                        </div>
+                      )
+                    )
+                    : ''}
+                </Grid>
+                <Typography
+                  className={classes.caption}
+                  variant='caption'
+                >{'than average'}
+                </Typography>
+                {budgetData
+                  ? (<Button color='primary' size='medium' style={{ fontSize: 10 }} onClick={handleOpeningChartDialog}> details </Button>)
+                  : ''}
+              </div>
+            </Grid>
+            <Dialog
+              open={openBudgetChart}
               keepMounted
-              open={open}
-              onClose={handleClose}
-              PaperProps={{
-                style: {
-                  maxHeight: ITEM_HEIGHT * 4.5,
-                  width: 200
-                }
-              }}
+              onClose={handleClosingChartDialog}
+              aria-labelledby='alert-dialog-slide-title'
+              aria-describedby='alert-dialog-slide-description'
+              maxWidth='md'
+              fullWidth
             >
-              {options.map(option => (
-                <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Menu>
-          </div>
-        }
-      />
-      <Divider />
-      <CardContent style={{paddingTop:0}}>
-        <Container maxWidth='sm'>
-          <Grid
-            container
-            direction='row'
-            justify='center'
-          >
-            <Grid item>
-              <div className={classes.container1}>
-                <List>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar className={classes.avatar1}>
-                        <AttachMoneyIcon className={classes.icon1} />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText>
-                      <Typography style={{ fontSize: 16 }}>{totalMPBudget ? 'Total : $' + totalMPBudget : 'Total: $0'}</Typography>
-                    </ListItemText>
-                  </ListItem>
-                </List>
-              </div>
-            </Grid>
-            <Grid item>
-              <div className={classes.container1}>
-                <List>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar className={classes.avatar1}>
-                        <TrendingUpIcon className={classes.icon1} />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText>
-                      <div className={classes.difference}>
-                        <Grid item>
-                          {percentage
-                            ? (Math.sign(percentage) === -1
-                              ? (
-                                <div className={classes.test}>
-                                  <ArrowDownwardIcon className={classes.differenceIcon} />
-                                  <Typography
-                                    className={classes.differenceValue}
-                                    variant='body2'
-                                  >
-                                    {percentage ? Math.abs(percentage) + '%' : '0'}
-                                  </Typography>
-                                </div>
-                              )
-                              : (
-                                <div className={classes.test}>
-                                  <ArrowUpwardIcon className={classes.positiveIcon} />
-                                  <Typography className={classes.positiveIcon} variant='body2'>{percentage ? percentage + '%' : '0'}</Typography>
-                                </div>
-                              )
-                            ) : ''}
-                        </Grid>
-                        <Typography
-                          style={{ fontSize: 16, marginLeft: 5 }}
-                        >{'than average member'}
-                        </Typography>
-                      </div>
-                    </ListItemText>
-                  </ListItem>
-                </List>
-              </div>
-            </Grid>
-          </Grid>
-        </Container>
-        <Container maxWidth='lg'>
-          {budgetData.length
-            ? <MDBHorizontalBar data={budgetData} /> : ''}
-        </Container>
-      </CardContent>
-    </Card>
+              <DialogTitle id='alert-dialog-slide-title' style={{ textAlign: 'center' }}>Budget</DialogTitle>
+              <Divider />
+              <DialogContent>
+                <Container maxWidth='xl'>
+                  {budgetData.length
+                    ? <MDBHorizontalBar data={budgetData} /> : ''}
+                </Container>
+              </DialogContent>
+            </Dialog>
+
+          </CardContent>
+        </Card>
       </Hidden>
-      </div>
+      <Hidden smDown>
+        <Card
+          {...rest}
+          className={clsx(classes.root, className)}
+        >
+          <CardHeader
+            classes={{
+              title: classes.title
+            }}
+            title='Budget'
+            action={
+              <div>
+                <IconButton
+                  aria-label='more'
+                  aria-controls='long-menu'
+                  aria-haspopup='true'
+                  onClick={handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  id='long-menu'
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={open}
+                  onClose={handleClose}
+                  PaperProps={{
+                    style: {
+                      maxHeight: ITEM_HEIGHT * 4.5,
+                      width: 200
+                    }
+                  }}
+                >
+                  {options.map(option => (
+                    <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </div>
+            }
+          />
+          <Divider />
+          <CardContent style={{ paddingTop: 0 }}>
+            <Container maxWidth='sm'>
+              <Grid
+                container
+                direction='row'
+                justify='center'
+              >
+                <Grid item>
+                  <div className={classes.container1}>
+                    <List>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar className={classes.avatar1}>
+                            <AttachMoneyIcon className={classes.icon1} />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText>
+                          <Typography style={{ fontSize: 16 }}>{totalMPBudget ? 'Total : $' + totalMPBudget : 'Total: $0'}</Typography>
+                        </ListItemText>
+                      </ListItem>
+                    </List>
+                  </div>
+                </Grid>
+                <Grid item>
+                  <div className={classes.container1}>
+                    <List>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar className={classes.avatar1}>
+                            <TrendingUpIcon className={classes.icon1} />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText>
+                          <div className={classes.difference}>
+                            <Grid item>
+                              {percentage
+                                ? (Math.sign(percentage) === -1
+                                  ? (
+                                    <div className={classes.test}>
+                                      <ArrowDownwardIcon className={classes.differenceIcon} />
+                                      <Typography
+                                        className={classes.differenceValue}
+                                        variant='body2'
+                                      >
+                                        {percentage ? Math.abs(percentage) + '%' : '0'}
+                                      </Typography>
+                                    </div>
+                                  )
+                                  : (
+                                    <div className={classes.test}>
+                                      <ArrowUpwardIcon className={classes.positiveIcon} />
+                                      <Typography className={classes.positiveIcon} variant='body2'>{percentage ? percentage + '%' : '0'}</Typography>
+                                    </div>
+                                  )
+                                ) : ''}
+                            </Grid>
+                            <Typography
+                              style={{ fontSize: 16, marginLeft: 5 }}
+                            >{'than average member'}
+                            </Typography>
+                          </div>
+                        </ListItemText>
+                      </ListItem>
+                    </List>
+                  </div>
+                </Grid>
+              </Grid>
+            </Container>
+            <Container maxWidth='lg'>
+              {budgetData.length
+                ? <MDBHorizontalBar data={budgetData} /> : ''}
+            </Container>
+          </CardContent>
+        </Card>
+      </Hidden>
+    </div>
   )
 }
 

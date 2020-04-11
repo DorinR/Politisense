@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { LinearProgress } from "@material-ui/core";
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { LinearProgress } from '@material-ui/core'
 
-export async function fetchPopulation(riding) {
+export async function fetchPopulation (riding) {
   return axios
     .get(`/api/ridings/getRidingPopulation/${encodeURI(riding)}`)
     .then((res) => {
       if (res.data.success) {
-        return res.data.data.population;
+        return res.data.data.population
       }
     })
-    .catch(console.error);
+    .catch(console.error)
 }
 
-export default function RidingPopulation(props) {
-  const [population, setPopulation] = useState(null);
+export default function RidingPopulation (props) {
+  const [population, setPopulation] = useState(null)
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (props.riding) {
-        const pop = await fetchPopulation(props.riding);
-        setPopulation(pop);
+        const pop = await fetchPopulation(props.riding)
+        setPopulation(pop)
       }
     }
-    getData();
-  }, [riding]);
+    getData()
+  }, [props.riding])
 
   return (
     <span>
@@ -36,5 +36,5 @@ export default function RidingPopulation(props) {
         </span>
       )}
     </span>
-  );
+  )
 }

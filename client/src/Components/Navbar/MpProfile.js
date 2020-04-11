@@ -60,7 +60,6 @@ const MpProfile = props => {
   const [data, setData] = useState(null)
   useEffect(() => {
     if (props.data !== data) {
-      console.log(props.data, data)
       setData(props.data)
     }
   }, [props.data, data])
