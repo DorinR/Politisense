@@ -1,0 +1,164 @@
+@startuml
+class Error <<E, yellow>>
+package Firebase #e0e0d1 {
+    package Models #e0e0d1 {
+        class Model
+        class VoteRecord
+        class Vote
+        class Role
+        class Politician
+        class LegislativeActivity
+    }
+    package Builders #e0e0d1 {
+        class VoteRecordBuilder
+        class VoteParticipantBuilder
+        class RoleBuilder
+        class BillBuilder
+    }
+}
+
+package Parsers #e0e0d1 {
+    abstract class XmlDataParser<T extends Model> {
+        - xml: String
+        - $: cheerio::Parser
+        + XmlDataParser(xml: String): XmlDataParser
+        + xmlToJson(void) : T
+        + getAllFromXml(onlyFromListTag: Boolean) : Array<T>
+        + isTagInXml(tag: String) : Boolean
+        + hasData(void) : Boolean
+        + hasListOfData(void) : Boolean
+        + formatXmlDate(xmlDate: String) : String
+        # getDataInTag(tag: String, allowMissingTag: Boolean) : String
+        # getXmlInTag(tag: String, allowMissingTag: Boolean) : String
+        # getDataInAttribute(tag: String, attribute: String, allowMissingTag: Boolean) : String
+        {abstract} # tagName(void) : String
+        {abstract} # listTagName(void) : String
+        {abstract} # generateNewParser(xml: String) : XmlDataParser
+        # passesFilters(void) : Boolean
+        # buildJson(void) : T
+    }
+    XmlDataParser --> Models
+    XmlDataParser --> Builders
+    XmlDataParser --> DataNotFoundError
+
+    class DataNotFoundError extends Error {
+        - message: String
+        - name: String
+        + DataNotFoundError(message: String): DataNotFoundError
+    }
+
+    class ParliamentNotSetError extends Error {
+        - message: String
+        - name: String
+        + ParliamentNotSetError(message: String): ParliamentNotSetError
+    }
+
+    class VoteXmlParser extends XmlDataParser {
+        + VoteXmlParser(xml: String, currentParliament: Boolean): VoteXmlParser
+        # tagName(void) : String
+        # listTagName(void) : String
+        # generateNewParser(xml: String) : VoteXmlParser
+        # buildJson(void) : VoteRecord
+        - isInCurrentParliament(void) : Boolean
+        - isFinalDecision(void) : Boolean
+    }
+
+    class VoteParticipantXmlParser extends XmlDataParser {
+        + VoteParticipantXmlParser(xml: String, id: String): VoteParticipantXmlParser
+        # tagName(void) : String
+        # listTagName(void) : String
+        # generateNewParser(xml: String) : VoteParticipantXmlParser
+        # buildJson(void) : VoteRecord
+    }
+
+    class RoleXmlParser extends XmlDataParser {
+        + RoleXmlParser(xml: String): RoleXmlParser
+        + hasData(void) : Boolean
+        # tagName(void) : String
+        # listTagName(void) : String
+        # generateNewParser(xml: String) : RoleXmlParser
+        # buildJson(void) : Object
+    }
+
+    RoleXmlParser --> ParliamentaryRoleXmlParser
+    RoleXmlParser --> CommitteeRoleXmlParser
+    RoleXmlParser --> AssociationRoleXmlParser
+
+    class ParliamentaryRoleXmlParser extends XmlDataParser {
+        - id: String
+        + ParliamentaryRoleXmlParser(xml: String, id: String): ParliamentaryRoleXmlParser
+        + hasData(void) : Boolean
+        # tagName(void) : String
+        # listTagName(void) : String
+        # generateNewParser(xml: String) : ParliamentaryRoleXmlParser
+        # buildJson(void) : Role
+    }
+
+    class CommitteeRoleXmlParser extends XmlDataParser {
+        - id: String
+        + CommitteeRoleXmlParser(xml: String, id: String): CommitteeRoleXmlParser
+        + hasData(void) : Boolean
+        # tagName(void) : String
+        # listTagName(void) : String
+        # generateNewParser(xml: String) : CommitteeRoleXmlParser
+        # buildJson(void) : Role
+    }
+
+    class AssociationRoleXmlParser extends XmlDataParser {
+        - id: String
+        + AssociationRoleXmlParser(xml: String, id: String): AssociationRoleXmlParser
+        + hasData(void) : Boolean
+        # tagName(void) : String
+        # listTagName(void) : String
+        # generateNewParser(xml: String) : AssociationRoleXmlParser
+        # buildJson(void) : Role
+    }
+
+    class MpXmlParser extends XmlDataParser {
+        - mustBeACurrentMember: Boolean
+        + MpXmlParser(xml: String, mustBeACurrentMember: Boolean): MpXmlParser
+        + hasData(void) : Boolean
+        # tagName(void) : String
+        # listTagName(void) : String
+        # generateNewParser(xml: String) : MpXmlParser
+        # buildJson(void) : Role
+        # passesFilters(void) : Boolean
+        - isACurrentMember(void) : Boolean
+    }
+
+    class BillXmlParser extends XmlDataParser {
+        + BillXmlParser(xml: String, filters: Object, currentParliament: Boolean): BillXmlParser
+        # tagName(void) : String
+        # listTagName(void) : String
+        # generateNewParser(xml: String) : BillXmlParser
+        # buildJson(void) : VoteRecord
+        # passesFilters(void) : Boolean
+        - isInCurrentParliament(void) : Boolean
+        - getLinkToBillText(void) : String
+        - getPublicationUrlPath(publication: String) : String
+        - hasRoyalAssent(void) : Boolean
+    }
+
+    class LegislativeActivityXmlParser extends XmlDataParser {
+        -parser: _LegislativeActivityXmlParser
+        + LegislativeActivityXmlParser(xml: String): LegislativeActivityXmlParser
+        # tagName(void) : String
+        # listTagName(void) : String
+        + getAllFromXml(onlyFromListTag: Boolean) : Array<LegislativeActivity>
+        + hasData(void) : Boolean
+        # buildJson(void) : LegislativeActivity
+        # generateNewParser(xml: String) : LegislativeActivityXmlParser
+    }
+    LegislativeActivityXmlParser --> _LegislativeActivityXmlParser
+
+    class _LegislativeActivityXmlParser extends XmlDataParser {
+        + _LegislativeActivityXmlParser(xml: String): _LegislativeActivityXmlParser
+        # tagName(void) : String
+        # listTagName(void) : String
+        + hasData(void) : Boolean
+        # buildJson(void) : LegislativeActivity
+        # generateNewParser(xml: String) : _LegislativeActivityXmlParser
+    }
+}
+
+@enduml

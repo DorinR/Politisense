@@ -1,0 +1,72 @@
+@startuml
+package QueueManagers #e0e0d1 {
+    class QueueAction
+    class QueueManager
+}
+package Job #e0e0d1 {
+    abstract class Job
+}
+package Actions #e0e0d1 {
+    package FetchActions #e0e0d1 {
+        class FetchAction
+    }
+    package ParseActions #e0e0d1 {
+        class TextParserAction
+        class SelectionAction
+    }
+    package AdapterAction #e0e0d1 {
+        class PoliticianAfterAdapterAction
+    }
+}
+package Firebase #e0e0d1 {
+    class Firestore
+    package Models #e0e0d1 {
+        class Politician
+        class Bill
+        class VoteRecord
+        class Vote
+    }
+}
+
+package After #e0e0d1 {
+    class PoliticianAfter {
+        - manager: QueueManager
+        + perform(void): Promise<void>
+        + PoliticianAfter(manager: QueueManager): PoliticianAfter
+        {static} - createFetchJob(void) : Job
+        - attachToMps(links: Array<String>) void
+        - findUrl(politician: Politician, links: Array<String>) : String
+        - stripHyphens(void) : void
+        - stripHyphensFromRecord(record: Politician) : void
+    }
+    Job <-- PoliticianAfter
+    Actions <-- PoliticianAfter
+    QueueAction <|-- PoliticianAfter
+
+    class VoteAfter {
+        - manager: QueueManager
+        - bills: Array<Array<Bill>>
+        + perform(void): Promise<void>
+        + VoteAfter(manager: QueueManager): VoteAfter
+        {static} - retrieveBills(db: Firestore) : Promise<Array<Array<Bill>>>
+        {static} - findBill(vote: VoteRecord, bills: Array<Bill>) : Bill
+        - attachBillsToVotes(void): void
+    }
+    QueueAction <|-- VoteAfter
+
+    class VotersAfter {
+        - manager: QueueManager
+        - politicians: Array<Array<Politician>>
+        + perform(void): Promise<void>
+        + VotersAfter(manager: QueueManager): VotersAfter
+        {static} - retrievePoliticians(db: Firestore) : Promise<Array<Array<Politician>>>
+        {static} - findPolitician(member: String, polticians: Array<Politician>) : Politician
+        - replaceMemberName(void): Promise<void>
+    }
+    QueueAction <|-- VotersAfter
+}
+QueueManagers <-- After
+Models <-- After
+Firebase <-- After
+
+@enduml

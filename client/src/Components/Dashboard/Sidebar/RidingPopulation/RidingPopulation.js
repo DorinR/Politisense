@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { LinearProgress } from '@material-ui/core'
 
 export async function fetchPopulation (riding) {
   return axios
@@ -13,16 +14,25 @@ export async function fetchPopulation (riding) {
 }
 
 export default function RidingPopulation (props) {
-  const [population, setPopulation] = useState('')
+  const [population, setPopulation] = useState(null)
 
   useEffect(() => {
     async function getData () {
       if (props.riding) {
-        setPopulation(await fetchPopulation(props.riding))
+        const pop = await fetchPopulation(props.riding)
+        setPopulation(pop)
       }
     }
     getData()
   })
 
-  return population
+  return (
+    <span>
+      {population ? (
+        <span>{population}</span>
+      ) : (
+        <span><LinearProgress /></span>
+      )}
+    </span>
+  )
 }

@@ -38,7 +38,7 @@ def read_in_files(file_list):
 
 def classify_corpus(corpus):
     print("INFO: Finished classifying %i bills" % (len(sys.argv) - 1), file=sys.stdout)
-    vectorizer = TfidfVectorizer(stop_words='english', token_pattern=r'[a-zA-z]{3,}', ngram_range=(1,2))
+    vectorizer = TfidfVectorizer(stop_words='english', token_pattern=r'[a-zA-z]{3,}')
     document_term_mat = vectorizer.fit_transform(corpus.values())
     feature_names = vectorizer.get_feature_names()
     return (document_term_mat, feature_names)

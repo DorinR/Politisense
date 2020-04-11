@@ -1,17 +1,6 @@
-const QueueActions = require('../actions')
-const QueueAction = QueueActions.QueueAction
+const QueueAction = require('../QueueAction').QueueAction
 const Actions = require('../../action/actions')
-const Job = require('../../Job').AbstractJob
-
-class FormatAction extends Actions.Action {
-  perform (response) {
-    // eslint-disable-next-line no-unused-vars
-    const { selected, other } = response
-    return selected.map(url => {
-      return 'https://www.ourcommons.ca' + url
-    })
-  }
-}
+const Job = require('../../../job/Job').AbstractJob
 
 class PoliticianAfterAction extends QueueAction {
   constructor (manager) {
@@ -20,14 +9,16 @@ class PoliticianAfterAction extends QueueAction {
   }
 
   async perform () {
-    console.log('INFO: adding image URLs to Politician Records')
-    const imageLinks = await this.fetchImageLinks()
+    console.log(`INFO: ${PoliticianAfterAction.name}: adding image URLs to Politician Records`)
+    const imageLinks = await PoliticianAfterAction
+      .createFetchJob()
+      .execute()
     this.attachToMps(imageLinks)
-    console.log('INFO: stripping away unnecessary hyphens from riding names')
+    console.log(`INFO: ${PoliticianAfterAction.name}: stripping away unnecessary hyphens from riding names`)
     this.stripHyphens()
   }
 
-  fetchImageLinks () {
+  static createFetchJob () {
     return new Job()
       .addAction(new Actions.FetchAction({
         url: 'https://www.ourcommons.ca/Members/en/search',
@@ -39,8 +30,7 @@ class PoliticianAfterAction extends QueueAction {
         return $(elem).attr('src')
       }))
       .addAction(new Actions.SelectionAction('/Content/Parliamentarians/Images/OfficialMPPhotos/'))
-      .addAction(new FormatAction())
-      .execute()
+      .addAction(new Actions.PoliticianAfterAdapterAction())
   }
 
   attachToMps (links) {

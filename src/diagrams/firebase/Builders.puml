@@ -1,0 +1,53 @@
+@startuml
+package Models #e0e0d1 {
+    class Bill
+    class Role
+    class Vote
+    class VoteRecord
+}
+
+package Builders #e0e0d1 {
+    class BillBuilder {
+        + BillBuilder(id: Number) : BillBuilder
+        + withNumber(number: String) : BillBuilder
+        + withTitle(title: String) : BillBuilder
+        + withText(text: String) : BillBuilder
+        + withLink(link: String) : BillBuilder
+        + withDateVoted(dateVoted: String) : BillBuilder
+        + withSponsorName(sponsorName: String) : BillBuilder
+        + build(void) : Bill
+    }
+    class RoleBuilder {
+        + RoleBuilder(id: String) : RoleBuilder
+        + withFromYear(year: Number) : RoleBuilder
+        + withToYear(year: Number) : RoleBuilder
+        + withTitle(title: String) : RoleBuilder
+        + withType(type: String) : RoleBuilder
+        + withGroup(group: String) : RoleBuilder
+        + build(void) : Role
+    }
+    class VoteParticipantBuilder {
+        + VoteParticipantBuilder(id: String) : VoteParticipantBuilder
+        + withMember(name: String) : VoteParticipantBuilder
+        + withYea(yea: Boolean) : VoteParticipantBuilder
+        + withPaired(paired: Boolean) : VoteParticipantBuilder
+        + build(void) : Vote
+    }
+    class VoteRecordBuilder {
+        + VoteRecordBuilder(id: String) : VoteRecordBuilder
+        + withName(name: String) : VoteRecordBuilder
+        + withYeas(yeas: Number) : VoteRecordBuilder
+        + withNays(nays: Number) : VoteRecordBuilder
+        + withType(type: String) : VoteRecordBuilder
+        + withYear(type: Number) : VoteRecordBuilder
+        + withMonth(type: Number) : VoteRecordBuilder
+        + build(void) : VoteRecord
+    }
+}
+
+BillBuilder -up-> Bill
+RoleBuilder -up-> Role
+VoteParticipantBuilder -up-> Vote
+VoteRecordBuilder -up-> VoteRecord
+
+@enduml
