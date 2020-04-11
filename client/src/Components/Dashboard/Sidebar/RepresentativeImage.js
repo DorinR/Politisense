@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
@@ -36,44 +36,14 @@ const useStyles = makeStyles(theme => ({
 
 export default function RepresentativeImage (props) {
   const classes = useStyles()
-  const [user, setUser] = useState(null)
-  useEffect(() => {
-    // eslint-disable-next-line no-undef
-    const user = JSON.parse(localStorage.getItem('user'))
-    setUser(user)
-  }, [])
-
-  const [riding, setRiding] = useState(props.representativeToLoad)
-  useEffect(() => {
-    async function getData () {
-      if (user && !riding) {
-        const riding = await fetchUserRiding(user.email)
-        setRiding(riding)
-      }
-    }
-    getData()
-  }, [user, riding])
-
-  const [representative, setRepresentative] = useState(null)
-  useEffect(() => {
-    async function getData () {
-      if (riding) {
-        const rep = await fetchRepresentative(riding)
-        setRepresentative(rep)
-      }
-    }
-    getData()
-  }, [riding])
-
-  const [name, setName] = useState(null)
-  const [imageUrl, setImageUrl] = useState(null)
-
-  useEffect(() => {
-    if (representative) {
-      setName(representative.name)
-      setImageUrl(representative.imageUrl)
-    }
-  }, [representative])
-
-  return <Avatar alt={name} src={imageUrl} className={classes.bigAvatar} />
+  return (
+    <div>
+      {props.representative &&
+        <Avatar
+          alt={props.representative.name}
+          src={props.representative.imageUrl}
+          className={classes.bigAvatar}
+        />}
+    </div>
+  )
 }
