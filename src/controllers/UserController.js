@@ -108,7 +108,10 @@ exports.socialLogin = (req, res) => {
   const token = new Auth().authenticate(social)
   res.json({
     success: true,
-    data: token
+    data: {
+      token: token,
+      config: new Firestore().firestore.config
+    }
   })
 }
 

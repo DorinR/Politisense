@@ -1,0 +1,125 @@
+@startuml
+
+package Utils #e0e0d1 {
+    package Actions #e0e0d1 {
+        interface Action
+        package Errors #e0e0d1 {
+            class ActionDecorationError
+        }
+    }
+}
+package Data #e0e0d1 {
+}
+package WrapperActions #e0e0d1 {
+    class ParserWrapperAction
+    class QueueManagerWrapperAction
+}
+package Parsers #e0e0d1 {
+    class BillXmlParser
+    class LegislativeActivityXmlParser
+    class MpXmlParser
+    class RoleXmlParser
+    class VoteParticipantXmlParser
+    class VoteRecordXmlParser
+}
+
+package Jobs #e0e0d1 {
+    abstract class Job {
+        - param: Object
+        - url: String
+        - actions: Array<Function>
+        - registry: Array<String>
+        - callback: Function
+        - done: Boolean
+        {static} - check(action: T) : Boolean
+        {static} - createRequestParams(params: Object)
+        {abstract} # logAction(void) : void
+        {abstract} # handleErrors(void) : Error
+        {static} + create(url: String, callback: Function)
+        + addAction(action: Action): Job
+        + addErrorAction(action: Action): Job
+        + addLogAction(action: Action): Job
+        + execute(void) : Promise<Object>
+    }
+    Job *-up- Action
+    Job -up-> ActionDecorationError
+
+    class BillFetchJob extends Job {
+        {static} + create(params: Object, callback: Function)
+    }
+    BillXmlParser <-down- BillFetchJob
+    ParserWrapperAction <-up- BillFetchJob
+
+    class BillLinkFetchJob extends Job {
+        - params: Object
+        + BillLinkFetchJob(params: Object, callback: Function) : BillLinkFetchJob
+        {static} + create(params: Object, callback: Function)
+    }
+
+    class BillPDFFetchJob extends Job {
+        - params: Object
+        + BillPDFFetchJob(params: Object, callback: Function): BillPDFFetchJob
+        {static} + create(params: Object, callback: Function)
+    }
+
+    class CategoryGenerationJob extends Job {
+        - params: Object
+        + CategoryGenerationJob(params: Object, callback: Function): CategoryGenerationJob
+        {static} + create(params: Object, callback: Function)
+    }
+
+    class ClassificationJob extends Job {
+        - params: Object
+        + ClassificationJob(params: Object, callback: Function): ClassificationJob
+        {static} + create(params: Object, callback: Function)
+    }
+    ClassificationJob -up-> QueueManagerWrapperAction
+    ClassificationJob --> Data
+
+    class LegislativeActivityFetchJob extends Job {
+        - params: Object
+        + LegislativeActivityFetchJob(params: Object, callback: Function): LegislativeActivityFetchJob
+        {static} + create(params: Object, callback: Function)
+    }
+    LegislativeActivityXmlParser <-down- LegislativeActivityFetchJob
+    ParserWrapperAction <-up- LegislativeActivityFetchJob
+
+    class PoliticianFetchJob extends Job {
+        - params: Object
+        + PoliticianFetchJob(params: Object, callback: Function): PoliticianFetchJob
+        {static} + create(params: Object, callback: Function)
+    }
+    MpXmlParser <-down- PoliticianFetchJob
+    ParserWrapperAction <-up- PoliticianFetchJob
+
+    class RoleFetchJob extends Job {
+        - params: Object
+        + RoleFetchJob(params: Object, callback: Function): RoleFetchJob
+        {static} + create(params: Object, callback: Function)
+    }
+    RoleXmlParser <-down- RoleFetchJob
+    ParserWrapperAction <-up- RoleFetchJob
+
+    class ScrapeJob extends Job {
+        - params: Object
+        + ScrapeJob(params: Object, callback: Function): ScrapeJob
+        {static} + create(params: Object, callback: Function)
+    }
+
+    class VoteParticipantFetchJob extends Job {
+        - params: Object
+        + VoteParticipantFetchJob(params: Object, callback: Function): VoteParticipantFetchJob
+        {static} + create(params: Object, callback: Function)
+    }
+    VoteParticipantXmlParser <-down- VoteParticipantFetchJob
+    ParserWrapperAction <-up- VoteParticipantFetchJob
+
+    class VoteRecordFetchJob extends Job {
+        - params: Object
+        + VoteRecordFetchJob(params: Object, callback: Function): VoteRecordFetchJob
+        {static} + create(params: Object, callback: Function)
+    }
+    VoteRecordXmlParser <-down- VoteRecordFetchJob
+    ParserWrapperAction <-up- VoteRecordFetchJob
+}
+@enduml

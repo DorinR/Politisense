@@ -1,3 +1,6 @@
-module.exports.ClassificationRunner = require('./ClassificationRunner').ClassificationRunner
-module.exports.BillLinkFetchRunner = require('./BillLinkFetchRunner').BillLinkFetchRunner
-module.exports.BillPDFFetchRunner = require('./BillPDFFetchRunner').BillPDFFetchRunner
+module.exports = {
+  ClassificationRunner: require('./ClassificationRunner').ClassificationRunner,
+  BillLinkFetchRunner: require('./BillLinkFetchRunner').BillLinkFetchRunner,
+  BillPDFFetchRunner: require('./BillPDFFetchRunner').BillPDFFetchRunner,
+  CategoryRunner: require('./CategoryRunner').CategoryRunner
+}

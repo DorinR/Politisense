@@ -1,0 +1,71 @@
+@startuml
+package Actions #e0e0d1 {
+    interface Action <T,U> {
+        + perform(params: U), Promise<T>
+    }
+}
+package AdapterActions #e0e0d1 {
+    class BillLinkFetchAdapterAction
+    class PoliticianAfterAdapterAction
+    class QueryResponseAdapterAction
+    class RoleFetchLinkAdapterAction
+    class RoleQueryResponseAdapterAction
+}
+Actions <-- AdapterActions
+
+package ClassifyActions #e0e0d1 {
+    class BillClassifyAction
+    class BillTagCreationAction
+    class FileOutputAction
+    class PartyClassificationAction
+    class UpdateCollectionAction
+}
+Actions <-- ClassifyActions
+
+package ErrorActions #e0e0d1 {
+    class HandleConnectionErrorAction
+    class HandleDownloadErrorAction
+}
+Actions <-- ErrorActions
+Errors <-- ErrorActions
+
+package Errors #e0e0d1 {
+    class ActionDecorationError <T extends Action, QueueAction> <<(E, yellow)>>
+    class ParseError <<(E, yellow)>>
+    class PDFParseError <<(E, yellow)>>
+    class RequestError <<(E, yellow)>>
+    class ScrapeError <<(E, yellow)>>
+}
+
+package FetchActions #e0e0d1 {
+    class FetchAction
+    class LinkScraperAction
+    class PDFFileRetrieverAction
+    class XMLRetrieverAction
+}
+Actions <-- FetchActions
+Errors <-- FetchActions
+
+package ParseActions #e0e0d1 {
+    class PDFParseAction
+    class SelectionAction
+    class GroupSelectionAction
+    class TextParserAction
+}
+Actions <-- ParseActions
+Errors <-- ParseActions
+
+package QueueActions #e0e0d1 {
+    class RequeueConnectionAction
+}
+Actions <-- QueueActions
+
+package WrapperActions #e0e0d1 {
+    class ParserWrapperAction <T extends XmlDataParser, U extends Model>
+    class QueueManagerWrapperAction<T extends QueueManager>
+}
+Actions <-- WrapperActions
+Errors <-- WrapperActions
+
+
+@enduml

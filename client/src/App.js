@@ -18,7 +18,7 @@ import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
 import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
 import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
 import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
-import Map from './Components/Dashboard/InteractiveMap/Map'
+import MapContainer from './Components/Map/MapContainer'
 
 const App = () => {
   const LoginContainer = () => (
@@ -34,7 +34,7 @@ const App = () => {
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
           <PrivateRoute path='/logout' component={Logout} />
-          <PrivateRoute path='/map' component={Map} />
+          <PrivateRoute path='/map' component={MapContainer} />
           <PrivateRoute path='/account' component={UserAccountTabs} />
           <PrivateRoute path='/general' component={GeneralDashboard} />
           <PrivateRoute path='/categories' component={CategoryDashboard} />

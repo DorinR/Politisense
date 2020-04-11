@@ -1,6 +1,6 @@
 module.exports = {
-  VoteAfterAction: require('./VoteAfter').VoteAfterAction,
-  PoliticianAfterAction: require('./PoliticianAfter').PoliticianAfterAction,
+  Vote: require('./VoteAfter').VoteAfterAction,
+  Politician: require('./PoliticianAfter').PoliticianAfterAction,
   VoteParticipant: require('./VotersAfter').VoteParticipantAfterAction,
   Expenditure: require('./ExpenditureAfter').ExpenditureAfterAction
 }
