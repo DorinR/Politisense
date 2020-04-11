@@ -10,6 +10,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import Dialog from '@material-ui/core/Dialog'
 import Slide from '@material-ui/core/Slide'
+import Box from '@material-ui/core/Box'
 
 const capitalize = require('capitalize')
 
@@ -130,12 +131,10 @@ export default function SeatingPlan (props) {
               />
             </Typography>
           </Grid>
-          <Grid item xs={5}>
-            <Typography variant='h5' color='textPrimary' gutterBottom>Seats in Parliament</Typography>
-          </Grid>
           <Grid item xs={30}>
+            <Typography variant='h5' color='textPrimary' gutterBottom>Seats in Parliament</Typography>
             <Grid container direction='row' spacing={2}>
-              <Grid item xs={3} my={2}>
+              <Grid item md={3} my={2}>
                 <div>
                   {parties.map((party) =>
                     <Typography key={party.name} variant='body2' color='textPrimary' my={2}>
@@ -150,14 +149,19 @@ export default function SeatingPlan (props) {
                 </div>
               </Grid>
               <Grid item xs={27}>
-                {rows.map((row, i) =>
-                  <Grid container key={i} justify='flex-start' alignItems='center' direction='row'>
-                    {Array.apply(null, { length: row.colours.length }).map((e, i) => (
-                      <Grid item key={i}>
-                        <FiberManualRecordIcon style={{ fontSize: 15, color: (row.colours[i]) }} />
-                      </Grid>))}
-                  </Grid>
-                )}
+                <Box
+                  component='div'
+                  display={{ xs: 'none', sm: 'none', md: 'block' }}
+                >
+                  {rows.map((row, i) =>
+                    <Grid container key={i} justify='flex-start' alignItems='center' direction='row'>
+                      {Array.apply(null, { length: row.colours.length }).map((e, i) => (
+                        <Grid item key={i}>
+                          <FiberManualRecordIcon style={{ fontSize: 15, color: (row.colours[i]) }} />
+                        </Grid>))}
+                    </Grid>
+                  )}
+                </Box>
               </Grid>
             </Grid>
           </Grid>

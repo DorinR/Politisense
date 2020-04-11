@@ -19,6 +19,7 @@ import TextField from '@material-ui/core/TextField'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import axios from 'axios'
 import SeatingPlan from './SeatingPlan'
+import CenteredCircularProgress from '../Utilities/CenteredCircularProgress'
 
 const capitalize = require('capitalize')
 
@@ -81,7 +82,6 @@ export function getLink (str) {
 
 export default function GeneralDashboard () {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(false)
   const [ministerOpen, setMinisterOpen] = React.useState(false)
   const [currentMinistry, setCurrentMinistry] = React.useState('')
   const [filter, setFilter] = React.useState('')
@@ -135,46 +135,46 @@ export default function GeneralDashboard () {
           for (let i = 0; i < res.data.data.length; i++) {
             result[i] = {}
 
-          result[i].name = res.data.data[i].name
-          result[i].seats = res.data.data[i].seats
-          result[i].proportionalSeats = res.data.data[i].seats
-          switch (res.data.data[i].name) {
-            case 'liberal':
-              result[i].color = '#D71921'
-              break
-            case 'conservative':
-              result[i].color = '#0C499C'
-              break
-            case 'ndp':
-              result[i].color = '#EF7E52'
-              break
-            case 'bloc québécois':
-              result[i].color = '#02819E'
-              break
-            case 'green party':
-              result[i].color = '#2E8724'
-              break
-            case 'independent':
-              result[i].color = '#78D7CE'
-              break
-            default:
-              result[i].color = 'white'
+            result[i].name = res.data.data[i].name
+            result[i].seats = res.data.data[i].seats
+            result[i].proportionalSeats = res.data.data[i].seats
+            switch (res.data.data[i].name) {
+              case 'liberal':
+                result[i].color = '#D71921'
+                break
+              case 'conservative':
+                result[i].color = '#0C499C'
+                break
+              case 'ndp':
+                result[i].color = '#EF7E52'
+                break
+              case 'bloc québécois':
+                result[i].color = '#02819E'
+                break
+              case 'green party':
+                result[i].color = '#2E8724'
+                break
+              case 'independent':
+                result[i].color = '#78D7CE'
+                break
+              default:
+                result[i].color = 'white'
+            }
+            if (res.data.data[i].seats > max) {
+              max = res.data.data[i].seats
+              result.current = result[i]
+            }
           }
-          if (res.data.data[i].seats > max) {
-            max = res.data.data[i].seats
-            result.current = result[i]
+          if (max >= 170) {
+            result.status = 'Majority'
+          } else {
+            result.status = 'Minority'
           }
+          return result
         }
-        if (max >= 170) {
-          result.status = 'Majority'
-        } else {
-          result.status = 'Minority'
-        }
-        return result
-      }
-    })
-    .catch(console.error)
-}
+      })
+      .catch(console.error)
+  }
 
   useEffect(() => {
     async function getData () {
@@ -204,14 +204,6 @@ export default function GeneralDashboard () {
 
   const handleFilterChange = e => {
     setFilter(e.target.value)
-  }
-
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
   }
 
   const handleMinisterClickOpen = (minister) => {
@@ -272,54 +264,47 @@ export default function GeneralDashboard () {
               )}
             </Card>
           </Container>
-      <Container>
-        <TextField label='Filter by Ministry' className={classes.search} variant='outlined' onChange={handleFilterChange} color='primary' />
-        <Grid container spacing={5} alignItems='flex-end'>
-          {filteredMinisters && filteredMinisters.length > 0
-            ? filteredMinisters.map(minister => (
-              <Grid item key={minister.title} xs={4}>
-                <Card className={classes.card}>
-                  <CardHeader
-                    title={capitalize.words(minister.name)}
-                    subheader={titleCase(minister.title)}
-                    titleTypographyProps={{ align: 'center' }}
-                    subheaderTypographyProps={{ align: 'center' }}
-                    action=<HelpIcon style={{ cursor: 'pointer' }} onClick={() => handleMinisterClickOpen(titleCase(minister.title))} />
-                    className={classes.cardHeader}
-                  />
-                  <CardContent>
-                    <div className={classes.image}>
-                      <RepresentativeImage representative={minister.data} />
-                    </div>
-                    <ul>
-                      <Typography component='li' variant='subtitle1' align='center'>
-                        <span style={{ fontWeight: 'bold' }}>Minister Since</span> {minister.description[0]}
-                      </Typography>
-                      <Typography component='li' variant='subtitle1' align='center'>
-                        <span style={{ fontWeight: 'bold' }}>Riding</span> {capitalize.words(minister.description[1])}
-                      </Typography>
-                      <Typography component='li' variant='subtitle1' align='center'>
-                        <Link href={minister.description[2]}>More information</Link>
-                      </Typography>
-                    </ul>
-                  </CardContent>
-                </Card>
-              </Grid>
-            )) : <Grid item xs={4}>
-              <Typography variant='h5' component='h2'>
-                          No Results Found
-              </Typography>
-            </Grid>}
-        </Grid>
-      </Container>
-      </div> :  <div style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)' }}
-          >
-            <CircularProgress/>
-          </div>}
+          <Container>
+            <TextField label='Filter by Ministry' className={classes.search} variant='outlined' onChange={handleFilterChange} color='primary' />
+            <Grid container spacing={5} alignItems='flex-end'>
+              {filteredMinisters && filteredMinisters.length > 0
+                ? filteredMinisters.map(minister => (
+                  <Grid item key={minister.title} xs={4}>
+                    <Card className={classes.card}>
+                      <CardHeader
+                        title={capitalize.words(minister.name)}
+                        subheader={titleCase(minister.title)}
+                        titleTypographyProps={{ align: 'center' }}
+                        subheaderTypographyProps={{ align: 'center' }}
+                        action=<HelpIcon style={{ cursor: 'pointer' }} onClick={() => handleMinisterClickOpen(titleCase(minister.title))} />
+                        className={classes.cardHeader}
+                      />
+                      <CardContent>
+                        <div className={classes.image}>
+                          <RepresentativeImage representative={minister.data} />
+                        </div>
+                        <ul>
+                          <Typography component='li' variant='subtitle1' align='center'>
+                            <span style={{ fontWeight: 'bold' }}>Minister Since</span> {minister.description[0]}
+                          </Typography>
+                          <Typography component='li' variant='subtitle1' align='center'>
+                            <span style={{ fontWeight: 'bold' }}>Riding</span> {capitalize.words(minister.description[1])}
+                          </Typography>
+                          <Typography component='li' variant='subtitle1' align='center'>
+                            <Link href={minister.description[2]}>More information</Link>
+                          </Typography>
+                        </ul>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                )) : (
+                  <Grid item xs={4}>
+                    <Typography variant='h5' component='h2'>No Results Found</Typography>
+                  </Grid>
+                )}
+            </Grid>
+          </Container>
+        </div>) : <div><CenteredCircularProgress /></div>}
       <MinisterHelpDialog ministry={currentMinistry} open={ministerOpen} onClose={handleMinisterClose} transition={Transition} />
     </Grid>
   )
