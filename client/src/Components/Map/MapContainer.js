@@ -1,5 +1,5 @@
 import MapWrapper from './MapWrapper'
-import React, { useState} from 'react'
+import React, { useState } from 'react'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
@@ -33,26 +33,26 @@ const useStyles = makeStyles({
     textAlign: 'center'
   },
   bigAvatar: {
-    marginLeft: "35%",
+    marginLeft: '35%',
     width: 100,
     height: 100,
     border: '3px'
   },
-  stylingIcons:{
-    background: "#43D0C4"
+  stylingIcons: {
+    background: '#43D0C4'
   }
 })
 
-const MapContainer= (props)=> {
+const MapContainer = (props) => {
   const classes = useStyles()
-  const [contents,setContents] = useState(null)
+  const [contents, setContents] = useState(null)
 
-  const handleSetContentsMap = (currentRidingcontents)=> {
-    if(contents){
-      if(contents[0].name !== currentRidingcontents[0].name){
+  const handleSetContentsMap = (currentRidingcontents) => {
+    if (contents) {
+      if (contents[0].name !== currentRidingcontents[0].name) {
         setContents(currentRidingcontents)
       }
-    }else {
+    } else {
       setContents(currentRidingcontents)
     }
   }
@@ -67,7 +67,7 @@ const MapContainer= (props)=> {
           color='primary'
           gutterBottom
         >
-          {props? props.test: "nothing"}
+          {props ? props.test : 'nothing'}
           Explore Canadian Ridings
         </Typography>
         <span className={classes.customTooltip}>
@@ -81,14 +81,14 @@ const MapContainer= (props)=> {
         </span>
       </Container>
       <Container>
-        {props.ridingCodes && props.shapeData && props.ridingMpData  ? (
+        {props.ridingCodes && props.shapeData && props.ridingMpData ? (
           <MapWrapper
             ridingCodes={props.ridingCodes}
             shapeData={props.shapeData}
             ridingMpData={props.ridingMpData}
             handleOpenModal={handleSetContentsMap}
-            selectedRiding={contents? contents[1]:""}
-            contents={contents ? contents[0] : ""}
+            selectedRiding={contents ? contents[1] : ''}
+            contents={contents ? contents[0] : ''}
           />
         ) : (
           <CenteredCircularProgress />

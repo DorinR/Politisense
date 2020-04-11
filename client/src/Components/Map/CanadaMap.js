@@ -3,7 +3,7 @@ import * as topojson from 'topojson-client'
 import { PARTY_COLORS } from '../../Components/Dashboard/Sidebar/RidingShape/partyColors'
 
 export default class D3Chart {
-  constructor (ridingCodes, shapeData, ridingMpData,handleOpenModal,selectedRiding,tag) {
+  constructor (ridingCodes, shapeData, ridingMpData, handleOpenModal, selectedRiding, tag) {
     const ridingRepresentative = d3.map()
     const width = parseInt(d3.select('#map-wrapper').style('width'))
     const mapRatio = 0.75
@@ -87,7 +87,7 @@ export default class D3Chart {
           })
         }
       })
-      selectRiding(clickedShape.properties.ID, representativeInfo,clickedShape)
+      selectRiding(clickedShape.properties.ID, representativeInfo, clickedShape)
       const bounds = path.bounds(clickedShape)
       const dx = bounds[1][0] - bounds[0][0]
       const dy = bounds[1][1] - bounds[0][1]
@@ -108,12 +108,12 @@ export default class D3Chart {
         )
     }
 
-    function selectRiding (ridingId, representativeInfo,clickedShape) {
+    function selectRiding (ridingId, representativeInfo, clickedShape) {
       const selectedRiding = d3.select(".riding[data-id='" + ridingId + "']")
       selectedRiding.node().parentNode.appendChild(selectedRiding.node())
       d3.select('.activenode').classed('activenode', false)
       selectedRiding.classed('activenode', true)
-      handleOpenModal([representativeInfo,clickedShape])
+      handleOpenModal([representativeInfo, clickedShape])
     }
 
     function zoomin () {

@@ -62,4 +62,3 @@ export function loadingTextdata (element) {
     return `${element.fromDate} - ${element.toDate}`
   }
 }
-
