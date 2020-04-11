@@ -50,3 +50,16 @@ export function capitalizedName (sponsor) {
   }
   return null
 }
+
+export function loadingTextdata (element) {
+  if (element.fromDate === 0 && element.toDate === 0) {
+    return 'Present'
+  }
+  if (element.fromDate !== 0 && (element.toDate === 0)) {
+    return `${element.fromDate} - Present`
+  }
+  if (element.fromDate !== 0 && (element.toDate !== 0)) {
+    return `${element.fromDate} - ${element.toDate}`
+  }
+}
+

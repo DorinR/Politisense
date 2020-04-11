@@ -8,10 +8,30 @@ import RemoveCircleIcon from '@material-ui/icons/RemoveCircle'
 import CachedIcon from '@material-ui/icons/Cached'
 import Tooltip from '@material-ui/core/Tooltip'
 import Grid from '@material-ui/core/Grid'
+import Avatar from "@material-ui/core/Avatar";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import ListItemText from "@material-ui/core/ListItemText";
+import List from '@material-ui/core/List';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import {capitalizedName, loadingTextdata} from "../Dashboard/Utilities/CommonUsedFunctions";
+import PersonIcon from '@material-ui/icons/Person'
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
+import FlagIcon from '@material-ui/icons/Flag'
+import LocationOnIcon from '@material-ui/icons/LocationOn'
+import Divider from '@material-ui/core/Divider';
 
-const divStyle = {
-  marginTop: 70,
-  marginLeft: 100
+const stylingRepInfoCard = {
+  bigAvatar: {
+    marginLeft: "35%",
+    width: 100,
+    height: 100,
+    border: '3px'
+  },
+  stylingIcons:{
+    background: "#43D0C4"
+  }
 }
 
 export default class ChartWrapper extends Component {
@@ -20,16 +40,23 @@ export default class ChartWrapper extends Component {
     new CanadaMap(
       this.props.ridingCodes,
       this.props.shapeData,
-      this.props.ridingMpData
+       this.props.ridingMpData,
+       this.props.handleOpenModal,
+        this.props.selectedRiding,
+          this.refs.chart
     )
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return equals(nextProps, this.props);
   }
 
   render () {
     return (
-      <div>
-        <div style={divStyle} id='map-holder' ref='mapHolder'>
-          <Grid container spacing={3}>
-            <Grid item xs={9}>
+      <div ref='mapHolder'>
+        <div  id='map-holder' >
+          <Grid container spacing={10}>
+            <Grid item xs={8}>
               <div id='map-wrapper'>
                 <div className='zoom-buttons'>
                   <div className='zoom-button' id='zoomin'>
@@ -60,26 +87,73 @@ export default class ChartWrapper extends Component {
                     </Tooltip>
                   </div>
                 </div>
-                <svg id='map' />
+                <svg id='map' ref={'chart'} />
               </div>
             </Grid>
-            <Grid item xs={3}>
-              <div className='right-sidebar'>
-                <div id='tooltip' className='hidden'>
-                  <svg
-                    id='representativeInfoContainer'
-                    width='200'
-                    height='200'
-                  >
-                    {' '}
-                  </svg>
-                  <div id='value' />
-                </div>
-              </div>
+            <Grid item xs={4}>
+            {this.props.contents ? (
+                <Card borderRadius="borderRadius" borderColor="grey.500" style={{marginLeft:"20%"}}>
+              <Avatar alt={this.props.contents.name} src={this.props.contents.imageUrl} style={stylingRepInfoCard.bigAvatar} />
+              <CardContent>
+                <Divider/>
+                <List>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar style={stylingRepInfoCard.stylingIcons}>
+                        <PersonIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText>
+                      <span style={{ fontWeight: 'bold' }}>Name: </span> {capitalizedName(this.props.contents.name)}</ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar style={stylingRepInfoCard.stylingIcons}>
+                        <LocationOnIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText><span style={{ fontWeight: 'bold' }}>Riding: </span>{capitalizedName(this.props.contents.riding)}</ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar style={stylingRepInfoCard.stylingIcons}>
+                        <FlagIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText>
+                      <span style={{ fontWeight: 'bold' }}>Party: </span>{capitalizedName(this.props.contents.party)}
+                    </ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar style={stylingRepInfoCard.stylingIcons}>
+                        <CalendarTodayIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText>
+                      <span style={{ fontWeight: 'bold' }}>Member Since: </span> { loadingTextdata({ fromDate: this.props.contents.start, toDate: this.props.contents.end })}
+                    </ListItemText>
+                  </ListItem>
+                </List>
+              </CardContent>
+            </Card>)
+                :
+                ("")}
+
             </Grid>
           </Grid>
         </div>
       </div>
     )
   }
+}
+function equals(nextProps,props){
+  if(nextProps.ridingCodes === props.ridingCodes
+      && nextProps.shapeData === props.shapeData
+      && nextProps.ridingMpData === props.ridingMpData
+      && nextProps.contents ===props.contents
+      && nextProps.selectedRiding ===props.selectedRiding
+  ){
+    return false
+  }else {return true}
 }
