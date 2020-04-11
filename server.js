@@ -1,9 +1,14 @@
 require('module-alias/register')
+const path = require('path')
+const result = require('dotenv').config({ path: path.resolve(process.cwd(), 'src/config/.env') })
+if (!result) {
+  throw new Error('ERROR: no .env found, cannot start server')
+}
+
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const path = require('path')
 
 // bodyparser middleware
 app.use(cors())

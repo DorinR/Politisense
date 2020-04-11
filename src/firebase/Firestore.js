@@ -1,25 +1,28 @@
 const Reference = require('./Reference').Reference
 const fs = require('firebase')
 require('firebase/firestore')
+const path = require('path')
+const result = require('dotenv').config({ path: path.resolve(process.cwd(), 'src/config/.env') })
+if (!result) {
+  throw new Error('ERROR: no .env found, cannot initialise firestore for testing.')
+}
 
 const config = {
-  apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
-  authDomain: 'abdulla-2c3a5.firebaseapp.com',
-  databaseURL: 'https://abdulla-2c3a5.firebaseio.com',
-  projectId: 'abdulla-2c3a5',
-  storageBucket: 'abdulla-2c3a5.appspot.com',
-  messagingSenderId: '1084760992823',
-  appId: '1:1084760992823:web:c6402249f92d54372ce3b2'
+  apiKey: process.env.DB_KEY,
+  authDomain: process.env.DB_AUTH_DOMAIN,
+  databaseURL: process.env.DB_URL,
+  projectId: process.env.DB_ID,
+  storageBucket: process.env.DB_BUCKET,
+  messagingSenderId: process.env.DB_MSG_SENDER_ID,
+  appId: process.env.DB_APP_ID
 }
+
 Object.freeze(config)
-if (!fs.app) {
-  fs.initializeApp(config)
-}
 
 class _Firestore {
   constructor () {
     this.config = config
-    if (!this.app || !fs.app) {
+    if (fs.apps.length === 0) {
       this.app = fs.initializeApp(this.config)
     } else {
       this.app = fs.app

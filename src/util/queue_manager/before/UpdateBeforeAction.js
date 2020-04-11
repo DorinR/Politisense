@@ -14,7 +14,7 @@ class UpdateBeforeAction extends QueueAction {
   }
 
   async perform () {
-    let currentDepth
+    let currentDepth = -1
     let index = 0
     this.manager.params = []
     console.log(`INFO: ${UpdateBeforeAction.name}: structuring ${this.updates.length} requested updates`)
@@ -23,7 +23,7 @@ class UpdateBeforeAction extends QueueAction {
       const params = UpdateBeforeAction.createParams(update)
       this.manager.params.push(params)
       const job = new Jobs.Job(params, this.manager.requeueCallback.bind(this.manager))
-      if (!currentDepth) {
+      if (currentDepth === -1) {
         this.manager.updateJobQueue.push([])
         currentDepth = depth
       }
@@ -35,7 +35,42 @@ class UpdateBeforeAction extends QueueAction {
       if (depth === currentDepth) {
         UpdateBeforeAction.addActions(job, params, vertex)
       }
-      this.manager.updateJobQueue[index].push(job)
+      let smallerParams
+      if (vertex.type.name === 'RoleScraper' || vertex.type.name === 'VoteParticipantScraper') {
+        smallerParams = params.parliaments.map(parliament => {
+          return {
+            sessions: params.sessions,
+            parliaments: [parliament],
+            parliamentSessions: params.parliamentSessions,
+            url: params.url,
+            collection: params.collection
+          }
+        })
+      }
+      if (vertex.type.name === 'ExpenditureScraper') {
+        smallerParams = params.years.map(year => {
+          return {
+            sessions: params.sessions,
+            parliaments: [Parameters.ExpenditureParameters.YearToParliament[year]],
+            parliamentSessions: params.parliamentSessions,
+            url: params.url,
+            collection: params.collection,
+            years: [year]
+          }
+        })
+      }
+      if (vertex.type.name === 'ExpenditureScraper' ||
+         vertex.type.name === 'RoleScraper' ||
+         vertex.type.name === 'VoteParticipantScraper') {
+        const jobs = smallerParams.map(param => {
+          const job = new Jobs.Job(param, this.manager.requeueCallback.bind(this.manager))
+          UpdateBeforeAction.addActions(job, param, vertex)
+          return job
+        })
+        this.manager.updateJobQueue[index].push(...jobs)
+      } else {
+        this.manager.updateJobQueue[index].push(job)
+      }
     })
     console.log(`INFO: ${UpdateBeforeAction.name}: structured updates into ${this.manager.updateJobQueue.length} phases`)
   }
@@ -44,7 +79,8 @@ class UpdateBeforeAction extends QueueAction {
     const params = {
       parliaments: Object.assign(Parameters.Parliament.Number),
       sessions: Object.assign(Parameters.Parliament.Session),
-      parliamentSessions: 'all'
+      parliamentSessions: Object.assign(Parameters.Parliament.Session),
+      years: Object.values(Parameters.ExpenditureParameters.Year)
     }
     params.url = vertex.data.url
     params.collection = vertex.data.collection

@@ -130,7 +130,9 @@ async function politicianRoles (req, res) {
 }
 
 async function politicianFinancials (req, res) {
-  const db = new Firestore(true).forParliament(req.params.parliament)
+  const db = new Firestore()
+    .forParliament(req.params.parliament)
+    .atYear(req.body.year)
   const politicians = db.Politician()
   const financials = db.FinancialRecord()
 
@@ -217,7 +219,8 @@ const UpdateDirector = {
 
   Politicians: {
     records: Parameters.Politician,
-    roles: Parameters.Role
+    roles: Parameters.Role,
+    finances: Parameters.Finance
   },
 
   Parties: {

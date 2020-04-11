@@ -3,9 +3,8 @@ const QueueUtils = require('@manager')
 const QueueManager = QueueUtils.QueueManager
 const StartAction = QueueUtils.Start.LegislativeActivity
 const StopAction = QueueUtils.Stop.Generic
-const ErrorAction = QueueUtils.Error.ParseErrorAction
+const ErrorAction = QueueUtils.Error.Parse
 
-// eslint-disable-next-line
 class LegislativeActivityScraper extends QueueManager {
   static create (wait = 1000) {
     const manager = new LegislativeActivityScraper(wait)
