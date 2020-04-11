@@ -1,0 +1,24 @@
+@startuml
+package Jobs #e0e0d1 {
+    abstract class Job
+}
+package Queues #e0e0d1 {
+    class UniqueJobQueue {
+        - queue: linked-list:LinkedList
+        - linkSet: Set
+        + enqueue(task: Job) : void
+        + dequeue(void) : Job
+        + size(void) : Number
+    }
+    Job <-- UniqueJobQueue
+
+    class Queue {
+        - queue: linked-list:LinkedList
+        + enqueue(task: Job) : void
+        + dequeue(void) : Job
+        + size(void) : Number
+    }
+    Job <-- Queue
+}
+
+@enduml
