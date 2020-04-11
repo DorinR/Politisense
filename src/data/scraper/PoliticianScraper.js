@@ -1,53 +1,16 @@
 require('module-alias/register')
-const Utils = require('@utils')
-const QueueManager = Utils.QueueManager.QueueManager
-const StartAction = Utils.QueueManager.Start.StartPoliticianScrape
-const StopAction = Utils.QueueManager.Stop.GenericStopAction
-const Throw = Utils.QueueManager.Error.ParseErrorAction
-const AfterAction = Utils.QueueManager.After.PoliticianAfterAction
+const Components = require('@manager')
+const Parameters = require('@parameter')
 
-const caucusMapping = {
-  unknown: 0,
-  reform: 7,
-  people: 24357,
-  progressiveConservative: 5,
-  newDemocratic: 3,
-  liberal: 4,
-  independentConservative: 1796,
-  independentBlocQuebec: 3638,
-  independentCanadianAlliance: 8,
-  green: 14130,
-  forceEtDemocratie: 20915,
-  CooperativeCommonwealthFederation: 24046,
-  conservativeIndependent: 20159,
-  conservative: 8781,
-  canadianAlliance: 103,
-  blocQuebecois: 6
-}
-const provinceKeys = [
-  'AB',
-  'BC',
-  'MB',
-  'NB',
-  'NL',
-  'NT',
-  'NS',
-  'NU',
-  'ON',
-  'PE',
-  'QC',
-  'SK',
-  'YT'
-]
-
-class PoliticianScraper extends QueueManager {
+class PoliticianScraper extends Components.QueueManager {
   static create (params, wait = 5000) {
     const manager = new PoliticianScraper(params, wait)
     manager
-      .setStartAction(new StartAction(manager))
-      .setStopAction(new StopAction(manager))
-      .setAfterAction(new AfterAction(manager))
-      .setErrorAction(new Throw(manager))
+      .setStartAction(new Components.Start.Politician(manager))
+      .setStopAction(new Components.Stop.Generic(manager))
+      .setAfterAction(new Components.After.Politician(manager))
+      .setErrorAction(new Components.Error.Parse(manager))
+      .setLogAction(new Components.Log.Typed(PoliticianScraper))
     return manager
   }
 
@@ -69,18 +32,8 @@ class PoliticianScraper extends QueueManager {
     this.maxQueryCount = this.queryCount
   }
 
-  async run () {
-    await super.run()
-    this.finish()
-  }
-
-  accumulate (result) {
-    this.result.push(result)
-    return result
-  }
-
   finish () {
-    console.log(`INFO: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
+    console.log(`INFO: ${PoliticianScraper.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
   setParliaments (parliaments) {
@@ -99,7 +52,7 @@ class PoliticianScraper extends QueueManager {
        (typeof caucuses === typeof ' ' && caucuses.toLowerCase().includes('all'))) {
       this.caucuses.push('all')
     } else if (typeof caucuses === typeof []) {
-      const validPartyKeys = Object.values(caucusMapping)
+      const validPartyKeys = Object.values(Parameters.PoliticianParameters.Caucus)
       this.caucuses = caucuses.filter(caucus => {
         return validPartyKeys.includes(caucus)
       })
@@ -112,7 +65,7 @@ class PoliticianScraper extends QueueManager {
       this.provinces.push('all')
     } else if (typeof provinces === typeof []) {
       this.provinces = provinces.filter(province => {
-        return provinceKeys.includes(province)
+        return Object.values(Parameters.PoliticianParameters.Province).includes(province)
       })
     }
   }
@@ -133,13 +86,13 @@ class PoliticianScraper extends QueueManager {
 
   setLastNamePrefixes (lastNamePrefixes) {
     if (typeof lastNamePrefixes === 'undefined' ||
-       (typeof lastNamePrefixes === typeof ' ' && lastNamePrefixes.toLowerCase().includes('all'))) {
+       (typeof lastNamePrefixes === 'string' && lastNamePrefixes.toLowerCase().includes('all'))) {
       this.lastNamePrefixes.push('')
-    } else if (typeof lastNamePrefixes === typeof []) {
+    } else if (Array.isArray(lastNamePrefixes)) {
       this.lastNamePrefixes = lastNamePrefixes.filter(prefix => {
         return prefix.length === 1 && prefix.toLowerCase().match(/[a-z]/i)
       })
-      this.lastNamePrefixes = this.lastNamePrefixes.forEach(prefix => {
+      this.lastNamePrefixes = this.lastNamePrefixes.map(prefix => {
         return prefix.toUpperCase()
       })
     }

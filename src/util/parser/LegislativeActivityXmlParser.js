@@ -71,12 +71,12 @@ class LegislativeActivityXmlParser extends Parser {
   }
 
   generateNewParser (xml) {
-    xml = this.getXmlInTag(this.tagName)
-    return new _LegislativeActivityXmlParser(xml)
+    const parser = new LegislativeActivityXmlParser(xml)
+    return parser.parser
   }
 
   hasData () {
-    return super.hasData() || this.isTagInXml(this.tagName)
+    return super.hasData() || this.isTagInXml(this.tagName) || this.parser.hasData()
   }
 
   getAllFromXml () {

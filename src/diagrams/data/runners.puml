@@ -1,0 +1,46 @@
+@startuml
+interface Utils::QueueManagers::QueueAction
+class Utils::QueueManagers::QueueManager
+package Runners #e0e0d1 {
+    class BillLinkFetchRunner extends Utils::QueueManagers::QueueManager {
+        - parliaments: Array<Number>
+        - params: Array<Object>
+        - queryCount: Number
+        - maxQueryCount: Number
+        # finish(void) : void
+        - BillLinkFetchRunner(params: Object, wait: Number) : BillLinkFetchRunner
+        {static} + create(params: Object, wait: Number) : BillLinkFetchRunner
+    }
+    BillLinkFetchRunner o--> Utils::QueueManagers::QueueAction
+
+    class BillPDFFetchRunner extends Utils::QueueManagers::QueueManager {
+        - params: Object
+        - queryCount: Number
+        - maxQueryCount: Number
+        # finish(void) : void
+        - BillPDFFetchRunner(params: Object, wait: Number) : BillPDFFetchRunner
+        {static} + create(params: Object, wait: Number) : BillPDFFetchRunner
+    }
+    BillPDFFetchRunner o--> Utils::QueueManagers::QueueAction
+
+    class CategoryRunner extends Utils::QueueManagers::QueueManager {
+        - params: Array<Object>
+        - queryCount: Number
+        - maxQueryCount: Number
+        # finish(void) : void
+        - CategoryRunner(params: Object, wait: Number) : CategoryRunner
+        {static} + create(params: Object, wait: Number) : CategoryRunner
+    }
+    CategoryRunner o--> Utils::QueueManagers::QueueAction
+
+    class ClassificationRunner extends Utils::QueueManagers::QueueManager {
+        - params: Array<Object>
+        - queryCount: Number
+        - maxQueryCount: Number
+        # finish(void) : void
+        - ClassificationRunner(params: Object, wait: Number) : ClassificationRunner
+        {static} + create(params: Object, wait: Number) : ClassificationRunner
+    }
+    ClassificationRunner o--> Utils::QueueManagers::QueueAction
+}
+@enduml

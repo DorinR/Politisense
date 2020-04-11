@@ -28,10 +28,6 @@ class RoleXmlParser extends XmlDataParser {
     }
   }
 
-  passesFilters () {
-    return true
-  }
-
   hasData () {
     return super.hasData() || this.isTagInXml(this.tagName)
   }

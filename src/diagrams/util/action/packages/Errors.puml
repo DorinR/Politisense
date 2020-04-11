@@ -1,0 +1,39 @@
+@startuml
+interface Action<T,U>
+interface QueueAction<T>
+class Error<<(E, yellow)>>
+
+package Errors #e0e0d1 {
+    class ActionDecorationError <T extends Action, QueueAction> <<(E, yellow)>> extends Error {
+        + ActionDecorationError(action : T,  message : String) : ActionDecorationError
+    }
+    ActionDecorationError <-- Action
+    ActionDecorationError <-- QueueAction
+
+    class ParseError <<(E, yellow)>> extends Error {
+        - message : String
+        - name : String
+        + ParseError(message : String) : ParseError
+    }
+
+    class PDFParseError <<(E, yellow)>> extends Error {
+        - message : String
+        - name : String
+        - id : String
+        - url : String
+        + PDFParseError(message : String, bill : String, url : String) : PDFParseError
+    }
+
+    class RequestError <<(E, yellow)>> extends Error {
+        - params : Object
+        - message : String
+        + RequestError(params : Object) : RequestError
+    }
+
+    class ScrapeError <<(E, yellow)>> extends Error {
+        - lnk : String
+        - message : String
+        + ScrapeError(lnk : String, message : String) : ScrapeError
+    }
+}
+@enduml

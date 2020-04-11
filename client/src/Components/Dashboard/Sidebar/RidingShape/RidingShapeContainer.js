@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import RidingShape from './RidingShape'
 import Box from '@material-ui/core/Box'
+import CenteredCircularProgress from '../../Utilities/CenteredCircularProgress'
 
 export async function fetchRidingShape (ridingCode) {
   try {
@@ -16,25 +17,36 @@ export async function fetchRidingShape (ridingCode) {
 }
 
 export default function RidingShapeContainer (props) {
-  const [ridingShape, setRidingShape] = useState('')
+  const [ridingCode, setRidingCode] = useState(null)
+  useEffect(() => {
+    if (props.ridingCode && props.ridingCode !== ridingCode) {
+      setRidingCode(props.ridingCode)
+    }
+  }, [ridingCode, props.ridingCode])
 
+  const [ridingShape, setRidingShape] = useState(null)
   useEffect(() => {
     async function getData () {
-      const ridingShape = await fetchRidingShape(props.ridingCode)
-      setRidingShape(ridingShape)
+      if (ridingCode) {
+        const ridingShape = await fetchRidingShape(ridingCode)
+        setRidingShape(ridingShape)
+      }
     }
-    if (props.ridingCode) {
-      getData()
-    }
-  }, [props.ridingCode])
+    getData()
+  }, [ridingCode])
 
   return (
     <div>
       <Box mx='auto' />
-      <RidingShape
-        ridingShapeCoordinates={ridingShape}
-        politicalParty={props.politicalParty}
-      />
+      {ridingShape && ridingCode && props.politicalParty ? (
+        <RidingShape
+          ridingShapeCoordinates={ridingShape}
+          politicalParty={props.politicalParty}
+          code={ridingCode}
+        />
+      ) : (
+        <CenteredCircularProgress />
+      )}
       <Box mx='auto' />
     </div>
   )
