@@ -1,0 +1,99 @@
+@startuml
+package QueueManagers #e0e0d1 {
+    class QueueAction
+    class QueueManager
+}
+package Firebase #e0e0d1 {
+    class Firestore
+    package Models #e0e0d1 {
+        class Politician
+        class Bill
+        class VoteRecord
+    }
+}
+package Jobs #e0e0d1 {
+    abstract class Job
+}
+
+package Updates #e0e0d1 {
+     class DependencyGraph
+      class UpdatePipelineManager
+}
+
+package Graphs #e0e0d1 {
+    class TypeVertex
+}
+
+package Actions #e0e0d1 {
+    package FetchActions #e0e0d1 {
+        class FetchAction
+    }
+    package ParseActions #e0e0d1 {
+        class TextParserAction
+        class SelectionAction
+    }
+    package WrapperActions #e0e0d1 {
+        class QueueManagerWrapperAction
+    }
+    package ClassifyActions #e0e0d1 {
+        class UpdateCollectionAction
+    }
+}
+
+package Before #e0e0d1 {
+   class BillLinkFetchBefore {
+       - manager: QueueManager
+       - bills: Array<Array<Bill>>
+       + perform(void): Promise<void>
+       + BillLinkFetchBefore(manager: QueueManager): BillLinkFetchBefore
+       {static} - retrieveBills(db: Firestore) : Promise<Array<Array<Bill>>>
+       - createQueryParams(void): Promise<void>
+   }
+   QueueAction <|-- BillLinkFetchBefore
+
+   class RoleBefore {
+       - manager: QueueManager
+       - bills: Array<Array<Bill>>
+       + perform(void): Promise<void>
+       + RoleBefore(manager: QueueManager): RoleBefore
+       {static} - retrievePoliticians(db: Firestore) : Promise<Array<Array<Politician>>>
+       {static} - formatName(name: String): String
+       {static} - create(params: Object) : Job
+       {static} - createRequestParams(params: Object) : Job
+       - modifyManagerQueryParams(Array<String>): Promise<void>
+
+   }
+   QueueAction <|-- RoleBefore
+   Actions <-- RoleBefore
+   Jobs <-- RoleBefore
+
+   class UpdateBeforeAction {
+       - manager: UpdatePipelineManager
+       - updates: Array<TypeVertex>
+       + perform(void): Promise<void>
+       + UpdateBeforeAction(manager: UpdatePipelineManager): UpdateBeforeAction
+       {static} - createParams(vertex: TypeVertex): Object
+       {static} - addActions(job: Job, params: Object, update: TypeVertex) : void
+   }
+   QueueAction <|-- UpdateBeforeAction
+   Actions <-- UpdateBeforeAction
+   Updates <-- UpdateBeforeAction
+   Graphs <-- UpdateBeforeAction
+   Jobs <-- UpdateBeforeAction
+
+   class VotersBefore {
+   - manager: QueueManager
+   - voteRecords: Array<Array<VoteRecord>>
+   + perform(void): Promise<void>
+   + VotersBefore(manager: QueueManager): VotersBefore
+   - retrieveVoteRecords(db: Firestore) : Promise<Array<Array<VoteRecord>>>
+   {static} - parliamentExists(parliament: Number, session: Number): Boolean
+   - modifyManagerParams(void): Promise<void>
+   }
+   QueueAction <|-- VotersBefore
+}
+Before --> QueueManagers
+Before --> Firebase
+Before --> Models
+
+@enduml

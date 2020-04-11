@@ -1,0 +1,63 @@
+@startuml
+package Utils #e0e0d1 {
+    package QueueManagers #e0e0d1 {
+        interface QueueAction
+        class QueueManager
+    }
+    package Graphs #e0e0d1 {
+        class DirectedGraph
+        class TypeVertex
+    }
+}
+
+package Controllers #e0e0d1 {
+    package DataController #e0e0d1 {}
+}
+
+package Firebase #e0e0d1 {
+    class Firestore
+}
+
+package Data #e0e0d1 {
+    package Runners #e0e0d1 {}
+    package Scrapers #e0e0d1 {}
+}
+
+package Updates #e0e0d1 {
+    class UpdateDependencyGraph extends DirectedGraph{
+        + UpdateDependencyGraph(void): UpdateDependencyGraph
+        - addVertices(void): void
+        - addEdges(void): void
+        + orderedUpdates(start: String) : Array<TypeVertex>
+    }
+
+    class Links <<(R, orchid) resource>>{}
+    note bottom of Links: provides an object literal\nthat contains the link to the data,\nand its firestore collection factory function
+
+    class RegisteredVertices <<(R, orchid) resource>>
+    note top of RegisteredVertices: provides an object literal\nthat associates Links members with\n the appropriate QueueManager
+    UpdateDependencyGraph --> Links
+    UpdateDependencyGraph --> RegisteredVertices
+
+    UpdateDependencyGraph --> Runners
+    UpdateDependencyGraph --> Scrapers
+    UpdateDependencyGraph --> TypeVertex
+    UpdateDependencyGraph --> Firebase
+
+    class UpdatePipelineManager extends QueueManager {
+        - updatJobQueue: Array<Job>
+        - params: Array<Object>
+        - queryCount: Number
+        - maxQueryCount: Number
+        - UpdatePipelineManager(wait: Number) : UpdatePipelineManager
+        {static} + create(wait: Number) : UpdatePipelineManager
+    }
+    UpdatePipelineManager --> UpdateDependencyGraph
+    UpdatePipelineManager o--> QueueAction
+
+    class UpdateScript <<(R, Orchid) resource>>
+    UpdateScript <-- DataController
+    UpdateScript --> UpdatePipelineManager
+}
+
+@enduml
