@@ -108,9 +108,10 @@ export default function Voting() {
     useEffect(() => {
         async function getData() {
             const user = JSON.parse(localStorage.getItem('user'))
-            const email = await fetchUserData(user.email)
-            const postalCode = email.postalCode.substring(0, 3)
-            setUserEmail(email)
+            const userDetails = await fetchUserData(user.email)
+            console.log("userDetails ", userDetails.email)
+            const postalCode = userDetails.postalCode.substring(0, 3)
+            setUserEmail(userDetails.email)
             setStoragePostalCode(postalCode)
             const ipAddress = await getIpPostalCode()
             setIpPostalCode(ipAddress)
@@ -144,11 +145,11 @@ export default function Voting() {
     async function registerVote(userEmail, description, title, vote, index) {
         await axios.post(`http://localhost:5000/api/voting/vote`,
             {
-                body: {
-                    user: { email: userEmail },
-                    activity: { description: description, title: title },
-                    vote: vote
-                }
+
+                user: { email: userEmail },
+                activity: { description: description, title: title },
+                vote: vote
+
             })
             .then(res => {
                 if (res.data.success) {

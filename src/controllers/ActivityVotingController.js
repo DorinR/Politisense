@@ -30,10 +30,11 @@ module.exports.index = async (req, res) => {
 }
 
 module.exports.vote = async (req, res) => {
+  console.log(` ---- TOUCH DOWN ------`)
   if (!utils.validateRequestParameters(req, res) || !utils.validateUserVotingParameters(req, res)) {
     return
   }
-
+  console.log(` ---- TOUCH DOWN 22222------`)
   const user = await utils.retrieveUser(res, req.body.user.email)
   if (!user) {
     return
