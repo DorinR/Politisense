@@ -21,7 +21,7 @@ export default class D3Chart {
       { index: 1, name: 'Nays', value: nayCounter }
     ]
 
-    const width = 200
+    const width = 150
     const height = 150
     const opacity = 0.8
     const radius = Math.min(width, height) / 2
@@ -42,15 +42,15 @@ export default class D3Chart {
 
     const colors = ['#3282b8', '#26d06d']
 
-    // adding svg element
-    const svg = d3.select(element).append('svg')
-      .attr('width', width)
-      .attr('height', height)
-      .attr('viewBox', '0 0 150 200')
-      .attr('class', 'pieChart')
+    const svg = d3.select(element)
+      .append('svg')
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .attr('preserveAspectRatio', 'xMinYMin')
+      .attr('viewBox', '0 0 400 150')
 
     const g = svg.append('g')
-      .attr('transform', 'translate(' + (width / 3) + ',' + (height / 2) + ')')
+      .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')')
 
     const arcs = g.selectAll('arc')
       .data(createPie(totalYesNoVotes))
@@ -63,31 +63,23 @@ export default class D3Chart {
       .attr('d', createArc)
       .style('opacity', opacity)
 
-    const legend = d3.select(element)
-      .append('div')
+    var legend = svg.append('svg')
+      .attr('preserveAspectRatio', 'xMinYMin')
       .attr('class', 'legend')
-      .style('margin-top', '-120px')
-      .style('margin-left', '180px')
-
-    const keys = legend.selectAll('.key')
+      .selectAll('g')
       .data(totalYesNoVotes)
-      .enter().append('div')
-      .attr('class', 'key')
-      .style('display', 'flex')
-      .style('align-items', 'center')
-      .style('margin-right', '-200px')
+      .enter().append('g')
+      .attr('transform', function (d, i) { return 'translate(' + (180) + ',' + (30 + (i * 20)) + ')' })
 
-    keys.append('div')
-      .attr('class', 'symbol')
-      .style('height', '10px')
-      .style('width', '10px')
-      .style('margin', '5px 5px')
-      .style('background-color', (d, i) => colors[i])
+    legend.append('rect')
+      .attr('width', 18)
+      .attr('height', 18)
+      .style('fill', function (d, i) { return colors[i] })
 
-    keys.append('div')
-      .attr('class', 'name')
+    legend.append('text')
+      .attr('x', 24)
+      .attr('y', 9)
+      .attr('dy', '.35em')
       .text(d => `${d.name} (${d.value})`)
-
-    keys.exit().remove()
   }
 }
