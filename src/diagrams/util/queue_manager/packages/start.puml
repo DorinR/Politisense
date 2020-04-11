@@ -1,0 +1,78 @@
+@startuml
+package QueueManagers #e0e0d1 {
+    class QueueAction
+    class QueueManager
+}
+package Updates #e0e0d1 {
+    class UpdatePipelineManager
+}
+
+package Jobs #e0e0d1 {
+    class Job
+    class BillPDFFinderJob
+    class BillPDFFetchJob
+    class BillFetchJob
+    class CategoryGenerationJob
+    class ClassificationJob
+    class LegislativeActivityFetchJob
+    class PoliticianFetchJob
+    class RoleFetchJob
+    class VoteParticipantFetchJob
+    class VoteRecordFetchJob
+}
+
+package Start #e0e0d1 {
+    class GenericStartAction<T extends Job> extends QueueAction {
+        - manager: QueueManager
+        - create: Function
+        - type: T
+        + GenericStartAction(manager: QueueManager, type: T): GenericStartAction
+        + perform(void): Promise<void>
+    }
+
+    class UpdateStart extends QueueAction {
+        - manager: UpdatePipelineManager
+        + UpdateStart(manager: UpdatePipelineManager): UpdateStart
+        + perform(void): Promise<void>
+    }
+    UpdatePipelineManager <-- UpdateStart
+
+    class BillLinkStart extends GenericStartAction {
+        + BillLinkStart(manager: QueueManager): BillLinkStart
+    }
+
+    class BillStart extends GenericStartAction {
+        + BillStart(manager: QueueManager): BillStart
+    }
+
+    class CategoryStart extends GenericStartAction {
+        + CategoryStart(manager: QueueManager): CategoryStart
+    }
+
+    class ClassifyStart extends GenericStartAction {
+        + ClassifyStart(manager: QueueManager): ClassifyStart
+    }
+
+    class LegislativeActivityStart extends GenericStartAction {
+        + LegislativeActivityStart(manager: QueueManager): LegislativeActivityStart
+    }
+
+    class PoliticianStart extends GenericStartAction {
+        + PoliticianStart(manager: QueueManager): PoliticianStart
+    }
+
+    class RoleStart extends GenericStartAction {
+        + RoleStart(manager: QueueManager): RoleStart
+    }
+
+    class VoteParticipantStart extends GenericStartAction {
+        + VoteParticipantStart(manager: QueueManager): VoteParticipantStart
+    }
+
+    class VoteRecordStart extends GenericStartAction {
+        + VoteRecordStart(manager: QueueManager): VoteRecordStart
+    }
+}
+Start --> Jobs
+
+@enduml

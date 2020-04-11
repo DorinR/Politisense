@@ -1,0 +1,90 @@
+@startuml
+interface Action <T, U>
+package ClassifyActions #e0e0d1 {
+    Action <|-- BillClassifyAction
+    Action <|-- BillTagCreationAction
+    Action <|-- FileOutputAction
+    Action <|-- PartyClassificationAction
+    Action <|-- UpdateCollectionAction
+
+    class BillClassifyAction {
+        - classifierPath: String
+        + BillClassifyAction(fp) : BillClassifyAction
+        + perform(billParams : Object) : Promise<Array<TfIdfClassification>>
+        - createExternalClassifierParameters(billParams: Object) : Object
+        - runExternalClassifier(execString : String, paths: Array<String>, params : Array<Object>) : Promise<Array<TfIdfClassification>>
+        - readClassificationFile(path: String) : Object
+        - addToModels(raws: Object, bills: Object) : Array<TfIdfClassification>
+        - deleteTempFiles(files: Array<String>) : void
+    }
+    BillClassifyAction --> Models
+
+    class Classifier <<(R, Orchid), resource>>
+    class BillTagCreationAction {
+        - termThreshold : Number
+        - tagThreshold : Number
+        - parliament : Number
+        + BillTagCreationAction(parliament: Number, termThreshold: Number, tagThreshold: Number) : BillTagCreationAction
+        + perform(void) : Promise<Array<BillClassification>>
+        - loadRawClassifications(void) : Promise<Array<TfIdfClassification>>
+        - filterRawByThreshhohld(tfidfs : Array<TfIdfClassification>) : Array<Object>
+        - filterTermsByScore(tfidf: Object, term : String, valuableTerms: Object) : void
+        - loadVocabularies(void) : Array<Object>
+        - throwIfDoesNotExist(directory: String) : void
+        - getFilesFromDirectory(directory: String) : Array<String>
+        - filterByExpectedFormat(filenames: Array<String>) : Array<String>
+        - createTagsFromFilenames(filenames: Array<String>) : Array<String>
+        - retrieveFileContents(filenames: Array<String>, dir : String) : Array<String>
+        - createReferenceVocabularies(files: Array<String>, tags: Array<String>) : Array<Object>
+        - tagBills(classifications: Array<Object>, vocabs: Array<Object>) : Array<BillClassification>
+
+    }
+    BillTagCreationAction <-- Classifier
+    BillTagCreationAction <-- Models
+    BillTagCreationAction <-- Firebase
+
+    class FileOutputAction {
+        - params: Object
+        - fs: Node::fs
+        + FileOutputAction(params: Object) : FileOutputAction
+        + perform(result : Object) : Promise<Object>
+    }
+
+    class PartyClassificationAction {
+        - parliament: Number
+        - politicians: Array<Politician>
+        + PartyClassificationAction(params: Object) : PartyClassificationAction
+        + perform(result : Object) : Promise<Object>
+        {static} - retrievePoliticians(db : Firestore) : Array<Politician>
+        - createDerivedPartyModels(void) : Promise<Array<PoliticalParty>>
+    }
+    PartyClassificationAction <-- Models
+    PartyClassificationAction <-- Firebase
+
+    class UpdateCollectionAction {
+        - collection: Reference
+        + UpdateCollectionAction(params: Object) : UpdateCollectionAction
+        + perform(results: Object) : Promise<Array<String>>
+        - {static} getData(data: Object): Array<Object>
+        - {static} getParliament(data: Object): Number
+        - {static} createNewCollectionReference(db: Firestore, collection : Reference): firestore::CollectionReference
+    }
+    UpdateCollectionAction <-- Firebase
+    UpdateCollectionAction <-- firestore::CollectionReference
+}
+
+package Firebase #e0e0d1 {
+    class Firestore
+    class Reference
+    package Models #e0e0d1 {
+        class TfIdfClassification
+        class BillClassification
+        class PoliticalParty
+    }
+}
+
+
+
+
+
+@enduml

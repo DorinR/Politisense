@@ -10,6 +10,7 @@ const BudgetController = require('./BudgetController')
 const MapSupportDataController = require('./MapSupportDataController')
 const ActivityVotingController = require('./ActivityVotingController')
 const ParliamentController = require('./ParliamentController')
+const DataController = require('./DataController')
 
 module.exports = {
   userSignup: function (req, res) {
@@ -140,6 +141,14 @@ module.exports = {
 
   getImageData: function (req, res) {
     return RepresentativeController.getImageData(req, res)
+  },
+
+  dataIndex: function (req, res) {
+    return DataController.index(req, res)
+  },
+
+  update: function (req, res) {
+    return DataController.update(req, res)
   },
 
   getRidingByRidingCode: function (req, res) {

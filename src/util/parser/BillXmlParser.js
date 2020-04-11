@@ -1,6 +1,5 @@
 const Parsers = require('./parsers')
 const XmlDataParser = Parsers.XmlDataParser
-const ParliamentNotSetError = Parsers.ParliamentNotSetError
 const Builder = require('@builder').BillBuilder
 
 class BillXmlParser extends XmlDataParser {
@@ -54,23 +53,7 @@ class BillXmlParser extends XmlDataParser {
   }
 
   passesFilters () {
-    return (!this.filters.mustHaveRoyalAssent || this.hasRoyalAssent()) &&
-      (!this.filters.mustBeInCurrentParliament || this.isInCurrentParliament())
-  }
-
-  hasRoyalAssent () {
-    const currentState = this.getDataInAttribute('Events', 'laagCurrentStage', true)
-    return currentState === 'RoyalAssentGiven'
-  }
-
-  isInCurrentParliament () {
-    if (typeof this.currentParliament === 'undefined') {
-      throw new ParliamentNotSetError('Must specify what the current parliament is if it is used as a filter.')
-    }
-
-    const parliamentNumber = Number(this.getDataInAttribute('ParliamentSession', 'parliamentNumber', true))
-    const parliamentSession = Number(this.getDataInAttribute('ParliamentSession', 'sessionNumber', true))
-    return this.currentParliament.number === parliamentNumber && this.currentParliament.session === parliamentSession
+    return true
   }
 }
 

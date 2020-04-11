@@ -1,3 +1,4 @@
 module.exports.Throw = require('./ThrowError').ThrowAction
-module.exports.ParseErrorAction = require('./ParseError').ParseErrorAction
-module.exports.ScrapeErrorAction = require('./ScrapeError').ScrapeErrorAction
+module.exports.Parse = require('./ParseError').ParseErrorAction
+module.exports.Generic = require('./GenericError').GenericErrorAction
+module.exports.Scrape = require('./ScrapeError').ScrapeErrorAction

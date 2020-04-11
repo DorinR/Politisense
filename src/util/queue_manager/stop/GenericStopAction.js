@@ -1,5 +1,4 @@
-const QueueActions = require('../actions')
-const QueueAction = QueueActions.QueueAction
+const QueueAction = require('../QueueAction').QueueAction
 
 class GenericStopAction extends QueueAction {
   constructor (manager) {
@@ -7,9 +6,12 @@ class GenericStopAction extends QueueAction {
     this.manager = manager
   }
 
-  perform () {
+  async perform () {
+    await this.manager.lock.acquire()
     console.debug(`INFO: waiting on ${this.manager.queryCount - this.manager.result.length} results out of ${this.manager.queryCount} expected results`)
-    return this.manager.result.length >= this.manager.queryCount
+    const ret = this.manager.result.length >= this.manager.queryCount
+    this.manager.lock.release()
+    return ret
   }
 }
 

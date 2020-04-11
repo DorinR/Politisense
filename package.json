@@ -53,7 +53,7 @@
     "start": "node -r esm server.js",
     "server": "nodemon -r esm server.js",
     "client": "npm start --prefix client",
-    "test": "jest src/test/* -- --coverage",
+    "test": "jest src/test/*",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
@@ -70,11 +70,13 @@
   "_moduleAliases": {
     "@root": ".",
     "@utils": "./src/util/utils",
+    "@graph": "./src/util/graph/graphs",
     "@firestore": "./src/firebase/firebase",
     "@model": "./src/firebase/model/models",
     "@jobs": "./src/job/jobs",
     "@data": "./src/data/data",
     "@action": "./src/util/action/actions",
+    "@parameter": "./src/data/ParameterEnums",
     "@parser": "./src/util/parser/parsers",
     "@queue": "./src/util/queue/queues",
     "@manager": "./src/util/queue_manager/actions",
@@ -84,12 +86,14 @@
   "jest": {
     "moduleNameMapper": {
       "@utils": "<rootDir>/src/util/utils",
+      "@graph": "<rootDir>/src/util/graph/graphs",
       "@firestore": "<rootDir>/src/firebase/firebase",
       "@model": "<rootDir>/src/firebase/model/models",
       "@jobs": "<rootDir>/src/job/jobs",
       "@data": "<rootDir>/src/data/data",
       "@action": "<rootDir>/src/util/action/actions",
       "@parser": "<rootDir>/src/util/parser/parsers",
+      "@parameter": "<rootDir>/src/data/ParameterEnums",
       "@queue": "<rootDir>/src/util/queue/queues",
       "@manager": "<rootDir>/src/util/queue_manager/actions",
       "@controller": "<rootDir>/src/controllers",

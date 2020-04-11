@@ -1,0 +1,41 @@
+@startuml
+package QueueManagers #e0e0d1 {
+    class QueueAction
+    class QueueManager
+}
+package Actions #e0e0d1 {
+    package Errors #e0e0d1 {
+          class ParserError <<E, yellow>>
+          class ScraperError <<E, yellow>>
+    }
+}
+
+package Error #e0e0d1 {
+    class GenericErrorAction<T extends Error>{
+        - errorName: String
+        + GenericErrorAction(manager: QueueManager, errorType: T): GenericErrorAction
+        + perform(void) : Promise<void>
+    }
+
+    class ScrapeError extends GenericErrorAction{
+        + GenericErrorAction(manager: QueueManager): GenericErrorAction
+    }
+    Errors <-- ScrapeError
+
+    class ParseError extends GenericErrorAction{
+        + GenericErrorAction(manager: QueueManager): GenericErrorAction
+    }
+    Errors <-- ParseError
+
+    class ThrowError {
+        + GenericErrorAction(manager: QueueManager): GenericErrorAction
+        + perform(void) : Promise<void>
+    }
+    QueueAction <|-- GenericErrorAction
+    QueueAction <|-- ThrowError
+}
+QueueManagers <-- Error
+
+
+
+@enduml
