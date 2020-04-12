@@ -1,7 +1,6 @@
 import { Authentication as Auth, Firestore } from '@firestore'
 import represent from 'represent'
 import crypto from 'crypto'
-require('dotenv').config()
 const nodemailer = require('nodemailer')
 
 exports.checkIfUserExists = (req, res) => {
