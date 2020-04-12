@@ -198,8 +198,7 @@ const Sidebar = withRouter((props) => {
     setUser(user)
   }, [])
 
-  const [riding, setRiding] = useState(undefined)
-  // const prevRiding = usePrevious(riding)
+  const [riding, setRiding] = useState(null)
   useEffect(() => {
     async function getData () {
       if (user) {
@@ -209,32 +208,29 @@ const Sidebar = withRouter((props) => {
     }
     getData()
   }, [user])
-  const [data, setData] = useState(null)
-  const logicalCondition = (data && riding && riding !== data.riding) || (!data && riding)
+
+  const [representative, setRepresentative] = useState(null)
   useEffect(() => {
     async function getData () {
-      if (logicalCondition) {
-        const promises = await Promise.all([
-          fetchRidingCode(riding),
-          fetchRepresentative(riding)
-        ])
-        if (promises[0] && promises[1]) {
-          const ridingCode = promises[0]
-          const { name, party, start, end, imageUrl } = promises[1]
-          setData({
-            end: end,
-            name: name,
-            ridingCode: ridingCode,
-            riding: riding,
-            party: party,
-            start: start,
-            imageUrl: imageUrl
-          })
-        }
+      if (riding) {
+        const rep = await fetchRepresentative(riding)
+        console.log(rep)
+        setRepresentative(rep)
       }
     }
     getData()
-  }, [riding, data, logicalCondition])
+  }, [riding])
+
+  const [ridingCode, setRidingCode] = useState(null)
+  useEffect(() => {
+    async function getData () {
+      if (riding) {
+        const code = await fetchRidingCode(riding)
+        setRidingCode(code)
+      }
+    }
+    getData()
+  }, [riding])
 
   const pages = [
     {
@@ -271,7 +267,6 @@ const Sidebar = withRouter((props) => {
   ]
 
   return (
-
     <div>
       <Topbar onSidebarOpen={handleSidebarOpen} open={openSidebar} />
       <Drawer
@@ -281,6 +276,7 @@ const Sidebar = withRouter((props) => {
         open={openSidebar}
         variant='persistent'
       >
+        <div>
         <List className={classes.flexContainer}>
           <ListItem button onClick={() => { props.history.push({ pathname: '/general' }) }}>
             <AccountBalanceIcon className={classes.icon} />
@@ -290,13 +286,22 @@ const Sidebar = withRouter((props) => {
             {theme.direction === 'ltr' ? <ChevronLeftIcon className={classes.chevronLeftIcon} onClick={handleSidebarClose} /> : <ChevronRightIcon />}
           </ListItem>
         </List>
+        </div>
         <AppBar position='fixed' className={clsx(classes.appBar, { [classes.appBarShift]: openSidebar })} />
         <Divider className={classes.divider1} />
         <div>
-          <ListItemAvatar style={{ paddingTop: theme.spacing(1) }}>
-            {<Avatar alt={data ? data.name : ''} src={data ? data.imageUrl : ''} className={classes.bigAvatar} />}
-          </ListItemAvatar>
-          <MpProfile data={data} />
+          {representative && ridingCode && riding ? (
+            <div>
+              <ListItemAvatar style={{ paddingTop: theme.spacing(1) }}>
+                {<Avatar alt={representative ? representative.name : ''} src={representative ? representative.imageUrl : ''} className={classes.bigAvatar} />}
+              </ListItemAvatar>
+              <MpProfile
+                representative={representative}
+                ridingCode={ridingCode}
+                riding={riding}
+              />
+            </div>
+          ) : null}
           <Divider className={classes.divider} />
           <SidebarNav className={classes.nav} pages={pages} />
         </div>

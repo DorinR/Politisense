@@ -23,6 +23,7 @@
     "express-validator": "^6.2.0",
     "firebase": "^7.8.0",
     "jsonwebtoken": "^8.5.1",
+    "jss-theme-reactor": "^0.11.1",
     "leaflet": "^1.6.0",
     "mapshaper-with-patch": "^0.4.154",
     "notistack": "^0.9.5",

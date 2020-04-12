@@ -27,27 +27,70 @@ exports.getImageData = async (req, res) => {
     })
     .catch(console.error)
 }
+const Parliaments = require('@parameter').Parliament.Number
 
-exports.getRepresentativeByRiding = (req, res) => {
-  const db = new Firestore()
+function getPolitician (snapshot) {
+  if (snapshot.empty || snapshot.size > 1) {
+    return null
+  }
+  let politician = null
+  snapshot.forEach(doc => {
+    politician = doc.data()
+  })
+  return politician
+}
+
+exports.getRepresentativeByRiding = async (req, res) => {
   const riding = req.params.riding.toLowerCase()
-  db.Politician()
-    .select('riding', '==', riding)
-    .then(snapshot => {
-      if (snapshot.empty) {
-        res.status(400).json({
-          message: 'Riding Not Found',
-          success: false
-        })
-      }
-      snapshot.forEach(doc => {
-        res.json({
-          success: true,
-          data: doc.data()
-        })
-      })
+  const politician = await new Firestore()
+    .Politician()
+    .where('riding', '==', riding)
+    .select()
+    .then(getPolitician)
+    .catch((e) => {
+      console.error(e)
+      return null
     })
-    .catch(console.error)
+
+  if (!politician) {
+    Utils.error(res, `MP not found for riding: ${riding}`)
+    return
+  }
+
+  const start = await Promise.all(
+    Parliaments.map(parliament => {
+      return new Firestore()
+        .forParliament(parliament)
+        .Politician()
+        .where('name', '==', politician.name)
+        .select()
+        .then(getPolitician)
+        .then(politician => {
+          if (!politician) throw new Error(`Politician not found in parliament ${parliament}`)
+          return politician.start
+        })
+        .catch(() => {
+          return -1
+        })
+    })
+  )
+    .then(startDates => {
+      return startDates
+        .filter(startDate => { return startDate > 0 })
+        .sort()[0]
+    })
+    .catch(e => {
+      console.error(e)
+      return null
+    })
+
+  if (!start) {
+    Utils.error(res, `Could not locate correct start date for politician: ${politician.name}`)
+    return
+  }
+
+  politician.start = start
+  Utils.success(res, `Returning Politicians ${politician.name}`, politician)
 }
 async function getAllRepsForEachParliament (parliamentNo) {
   const db = new Firestore().forParliament(parliamentNo)
