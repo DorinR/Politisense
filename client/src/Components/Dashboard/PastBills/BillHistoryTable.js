@@ -10,15 +10,18 @@ import BillDetails from './BillDetails'
 import clsx from 'clsx'
 import axios from 'axios'
 import {
+  TableSortLabel,
   Card,
   CardHeader,
   CardContent,
   Divider,
   IconButton
 } from '@material-ui/core'
+
 import DescriptionDialog from '../../MyMP/DescriptionDialog'
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
 import { Transition } from '../General/GeneralDashboard'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const columns = [
   { id: 'number', label: 'Bill Number', minWidth: 120 },
@@ -36,14 +39,11 @@ const columns = [
     minWidth: 170,
     align: 'right'
   }
-
 ]
 
 function createData (number, dateVoted, title, vote, moreInfo) {
   return { number, dateVoted, title, vote, moreInfo }
 }
-
-let rows = []
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -76,85 +76,25 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding (userEmail) {
-  let result = ''
-  await axios
-    .get(`/api/users/${userEmail}/getUser`, {
-      params: { billhistory: userEmail }
-    })
-    .then(res => {
-      if (res.data.success) {
-        const riding = res.data.data.riding
-        result = riding
-      }
-    })
-    .catch(err => console.log(err))
-  return result
-}
-
-export async function fetchRepresentative (riding) {
-  let result = ''
-  await axios
-    .get(`/api/representatives/${riding}/getRepresentative`)
-    .then(res => {
-      if (res.data.success) {
-        const representative = res.data.data.name
-        result = representative
-      }
-    })
-    .catch(err => console.log(err))
-  return result
-}
-
-export function fetchAllBills () {
-  return axios
-    .get('/api/bills/getAllBills')
+async function votingHistory (representative) {
+  return axios.get(`api/representatives/representative/voting-history/${representative}`)
     .then(res => {
       if (res.data.success) {
         return res.data.data
       }
+      return []
     })
     .catch(console.error)
-}
-
-export async function fetchRepresentativeId (representative) {
-  return axios
-    .get(`/api/representatives/${representative}/getRepresentativeId`)
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data
-      }
-    })
-    .catch(console.error)
-}
-
-export async function fetchRepresentativeVotes (representativeId) {
-  return axios
-    .get(`/api/votes/${representativeId}/getAllVotesByRepresentative`)
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data
-      }
-    })
-}
-
-export async function fetchAllVoteRecords () {
-  return axios.get('/api/voteRecord/getAllVoteRecords').then(res => {
-    if (res.data.success) {
-      return res.data.data
-    }
-  })
 }
 
 function generateTableRows (bills) {
-  rows = []
-  bills.forEach(bill => {
-    const { number, dateVoted, title, sponsorName, link, vote } = bill
-    const tableRow = createData(
+  return bills.map(bill => {
+    const { number, dateVoted, title, sponsorName, link, vote, name } = bill
+    return createData(
       number,
       dateVoted,
-      title,
-      vote,
+      name.split(',')[0],
+      (vote === true ? 'Yea' : 'Nay'),
       <BillDetails
         title={title}
         sponsor={sponsorName}
@@ -163,44 +103,33 @@ function generateTableRows (bills) {
         dateVoted={dateVoted}
       />
     )
-    rows.push(tableRow)
   })
 }
 
-function assembleBillObjects (bills, voteRecords, votesByRepresentative) {
-  bills.forEach(bill => {
-    bill.vote = getRepresentativeVote(
-      bill.id,
-      voteRecords,
-      votesByRepresentative
-    )
-  })
-
-  return bills
+function descendingComparator (a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1
+  }
+  return 0
 }
 
-function getRepresentativeVote (billNumber, voteRecords, votesByRepresentative) {
-  let targetVoteRecord = {}
-  voteRecords.forEach(voteRecord => {
-    if (voteRecord.bill === billNumber) {
-      targetVoteRecord = voteRecord
-    }
-  })
-  let targetBillVote = null
-  votesByRepresentative.forEach(vote => {
-    if (vote.vote === targetVoteRecord.id) {
-      targetBillVote = vote.yea
-    }
-  })
-  let vote = 'Nay'
-  if (targetBillVote) {
-    vote = 'Yea'
-  }
-  if (targetBillVote == null) {
-    vote = 'Unknown'
-  }
+function getComparator (order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy)
+}
 
-  return vote
+function stableSort (array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index])
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0])
+    if (order !== 0) return order
+    return a[1] - b[1]
+  })
+  return stabilizedThis.map((el) => el[0])
 }
 
 export default function BillHistoryTable (props) {
@@ -210,11 +139,9 @@ export default function BillHistoryTable (props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
   const [open, setOpen] = React.useState(false)
   const content = {
-    title: 'Bill History Table',
-    body: 'This table shows all the bills for this current parliament, ' +
-        'including bills number,' +
-        " bill's type,date voted, your current MP's vote." +
-        ' You can also find more details by clicking on More Details button '
+    title: 'Voting History',
+    body: 'Explore the detailed voting record of your representative. This table ' +
+      'contains every vote in which your representative has participated.'
   }
   const handleClickOpen = () => {
     setOpen(true)
@@ -223,123 +150,139 @@ export default function BillHistoryTable (props) {
     setOpen(false)
   }
 
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property)
+  }
+
+  const [order, setOrder] = React.useState('desc')
+  const [orderBy, setOrderBy] = React.useState('dateVoted')
+  const onRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc'
+    setOrder(isAsc ? 'desc' : 'asc')
+    setOrderBy(property)
+  }
+
+  const [rows, setRows] = React.useState([])
   useEffect(() => {
     async function getData () {
-      // eslint-disable-next-line no-undef
-      const user = JSON.parse(localStorage.getItem('user'))
-      const riding = await fetchUserRiding(user.email)
-      // eslint-disable-next-line
-      const representative = await fetchRepresentative(riding)
-      const representativeId = await fetchRepresentativeId(representative)
-      const votesByRepresentative = await fetchRepresentativeVotes(
-        representativeId
-      )
-      const bills = await fetchAllBills()
-      const voteRecords = await fetchAllVoteRecords()
-      const fullBills = assembleBillObjects(
-        bills,
-        voteRecords,
-        votesByRepresentative
-      )
-      generateTableRows(fullBills)
+      if (rows.length === 0 && props.representative) {
+        const bills = await votingHistory(props.representative.name)
+        const rows = generateTableRows(bills)
+        setRows(rows)
+      }
     }
     getData()
-  }, [])
+  }, [rows, props.representative])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
 
   const handleChangeRowsPerPage = event => {
-    setRowsPerPage(+event.target.value)
+    setRowsPerPage(event.target.value)
     setPage(0)
   }
 
   return (
     <div className={classes.container}>
-      <Card
-        {...rest}
-        className={clsx(classes.root, className)}
-      >
-        <CardHeader
-          classes={{
-            title: classes.title
-          }}
-          title='Voting History'
-          action={
-            <IconButton aria-label='settings' onClick={handleClickOpen}>
-              <HelpOutlineIcon />
-            </IconButton>
-          }
-        />
-        <Divider />
-        <CardContent className={classes.content}>
-          <div className={classes.tableWrapper}>
-            <Table stickyheader='true'>
-              <TableHead>
-                <TableRow>
-                  {columns.map(column => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
-                      style={{ minWidth: column.minWidth }}
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, i) => {
-                    return (
-                      <TableRow
-                        hover
-                        role='checkbox'
-                        tabIndex={-1}
-                        key={i}
-                      >
-                        {columns.map((column, i) => {
-                          const value = row[column.id]
-                          return (
-                            <TableCell key={i} align={column.align}>
-                              {column.format && typeof value === 'number'
-                                ? column.format(value)
-                                : value}
-                            </TableCell>
-                          )
-                        })}
-                      </TableRow>
-                    )
-                  })}
-              </TableBody>
-            </Table>
-          </div>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            component='div'
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            backIconButtonProps={{
-              'aria-label': 'previous page'
+      {rows.length === 0 ? (
+        <div>
+          <CircularProgress />
+        </div>
+      ) : (
+        <Card
+          {...rest}
+          className={clsx(classes.root, className)}
+        >
+          <CardHeader
+            classes={{
+              title: classes.title
             }}
-            nextIconButtonProps={{
-              'aria-label': 'next page'
-            }}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
+            title='Voting History'
+            action={
+              <IconButton aria-label='settings' onClick={handleClickOpen}>
+                <HelpOutlineIcon />
+              </IconButton>
+            }
           />
-        </CardContent>
-        <DescriptionDialog
-          open={open}
-          onClose={handleClose}
-          d3
-          explaination={content}
-          transition={Transition}
-        />
-      </Card>
+          <Divider />
+          <CardContent className={classes.content}>
+            <div className={classes.tableWrapper}>
+              <Table stickyheader='true'>
+                <TableHead>
+                  <TableRow>
+                    {columns.map((column, index) => (
+                      <TableCell
+                        key={index}
+                        align={column.align}
+                        style={{ minWidth: column.minWidth }}
+                      >
+                        {index < columns.length - 1 ? (
+                          <TableSortLabel
+                            active={orderBy === column.id}
+                            direction={orderBy === column.id ? order : 'asc'}
+                            onClick={createSortHandler(column.id)}
+                          >
+                            {column.label}
+                          </TableSortLabel>
+                        ) : (
+                        `${column.label}`
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {stableSort(rows, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      return (
+                        <TableRow
+                          hover
+                          role='checkbox'
+                          tabIndex={-1}
+                          key={index}
+                        >
+                          {columns.map(column => {
+                            const value = row[column.id]
+                            return (
+                              <TableCell key={column.id} align={column.align}>
+                                {column.format && typeof value === 'number'
+                                  ? column.format(value)
+                                  : value}
+                              </TableCell>
+                            )
+                          })}
+                        </TableRow>
+                      )
+                    })}
+                </TableBody>
+              </Table>
+            </div>
+            <TablePagination
+              rowsPerPageOptions={[10, 20, 30]}
+              component='div'
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              backIconButtonProps={{
+                'aria-label': 'previous page'
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'next page'
+              }}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+          </CardContent>
+          <DescriptionDialog
+            open={open}
+            onClose={handleClose}
+            d3
+            explaination={content}
+            transition={Transition}
+          />
+        </Card>)}
     </div>
   )
 }

@@ -45,4 +45,6 @@ router.get(
   controller.getAllRepsFromAllParliaments
 )
 
+router.get('/representative/voting-history/:representative', controller.representativeVotingHistory)
+
 module.exports = router
