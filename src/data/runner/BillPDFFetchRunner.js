@@ -5,19 +5,6 @@ const StopAction = require('../../util/queue_manager/stop/GenericStopAction').Ge
 const Throw = require('../../util/queue_manager/error/ScrapeError').ScrapeErrorAction
 const LogAction = require('../../util/queue_manager/log/TypedLogAction').TypedLogAction
 
-// class LogAction extends QueueAction {
-//   constructor (manager) {
-//     super()
-//     this.manager = manager
-//   }
-
-//   perform (result) {
-//     if (result) {
-//       // console.log(`INFO: found result for ${result.id}`)
-//     }
-//     return result
-//   }
-// }
 const InvalidParameterError = require('../error/errors').InvalidParameterError
 const Parameters = require('@parameter')
 

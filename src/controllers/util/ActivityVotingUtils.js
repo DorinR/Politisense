@@ -207,7 +207,7 @@ export function insertNewActivity (req, res) {
   delete activity.userHasVoted
   return new Firestore()
     .LegislativeActivity()
-    .insert(activity)
+    .insert(new Models.LegislativeActivity(activity.number, activity.title, activity.link, activity.description, activity.date))
     .then(id => {
       return {
         id: id,
