@@ -245,39 +245,53 @@ exports.updateUser = (req, res) => {
     })
 }
 
-exports.setRiding = (req, res) => {
-  let postalCode = req.body.postalCode
-  postalCode = postalCode.replace(/\s/g, '').toUpperCase()
-  let ridingName = ''
-  represent.postalCode(
-    postalCode + '/?sets=federal-electoral-districts',
-    async (err, data) => {
-      if (err) {
-        res.json({
-          success: false
-        })
-        return
-      }
-      const id = data.boundaries_centroid[0].external_id
-      ridingName = await new Firestore()
-        .Riding()
-        .where('code', '==', Number(id))
-        .select()
-        .then(snapshot => {
-          let name = ''
-          snapshot.forEach(doc => {
-            name = doc.data().nameEnglish
-            name = name.replace(/--+/g, '-') // double dash is evil
-          })
-          return name
-        })
-        .catch(console.error)
-      res.json({
-        success: true,
-        data: ridingName
+const Utils = require('./util/ActivityVotingUtils')
+
+exports.setRiding = async (req, res) => {
+  if (!req.body || !req.body.postalCode) {
+    Utils.error(res, 412, 'invalid request body')
+  }
+  const postalCode = req.body.postalCode.replace(/\s/g, '').toUpperCase()
+  const ridingID = await new Promise((resolve, reject) => {
+    represent.postalCode(
+      postalCode + '/?sets=federal-electoral-districts',
+      async (err, data) => {
+        if (err) reject(err)
+        if (data) resolve(data.boundaries_centroid[0].external_id)
       })
-    }
-  )
+  })
+    .catch(e => {
+      console.error(e.message)
+      return null
+    })
+
+  if (!ridingID) {
+    Utils.error(res, 200, 'Invalid postal code')
+    return
+  }
+
+  new Firestore()
+    .Riding()
+    .where('code', '==', Number(ridingID))
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty || snapshot.size > 1) {
+        throw new Error('Too many ridings found')
+      }
+      let name = ''
+      snapshot.forEach(doc => {
+        name = doc.data().nameEnglish
+        name = name.replace(/--+/g, '-') // double dash is evil
+      })
+      return name
+    })
+    .then(name => {
+      Utils.success(res, 'Riding Found', name)
+    })
+    .catch(e => {
+      console.error(e)
+      Utils.error(res, 500, 'Unspecified Server Error')
+    })
 }
 
 exports.updateUserRiding = (req, res) => {

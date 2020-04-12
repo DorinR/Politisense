@@ -77,7 +77,7 @@ export default function MyMP (props) {
     async function getData () {
       if (riding) {
         const representative = await fetchRepresentative(riding)
-        setUserRepresentative(representative.name)
+        setUserRepresentative(representative)
       }
     }
     getData()
@@ -98,7 +98,7 @@ export default function MyMP (props) {
   useEffect(() => {
     async function getData () {
       if (userRepresentative) {
-        const billsByRep = await getAllBillsByRepForAllParliaments(userRepresentative)
+        const billsByRep = await getAllBillsByRepForAllParliaments(userRepresentative.name)
         setRepresentativeData(billsByRep)
       }
     }
@@ -130,7 +130,7 @@ export default function MyMP (props) {
     async function getData () {
       if (userRepresentative) {
         const issuedBillByUserRep = await getAllBillsBySponsorForAllParliaments(
-          userRepresentative
+          userRepresentative.name
         )
         const uniqueIssuedBills = issuedBillByUserRep.filter((thing, index, self) =>
           index === self.findIndex((t) => (
@@ -186,7 +186,6 @@ export default function MyMP (props) {
     <div>
       <CssBaseline />
       {userRepresentative && categoryList && radarData && donutData
-
         ? (
           <div className={classes.root}>
             <Grid
@@ -204,7 +203,7 @@ export default function MyMP (props) {
                   <IssuedBillsByMP
                     issuedbills={userRepIssuedBills}
                     categorylist={categoryList}
-                    representative={userRepresentative}
+                    representative={userRepresentative.name}
                     rows={barPieRows}
                   />)
                   : ('')}
@@ -216,7 +215,7 @@ export default function MyMP (props) {
                 xl={3}
                 xs={12}
               >
-                {userRepresentative ? <Roles representative={userRepresentative} /> : ''}
+                {userRepresentative ? <Roles representative={userRepresentative.name} /> : ''}
               </Grid>
               <Grid
                 item
@@ -225,7 +224,7 @@ export default function MyMP (props) {
                 xl={3}
                 xs={12}
               >
-                {userRepresentative ? <Committees representative={userRepresentative} /> : ''}
+                {userRepresentative ? <Committees representative={userRepresentative.name} /> : ''}
               </Grid>
               <Grid
                 item
@@ -234,7 +233,7 @@ export default function MyMP (props) {
                 xl={3}
                 xs={12}
               >
-                {userRepresentative ? <Associations representative={userRepresentative} /> : ''}
+                {userRepresentative ? <Associations representative={userRepresentative.name} /> : ''}
               </Grid>
               <Grid
                 item
@@ -282,7 +281,9 @@ export default function MyMP (props) {
                 xl={8}
                 xs={12}
               >
-                <BillHistoryTable />
+                <BillHistoryTable
+                  representative={userRepresentative}
+                />
               </Grid>
             </Grid>
           </div>)

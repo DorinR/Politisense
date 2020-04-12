@@ -176,5 +176,9 @@ module.exports = {
 
   getAllRepsFromAllParliaments: function (req, res) {
     return RepresentativeController.getAllRepsFromAllParliaments(req, res)
+  },
+
+  representativeVotingHistory: function (req, res) {
+    return RepresentativeController.votingHistory(req, res)
   }
 }
