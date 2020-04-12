@@ -3,7 +3,7 @@ const Components = require('@manager')
 const InvalidParameterError = require('../error/errors').InvalidParameterError
 
 class ClassificationRunner extends Components.QueueManager {
-  static create (params, wait = 30000) {
+  static create(params, wait = 30000) {
     const manager = new ClassificationRunner(params, wait)
     manager
       .setStartAction(new Components.Start.Classify(manager))
@@ -13,20 +13,17 @@ class ClassificationRunner extends Components.QueueManager {
     return manager
   }
 
-  finish () {
+  finish() {
     console.log(`INFO: ${ClassificationRunner.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
-<<<<<<< Updated upstream
   }
 
-  accumulate (results) {
+  accumulate(results) {
     super.accumulate(results)
     this.result = this.result.flat()
     return this.result
-=======
->>>>>>> Stashed changes
   }
 
-  constructor (params, wait = 30000) {
+  constructor(params, wait = 30000) {
     super(wait)
     if (!(params instanceof Object)) {
       throw new InvalidParameterError('ERROR: parameter must be an object')

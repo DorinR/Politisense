@@ -12,11 +12,7 @@ import ListItem from '@material-ui/core/ListItem'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import PersonIcon from '@material-ui/icons/Person'
-<<<<<<< Updated upstream
 import { fetchRidingCode } from '../Utilities/CommonUsedFunctions'
-=======
-import { fetchRidingCode } from '../Sidebar/RepresentativeInfo'
->>>>>>> Stashed changes
 import axios from 'axios'
 import Box from '@material-ui/core/Box'
 import RidingShapeContainer from '../Sidebar/RidingShape/RidingShapeContainer'
@@ -28,10 +24,6 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
 import MapIcon from '@material-ui/icons/Map'
 import AssignmentIcon from '@material-ui/icons/Assignment'
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 const useStyles = makeStyles({
   card: {
     width: 350
@@ -65,10 +57,7 @@ export default function RepresentativeCard(props) {
   const [ridingCode, setRidingCode] = useState('')
   const [skeleton] = useState([1, 2, 3, 4, 5])
   const [issuedBills, setIssuedBills] = useState(0)
-<<<<<<< Updated upstream
   const [representative, setRepresentative] = useState(null)
-=======
->>>>>>> Stashed changes
 
   const updateNameFromSwitcher = newName => {
     setName(newName)
@@ -91,7 +80,6 @@ export default function RepresentativeCard(props) {
       }
       async function getData(name) {
         // eslint-disable-next-line
-<<<<<<< Updated upstream
         const rep = await getRepInfo(name)
         setRepresentative(rep)
         const bills = await getAllBillsByHead(name)
@@ -105,30 +93,12 @@ export default function RepresentativeCard(props) {
         setRidingCode(ridingCode)
         const issuedBillsByHead = await getIssuedBillsByHead(name)
         if (issuedBillsByHead.length !== 0) {
-=======
-        const riding = await getRepInfo(name)
-        const bills = await getAllBillsByHead(name)
-        const total = await calculateTotalVotesBills(bills)
-        setTotalBills(total)
-        setRiding(riding.riding)
-        const test = riding.riding
-        setYearElected(riding.yearElected)
-        setPoliticalParty(riding.politicalParty)
-        const ridingCode = await fetchRidingCode(test)
-        setRidingCode(ridingCode)
-        const issuedBillsByHead = await getIssuedBillsByHead(name)
-        if (issuedBillsByHead.length != 0) {
->>>>>>> Stashed changes
           setIssuedBills(issuedBillsByHead.length)
         }
       }
       getData(name)
     }
   }, [name, riding, politicalParty, yearElected, issuedBills])
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} align='center'>
@@ -139,19 +109,12 @@ export default function RepresentativeCard(props) {
           <CardContent>
             <Grid container justify='center'>
               <Grid item xs={12}>
-<<<<<<< Updated upstream
                 {representative ? (
                   <RepresentativeImage
                     align='center'
                     representative={representative}
                   />
                 ) : null}
-=======
-                <RepresentativeImage
-                  align='center'
-                  representativeToLoad={name}
-                />
->>>>>>> Stashed changes
               </Grid>
             </Grid>
             {ridingCode ? (
@@ -223,12 +186,12 @@ export default function RepresentativeCard(props) {
                 </ListItem>
               </List>
             ) : (
-              <Grid item style={{ paddingTop: '10px' }}>
-                {skeleton.map(skeleton => {
-                  return <Skeleton animation={false} />
-                })}
-              </Grid>
-            )}
+                <Grid item style={{ paddingTop: '10px' }}>
+                  {skeleton.map(skeleton => {
+                    return <Skeleton animation={false} />
+                  })}
+                </Grid>
+              )}
           </CardContent>
         </Card>
       </Grid>

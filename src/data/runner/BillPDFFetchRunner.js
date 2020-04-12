@@ -9,7 +9,7 @@ const InvalidParameterError = require('../error/errors').InvalidParameterError
 const Parameters = require('@parameter')
 
 class BillPDFFetchRunner extends QueueManager {
-  static create (params, wait = 5000) {
+  static create(params, wait = 5000) {
     const manager = new BillPDFFetchRunner(params, wait)
     manager
       .setStartAction(new StartAction(manager))
@@ -19,9 +19,8 @@ class BillPDFFetchRunner extends QueueManager {
     return manager
   }
 
-  constructor (params, wait = 5000) {
+  constructor(params, wait = 5000) {
     super(wait)
-<<<<<<< Updated upstream
     if (!params[0].url) {
       throw new InvalidParameterError('ERROR: no url to bill pdf provided')
     }
@@ -29,15 +28,6 @@ class BillPDFFetchRunner extends QueueManager {
       throw new InvalidParameterError('ERROR: no bill ID for provided url')
     }
     if (!params[0].parliament || (params[0].parliament && !Parameters.Parliament.Number.includes(params[0].parliament))) {
-=======
-    if (!params.url) {
-      throw new InvalidParameterError('ERROR: no url to bill pdf provided')
-    }
-    if (!params.id) {
-      throw new InvalidParameterError('ERROR: no bill ID for provided url')
-    }
-    if (!params.parliament || (params.parliament && !Parameters.Parliament.Number.includes(params.parliament))) {
->>>>>>> Stashed changes
       throw new InvalidParameterError('ERROR: no parliament or invalid provided for bill ID and url')
     }
 
@@ -46,7 +36,7 @@ class BillPDFFetchRunner extends QueueManager {
     this.maxQueryCount = this.queryCount
   }
 
-  finish () {
+  finish() {
     console.log(`INFO: ${BillPDFFetchRunner.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 }

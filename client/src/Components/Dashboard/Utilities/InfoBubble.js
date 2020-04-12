@@ -7,7 +7,7 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Slide from '@material-ui/core/Slide'
 
-const Transition = React.forwardRef(function Transition (props, ref) {
+const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />
 })
 
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function InfoBubble (props) {
+export default function InfoBubble(props) {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
   const [color, setColor] = React.useState('#43D0C4')
@@ -33,17 +33,10 @@ export default function InfoBubble (props) {
   }
 
   useEffect(() => {
-<<<<<<< Updated upstream
     if (props.color && props.color !== color) {
       setColor(props.color)
     }
   }, [props.color, color])
-=======
-    if (props.color) {
-      setColor(props.color)
-    }
-  })
->>>>>>> Stashed changes
 
   return (
     <span>

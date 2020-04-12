@@ -59,22 +59,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function getSteps () {
+function getSteps() {
   return ['Voting Issue', 'Area of Interest', 'Postal Code']
 }
 
-<<<<<<< Updated upstream
-async function validateRiding (postalCode) {
+async function validateRiding(postalCode) {
   return axios.post('/api/users/setRiding', {
     postalCode: postalCode
   })
-=======
-export async function setRiding (postalCode) {
-  const result = await axios
-    .post('/api/users/setRiding', {
-      postalCode: postalCode
-    })
->>>>>>> Stashed changes
     .then(res => {
       if (res.data.success) {
         return res.data.data
@@ -86,7 +78,7 @@ export async function setRiding (postalCode) {
     })
 }
 
-export default function HorizontalLinearStepper (props) {
+export default function HorizontalLinearStepper(props) {
   const classes = useStyles()
   const [activeStep, setActiveStep] = useState(0)
   const steps = getSteps()
@@ -106,14 +98,14 @@ export default function HorizontalLinearStepper (props) {
 
   const [options, setOptions] = useState([])
   React.useEffect(() => {
-    async function getCategoryList () {
+    async function getCategoryList() {
       const categories = await fetchCategories()
       setOptions(categories)
     }
     getCategoryList()
   }, [])
 
-  function getStepContent (step) {
+  function getStepContent(step) {
     switch (step) {
       case 0:
         return (
@@ -158,18 +150,6 @@ export default function HorizontalLinearStepper (props) {
                   onChange={handleChangeCategory2}
                 >
                   {options &&
-<<<<<<< Updated upstream
-                  options.map(option =>
-                    option !== category1 ? (
-                      <FormControlLabel
-                        value={option}
-                        control={<Radio />}
-                        label={formattingCategory(option)}
-                        key={option}
-                      />
-                    ) : null
-                  )}
-=======
                     options.map(option =>
                       option !== category1 ? (
                         <FormControlLabel
@@ -180,7 +160,6 @@ export default function HorizontalLinearStepper (props) {
                         />
                       ) : null
                     )}
->>>>>>> Stashed changes
                 </RadioGroup>
               </FormControl>
             </CardContent>
@@ -211,7 +190,6 @@ export default function HorizontalLinearStepper (props) {
 
   const handleSubmit = e => {
     e.preventDefault()
-<<<<<<< Updated upstream
     if (riding) {
       const userToSignup = user
       userToSignup.postalCode = postalCode
@@ -222,27 +200,6 @@ export default function HorizontalLinearStepper (props) {
       localStorage.setItem('user', JSON.stringify(userToSignup))
       axios.post('/api/users/signup', userToSignup)
       props.history.push('/general')
-=======
-    if (postalCode) {
-      await setRiding(postalCode)
-        .then(async res => {
-          if (res.data.success) {
-            const userToSignup = props.location.state.user
-            userToSignup.postalCode = postalCode
-            userToSignup.riding = res.data.data
-            userToSignup.categories = [category1, category2]
-            // eslint-disable-next-line no-undef
-            localStorage.setItem('user', JSON.stringify(userToSignup))
-            await axios.post('/api/users/signup', userToSignup)
-            props.history.push('/dashboard')
-          } else {
-            console.log('Could not fetch riding')
-          }
-        })
-        .catch(error => {
-          console.log(error)
-        })
->>>>>>> Stashed changes
     }
   }
 
@@ -345,7 +302,6 @@ export default function HorizontalLinearStepper (props) {
                     Registration process complete
                   </Typography>
                   <div className={classes.actions}>
-<<<<<<< Updated upstream
                     <Button
                       className={classes.button}
                       onClick={handleReset}
@@ -353,10 +309,6 @@ export default function HorizontalLinearStepper (props) {
                       color='primary'
                     >
                       Redo registration
-=======
-                    <Button className={classes.button} onClick={handleReset}>
-                      Reset
->>>>>>> Stashed changes
                     </Button>
                     <Button
                       onClick={handleSubmit}
@@ -364,39 +316,35 @@ export default function HorizontalLinearStepper (props) {
                       color='primary'
                       className={classes.button}
                     >
-<<<<<<< Updated upstream
                       Go to Politisense
-=======
-                      Confirm information
->>>>>>> Stashed changes
                     </Button>
                   </div>
                 </div>
               ) : (
-                <div>
-                  <div className={classes.question}>
-                    <div className={classes.instructions}>
-                      {getStepContent(activeStep)}
+                  <div>
+                    <div className={classes.question}>
+                      <div className={classes.instructions}>
+                        {getStepContent(activeStep)}
+                      </div>
+                    </div>
+                    <div className={classes.actions}>
+                      <Button
+                        onClick={handleBack}
+                        className={classes.button}
+                      >
+                        Back
+                    </Button>
+                      <Button
+                        variant='contained'
+                        color='primary'
+                        onClick={handleNext}
+                        className={classes.button}
+                      >
+                        Next
+                    </Button>
                     </div>
                   </div>
-                  <div className={classes.actions}>
-                    <Button
-                      onClick={handleBack}
-                      className={classes.button}
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      variant='contained'
-                      color='primary'
-                      onClick={handleNext}
-                      className={classes.button}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </div>
-              )}
+                )}
             </div>
           </Grid>
         </Grid>

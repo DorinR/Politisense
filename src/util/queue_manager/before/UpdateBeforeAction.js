@@ -7,18 +7,14 @@ const Parameters = require('@parameter')
 const InsertAction = require('../../action/classify_action/UpdateCollectionAction').UpdateCollectionAction
 
 class UpdateBeforeAction extends QueueAction {
-  constructor (manager) {
+  constructor(manager) {
     super()
     this.manager = manager
     this.updates = new UpdateGraph().orderedUpdates(manager.params)
   }
 
-  async perform () {
-<<<<<<< Updated upstream
+  async perform() {
     let currentDepth = -1
-=======
-    let currentDepth
->>>>>>> Stashed changes
     let index = 0
     this.manager.params = []
     console.log(`INFO: ${UpdateBeforeAction.name}: structuring ${this.updates.length} requested updates`)
@@ -27,11 +23,7 @@ class UpdateBeforeAction extends QueueAction {
       const params = UpdateBeforeAction.createParams(update)
       this.manager.params.push(params)
       const job = new Jobs.Job(params, this.manager.requeueCallback.bind(this.manager))
-<<<<<<< Updated upstream
       if (currentDepth === -1) {
-=======
-      if (!currentDepth) {
->>>>>>> Stashed changes
         this.manager.updateJobQueue.push([])
         currentDepth = depth
       }
@@ -43,7 +35,6 @@ class UpdateBeforeAction extends QueueAction {
       if (depth === currentDepth) {
         UpdateBeforeAction.addActions(job, params, vertex)
       }
-<<<<<<< Updated upstream
       let smallerParams
       if (vertex.type.name === 'RoleScraper' || vertex.type.name === 'VoteParticipantScraper') {
         smallerParams = params.parliaments.map(parliament => {
@@ -69,8 +60,8 @@ class UpdateBeforeAction extends QueueAction {
         })
       }
       if (vertex.type.name === 'ExpenditureScraper' ||
-         vertex.type.name === 'RoleScraper' ||
-         vertex.type.name === 'VoteParticipantScraper') {
+        vertex.type.name === 'RoleScraper' ||
+        vertex.type.name === 'VoteParticipantScraper') {
         const jobs = smallerParams.map(param => {
           const job = new Jobs.Job(param, this.manager.requeueCallback.bind(this.manager))
           UpdateBeforeAction.addActions(job, param, vertex)
@@ -80,30 +71,23 @@ class UpdateBeforeAction extends QueueAction {
       } else {
         this.manager.updateJobQueue[index].push(job)
       }
-=======
-      this.manager.updateJobQueue[index].push(job)
->>>>>>> Stashed changes
     })
     console.log(`INFO: ${UpdateBeforeAction.name}: structured updates into ${this.manager.updateJobQueue.length} phases`)
   }
 
-  static createParams (vertex) {
+  static createParams(vertex) {
     const params = {
       parliaments: Object.assign(Parameters.Parliament.Number),
       sessions: Object.assign(Parameters.Parliament.Session),
-<<<<<<< Updated upstream
       parliamentSessions: Object.assign(Parameters.Parliament.Session),
       years: Object.values(Parameters.ExpenditureParameters.Year)
-=======
-      parliamentSessions: 'all'
->>>>>>> Stashed changes
     }
     params.url = vertex.data.url
     params.collection = vertex.data.collection
     return params
   }
 
-  static addActions (job, params, update) {
+  static addActions(job, params, update) {
     // eslint-disable-next-line new-cap
     const typeCheck = new update.type(params)
     if (typeCheck instanceof QueueManager) {

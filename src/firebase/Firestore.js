@@ -1,26 +1,10 @@
 const Reference = require('./Reference').Reference
 const fs = require('firebase')
 require('firebase/firestore')
-<<<<<<< Updated upstream
 const path = require('path')
 const result = require('dotenv').config({ path: path.resolve(process.cwd(), 'src/config/.env') })
 if (!result) {
   throw new Error('ERROR: no .env found, cannot initialise firestore for testing.')
-=======
-
-const config = {
-  apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
-  authDomain: 'abdulla-2c3a5.firebaseapp.com',
-  databaseURL: 'https://abdulla-2c3a5.firebaseio.com',
-  projectId: 'abdulla-2c3a5',
-  storageBucket: 'abdulla-2c3a5.appspot.com',
-  messagingSenderId: '1084760992823',
-  appId: '1:1084760992823:web:c6402249f92d54372ce3b2'
-}
-Object.freeze(config)
-if (!fs.app) {
-  fs.initializeApp(config)
->>>>>>> Stashed changes
 }
 
 const config = {
@@ -36,13 +20,9 @@ const config = {
 Object.freeze(config)
 
 class _Firestore {
-  constructor () {
+  constructor() {
     this.config = config
-<<<<<<< Updated upstream
     if (fs.apps.length === 0) {
-=======
-    if (!this.app || !fs.app) {
->>>>>>> Stashed changes
       this.app = fs.initializeApp(this.config)
     } else {
       this.app = fs.app
@@ -53,7 +33,7 @@ class _Firestore {
 }
 
 var instance = null
-function getInstance () {
+function getInstance() {
   if (!instance) {
     instance = new _Firestore()
   }
@@ -61,7 +41,7 @@ function getInstance () {
 }
 
 class Firestore {
-  constructor (legacy = false) {
+  constructor(legacy = false) {
     this.firestore = getInstance()
     this.reference = this.firestore.db
     this.firebase = this.firestore.firebase
@@ -70,150 +50,146 @@ class Firestore {
     this.legacy = legacy
   }
 
-  forParliament (parliament) {
+  forParliament(parliament) {
     this.parliament = parliament
     return this
   }
 
-  atYear (year) {
+  atYear(year) {
     this.year = year
     return this
   }
 
-  AverageExpenditure () {
+  AverageExpenditure() {
     Firestore.legacyCollectionError(this.legacy)
     const collection = `${this.parliament}/politicians/expenditure/${this.year}/averages`
     return this.createReference(collection)
   }
 
-  Admin () {
+  Admin() {
     Firestore.legacyCollectionError(this.legacy)
     const collection = 'static/users/admin'
     return this.createReference(collection)
   }
 
-  Bill () {
+  Bill() {
     const collection = this.legacy ? 'bills' : `${this.parliament}/bills/bill`
     return this.createReference(collection)
   }
 
-  BillClassification () {
+  BillClassification() {
     const collection = this.legacy
       ? 'bill_classification'
       : `${this.parliament}/bills/tag`
     return this.createReference(collection)
   }
 
-  FinancialRecord () {
+  FinancialRecord() {
     const collection = this.legacy
       ? 'financialRecord'
       : `${this.parliament}/politicians/expenditure/${this.year}/expenditures`
     return this.createReference(collection)
   }
 
-  MinisterDescription () {
+  MinisterDescription() {
     Firestore.legacyCollectionError(this.legacy)
     const collection = 'static/minister_descriptions/description'
     return this.createReference(collection)
   }
 
-  PoliticalParty () {
+  PoliticalParty() {
     const collection = this.legacy
       ? 'parties'
       : `${this.parliament}/parties/party`
     return this.createReference(collection)
   }
 
-  LegislativeActivityVote () {
+  LegislativeActivityVote() {
     Firestore.legacyCollectionError(this.legacy)
     return this.createReference(
       `${this.parliament}/legislative_activities/vote`
     )
   }
 
-  LegislativeActivity () {
+  LegislativeActivity() {
     Firestore.legacyCollectionError(this.legacy)
     return this.createReference(
       `${this.parliament}/legislative_activities/activity`
     )
   }
 
-  Politician () {
+  Politician() {
     const collection = this.legacy
       ? 'politicians'
       : `${this.parliament}/politicians/politician`
     return this.createReference(collection)
   }
 
-  Riding () {
+  Riding() {
     const collection = this.legacy ? 'ridings' : 'static/ridings/riding'
     return this.createReference(collection)
   }
 
-  Role () {
+  Role() {
     const collection = this.legacy ? 'roles' : `${this.parliament}/roles/role`
     return this.createReference(collection)
   }
 
-  TfIdfClassification () {
+  TfIdfClassification() {
     const collection = this.legacy
       ? 'tf_idf_bill'
       : `${this.parliament}/bills/raw`
     return this.createReference(collection)
   }
 
-  User () {
+  User() {
     const collection = this.legacy ? 'users' : 'static/users/user'
     return this.createReference(collection)
   }
 
-  Vote () {
-<<<<<<< Updated upstream
+  Vote() {
     const collection = this.legacy
       ? 'votes'
       : `${this.parliament}/voters/voter`
-=======
-    const collection = this.legacy ? 'votes' : `${this.parliament}/voters/voter`
->>>>>>> Stashed changes
     return this.createReference(collection)
   }
 
-  VoteRecord () {
+  VoteRecord() {
     const collection = this.legacy
       ? 'voteRecord'
       : `${this.parliament}/vote_records/vote_record`
     return this.createReference(collection)
   }
 
-  MapSupportData () {
+  MapSupportData() {
     Firestore.legacyCollectionError(this.legacy)
     const collection = 'static/map_support_data/map_support_data'
     return this.createReference(collection)
   }
 
-  createReference (collection) {
+  createReference(collection) {
     return new Reference(this.reference.collection(collection), collection)
   }
 
-  static legacyCollectionError (legacy) {
+  static legacyCollectionError(legacy) {
     if (legacy) {
       throw new Error('ERROR: collection not available in legacy mode')
     }
   }
 
-  async close () {
+  async close() {
     await this.firestore.app
       .delete()
       .then(result => {
         this.firestore.db
           .terminate()
-          .then(result => {})
-          .catch(e => {})
+          .then(result => { })
+          .catch(e => { })
       })
-      .catch(e => {})
+      .catch(e => { })
   }
 
-  static copyCollection (from, to) {
+  static copyCollection(from, to) {
     return new Promise(resolve => {
       from
         .select()

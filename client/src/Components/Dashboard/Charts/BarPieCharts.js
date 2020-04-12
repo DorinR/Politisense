@@ -1,11 +1,11 @@
 import * as d3 from 'd3'
 
-function dashboard (element, data) {
+function dashboard(element, data) {
   const barColor = '#00bcd4'
 
   data.forEach(function (d) { return d.total })
 
-  function histoGram (fD) {
+  function histoGram(fD) {
     const hG = {}
     const histoGramDimensions = { top: 30, right: 5, back: 30, left: 20 }
     histoGramDimensions.width = 490 - histoGramDimensions.left - histoGramDimensions.right
@@ -92,7 +92,7 @@ function dashboard (element, data) {
   }
 
   // function to handle pieChart.
-  function pieChart (pD) {
+  function pieChart(pD) {
     const pieChartObj = {}
     const pieDimensions = { width: 200, height: 200 }
     pieDimensions.radius = Math.min(pieDimensions.width, pieDimensions.height) / 2
@@ -138,7 +138,7 @@ function dashboard (element, data) {
     }
     // Animating the pie-slice requiring a custom function which specifies
     // how the intermediate paths should be drawn.
-    function arcTween (a) {
+    function arcTween(a) {
       const i = d3.interpolate(this._current, a)
       this._current = i(0)
       return (t) => { return arc(i(t)) }
@@ -147,7 +147,7 @@ function dashboard (element, data) {
   }
 
   // function to handle legend.
-  function legend (data) {
+  function legend(data) {
     const leg = {}
 
     // create table for legend.
@@ -219,7 +219,7 @@ function dashboard (element, data) {
         .style('width', '40px')
     }
 
-    function getLegend (d, aD) { // Utility function to compute percentage.
+    function getLegend(d, aD) { // Utility function to compute percentage.
       let sum = 0
       aD.forEach(element => {
         sum = sum + element.freq
@@ -243,17 +243,13 @@ function dashboard (element, data) {
   const table = legend(totalFreqForAllStates) // create the legend.
 }
 export default class BarPieChart {
-<<<<<<< Updated upstream
-  constructor (element, data, categories, body) {
-=======
-  constructor (element, data, categories) {
->>>>>>> Stashed changes
+  constructor(element, data, categories, body) {
     createData(categories, data).then(results => {
       dashboard(element, results, body)
     })
   }
 }
-export async function createData (categories, data) {
+export async function createData(categories, data) {
   const dataArray = []
   categories.forEach(category => {
     let passedBills = 0
@@ -274,4 +270,4 @@ export async function createData (categories, data) {
   return dataArray
 }
 
-function segColor (c) { return { Succeeded: '#34699a', Failed: '#c83660' }[c] }
+function segColor(c) { return { Succeeded: '#34699a', Failed: '#c83660' }[c] }

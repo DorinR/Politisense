@@ -26,11 +26,11 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function isValidColor (color) {
+export function isValidColor(color) {
   return /^([0-9A-F]{3}){1,2}$/i.test(color.substr(3))
 }
 
-export function addColorFillToRidingShape (svg, color) {
+export function addColorFillToRidingShape(svg, color) {
   if (!isValidColor(color)) {
     console.error('invalid color format, using fallback color')
     color = '%237766E4'
@@ -45,7 +45,7 @@ export function addColorFillToRidingShape (svg, color) {
   return coloredSvg
 }
 
-export default function RidingShape (props) {
+export default function RidingShape(props) {
   const classes = useStyles()
   const [code, setCode] = React.useState(null)
   useEffect(() => {
@@ -59,15 +59,10 @@ export default function RidingShape (props) {
 
   const [coordinates, setCoordinates] = React.useState(null)
   useEffect(() => {
-<<<<<<< Updated upstream
     if (!coordinates) {
       setCoordinates(props.ridingShapeCoordinates)
     }
   }, [code, coordinates, props.ridingShapeCoordinates])
-=======
-    if (props.ridingShapeCoordinates && props.politicalParty) {
-      const thisPartyColor = PARTY_COLORS[props.politicalParty]
->>>>>>> Stashed changes
 
   const [party, setParty] = React.useState(null)
   useEffect(() => {
@@ -115,8 +110,8 @@ export default function RidingShape (props) {
           className={classes.customRidingShape}
         />
       ) : (
-        <CenteredCircularProgress />
-      )}
+          <CenteredCircularProgress />
+        )}
     </div>
   )
 }

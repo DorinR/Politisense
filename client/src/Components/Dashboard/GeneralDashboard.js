@@ -15,11 +15,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import List from '@material-ui/core/List'
-<<<<<<< Updated upstream
 import { fetchCategories, capitalizedName, fetchUserRiding } from './Utilities/CommonUsedFunctions'
-=======
-import { fetchCategories, capitalizedName } from './Utilities/CommonUsedFunctions'
->>>>>>> Stashed changes
 
 const useStyles = makeStyles({
   card: {
@@ -46,7 +42,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function CategoryDashboard () {
+export default function CategoryDashboard() {
   const classes = useStyles()
 
   const [user, setUser] = useState(null)
@@ -56,7 +52,7 @@ export default function CategoryDashboard () {
     setUser(user)
   }, [])
 
-  async function getAllRepsFromAllParliaments () {
+  async function getAllRepsFromAllParliaments() {
     return axios
       .get('/api/representatives/getAllRepsFromAllParliaments')
       .then(res => {
@@ -68,7 +64,7 @@ export default function CategoryDashboard () {
   }
   const [categoryList, setCategoryList] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const categories = await fetchCategories()
       setCategoryList(categories)
     }
@@ -77,7 +73,7 @@ export default function CategoryDashboard () {
 
   const [allMPsFromAllParliaments, setAllMPsFromAllParliaments] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const mpsFromAllParliaments = await getAllRepsFromAllParliaments()
       setAllMPsFromAllParliaments(mpsFromAllParliaments)
     }
@@ -86,7 +82,7 @@ export default function CategoryDashboard () {
 
   const [riding, setRiding] = useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (user) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -97,7 +93,7 @@ export default function CategoryDashboard () {
 
   const [userRepresentative, setUserRepresentative] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (riding) {
         const representative = await fetchRepresentative(riding)
         setUserRepresentative(representative)
@@ -106,7 +102,7 @@ export default function CategoryDashboard () {
     getData()
   }, [riding])
 
-  async function fetchRepresentative (riding) {
+  async function fetchRepresentative(riding) {
     return axios
       .get(`/api/representatives/${riding}/getRepresentative`)
       .then(res => {
@@ -119,7 +115,7 @@ export default function CategoryDashboard () {
 
   const [representativeData, setRepresentativeData] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (userRepresentative) {
         const billsByRep = await getAllBillsByRepForAllParliaments(userRepresentative)
         setRepresentativeData(billsByRep)
@@ -128,7 +124,7 @@ export default function CategoryDashboard () {
     getData()
   }, [userRepresentative])
 
-  async function getAllBillsByRepForAllParliaments (head) {
+  async function getAllBillsByRepForAllParliaments(head) {
     return axios
       .get(`/api/bills/${head}/getAllBillsByRepForAllParliaments`)
       .then(res => {
@@ -140,7 +136,7 @@ export default function CategoryDashboard () {
   }
   const [userRepIssuedBills, setUserRepIssuedBills] = React.useState(null)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (userRepresentative) {
         const issuedBillByUserRep = await getAllBillsBySponsorForAllParliaments(
           userRepresentative
@@ -151,7 +147,7 @@ export default function CategoryDashboard () {
     getData()
   }, [userRepresentative])
 
-  async function getAllBillsBySponsorForAllParliaments (head) {
+  async function getAllBillsBySponsorForAllParliaments(head) {
     return axios
       .get(`/api/bills/${head}/getAllBillsBySponsorForAllParliaments`)
       .then(res => {
@@ -163,7 +159,7 @@ export default function CategoryDashboard () {
   }
   const [donutData, setDonutData] = React.useState(null)
   useEffect(() => {
-    async function getDataForDonutD3 () {
+    async function getDataForDonutD3() {
       let data = []
       if (allMPsFromAllParliaments && representativeData) {
         data = createDataSetDonut(allMPsFromAllParliaments, representativeData)
@@ -216,8 +212,8 @@ export default function CategoryDashboard () {
               </CardContent>
             </Card>
           ) : (
-            ''
-          )}
+              ''
+            )}
         </Grid>
 
         {radarData && categoryList ? (
@@ -297,30 +293,30 @@ export default function CategoryDashboard () {
                   </Card>
                 </Grid>
               ) : (
-                ''
-              )}
+                  ''
+                )}
             </Grid>
           </Grid>
         ) : (
-          <div
-            style={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              zIndex: '-2',
-              transform: 'translate(-50%, -50%)'
-            }}>
-            <CircularProgress />
-          </div>
-        )}
+            <div
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                zIndex: '-2',
+                transform: 'translate(-50%, -50%)'
+              }}>
+              <CircularProgress />
+            </div>
+          )}
       </Grid>
     </div>
   )
 }
-function createVariablesRadar(categories){
-  let lables= []
-  categories.forEach(category =>{
-    let temp = {key: category, label:category}
+function createVariablesRadar(categories) {
+  let lables = []
+  categories.forEach(category => {
+    let temp = { key: category, label: category }
     lables.push(temp)
   })
   return lables
@@ -353,11 +349,7 @@ function createDataSetRadar(categories, data) {
 
   return [dataSetRadar, maxValue]
 }
-<<<<<<< Updated upstream
- function getPoliticalPartyFromSponsor(sponsors){
-=======
-export function getPoliticalPartyFromSponsor(sponsors){
->>>>>>> Stashed changes
+function getPoliticalPartyFromSponsor(sponsors) {
   let politicalParties = [...new Set(sponsors.map(item => item.party))]
   return politicalParties
 }
@@ -366,8 +358,8 @@ export function createDataSetDonut(sponsors, mpdata) {
   let politicalPartiesFromAllParliaments = getPoliticalPartyFromSponsor(sponsors)
   let partiesCounters = []
 
-  politicalPartiesFromAllParliaments.forEach((party,i) => {
-    let temp = {partyType: party, counter: 0}
+  politicalPartiesFromAllParliaments.forEach((party, i) => {
+    let temp = { partyType: party, counter: 0 }
     partiesCounters.push(temp)
   })
 
@@ -376,20 +368,20 @@ export function createDataSetDonut(sponsors, mpdata) {
       if (bill.voteRecord.yea === true) {
         sponsors.forEach(sponsor => {
           if (sponsor.name === bill.billData.sponsorName) {
-           partiesCounters.forEach((party)=> {
-             if(sponsor.party == party.partyType && party.partyType != "" && party.partyType != undefined){
-               party.counter++
-             }
-           })
+            partiesCounters.forEach((party) => {
+              if (sponsor.party == party.partyType && party.partyType != "" && party.partyType != undefined) {
+                party.counter++
+              }
+            })
           }
         })
       }
     })
   }
 
-  partiesCounters.forEach(element=> {
-    parties[element.partyType]=element.counter
+  partiesCounters.forEach(element => {
+    parties[element.partyType] = element.counter
   })
-  politicalPartiesFromAllParliaments =politicalPartiesFromAllParliaments.filter(element=> element != "" && element!= undefined )
-  return [parties,politicalPartiesFromAllParliaments]
+  politicalPartiesFromAllParliaments = politicalPartiesFromAllParliaments.filter(element => element != "" && element != undefined)
+  return [parties, politicalPartiesFromAllParliaments]
 }

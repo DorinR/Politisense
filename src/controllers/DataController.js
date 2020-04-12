@@ -45,7 +45,7 @@ exports.index = (req, res) => {
   }
 }
 
-async function rawClassifications (req, res) {
+async function rawClassifications(req, res) {
   const db = new Firestore().forParliament(req.params.parliament)
   const raws = db.TfIdfClassification()
   const bills = db.Bill()
@@ -66,7 +66,7 @@ async function rawClassifications (req, res) {
   Utils.success(res, data, 'Bill Data with Raw TF-IDF Classifications')
 }
 
-async function derivedClassifications (req, res) {
+async function derivedClassifications(req, res) {
   const db = new Firestore().forParliament(req.params.parliament)
   const tags = db.BillClassification()
   const bills = db.Bill()
@@ -88,7 +88,7 @@ async function derivedClassifications (req, res) {
   Utils.success(res, data, 'Bill Data with Derived Classifications')
 }
 
-async function billRecords (req, res) {
+async function billRecords(req, res) {
   const bills = new Firestore()
     .forParliament(req.params.parliament)
     .Bill()
@@ -96,7 +96,7 @@ async function billRecords (req, res) {
   Utils.success(res, data.map(datum => { return datum.data }), 'Bill Records')
 }
 
-async function politicianRecords (req, res) {
+async function politicianRecords(req, res) {
   const politicians = new Firestore(false)
     .forParliament(req.params.parliament)
     .Politician()
@@ -104,7 +104,7 @@ async function politicianRecords (req, res) {
   Utils.success(res, data.map(datum => { return datum.data }), 'Politician Records')
 }
 
-async function politicianRoles (req, res) {
+async function politicianRoles(req, res) {
   const db = new Firestore(false).forParliament(req.params.parliament)
   const politicians = db.Politician()
   const roles = db.Role()
@@ -129,14 +129,10 @@ async function politicianRoles (req, res) {
   Utils.success(res, data, 'Politician Data with Roles')
 }
 
-async function politicianFinancials (req, res) {
-<<<<<<< Updated upstream
+async function politicianFinancials(req, res) {
   const db = new Firestore()
     .forParliament(req.params.parliament)
     .atYear(req.body.year)
-=======
-  const db = new Firestore(true).forParliament(req.params.parliament)
->>>>>>> Stashed changes
   const politicians = db.Politician()
   const financials = db.FinancialRecord()
 
@@ -159,7 +155,7 @@ async function politicianFinancials (req, res) {
   Utils.success(res, data, 'Politician Data with Financial Records')
 }
 
-async function voteRecords (req, res) {
+async function voteRecords(req, res) {
   const voteRecords = new Firestore(false)
     .forParliament(req.params.parliament)
     .VoteRecord()
@@ -167,7 +163,7 @@ async function voteRecords (req, res) {
   Utils.success(res, data.map(datum => { return datum.data }), 'Vote Records')
 }
 
-async function voters (req, res) {
+async function voters(req, res) {
   const db = new Firestore(false).forParliament(req.params.parliament)
   const voteRecords = db.VoteRecord()
   const voters = db.Vote()
@@ -206,7 +202,7 @@ async function voters (req, res) {
   Utils.success(res, data, 'Politician Data with Voting Records')
 }
 
-async function ridingRecords (req, res) {
+async function ridingRecords(req, res) {
   const ridings = new Firestore(false)
     .forParliament(req.params.parliament)
     .Riding()
@@ -223,12 +219,8 @@ const UpdateDirector = {
 
   Politicians: {
     records: Parameters.Politician,
-<<<<<<< Updated upstream
     roles: Parameters.Role,
     finances: Parameters.Finance
-=======
-    roles: Parameters.Role
->>>>>>> Stashed changes
   },
 
   Parties: {
@@ -311,7 +303,7 @@ exports.update = async (req, res) => {
 
 const child = require('child_process')
 
-async function updateFromProvidedNode (root, opts) {
+async function updateFromProvidedNode(root, opts) {
   const opt = Object.create(opts)
   opts.NODE_OPTIONS = '--max-old-space-size=16384'
   return new Promise((resolve, reject) => {

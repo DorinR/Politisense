@@ -111,6 +111,14 @@ const Topbar = withRouter((props) => {
           onClick={() => { props.history.push('/map') }}
         >Map
         </Button>
+        {props.country && props.country === 'Canada'
+          ?
+          <Button
+            style={{ color: 'white', textTransform: 'none' }} variant='text'
+            onClick={() => { props.history.push('/polls') }}
+          >
+            Polls
+              </Button> : ''}
         <IconButton
           className={classes.signOutButton}
           onClick={() => { props.history.push('/logout') }}

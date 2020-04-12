@@ -4,21 +4,17 @@ const flatten = require('flat')
 const Parameters = require('@parameter').ExpenditureParameters
 
 class ExpenditureScraper extends Components.QueueManager {
-  static create (params, wait = 5000) {
+  static create(params, wait = 5000) {
     const manager = new ExpenditureScraper(params, wait)
     manager
       .setStartAction(new Components.Start.Expenditure(manager))
       .setStopAction(new Components.Stop.Generic(manager))
       .setAfterAction(new Components.After.Expenditure(manager))
-<<<<<<< Updated upstream
       .setErrorAction(new Components.Error.Parse(manager))
-=======
-      .setErrorAction(new Components.Error.ParseErrorAction(manager))
->>>>>>> Stashed changes
     return manager
   }
 
-  constructor (params, wait = 5000) {
+  constructor(params, wait = 5000) {
     super(wait)
     this.years = []
     this.createYears(params.years)
@@ -28,7 +24,7 @@ class ExpenditureScraper extends Components.QueueManager {
     this.queryCount = this.params.length
   }
 
-  createYears (years) {
+  createYears(years) {
     const valid = Object.values(flatten(Parameters.Year))
     if (typeof years === 'undefined' || years === 'all') {
       this.years = valid
@@ -39,7 +35,7 @@ class ExpenditureScraper extends Components.QueueManager {
     }
   }
 
-  createQueries (url) {
+  createQueries(url) {
     this.years.forEach(year => {
       this.params.push({
         url: url,

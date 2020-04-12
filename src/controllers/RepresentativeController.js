@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
 import { mergeArrays, checkIsEmptyRawData } from '../../client/src/Components/Dashboard/Utilities/CommonUsedFunctions'
-=======
-import { mergeArrays } from '../../client/src/Components/Dashboard/Utilities/CommonUsedFunctions'
->>>>>>> Stashed changes
 const Firestore = require('@firestore').Firestore
 const Utils = require('./util/ActivityVotingUtils')
 
@@ -53,12 +49,8 @@ exports.getRepresentativeByRiding = (req, res) => {
     })
     .catch(console.error)
 }
-async function getAllRepsForEachParliament (parliamentNo) {
-<<<<<<< Updated upstream
+async function getAllRepsForEachParliament(parliamentNo) {
   const db = new Firestore().forParliament(parliamentNo)
-=======
-  const db = new Firestore(false).forParliament(parliamentNo)
->>>>>>> Stashed changes
   const politicians = []
   await db.Politician()
     .select()
@@ -234,7 +226,7 @@ exports.votingHistory = async (req, res) => {
     })
 }
 
-function getMemberIDInParliament (snapshot) {
+function getMemberIDInParliament(snapshot) {
   if (snapshot.empty || snapshot.size > 1) {
     return null
   }
@@ -245,7 +237,7 @@ function getMemberIDInParliament (snapshot) {
   return id
 }
 
-function addBillData (votes, allBills, index) {
+function addBillData(votes, allBills, index) {
   const voteMap = mapVotesByBill(votes)
   const billIDs = Object.keys(voteMap)
   return Promise.resolve(allBills[index])
@@ -255,7 +247,7 @@ function addBillData (votes, allBills, index) {
     })
 }
 
-function joinVotesToVoteRecords (id, parliament) {
+function joinVotesToVoteRecords(id, parliament) {
   const db = new Firestore().forParliament(parliament)
   const memberVotes = db.Vote().where('member', '==', id)
   return db.VoteRecord()
@@ -265,7 +257,7 @@ function joinVotesToVoteRecords (id, parliament) {
     })
 }
 
-function addBillDataToMap (voteMap, billIDs, snapshot) {
+function addBillDataToMap(voteMap, billIDs, snapshot) {
   snapshot.forEach(doc => {
     if (billIDs.includes(doc.id)) {
       voteMap[doc.id].bill = doc.data()
@@ -273,7 +265,7 @@ function addBillDataToMap (voteMap, billIDs, snapshot) {
   })
 }
 
-function mapVotesByBill (votes) {
+function mapVotesByBill(votes) {
   const voteMap = {}
   votes.forEach(vote => {
     voteMap[vote.bill] = vote
@@ -281,7 +273,7 @@ function mapVotesByBill (votes) {
   return voteMap
 }
 
-function createExpectedRecord (vote) {
+function createExpectedRecord(vote) {
   return {
     number: vote.billNumber,
     title: vote.bill.title,
@@ -295,11 +287,11 @@ function createExpectedRecord (vote) {
   }
 }
 
-function isRecordComplete (vote) {
+function isRecordComplete(vote) {
   return vote.dateVoted && vote.number
 }
 
-async function fetchRolesByParliament (parliamentNo, repName) {
+async function fetchRolesByParliament(parliamentNo, repName) {
   const id = await fetchIDbyRepName(parliamentNo, repName)
   if (id) {
     const roles = await fetchrolesbyID(parliamentNo, id)
@@ -308,7 +300,7 @@ async function fetchRolesByParliament (parliamentNo, repName) {
   return []
 }
 
-async function fetchIDbyRepName (parliamentNo, repName) {
+async function fetchIDbyRepName(parliamentNo, repName) {
   const db = new Firestore().forParliament(parliamentNo)
   let id = null
   await db.Politician()
@@ -327,7 +319,7 @@ async function fetchIDbyRepName (parliamentNo, repName) {
   return id
 }
 
-async function fetchrolesbyID (parliamentNo, id) {
+async function fetchrolesbyID(parliamentNo, id) {
   const roles = []
   return new Firestore()
     .forParliament(parliamentNo)

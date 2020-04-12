@@ -8,17 +8,12 @@ import Dialog from '@material-ui/core/Dialog'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import Radio from '@material-ui/core/Radio'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-<<<<<<< Updated upstream
 import { formattingCategory } from './Utilities/CommonUsedFunctions'
-=======
-import { fetchCategories, formattingCategory } from './Utilities/CommonUsedFunctions'
->>>>>>> Stashed changes
 
-export function ConfirmationDialogRaw (props) {
+export function ConfirmationDialogRaw(props) {
   const { onClose, value: valueProp, open, ...other } = props
   const [value, setValue] = React.useState(valueProp)
   const radioGroupRef = React.useRef(null)
-<<<<<<< Updated upstream
   const [categoryList, setCategoryList] = React.useState(null)
 
   React.useEffect(() => {
@@ -31,20 +26,6 @@ export function ConfirmationDialogRaw (props) {
     const removalExistedCategoriesFromOptions = (existedCategories) => {
       setOptions(categoryList.filter((el) => !existedCategories.includes(el)))
     }
-=======
-
-  const [categoryList, setCategoryList] = React.useState(null)
-
-  React.useEffect(() => {
-    async function getCategoryList () {
-      const categories = await fetchCategories()
-      setCategoryList(categories)
-    }
-    getCategoryList()
-  }, [])
-
-  React.useEffect(() => {
->>>>>>> Stashed changes
     if (!open) {
       setValue(valueProp)
     }
@@ -54,12 +35,6 @@ export function ConfirmationDialogRaw (props) {
   }, [valueProp, open, props.existedcategories, categoryList])
 
   const [options, setOptions] = React.useState(null)
-<<<<<<< Updated upstream
-=======
-  const removalExistedCategoriesFromOptions = (existedCategories) => {
-    setOptions(categoryList.filter((el) => !existedCategories.includes(el)))
-  }
->>>>>>> Stashed changes
 
   const handleEntering = () => {
     if (radioGroupRef.current != null) {
@@ -105,10 +80,10 @@ export function ConfirmationDialogRaw (props) {
       </DialogContent>
       <DialogActions>
         <Button autoFocus onClick={handleCancel} color='primary'>
-                    Cancel
+          Cancel
         </Button>
         <Button onClick={handleOk} color='primary'>
-                    Ok
+          Ok
         </Button>
       </DialogActions>
     </Dialog>

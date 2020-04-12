@@ -21,6 +21,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Topbar from './Topbar'
 import Avatar from '@material-ui/core/Avatar'
 import { withRouter } from 'react-router-dom'
+import { getIpInfo } from '../Dashboard/Polls/GetIpAddress'
 
 const drawerWidth = 220
 const drawerWidthXlMode = 250
@@ -186,6 +187,7 @@ const Sidebar = withRouter((props) => {
   const theme = useTheme()
   const [user, setUser] = useState(null)
   const [openSidebar, setOpenSidebar] = useState(true)
+  const [userCountry, setUserCountry] = useState("")
   const handleSidebarOpen = () => {
     setOpenSidebar(true)
   }
@@ -201,7 +203,7 @@ const Sidebar = withRouter((props) => {
   const [riding, setRiding] = useState(undefined)
   // const prevRiding = usePrevious(riding)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (user) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -212,7 +214,10 @@ const Sidebar = withRouter((props) => {
   const [data, setData] = useState(null)
   const logicalCondition = (data && riding && riding !== data.riding) || (!data && riding)
   useEffect(() => {
-    async function getData () {
+    async function getData() {
+      const country = await getIpInfo()
+      setUserCountry(country)
+      console.log(country)
       if (logicalCondition) {
         const promises = await Promise.all([
           fetchRidingCode(riding),
@@ -273,7 +278,7 @@ const Sidebar = withRouter((props) => {
   return (
 
     <div>
-      <Topbar onSidebarOpen={handleSidebarOpen} open={openSidebar} />
+      <Topbar onSidebarOpen={handleSidebarOpen} open={openSidebar} country={userCountry} />
       <Drawer
         anchor='left'
         classes={{ paper: classes.drawer }}

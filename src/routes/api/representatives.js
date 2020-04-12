@@ -32,7 +32,6 @@ router.get(
 // @access Public
 router.get('/representative/representative/:name', controller.getImageData)
 
-<<<<<<< Updated upstream
 // @route post api/representatives/:repName/getAllRolesByRep
 // @desc  get all roles for specific mp
 // @access Public
@@ -47,8 +46,5 @@ router.get(
 )
 
 router.get('/representative/voting-history/:representative', controller.representativeVotingHistory)
-=======
-router.get('/getAllRepsFromAllParliaments', controller.getAllRepsFromAllParliaments)
->>>>>>> Stashed changes
 
 module.exports = router

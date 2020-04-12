@@ -17,6 +17,8 @@ import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
 import LegislativeActivities from './Components/Dashboard/Polls/LegislativeActivities'
 import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
 import MapContainer from './Components/Map/MapContainer'
+import Sidebar from './Components/Navbar/Navbar'
+import MyMP from './Components/MyMP/MyMP'
 
 const App = () => {
   const LoginContainer = () => (
@@ -40,6 +42,7 @@ const App = () => {
           <PrivateRoute path='/votingHistory' component={BillHistoryTable} />
           <PrivateRoute path='/budget' component={BudgetContainer} />
           <PrivateRoute path='/compare' component={CompareContainer} />
+          <PrivateRoute path='/myRepresentative' component={MyMP} />
         </div>
       </Sidebar>
     </div>

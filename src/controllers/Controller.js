@@ -140,12 +140,9 @@ module.exports = {
   getImageData: function (req, res) {
     return RepresentativeController.getImageData(req, res)
   },
-<<<<<<< Updated upstream
   getAllRolesByRep: function (req, res) {
     return RepresentativeController.getAllRolesByRep(req, res)
   },
-=======
->>>>>>> Stashed changes
 
   dataIndex: function (req, res) {
     return DataController.index(req, res)
@@ -159,10 +156,6 @@ module.exports = {
     return RidingController.getRidingByRidingCode(req, res)
   },
 
-<<<<<<< Updated upstream
-=======
-  // Map support data
->>>>>>> Stashed changes
   getMapSupportData: function (req, res) {
     return MapSupportDataController.getMapSupportData(req, res)
   },
@@ -181,12 +174,9 @@ module.exports = {
 
   getAllRepsFromAllParliaments: function (req, res) {
     return RepresentativeController.getAllRepsFromAllParliaments(req, res)
-<<<<<<< Updated upstream
   },
 
   representativeVotingHistory: function (req, res) {
     return RepresentativeController.votingHistory(req, res)
-=======
->>>>>>> Stashed changes
   }
 }

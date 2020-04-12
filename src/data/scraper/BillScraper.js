@@ -6,7 +6,7 @@ const flatten = require('flat')
 const Parameters = require('@parameter')
 
 class BillScraper extends Components.QueueManager {
-  static create (params, wait = 5000) {
+  static create(params, wait = 5000) {
     const manager = new BillScraper(params, wait)
     manager
       .setStartAction(new Components.Start.Bill(manager))
@@ -16,11 +16,11 @@ class BillScraper extends Components.QueueManager {
     return manager
   }
 
-  finish () {
+  finish() {
     console.log(`INFO: ${BillScraper.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
-  constructor (params, wait = 5000) {
+  constructor(params, wait = 5000) {
     super(wait)
     this.parliaments = []
     this.setParliaments(params.parliaments)
@@ -47,13 +47,9 @@ class BillScraper extends Components.QueueManager {
     this.maxQueryCount = this.params.length
   }
 
-  setParliaments (parliaments) {
+  setParliaments(parliaments) {
     if (typeof parliaments === 'undefined' ||
-<<<<<<< Updated upstream
-        (typeof parliaments === 'string' && parliaments.toLowerCase().includes('all'))) {
-=======
       (typeof parliaments === 'string' && parliaments.toLowerCase().includes('all'))) {
->>>>>>> Stashed changes
       this.parliaments.push(' ')
     } else if (Array.isArray(parliaments)) {
       this.parliaments = parliaments.filter(parliament => {
@@ -62,7 +58,7 @@ class BillScraper extends Components.QueueManager {
     }
   }
 
-  setSessions (sessions) {
+  setSessions(sessions) {
     if (typeof sessions === 'undefined' ||
       (sessions instanceof String && sessions.toLowerCase().includes('all'))) {
       this.sessions.push(' ')
@@ -73,7 +69,7 @@ class BillScraper extends Components.QueueManager {
     }
   }
 
-  setOriginatingChambers (originatingChambers) {
+  setOriginatingChambers(originatingChambers) {
     if (typeof originatingChambers === 'undefined' ||
       (originatingChambers instanceof String && originatingChambers.toLowerCase().includes('all'))) {
       this.originatingChambers.push(' ')
@@ -84,7 +80,7 @@ class BillScraper extends Components.QueueManager {
     }
   }
 
-  setBillTypes (billTypes) {
+  setBillTypes(billTypes) {
     if (typeof billTypes === 'undefined' ||
       (billTypes instanceof String && billTypes.toLowerCase().includes('all'))) {
       this.billTypes.push(' ')
@@ -95,7 +91,7 @@ class BillScraper extends Components.QueueManager {
     }
   }
 
-  setSponsorAffiliation (sponsorAffiliations) {
+  setSponsorAffiliation(sponsorAffiliations) {
     if (typeof sponsorAffiliations === 'undefined' ||
       (sponsorAffiliations instanceof String && sponsorAffiliations.toLowerCase().includes('all'))) {
       this.sponsorAffiliations.push(' ')
@@ -106,7 +102,7 @@ class BillScraper extends Components.QueueManager {
     }
   }
 
-  setSponsors (sponsors) {
+  setSponsors(sponsors) {
     if (typeof sponsors === 'undefined' ||
       (sponsors instanceof String && sponsors.toLowerCase().includes('all'))) {
       this.sponsors.push(' ')
@@ -115,7 +111,7 @@ class BillScraper extends Components.QueueManager {
     }
   }
 
-  setStatuses (statuses) {
+  setStatuses(statuses) {
     if (typeof statuses === 'undefined' ||
       (statuses instanceof String && statuses.toLowerCase().includes('all'))) {
       this.statuses.push(' ')
@@ -126,7 +122,7 @@ class BillScraper extends Components.QueueManager {
     }
   }
 
-  createQueries (url) {
+  createQueries(url) {
     this.billTypes.forEach(type => {
       this.statuses.forEach(status => {
         this.sponsorAffiliations.forEach(affiliation => {
@@ -167,7 +163,7 @@ class BillScraper extends Components.QueueManager {
     })
   }
 
-  appendQueryStringToURL (url, param) {
+  appendQueryStringToURL(url, param) {
     // I hate that this function needs to exist
     // I would use C/CGI if I wanted to do this
     let fullString = `${url}?`

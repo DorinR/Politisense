@@ -33,10 +33,6 @@ module.exports.vote = async (req, res) => {
   if (!utils.validateRequestParameters(req, res) || !utils.validateUserVotingParameters(req, res)) {
     return
   }
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
   const user = await utils.retrieveUser(res, req.body.user.email)
   if (!user) {
     return
@@ -52,10 +48,6 @@ module.exports.vote = async (req, res) => {
   }
 
   if (await utils.canUserVoteOnActivity(user, activity)) {
-<<<<<<< Updated upstream
-=======
-    console.log('activity ', activity)
->>>>>>> Stashed changes
     await utils.insertNewVote(user, activity)
     await utils.countVote(user, activity)
     utils.success(res, 'vote successfully registered', {})

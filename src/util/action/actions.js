@@ -21,10 +21,6 @@ module.exports = {
   RoleFetchLinkAdapterAction: require('./adapter_action/RoleFetchLinkAdapterAction').RoleFetchLinkAdapterAction,
   RoleQueryResponseAdapterAction: require('./adapter_action/RoleQueryResponseAdapterAction').RoleQueryResponseAdapterAction,
   PoliticianAfterAdapterAction: require('./adapter_action/PoliticianAfterAdapterAction').PoliticianAfterAdapterAction,
-<<<<<<< Updated upstream
   ExpenditureComputeAction: require('./classify_action/ExpenditureComputeAction').ExpenditureComputeAction,
   ClassificationResultAdapterAction: require('./adapter_action/ClassificationResultAdapterAction').ClassificationResultAdapterAction
-=======
-  ExpenditureComputeAction: require('./classify_action/ExpenditureComputeAction').ExpenditureComputeAction
->>>>>>> Stashed changes
 }

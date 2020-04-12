@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function checkEmailFormat (email) {
+export function checkEmailFormat(email) {
   /* eslint-disable */
   const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   return email.match(emailFormat)
@@ -87,11 +87,7 @@ export async function handleEmailLogin(user) {
 }
 
 export async function handleSocialLogin(social) {
-<<<<<<< Updated upstream
   return axios
-=======
-  return await axios
->>>>>>> Stashed changes
     .post('/api/users/socialLogin', { type: social })
     .then(res => {
       return tokenAuthenticate(res.data.data.token, res.data.data.config)
@@ -109,27 +105,18 @@ export default function Login(props) {
   const [authenticated, setAuthenticated] = useState(false)
   const [errors, setErrors] = useState({ email: '', password: '' })
 
-<<<<<<< Updated upstream
   function validateUserFromSocialProviders(type, getOAuthUserCallback) {
     getOAuthUserCallback(type)
       .then(oAuthUser => {
-        if(!oAuthUser.user) throw new Error()
+        if (!oAuthUser.user) throw new Error()
         return fetchUser(oAuthUser.user.email)
           .then(resp => {
-            if(!resp.data.success) {
+            if (!resp.data.success) {
               resp.data.data = oAuthUser.user
             }
             return resp
           })
           .catch(console.error)
-=======
-  function validateUserFromSocialProviders(type, cb) {
-    let user = {}
-    cb(type)
-      .then(usr => {
-        user = usr
-        return fetchUser(user.email)
->>>>>>> Stashed changes
       })
       .then(res => {
         let user = res.data.data

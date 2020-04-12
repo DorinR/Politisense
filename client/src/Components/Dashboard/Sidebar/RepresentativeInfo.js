@@ -27,14 +27,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export async function fetchRidingCode (riding) {
+export async function fetchRidingCode(riding) {
   return axios
     .get(`/api/ridings/getRidingCode/${encodeURI(riding)}`)
-<<<<<<< Updated upstream
     .then((res) => {
-=======
-    .then(res => {
->>>>>>> Stashed changes
       if (res.data.success) {
         return res.data.data.code
       }
@@ -42,63 +38,16 @@ export async function fetchRidingCode (riding) {
     .catch(console.error)
 }
 
-<<<<<<< Updated upstream
-=======
-export async function fetchUserRiding (userEmail) {
-  return axios
-    .get(`/api/users/${userEmail}/getUser`, {
-      params: { repinfo: userEmail }
-    })
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data.riding
-      }
-    })
-    .catch(console.error)
-}
-
-export async function fetchRepresentative (riding) {
-  return axios
-    .get(`/api/representatives/${riding}/getRepresentative`)
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data
-      }
-    })
-    .catch(console.error)
-}
-
->>>>>>> Stashed changes
-export default function RepresentativeInfo (props) {
+export default function RepresentativeInfo(props) {
   const classes = useStyles()
 
   const [ridingCode, setRidingCode] = useState(null)
   useEffect(() => {
-    async function getData () {
-<<<<<<< Updated upstream
+    async function getData() {
       if (props.riding) {
         const code = await fetchRidingCode(props.riding)
         setRidingCode(code)
       }
-=======
-      // eslint-disable-next-line
-      const user = JSON.parse(localStorage.getItem('user'))
-      const riding = await fetchUserRiding(user.email)
-      const promises = await Promise.all([
-        fetchRidingCode(riding),
-        fetchRepresentative(riding)
-      ])
-      const ridingCode = promises[0]
-      const { name, party, start } = promises[1]
-      const data = {
-        name: name,
-        ridingCode: ridingCode,
-        riding: riding,
-        politicalParty: party,
-        yearElected: start
-      }
-      setData(data)
->>>>>>> Stashed changes
     }
     getData()
   }, [props.riding, ridingCode])
@@ -135,8 +84,8 @@ export default function RepresentativeInfo (props) {
               onChange={props.onChange}
             />
           ) : (
-            <CenteredCircularProgress />
-          )}
+              <CenteredCircularProgress />
+            )}
           <Box m={1} />
           {ridingCode && props.representative.party ? (
             <RidingShapeContainer
@@ -144,8 +93,8 @@ export default function RepresentativeInfo (props) {
               politicalParty={props.representative.party}
             />
           ) : (
-            <CenteredCircularProgress />
-          )}
+              <CenteredCircularProgress />
+            )}
           <Box m={1} />
         </CardContent>
       </Card>
@@ -158,8 +107,8 @@ export default function RepresentativeInfo (props) {
           {props.riding ? (
             <RidingPopulation riding={props.riding} />
           ) : (
-            <CenteredCircularProgress />
-          )}
+              <CenteredCircularProgress />
+            )}
         </CardContent>
       </Card>
       <Box m={1} />

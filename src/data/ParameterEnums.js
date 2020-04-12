@@ -129,15 +129,8 @@ const Politician = {
 }
 const Expenditure = {
   Year: {
-<<<<<<< Updated upstream
     // Q1:'MER2020Q1-1019'
     2019: 'MER2020Q2-1023', // Q2 YTD
-=======
-    current: {
-      // Q1:'MER2020Q1-1019',
-      Q2: 'MER2020Q2-1023'
-    },
->>>>>>> Stashed changes
     2018: 'MER2019Q4',
     2017: 'MER2018Q4',
     2016: 'MER2017Q4B',
@@ -145,7 +138,6 @@ const Expenditure = {
     2014: 'MER2015FY',
     2013: 'MER2014FY',
     2012: 'MER2013FY'
-<<<<<<< Updated upstream
   },
 
   YearToParliament: {
@@ -157,8 +149,6 @@ const Expenditure = {
     MER2015FY: 41,
     MER2014FY: 41,
     MER2013FY: 40
-=======
->>>>>>> Stashed changes
   }
 }
 
@@ -282,12 +272,8 @@ const Updates = {
   TfIdf: 'raw',
   Category: 'classifications',
   All: 'root',
-<<<<<<< Updated upstream
   None: 'leaf',
   Finance: 'finances'
-=======
-  None: 'leaf'
->>>>>>> Stashed changes
 }
 
 module.exports = {

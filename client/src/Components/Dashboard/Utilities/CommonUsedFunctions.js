@@ -1,10 +1,6 @@
 import axios from 'axios'
-<<<<<<< Updated upstream
 import { useEffect, useRef } from 'react'
-=======
-
->>>>>>> Stashed changes
-export async function fetchCategories () {
+export async function fetchCategories() {
   return axios
     .get('/api/bills/fetchCategories')
     .then(res => {
@@ -14,7 +10,7 @@ export async function fetchCategories () {
     })
 }
 
-export function mergeArrays (rawData) {
+export function mergeArrays(rawData) {
   let jointArray = []
 
   rawData.forEach(array => {
@@ -22,33 +18,18 @@ export function mergeArrays (rawData) {
       jointArray = [...jointArray, ...array]
     }
   })
-<<<<<<< Updated upstream
   const mergedArrays = [...new Set([...jointArray])]
   return mergedArrays
-=======
-  const test = [...new Set([...jointArray])]
-  return test
 }
 
-export function formatingCategories (categoriesList) {
-  const modifiedArray = categoriesList.map(element => {
-    if (element.includes('-')) {
-      return capitalizedName(element.replace('-', ' '))
-    }
-    return capitalizedName(element)
-  })
-  return modifiedArray
->>>>>>> Stashed changes
-}
-
-export function formattingCategory (element) {
+export function formattingCategory(element) {
   if (element.includes('-')) {
     return capitalizedName(element.replace('-', ' '))
   }
   return capitalizedName(element)
 }
 
-export function capitalizedName (sponsor) {
+export function capitalizedName(sponsor) {
   if (sponsor && isNaN(sponsor)) {
     let name = sponsor
     name = name.toLowerCase()
@@ -59,9 +40,8 @@ export function capitalizedName (sponsor) {
   }
   return null
 }
-<<<<<<< Updated upstream
 
-export function getPercentagePartisanIndex (element, arr) { // Utility function to compute percentage.
+export function getPercentagePartisanIndex(element, arr) { // Utility function to compute percentage.
   let sum = 0
   arr.forEach(element => {
     sum = sum + element.freq
@@ -70,13 +50,13 @@ export function getPercentagePartisanIndex (element, arr) { // Utility function 
   return fraction
 }
 
-export function loadingTextTitle (element) {
+export function loadingTextTitle(element) {
   let title = null
   switch (element.type) {
     case 'parliamentary':
       title = element.title
       break
-      // eslint-disable-next-line no-lone-blocks
+    // eslint-disable-next-line no-lone-blocks
     case 'association': {
       if (element.group.includes('inter-')) {
         title = element.group.slice(0, element.group.indexOf('inter-'))
@@ -96,7 +76,7 @@ export function loadingTextTitle (element) {
   return title
 }
 
-export function loadingTextdata (element) {
+export function loadingTextdata(element) {
   if (element.fromDate === 0 && element.toDate === 0) {
     return 'Present'
   }
@@ -108,7 +88,7 @@ export function loadingTextdata (element) {
   }
 }
 
-export function checkIsEmptyRawData (arrs) {
+export function checkIsEmptyRawData(arrs) {
   let counter = 0
   arrs.forEach(arr => {
     if (arr.length !== 0 && arr !== null) {
@@ -122,7 +102,7 @@ export function checkIsEmptyRawData (arrs) {
   }
 }
 
-export function mergeArraysAndFilteringByType (type, ...arrays) {
+export function mergeArraysAndFilteringByType(type, ...arrays) {
   let jointArray = []
 
   arrays.forEach(array => {
@@ -150,7 +130,7 @@ export function mergeArraysAndFilteringByType (type, ...arrays) {
   }
 }
 
-export async function getAllRolesByRep (type, repName) {
+export async function getAllRolesByRep(type, repName) {
   return axios
     .get(`/api/representatives/${repName}/getAllRolesByRep`)
     .then(res => {
@@ -166,14 +146,14 @@ export async function getAllRolesByRep (type, repName) {
     .catch(console.error)
 }
 
-export async function getAllDesc (arr) {
+export async function getAllDesc(arr) {
   for (const element of arr) {
     element.desc = await getDescription(titleCase(loadingTextTitle(element)))
   }
   return arr
 }
 
-export function sortingBasedOnDate (arr) {
+export function sortingBasedOnDate(arr) {
   arr.sort((a, b) => {
     if (a.fromDate === 0 || b.fromDate === 0) {
       return -1
@@ -200,13 +180,13 @@ export const getDescription = async (ministry) => {
     }).catch(console.error)
 }
 
-export function titleCase (str) {
+export function titleCase(str) {
   const regex = /(^|\b(?!(and?|at?|the|for|to|but|by|of)\b))\w+/g
   return str.toLowerCase()
     .replace(regex, s => s[0].toUpperCase() + s.slice(1))
 }
 
-export async function fetchUserRiding (userEmail) {
+export async function fetchUserRiding(userEmail) {
   return axios
     .get(`/api/users/${userEmail}/getUser`)
     .then(res => {
@@ -217,7 +197,7 @@ export async function fetchUserRiding (userEmail) {
     .catch(console.error)
 }
 
-export async function fetchRidingCode (riding) {
+export async function fetchRidingCode(riding) {
   return axios
     .get(`/api/ridings/getRidingCode/${encodeURI(riding)}`)
     .then(res => {
@@ -228,7 +208,7 @@ export async function fetchRidingCode (riding) {
     .catch(console.error)
 }
 
-export async function fetchRepresentative (riding) {
+export async function fetchRepresentative(riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
@@ -239,7 +219,7 @@ export async function fetchRepresentative (riding) {
     .catch(console.error)
 }
 
-export function totalBillsArray (arr) {
+export function totalBillsArray(arr) {
   const totalBills = arr.filter((thing, index, self) =>
     index === self.findIndex((t) => (
       t.billsClassified.number === thing.billsClassified.number
@@ -248,11 +228,11 @@ export function totalBillsArray (arr) {
   return totalBills.length
 }
 
-export function formatNumber (num) {
+export function formatNumber(num) {
   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 }
 
-export function createVariablesRadar (categories) {
+export function createVariablesRadar(categories) {
   const lables = []
   categories.forEach(category => {
     lables.push({ key: category, label: category })
@@ -260,7 +240,7 @@ export function createVariablesRadar (categories) {
   return lables
 }
 
-export function createDataSetRadar (categories, data) {
+export function createDataSetRadar(categories, data) {
   const dataArray = []
   let temp = {}
   const dataSetRadar = {}
@@ -289,19 +269,19 @@ export function createDataSetRadar (categories, data) {
   maxValue = roundUpToNearestInteger(maxValue)
   return [dataSetRadar, maxValue]
 }
-export function getPoliticalPartyFromSponsor (sponsors) {
+export function getPoliticalPartyFromSponsor(sponsors) {
   const politicalParties = [...new Set(sponsors.map(item => item.party))]
   return politicalParties
 }
 
-export function createPartyCountersForBiPartisanIndex (politicalPartiesFromAllParliaments) {
+export function createPartyCountersForBiPartisanIndex(politicalPartiesFromAllParliaments) {
   const partiesCounters = []
   politicalPartiesFromAllParliaments.forEach((party) => {
     partiesCounters.push({ partyType: party, counter: 0 })
   })
   return partiesCounters
 }
-export function getBillsForBiPartisanIndex (mpdata, sponsors) {
+export function getBillsForBiPartisanIndex(mpdata, sponsors) {
   const bills = []
   mpdata.forEach(bill => {
     if (bill.voteRecord.yea === true) {
@@ -317,7 +297,7 @@ export function getBillsForBiPartisanIndex (mpdata, sponsors) {
   return bills
 }
 
-export function getPartiesDataForBiPartisanIndex (mpdata, sponsors, partiesCounters) {
+export function getPartiesDataForBiPartisanIndex(mpdata, sponsors, partiesCounters) {
   const partiesData = []
   mpdata.forEach(bill => {
     if (bill.voteRecord.yea === true) {
@@ -338,7 +318,7 @@ export function getPartiesDataForBiPartisanIndex (mpdata, sponsors, partiesCount
   return partiesData
 }
 
-export function formattingPartiesData (partiesData) {
+export function formattingPartiesData(partiesData) {
   partiesData = partiesData.filter(element =>
     element.label !== undefined && element.label !== '' && element.freq !== 0
   )
@@ -352,7 +332,7 @@ export function formattingPartiesData (partiesData) {
   return partiesData
 }
 
-export function createDataSetDonut (sponsors, mpdata) {
+export function createDataSetDonut(sponsors, mpdata) {
   const politicalPartiesFromAllParliaments = getPoliticalPartyFromSponsor(sponsors)
   let bills = []
   let partiesData = []
@@ -365,7 +345,7 @@ export function createDataSetDonut (sponsors, mpdata) {
   return [partiesData, bills]
 }
 
-export function createDataPieBarTable (categories, data) {
+export function createDataPieBarTable(categories, data) {
   const billsForSpecificCategory = []
   categories.forEach(category => {
     data.forEach(bill => {
@@ -377,12 +357,12 @@ export function createDataPieBarTable (categories, data) {
 
   return billsForSpecificCategory
 }
-export function sortBasedOnLargest (list) {
+export function sortBasedOnLargest(list) {
   return list.sort(function (a, b) {
     return a.value - b.value
   })
 }
-export function AssignColorForEachItem (list) {
+export function AssignColorForEachItem(list) {
   const colors = ['#32afa9', '#556fb5', '#00818a', '#293462', '#7189bf', '#d45079']
 
   list.forEach((item, index) => {
@@ -391,12 +371,12 @@ export function AssignColorForEachItem (list) {
   return list
 }
 
-export function roundUpToNearestInteger (num) {
+export function roundUpToNearestInteger(num) {
   if (num % 10 === 0) return num + 5
   return (10 - num % 10) + num
 }
 
-export function pushToArrayUniqueBillsForPieBar (arr, obj, category) {
+export function pushToArrayUniqueBillsForPieBar(arr, obj, category) {
   if (arr.length !== 0) {
     const index = arr.findIndex((e) => e.bill.billsClassified.number === obj.billsClassified.number)
     if (index === -1) {
@@ -419,7 +399,7 @@ export function pushToArrayUniqueBillsForPieBar (arr, obj, category) {
     }
   }
 }
-export function pushToArrayUniqueBillsForRadar (arr, obj, category) {
+export function pushToArrayUniqueBillsForRadar(arr, obj, category) {
   if (arr.length !== 0) {
     const index = arr.findIndex((e) => e.bill.billData.number === obj.billData.number)
     if (index === -1) {
@@ -444,7 +424,7 @@ export function pushToArrayUniqueBillsForRadar (arr, obj, category) {
   }
 }
 
-export function createRadarRows (bills, categoryList) {
+export function createRadarRows(bills, categoryList) {
   const rows = []
   categoryList.forEach(category => {
     bills.forEach(bill => {
@@ -456,10 +436,10 @@ export function createRadarRows (bills, categoryList) {
   return rows
 }
 
-export async function fetchRepresentativeId (representative) {
+export async function fetchRepresentativeId(representative) {
   return axios
     .get(
-          `/api/representatives/${representative}/getRepresentativeId`
+      `/api/representatives/${representative}/getRepresentativeId`
     )
     .then(res => {
       if (res.data.success) {
@@ -469,12 +449,10 @@ export async function fetchRepresentativeId (representative) {
     .catch(console.error)
 }
 
-export function usePrevious (value) {
+export function usePrevious(value) {
   const ref = useRef()
   useEffect(() => {
     ref.current = value
   })
   return ref.current
 }
-=======
->>>>>>> Stashed changes

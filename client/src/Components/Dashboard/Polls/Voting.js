@@ -110,8 +110,11 @@ export default function Voting() {
 
     useEffect(() => {
         async function getData() {
+            console.log('INSIDE THE VOTING!')
             const user = JSON.parse(localStorage.getItem('user'))
+            console.log('user ', user)
             const userDetails = await fetchUserData(user.email)
+            console.log('userDetails ', userDetails)
             const postalCode = userDetails.postalCode.substring(0, 3)
             setUserEmail(userDetails.email)
             setStoragePostalCode(postalCode)
