@@ -12,7 +12,7 @@ import ListItem from '@material-ui/core/ListItem'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import PersonIcon from '@material-ui/icons/Person'
-import { fetchRidingCode} from "../Utilities/CommonUsedFunctions";
+import { fetchRidingCode } from '../Utilities/CommonUsedFunctions'
 import axios from 'axios'
 import Box from '@material-ui/core/Box'
 import RidingShapeContainer from '../Sidebar/RidingShape/RidingShapeContainer'
