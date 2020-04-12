@@ -4,13 +4,13 @@ const Firestore = require('@firestore').Firestore
 const Parliaments = require('@parameter').Parliament.Number
 
 class BillLinkFetchBeforeAction extends QueueAction {
-  constructor(manager) {
+  constructor (manager) {
     super()
     this.manager = manager
     this.bills = this.retrieveBills(new Firestore(false))
   }
 
-  retrieveBills(db) {
+  retrieveBills (db) {
     return Parliaments.map(parl => {
       return db.forParliament(parl)
         .Bill()
@@ -35,11 +35,11 @@ class BillLinkFetchBeforeAction extends QueueAction {
     })
   }
 
-  async perform() {
+  async perform () {
     await this.createQueryParams()
   }
 
-  async createQueryParams() {
+  async createQueryParams () {
     this.bills = await Promise.all(this.bills)
     const params = []
     this.manager.params.forEach(param => {

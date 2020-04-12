@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
@@ -99,7 +100,7 @@ export async function fetchUserData(userEmail) {
 
 export default function Voting() {
     const classes = useStyles()
-    const [name, setName] = useState('')
+    const [name] = useState('')
     const [recentBills, setRecentBills] = useState([])
     const [storagePostalCode, setStoragePostalCode] = useState('')
     const [ipPostalCode, setIpPostalCode] = useState('')
@@ -111,41 +112,36 @@ export default function Voting() {
         async function getData() {
             const user = JSON.parse(localStorage.getItem('user'))
             const userDetails = await fetchUserData(user.email)
-            console.log("userDetails ", userDetails.email)
             const postalCode = userDetails.postalCode.substring(0, 3)
             setUserEmail(userDetails.email)
             setStoragePostalCode(postalCode)
             const ipAddress = await getIpPostalCode()
             setIpPostalCode(ipAddress)
             const recentLegislativeActivities = await fetchRecentBills()
-            console.log(" recentLegislativeActivities ", recentLegislativeActivities)
+            console.log(' recentLegislativeActivities ', recentLegislativeActivities)
             const listBills = recentLegislativeActivities[0].data[0]
             setRecentBills(listBills)
+            console.log(listBills[0])
         }
         getData()
     }, [name])
 
     const registerButtonClick = (event, title, description, index) => {
         event.preventDefault()
-        console.log("title ", title)
-        console.log("description ", description)
-        console.log(" vote ", event.currentTarget.value)
-        console.log(" index ", index)
-        console.log(" id ", parseInt(event.currentTarget.id))
         if (event.currentTarget.value === 'yes') {
-            console.log("for value ", event.currentTarget.value)
-            alert("Yes Clicked!!")
+            // eslint-disable-next-line
+            alert('You voted For this bill')
         }
         if (event.currentTarget.value === 'no') {
-            console.log("for value ", event.currentTarget.value)
-            alert("No Clicked!!")
+            // eslint-disable-next-line
+            alert('You voted Against this bill')
         }
 
         registerVote(userEmail, description, title, event.currentTarget.value, index)
     }
 
     async function registerVote(userEmail, description, title, vote, index) {
-        await axios.post(`http://localhost:5000/api/voting/vote`,
+        await axios.post('http://localhost:5000/api/voting/vote',
             {
 
                 user: { email: userEmail },
@@ -155,8 +151,6 @@ export default function Voting() {
             })
             .then(res => {
                 if (res.data.success) {
-                    // const vote = res.data.data
-                    // result = vote
                     setHasNotClicked([...hasNotClicked, index])
                 }
             })
@@ -182,7 +176,7 @@ export default function Voting() {
                                 <CardActions>
                                     <Typography className={classes.details}>
                                         Get more details
-                                    </Typography>
+                  </Typography>
                                     <Typography className={classes.link}>
                                         <Link href='#' onClick={preventDefault} className={classes.link}>
                                             {bills.link}
@@ -193,22 +187,22 @@ export default function Voting() {
                                     {bills.description}
                                 </Typography>
                                 {storagePostalCode === ipPostalCode && bills.description !== ''
-                                    ? <Alert className={classes.alert} severity='error'>Read the bill properly. Once you cast your vote,
-                                    it cannot be undone!
-                                 </Alert> : ''}
+                                    ? <Alert className={classes.alert} severity='error'>
+                                        Read the bill properly. Once you cast your vote, it cannot be undone!
+                    </Alert> : ''}
                                 {storagePostalCode === ipPostalCode && !hasNotClicked.includes(index) && bills.description !== ''
                                     ? <ButtonGroup>
                                         <Button value='yes' id={index} className={classes.for} onClick={(event) => registerButtonClick(event, bills.title, bills.description, index)}>For</Button>
                                         <Button value='no' id={index} className={classes.against} onClick={(event) => registerButtonClick(event, bills.title, bills.description, index)}>Against</Button>
                                     </ButtonGroup> : ''}
-                                {bills.description !== '' && hasNotClicked.includes(index) ?
-                                    <List component="nav" className={classes.root} aria-label="mailbox folders">
+                                {bills.description !== '' && hasNotClicked.includes(index)
+                                    ? <List component='nav' className={classes.root} aria-label='mailbox folders'>
                                         <ListItem>
-                                            <ListItemText primary="For" />
+                                            <ListItemText primary='For' /> {bills.yes}
                                         </ListItem>
                                         <Divider />
                                         <ListItem>
-                                            <ListItemText primary="Against" />
+                                            <ListItemText primary='Against' /> {bills.no}
                                         </ListItem>
                                     </List> : ''}
                             </CardContent>

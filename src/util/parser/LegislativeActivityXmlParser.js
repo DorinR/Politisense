@@ -4,31 +4,31 @@ const LegislativeActivity = require('@model').LegislativeActivity
 
 class _LegislativeActivityXmlParser extends Parser {
   // eslint-disable-next-line no-useless-constructor
-  constructor(xml) {
+  constructor (xml) {
     super(xml)
   }
 
-  static tagName() {
+  static tagName () {
     return 'item'
   }
 
-  static listTagName() {
+  static listTagName () {
     return 'channel'
   }
 
-  get tagName() {
+  get tagName () {
     return _LegislativeActivityXmlParser.tagName()
   }
 
-  get listTagName() {
+  get listTagName () {
     return _LegislativeActivityXmlParser.listTagName()
   }
 
-  generateNewParser(xml) {
+  generateNewParser (xml) {
     return new _LegislativeActivityXmlParser(xml)
   }
 
-  buildJson() {
+  buildJson () {
     const json = {
       number: '',
       title: this.getDataInTag('title').trim(),
@@ -41,49 +41,49 @@ class _LegislativeActivityXmlParser extends Parser {
     return LegislativeActivity.deserialise(json)
   }
 
-  hasData() {
+  hasData () {
     return super.hasData() || this.isTagInXml(this.tagName)
   }
 }
 
 class LegislativeActivityXmlParser extends Parser {
-  constructor(xml) {
+  constructor (xml) {
     super(xml)
     this.parser = new _LegislativeActivityXmlParser(
       this.getXmlInTag(this.tagName)
     )
   }
 
-  static tagName() {
+  static tagName () {
     return 'channel'
   }
 
-  static listTagName() {
+  static listTagName () {
     return 'rss'
   }
 
-  get tagName() {
+  get tagName () {
     return LegislativeActivityXmlParser.tagName()
   }
 
-  get listTagName() {
+  get listTagName () {
     return LegislativeActivityXmlParser.listTagName()
   }
 
-  generateNewParser(xml) {
+  generateNewParser (xml) {
     const parser = new LegislativeActivityXmlParser(xml)
     return parser.parser
   }
 
-  hasData() {
+  hasData () {
     return super.hasData() || this.isTagInXml(this.tagName) || this.parser.hasData()
   }
 
-  getAllFromXml() {
+  getAllFromXml () {
     return this.parser.getAllFromXml()
   }
 
-  buildJson() {
+  buildJson () {
     return this.parser.buildJson()
   }
 }

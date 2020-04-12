@@ -50,8 +50,6 @@ module.exports.vote = async (req, res) => {
   if (await utils.canUserVoteOnActivity(user, activity)) {
     await utils.insertNewVote(user, activity)
     await utils.countVote(user, activity)
-    console.log("activity ", activity)
-    console.log("activity data", activity.data)
     utils.success(res, 'vote successfully registered', {})
   } else {
     utils.error(res, 400, 'cannot vote on this activity or have already voted')

@@ -2,7 +2,7 @@ const Model = require('./Model').Model
 const Condition = require('../../util/Condition').Condition
 
 class LegislativeActivity extends Model {
-  constructor(number, title, link, description, date, no = 0, yes = 0) {
+  constructor (number, title, link, description, date, no = 0, yes = 0) {
     super()
     Condition.parameter(number).isType(String)
     Condition.parameter(title).isType(String)
@@ -21,7 +21,7 @@ class LegislativeActivity extends Model {
     this.no = no
   }
 
-  static deserialise(json) {
+  static deserialise (json) {
     return Model.deserialise(json, new LegislativeActivity('', '', '', '', '', 0, 0))
   }
 }

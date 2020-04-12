@@ -3,12 +3,12 @@ const Actions = require('@action')
 const LegislativeActivityXmlParser = require('@parser').LegislativeActivityXmlParser
 
 class LegislativeActivityFetchJob extends Job {
-  constructor(params, callback) {
+  constructor (params, callback) {
     super(params.url, callback)
     this.params = params
   }
 
-  static create(params, cb) {
+  static create (params, cb) {
     return new LegislativeActivityFetchJob(params, cb)
       .addAction(new Actions.FetchAction(params))
       .addAction(new Actions.ParserWrapperAction(LegislativeActivityXmlParser))
