@@ -67,12 +67,16 @@ exports.activateAccount = (req, res) => {
 }
 
 exports.generateActivationLink = (req, res) => {
-  const token = crypto.randomBytes(20).toString('hex')
   const email = req.body.email
+  let user = {}
   new Firestore().User()
     .where('email', '==', email)
-    .update({ verifyToken: token })
-    .then(result => {
+    .select()
+    .then(snapshot => {
+      snapshot.forEach(doc => {
+        user = doc.data()
+      })
+      const token = user.verifyToken
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -133,32 +137,35 @@ exports.userSignup = async (req, res) => {
           .User()
           .insert(user)
           .then(() => {
-            const transporter = nodemailer.createTransport({
-              service: 'gmail',
-              auth: {
+            if (req.body.type !== 'social') {
+              const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
                   user: `${process.env.EMAIL_ADDRESS}`,
                   pass: `${process.env.EMAIL_PASSWORD}`
+                }
+              })
+              const mailOptions = {
+                from: 'politisense@gmail.com',
+                to: user.email,
+                subject: 'Link to Activate Account',
+                text:
+                          'Please visit the following link to activate your account.\n\n' +
+                          `http://localhost:3000/activate/${token}\n\n` +
+                          'If you did not request this, please ignore this email.\n'
               }
-            })
-            const mailOptions = {
-              from: 'politisense@gmail.com',
-              to: user.email,
-              subject: 'Link to Activate Account',
-              text:
-                      'Please visit the following link to activate your account.\n\n' +
-                      `http://localhost:3000/activate/${token}\n\n` +
-                      'If you did not request this, please ignore this email.\n'
+              transporter.sendMail(mailOptions, (err) => {
+                if (err) {
+                  res.status(400).json({ success: false, message: err })
+                } else {
+                  res.json({
+                    success: true,
+                    data: 'email sent'
+                  })
+                }
+              })
             }
-            transporter.sendMail(mailOptions, (err) => {
-              if (err) {
-                res.status(400).json({ success: false, message: err })
-              } else {
-                res.json({
-                  success: true,
-                  data: 'email sent'
-                })
-              }
-            })
+
             res.json({
               success: true
             })

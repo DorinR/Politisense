@@ -13,7 +13,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
 import axios from 'axios'
-import {checkUserExists} from "../Dashboard/Utilities/CommonUsedFunctions";
+import { checkUserExists } from '../Dashboard/Utilities/CommonUsedFunctions'
 
 function Alert (props) {
   return <MuiAlert elevation={6} variant='filled' {...props} />
