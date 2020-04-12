@@ -105,9 +105,9 @@ export default function Reset () {
       errors.email === ''
     ) {
       checkUserExists(email).then(res => {
-          generateResetLink(email).then(
-            handleClickSuccess()
-          )
+        generateResetLink(email).then(
+          handleClickSuccess()
+        )
       })
     }
     setErrors(errors)

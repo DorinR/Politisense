@@ -1,7 +1,7 @@
 import { Authentication as Auth, Firestore } from '@firestore'
-require('dotenv').config()
 import represent from 'represent'
 import crypto from 'crypto'
+require('dotenv').config()
 const nodemailer = require('nodemailer')
 
 exports.checkIfUserExists = (req, res) => {
@@ -36,36 +36,36 @@ exports.generateResetLink = (req, res) => {
   new Firestore().User()
     .where('email', '==', email)
     .update({ resetPasswordToken: token, resetPasswordExpires: Date.now() + 3600000 })
-      .then( result => {
-          const transporter = nodemailer.createTransport({
-              service: 'gmail',
-              auth: {
-                  user: `${process.env.EMAIL_ADDRESS}`,
-                  pass: `${process.env.EMAIL_PASSWORD}`
-              }
-          })
-          const mailOptions = {
-              from: 'politisense@gmail.com',
-              to: email,
-              subject: 'Link to Password Reset',
-              text:
+    .then(result => {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: `${process.env.EMAIL_ADDRESS}`,
+          pass: `${process.env.EMAIL_PASSWORD}`
+        }
+      })
+      const mailOptions = {
+        from: 'politisense@gmail.com',
+        to: email,
+        subject: 'Link to Password Reset',
+        text:
                   'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                   'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n' +
                   `http://localhost:3000/reset/${token}\n\n` +
                   'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-          }
-          transporter.sendMail(mailOptions, (err) => {
-              if (err) {
-                  res.status(400).json({ success: false, message: err })
-              } else {
-                  res.json({
-                      success: true,
-                      data: 'email sent'
-                  })
-              }
+      }
+      transporter.sendMail(mailOptions, (err) => {
+        if (err) {
+          res.status(400).json({ success: false, message: err })
+        } else {
+          res.json({
+            success: true,
+            data: 'email sent'
           })
-          }
-      )
+        }
+      })
+    }
+    )
 }
 
 exports.checkTokenValid = (req, res) => {
