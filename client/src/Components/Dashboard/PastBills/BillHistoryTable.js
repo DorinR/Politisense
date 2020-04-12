@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
@@ -8,7 +7,18 @@ import TableHead from '@material-ui/core/TableHead'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import BillDetails from './BillDetails'
+import clsx from 'clsx'
 import axios from 'axios'
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Divider,
+  IconButton
+} from '@material-ui/core'
+import DescriptionDialog from '../../MyMP/DescriptionDialog'
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
+import { Transition } from '../General/GeneralDashboard'
 
 const columns = [
   { id: 'number', label: 'Bill Number', minWidth: 120 },
@@ -26,6 +36,7 @@ const columns = [
     minWidth: 170,
     align: 'right'
   }
+
 ]
 
 function createData (number, dateVoted, title, vote, moreInfo) {
@@ -34,19 +45,36 @@ function createData (number, dateVoted, title, vote, moreInfo) {
 
 let rows = []
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     width: '100%'
   },
   tableWrapper: {
-    maxHeight: 450,
+    maxHeight: 410,
     overflow: 'auto'
   },
   container: {
-    margin: '20px',
-    marginTop: '30px'
+  },
+  content: {
+    padding: 0
+  },
+  inner: {
+    minWidth: 800
+  },
+  statusContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  status: {
+    marginRight: theme.spacing(1)
+  },
+  title: {
+    color: '#263238',
+    fontSize: '16px',
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+    fontWeight: 700
   }
-})
+}))
 
 export async function fetchUserRiding (userEmail) {
   let result = ''
@@ -72,20 +100,6 @@ export async function fetchRepresentative (riding) {
       if (res.data.success) {
         const representative = res.data.data.name
         result = representative
-      }
-    })
-    .catch(err => console.log(err))
-  return result
-}
-
-export async function fetchRepresentatieVotes (representative) {
-  const result = []
-  await axios
-    .get(`/api/voteRecord/getVotesByRepresentative/${representative}`)
-    .then(res => {
-      if (res.data.success) {
-        const votes = res.data.data
-        votes.forEach(vote => result.push(vote))
       }
     })
     .catch(err => console.log(err))
@@ -189,10 +203,25 @@ function getRepresentativeVote (billNumber, voteRecords, votesByRepresentative) 
   return vote
 }
 
-export default function BillHistoryTable () {
+export default function BillHistoryTable (props) {
+  const { className, ...rest } = props
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const [open, setOpen] = React.useState(false)
+  const content = {
+    title: 'Bill History Table',
+    body: 'This table shows all the bills for this current parliament, ' +
+        'including bills number,' +
+        " bill's type,date voted, your current MP's vote." +
+        ' You can also find more details by clicking on More Details button '
+  }
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+  const handleClose = () => {
+    setOpen(false)
+  }
 
   useEffect(() => {
     async function getData () {
@@ -215,7 +244,7 @@ export default function BillHistoryTable () {
       generateTableRows(fullBills)
     }
     getData()
-  })
+  }, [])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -228,65 +257,89 @@ export default function BillHistoryTable () {
 
   return (
     <div className={classes.container}>
-      <Paper className={classes.root}>
-        <div className={classes.tableWrapper}>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                {columns.map(column => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(row => {
-                  return (
-                    <TableRow
-                      hover
-                      role='checkbox'
-                      tabIndex={-1}
-                      key={row.code}
-                    >
-                      {columns.map(column => {
-                        const value = row[column.id]
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === 'number'
-                              ? column.format(value)
-                              : value}
-                          </TableCell>
-                        )
-                      })}
-                    </TableRow>
-                  )
-                })}
-            </TableBody>
-          </Table>
-        </div>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component='div'
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          backIconButtonProps={{
-            'aria-label': 'previous page'
+      <Card
+        {...rest}
+        className={clsx(classes.root, className)}
+      >
+        <CardHeader
+          classes={{
+            title: classes.title
           }}
-          nextIconButtonProps={{
-            'aria-label': 'next page'
-          }}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          title='Voting History'
+          action={
+            <IconButton aria-label='settings' onClick={handleClickOpen}>
+              <HelpOutlineIcon />
+            </IconButton>
+          }
         />
-      </Paper>
+        <Divider />
+        <CardContent className={classes.content}>
+          <div className={classes.tableWrapper}>
+            <Table stickyheader='true'>
+              <TableHead>
+                <TableRow>
+                  {columns.map(column => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, i) => {
+                    return (
+                      <TableRow
+                        hover
+                        role='checkbox'
+                        tabIndex={-1}
+                        key={i}
+                      >
+                        {columns.map((column, i) => {
+                          const value = row[column.id]
+                          return (
+                            <TableCell key={i} align={column.align}>
+                              {column.format && typeof value === 'number'
+                                ? column.format(value)
+                                : value}
+                            </TableCell>
+                          )
+                        })}
+                      </TableRow>
+                    )
+                  })}
+              </TableBody>
+            </Table>
+          </div>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component='div'
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            backIconButtonProps={{
+              'aria-label': 'previous page'
+            }}
+            nextIconButtonProps={{
+              'aria-label': 'next page'
+            }}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+        </CardContent>
+        <DescriptionDialog
+          open={open}
+          onClose={handleClose}
+          d3
+          explaination={content}
+          transition={Transition}
+        />
+      </Card>
     </div>
   )
 }

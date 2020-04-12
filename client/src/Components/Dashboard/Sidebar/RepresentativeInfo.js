@@ -11,7 +11,7 @@ import RidingPopulation from './RidingPopulation/RidingPopulation'
 import axios from 'axios'
 import CenteredCircularProgress from '../Utilities/CenteredCircularProgress'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   customCardContent: {
     padding: 5,
     paddingBottom: '5px!important',
@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 export async function fetchRidingCode (riding) {
   return axios
     .get(`/api/ridings/getRidingCode/${encodeURI(riding)}`)
-    .then(res => {
+    .then((res) => {
       if (res.data.success) {
         return res.data.data.code
       }
@@ -57,7 +57,9 @@ export default function RepresentativeInfo (props) {
       <Card>
         <CardContent className={classes.customCardContent}>
           <Typography className={classes.customHeadingText}>NAME</Typography>
-          <span className={classes.customTextFormatting}>{props.representative.name}</span>
+          <span className={classes.customTextFormatting}>
+            {props.representative.name}
+          </span>
         </CardContent>
       </Card>
       <Box m={1} />
@@ -66,7 +68,9 @@ export default function RepresentativeInfo (props) {
           <Typography className={classes.customHeadingText}>
             POLITICAL PARTY
           </Typography>
-          <span className={classes.customTextFormatting}>{props.representative.party}</span>
+          <span className={classes.customTextFormatting}>
+            {props.representative.party}
+          </span>
         </CardContent>
       </Card>
       <Box m={1} />

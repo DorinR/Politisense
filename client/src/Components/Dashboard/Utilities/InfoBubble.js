@@ -33,10 +33,10 @@ export default function InfoBubble (props) {
   }
 
   useEffect(() => {
-    if (props.color) {
+    if (props.color && props.color !== color) {
       setColor(props.color)
     }
-  })
+  }, [props.color, color])
 
   return (
     <span>

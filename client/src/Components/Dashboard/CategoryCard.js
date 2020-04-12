@@ -26,7 +26,7 @@ import { formattingCategory } from './Utilities/CommonUsedFunctions'
 const useStyles = makeStyles(theme => ({
   media: {
     height: 0,
-    paddingTop: '56.25%' // 16:9
+    paddingTop: '56.25%'
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -40,6 +40,9 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     maxHeight: 200
+  },
+  header: {
+    backgroundColor: '#f6f6f6'
   }
 }))
 
@@ -139,6 +142,7 @@ export default function CategoryCard (props) {
       <div>
         <Card className={classes.card}>
           <CardHeader
+            className={classes.header}
             avatar={setCardLogo()}
             action={
               <div>
@@ -146,6 +150,7 @@ export default function CategoryCard (props) {
                   <IndeterminateCheckBoxIcon color='primary' />
                 </IconButton>
               </div>
+
             }
             title={formattingCategory(props.title)}
           />
@@ -163,6 +168,8 @@ export default function CategoryCard (props) {
               ? <BarChartWrapper data={data} categoryType={props.title} />
               : 'title is empty!!'}
             <br />
+            <br />
+            <br />
             <TableContainer className={classes.container}>
               <Table className={classes.table} size='small' aria-label='a dense table'>
                 <TableHead>
@@ -170,18 +177,21 @@ export default function CategoryCard (props) {
                     <TableCell>Bill Name</TableCell>
                     <TableCell align='right'>Vote</TableCell>
                   </TableRow>
-                </TableHead>
-                {(rows && rows.length) > 0 ? (
-                  <TableBody stickyHeader>
-                    {rows.map(row => (
-                      <TableRow key={row.name}>
-                        <TableCell component='th' scope='row'>
-                          <Button color='primary' onClick={() => handleBillClickOpen(row)}><Typography>{row.name}</Typography></Button>
-                        </TableCell>
-                        <TableCell align='right'>{row.vote === 'yea' ? <Typography>Yea</Typography> : <Typography>Nay</Typography>}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>) : ''}
+                </TableHead>{(rows && rows.length) > 0
+                  ? (
+                    <TableBody stickyheader='true'>
+                      {rows.map((row, i) => (
+                        <TableRow key={i}>
+                          <TableCell component='th' scope='row'>
+                            <Button color='primary' onClick={() => handleBillClickOpen(row)}>
+                              <Typography>{row.name}</Typography>
+                            </Button>
+                          </TableCell>
+                          <TableCell align='right'>{row.vote === 'yea'
+                            ? <Typography>Yea</Typography> : <Typography>Nay</Typography>}
+                          </TableCell>
+                        </TableRow>))}
+                    </TableBody>) : null}
               </Table>
             </TableContainer>
           </CardContent>

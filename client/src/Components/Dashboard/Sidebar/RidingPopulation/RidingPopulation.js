@@ -5,7 +5,7 @@ import { LinearProgress } from '@material-ui/core'
 export async function fetchPopulation (riding) {
   return axios
     .get(`/api/ridings/getRidingPopulation/${encodeURI(riding)}`)
-    .then(res => {
+    .then((res) => {
       if (res.data.success) {
         return res.data.data.population
       }
@@ -24,14 +24,16 @@ export default function RidingPopulation (props) {
       }
     }
     getData()
-  })
+  }, [props.riding])
 
   return (
     <span>
       {population ? (
         <span>{population}</span>
       ) : (
-        <span><LinearProgress /></span>
+        <span>
+          <LinearProgress />
+        </span>
       )}
     </span>
   )

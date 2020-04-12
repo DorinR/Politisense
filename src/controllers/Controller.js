@@ -142,6 +142,9 @@ module.exports = {
   getImageData: function (req, res) {
     return RepresentativeController.getImageData(req, res)
   },
+  getAllRolesByRep: function (req, res) {
+    return RepresentativeController.getAllRolesByRep(req, res)
+  },
 
   dataIndex: function (req, res) {
     return DataController.index(req, res)
@@ -155,7 +158,6 @@ module.exports = {
     return RidingController.getRidingByRidingCode(req, res)
   },
 
-  // Map support data
   getMapSupportData: function (req, res) {
     return MapSupportDataController.getMapSupportData(req, res)
   },
