@@ -10,6 +10,12 @@ export async function fetchCategories () {
     })
 }
 
+export async function checkUserExists (email) {
+  return axios.post('/api/users/checkIfUserExists', { email: email }).then(res => {
+    return res
+  })
+}
+
 export function mergeArrays (rawData) {
   let jointArray = []
 

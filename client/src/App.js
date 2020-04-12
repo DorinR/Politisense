@@ -7,13 +7,12 @@ import {
   Redirect,
   Switch
 } from 'react-router-dom'
-import Login from './Components/Auth/Login'
+import Login, {checkUserVerified} from './Components/Auth/Login'
 import SignUp from './Components/Auth/SignUp'
 import Activate from './Components/Auth/Activate'
 import ActivateForm from './Components/Auth/ActivateForm'
 import Navbar from './Components/Navbar'
 import Logout from './Components/Logout'
-import Unverified from './Components/Auth/Unverified'
 import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
 import Questionnaire from './Components/Questionnaire'
 import GeneralDashboard from './Components/Dashboard/General/GeneralDashboard'
@@ -22,6 +21,8 @@ import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
 import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
 import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
 import MapContainer from './Components/Map/MapContainer'
+import PrivateRoute from "./Components/Auth/PrivateRoute";
+import axios from "axios";
 
 const App = () => {
   const LoginContainer = () => (
@@ -51,30 +52,41 @@ const App = () => {
     </div>
   )
 
-  function verified () {
-    return JSON.parse(localStorage.getItem('user')).verified === 'true'
-  }
-
-  function unverified () {
-    if (localStorage.getItem('user')) {
-      return <Unverified />
-    } else {
-      return <Redirect to='/login' />
-    }
-  }
-
-  /* eslint-disable */
-  const PrivateRoute = ({ component: Component, ...rest }) => (
-    <Route
-      {...rest}
-      render={props =>
-        verified() ? (
-          <Component {...props} />
-        ) : (
-          unverified()
-        )}
-    />
-  )
+  //   async function checkUserVerified(user) {
+  //       return await axios
+  //           .post('/api/users/checkUserVerified', user)
+  //           .then(res => {
+  //               return res.data.message === 'verified'
+  //           })
+  //           .catch(err => console.error(err))
+  //   }
+  //
+  // async function verified () {
+  //     checkUserVerified((JSON).parse(localStorage.getItem('user'))).then(res=>{
+  //         console.log(res)
+  //         return res
+  //     })
+  // }
+  //
+  // function unverified () {
+  //   if (localStorage.getItem('user')) {
+  //     return <Unverified />
+  //   } else {
+  //     return <Redirect to='/login' />
+  //   }
+  // }
+  //
+  // const PrivateRoute = ({ component: Component, ...rest }) => (
+  //   <Route
+  //     {...rest}
+  //     render={props =>
+  //         verified() ? (
+  //         <Component {...props} />
+  //       ) : (
+  //         unverified()
+  //       )}
+  //   />
+  // )
 
   return (
     <Router>

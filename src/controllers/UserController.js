@@ -76,8 +76,8 @@ exports.generateActivationLink = (req, res) => {
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'politisenseapp@gmail.com',
-          pass: 'abc123$$$'
+          user: `${process.env.EMAIL_ADDRESS}`,
+          pass: `${process.env.EMAIL_PASSWORD}`
         }
       })
       const mailOptions = {
@@ -136,8 +136,8 @@ exports.userSignup = async (req, res) => {
             const transporter = nodemailer.createTransport({
               service: 'gmail',
               auth: {
-                user: 'politisenseapp@gmail.com',
-                pass: 'abc123$$$'
+                  user: `${process.env.EMAIL_ADDRESS}`,
+                  pass: `${process.env.EMAIL_PASSWORD}`
               }
             })
             const mailOptions = {

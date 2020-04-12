@@ -13,6 +13,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
 import axios from 'axios'
+import {checkUserExists} from "../Dashboard/Utilities/CommonUsedFunctions";
 
 function Alert (props) {
   return <MuiAlert elevation={6} variant='filled' {...props} />
@@ -52,12 +53,6 @@ const useStyles = makeStyles(theme => ({
     color: '#43D0C4'
   }
 }))
-
-export async function checkUserExists (email) {
-  return axios.post('/api/users/checkIfUserExists', { email: email }).then(res => {
-    return res
-  })
-}
 
 export async function generateActivationLink (email) {
   return axios.post('/api/users/generateActivationLink', { email: email }).then(res => {
