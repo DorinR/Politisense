@@ -86,6 +86,17 @@ export async function handleEmailLogin(user) {
   return result
 }
 
+export async function checkUserVerified(user) {
+  let result = ''
+  await axios
+      .post('/api/users/checkUserVerified', user)
+      .then(res => {
+        result = res
+      })
+      .catch(err => console.error(err))
+  return result
+}
+
 export async function handleSocialLogin(social) {
   return await axios
     .post('/api/users/socialLogin', { type: social })
@@ -158,10 +169,17 @@ export default function Login(props) {
       handleEmailLogin(user)
         .then(res => {
           if (res.data.success) {
-            // eslint-disable-next-line no-undef
-            const userToStore = { email: user.email }
-            localStorage.setItem('user', JSON.stringify(userToStore))
-            setAuthenticated(true)
+            checkUserVerified(user).then(res=>{
+              let userToStore = {}
+              if(res.data.message === 'verified'){
+                userToStore = { email: user.email, verified: 'true'}
+              } else{
+                userToStore = { email: user.email, verified: 'false'}
+              }
+              // eslint-disable-next-line no-undef
+              localStorage.setItem('user', JSON.stringify(userToStore))
+              setAuthenticated(true)
+            })
           } else {
             if (res.data.type === 'email') {
               errors.email = res.data.auth

@@ -9,6 +9,7 @@ router.post('/login', controller.userLogin)
 router.post('/socialLogin', controller.socialLogin)
 router.post('/setRiding', controller.setRiding)
 router.post('/checkIfUserExists', controller.checkIfUserExists)
+router.post('/checkUserVerified', controller.checkUserVerified)
 router.post('/activateAccount', controller.activateAccount)
 router.post('/generateActivationLink', controller.generateActivationLink)
 

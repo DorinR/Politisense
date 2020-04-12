@@ -13,6 +13,7 @@ import Activate from './Components/Auth/Activate'
 import ActivateForm from './Components/Auth/ActivateForm'
 import Navbar from './Components/Navbar'
 import Logout from './Components/Logout'
+import Unverified from './Components/Auth/Unverified'
 import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
 import Questionnaire from './Components/Questionnaire'
 import GeneralDashboard from './Components/Dashboard/General/GeneralDashboard'
@@ -28,8 +29,9 @@ const App = () => {
       <Route exact path='/' render={() => <Redirect to='/login' />} />
       <Route path='/signup' component={SignUp} />
       <Route exact path='/activate' component={ActivateForm} />
-      <Route wxact path='/activate/:token' component={Activate} />
+      <Route exact path='/activate/:token' component={Activate} />
       <Route path='/login' component={Login} />
+      <Route path='/logout' component={Logout} />
     </div>
   )
   const DefaultContainer = () => (
@@ -37,7 +39,6 @@ const App = () => {
       <Navbar>
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
-          <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute path='/map' component={MapContainer} />
           <PrivateRoute path='/account' component={UserAccountTabs} />
           <PrivateRoute path='/general' component={GeneralDashboard} />
@@ -50,14 +51,27 @@ const App = () => {
     </div>
   )
 
+  function verified () {
+    return JSON.parse(localStorage.getItem('user')).verified === 'true'
+  }
+
+  function unverified () {
+    if (localStorage.getItem('user')) {
+      return <Unverified />
+    } else {
+      return <Redirect to='/login' />
+    }
+  }
+
+  /* eslint-disable */
   const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route
       {...rest}
       render={props =>
-        localStorage.getItem('user') ? (
+        verified() ? (
           <Component {...props} />
         ) : (
-          <Redirect to='/login' /> // eslint-disable-next-line
+          unverified()
         )}
     />
   )
@@ -66,6 +80,7 @@ const App = () => {
     <Router>
       <Switch>
         <Route exact path='/(login)' component={LoginContainer} />
+        <Route path='/logout' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
         <Route exact path='/activate' component={LoginContainer} />
         <Route exact path='/activate/:token' component={LoginContainer} />

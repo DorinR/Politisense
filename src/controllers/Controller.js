@@ -36,6 +36,9 @@ module.exports = {
   checkIfUserExists: function (req, res) {
     return UserController.checkIfUserExists(req, res)
   },
+  checkUserVerified: function (req, res) {
+    return UserController.checkUserVerified(req, res)
+  },
   activateAccount: function (req, res) {
     return UserController.activateAccount(req, res)
   },

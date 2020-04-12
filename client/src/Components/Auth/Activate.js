@@ -67,7 +67,7 @@ export default function Activate (props) {
 
   useEffect(() => {
     activateAccount(props.match.params.token)
-  }, [])
+  }, [props.match.params.token])
   return (
     <div>
       <div className={classes.root}>
@@ -83,7 +83,7 @@ export default function Activate (props) {
         <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
                     Your account has been verified and activated!
         </Typography>
-        <Link variant='body2' to='/login' align='center'>
+        <Link variant='body2' to='/login' align='center' className={classes.routerLink}>
                     Click here to login
         </Link>
       </Box>

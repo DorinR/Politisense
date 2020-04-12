@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
   pad: {
     marginTop: 10
   },
-  test: {
+  center: {
     textAlign: 'center'
   }
 }))
@@ -279,11 +279,11 @@ export default function HorizontalLinearStepper (props) {
         </Grid>
         <Grid container direction='row' justify='center' alignItems='center'>
           <Grid item xs={3}>
-            <div className={classes.test}>
+            <div className={classes.center}>
               {activeStep === steps.length ? (
                 <div>
                   <Typography className={classes.instructions}>
-                    Registration completed. You're all set!
+                    You're almost done! Once you confirm, we will send you an email with a link to activate your account!
                   </Typography>
                   <div className={classes.actions}>
                     <Button className={classes.button} onClick={handleReset}>

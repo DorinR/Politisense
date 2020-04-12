@@ -54,57 +54,57 @@ exports.getUserInterests = (req, res) => {
 }
 
 exports.activateAccount = (req, res) => {
-    const token = req.body.token
-    new Firestore().User()
-        .where('verifyToken', '==', token)
-        .update({ verified: 'true'})
-        .then( result => {
-            res.json({
-                success: true,
-                data: 'verified'
-            })
-            }).catch(console.error)
+  const token = req.body.token
+  new Firestore().User()
+    .where('verifyToken', '==', token)
+    .update({ verified: 'true' })
+    .then(result => {
+      res.json({
+        success: true,
+        data: 'verified'
+      })
+    }).catch(console.error)
 }
 
 exports.generateActivationLink = (req, res) => {
-    const token = crypto.randomBytes(20).toString('hex')
-    const email = req.body.email
-    new Firestore().User()
-        .where('email', '==', email)
-        .update({ verifyToken: token})
-        .then( result => {
-            const transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: `politisenseapp@gmail.com`,
-                    pass: `abc123$$$`
-                }
-            })
-            const mailOptions = {
-                from: 'politisense@gmail.com',
-                to: email,
-                subject: 'Link to Activate Account',
-                text:
+  const token = crypto.randomBytes(20).toString('hex')
+  const email = req.body.email
+  new Firestore().User()
+    .where('email', '==', email)
+    .update({ verifyToken: token })
+    .then(result => {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'politisenseapp@gmail.com',
+          pass: 'abc123$$$'
+        }
+      })
+      const mailOptions = {
+        from: 'politisense@gmail.com',
+        to: email,
+        subject: 'Link to Activate Account',
+        text:
                     'Please visit the following link to activate your account.\n\n' +
                     `http://localhost:3000/activate/${token}\n\n` +
                     'If you did not request this, please ignore this email.\n'
-            }
-            transporter.sendMail(mailOptions, (err) => {
-                if (err) {
-                    res.status(400).json({ success: false, message: err })
-                } else {
-                    res.json({
-                        success: true,
-                        data: 'email sent'
-                    })
-                }
-            })
-            }
-        )
+      }
+      transporter.sendMail(mailOptions, (err) => {
+        if (err) {
+          res.status(400).json({ success: false, message: err })
+        } else {
+          res.json({
+            success: true,
+            data: 'email sent'
+          })
+        }
+      })
+    }
+    )
 }
 
 exports.userSignup = async (req, res) => {
-    const token = crypto.randomBytes(20).toString('hex')
+  const token = crypto.randomBytes(20).toString('hex')
   const user = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
@@ -130,32 +130,32 @@ exports.userSignup = async (req, res) => {
           .User()
           .insert(user)
           .then(() => {
-              const transporter = nodemailer.createTransport({
-                  service: 'gmail',
-                  auth: {
-                      user: `politisenseapp@gmail.com`,
-                      pass: `abc123$$$`
-                  }
-              })
-              const mailOptions = {
-                  from: 'politisense@gmail.com',
-                  to: user.email,
-                  subject: 'Link to Activate Account',
-                  text:
+            const transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: 'politisenseapp@gmail.com',
+                pass: 'abc123$$$'
+              }
+            })
+            const mailOptions = {
+              from: 'politisense@gmail.com',
+              to: user.email,
+              subject: 'Link to Activate Account',
+              text:
                       'Please visit the following link to activate your account.\n\n' +
                       `http://localhost:3000/activate/${token}\n\n` +
                       'If you did not request this, please ignore this email.\n'
+            }
+            transporter.sendMail(mailOptions, (err) => {
+              if (err) {
+                res.status(400).json({ success: false, message: err })
+              } else {
+                res.json({
+                  success: true,
+                  data: 'email sent'
+                })
               }
-              transporter.sendMail(mailOptions, (err) => {
-                  if (err) {
-                      res.status(400).json({ success: false, message: err })
-                  } else {
-                      res.json({
-                          success: true,
-                          data: 'email sent'
-                      })
-                  }
-              })
+            })
             res.json({
               success: true
             })
@@ -180,6 +180,40 @@ exports.userLogin = (req, res) => {
     .then((json) => {
       console.log(`${json.success ? 'Successful' : 'Unsuccessful'} login for ${credentials.email} with message: ${json.auth}`)
       res.json(json)
+    })
+    .catch(console.error)
+}
+
+exports.checkUserVerified = (req, res) => {
+  const email = req.body.email
+  let user = {}
+  const db = new Firestore()
+  db.User()
+    .where('email', '==', email)
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty || snapshot.size > 1) {
+        res.json({
+          success: false,
+          message: 'doesnt exist',
+          data: {}
+        })
+      } else {
+        snapshot.forEach(doc => {
+          user = doc.data()
+        })
+        if (user.verified) {
+          res.json({
+            success: true,
+            message: 'verified'
+          })
+        } else {
+          res.json({
+            success: true,
+            message: 'unverfied'
+          })
+        }
+      }
     })
     .catch(console.error)
 }
