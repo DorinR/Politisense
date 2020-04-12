@@ -12,22 +12,22 @@ import Slide from '@material-ui/core/Slide'
 import CardContent from '@material-ui/core/CardContent'
 import 'typeface-roboto'
 // eslint-disable-next-line
-import HelpIcon from '@material-ui/icons/Help'
+import HelpIcon from "@material-ui/icons/Help";
 import RepresentativeImage from '../Sidebar/RepresentativeImage'
 import MinisterHelpDialog from './MinisterHelpDialog'
 import TextField from '@material-ui/core/TextField'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import axios from 'axios'
+import { titleCase } from '../Utilities/CommonUsedFunctions'
 import SeatingPlan from './SeatingPlan'
 import CenteredCircularProgress from '../Utilities/CenteredCircularProgress'
-
 const capitalize = require('capitalize')
 
-const Transition = React.forwardRef(function Transition (props, ref) {
+export const Transition = React.forwardRef(function Transition (props, ref) {
   return <Slide direction='up' ref={ref} {...props} />
 })
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   '@global': {
     ul: {
       margin: 0,
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   card: {
-    height: 400
+    height: 350
   },
   search: {
     marginBottom: '30px',
@@ -65,19 +65,19 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'baseline',
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
+    marginRight: theme.spacing(4)
   }
 }))
 
-export function titleCase (str) {
-  const regex = /(^|\b(?!(and?|at?|the|for|to|but|by|of)\b))\w+/g
-  return str.toLowerCase()
-    .replace(regex, s => s[0].toUpperCase() + s.slice(1))
-}
-
 export function getLink (str) {
   const nameArr = str.split(' ')
-  return 'https://pm.gc.ca/en/cabinet/right-honourable-' + nameArr[0] + '-' + nameArr[nameArr.length - 1]
+  return (
+    'https://pm.gc.ca/en/cabinet/right-honourable-' +
+    nameArr[0] +
+    '-' +
+    nameArr[nameArr.length - 1]
+  )
 }
 
 export default function GeneralDashboard () {
@@ -93,7 +93,7 @@ export default function GeneralDashboard () {
   async function getMinisters () {
     return axios
       .get('/api/parliament/getCabinetMinisters')
-      .then(res => {
+      .then((res) => {
         const result = []
         if (res.data.success) {
           for (let i = 0; i < res.data.data.length; i++) {
@@ -114,7 +114,11 @@ export default function GeneralDashboard () {
               linkName += '-' + nameArr[j]
             }
 
-            result[i].description = [res.data.data[i].fromDate, res.data.data[i].riding, 'https://pm.gc.ca/en/cabinet/honourable' + linkName]
+            result[i].description = [
+              res.data.data[i].fromDate,
+              res.data.data[i].riding,
+              'https://pm.gc.ca/en/cabinet/honourable' + linkName
+            ]
 
             result[i].id = res.data.data[i].title
             result[i].data = res.data.data[i]
@@ -122,13 +126,13 @@ export default function GeneralDashboard () {
         }
         return result
       })
-      .catch(err => console.error(err))
+      .catch((err) => console.error(err))
   }
 
   async function getPartyInfo () {
     return axios
       .get('/api/parliament/getPartyInfo')
-      .then(res => {
+      .then((res) => {
         if (res.data.success) {
           const result = []
           let max = 0
@@ -197,12 +201,14 @@ export default function GeneralDashboard () {
     if (filter === '') {
       filteredMin = ministers
     } else {
-      filteredMin = ministers.filter(minister => minister.title.toLowerCase().includes(filter.toLowerCase()))
+      filteredMin = ministers.filter((minister) =>
+        minister.title.toLowerCase().includes(filter.toLowerCase())
+      )
     }
     setFilteredMinisters(filteredMin)
   }, [filter, ministers])
 
-  const handleFilterChange = e => {
+  const handleFilterChange = (e) => {
     setFilter(e.target.value)
   }
 
@@ -221,14 +227,17 @@ export default function GeneralDashboard () {
         <div>
           <CssBaseline />
           <Container maxWidth='sm' component='main' className={classes.content}>
-            <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
-            Your Government
+            <Typography
+              component='h1'
+              variant='h2'
+              align='center'
+              color='textPrimary'
+              gutterBottom
+            >
+              Your Government
             </Typography>
           </Container>
-          <SeatingPlan
-            partiesToUse={parties}
-            classes={classes}
-          />
+          <SeatingPlan partiesToUse={parties} classes={classes} />
           <Container className={classes.prime}>
             <Card>
               <CardHeader
@@ -244,14 +253,30 @@ export default function GeneralDashboard () {
                     <RepresentativeImage representative={primeMinister} />
                   </div>
                   <ul>
-                    <Typography component='li' variant='subtitle1' align='center'>
-                      <span style={{ fontWeight: 'bold' }}>Year Elected</span> {primeMinister.fromDate}
+                    <Typography
+                      component='li'
+                      variant='subtitle1'
+                      align='center'
+                    >
+                      <span style={{ fontWeight: 'bold' }}>Year Elected</span>{' '}
+                      {primeMinister.fromDate}
                     </Typography>
-                    <Typography component='li' variant='subtitle1' align='center'>
-                      <span style={{ fontWeight: 'bold' }}>Riding</span> {titleCase(primeMinister.riding)}
+                    <Typography
+                      component='li'
+                      variant='subtitle1'
+                      align='center'
+                    >
+                      <span style={{ fontWeight: 'bold' }}>Riding</span>{' '}
+                      {titleCase(primeMinister.riding)}
                     </Typography>
-                    <Typography component='li' variant='subtitle1' align='center'>
-                      <Link href={getLink(primeMinister.name)}>More information</Link>
+                    <Typography
+                      component='li'
+                      variant='subtitle1'
+                      align='center'
+                    >
+                      <Link href={getLink(primeMinister.name)}>
+                        More information
+                      </Link>
                     </Typography>
                   </ul>
                 </CardContent>
@@ -265,10 +290,16 @@ export default function GeneralDashboard () {
             </Card>
           </Container>
           <Container>
-            <TextField label='Filter by Ministry' className={classes.search} variant='outlined' onChange={handleFilterChange} color='primary' />
+            <TextField
+              label='Filter by Ministry'
+              className={classes.search}
+              variant='outlined'
+              onChange={handleFilterChange}
+              color='primary'
+            />
             <Grid container spacing={5} alignItems='flex-end'>
-              {filteredMinisters && filteredMinisters.length > 0
-                ? filteredMinisters.map(minister => (
+              {filteredMinisters && filteredMinisters.length > 0 ? (
+                filteredMinisters.map((minister) => (
                   <Grid item key={minister.title} xs={4}>
                     <Card className={classes.card}>
                       <CardHeader
@@ -276,7 +307,7 @@ export default function GeneralDashboard () {
                         subheader={titleCase(minister.title)}
                         titleTypographyProps={{ align: 'center' }}
                         subheaderTypographyProps={{ align: 'center' }}
-                        action=<HelpIcon style={{ cursor: 'pointer' }} onClick={() => handleMinisterClickOpen(titleCase(minister.title))} />
+                        action={<HelpIcon style={{ cursor: 'pointer' }} onClick={() => handleMinisterClickOpen(titleCase(minister.title))} />}
                         className={classes.cardHeader}
                       />
                       <CardContent>
@@ -284,28 +315,59 @@ export default function GeneralDashboard () {
                           <RepresentativeImage representative={minister.data} />
                         </div>
                         <ul>
-                          <Typography component='li' variant='subtitle1' align='center'>
-                            <span style={{ fontWeight: 'bold' }}>Minister Since</span> {minister.description[0]}
+                          <Typography
+                            component='li'
+                            variant='subtitle1'
+                            align='center'
+                          >
+                            <span style={{ fontWeight: 'bold' }}>
+                              Minister Since
+                            </span>{' '}
+                            {minister.description[0]}
                           </Typography>
-                          <Typography component='li' variant='subtitle1' align='center'>
-                            <span style={{ fontWeight: 'bold' }}>Riding</span> {capitalize.words(minister.description[1])}
+                          <Typography
+                            component='li'
+                            variant='subtitle1'
+                            align='center'
+                          >
+                            <span style={{ fontWeight: 'bold' }}>Riding</span>{' '}
+                            {capitalize.words(minister.description[1])}
                           </Typography>
-                          <Typography component='li' variant='subtitle1' align='center'>
-                            <Link href={minister.description[2]}>More information</Link>
+                          <Typography
+                            component='li'
+                            variant='subtitle1'
+                            align='center'
+                          >
+                            <Link href={minister.description[2]}>
+                              More information
+                            </Link>
                           </Typography>
                         </ul>
                       </CardContent>
                     </Card>
                   </Grid>
-                )) : (
-                  <Grid item xs={4}>
-                    <Typography variant='h5' component='h2'>No Results Found</Typography>
-                  </Grid>
-                )}
+                ))
+              ) : (
+                <Grid item xs={4}>
+                  <Typography variant='h5' component='h2'>
+                    No Results Found
+                  </Typography>
+                </Grid>
+              )}
             </Grid>
           </Container>
-        </div>) : <div><CenteredCircularProgress /></div>}
-      <MinisterHelpDialog ministry={currentMinistry} open={ministerOpen} onClose={handleMinisterClose} transition={Transition} />
+        </div>
+      ) : (
+        <div>
+          <CenteredCircularProgress />
+        </div>
+      )}
+      <MinisterHelpDialog
+        ministry={currentMinistry}
+        open={ministerOpen}
+        onClose={handleMinisterClose}
+        transition={Transition}
+      />
     </Grid>
   )
 }

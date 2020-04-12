@@ -13,8 +13,17 @@ function fetchAverageExpenditures (parliament = 43, year = 2019) {
         docs.push(doc.data())
       })
       return docs
-        .filter(doc => { return doc.parent === '' })
-        .map(doc => { return doc.amount })
+        .filter(doc => {
+          return doc.parent === ''
+        })
+        .sort((a, b) => {
+          if (a.category < b.category) return -1
+          if (a.category > b.category) return 1
+          return 0
+        })
+        .map(doc => {
+          return { amount: Math.round(doc.amount), category: (doc.category).substr(2) }
+        })
     })
     .catch(console.error)
 }
@@ -28,8 +37,12 @@ function fetchMemberExpenditures (member, parliament = 43, year = 2019) {
     .perform()
     .then(results => {
       return results
-        .filter(result => { return result.parent === '' })
-        .map(doc => { return doc.amount })
+        .filter(result => {
+          return result.parent === ''
+        })
+        .map(doc => {
+          return Math.round(doc.amount)
+        })
     })
     .catch(console.error)
 }
@@ -41,23 +54,31 @@ exports.budgetData = async (req, res) => {
       success: false,
       data: {
         mp: [],
-        avg: []
+        avg: [],
+        labels: []
       }
     })
     return
   }
-
   const [average, member] = await Promise.all([
     fetchAverageExpenditures(),
     fetchMemberExpenditures(representativeId)
   ])
 
   if (member && average) {
+    const labels = average.map(item => {
+      if (item.category.includes('Employees')) {
+        return item.category.substr(0, 9)
+      }
+      return item.category
+    })
+    const avgCategoriesValues = average.map(item => item.amount)
     res.status(200).json({
       success: true,
       data: {
         mp: member,
-        avg: average
+        avg: avgCategoriesValues,
+        labels: labels
       }
     })
   } else {
@@ -65,7 +86,8 @@ exports.budgetData = async (req, res) => {
       success: false,
       data: {
         mp: [],
-        avg: []
+        avg: [],
+        labels: []
       }
     })
   }

@@ -148,7 +148,9 @@ class Firestore {
   }
 
   Vote () {
-    const collection = this.legacy ? 'votes' : `${this.parliament}/voters/voter`
+    const collection = this.legacy
+      ? 'votes'
+      : `${this.parliament}/voters/voter`
     return this.createReference(collection)
   }
 

@@ -12,7 +12,7 @@ import ListItem from '@material-ui/core/ListItem'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import PersonIcon from '@material-ui/icons/Person'
-import { fetchRidingCode } from '../Sidebar/RepresentativeInfo'
+import { fetchRidingCode} from "../Utilities/CommonUsedFunctions";
 import axios from 'axios'
 import Box from '@material-ui/core/Box'
 import RidingShapeContainer from '../Sidebar/RidingShape/RidingShapeContainer'
@@ -100,7 +100,6 @@ export default function RepresentativeCard(props) {
       getData(name)
     }
   }, [name, riding, politicalParty, yearElected, issuedBills])
-
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} align='center'>

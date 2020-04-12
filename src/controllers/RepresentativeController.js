@@ -1,4 +1,4 @@
-import { mergeArrays } from '../../client/src/Components/Dashboard/Utilities/CommonUsedFunctions'
+import { mergeArrays, checkIsEmptyRawData } from '../../client/src/Components/Dashboard/Utilities/CommonUsedFunctions'
 const Firestore = require('@firestore').Firestore
 
 exports.getImageData = async (req, res) => {
@@ -49,7 +49,7 @@ exports.getRepresentativeByRiding = (req, res) => {
     .catch(console.error)
 }
 async function getAllRepsForEachParliament (parliamentNo) {
-  const db = new Firestore(false).forParliament(parliamentNo)
+  const db = new Firestore().forParliament(parliamentNo)
   const politicians = []
   await db.Politician()
     .select()
@@ -176,4 +176,82 @@ exports.getRepresentativeId = async (req, res) => {
         message: err
       })
     })
+}
+
+async function fetchRolesByParliament (parliamentNo, repName) {
+  const id = await fetchIDbyRepName(parliamentNo, repName)
+  if (id) {
+    const roles = await fetchrolesbyID(parliamentNo, id)
+    return roles
+  }
+  return []
+}
+
+async function fetchIDbyRepName (parliamentNo, repName) {
+  const db = new Firestore().forParliament(parliamentNo)
+  let id = null
+  await db.Politician()
+    .where('name', '==', repName)
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        return 'nothing there 1'
+      }
+      snapshot.forEach(doc => {
+        id = doc.id
+      })
+
+      return id
+    })
+  return id
+}
+
+async function fetchrolesbyID (parliamentNo, id) {
+  const roles = []
+  return new Firestore()
+    .forParliament(parliamentNo)
+    .Role()
+    .where('politician', '==', id)
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        return []
+      }
+      snapshot.forEach(doc => {
+        const { fromDate, group, title, toDate, type } = doc.data()
+        const test = {
+          fromDate: fromDate,
+          group: group,
+          title: title,
+          toDate: toDate,
+          type: type
+        }
+        roles.push(test)
+      })
+      return roles
+    })
+    .catch(err => {
+      console.log('Error getting documents', err)
+    })
+}
+
+exports.getAllRolesByRep = async (req, res) => {
+  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
+  const rawData = await Promise.all(
+    parliaments.map(parliament => {
+      return fetchRolesByParliament(parliament, req.params.repName)
+    })
+  )
+  if (checkIsEmptyRawData(rawData)) {
+    res.status(200).json({
+      success: true,
+      data: rawData
+    })
+  } else {
+    res.status(404)
+      .json({
+        success: false,
+        message: 'no data found'
+      })
+  }
 }
