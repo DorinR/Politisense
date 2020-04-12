@@ -29,28 +29,30 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchPastRepresentativeId(representative, data) {
+async function fetchPastRepresentativeId (representative, data) {
+  console.log('INSIDE FETCH REP ID')
   const res = await axios.post(`/api/representatives/${representative}/getPastRepresentativeId`, data)
+  console.log('res.data.data ', res.data.data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeVotes(member, data) {
+async function fetchPastRepresentativeVotes (member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativeVotes`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativePairedVotes(member, data) {
+async function fetchPastRepresentativePairedVotes (member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativePairedVotes`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeSpending(member, data) {
+async function fetchPastRepresentativeSpending (member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
   console.log(res.data.data)
   return res.data.data
 }
 
-function getStartYear(parlSession) {
+function getStartYear (parlSession) {
   switch (parlSession) {
     case 43:
       return 2019
@@ -71,32 +73,37 @@ function getStartYear(parlSession) {
   }
 }
 
-export default function RepresentativeCard() {
+export default function RepresentativeCard () {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
   const [imageUrl, setImageUrl] = useState('')
-  const [start, setStart] = useState('')
+  const [startDate, setStartDate] = useState('')
   const [nbBills, setNbBills] = useState(0)
   const [nbPairedBills, setNbPairedBills] = useState(0)
   const [partyImageUrl, setPartyImageUrl] = useState('')
   const [totalExpensesYear, setTotalExpensesYear] = useState(0)
-  const [startTerm, setStartTerm] = useState(0)
 
-  const updateNameFromSwitcher = newName => {
-    setStart(newName.start)
-    setName(newName.name)
-    setImageUrl(newName.imageUrl)
-    setPoliticalParty(newName.party)
+  const updateNameFromSwitcher = mpObject => {
+    setStartDate(mpObject.start)
+    setName(mpObject.name)
+    setImageUrl(mpObject.imageUrl)
+    setPoliticalParty(mpObject.party)
+    console.log('mpObject ', mpObject)
   }
 
   useEffect(() => {
-    async function getData() {
-      const data = { start: start }
+    async function getData () {
+      console.log('NEW MP LOOKUP')
+      const data = { start: startDate }
+      console.log('data ', data)
       const member = await fetchPastRepresentativeId(name, data)
+      console.log('member ', member)
       const partyData = await getPartyData(politicalParty)
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, data)
+      console.log('pastRepresentativeVotes ', pastRepresentativeVotes)
       const parliamentSession = pastRepresentativeVotes[0].parliament
+      console.log('parliamentSession ', parliamentSession)
       const startYear = getStartYear(parliamentSession)
       const parliamentData = { parliament: parliamentSession, year: startYear }
       const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, data)
@@ -108,7 +115,6 @@ export default function RepresentativeCard() {
       setPartyImageUrl(partyData.imageUrl)
       setNbBills(totalBills)
       setNbPairedBills(totalPairedBills)
-      setStartTerm(startYear)
     }
     if (name) {
       getData()
@@ -117,9 +123,11 @@ export default function RepresentativeCard() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} align='center' style={{
-        height: 115
-      }}>
+      <Grid
+        item xs={12} align='center' style={{
+          height: 115
+        }}
+      >
         <PastMPSwitcher functionUpdate={updateNameFromSwitcher} />
       </Grid>
       <Grid item xs={12} align='center'>
@@ -172,10 +180,11 @@ export default function RepresentativeCard() {
                 <ListItemText>{capitalizedName(politicalParty)}</ListItemText>
               </ListItem>
               <Box m={2} />
-              <DividerBlock text='Spending'
+              <DividerBlock
+                text='Spending'
                 color={getPartyColor(politicalParty).backgroundColor}
                 infoBubbleTitle='Cumulative spending'
-                infoBubbleText={'Only available data is displayed'}
+                infoBubbleText='Only available data is displayed'
                 infoBubbleColor='white'
               />
               <Box m={2} />

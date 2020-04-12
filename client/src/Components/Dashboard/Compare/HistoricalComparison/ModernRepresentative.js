@@ -29,7 +29,7 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchCurrentRepresentative(riding) {
+async function fetchCurrentRepresentative (riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
@@ -41,7 +41,7 @@ async function fetchCurrentRepresentative(riding) {
     .catch(console.error)
 }
 
-async function fetchRepresentativeId(representative) {
+async function fetchRepresentativeId (representative) {
   return axios
     .get(`/api/representatives/${representative}/getRepresentativeId`)
     .then(res => {
@@ -52,13 +52,12 @@ async function fetchRepresentativeId(representative) {
     .catch(console.error)
 }
 
-async function fetchRepresentativeSpending(member, data) {
+async function fetchRepresentativeSpending (member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
-  console.log(res.data.data)
   return res.data.data
 }
 
-export default function ModernRepresentative() {
+export default function ModernRepresentative () {
   const classes = useStyles()
   const [name] = useState('')
   const [totalBills, setTotalBills] = useState(0)
@@ -70,14 +69,14 @@ export default function ModernRepresentative() {
   const [spending, setSpending] = useState(0)
 
   useEffect(() => {
-    async function getIssuedBillsByHead(head) {
+    async function getIssuedBillsByHead (head) {
       const res = await axios.get(
         `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
       )
       return res.data.data
     }
 
-    async function getData(mp) {
+    async function getData (mp) {
       // eslint-disable-next-line
       const user = JSON.parse(localStorage.getItem('user'))
       const riding = await fetchUserRiding(user.email)
@@ -85,7 +84,6 @@ export default function ModernRepresentative() {
       const member = await fetchRepresentativeId(currentRepresentative.name)
       const parliamentData = { parliament: 43 }
       const spending = await fetchRepresentativeSpending(member, parliamentData)
-      console.log("spending  ", spending)
       setSpending(spending)
       const bills = await getAllBillsByHead(currentRepresentative.name)
       const total = calculateTotalVotesBills(bills)
@@ -150,10 +148,11 @@ export default function ModernRepresentative() {
                 <ListItemText>{capitalizedName(politicalParty)}</ListItemText>
               </ListItem>
               <Box m={2} />
-              <DividerBlock text='Spending'
+              <DividerBlock
+                text='Spending'
                 color={getPartyColor(politicalParty).backgroundColor}
                 infoBubbleTitle='Cumulative spending to this point in time'
-                infoBubbleText={'Only available data is displayed'}
+                infoBubbleText='Only available data is displayed'
                 infoBubbleColor='white'
               />
               <Box m={2} />

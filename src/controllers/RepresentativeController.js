@@ -49,7 +49,7 @@ exports.getRepresentativeByRiding = (req, res) => {
     })
     .catch(console.error)
 }
-async function getAllRepsForEachParliament(parliamentNo) {
+async function getAllRepsForEachParliament (parliamentNo) {
   const db = new Firestore(false).forParliament(parliamentNo)
   const politicians = []
   await db.Politician()
@@ -217,6 +217,7 @@ exports.getRepresentativeId = async (req, res) => {
 }
 
 exports.getPastRepresentativeId = async (req, res) => {
+  console.log('start mandate of MP ', req.body.start)
   const parliaments = [36, 37, 38, 39, 40, 41, 42]
   const db = new Firestore()
   parliaments.map(parl => {
@@ -241,7 +242,7 @@ exports.getPastRepresentativeId = async (req, res) => {
 }
 
 exports.getParliamentNumber = async (req, res) => {
-  console.log("from frontend member Parl:", req.params.member)
+  console.log('from frontend member Parl:', req.params.member)
   const parliaments = [36, 37, 38, 39, 40, 41, 42]
   const db = new Firestore()
   parliaments.map(parl => {
@@ -253,7 +254,7 @@ exports.getParliamentNumber = async (req, res) => {
       .then(snapshot => {
         const docs = []
         snapshot.forEach(doc => {
-          console.log("parl:", parl)
+          console.log('parl:', parl)
           docs.push({
             data: doc.data(),
             parliament: parl
@@ -278,4 +279,3 @@ exports.getParliamentNumber = async (req, res) => {
       })
     })
 }
-
