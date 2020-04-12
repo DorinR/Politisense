@@ -118,10 +118,8 @@ export default function Voting() {
             const ipAddress = await getIpPostalCode()
             setIpPostalCode(ipAddress)
             const recentLegislativeActivities = await fetchRecentBills()
-            console.log(' recentLegislativeActivities ', recentLegislativeActivities)
             const listBills = recentLegislativeActivities[0].data[0]
             setRecentBills(listBills)
-            console.log(listBills[0])
         }
         getData()
     }, [name])
@@ -137,15 +135,15 @@ export default function Voting() {
             alert('You voted Against this bill')
         }
 
-        registerVote(userEmail, description, title, event.currentTarget.value, index)
+        registerVote(userEmail, description, title, event.currentTarget.value, index, number, link)
     }
 
-    async function registerVote(userEmail, description, title, vote, index) {
+    async function registerVote(userEmail, description, title, vote, index, number, link) {
         await axios.post('http://localhost:5000/api/voting/vote',
             {
 
                 user: { email: userEmail },
-                activity: { description: description, title: title },
+                activity: { description: description, title: title, number: number, link: link },
                 vote: vote
 
             })
@@ -192,8 +190,8 @@ export default function Voting() {
                     </Alert> : ''}
                                 {storagePostalCode === ipPostalCode && !hasNotClicked.includes(index) && bills.description !== ''
                                     ? <ButtonGroup>
-                                        <Button value='yes' id={index} className={classes.for} onClick={(event) => registerButtonClick(event, bills.title, bills.description, index)}>For</Button>
-                                        <Button value='no' id={index} className={classes.against} onClick={(event) => registerButtonClick(event, bills.title, bills.description, index)}>Against</Button>
+                                        <Button value='yes' id={index} className={classes.for} onClick={(event) => registerButtonClick(event, bills.title, bills.description, index, bills.number, bills.link)}>For</Button>
+                                        <Button value='no' id={index} className={classes.against} onClick={(event) => registerButtonClick(event, bills.title, bills.description, index, bills.number, bills.link)}>Against</Button>
                                     </ButtonGroup> : ''}
                                 {bills.description !== '' && hasNotClicked.includes(index)
                                     ? <List component='nav' className={classes.root} aria-label='mailbox folders'>
