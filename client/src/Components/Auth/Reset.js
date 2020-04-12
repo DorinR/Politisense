@@ -72,21 +72,9 @@ export default function Reset () {
     email: ''
   })
   const [openSuccess, setOpenSuccess] = useState(false)
-  const [openError, setOpenError] = useState(false)
 
   const handleClickSuccess = () => {
     setOpenSuccess(true)
-  }
-
-  const handleClickError = () => {
-    setOpenError(true)
-  }
-
-  const handleCloseError = (event, reason) => {
-    if (reason === 'clickaway') {
-      return
-    }
-    setOpenError(false)
   }
 
   const handleCloseSuccess = (event, reason) => {
@@ -117,13 +105,9 @@ export default function Reset () {
       errors.email === ''
     ) {
       checkUserExists(email).then(res => {
-        if (res.data.message === 'user exists') {
           generateResetLink(email).then(
             handleClickSuccess()
           )
-        } else {
-          handleClickError()
-        }
       })
     }
     setErrors(errors)
@@ -144,11 +128,6 @@ export default function Reset () {
         <Snackbar open={openSuccess} autoHideDuration={6000} onClose={handleCloseSuccess}>
           <Alert onClose={handleCloseSuccess} severity='success'>
                         Password reset link has been sent
-          </Alert>
-        </Snackbar>
-        <Snackbar open={openError} autoHideDuration={6000} onClose={handleCloseError}>
-          <Alert onClose={handleCloseError} severity='error'>
-                        Invalid email
           </Alert>
         </Snackbar>
         <div className={classes.paper}>
