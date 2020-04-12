@@ -130,9 +130,13 @@ async function politicianRoles (req, res) {
 }
 
 async function politicianFinancials (req, res) {
+<<<<<<< Updated upstream
   const db = new Firestore()
     .forParliament(req.params.parliament)
     .atYear(req.body.year)
+=======
+  const db = new Firestore(true).forParliament(req.params.parliament)
+>>>>>>> Stashed changes
   const politicians = db.Politician()
   const financials = db.FinancialRecord()
 
@@ -219,8 +223,12 @@ const UpdateDirector = {
 
   Politicians: {
     records: Parameters.Politician,
+<<<<<<< Updated upstream
     roles: Parameters.Role,
     finances: Parameters.Finance
+=======
+    roles: Parameters.Role
+>>>>>>> Stashed changes
   },
 
   Parties: {

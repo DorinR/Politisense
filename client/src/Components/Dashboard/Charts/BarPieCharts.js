@@ -243,7 +243,11 @@ function dashboard (element, data) {
   const table = legend(totalFreqForAllStates) // create the legend.
 }
 export default class BarPieChart {
+<<<<<<< Updated upstream
   constructor (element, data, categories, body) {
+=======
+  constructor (element, data, categories) {
+>>>>>>> Stashed changes
     createData(categories, data).then(results => {
       dashboard(element, results, body)
     })

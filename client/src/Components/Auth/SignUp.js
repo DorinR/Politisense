@@ -47,12 +47,20 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export async function signupAPICall (user) {
+<<<<<<< Updated upstream
   return axios
     .post('/api/users/checkIfUserExists', user)
     .then(res => {
       return !res.data.success
     })
     .catch(console.error)
+=======
+  let result = ''
+  await axios.post('/api/users/checkIfUserExists', user).then(res => {
+    result = res
+  })
+  return result
+>>>>>>> Stashed changes
 }
 
 export default function SignUp (props) {
@@ -109,6 +117,7 @@ export default function SignUp (props) {
     errors.passwordConfirm = !(user.password === passwordConfirm)
       ? 'Passwords do not match, please re-enter confirmation password'
       : ''
+<<<<<<< Updated upstream
     let registered = false
     if (errors.firstname === '' && errors.lastname === '' && errors.email === '' && errors.password === '' && errors.passwordConfirm === '') {
       errors = {}
@@ -127,6 +136,22 @@ export default function SignUp (props) {
         pathname: '/question',
         state: {
           user: user
+=======
+    if (
+      errors.firstname === '' &&
+      errors.lastname === '' &&
+      errors.email === '' &&
+      errors.password === '' &&
+      errors.passwordConfirm === ''
+    ) {
+      signupAPICall(user).then(res => {
+        if (res.data.success === false) {
+          setRegistered(true)
+        } else {
+          errors.email = 'Already taken'
+          setErrors(errors)
+          return <Redirect to={{ pathname: '/signup', state: { user: '' } }} />
+>>>>>>> Stashed changes
         }
       })
     }

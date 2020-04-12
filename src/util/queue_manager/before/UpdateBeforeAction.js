@@ -14,7 +14,11 @@ class UpdateBeforeAction extends QueueAction {
   }
 
   async perform () {
+<<<<<<< Updated upstream
     let currentDepth = -1
+=======
+    let currentDepth
+>>>>>>> Stashed changes
     let index = 0
     this.manager.params = []
     console.log(`INFO: ${UpdateBeforeAction.name}: structuring ${this.updates.length} requested updates`)
@@ -23,7 +27,11 @@ class UpdateBeforeAction extends QueueAction {
       const params = UpdateBeforeAction.createParams(update)
       this.manager.params.push(params)
       const job = new Jobs.Job(params, this.manager.requeueCallback.bind(this.manager))
+<<<<<<< Updated upstream
       if (currentDepth === -1) {
+=======
+      if (!currentDepth) {
+>>>>>>> Stashed changes
         this.manager.updateJobQueue.push([])
         currentDepth = depth
       }
@@ -35,6 +43,7 @@ class UpdateBeforeAction extends QueueAction {
       if (depth === currentDepth) {
         UpdateBeforeAction.addActions(job, params, vertex)
       }
+<<<<<<< Updated upstream
       let smallerParams
       if (vertex.type.name === 'RoleScraper' || vertex.type.name === 'VoteParticipantScraper') {
         smallerParams = params.parliaments.map(parliament => {
@@ -71,6 +80,9 @@ class UpdateBeforeAction extends QueueAction {
       } else {
         this.manager.updateJobQueue[index].push(job)
       }
+=======
+      this.manager.updateJobQueue[index].push(job)
+>>>>>>> Stashed changes
     })
     console.log(`INFO: ${UpdateBeforeAction.name}: structured updates into ${this.manager.updateJobQueue.length} phases`)
   }
@@ -79,8 +91,12 @@ class UpdateBeforeAction extends QueueAction {
     const params = {
       parliaments: Object.assign(Parameters.Parliament.Number),
       sessions: Object.assign(Parameters.Parliament.Session),
+<<<<<<< Updated upstream
       parliamentSessions: Object.assign(Parameters.Parliament.Session),
       years: Object.values(Parameters.ExpenditureParameters.Year)
+=======
+      parliamentSessions: 'all'
+>>>>>>> Stashed changes
     }
     params.url = vertex.data.url
     params.collection = vertex.data.collection

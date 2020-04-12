@@ -90,7 +90,11 @@ class UpdateDependencyGraph extends Graph {
         this.addEdge(v, RegisteredVertices.classifications)
       } else if (v.type === Scrapers.PoliticianScraper.PoliticianScraper) {
         this.addEdge(v, RegisteredVertices.roles)
+<<<<<<< Updated upstream
         this.addEdge(v, RegisteredVertices.finances)
+=======
+        // this.addEdge(v, RegisteredVertices.finances)
+>>>>>>> Stashed changes
         this.addEdge(v, RegisteredVertices.voters)
         // this.addEdge(v, RegisteredVertices.parties)
       } else if (v.type === Scrapers.VoteScraper.VoteScraper) {

@@ -15,7 +15,11 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import List from '@material-ui/core/List'
+<<<<<<< Updated upstream
 import { fetchCategories, capitalizedName, fetchUserRiding } from './Utilities/CommonUsedFunctions'
+=======
+import { fetchCategories, capitalizedName } from './Utilities/CommonUsedFunctions'
+>>>>>>> Stashed changes
 
 const useStyles = makeStyles({
   card: {
@@ -349,7 +353,11 @@ function createDataSetRadar(categories, data) {
 
   return [dataSetRadar, maxValue]
 }
+<<<<<<< Updated upstream
  function getPoliticalPartyFromSponsor(sponsors){
+=======
+export function getPoliticalPartyFromSponsor(sponsors){
+>>>>>>> Stashed changes
   let politicalParties = [...new Set(sponsors.map(item => item.party))]
   return politicalParties
 }

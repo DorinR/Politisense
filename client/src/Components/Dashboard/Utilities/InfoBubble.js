@@ -33,10 +33,17 @@ export default function InfoBubble (props) {
   }
 
   useEffect(() => {
+<<<<<<< Updated upstream
     if (props.color && props.color !== color) {
       setColor(props.color)
     }
   }, [props.color, color])
+=======
+    if (props.color) {
+      setColor(props.color)
+    }
+  })
+>>>>>>> Stashed changes
 
   return (
     <span>

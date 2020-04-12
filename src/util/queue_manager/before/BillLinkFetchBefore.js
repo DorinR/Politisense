@@ -7,7 +7,11 @@ class BillLinkFetchBeforeAction extends QueueAction {
   constructor (manager) {
     super()
     this.manager = manager
+<<<<<<< Updated upstream
     this.bills = this.retrieveBills(new Firestore())
+=======
+    this.bills = this.retrieveBills(new Firestore(false))
+>>>>>>> Stashed changes
   }
 
   retrieveBills (db) {

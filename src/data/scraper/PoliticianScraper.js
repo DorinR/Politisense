@@ -38,7 +38,11 @@ class PoliticianScraper extends Components.QueueManager {
 
   setParliaments (parliaments) {
     if (typeof parliaments === 'undefined' ||
+<<<<<<< Updated upstream
        (typeof parliaments === typeof '' && parliaments.toLowerCase().includes('all'))) {
+=======
+      (typeof parliaments === typeof '' && parliaments.toLowerCase().includes('all'))) {
+>>>>>>> Stashed changes
       this.parliaments.push('all')
     } else if (typeof parliaments === typeof []) {
       this.parliaments = parliaments.filter(parliament => {
@@ -49,7 +53,7 @@ class PoliticianScraper extends Components.QueueManager {
 
   setCaucuses (caucuses) {
     if (typeof caucuses === 'undefined' ||
-       (typeof caucuses === typeof ' ' && caucuses.toLowerCase().includes('all'))) {
+      (typeof caucuses === typeof ' ' && caucuses.toLowerCase().includes('all'))) {
       this.caucuses.push('all')
     } else if (typeof caucuses === typeof []) {
       const validPartyKeys = Object.values(Parameters.PoliticianParameters.Caucus)
@@ -61,7 +65,7 @@ class PoliticianScraper extends Components.QueueManager {
 
   setProvinces (provinces) {
     if (typeof provinces === 'undefined' ||
-       (typeof provinces === typeof ' ' && provinces.toLowerCase().includes('all'))) {
+      (typeof provinces === typeof ' ' && provinces.toLowerCase().includes('all'))) {
       this.provinces.push('all')
     } else if (typeof provinces === typeof []) {
       this.provinces = provinces.filter(province => {
@@ -72,7 +76,7 @@ class PoliticianScraper extends Components.QueueManager {
 
   setGenders (genders) {
     if (typeof genders === 'undefined' ||
-       (typeof genders === typeof ' ' && genders.toLowerCase().includes('all'))) {
+      (typeof genders === typeof ' ' && genders.toLowerCase().includes('all'))) {
       this.genders.push('all')
     } else if (typeof genders === typeof []) {
       this.genders = genders.filter(gender => {
@@ -86,7 +90,11 @@ class PoliticianScraper extends Components.QueueManager {
 
   setLastNamePrefixes (lastNamePrefixes) {
     if (typeof lastNamePrefixes === 'undefined' ||
+<<<<<<< Updated upstream
        (typeof lastNamePrefixes === 'string' && lastNamePrefixes.toLowerCase().includes('all'))) {
+=======
+      (typeof lastNamePrefixes === 'string' && lastNamePrefixes.toLowerCase().includes('all'))) {
+>>>>>>> Stashed changes
       this.lastNamePrefixes.push('')
     } else if (Array.isArray(lastNamePrefixes)) {
       this.lastNamePrefixes = lastNamePrefixes.filter(prefix => {

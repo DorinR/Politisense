@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
@@ -27,8 +28,7 @@ import Box from '@material-ui/core/Box'
 import axios from 'axios'
 import politisenseLogo from '../politisenseLogo.png'
 import Button from '@material-ui/core/Button'
-import CenteredCircularProgress from './Dashboard/Utilities/CenteredCircularProgress'
-
+import { getIpInfo } from './Dashboard/Polls/GetIpAddress'
 const drawerWidth = 330
 
 const useStyles = makeStyles(theme => ({
@@ -132,7 +132,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchUserRiding (userEmail) {
+export async function fetchUserRiding(userEmail) {
   return axios
     .get(`/api/users/${userEmail}/getUser`)
     .then(res => {
@@ -143,7 +143,7 @@ export async function fetchUserRiding (userEmail) {
     .catch(console.error)
 }
 
-export async function fetchRepresentative (riding) {
+export async function fetchRepresentative(riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
@@ -154,13 +154,14 @@ export async function fetchRepresentative (riding) {
     .catch(console.error)
 }
 
-export default function MiniDrawer ({ children }) {
+export default function MiniDrawer({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const [userRepresentative, setUserRepresentative] = React.useState(null)
   const [riding, setRiding] = useState(null)
   const [user, setUser] = useState(null)
+  const [userCountry, setUserCountry] = useState('')
 
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -169,19 +170,24 @@ export default function MiniDrawer ({ children }) {
   }, [])
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (user) {
         const riding = await fetchUserRiding(user.email)
+        const country = await getIpInfo()
+        console.log(country)
         setRiding(riding)
+        setUserCountry(country)
       }
     }
     getData()
   }, [user])
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (riding) {
         const representative = await fetchRepresentative(riding)
+        const country = await getIpInfo()
+        console.log(country)
         setUserRepresentative(representative)
       }
     }
@@ -270,6 +276,17 @@ export default function MiniDrawer ({ children }) {
               Map
             </Button>
           </Link>
+          {userCountry && userCountry === 'Canada'
+            ? <Link to='/polls' className={classes.navbarCustomFont}>
+              <Button
+                variant='contained'
+                color='primary'
+                className={classes.navbarCustomButton}
+              >
+                Polls
+              </Button>
+            </Link> : ''}
+
           <Typography style={{ flex: 1 }} />
           <Link to='/account'>
             <Tooltip title='My Account' aria-label='add'>
@@ -314,8 +331,8 @@ export default function MiniDrawer ({ children }) {
             {theme.direction === 'rtl' ? (
               <ChevronRightIcon />
             ) : (
-              <ChevronLeftIcon />
-            )}
+                <ChevronLeftIcon />
+              )}
           </IconButton>
         </div>
         <Divider />
@@ -332,8 +349,8 @@ export default function MiniDrawer ({ children }) {
               />
             </ListItemAvatar>
           ) : (
-            <CenteredCircularProgress />
-          )}
+              <CenteredCircularProgress />
+            )}
         </ListItem>
         {open && riding && user && userRepresentative ? (
           <ListItem>

@@ -15,12 +15,15 @@ class ClassificationRunner extends Components.QueueManager {
 
   finish () {
     console.log(`INFO: ${ClassificationRunner.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
+<<<<<<< Updated upstream
   }
 
   accumulate (results) {
     super.accumulate(results)
     this.result = this.result.flat()
     return this.result
+=======
+>>>>>>> Stashed changes
   }
 
   constructor (params, wait = 30000) {

@@ -26,6 +26,11 @@ router.get(
   controller.getAllBillsBySponsorForAllParliaments
 )
 
+<<<<<<< Updated upstream
+=======
+router.get('/getUpcomingBills', controller.getUpcomingBills)
+
+>>>>>>> Stashed changes
 // @route get api/bills/getAllBillsSponsoredByParty
 // @desc get all the bills that were sponsored by MPs from that party
 // @access Public

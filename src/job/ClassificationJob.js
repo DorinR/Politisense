@@ -3,7 +3,11 @@ const ClassificationAction = require('../util/action/classify_action/BillClassif
 const BillPDFFetchRunner = require('../data/runner/BillPDFFetchRunner').BillPDFFetchRunner
 const BillLinkFetchRunner = require('../data/runner/BillLinkFetchRunner').BillLinkFetchRunner
 const AbstractJob = require('./Job').AbstractJob
+<<<<<<< Updated upstream
 const FormatAction = require('../util/action/adapter_action/ClassificationResultAdapterAction').ClassificationResultAdapterAction
+=======
+const FormatAction = require('../util/action/adapter_action/QueryResponseAdapterAction').QueryResponseAdapterAction
+>>>>>>> Stashed changes
 
 class ClassificationJob extends AbstractJob {
   constructor (params, callback) {

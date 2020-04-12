@@ -59,10 +59,15 @@ export default function RidingShape (props) {
 
   const [coordinates, setCoordinates] = React.useState(null)
   useEffect(() => {
+<<<<<<< Updated upstream
     if (!coordinates) {
       setCoordinates(props.ridingShapeCoordinates)
     }
   }, [code, coordinates, props.ridingShapeCoordinates])
+=======
+    if (props.ridingShapeCoordinates && props.politicalParty) {
+      const thisPartyColor = PARTY_COLORS[props.politicalParty]
+>>>>>>> Stashed changes
 
   const [party, setParty] = React.useState(null)
   useEffect(() => {

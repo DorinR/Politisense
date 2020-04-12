@@ -15,6 +15,16 @@ class LegislativeActivityScraper extends QueueManager {
     return manager
   }
 
+<<<<<<< Updated upstream
+=======
+  accumulate (result) {
+    if (result) {
+      this.result.push(result)
+    }
+    return result
+  }
+
+>>>>>>> Stashed changes
   constructor (wait = 1000) {
     super(wait)
     this.params = [

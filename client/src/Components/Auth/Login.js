@@ -87,7 +87,11 @@ export async function handleEmailLogin(user) {
 }
 
 export async function handleSocialLogin(social) {
+<<<<<<< Updated upstream
   return axios
+=======
+  return await axios
+>>>>>>> Stashed changes
     .post('/api/users/socialLogin', { type: social })
     .then(res => {
       return tokenAuthenticate(res.data.data.token, res.data.data.config)
@@ -105,6 +109,7 @@ export default function Login(props) {
   const [authenticated, setAuthenticated] = useState(false)
   const [errors, setErrors] = useState({ email: '', password: '' })
 
+<<<<<<< Updated upstream
   function validateUserFromSocialProviders(type, getOAuthUserCallback) {
     getOAuthUserCallback(type)
       .then(oAuthUser => {
@@ -117,6 +122,14 @@ export default function Login(props) {
             return resp
           })
           .catch(console.error)
+=======
+  function validateUserFromSocialProviders(type, cb) {
+    let user = {}
+    cb(type)
+      .then(usr => {
+        user = usr
+        return fetchUser(user.email)
+>>>>>>> Stashed changes
       })
       .then(res => {
         let user = res.data.data

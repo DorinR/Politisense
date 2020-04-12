@@ -14,6 +14,10 @@ export function error (response, status, message) {
 }
 
 export function success (response, message, data) {
+<<<<<<< Updated upstream
+=======
+  console.info(message)
+>>>>>>> Stashed changes
   response
     .status(200)
     .json({
@@ -72,6 +76,12 @@ export function retrieveUser (res, email) {
 }
 
 export function validateRequestParameters (req, res) {
+<<<<<<< Updated upstream
+=======
+  // const test = req.body.user.email
+  // console.log(` body received from frontend `, test)
+  console.log(' req email received from frontend ', req.body.user.email)
+>>>>>>> Stashed changes
   if (!req.body.user) {
     error(res, 400, 'User not defined in passed parameters')
     return false
@@ -138,7 +148,11 @@ export function getActivityRecords (req, res, user) {
 
 export function replaceNewVotesWithExisting (activity, activityMap) {
   if (Object.keys(activityMap).includes(activity.title) &&
+<<<<<<< Updated upstream
       Object.values(activityMap).includes(activity.description)) {
+=======
+    Object.values(activityMap).includes(activity.description)) {
+>>>>>>> Stashed changes
     return activityMap[activity.title]
   } else {
     activity.yes = 0
@@ -156,6 +170,12 @@ export function addHasVotedTag (activity, voteMap) {
 }
 
 export function validateUserVotingParameters (req, res) {
+<<<<<<< Updated upstream
+=======
+  console.log('activity from frontend ', req.body.activity)
+  console.log('activity title from frontend ', req.body.activity.title)
+  console.log('activity description from frontend ', req.body.activity.description)
+>>>>>>> Stashed changes
   if (!req.body.activity || !req.body.activity.title || !req.body.activity.description) {
     error(res, 400, 'No activity, or incomplete activity Provided')
   } else if (!req.body.vote) {
@@ -200,7 +220,11 @@ export function insertNewActivity (req, res) {
   delete activity.userHasVoted
   return new Firestore()
     .LegislativeActivity()
+<<<<<<< Updated upstream
     .insert(activity)
+=======
+    .insert(new Models.LegislativeActivity(activity.number, activity.title, activity.link, activity.description, activity.date))
+>>>>>>> Stashed changes
     .then(id => {
       return {
         id: id,
@@ -230,6 +254,10 @@ export function canUserVoteOnActivity (user, activity) {
 }
 
 export function insertNewVote (user, activity) {
+<<<<<<< Updated upstream
+=======
+  console.log('activity ', activity)
+>>>>>>> Stashed changes
   return new Firestore()
     .LegislativeActivityVote()
     .insert(

@@ -1,10 +1,26 @@
 const Reference = require('./Reference').Reference
 const fs = require('firebase')
 require('firebase/firestore')
+<<<<<<< Updated upstream
 const path = require('path')
 const result = require('dotenv').config({ path: path.resolve(process.cwd(), 'src/config/.env') })
 if (!result) {
   throw new Error('ERROR: no .env found, cannot initialise firestore for testing.')
+=======
+
+const config = {
+  apiKey: 'AIzaSyBdCSbXtHoTPO4JfPDicPhnams3q1p_6AQ',
+  authDomain: 'abdulla-2c3a5.firebaseapp.com',
+  databaseURL: 'https://abdulla-2c3a5.firebaseio.com',
+  projectId: 'abdulla-2c3a5',
+  storageBucket: 'abdulla-2c3a5.appspot.com',
+  messagingSenderId: '1084760992823',
+  appId: '1:1084760992823:web:c6402249f92d54372ce3b2'
+}
+Object.freeze(config)
+if (!fs.app) {
+  fs.initializeApp(config)
+>>>>>>> Stashed changes
 }
 
 const config = {
@@ -22,7 +38,11 @@ Object.freeze(config)
 class _Firestore {
   constructor () {
     this.config = config
+<<<<<<< Updated upstream
     if (fs.apps.length === 0) {
+=======
+    if (!this.app || !fs.app) {
+>>>>>>> Stashed changes
       this.app = fs.initializeApp(this.config)
     } else {
       this.app = fs.app
@@ -148,9 +168,13 @@ class Firestore {
   }
 
   Vote () {
+<<<<<<< Updated upstream
     const collection = this.legacy
       ? 'votes'
       : `${this.parliament}/voters/voter`
+=======
+    const collection = this.legacy ? 'votes' : `${this.parliament}/voters/voter`
+>>>>>>> Stashed changes
     return this.createReference(collection)
   }
 

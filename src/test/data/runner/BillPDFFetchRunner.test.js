@@ -14,11 +14,19 @@ describe('BillPDFFetchRunner.js', () => {
   })
 
   test('BillPDFFetchRunner.js::create adds correct actions', async (done) => {
+<<<<<<< Updated upstream
     const undertest = BillPDFFetchRunner.create([{
       url: 'test-url.com',
       parliament: 43,
       id: ' '
     }])
+=======
+    const undertest = BillPDFFetchRunner.create({
+      url: 'test-url.com',
+      parliament: 43,
+      id: ' '
+    })
+>>>>>>> Stashed changes
     const registry = undertest.registry
     Assert.equal(Object.values(registry).length, 4)
     Assert.equal(registry.start, 'BillPDFFetchStartAction')
@@ -30,11 +38,19 @@ describe('BillPDFFetchRunner.js', () => {
 
   test('BillPDFFetchRunner.js throws on invalid parliament', async (done) => {
     try {
+<<<<<<< Updated upstream
       BillPDFFetchRunner.create([{
         url: 'test-url.com',
         parliaments: ' ',
         id: ' '
       }])
+=======
+      BillPDFFetchRunner.create({
+        url: 'test-url.com',
+        parliaments: ' ',
+        id: ' '
+      })
+>>>>>>> Stashed changes
     } catch (e) {
       if (e instanceof chai.AssertionError) {
         throw e
@@ -49,10 +65,17 @@ describe('BillPDFFetchRunner.js', () => {
 
   test('BillPDFFetchRunner.js throws on no bill', async (done) => {
     try {
+<<<<<<< Updated upstream
       BillPDFFetchRunner.create([{
         url: 'test-url.com',
         parliaments: 43
       }])
+=======
+      BillPDFFetchRunner.create({
+        url: 'test-url.com',
+        parliaments: 43
+      })
+>>>>>>> Stashed changes
     } catch (e) {
       if (e instanceof chai.AssertionError) {
         throw e
@@ -67,10 +90,17 @@ describe('BillPDFFetchRunner.js', () => {
 
   test('BillPDFFetchRunner.js throws on no url', async (done) => {
     try {
+<<<<<<< Updated upstream
       BillPDFFetchRunner.create([{
         parliaments: 43,
         bill: ''
       }])
+=======
+      BillPDFFetchRunner.create({
+        parliaments: 43,
+        bill: ''
+      })
+>>>>>>> Stashed changes
     } catch (e) {
       if (e instanceof chai.AssertionError) {
         throw e

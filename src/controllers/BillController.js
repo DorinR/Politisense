@@ -1,5 +1,30 @@
 import { mergeArrays } from '../../client/src/Components/Dashboard/Utilities/CommonUsedFunctions'
 const Firestore = require('@firestore').Firestore
+<<<<<<< Updated upstream
+=======
+
+exports.getUpcomingBills = async (req, res) => {
+  console.log(' inside bill controller ')
+  const Data = require('@data').Scrapers.LegislativeActivityScraper
+
+  Data.create()
+    .execute()
+    .then(result => {
+      console.log(result)
+      res.status(200).json({
+        success: true,
+        data: result
+      })
+    })
+    .catch(e => {
+      res.status(404).json({
+        success: false,
+        data: e.message
+      })
+    })
+}
+
+>>>>>>> Stashed changes
 exports.getAllBillsByHead = (req, res) => {
   const db = new Firestore()
   const votes = db.Vote()
@@ -216,6 +241,7 @@ async function getAllBillsByParliamentWithoutRep (parliamentNo) {
     }
     snapshot.forEach(doc => {
       bills.push(doc.data())
+<<<<<<< Updated upstream
     })
   }).catch(e => console.log(e))
   return bills
@@ -226,6 +252,18 @@ exports.fetchCategories = async (req, res) => {
     parliaments.map(parliament => {
       return getAllBillsByParliamentWithoutRep(parliament)
     })
+=======
+    })
+  }).catch(e => console.log(e))
+  return bills
+}
+exports.fetchCategories = async (req, res) => {
+  const parliaments = [39, 40, 41, 42, 43]
+  const rawData = await Promise.all(
+    parliaments.map(parliament => {
+      return getAllBillsByParliamentWithoutRep(parliament)
+    })
+>>>>>>> Stashed changes
   )
   const jointedArray = mergeArrays(rawData)
   let categories = [...new Set(jointedArray.map(item => item.category))]

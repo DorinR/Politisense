@@ -74,10 +74,73 @@ const useStyles = makeStyles(theme => ({
     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
     fontWeight: 700
   }
+<<<<<<< Updated upstream
 }))
 
 async function votingHistory (representative) {
   return axios.get(`api/representatives/representative/voting-history/${representative}`)
+=======
+})
+
+export async function fetchUserRiding (userEmail) {
+  let result = ''
+  await axios
+    .get(`/api/users/${userEmail}/getUser`, {
+      params: { billhistory: userEmail }
+    })
+    .then(res => {
+      if (res.data.success) {
+        const riding = res.data.data.riding
+        result = riding
+      }
+    })
+    .catch(err => console.log(err))
+  return result
+}
+
+export async function fetchRepresentative (riding) {
+  let result = ''
+  await axios
+    .get(`/api/representatives/${riding}/getRepresentative`)
+    .then(res => {
+      if (res.data.success) {
+        const representative = res.data.data.name
+        result = representative
+      }
+    })
+    .catch(err => console.log(err))
+  return result
+}
+
+export async function fetchRepresentatieVotes (representative) {
+  const result = []
+  await axios
+    .get(`/api/voteRecord/getVotesByRepresentative/${representative}`)
+    .then(res => {
+      if (res.data.success) {
+        const votes = res.data.data
+        votes.forEach(vote => result.push(vote))
+      }
+    })
+    .catch(err => console.log(err))
+  return result
+}
+
+export function fetchAllBills () {
+  return axios
+    .get('/api/bills/getAllBills')
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+    .catch(console.error)
+}
+
+export async function fetchRepresentativeId (representative) {
+  return axios
+    .get(`/api/representatives/${representative}/getRepresentativeId`)
+>>>>>>> Stashed changes
     .then(res => {
       if (res.data.success) {
         return res.data.data
@@ -87,6 +150,27 @@ async function votingHistory (representative) {
     .catch(console.error)
 }
 
+<<<<<<< Updated upstream
+=======
+export async function fetchRepresentativeVotes (representativeId) {
+  return axios
+    .get(`/api/votes/${representativeId}/getAllVotesByRepresentative`)
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+}
+
+export async function fetchAllVoteRecords () {
+  return axios.get('/api/voteRecord/getAllVoteRecords').then(res => {
+    if (res.data.success) {
+      return res.data.data
+    }
+  })
+}
+
+>>>>>>> Stashed changes
 function generateTableRows (bills) {
   return bills.map(bill => {
     const { number, dateVoted, title, sponsorName, link, vote, name } = bill

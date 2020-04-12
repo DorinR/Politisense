@@ -5,7 +5,11 @@ import { LinearProgress } from '@material-ui/core'
 export async function fetchPopulation (riding) {
   return axios
     .get(`/api/ridings/getRidingPopulation/${encodeURI(riding)}`)
+<<<<<<< Updated upstream
     .then((res) => {
+=======
+    .then(res => {
+>>>>>>> Stashed changes
       if (res.data.success) {
         return res.data.data.population
       }

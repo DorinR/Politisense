@@ -10,11 +10,12 @@ import SignUp from './Components/Auth/SignUp'
 import Logout from './Components/Logout'
 import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
 import Questionnaire from './Components/Questionnaire'
-import MyMP from './Components/MyMP/MyMP'
 import GeneralDashboard from './Components/Dashboard/General/GeneralDashboard'
-import Sidebar from './Components/Navbar/Navbar'
+import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
+import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
+import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
+import LegislativeActivities from './Components/Dashboard/Polls/LegislativeActivities'
 import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
-import IssuedBillsByCategory from './Components/MyMP/IssuedBillsByCategory'
 import MapContainer from './Components/Map/MapContainer'
 
 const App = () => {
@@ -31,12 +32,14 @@ const App = () => {
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
           <PrivateRoute path='/logout' component={Logout} />
+          <PrivateRoute path='/polls' component={LegislativeActivities} />
           <PrivateRoute path='/map' component={MapContainer} />
           <PrivateRoute path='/account' component={UserAccountTabs} />
           <PrivateRoute path='/general' component={GeneralDashboard} />
-          <PrivateRoute path='/myRepresentative' component={MyMP} />
+          <PrivateRoute path='/categories' component={CategoryDashboard} />
+          <PrivateRoute path='/votingHistory' component={BillHistoryTable} />
+          <PrivateRoute path='/budget' component={BudgetContainer} />
           <PrivateRoute path='/compare' component={CompareContainer} />
-          <PrivateRoute path='/performance' component={IssuedBillsByCategory} />
         </div>
       </Sidebar>
     </div>
@@ -45,10 +48,13 @@ const App = () => {
   const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route
       {...rest}
-      render={(
-        props
-      ) =>// eslint-disable-next-line
-        localStorage.getItem('user') ? (<Component {...props} />) : (<Redirect to='/login' />)}/>
+      render={props =>
+        localStorage.getItem('user') ? (
+          <Component {...props} />
+        ) : (
+            <Redirect to='/login' /> // eslint-disable-next-line
+          )}
+    />
   )
 
   return (

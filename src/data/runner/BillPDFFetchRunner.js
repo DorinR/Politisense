@@ -21,6 +21,7 @@ class BillPDFFetchRunner extends QueueManager {
 
   constructor (params, wait = 5000) {
     super(wait)
+<<<<<<< Updated upstream
     if (!params[0].url) {
       throw new InvalidParameterError('ERROR: no url to bill pdf provided')
     }
@@ -28,6 +29,15 @@ class BillPDFFetchRunner extends QueueManager {
       throw new InvalidParameterError('ERROR: no bill ID for provided url')
     }
     if (!params[0].parliament || (params[0].parliament && !Parameters.Parliament.Number.includes(params[0].parliament))) {
+=======
+    if (!params.url) {
+      throw new InvalidParameterError('ERROR: no url to bill pdf provided')
+    }
+    if (!params.id) {
+      throw new InvalidParameterError('ERROR: no bill ID for provided url')
+    }
+    if (!params.parliament || (params.parliament && !Parameters.Parliament.Number.includes(params.parliament))) {
+>>>>>>> Stashed changes
       throw new InvalidParameterError('ERROR: no parliament or invalid provided for bill ID and url')
     }
 

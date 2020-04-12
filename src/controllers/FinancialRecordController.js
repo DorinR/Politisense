@@ -9,10 +9,17 @@ exports.getAllSpendingItemsForParty = (req, res) => {
     '5-Gifts',
     '6-Advertising'
   ]
+<<<<<<< Updated upstream
   const db = new Firestore()
   const financialRecordCollection = db.FinancialRecord()
   db.Politician()
     .where('party', '==', req.params.party)
+=======
+  const db = new Firestore(true)
+  const financialRecordCollection = db.FinancialRecord()
+  db.Politician()
+    .where('politicalParty', '==', req.params.party)
+>>>>>>> Stashed changes
     .innerJoin('_id', financialRecordCollection, 'member')
     .then(snapshot => {
       if (snapshot.empty) {

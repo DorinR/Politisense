@@ -49,7 +49,11 @@ class BillScraper extends Components.QueueManager {
 
   setParliaments (parliaments) {
     if (typeof parliaments === 'undefined' ||
+<<<<<<< Updated upstream
         (typeof parliaments === 'string' && parliaments.toLowerCase().includes('all'))) {
+=======
+      (typeof parliaments === 'string' && parliaments.toLowerCase().includes('all'))) {
+>>>>>>> Stashed changes
       this.parliaments.push(' ')
     } else if (Array.isArray(parliaments)) {
       this.parliaments = parliaments.filter(parliament => {

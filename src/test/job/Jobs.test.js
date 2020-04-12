@@ -83,7 +83,11 @@ describe('Jobs', () => {
     Assert.equal(job.registry[2], 'BillClassificationAction')
 
     Assert.equal(job.actions[3].name, 'bound perform')
+<<<<<<< Updated upstream
     Assert.equal(job.registry[3], 'ClassificationResultAdapterAction')
+=======
+    Assert.equal(job.registry[3], 'QueryResponseAdapterAction')
+>>>>>>> Stashed changes
     done()
   })
 

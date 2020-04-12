@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import { mergeArrays, checkIsEmptyRawData } from '../../client/src/Components/Dashboard/Utilities/CommonUsedFunctions'
+=======
+import { mergeArrays } from '../../client/src/Components/Dashboard/Utilities/CommonUsedFunctions'
+>>>>>>> Stashed changes
 const Firestore = require('@firestore').Firestore
 const Utils = require('./util/ActivityVotingUtils')
 
@@ -50,7 +54,11 @@ exports.getRepresentativeByRiding = (req, res) => {
     .catch(console.error)
 }
 async function getAllRepsForEachParliament (parliamentNo) {
+<<<<<<< Updated upstream
   const db = new Firestore().forParliament(parliamentNo)
+=======
+  const db = new Firestore(false).forParliament(parliamentNo)
+>>>>>>> Stashed changes
   const politicians = []
   await db.Politician()
     .select()

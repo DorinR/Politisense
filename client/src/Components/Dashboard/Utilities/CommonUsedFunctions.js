@@ -1,5 +1,9 @@
 import axios from 'axios'
+<<<<<<< Updated upstream
 import { useEffect, useRef } from 'react'
+=======
+
+>>>>>>> Stashed changes
 export async function fetchCategories () {
   return axios
     .get('/api/bills/fetchCategories')
@@ -18,8 +22,23 @@ export function mergeArrays (rawData) {
       jointArray = [...jointArray, ...array]
     }
   })
+<<<<<<< Updated upstream
   const mergedArrays = [...new Set([...jointArray])]
   return mergedArrays
+=======
+  const test = [...new Set([...jointArray])]
+  return test
+}
+
+export function formatingCategories (categoriesList) {
+  const modifiedArray = categoriesList.map(element => {
+    if (element.includes('-')) {
+      return capitalizedName(element.replace('-', ' '))
+    }
+    return capitalizedName(element)
+  })
+  return modifiedArray
+>>>>>>> Stashed changes
 }
 
 export function formattingCategory (element) {
@@ -40,6 +59,7 @@ export function capitalizedName (sponsor) {
   }
   return null
 }
+<<<<<<< Updated upstream
 
 export function getPercentagePartisanIndex (element, arr) { // Utility function to compute percentage.
   let sum = 0
@@ -456,3 +476,5 @@ export function usePrevious (value) {
   })
   return ref.current
 }
+=======
+>>>>>>> Stashed changes
