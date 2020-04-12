@@ -30,11 +30,9 @@ module.exports.index = async (req, res) => {
 }
 
 module.exports.vote = async (req, res) => {
-  console.log(` ---- TOUCH DOWN ------`)
   if (!utils.validateRequestParameters(req, res) || !utils.validateUserVotingParameters(req, res)) {
     return
   }
-  console.log(` ---- TOUCH DOWN 22222------`)
   const user = await utils.retrieveUser(res, req.body.user.email)
   if (!user) {
     return
@@ -52,6 +50,8 @@ module.exports.vote = async (req, res) => {
   if (await utils.canUserVoteOnActivity(user, activity)) {
     await utils.insertNewVote(user, activity)
     await utils.countVote(user, activity)
+    console.log("activity ", activity)
+    console.log("activity data", activity.data)
     utils.success(res, 'vote successfully registered', {})
   } else {
     utils.error(res, 400, 'cannot vote on this activity or have already voted')

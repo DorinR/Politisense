@@ -12,9 +12,11 @@ import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
-import ButtonGroup from '@material-ui/core/ButtonGroup';
+import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Alert from '@material-ui/lab/Alert'
 import { getIpPostalCode } from './GetIpAddress'
+import ListItemText from '@material-ui/core/ListItemText'
+import Divider from '@material-ui/core/Divider'
 
 const useStyles = makeStyles({
     card: {
@@ -190,15 +192,25 @@ export default function Voting() {
                                 <Typography variant='body2' component='p'>
                                     {bills.description}
                                 </Typography>
-                                {storagePostalCode === ipPostalCode
+                                {storagePostalCode === ipPostalCode && bills.description !== ''
                                     ? <Alert className={classes.alert} severity='error'>Read the bill properly. Once you cast your vote,
                                     it cannot be undone!
                                  </Alert> : ''}
-                                {storagePostalCode === ipPostalCode && !hasNotClicked.includes(index)
+                                {storagePostalCode === ipPostalCode && !hasNotClicked.includes(index) && bills.description !== ''
                                     ? <ButtonGroup>
                                         <Button value='yes' id={index} className={classes.for} onClick={(event) => registerButtonClick(event, bills.title, bills.description, index)}>For</Button>
                                         <Button value='no' id={index} className={classes.against} onClick={(event) => registerButtonClick(event, bills.title, bills.description, index)}>Against</Button>
                                     </ButtonGroup> : ''}
+                                {bills.description !== '' && hasNotClicked.includes(index) ?
+                                    <List component="nav" className={classes.root} aria-label="mailbox folders">
+                                        <ListItem>
+                                            <ListItemText primary="For" />
+                                        </ListItem>
+                                        <Divider />
+                                        <ListItem>
+                                            <ListItemText primary="Against" />
+                                        </ListItem>
+                                    </List> : ''}
                             </CardContent>
                         </Card>
                     </ListItem>
