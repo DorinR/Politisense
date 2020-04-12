@@ -115,6 +115,9 @@ exports.userSignup = async (req, res) => {
     verifyToken: token,
     verified: false
   }
+  if (req.body.type === 'social') {
+    user.verified = true
+  }
   if (req.body.password) {
     user.password = Auth.hashPassword(req.body.password)
   }

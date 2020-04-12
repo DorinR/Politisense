@@ -128,8 +128,17 @@ export default function Login(props) {
         if (res.success) {
           // eslint-disable-next-line no-undef
           user = res.data
-          localStorage.setItem('user', JSON.stringify(user))
-          setAuthenticated(true)
+          checkUserVerified(user).then(res=>{
+            let userToStore = {}
+            if(res.data.message === 'verified'){
+              userToStore = { email: user.email, verified: 'true'}
+            } else{
+              userToStore = { email: user.email, verified: 'false'}
+            }
+            // eslint-disable-next-line no-undef
+            localStorage.setItem('user', JSON.stringify(userToStore))
+            setAuthenticated(true)
+          })
         } else {
           const newUser = {
             firstname: user.displayName
@@ -138,7 +147,8 @@ export default function Login(props) {
             lastname: user.displayName
               ? user.displayName.substr(user.displayName.indexOf(' ') + 1)
               : ' ',
-            email: user.email
+            email: user.email,
+            type: 'social'
           }
           props.history.push({
             pathname: '/question',
