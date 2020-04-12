@@ -237,6 +237,7 @@ export function canUserVoteOnActivity (user, activity) {
 }
 
 export function insertNewVote (user, activity) {
+  console.log('activity ', activity)
   return new Firestore()
     .LegislativeActivityVote()
     .insert(
