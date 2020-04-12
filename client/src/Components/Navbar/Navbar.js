@@ -277,15 +277,15 @@ const Sidebar = withRouter((props) => {
         variant='persistent'
       >
         <div>
-        <List className={classes.flexContainer}>
-          <ListItem button onClick={() => { props.history.push({ pathname: '/general' }) }}>
-            <AccountBalanceIcon className={classes.icon} />
-            <Typography variant='h5' style={{ color: 'white' }}>Politisense</Typography>
-          </ListItem>
-          <ListItem>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon className={classes.chevronLeftIcon} onClick={handleSidebarClose} /> : <ChevronRightIcon />}
-          </ListItem>
-        </List>
+          <List className={classes.flexContainer}>
+            <ListItem button onClick={() => { props.history.push({ pathname: '/general' }) }}>
+              <AccountBalanceIcon className={classes.icon} />
+              <Typography variant='h5' style={{ color: 'white' }}>Politisense</Typography>
+            </ListItem>
+            <ListItem>
+              {theme.direction === 'ltr' ? <ChevronLeftIcon className={classes.chevronLeftIcon} onClick={handleSidebarClose} /> : <ChevronRightIcon />}
+            </ListItem>
+          </List>
         </div>
         <AppBar position='fixed' className={clsx(classes.appBar, { [classes.appBarShift]: openSidebar })} />
         <Divider className={classes.divider1} />
