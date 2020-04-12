@@ -10,6 +10,7 @@ const BudgetController = require('./BudgetController')
 const MapSupportDataController = require('./MapSupportDataController')
 const ActivityVotingController = require('./ActivityVotingController')
 const ParliamentController = require('./ParliamentController')
+const DataController = require('./DataController')
 
 module.exports = {
   userSignup: function (req, res) {
@@ -144,12 +145,22 @@ module.exports = {
   getImageData: function (req, res) {
     return RepresentativeController.getImageData(req, res)
   },
+  getAllRolesByRep: function (req, res) {
+    return RepresentativeController.getAllRolesByRep(req, res)
+  },
+
+  dataIndex: function (req, res) {
+    return DataController.index(req, res)
+  },
+
+  update: function (req, res) {
+    return DataController.update(req, res)
+  },
 
   getRidingByRidingCode: function (req, res) {
     return RidingController.getRidingByRidingCode(req, res)
   },
 
-  // Map support data
   getMapSupportData: function (req, res) {
     return MapSupportDataController.getMapSupportData(req, res)
   },
@@ -168,5 +179,9 @@ module.exports = {
 
   getAllRepsFromAllParliaments: function (req, res) {
     return RepresentativeController.getAllRepsFromAllParliaments(req, res)
+  },
+
+  representativeVotingHistory: function (req, res) {
+    return RepresentativeController.votingHistory(req, res)
   }
 }

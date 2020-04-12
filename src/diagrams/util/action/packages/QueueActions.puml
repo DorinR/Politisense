@@ -1,0 +1,15 @@
+@startuml
+
+interface Action <T,U>
+package QueueActions #e0e0d1 {
+    class RequeueConnectionAction {
+        - callback: Function
+        - create: Function
+        - tlds: Array<String>
+        + RequeueConnectionAction(callback: Function, createFn: Function topLevelDomains: Array<String>) : RequeueConnectionAction
+        + perform(data : Object) : Promise<Array<String>>
+    }
+    Action <|-- RequeueConnectionAction
+}
+
+@enduml

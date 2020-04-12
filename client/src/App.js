@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-env node */
 import React from 'react'
 import {
   BrowserRouter as Router,
@@ -15,11 +13,11 @@ import Navbar from './Components/Navbar'
 import Logout from './Components/Logout'
 import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
 import Questionnaire from './Components/Questionnaire'
+import MyMP from './Components/MyMP/MyMP'
 import GeneralDashboard from './Components/Dashboard/General/GeneralDashboard'
-import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
-import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
-import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
+import Sidebar from './Components/Navbar/Navbar'
 import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
+import IssuedBillsByCategory from './Components/MyMP/IssuedBillsByCategory'
 import MapContainer from './Components/Map/MapContainer'
 import PrivateRoute from "./Components/Auth/PrivateRoute";
 import axios from "axios";
@@ -37,56 +35,31 @@ const App = () => {
   )
   const DefaultContainer = () => (
     <div>
-      <Navbar>
+      <Sidebar>
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
           <PrivateRoute path='/map' component={MapContainer} />
           <PrivateRoute path='/account' component={UserAccountTabs} />
           <PrivateRoute path='/general' component={GeneralDashboard} />
-          <PrivateRoute path='/categories' component={CategoryDashboard} />
-          <PrivateRoute path='/votingHistory' component={BillHistoryTable} />
-          <PrivateRoute path='/budget' component={BudgetContainer} />
+          <PrivateRoute path='/myRepresentative' component={MyMP} />
           <PrivateRoute path='/compare' component={CompareContainer} />
+          <PrivateRoute path='/performance' component={IssuedBillsByCategory} />
         </div>
-      </Navbar>
+      </Sidebar>
     </div>
   )
 
-  //   async function checkUserVerified(user) {
-  //       return await axios
-  //           .post('/api/users/checkUserVerified', user)
-  //           .then(res => {
-  //               return res.data.message === 'verified'
-  //           })
-  //           .catch(err => console.error(err))
-  //   }
-  //
-  // async function verified () {
-  //     checkUserVerified((JSON).parse(localStorage.getItem('user'))).then(res=>{
-  //         console.log(res)
-  //         return res
-  //     })
-  // }
-  //
-  // function unverified () {
-  //   if (localStorage.getItem('user')) {
-  //     return <Unverified />
-  //   } else {
-  //     return <Redirect to='/login' />
-  //   }
-  // }
-  //
-  // const PrivateRoute = ({ component: Component, ...rest }) => (
-  //   <Route
-  //     {...rest}
-  //     render={props =>
-  //         verified() ? (
-  //         <Component {...props} />
-  //       ) : (
-  //         unverified()
-  //       )}
-  //   />
-  // )
+  const PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route
+      {...rest}
+      render={props =>
+        localStorage.getItem('user') ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to='/login' /> // eslint-disable-next-line
+        )}
+    />
+  )
 
   return (
     <Router>

@@ -34,3 +34,5 @@ package-lock.json
 /client/coverage/
 /client/build/
 
+#environment settings
+/src/config/.env

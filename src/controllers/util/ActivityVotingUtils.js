@@ -14,7 +14,6 @@ export function error (response, status, message) {
 }
 
 export function success (response, message, data) {
-  console.info(message)
   response
     .status(200)
     .json({

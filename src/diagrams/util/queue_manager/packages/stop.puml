@@ -1,0 +1,27 @@
+@startuml
+package QueueManagers #e0e0d1 {
+    class QueueAction
+    class QueueManager
+}
+package Updates #e0e0d1 {
+    class UpdatePipelineManager
+}
+package Stop #e0e0d1 {
+    class GenericStop extends QueueAction {
+        - manager: QueueManager
+        + GenericStop(manager: QueueManager): GenericStop
+        + perform(void) : Promise<void>
+    }
+    QueueManager <-- GenericStop
+
+    class UpdateStop extends QueueAction {
+            - manager: UpdatePipelineManager
+            - maxDepth: Number
+            + UpdateStop(manager: UpdatePipelineManager): UpdateStop
+            + perform(void) : Promise<void>
+            - shouldStop(void) : Promise<void>
+    }
+    UpdatePipelineManager <-- UpdateStop
+}
+
+@enduml

@@ -19,7 +19,6 @@
     "config": "^3.2.5",
     "cors": "^2.8.5",
     "dom-helpers": "^3.2.0",
-    "eslint": "^6.8.0",
     "express": "^4.17.1",
     "express-validator": "^6.2.0",
     "firebase": "^7.8.0",
@@ -79,8 +78,7 @@
     "concurrently": "^4.1.2",
     "jest": "^24.9.0",
     "mocha": "^6.2.0",
-    "nodemon": "^1.19.4",
-    "standard": "^14.3.1"
+    "nodemon": "^1.19.4"
   },
   "proxy": "http://localhost:5000"
 }

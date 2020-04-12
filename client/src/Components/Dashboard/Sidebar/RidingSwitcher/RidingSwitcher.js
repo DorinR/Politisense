@@ -1,4 +1,3 @@
-/* global localStorage */
 import React, { useEffect } from 'react'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Input from '@material-ui/core/Input'
@@ -6,6 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import axios from 'axios'
+import CenteredCircularProgress from '../../Utilities/CenteredCircularProgress'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -36,16 +36,6 @@ const MenuProps = {
   }
 }
 
-// All ridings currently stored in the backend
-var dropdownRidings = []
-
-// Parameters: list of ridings to be added to ridings dropdown
-// Return: none
-async function populateDropdownRidings (ridings) {
-  const ridingsToAddToDropdown = await ridings
-  dropdownRidings = ridingsToAddToDropdown
-}
-
 // Parameters: none
 // Return: list of Representatives objects
 async function fetchAllRepresentatives () {
@@ -64,11 +54,11 @@ async function fetchAllRepresentatives () {
 // Parameters: list of representatives objects
 // Return: list of ridings
 export function getAllRidings (representatives) {
-  const ridings = []
-  representatives.forEach(rep => {
-    ridings.push(rep.riding.replace(/\u2013|\u2014/g, '-'))
-  })
-  return ridings.sort()
+  return representatives
+    .map(rep => {
+      return rep.riding.replace(/\u2013|\u2014/g, '-')
+    })
+    .sort()
 }
 
 // Parameters: email of user, new riding for that user.
@@ -93,50 +83,55 @@ function getStyles (name, personName, theme) {
 export default function RidingSwitcher (props) {
   const classes = useStyles()
   const theme = useTheme()
-  const [riding, setRiding] = React.useState([])
 
-  const handleChange = event => {
-    const user = JSON.parse(localStorage.getItem('user'))
-    setRiding(event.target.value)
-    updateUserRiding(user.email, event.target.value)
-    setTimeout(() => {
-      window.location.reload(false)
-    }, 0)
-  }
-
-  useEffect(() => {
-    setRiding(props.riding)
-  }, [props.riding])
-
+  const [representatives, setRepresentatives] = React.useState(null)
   useEffect(() => {
     async function getData () {
-      const representatives = await fetchAllRepresentatives()
-      const allRidings = getAllRidings(representatives)
-      populateDropdownRidings(allRidings)
+      if (!representatives) {
+        const reps = await fetchAllRepresentatives()
+        setRepresentatives(reps)
+      }
     }
     getData()
-  }, [])
+  }, [representatives])
+
+  const [ridings, setRidings] = React.useState(null)
+  useEffect(() => {
+    if (representatives && !ridings) {
+      const allRidings = getAllRidings(representatives)
+      setRidings(allRidings)
+    }
+  }, [representatives, ridings])
+
+  const handleChange = event => {
+    updateUserRiding(props.user.email, event.target.value)
+      .then((resp) => {
+        props.onChange(event.target.value)
+      })
+  }
 
   return (
     <div>
-      <FormControl className={classes.formControl}>
-        <Select
-          value={riding}
-          onChange={handleChange}
-          input={<Input />}
-          MenuProps={MenuProps}
-        >
-          {dropdownRidings.map(riding => (
-            <MenuItem
-              key={riding}
-              value={riding}
-              style={getStyles(riding, riding, theme)}
-            >
-              {riding}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      {props.riding && ridings ? (
+        <FormControl className={classes.formControl}>
+          <Select
+            value={props.riding}
+            onChange={handleChange}
+            input={<Input />}
+            MenuProps={MenuProps}
+          >
+            {ridings.map(riding => (
+              <MenuItem
+                key={riding}
+                value={riding}
+                style={getStyles(riding, riding, theme)}
+              >
+                {riding}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      ) : (<CenteredCircularProgress />)}
     </div>
   )
 }

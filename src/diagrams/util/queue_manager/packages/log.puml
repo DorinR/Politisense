@@ -1,0 +1,19 @@
+@startuml
+package QueueManagers #e0e0d1 {
+    class QueueAction
+}
+
+package Log #e0e0d1 {
+    class DefaultLogAction {
+        + perform(void) : Promise<void>
+    }
+    QueueAction <|-- DefaultLogAction
+    class TypedLogAction {
+        - type : String
+        + perform(void) : Promise<void>
+        + TypedLogAction(type : T) : TypedLogAction
+    }
+    QueueAction <|-- TypedLogAction
+}
+
+@enduml

@@ -1,0 +1,86 @@
+@startuml
+package Firebase #e0e0d1 {
+    package Models #e0e0d1 {
+        class Model
+    }
+}
+package Jobs #e0e0d1 {
+    class Job
+}
+class Error<<E, yellow>>
+package Utils #e0e0d1 {
+    package Actions #e0e0d1 {
+        interface Action
+        package AdapterActions #e0e0d1 {}
+        package ClassifyActions #e0e0d1 {}
+        package Errors #e0e0d1 {}
+        package ErrorActions #e0e0d1 {}
+        package FetchActions #e0e0d1 {}
+        package ParseActions #e0e0d1 {}
+        package QueueActions #e0e0d1 {}
+        package WrapperActions #e0e0d1 {}
+    }
+    WrapperActions --> Parsers
+
+    package Graphs #e0e0d1 {
+        class DirectedGraph
+        class UndirectedGraph
+        class Vertex
+        class TypeVertex
+    }
+    package Parsers #e0e0d1 {
+        class XmlDataParser
+        class AssociationRoleXmlParser
+        class CommitteeRoleXmlParser
+        class ParliamentaryRoleXmlParser
+        class RoleXmlParser
+        class BillXmlParser
+        class LegislativeActivityXmlParser
+        class MpXmlParser
+        class VoteParticipantsXmlParser
+        class VoteXmlParser
+        class DataNotFoundError <<E,yellow>>
+        class ParliamentNotSetError <<E,yellow>>
+    }
+    package Queues #e0e0d1 {
+        class UniqueJobQueue
+        class Queue
+    }
+    package QueueManagers #e0e0d1 {
+        class QueueManager
+        interface QueueAction
+        package Before #e0e0d1 {}
+        package Start #e0e0d1 {}
+        package Stop #e0e0d1 {}
+        package After #e0e0d1 {}
+        package Log #e0e0d1 {}
+        package Error #e0e0d1 {}
+    }
+    QueueManager <-- WrapperActions
+    Before --> Actions
+    After --> Actions
+    QueueManagers --> Graphs
+    QueueManager --> Queues
+
+    class Condition<T> {
+        - param: T
+        - Condition(param: T) : Condition
+        {static} + parameter(param: T): Condition
+        + isType(type: U) : void
+        + isValue(value: V) : void
+        + isMoreThan(value: V) : void
+        + isMoreThanOrEqual(value: V) : void
+        + isLessThan(value: V) : void
+        + isLessThanOrEqual(value: V) : void
+        + contains(value: V) : void
+    }
+    class ModelError<T> <<E, yellow>> extends Error {
+        - message: String
+        + ModelError(params: T): ModelError
+    }
+    Condition --> ModelError
+}
+Models <-- Condition
+Jobs -- Utils
+
+@enduml

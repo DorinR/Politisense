@@ -1,0 +1,123 @@
+@startuml
+interface Utils::QueueManagers::QueueAction {}
+class Utils::QueueManagers::QueueManager
+
+package Scrapers #e0e0d1 {
+    class BillScraper extends Utils::QueueManagers::QueueManager {
+        - parliaments: Array<Number>
+        - sessions: Array<Number>
+        - originatingChambers: Array<String>
+        - billTypes: Array<String>
+        - sponsorAffiliations: Array<String>
+        - sponsors: Array<String>
+        - statuses: Array<String>
+        - params: Array<Object>
+        - queryCount: Number
+        - maxQueryCount: Number
+        # finish(void) : void
+        - BillScraper(params: Object, wait: Number) : BillScraper
+        {static} + create(params: Object, wait: Number) : BillScraper
+        - setParliaments(parliaments: Array<Number>) : void
+        - setSessions(parliaments: Array<Number>) : void
+        - setOriginatingChambers(originatingChambers: Array<String>) : void
+        - setBillTypes(billTypes: Array<String>) : void
+        - setSponsorAffiliation(sponsorAffiliations: Array<String>) : void
+        - setSponsors(sponsors: Array<String>) : void
+        - setStatuses(statuses: Array<String>) : void
+        - createQueries(url: String): void
+        - appendQueryStringToUrl(url: String, param: Object): String
+    }
+    BillScraper o--> Utils::QueueManagers::QueueAction
+
+    class ExpenditureScraper extends Utils::QueueManagers::QueueManager {
+        - params: Array<Object>
+        - queryCount: Number
+        - years: Array<Number>
+        - maxQueryCount: Number
+        - createYears(years : Array<Number>) : void
+        - createQueries(url: String) : void
+        - ExpenditureScraper(params: Object, wait: Number) : ExpenditureScraper
+        {static} + create(params: Object, wait: Number) : ExpenditureScraper
+    }
+    ExpenditureScraper o--> Utils::QueueManagers::QueueAction
+
+    class LegislativeActivityScraper extends Utils::QueueManagers::QueueManager{
+        - params: Array<Object>
+        - queryCount: Number
+        - maxQueryCount: Number
+        - LegislativeActivityScraper(wait: Number) : LegislativeActivityScraper
+        {static} + create(wait: Number) : LegislativeActivityScraper
+    }
+    LegislativeActivityScraper o--> Utils::QueueManagers::QueueAction
+
+    class PoliticianScraper extends Utils::QueueManagers::QueueManager {
+        - params: Array<Object>
+        - parliaments: Array<Number>
+        - caucuses: Array<String>
+        - provinces: Array<String>
+        - genders: Array<String>
+        - lastNamePrefixes: Array<String>
+        - queryCount: Number
+        - maxQueryCount: Number
+        - LegislativeActivityScraper(wait: Number) : LegislativeActivityScraper
+        - createQueries(url: String) : void
+        - setParliaments(parliaments: Array<Number>) : void
+        - setCaucuses(caucuses: Array<String>) : void
+        - setProvinces(provinces: Array<String>) : void
+        - setGenders(genders: Array<String>) : void
+        - setLastNamePrefixes(prefixes: Array<String>) : void
+        # finish(void) : void
+        {static} + create(wait: Number) : LegislativeActivityScraper
+    }
+    PoliticianScraper o--> Utils::QueueManagers::QueueAction
+
+    class RoleScraper extends Utils::QueueManagers::QueueManager {
+        - params: Array<Object>
+        - parliaments: Array<Number>
+        - queryCount: Number
+        - maxQueryCount: Number
+        - RoleScraper(params: Object, wait: Number) : RoleScraper
+        - setParliaments(parliaments: Array<Number>) : void
+        - createQueries(url: String) : void
+        # finish(void) : void
+        {static} + create(params: Object, wait: Number) : RoleScraper
+    }
+    RoleScraper o--> Utils::QueueManagers::QueueAction
+
+    class VoteParticipantScraper extends Utils::QueueManagers::QueueManager {
+        - params: Array<Object>
+        - parliaments: Array<Number>
+        - sessions: Array<Number>
+        - queryCount: Number
+        - maxQueryCount: Number
+        - VoteParticipantScraper(params: Object, wait: Number) : VoteParticipantScraper
+        - createParliaments(parliaments: Array<Number>) : void
+        - createSessions(parliaments: Array<Number>) : void
+        - createParams(url: String) : void
+        # finish(void) : void
+        {static} + create(params: Object, wait: Number) : VoteParticipantScraper
+
+    }
+    VoteParticipantScraper o--> Utils::QueueManagers::QueueAction
+
+    class VoteScraper extends Utils::QueueManagers::QueueManager {
+        - params: Array<Object>
+        - parliamentSessions: Array<Number>
+        - billDocumentTypes: Array<Number>
+        - voteResults: Array<String>
+        - motionPrefixes: Array<String>
+        - queryCount: Number
+        - maxQueryCount: Number
+        - VoteScraper(params: Object, wait: Number) : VoteScraper
+        - createParliamentSessions(parliamentSessions: Array<Number>) : void
+        - createBillDocumentTypes(types: Array<Number>) : void
+        - createVoteResults(voteResults: Array<String>) : void
+        - createMotionPrefixes(prefixes: Array<String>) : void
+        - createParams(url: String) : void
+        # finish(void) : void
+        {static} + create(params: Object, wait: Number) : VoteScraper
+    }
+    VoteScraper o--> Utils::QueueManagers::QueueAction
+}
+
+@enduml

@@ -1,0 +1,100 @@
+@startuml
+package bcrypt <<Node>> #e0e0d1 {
+}
+package firebase <<Database>> #e0e0d1 {
+}
+package Firebase #e0e0d1 {
+    package Models #e0e0d1 {
+        class Model
+        class Bill
+        class BillClassification
+        class TfIdfClassification
+        class Description
+        class FinancialRecord
+        class LegislativeActivity
+        class Party
+        class Politician
+        class Riding
+        class Role
+        class User
+        class Vote
+        class VoteRecord
+        package builders #e0e0d1 {}
+    }
+    class _Firestore <<(S, red) Singleton>> {
+        - config : Object
+        - firebase: firebase::firestore::Firestore
+        {static} - instance: _Firestore
+        {static} - app: firebase::app::App
+        {static} + getInstance() : _Firestore
+    }
+    _Firestore <-- Firestore
+    _Firestore -down-> firebase
+
+    class Firestore {
+        - firestore: _Firestore
+        - reference: firebase::firestore::Firestore
+        - firebase: firebase::app::App
+        - parliament: Number
+        - legacy: Boolean
+        + Firestore(legacy: Boolean) : Firestore
+        + forParliament(parliament: Number) : Firestore
+        + Admin(void): Reference
+        + Bill(void): Reference
+        + BillClassification(void): Reference
+        + FinancialRecord(void): Reference
+        + MinisterDescription(void): Reference
+        + PoliticalParty(void): Reference
+        + Politician(void): Reference
+        + Riding(void): Reference
+        + Role(void): Reference
+        + TfIdfClassification(void): Reference
+        + User(void): Reference
+        + Vote(void): Reference
+        + VoteRecord(void): Reference
+        - createReference(collection: String): Reference
+        {static} - noLegacyCollectionError(legacy): void
+        {static} - copyCollection(from: Reference, to: Reference): Promise<void>
+    }
+    Firestore --> Reference
+    Firestore -up-> firebase
+
+    class Reference {
+        - reference: firebase::firestore::CollectionReference
+        - modelsOnly: Boolean
+        - query: firebase::firestore::Query
+        - referenceString: String
+        + Reference(reference: firebase::firestore::CollectionReference, refString: String) : Reference
+        + id(void): String
+        + hierarchy(void): Array<String>
+        + where(attribute: String, operator: String, value: String) : Reference
+        + update(model: Object): Promise<Array<Boolean>>
+        + delete(): Promise<Number>
+        + select(): Promise<firebase::firestore::QuerySnapshot>
+        + insert(model: Model): Promise<Array<String>>
+        + innerJoin(key: String, reference: Reference, refKey: String): Promise<Array<Object>>
+    }
+    Reference --> Model
+
+    class _Auth {
+        - auth: firebase::auth::Auth
+        - ref: firebase::auth
+        - providers: Object
+        + authenticate(type: String): Boolean
+        - emailAuthenticate(email: String, password: String) : Boolean
+        - compare(password : String, hash: String): Boolean
+    }
+    _Auth --> Firestore
+    _Auth -up-> firebase
+    _Auth -right-> bcrypt
+    _Auth <-- Auth
+
+    class Auth {
+        - auth: _Auth
+        + compare(salt: String, hash: String): Boolean
+        + authenticate(type: String): Boolean
+        {static} + hashPassword(plaintext: String) : String
+    }
+    Auth -right-> bcrypt
+}
+@enduml

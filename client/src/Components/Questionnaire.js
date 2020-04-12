@@ -63,18 +63,19 @@ function getSteps () {
   return ['Voting Issue', 'Area of Interest', 'Postal Code']
 }
 
-export async function setRiding (postalCode) {
-  const result = await axios
-    .post('/api/users/setRiding', {
-      postalCode: postalCode
-    })
+async function validateRiding (postalCode) {
+  return axios.post('/api/users/setRiding', {
+    postalCode: postalCode
+  })
     .then(res => {
-      return res
+      if (res.data.success) {
+        return res.data.data
+      }
+      return null
     })
     .catch(e => {
-      console.error(e)
+      return null
     })
-  return result
 }
 
 export default function HorizontalLinearStepper (props) {
@@ -149,16 +150,16 @@ export default function HorizontalLinearStepper (props) {
                   onChange={handleChangeCategory2}
                 >
                   {options &&
-                    options.map(option =>
-                      option !== category1 ? (
-                        <FormControlLabel
-                          value={option}
-                          control={<Radio />}
-                          label={formattingCategory(option)}
-                          key={option}
-                        />
-                      ) : null
-                    )}
+                  options.map(option =>
+                    option !== category1 ? (
+                      <FormControlLabel
+                        value={option}
+                        control={<Radio />}
+                        label={formattingCategory(option)}
+                        key={option}
+                      />
+                    ) : null
+                  )}
                 </RadioGroup>
               </FormControl>
             </CardContent>
@@ -184,48 +185,51 @@ export default function HorizontalLinearStepper (props) {
         return 'Unknown step'
     }
   }
+  const [riding, setRiding] = React.useState(null)
+  const [user] = React.useState(props.location.state.user)
 
-  const handleSubmit = async e => {
+  const handleSubmit = e => {
     e.preventDefault()
-    if (postalCode) {
-      await setRiding(postalCode)
-        .then(async res => {
-          if (res.data.success) {
-            const userToSignup = props.location.state.user
-            userToSignup.postalCode = postalCode
-            userToSignup.riding = res.data.data
-            userToSignup.categories = [category1, category2]
-            // eslint-disable-next-line no-undef
-            localStorage.setItem('user', JSON.stringify(userToSignup))
-            await axios.post('/api/users/signup', userToSignup)
-            props.history.push('/login')
-          } else {
-            console.log('Could not fetch riding')
-          }
-        })
-        .catch(error => {
-          console.log(error)
-        })
+    if (riding) {
+      const userToSignup = user
+      userToSignup.postalCode = postalCode
+      userToSignup.riding = riding
+      userToSignup.categories = [category1, category2]
+
+      // eslint-disable-next-line no-undef
+      localStorage.setItem('user', JSON.stringify(userToSignup))
+      axios.post('/api/users/signup', userToSignup)
+      props.history.push('/general')
     }
   }
 
-  const checkValidPostalCode = () => {
+  const checkValidPostalCode = async () => {
     const postalCodeFormat = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/
     const errors = {}
     errors.postalCode = !postalCode.match(postalCodeFormat)
       ? 'Invalid postal code'
       : ''
+    let valid = errors.postalCode === ''
+    if (valid) {
+      const rdn = await validateRiding(postalCode)
+      if (rdn) {
+        setRiding(rdn)
+      } else {
+        errors.postalCode = 'Invalid postal code'
+      }
+      valid = valid && rdn
+    }
     setErrors(errors)
-    return errors.postalCode === ''
+    return valid
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     let valid = true
     if (activeStep === steps.length - 2) {
       valid = category2
     }
     if (activeStep === steps.length - 1) {
-      valid = checkValidPostalCode()
+      valid = await checkValidPostalCode()
     }
     if (valid) {
       setActiveStep(prevActiveStep => prevActiveStep + 1)
@@ -236,7 +240,19 @@ export default function HorizontalLinearStepper (props) {
     if (activeStep === steps.length - 2) {
       setCatergory2('')
     }
-    setActiveStep(prevActiveStep => prevActiveStep - 1)
+    const history = {}
+    if (activeStep === 0 && user && user.firstname !== ' ') {
+      history.pathname = '/signup'
+      history.state = { user: user }
+    } else if (activeStep === 0) {
+      history.pathname = '/login'
+    }
+
+    if (Object.keys(history).length > 0) {
+      props.history.push(history)
+    } else {
+      setActiveStep(prevActiveStep => prevActiveStep - 1)
+    }
   }
 
   const handleReset = () => {
@@ -244,7 +260,7 @@ export default function HorizontalLinearStepper (props) {
     setPostalCode('')
   }
 
-  if (props.location.state === undefined) {
+  if (!props.location.state) {
     return <Redirect to='/login' />
   }
 
@@ -265,7 +281,7 @@ export default function HorizontalLinearStepper (props) {
         <Grid container direction='row' justify='center' alignItems='center'>
           <Grid item xs={8}>
             <Stepper activeStep={activeStep}>
-              {steps.map((label, index) => {
+              {steps.map(label => {
                 const stepProps = {}
                 const labelProps = {}
                 return (
@@ -286,8 +302,13 @@ export default function HorizontalLinearStepper (props) {
                     You're almost done! Once you confirm, we will send you an email with a link to activate your account!
                   </Typography>
                   <div className={classes.actions}>
-                    <Button className={classes.button} onClick={handleReset}>
-                      Reset
+                    <Button
+                      className={classes.button}
+                      onClick={handleReset}
+                      variant='contained'
+                      color='primary'
+                    >
+                      Redo registration
                     </Button>
                     <Button
                       onClick={handleSubmit}
@@ -308,7 +329,6 @@ export default function HorizontalLinearStepper (props) {
                   </div>
                   <div className={classes.actions}>
                     <Button
-                      disabled={activeStep === 0}
                       onClick={handleBack}
                       className={classes.button}
                     >

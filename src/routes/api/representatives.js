@@ -27,8 +27,24 @@ router.get(
   controller.getRepresentativeId
 )
 
+// @route post api/representatives/representative/representative/:name
+// @desc get image of specific mp
+// @access Public
 router.get('/representative/representative/:name', controller.getImageData)
 
-router.get('/getAllRepsFromAllParliaments', controller.getAllRepsFromAllParliaments)
+// @route post api/representatives/:repName/getAllRolesByRep
+// @desc  get all roles for specific mp
+// @access Public
+router.get('/:repName/getAllRolesByRep', controller.getAllRolesByRep)
+
+// @route post api/representatives/getAllRepsFromAllParliaments
+// @desc get all reps from all parliaments
+// @access Public
+router.get(
+  '/getAllRepsFromAllParliaments',
+  controller.getAllRepsFromAllParliaments
+)
+
+router.get('/representative/voting-history/:representative', controller.representativeVotingHistory)
 
 module.exports = router
