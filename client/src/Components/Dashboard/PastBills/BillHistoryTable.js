@@ -5,23 +5,23 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TablePagination from '@material-ui/core/TablePagination'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import TableRow from '@material-ui/core/TableRow'
 import BillDetails from './BillDetails'
 import clsx from 'clsx'
-import { fetchRepresentative, fetchUserRiding } from '../Utilities/CommonUsedFunctions'
 import axios from 'axios'
-import { TableSortLabel } from '@material-ui/core'
 import {
+  TableSortLabel,
   Card,
   CardHeader,
   CardContent,
   Divider,
   IconButton
 } from '@material-ui/core'
+
 import DescriptionDialog from '../../MyMP/DescriptionDialog'
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
 import { Transition } from '../General/GeneralDashboard'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const columns = [
   { id: 'number', label: 'Bill Number', minWidth: 120 },
@@ -139,11 +139,9 @@ export default function BillHistoryTable (props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
   const [open, setOpen] = React.useState(false)
   const content = {
-    title: 'Bill History Table',
-    body: 'This table shows all the bills for this current parliament, ' +
-        'including bills number,' +
-        " bill's type,date voted, your current MP's vote." +
-        ' You can also find more details by clicking on More Details button '
+    title: 'Voting History',
+    body: 'Explore the detailed voting record of your representative. This table ' +
+      'contains every vote in which your representative has participated.'
   }
   const handleClickOpen = () => {
     setOpen(true)
@@ -164,155 +162,127 @@ export default function BillHistoryTable (props) {
     setOrderBy(property)
   }
 
-  const [user, setUser] = React.useState(null)
-  useEffect(() => {
-    if (!user) {
-      // eslint-disable-next-line no-undef
-      const usr = JSON.parse(localStorage.getItem('user'))
-      setUser(usr)
-    }
-  }, [user])
-
-  const [representative, setRepresentative] = React.useState(null)
-  useEffect(() => {
-    async function getData () {
-      if (user && !representative) {
-        const riding = await fetchUserRiding(user.email)
-        const rep = await fetchRepresentative(riding)
-        setRepresentative(rep)
-      }
-    }
-    getData()
-  }, [user, representative])
-
   const [rows, setRows] = React.useState([])
   useEffect(() => {
     async function getData () {
-      if (rows.length === 0 && representative) {
-        const bills = await votingHistory(representative)
+      if (rows.length === 0 && props.representative) {
+        const bills = await votingHistory(props.representative.name)
         const rows = generateTableRows(bills)
         setRows(rows)
       }
     }
     getData()
-  }, [rows, representative])
+  }, [rows, props.representative])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
 
   const handleChangeRowsPerPage = event => {
-    setRowsPerPage(+event.target.value)
+    setRowsPerPage(event.target.value)
     setPage(0)
   }
 
   return (
     <div className={classes.container}>
       {rows.length === 0 ? (
-        <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            zIndex: '-2',
-            transform: 'translate(-50%, -50%)'
-          }}>
+        <div>
           <CircularProgress />
         </div>
       ) : (
-      <Card
-        {...rest}
-        className={clsx(classes.root, className)}
-      >
-        <CardHeader
-          classes={{
-            title: classes.title
-          }}
-          title='Voting History'
-          action={
-            <IconButton aria-label='settings' onClick={handleClickOpen}>
-              <HelpOutlineIcon />
-            </IconButton>
-          }
-        />
-        <Divider />
-        <CardContent className={classes.content}>
-          <div className={classes.tableWrapper}>
-            <Table stickyheader='true'>
-              <TableHead>
-                <TableRow>
-                  {columns.map((column, index) => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
-                      style={{ minWidth: column.minWidth }}
-                    >
-                      {index < columns.length - 1 ? (
-                        <TableSortLabel
-                          active={orderBy === column.id}
-                          direction={orderBy === column.id ? order : 'asc'}
-                          onClick={createSortHandler(column.id)}
-                        >
-                          {column.label}
-                        </TableSortLabel>
-                      ) : (
-                        `${column.label}`
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    return (
-                      <TableRow
-                        hover
-                        role='checkbox'
-                        tabIndex={-1}
-                        key={index}
-                      >
-                        {columns.map(column => {
-                          const value = row[column.id]
-                          return (
-                            <TableCell key={column.id} align={column.align}>
-                              {column.format && typeof value === 'number'
-                                ? column.format(value)
-                                : value}
-                            </TableCell>
-                          )
-                        })}
-                      </TableRow>
-                    )
-                  })}
-              </TableBody>
-            </Table>
-          </div>
-          <TablePagination
-            rowsPerPageOptions={[10, 20, 30]}
-            component='div'
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            backIconButtonProps={{
-              'aria-label': 'previous page'
+        <Card
+          {...rest}
+          className={clsx(classes.root, className)}
+        >
+          <CardHeader
+            classes={{
+              title: classes.title
             }}
-            nextIconButtonProps={{
-              'aria-label': 'next page'
-            }}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
+            title='Voting History'
+            action={
+              <IconButton aria-label='settings' onClick={handleClickOpen}>
+                <HelpOutlineIcon />
+              </IconButton>
+            }
           />
-        </CardContent>
-        <DescriptionDialog
-          open={open}
-          onClose={handleClose}
-          d3
-          explaination={content}
-          transition={Transition}
-        />
-      </Card>)}
+          <Divider />
+          <CardContent className={classes.content}>
+            <div className={classes.tableWrapper}>
+              <Table stickyheader='true'>
+                <TableHead>
+                  <TableRow>
+                    {columns.map((column, index) => (
+                      <TableCell
+                        key={index}
+                        align={column.align}
+                        style={{ minWidth: column.minWidth }}
+                      >
+                        {index < columns.length - 1 ? (
+                          <TableSortLabel
+                            active={orderBy === column.id}
+                            direction={orderBy === column.id ? order : 'asc'}
+                            onClick={createSortHandler(column.id)}
+                          >
+                            {column.label}
+                          </TableSortLabel>
+                        ) : (
+                        `${column.label}`
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {stableSort(rows, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      return (
+                        <TableRow
+                          hover
+                          role='checkbox'
+                          tabIndex={-1}
+                          key={index}
+                        >
+                          {columns.map(column => {
+                            const value = row[column.id]
+                            return (
+                              <TableCell key={column.id} align={column.align}>
+                                {column.format && typeof value === 'number'
+                                  ? column.format(value)
+                                  : value}
+                              </TableCell>
+                            )
+                          })}
+                        </TableRow>
+                      )
+                    })}
+                </TableBody>
+              </Table>
+            </div>
+            <TablePagination
+              rowsPerPageOptions={[10, 20, 30]}
+              component='div'
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              backIconButtonProps={{
+                'aria-label': 'previous page'
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'next page'
+              }}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+          </CardContent>
+          <DescriptionDialog
+            open={open}
+            onClose={handleClose}
+            d3
+            explaination={content}
+            transition={Transition}
+          />
+        </Card>)}
     </div>
   )
 }
