@@ -15,16 +15,18 @@ import ListItemText from '@material-ui/core/ListItemText'
 import List from '@material-ui/core/List'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
-import { capitalizedName, loadingTextdata } from '../Dashboard/Utilities/CommonUsedFunctions'
+import { capitalizedName } from '../Dashboard/Utilities/CommonUsedFunctions'
 import PersonIcon from '@material-ui/icons/Person'
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import FlagIcon from '@material-ui/icons/Flag'
 import LocationOnIcon from '@material-ui/icons/LocationOn'
 import Divider from '@material-ui/core/Divider'
+import CardHeader from '@material-ui/core/CardHeader'
 
 const stylingRepInfoCard = {
   bigAvatar: {
-    marginLeft: '35%',
+    marginTop: '5%',
+    marginLeft: '30%',
     width: 100,
     height: 100,
     border: '3px'
@@ -52,6 +54,8 @@ export default class ChartWrapper extends Component {
   }
 
   render () {
+    console.log(this.props.contents)
+
     return (
       <div ref='mapHolder'>
         <div id='map-holder'>
@@ -93,6 +97,11 @@ export default class ChartWrapper extends Component {
             <Grid item xs={4}>
               {this.props.contents ? (
                 <Card borderRadius='borderRadius' borderColor='grey.500' style={{ marginLeft: '20%' }}>
+                  <CardHeader
+                    style={{ textAlign: 'center' }}
+                    title='Representative Info'
+                  />
+                  <Divider />
                   <Avatar alt={this.props.contents.name} src={this.props.contents.imageUrl} style={stylingRepInfoCard.bigAvatar} />
                   <CardContent>
                     <Divider />
@@ -132,7 +141,7 @@ export default class ChartWrapper extends Component {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText>
-                          <span style={{ fontWeight: 'bold' }}>Member Since: </span> {loadingTextdata({ fromDate: this.props.contents.start, toDate: this.props.contents.end })}
+                          <span style={{ fontWeight: 'bold' }}>Member Since: </span> {this.props.contents.dateEntry}
                         </ListItemText>
                       </ListItem>
                     </List>

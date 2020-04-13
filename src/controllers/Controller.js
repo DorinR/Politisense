@@ -140,7 +140,6 @@ module.exports = {
     return RidingController.getRidingByRidingCode(req, res)
   },
 
-  // Map support data
   getMapSupportData: function (req, res) {
     return MapSupportDataController.getMapSupportData(req, res)
   },
@@ -159,5 +158,8 @@ module.exports = {
 
   getAllRepsFromAllParliaments: function (req, res) {
     return RepresentativeController.getAllRepsFromAllParliaments(req, res)
+  },
+  getRepresentativesDateEntryParliament: function (req, res) {
+    return RepresentativeController.getRepresentativesDateEntryParliament(req, res)
   }
 }

@@ -177,3 +177,38 @@ exports.getRepresentativeId = async (req, res) => {
       })
     })
 }
+
+exports.getRepresentativesDateEntryParliament = async (req, res) => {
+  const name = req.params.name.toLowerCase()
+  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
+  const rawData = await Promise.all(
+    parliaments.map(parliament => {
+      return findRepForSpecificParliament(parliament, name)
+    })
+  )
+  const jointArray = mergeArrays((rawData))
+  const dayEntryParliament = Math.min.apply(Math, jointArray.map(function (o) { return o }))
+  res.status(200).json({
+    success: true,
+    data: dayEntryParliament
+  })
+}
+
+async function findRepForSpecificParliament (parliament, name) {
+  const db = new Firestore().forParliament(parliament)
+  const politicians = []
+  await db.Politician()
+    .where('name', '==', name)
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        return []
+      }
+      snapshot.forEach(doc => {
+        politicians.push(doc.data().start)
+      })
+
+      return politicians
+    })
+  return politicians
+}
