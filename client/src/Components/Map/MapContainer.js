@@ -88,23 +88,23 @@ export default function MapContainer () {
       <Box m={2} />
       <Container>
         <Typography
-          style={{ display: 'inline-block' }}
-          className={classes.customHeaders}
-          align='left'
-          color='primary'
-          gutterBottom
+            component='h1'
+            variant='h2'
+            align='center'
+            color='textPrimary'
+            gutterBottom
         >
           Explore Canadian Ridings
-        </Typography>
-        <span className={classes.customTooltip}>
+          <span className={classes.customTooltip}>
           <InfoBubble
-            title='How To Use the Map'
-            text={
-              /* eslint-disable-next-line indent */
-            "Zooming on this map is done the same way you scroll on a webpage. Just use the clickwheel on your mouse or use two fingers on your trackpad. Click on a given riding and the map will automatically zoom-in to the appropriate level. Clicking on the 'Reset Zoom Level' button will bring the zoom level back to what it was at the beginning"
-            }
+              title='How To Use the Map'
+              text={
+                /* eslint-disable-next-line indent */
+                "Zooming on this map is done the same way you scroll on a webpage. Just use the clickwheel on your mouse or use two fingers on your trackpad. Click on a given riding and the map will automatically zoom-in to the appropriate level. Clicking on the 'Reset Zoom Level' button will bring the zoom level back to what it was at the beginning"
+              }
           />
         </span>
+        </Typography>
       </Container>
       <Container>
         {ridingCodes && shapeData && ridingMpData ? (
