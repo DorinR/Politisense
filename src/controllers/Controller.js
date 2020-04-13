@@ -7,8 +7,10 @@ const RidingController = require('./RidingController')
 const PartyController = require('./PartyController')
 const FinancialRecordController = require('./FinancialRecordController')
 const BudgetController = require('./BudgetController')
+const MapSupportDataController = require('./MapSupportDataController')
 const ActivityVotingController = require('./ActivityVotingController')
 const ParliamentController = require('./ParliamentController')
+const DataController = require('./DataController')
 
 module.exports = {
   userSignup: function (req, res) {
@@ -34,6 +36,12 @@ module.exports = {
   },
   checkIfUserExists: function (req, res) {
     return UserController.checkIfUserExists(req, res)
+  },
+  generateResetLink: function (req, res) {
+    return UserController.generateResetLink(req, res)
+  },
+  checkTokenValid: function (req, res) {
+    return UserController.checkTokenValid(req, res)
   },
   getUserInterests: function (req, res) {
     return UserController.getUserInterests(req, res)
@@ -152,6 +160,25 @@ module.exports = {
   getImageData: function (req, res) {
     return RepresentativeController.getImageData(req, res)
   },
+  getAllRolesByRep: function (req, res) {
+    return RepresentativeController.getAllRolesByRep(req, res)
+  },
+
+  dataIndex: function (req, res) {
+    return DataController.index(req, res)
+  },
+
+  update: function (req, res) {
+    return DataController.update(req, res)
+  },
+
+  getRidingByRidingCode: function (req, res) {
+    return RidingController.getRidingByRidingCode(req, res)
+  },
+
+  getMapSupportData: function (req, res) {
+    return MapSupportDataController.getMapSupportData(req, res)
+  },
 
   index: function (req, res) {
     return ActivityVotingController.index(req, res)
@@ -175,5 +202,15 @@ module.exports = {
 
   getParliamentNumber: function (req, res) {
     return RepresentativeController.getParliamentNumber(req, res)
+  },
+
+  getRepresentativesDateEntryParliament: function (req, res) {
+    return RepresentativeController.getRepresentativesDateEntryParliament(
+      req,
+      res
+    )
+  },
+  representativeVotingHistory: function (req, res) {
+    return RepresentativeController.votingHistory(req, res)
   }
 }

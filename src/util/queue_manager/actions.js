@@ -1,9 +1,10 @@
-module.exports.QueueAction = require('./QueueAction').QueueAction
-module.exports.QueueManager = require('./QueueManager').QueueManager
-module.exports.Start = require('./start/starts')
-module.exports.Stop = require('./stop/stops')
-module.exports.Before = require('./before/before')
-module.exports.After = require('./after/after')
-module.exports.Error = require('./error/errors')
-module.exports.After = require('./after/after')
-module.exports.Before = require('./before/before')
+module.exports = {
+  QueueAction: require('./QueueAction').QueueAction,
+  QueueManager: require('./QueueManager').QueueManager,
+  Start: require('./start/starts'),
+  Stop: require('./stop/stops'),
+  Before: require('./before/before'),
+  After: require('./after/after'),
+  Error: require('./error/errors'),
+  Log: require('./log/log')
+}

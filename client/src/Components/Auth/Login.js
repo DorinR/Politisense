@@ -87,16 +87,15 @@ export async function handleEmailLogin(user) {
 }
 
 export async function handleSocialLogin(social) {
-  return await axios
+  return axios
     .post('/api/users/socialLogin', { type: social })
     .then(res => {
-      const token = res.data.data
-      return tokenAuthenticate(token)
+      return tokenAuthenticate(res.data.data.token, res.data.data.config)
     })
-    .then(result => {
-      return result.user
+    .catch(e => {
+      console.error(e)
+      return {}
     })
-    .catch(console.error)
 }
 
 export default function Login(props) {
@@ -106,17 +105,23 @@ export default function Login(props) {
   const [authenticated, setAuthenticated] = useState(false)
   const [errors, setErrors] = useState({ email: '', password: '' })
 
-  function validateUserFromSocialProviders(type, cb) {
-    let user = {}
-    cb(type)
-      .then(usr => {
-        user = usr
-        return fetchUser(user.email)
+  function validateUserFromSocialProviders(type, getOAuthUserCallback) {
+    getOAuthUserCallback(type)
+      .then(oAuthUser => {
+        if(!oAuthUser.user) throw new Error()
+        return fetchUser(oAuthUser.user.email)
+          .then(resp => {
+            if(!resp.data.success) {
+              resp.data.data = oAuthUser.user
+            }
+            return resp
+          })
+          .catch(console.error)
       })
       .then(res => {
+        let user = res.data.data
         if (res.success) {
           // eslint-disable-next-line no-undef
-          user = res.data
           localStorage.setItem('user', JSON.stringify(user))
           setAuthenticated(true)
         } else {
@@ -234,7 +239,7 @@ export default function Login(props) {
                   <Grid item xs>
                     <Link
                       variant='body2'
-                      to='/signup'
+                      to='/reset'
                       className={classes.routerLink}>
                       Forgot password?
                     </Link>

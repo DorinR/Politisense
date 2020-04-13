@@ -1,0 +1,44 @@
+@startuml
+
+interface Action <T,U>
+class QueueManager
+package Errors #e0e0d1 {
+    class ActionDecorationError
+}
+package Parsers #e0e0d1 {
+    class XmlDataParser
+    class XmlParseError
+}
+
+package Firestore #e0e0d1 {
+    package Models #e0e0d1 {
+        class Model
+    }
+}
+package WrapperActions #e0e0d1 {
+    class ParserWrapperAction <T extends XmlDataParser, U extends Model>{
+        - Create: Function
+        - wrapped: String
+        - params: Object
+        + ParserWrapperAction(xmlParserType : T, params: Object) : ParserWrapperAction
+        + perform(xml : String) : Promise<Array<U>>
+    }
+    Action <|-- ParserWrapperAction
+    ParserWrapperAction --> Parsers
+    ParserWrapperAction --> Model
+
+    class QueueManagerWrapperAction<T extends QueueManager> {
+        - Create: Function
+        - wrapped: String
+        - params: Object
+        + ParserWrapperAction(QueueManagerType : T, params: Object) : ParserWrapperAction
+        + perform(params : Object) : Promise<Array<Array<Object>>>
+    }
+    QueueManagerWrapperAction --> QueueManager
+}
+WrapperActions <-- Errors
+
+
+
+
+@enduml

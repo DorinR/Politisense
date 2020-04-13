@@ -1,4 +1,4 @@
-const Job = require('../util/Job').AbstractJob
+const Job = require('./Job').AbstractJob
 const Actions = require('@action')
 const LegislativeActivityXmlParser = require('@parser').LegislativeActivityXmlParser
 
@@ -12,7 +12,7 @@ class LegislativeActivityFetchJob extends Job {
     return new LegislativeActivityFetchJob(params, cb)
       .addAction(new Actions.FetchAction(params))
       .addAction(new Actions.ParserWrapperAction(LegislativeActivityXmlParser))
-      .addAction(new Actions.FormatAction({ type: 'rss-feed' }))
+      .addAction(new Actions.QueryResponseAdapterAction({ type: 'rss-feed' }))
       .addErrorAction(new Actions.HandleConnectionErrorAction(cb, LegislativeActivityFetchJob.create, params))
   }
 }

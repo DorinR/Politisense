@@ -27,7 +27,7 @@ import Box from '@material-ui/core/Box'
 import axios from 'axios'
 import politisenseLogo from '../politisenseLogo.png'
 import Button from '@material-ui/core/Button'
-import { fetchUserRiding } from './Dashboard/Utilities/CommonUsedFunctions'
+import CenteredCircularProgress from './Dashboard/Utilities/CenteredCircularProgress'
 
 const drawerWidth = 330
 
@@ -132,18 +132,18 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchRepresentative (riding) {
+export async function fetchRepresentative(riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
       if (res.data.success) {
-        return res.data.data.name
+        return res.data.data
       }
     })
     .catch(console.error)
 }
 
-export default function MiniDrawer ({ children }) {
+export default function MiniDrawer({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -159,7 +159,7 @@ export default function MiniDrawer ({ children }) {
 
   useEffect(() => {
     handleDrawerOpen()
-    async function getData () {
+    async function getData() {
       // eslint-disable-next-line
       const user = JSON.parse(localStorage.getItem('user'))
       if (user) {
@@ -171,7 +171,7 @@ export default function MiniDrawer ({ children }) {
   }, [user])
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       if (riding) {
         const representative = await fetchRepresentative(riding)
         setUserRepresentative(representative)
@@ -306,8 +306,8 @@ export default function MiniDrawer ({ children }) {
             {theme.direction === 'rtl' ? (
               <ChevronRightIcon />
             ) : (
-              <ChevronLeftIcon />
-            )}
+                <ChevronLeftIcon />
+              )}
           </IconButton>
         </div>
         <Divider />
@@ -315,15 +315,26 @@ export default function MiniDrawer ({ children }) {
           <ListItemIcon>
             <PersonIcon className={classes.politisenseIcon} />
           </ListItemIcon>
-          {open ? (
+          {open && userRepresentative && user && riding ? (
             <ListItemAvatar>
-              <RepresentativeImage representativeToLoad={userRepresentative} />
+              <RepresentativeImage
+                representative={userRepresentative}
+                user={user}
+                riding={riding}
+              />
             </ListItemAvatar>
-          ) : null}
+          ) : (
+              <CenteredCircularProgress />
+            )}
         </ListItem>
-        {open ? (
+        {open && riding && user && userRepresentative ? (
           <ListItem>
-            <RepresentativeInfo representativeToLoad={userRepresentative} />
+            <RepresentativeInfo
+              representative={userRepresentative}
+              user={user}
+              riding={riding}
+              onChange={riding => { setRiding(riding) }}
+            />
           </ListItem>
         ) : null}
         <Divider />

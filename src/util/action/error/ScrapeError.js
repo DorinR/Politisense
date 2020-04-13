@@ -4,7 +4,6 @@ class ScrapeError extends Error {
     super()
     this.message = message
     this.link = link
-    this.name = module.exports.ScrapeErrorName
   }
 }
 module.exports.ScrapeError = ScrapeError

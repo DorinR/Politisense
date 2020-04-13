@@ -1,0 +1,49 @@
+@startuml
+interface Action <T,U>
+package FetchActions #e0e0d1 {
+    class FetchAction {
+        - send : Function
+        - params : Object
+        + FetchAction(params : Object) : FetchAction
+        + perform(params : Object) : Promise<String>
+        {static} + headers(void) : String
+        - logResult(resp: axios::Response) : String
+    }
+    Action <|-- FetchAction
+
+    class LinkScraperAction {
+        - send : Function
+        - url : String
+        + LinkScraperAction(params : Object) : LinkScraperAction
+        + perform(url : String) : Promise<String>
+        {static} + headers(void) : String
+        - logResult(resp: request-promise::Response) : String
+    }
+    Action <|-- LinkScraperAction
+
+    class PDFFileRetrieverAction {
+        - fp: String
+        - send: Function
+        - bill: String
+        + perform(void) : Promise<Uint8Array>
+        + PDFFileRetrieverAction(partialFp: String, bill: String) : PDFFileRetrieverAction
+        - createBufferFromResponse : (response: node-fetch::response) : Buffer
+        - formatBufferToUint8 : (buffer: Buffer) : Uint8Array
+    }
+    Action <|-- PDFFileRetrieverAction
+
+    class XMLRetrieverAction {
+        - fp: String
+        - send: Function
+        + perform(void) : Promise<String>
+        + XMLRetrieverAction(filepath: String) : XMLRetrieverAction
+    }
+    Action <|-- XMLRetrieverAction
+
+}
+package Errors #e0e0d1 {
+    class RequestError
+    class ScrapeError
+}
+FetchActions --> Errors
+@enduml

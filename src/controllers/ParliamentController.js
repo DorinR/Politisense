@@ -48,7 +48,7 @@ exports.getRoleDescription = (req, res) => {
   db.MinisterDescription().where('identifier', '==', req.body.ministry).select()
     .then(snapshot => {
       if (snapshot.empty) {
-        res.status(404).json({
+        res.status(200).json({
           message: 'description not found',
           success: false
         })

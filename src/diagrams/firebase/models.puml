@@ -1,0 +1,141 @@
+@startuml
+package Utils #e0e0d1 {
+    class Condition
+}
+package Models #e0e0d1 {
+    abstract class Model {
+        + serialise(model: Model) : String
+        {static} + deserialise(json: Object, proto: Model) : Model
+    }
+    Model -up-> Condition
+    class Bill extends Model{
+        - id : Number
+        - number: String
+        - text: String
+        - link: String
+        - dateVoted: String
+        - sponsorName: String
+        + Bill(id : Number, number: String, text: String, link: String, dateVoted: String, sponsorName: String) : Bill
+        {static} + deserialise(json: Object, proto: Bill) : Bill
+    }
+    class BillClassification extends Model {
+        - bill: String
+        - raw: String
+        - category: String
+        BillClassification(bill: String, raw: String, classification: String) : BillClassification
+        {static} + deserialise(json: Object, proto: BillClassification) : BillClassification
+    }
+    class TfIdfClassification extends Model {
+        - bill: String
+        - raw: Object
+        + TfIdfClassification(bill: String, raw: Object) : TfIdfClassification
+        {static} + deserialise(json: Object, proto: TfIdfClassification) : TfIdfClassification
+    }
+    class Description extends Model {
+        - identifier: String
+        - description: String
+        + Description(identifier: String, description: String) : Description
+        {static} + deserialise(json: Object, proto: Description) : Description
+    }
+    class FinancialRecord extends Model {
+        - member: String
+        - parent: String
+        - category: String
+        - amount: Number
+        - year: Number
+        - quarter: Number
+        + FinancialRecord(member: String, parent: String, category: String, amount: Number, year: Number, quarter: Number) : FinancialRecord
+        {static} + deserialise(json: Object, proto: FinancialRecord) : FinancialRecord
+    }
+    class LegislativeActivity extends Model {
+        - number: String
+        - title: String
+        - link: String
+        - description: String
+        - date: String
+        - yes: Number
+        - no: Number
+        + LegislativeActivity(number: String, title: String, link: String, description: String, date: String, yes: Number, no: Number) : LegislativeActivity
+        {static} + deserialise(json: Object, proto: LegislativeActivity) : LegislativeActivity
+    }
+    class PoliticalParty extends Model {
+        - name: String
+        - seats: Number
+        - imageUrl: String
+        + PoliticalParty(name: String, seats: Number, imageUrl: String) : PoliticalParty
+        {static} + deserialise(json: Object, proto: PoliticalParty) : PoliticalParty
+    }
+    class Politician extends Model {
+        - name: String
+        - party: String
+        - riding: String
+        - start: Number
+        - end: Number
+        - imageUrl: String
+        + Politician(name: String, party: String, riding: String, start: Number, end: Number, imageUrl: String) : Politician
+        {static} + deserialise(json: Object, proto: Politician) : Politician
+    }
+    class Riding extends Model {
+        - code: Number
+        - nameEnglish: String
+        - nameFrench: String
+        - population: Number
+        + Riding(code: Number, nameEnglish: String, nameFrench: String, population: Number) : Riding
+        {static} + deserialise(json: Object, proto: Riding) : Riding
+    }
+
+    class Role extends Model {
+        - group: String
+        - title: String
+        - fromDate: Number
+        - toDate: Number
+        - politician: String
+        - type: String
+        + Role(group: String, title: String, fromDate: Number, toDate: Number, politician: String, type: String) : Role
+        {static} + deserialise(json: Object, proto: Role) : Role
+    }
+    class User extends Model {
+        - email: String
+        - firstname: String
+        - lastname: String
+        - password: String
+        - postalCode: String
+        - riding: String
+        - categories: Object
+        + User(email: String, firstname: String, lastname: String, password: String, postalCode: String, riding: String, categories: Object) : User
+        {static} + deserialise(json: Object, proto: User) : User
+    }
+    class Vote extends Model {
+        - member: String
+        - vote: String
+        - yea: Boolean
+        - paired: Boolean
+        + Vote(member: String, vote: String, yea: Boolean, paired: Boolean) : Vote
+        {static} + deserialise(json: Object, proto: Vote) : Vote
+    }
+    class VoteRecord extends Model {
+        - billNumber: String
+        - id: Number
+        - bill: String
+        - yeas: Number
+        - nays: Number
+        - type: String
+        - year: Number
+        - month: Number
+        + VoteRecord(billNumber: String, id: Number, yeas: Number, nays: Number, type: String, year: Number, month: Number) : VoteRecord
+        {static} + deserialise(json: Object, proto: VoteRecord) : VoteRecord
+    }
+
+    package Builders #e0e0d1 {
+        class BillBuilder
+        class RoleBuilder
+        class VoteParticipantBuilder
+        class VoteRecordBuilder
+    }
+    Builders -up-> Bill
+    Builders -up-> Role
+    Builders -up-> Vote
+    Builders -up-> VoteRecord
+}
+
+@enduml

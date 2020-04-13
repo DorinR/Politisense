@@ -9,10 +9,10 @@ exports.getAllSpendingItemsForParty = (req, res) => {
     '5-Gifts',
     '6-Advertising'
   ]
-  const db = new Firestore(true)
+  const db = new Firestore()
   const financialRecordCollection = db.FinancialRecord()
   db.Politician()
-    .where('politicalParty', '==', req.params.party)
+    .where('party', '==', req.params.party)
     .innerJoin('_id', financialRecordCollection, 'member')
     .then(snapshot => {
       if (snapshot.empty) {

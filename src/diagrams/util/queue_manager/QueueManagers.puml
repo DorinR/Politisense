@@ -1,0 +1,110 @@
+@startuml
+package Actions #e0e0d1 {
+    package Errors #e0e0d1 {
+          class ActionDecorationError <<E, yellow>>
+          class ParseError <<E, yellow>>
+          class ScrapeError <<E, yellow>>
+    }
+}
+
+package Jobs #e0e0d1 {
+    abstract class Job
+}
+package Queues #e0e0d1 {
+    class Queue
+}
+
+package QueueManagers #e0e0d1 {
+    class QueueManager {
+        - activeJobs: Array<Job>
+        - activeJobCount: Number
+        - queue: Queue
+        - waitPeriod: Number
+        - result: Array<Object>
+        - lock: async-sema::Sema
+        - registry: Object
+        + execute(void): Array<Object>
+        + setBeforeAction(action: QueueAction) : QueueManager
+        + setStartAction(action: QueueAction) : QueueManager
+        + setStopAction(action: QueueAction) : QueueManager
+        + setAfterAction(action: QueueAction) : QueueManager
+        + setErrorAction(action: QueueAction) : QueueManager
+        + setLogAction(action: QueueAction) : QueueManager
+        # requeueCallback(jobs: Array<Job>) : void
+        # accumulate(result: Object) : Object
+        - run(void): Promise<void>
+        - start(void): Promise<void>
+        - stop(void): Promise<void>
+        - before(void): Promise<void>
+        - after(void): Promise<void>
+        - log(void): void
+        - finish(void): void
+        - waitForActiveJobs(e: Error): Promise<void>
+        - pruneActiveJobs(void) : Promise<void>
+        {static} - check(action: T) : void
+        {static} - wait(ms : Number) : Promise<void>
+    }
+    QueueManager --> QueueAction
+    QueueManager --> Job
+    QueueManager --> Queue
+
+    interface QueueAction {
+        + perform(void): Promise<void>
+    }
+}
+
+package Before #e0e0d1 {
+    class BillLinkFetchBefore
+    class RoleBefore
+    class UpdateBeforeAction
+    class VotersBefore
+}
+Before --> QueueManagers
+
+package After #e0e0d1 {
+    class PoliticianAfter
+    class VoteAfter
+    class VotersAfter
+}
+After --> QueueManagers
+
+package Error #e0e0d1 {
+    class GenericError
+    class ParseError
+    class ScrapeError
+    class ThrowError
+}
+Error --> QueueManagers
+Error --> Errors
+
+package Start #e0e0d1 {
+    class BillLinkStart
+    class BillPDFFetchStart
+    class BillStart
+    class CategoryStart
+    class ClassifyStart
+    class GenericStartAction
+    class LegislativeActivityStart
+    class PoliticianStart
+    class RoleStart
+    class UpdateStart
+    class VoteParticipantStart
+    class VoteRecordStart
+}
+Start --> QueueManagers
+Start --> Jobs
+Start --> Actions
+
+package Stop #e0e0d1 {
+    class GenericStop
+    class UpdateStop
+}
+Stop --> QueueManagers
+
+package Log #e0e0d1 {
+    class DefaultLogAction
+    class TypedLogAction
+}
+Log --> QueueManagers
+
+@enduml

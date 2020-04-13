@@ -5,20 +5,17 @@ import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import { red } from '@material-ui/core/colors'
-import PropTypes from 'prop-types'
-import Box from '@material-ui/core/Box'
 import CategoryCard from './CategoryCard'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import { ConfirmationDialogRaw } from './CategoryForm'
 import AddIcon from '@material-ui/icons/Add'
 import axios from 'axios'
-import { fetchUserRiding } from './Utilities/CommonUsedFunctions'
 import CircularProgress from '@material-ui/core/CircularProgress'
-/* eslint-disable */
+import { Hidden } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
   card: {
-    backgroundColor: '#43D0C4'
+    backgroundColor: '#00bcd4'
   },
   container: {
     margin: '20px',
@@ -49,50 +46,27 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     bottom: theme.spacing(2),
     right: theme.spacing(3)
+  },
+  xsMode: {
+    direction: 'column',
+    justify: 'center',
+    alignItems: 'center'
+
   }
 }))
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props
-  return (
-    <Typography
-      component='div'
-      role='tabpanel'
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}>
-      <Box p={3}>{children}</Box>
-    </Typography>
-  )
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired
-}
-
-export default function CategoryGrid() {
+export default function CategoryGrid(props) {
   const classes = useStyles()
-
-  const [user, setUser] = React.useState(null)
-  useEffect(() => {
-    // eslint-disable-next-line no-undef
-    const user = JSON.parse(localStorage.getItem('user'))
-    setUser(user)
-  }, [])
-
   const [categoryList, setCategoryList] = React.useState(null)
   useEffect(() => {
     async function getData() {
-      if (user) {
-        const interests = await getUserInterests(user.email)
+      if (props.user) {
+        const interests = await getUserInterests(props.user.email)
         setCategoryList(interests)
       }
     }
     getData()
-  }, [user])
+  }, [props.user])
 
   async function getUserInterests(email) {
     return axios
@@ -110,62 +84,7 @@ export default function CategoryGrid() {
     }
   }, [categoryList])
 
-  const [riding, setRiding] = React.useState(null)
-  useEffect(() => {
-    async function getData() {
-      if (user) {
-        const riding = await fetchUserRiding(user.email)
-        setRiding(riding)
-      }
-    }
-    getData()
-  }, [user])
-
-  const [userRepresentative, setUserRepresentative] = React.useState(null)
-  useEffect(() => {
-    async function getData() {
-      if (riding) {
-        const representative = await fetchRepresentative(riding)
-        setUserRepresentative(representative)
-      }
-    }
-    getData()
-  }, [riding])
-
-  async function fetchRepresentative(riding) {
-    return axios
-      .get(`/api/representatives/${riding}/getRepresentative`)
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data.name
-        }
-      })
-      .catch(console.error)
-  }
-
-  const [representativeData, setRepresentativeData] = React.useState(null)
-  useEffect(() => {
-    async function getData() {
-      if (userRepresentative) {
-        const representative = await getAllBillsByRep(userRepresentative)
-        setRepresentativeData(representative)
-      }
-    }
-    getData()
-  }, [userRepresentative])
-
-  async function getAllBillsByRep(head) {
-    return axios
-      .get(`/api/bills/${head}/getAllBillsByRepForAllParliaments`)
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data
-        }
-      })
-      .catch(console.error)
-  }
-
-  const [value] = React.useState('')
+  const [value] = React.useState(false)
   const deleteEvent = index => {
     const copyCategoryArray = Object.assign([], categoryList)
     copyCategoryArray.splice(index, 1)
@@ -198,7 +117,7 @@ export default function CategoryGrid() {
   async function updateUserCategory(categoryList) {
     return axios
       .post('/api/users/updateUserCategory', {
-        email: user.email,
+        email: props.user.email,
         categoryList: categoryList
       })
       .catch(console.error)
@@ -218,72 +137,146 @@ export default function CategoryGrid() {
   /* eslint-disable */
   return (
     <div className={classes.container}>
-      <Grid container spacing={2}>
-        {representativeData && categoryList ? (
-          categoryList.map((category, index) => {
-            return (
-              <Grid item xs={4} key={categoryList[index]}>
-                <CategoryCard
-                  id={index}
-                  title={category}
-                  delete={deleteEvent}
-                  representative={representativeData}
-                  data={representativeData}
-                />
-              </Grid>
-            )
-          })
-        ) : (
-            <div
-              style={{
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)'
-              }}>
-              <CircularProgress />
-            </div>
-          )}
-        {(counter === 0 || counter < 3) &&
-          representativeData &&
-          categoryList ? (
-            <Grid item md={4}>
-              <Card className={classes.card}>
-                <CardActionArea>
-                  <CardContent>
-                    <div onClick={handleClickListItem}>
-                      <Typography
-                        gutterBottom
-                        variant='h5'
-                        component='h2'
-                        align='center'
-                        style={{ color: 'white' }}>
-                        Add New Category
-                    </Typography>
-                      <div align='center'>
-                        <AddIcon
-                          color='white'
-                          fontSize='large'
-                          style={{ color: 'white', fontSize: 100 }}
-                        />
-                      </div>
-                    </div>
-                    <ConfirmationDialogRaw
-                      classes={{ paper: classes.paper }}
-                      keepMounted
-                      open={open}
-                      onClose={handleClose}
-                      value={value}
-                      existedcategories={categoryList}
-                    />
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
+      <Hidden smDown>
+        <Grid container spacing={2}>
+          {props.representativedata && categoryList ? (
+            categoryList.map((category, index) => {
+              return (
+                <Grid item xs={4} key={categoryList[index]}>
+                  <CategoryCard
+                    id={index}
+                    title={category}
+                    delete={deleteEvent}
+                    representative={props.representativedata}
+                    data={props.representativedata}
+                  />
+                </Grid>
+              );
+            })
           ) : (
-            <div />
-          )}
-      </Grid>
+              <div
+                style={{
+                  position: "relative",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)"
+                }}
+              >
+                <CircularProgress style={{ color: "#00bcd4" }} />
+              </div>
+            )}
+          {(counter === 0 || counter < 3) &&
+            props.representativedata &&
+            categoryList ? (
+              <Grid item md={4}>
+                <Card className={classes.card}>
+                  <CardActionArea>
+                    <CardContent>
+                      <div onClick={handleClickListItem}>
+                        <Typography
+                          gutterBottom
+                          variant="h5"
+                          component="h2"
+                          align="center"
+                          style={{ color: "white" }}
+                        >
+                          Add New Category
+                    </Typography>
+                        <div align="center">
+                          <AddIcon
+                            fontSize="large"
+                            style={{ color: "white", fontSize: 100 }}
+                          />
+                        </div>
+                      </div>
+                      <ConfirmationDialogRaw
+                        classes={{ paper: classes.paper }}
+                        keepMounted
+                        open={open}
+                        onClose={handleClose}
+                        value={value}
+                        existedcategories={categoryList}
+                        allcategories={props.categorylist}
+                      />
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            ) : (
+              <div />
+            )}
+        </Grid>
+      </Hidden>
+      <Hidden mdUp>
+        <Grid container spacing={2} direction="column" justify="center" alignItems="center">
+          {props.representativedata && categoryList ? (
+            categoryList.map((category, index) => {
+              return (
+                <Grid item xs={12} key={categoryList[index]}>
+                  <CategoryCard
+                    id={index}
+                    title={category}
+                    delete={deleteEvent}
+                    representative={props.representativedata}
+                    data={props.representativedata}
+                  />
+                </Grid>
+              );
+            })
+          ) : (
+              <div
+                style={{
+                  position: "relative",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)"
+                }}
+              >
+                <CircularProgress style={{ color: "#00bcd4" }} />
+              </div>
+            )}
+          {(counter === 0 || counter < 3) &&
+            props.representativedata &&
+            categoryList ? (
+              <Grid item md={4}>
+                <Card className={classes.card}>
+                  <CardActionArea>
+                    <CardContent>
+                      <div onClick={handleClickListItem}>
+                        <Typography
+                          gutterBottom
+                          variant="h5"
+                          component="h2"
+                          align="center"
+                          style={{ color: "white" }}
+                        >
+                          Add New Category
+                        </Typography>
+                        <div align="center">
+                          <AddIcon
+                            fontSize="large"
+                            style={{ color: "white", fontSize: 100 }}
+                          />
+                        </div>
+                      </div>
+                      <ConfirmationDialogRaw
+                        classes={{ paper: classes.paper }}
+                        keepMounted
+                        open={open}
+                        onClose={handleClose}
+                        value={value}
+                        existedcategories={categoryList}
+                        allcategories={props.categorylist}
+                      />
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            ) : (
+              <div />
+            )}
+        </Grid>
+      </Hidden>
     </div>
-  )
+  );
 }
