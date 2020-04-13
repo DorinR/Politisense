@@ -137,7 +137,6 @@ export default function Voting() {
             filtered = recentBills.filter((bills) =>
                 bills.title.toLowerCase().includes(filter.toLowerCase())
             )
-            console.log("filtered in else -- ", filtered)
         }
         console.log("filtered ", filtered)
         setfilteredBills(filtered)
@@ -187,66 +186,66 @@ export default function Voting() {
                 onChange={handleFilterChange}
                 color='primary'
             />
-            {/* {filteredBills && filteredBills.length > 0 ? ( */}
-            <Grid item xs={12} align='center'>
-                {/* {filteredBills.map((recentBills) => ( */}
-                <List className={classes.root}>
-                    {recentBills.map((bills, index) => (
-                        <ListItem key={index} value={bills}>
-                            <ListItemAvatar>
-                                <Avatar src='http://www.pngall.com/wp-content/uploads/2016/07/Canada-Leaf-PNG-Clipart.png' />
-                            </ListItemAvatar>
-                            <Card className={classes.root}>
-                                <CardContent>
-                                    <Typography className={classes.title} color='primary' gutterBottom>
-                                        {bills.title}
-                                    </Typography>
-                                    <Typography className={classes.date}>
-                                        Retrieved on {bills.date}
-                                    </Typography>
-                                    <CardActions>
-                                        <Typography className={classes.details}>
-                                            Get more details
-                                             </Typography>
-                                        <Typography className={classes.link}>
-                                            <Link href='#' onClick={preventDefault} className={classes.link}>
-                                                {bills.link}
-                                            </Link>
+            {filteredBills && filteredBills.length > 0 ? (
+                <Grid item xs={12} align='center'>
+                    {/* {filteredBills.map((recentBills) => ( */}
+                    <List className={classes.root}>
+                        {filteredBills.map((bills, index) => (
+                            <ListItem key={index} value={bills}>
+                                <ListItemAvatar>
+                                    <Avatar src='http://www.pngall.com/wp-content/uploads/2016/07/Canada-Leaf-PNG-Clipart.png' />
+                                </ListItemAvatar>
+                                <Card className={classes.root}>
+                                    <CardContent>
+                                        <Typography className={classes.title} color='primary' gutterBottom>
+                                            {bills.title}
                                         </Typography>
-                                    </CardActions>
-                                    <Typography variant='body2' component='p'>
-                                        {bills.description}
-                                    </Typography>
-                                    {storagePostalCode === ipPostalCode && bills.description !== ''
-                                        ? <Alert className={classes.alert} severity='error'>
-                                            Read the bill properly. Once you cast your vote, it cannot be undone!
+                                        <Typography className={classes.date}>
+                                            Retrieved on {bills.date}
+                                        </Typography>
+                                        <CardActions>
+                                            <Typography className={classes.details}>
+                                                Get more details
+                                             </Typography>
+                                            <Typography className={classes.link}>
+                                                <Link href='#' onClick={preventDefault} className={classes.link}>
+                                                    {bills.link}
+                                                </Link>
+                                            </Typography>
+                                        </CardActions>
+                                        <Typography variant='body2' component='p'>
+                                            {bills.description}
+                                        </Typography>
+                                        {storagePostalCode === ipPostalCode && bills.description !== ''
+                                            ? <Alert className={classes.alert} severity='error'>
+                                                Read the bill properly. Once you cast your vote, it cannot be undone!
                                       </Alert> : ''}
-                                    {storagePostalCode === ipPostalCode && !hasNotClicked.includes(index) && bills.description !== ''
-                                        ? <ButtonGroup>
-                                            <Button value='yes' id={index} className={classes.for} onClick={(event) => registerButtonClick(event, bills.number, bills.title, bills.link, bills.description, bills.date, index)}>For</Button>
-                                            <Button value='no' id={index} className={classes.against} onClick={(event) => registerButtonClick(event, bills.number, bills.title, bills.link, bills.description, bills.date, index)}>Against</Button>
-                                        </ButtonGroup> : ''}
-                                    {bills.description !== '' && hasNotClicked.includes(index)
-                                        ? <List component='nav' className={classes.root} aria-label='mailbox folders'>
-                                            <ListItem>
-                                                <ListItemText primary='For' /> {bills.yes}
-                                            </ListItem>
-                                            <Divider />
-                                            <ListItem>
-                                                <ListItemText primary='Against' /> {bills.no}
-                                            </ListItem>
-                                        </List> : ''}
-                                </CardContent>
-                            </Card>
-                        </ListItem>
-                    ))}
-                </List>
-            // ))}
-            </Grid>) : (
-            <Typography variant='h5' component='h2'>
-                No Results Found
+                                        {storagePostalCode === ipPostalCode && !hasNotClicked.includes(index) && bills.description !== ''
+                                            ? <ButtonGroup>
+                                                <Button value='yes' id={index} className={classes.for} onClick={(event) => registerButtonClick(event, bills.number, bills.title, bills.link, bills.description, bills.date, index)}>For</Button>
+                                                <Button value='no' id={index} className={classes.against} onClick={(event) => registerButtonClick(event, bills.number, bills.title, bills.link, bills.description, bills.date, index)}>Against</Button>
+                                            </ButtonGroup> : ''}
+                                        {bills.description !== '' && hasNotClicked.includes(index)
+                                            ? <List component='nav' className={classes.root} aria-label='mailbox folders'>
+                                                <ListItem>
+                                                    <ListItemText primary='For' /> {bills.yes}
+                                                </ListItem>
+                                                <Divider />
+                                                <ListItem>
+                                                    <ListItemText primary='Against' /> {bills.no}
+                                                </ListItem>
+                                            </List> : ''}
+                                    </CardContent>
+                                </Card>
+                            </ListItem>
+                        ))}
+                    </List>
+                // ))}
+                </Grid>) : (
+                    <Typography variant='h5' component='h2'>
+                        No Results Found
                     </Typography>
-            {/* )} */}
+                )}
         </Grid>
     )
 
