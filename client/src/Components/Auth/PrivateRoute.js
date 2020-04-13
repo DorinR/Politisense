@@ -54,7 +54,7 @@ export default function PrivateRoute (props) {
                 <Component {...props} />
               )
               : unverified()}
-              /* eslint-disable-next-line indent */
+/* eslint-disable-next-line indent */
           />}
     </div>
   )
