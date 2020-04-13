@@ -37,12 +37,12 @@ export default function MyMP (props) {
   }, [])
 
   useEffect(() => {
-    if(!user) {
+    if (!user) {
       // eslint-disable-next-line no-undef
       const usr = JSON.parse(localStorage.getItem('user'))
       setUser(usr)
     }
-  },[user])
+  }, [user])
 
   async function getAllRepsFromAllParliaments () {
     return axios

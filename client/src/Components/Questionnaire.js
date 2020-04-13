@@ -197,7 +197,6 @@ export default function HorizontalLinearStepper (props) {
       userToSignup.categories = [category1, category2]
 
       // eslint-disable-next-line no-undef
-      console.log(userToSignup)
       localStorage.setItem('user', JSON.stringify(userToSignup))
       await axios.post('/api/users/signup', userToSignup)
       props.history.push('/general')

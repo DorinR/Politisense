@@ -193,7 +193,7 @@ const Sidebar = withRouter((props) => {
     setOpenSidebar(false)
   }
   useEffect(() => {
-    if(!user) {
+    if (!user) {
       // eslint-disable-next-line no-undef
       const usr = JSON.parse(localStorage.getItem('user'))
       setUser(usr)
