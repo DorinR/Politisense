@@ -62,12 +62,6 @@ function getStartYear(parlSession) {
       return 2011
     case 40:
       return 2008
-    case 39:
-      return 2006
-    case 38:
-      return 2004
-    case 37:
-      return 2001
     default:
       return 'no financial data for this parliament session'
   }
@@ -83,6 +77,7 @@ export default function RepresentativeCard() {
   const [nbPairedBills, setNbPairedBills] = useState(0)
   const [partyImageUrl, setPartyImageUrl] = useState('')
   const [totalExpensesYear, setTotalExpensesYear] = useState(0)
+  const [parliamentNumber, setParliamentNumber] = useState(0)
 
   const updateNameFromSwitcher = mpObject => {
     setStartDate(mpObject.start)
@@ -94,27 +89,24 @@ export default function RepresentativeCard() {
 
   useEffect(() => {
     async function getData() {
-      console.log('NEW MP LOOKUP')
       const data = { start: startDate }
-      console.log('data ', data)
       const member = await fetchPastRepresentativeId(name, data)
-      console.log('member ', member)
       const partyData = await getPartyData(politicalParty)
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, data)
-      console.log('pastRepresentativeVotes ', pastRepresentativeVotes)
       const parliamentSession = pastRepresentativeVotes[0].parliament
-      console.log('parliamentSession ', parliamentSession)
       const startYear = getStartYear(parliamentSession)
       const parliamentData = { parliament: parliamentSession, year: startYear }
       const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, data)
-      const totalBills = calculateTotalVotesBills(pastRepresentativeVotes)
-      const totalPairedBills = calculateTotalVotesBills(pastRepresentativePairedVotes)
-      const expensesYear = await fetchPastRepresentativeSpending(member, parliamentData)
-      console.log(expensesYear)
-      setTotalExpensesYear(expensesYear)
+      console.log("parliamentData.parliamentSession ", parliamentData.parliament)
+      setParliamentNumber(parliamentData.parliament)
+      if (parliamentData.parliament >= 40) {
+        const expensesYear = await fetchPastRepresentativeSpending(member, parliamentData)
+        setTotalExpensesYear(expensesYear)
+      }
+      console.log("totalExpensesYear ", totalExpensesYear)
       setPartyImageUrl(partyData.imageUrl)
-      setNbBills(totalBills)
-      setNbPairedBills(totalPairedBills)
+      setNbBills(pastRepresentativeVotes.length)
+      setNbPairedBills(pastRepresentativePairedVotes.length)
     }
     if (startDate) {
       getData()
@@ -180,49 +172,50 @@ export default function RepresentativeCard() {
                 <ListItemText>{capitalizedName(politicalParty)}</ListItemText>
               </ListItem>
               <Box m={2} />
-              <DividerBlock
-                text='Spending'
-                color={getPartyColor(politicalParty).backgroundColor}
-                infoBubbleTitle='Cumulative spending'
-                infoBubbleText='Only available data is displayed'
-                infoBubbleColor='white'
-              />
+              {parliamentNumber >= 40 ? (
+                <DividerBlock
+                  text='Spending'
+                  color={getPartyColor(politicalParty).backgroundColor}
+                  infoBubbleTitle='Cumulative spending'
+                  infoBubbleText='Only available data is displayed'
+                  infoBubbleColor='white'
+                />) : ''}
               <Box m={2} />
-              {numericalStyling(totalExpensesYear[0]) !== 'NaN' ? (
+              {numericalStyling(totalExpensesYear[0]) !== 'NaN' && parliamentNumber >= 40 ? (
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar style={getPartyColor(politicalParty)}>
                       <DollarIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>Year 1 : <ColoredText text={numericalStyling(totalExpensesYear[0])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                  <ListItemText>{startDate} : <ColoredText text={numericalStyling(totalExpensesYear[0])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
                 </ListItem>) : ''}
-              {numericalStyling(totalExpensesYear[1]) !== 'NaN' ? (
+              {numericalStyling(totalExpensesYear[1]) !== 'NaN' && parliamentNumber >= 40 ? (
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar style={getPartyColor(politicalParty)}>
                       <DollarIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>Year 3 : <ColoredText text={numericalStyling(totalExpensesYear[1])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                  <ListItemText>{startDate + 1} : <ColoredText text={numericalStyling(totalExpensesYear[1])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
                 </ListItem>) : ''}
-              {numericalStyling(totalExpensesYear[2]) !== 'NaN' ? (
+              {numericalStyling(totalExpensesYear[2]) !== 'NaN' && parliamentNumber >= 40 ? (
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar style={getPartyColor(politicalParty)}>
                       <DollarIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>Year 3 : <ColoredText text={numericalStyling(totalExpensesYear[2])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                  <ListItemText>{startDate + 2} : <ColoredText text={numericalStyling(totalExpensesYear[2])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
                 </ListItem>) : ''}
-              {numericalStyling(totalExpensesYear[3]) !== 'NaN' ? (
+              {numericalStyling(totalExpensesYear[3]) !== 'NaN' && parliamentNumber >= 40 ? (
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar style={getPartyColor(politicalParty)}>
                       <DollarIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>Year 4 : <ColoredText text={numericalStyling(totalExpensesYear[3])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                  <ListItemText>{startDate + 3} : <ColoredText text={numericalStyling(totalExpensesYear[3])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
                 </ListItem>) : ''}
               <Box m={2} />
               <DividerBlock
