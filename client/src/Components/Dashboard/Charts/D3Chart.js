@@ -2,32 +2,28 @@ import * as d3 from 'd3'
 
 export default class D3Chart {
   constructor (element, data, categoryType) {
-    const test = data.filter(element => element.billData.category === categoryType.toLowerCase())
+    const filteredDataByCategory = data.filter(element => element.billData.category === categoryType.toLowerCase())
 
     let yeaCounter = 0
     let nayCounter = 0
-    let abstainCounter = 0
 
-    if (test.length !== 0) {
-      test.forEach(element => {
+    if (filteredDataByCategory.length !== 0) {
+      filteredDataByCategory.forEach(element => {
         if (element.voteRecord.yea === true) {
           yeaCounter++
         } else if (element.voteRecord.yea === false) {
           nayCounter++
-        } else { abstainCounter++ }
+        }
       })
     }
     const totalYesNoVotes = [
       { index: 0, name: 'Yeas', value: yeaCounter },
-      { index: 1, name: 'Nays', value: nayCounter },
-      { index: 2, name: 'Abstain', value: abstainCounter }
+      { index: 1, name: 'Nays', value: nayCounter }
     ]
 
-    const width = 200
+    const width = 150
     const height = 150
     const opacity = 0.8
-    const opacityHover = 1
-    const otherOpacityOnHover = 0.8
     const radius = Math.min(width, height) / 2
 
     // The d3.pie() function takes in a dataset and creates handy data for us to generate a pie chart in the SVG.
@@ -44,31 +40,17 @@ export default class D3Chart {
       .innerRadius(radius - 20)
       .outerRadius(radius)
 
-    const colors = d3.scaleOrdinal(d3.schemeCategory10)
+    const colors = ['#3282b8', '#26d06d']
 
-    const div = d3.select(element).append('div')
-      .attr('class', 'tooltip')
-      .style('opacity', 0)
-      .style('testAlign', 'center')
-      .style('width', '30px')
-      .style('height', '28px')
-      .style('padding', '2px')
-      .style('font', 'sansSerif')
-      .style('background', 'lightsteelblue')
-      .style('border', '0px')
-      .style('border-radius', '8px')
-      .style('pointerEvents', 'none')
-      .style('position', 'absolute')
-
-    // adding svg element
-    const svg = d3.select(element).append('svg')
-      .attr('width', width)
-      .attr('height', height)
-      .attr('viewBox', '0 0 150 200')
-      .attr('class', 'pieChart')
+    const svg = d3.select(element)
+      .append('svg')
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .attr('preserveAspectRatio', 'xMinYMin')
+      .attr('viewBox', '0 0 400 150')
 
     const g = svg.append('g')
-      .attr('transform', 'translate(' + (width / 3) + ',' + (height / 2) + ')')
+      .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')')
 
     const arcs = g.selectAll('arc')
       .data(createPie(totalYesNoVotes))
@@ -77,66 +59,27 @@ export default class D3Chart {
       .attr('class', 'arc')
 
     arcs.append('path')
-      .attr('fill', (d, i) => { return colors(i) })
+      .attr('fill', (d, i) => { return colors[i] })
       .attr('d', createArc)
       .style('opacity', opacity)
-      .style('stroke', 'white')
-      .on('mouseover', function (d) {
-        d3.selectAll('path')
-          .style('opacity', otherOpacityOnHover)
-        d3.select(this)
-          .style('opacity', opacityHover)
 
-        div.transition()
-          .duration(200)
-          .style('opacity', 0.9)
-        div.html(d.value + '<br/>')
-          .style('left', (d3.event.pageX) + 'px')
-          .style('top', (d3.event.pageY + 10) + 'px')
-      })
-      .on('mouseout', function (d) {
-        d3.selectAll('path')
-          .style('opacity', opacity)
-
-        div.transition()
-          .duration(500)
-          .style('opacity', 0)
-      })
-      .on('touchstart', function (d) {
-        d3.selectAll('path')
-          .style('opacity', otherOpacityOnHover)
-        d3.select(this)
-          .style('opacity', opacityHover)
-
-        div.transition()
-          .duration(200)
-          .style('opacity', 0.9)
-      })
-
-    const legend = d3.select(element).append('div')
+    var legend = svg.append('svg')
+      .attr('preserveAspectRatio', 'xMinYMin')
       .attr('class', 'legend')
-      .style('margin-top', '-120px')
-      .style('margin-left', '180px')
-
-    const keys = legend.selectAll('.key')
+      .selectAll('g')
       .data(totalYesNoVotes)
-      .enter().append('div')
-      .attr('class', 'key')
-      .style('display', 'flex')
-      .style('align-items', 'center')
-      .style('margin-right', '-200px')
+      .enter().append('g')
+      .attr('transform', function (d, i) { return 'translate(' + (180) + ',' + (30 + (i * 20)) + ')' })
 
-    keys.append('div')
-      .attr('class', 'symbol')
-      .style('height', '10px')
-      .style('width', '10px')
-      .style('margin', '5px 5px')
-      .style('background-color', (d, i) => colors(i))
+    legend.append('rect')
+      .attr('width', 18)
+      .attr('height', 18)
+      .style('fill', function (d, i) { return colors[i] })
 
-    keys.append('div')
-      .attr('class', 'name')
+    legend.append('text')
+      .attr('x', 24)
+      .attr('y', 9)
+      .attr('dy', '.35em')
       .text(d => `${d.name} (${d.value})`)
-
-    keys.exit().remove()
   }
 }

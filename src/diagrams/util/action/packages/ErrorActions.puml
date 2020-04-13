@@ -1,0 +1,43 @@
+@startuml
+interface Action <T, U>
+package ErrorActions #e0e0d1 {
+    Action <|-- HandleConnectionErrorAction
+    Action <|-- HandleDownloadErrorAction
+
+    class HandleConnectionErrorAction {
+        - callback : Function
+        - create : Function
+        - tlds : Object
+        - handled : Boolean
+        {static} + connectionErrors: Array<String>
+        + HandleConnectionErrorAction(callback: Function, creationFn: Function, topLevelDomains: Object) : HandleConnectionErrorAction
+        + perform(void): Promise<Error>
+        {static} + connectionErrorName(message : String) : String
+        - throwOnUnexpected(e : Error) : Error
+        - requeueOnFailedConnection(e : Error) : Error
+        - throwOnMalformedLink(e : Error) : Error
+        - reconditionPartialLinks(e : Error) : Error
+        - dynamicCreate(e: Error, lnk: String) : Action
+    }
+    class HandleDownloadErrorAction {
+        - pdfError : String
+        - parseError : String
+        - freeError : String
+        - callback : Function
+        - create : Function
+        - params : Object
+        - error : Error
+        - handled : Boolean
+        + perform(void): Promise<Error>
+        + HandleDownloadErrorAction(callback: Function, creationFn: Function, params: Object) : HandleDownloadErrorAction
+        - requeueConnectionFailures(e: Error) : Error
+        - requeueDataFailure(e: Error) : Error
+    }
+}
+package Errors #e0e0d1 {
+    class ScrapeError
+    class PDFParseError
+}
+ErrorActions --> Errors
+
+@enduml

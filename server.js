@@ -1,9 +1,14 @@
 require('module-alias/register')
+const path = require('path')
+const result = require('dotenv').config({ path: path.resolve(process.cwd(), 'src/config/.env') })
+if (!result) {
+  throw new Error('ERROR: no .env found, cannot start server')
+}
+
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const path = require('path')
 
 // bodyparser middleware
 app.use(cors())
@@ -25,8 +30,10 @@ app.use('/api/bills', require('./src/routes/api/bills'))
 app.use('/api/auth', require('./src/routes/api/auth'))
 app.use('/api/ridings', require('./src/routes/api/ridings'))
 app.use('/api/budgets', require('./src/routes/api/budgets'))
+app.use('/api/data', require('./src/routes/api/data'))
 app.use('/api/parties', require('./src/routes/api/parties'))
 app.use('/api/financialRecords', require('./src/routes/api/financialRecords'))
+app.use('/api/mapSupportData', require('./src/routes/api/mapSupportData'))
 app.use('/api/voting', require('./src/routes/api/voting'))
 app.use('/api/parliament', require('./src/routes/api/parliament'))
 

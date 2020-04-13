@@ -1,0 +1,50 @@
+@startuml
+package Actions #e0e0d1 {
+    package QueueManagers #e0e0d1 {}
+}
+
+
+package Data #e0e0d1 {
+    package Errors #e0e0d1 {
+        class InvalidParameterError <<E, yellow>>
+    }
+    package Runners #e0e0d1 {
+        class BillLinkFetchRunner
+        class BillPDFFetchhRunner
+        class CategoryRunner
+        class ClassificationRunner
+    }
+    package Scrapers #e0e0d1 {
+        class BillScraper
+        class ExpenditureScraper
+        class LegislativeActivityScraper
+        class PoliticianScraper
+        class RoleScraper
+        class VoteParticipantScraper
+        class VoteScraper
+    }
+    package Updates #e0e0d1 {
+        class UpdateDependencyGraph
+        class UpdatePipelineManager
+        class UpdateScript <<(R, Orchid) resource>>
+    }
+    package Parameters #e0e0d1 {
+        class BillParameters <<(S, red) Singleton>>
+        class PoliticianParameters <<(S, red) Singleton>>
+        class VoteParameters <<(S, red) Singleton>>
+        class Parliament <<(S, red) Singleton>>
+        class UpdateNode <<(S, red) Singleton>>
+    }
+    note top of Parameters: "Useful object literals for defining Scraper/Runner/Update parameters"
+    Scrapers <-- Updates
+    Runners <-- Updates
+    Parameters <-- Scrapers
+    Parameters <-- Runners
+    Parameters <-- Updates
+    Scrapers --> Errors
+    Runners --> Errors
+}
+Data --> QueueManagers
+
+
+@enduml
