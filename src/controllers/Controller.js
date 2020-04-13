@@ -46,6 +46,12 @@ module.exports = {
   generateActivationLink: function (req, res) {
     return UserController.generateActivationLink(req, res)
   },
+  generateResetLink: function (req, res) {
+    return UserController.generateResetLink(req, res)
+  },
+  checkTokenValid: function (req, res) {
+    return UserController.checkTokenValid(req, res)
+  },
   getUserInterests: function (req, res) {
     return UserController.getUserInterests(req, res)
   },
@@ -180,7 +186,12 @@ module.exports = {
   getAllRepsFromAllParliaments: function (req, res) {
     return RepresentativeController.getAllRepsFromAllParliaments(req, res)
   },
-
+  getRepresentativesDateEntryParliament: function (req, res) {
+    return RepresentativeController.getRepresentativesDateEntryParliament(
+      req,
+      res
+    )
+  },
   representativeVotingHistory: function (req, res) {
     return RepresentativeController.votingHistory(req, res)
   }

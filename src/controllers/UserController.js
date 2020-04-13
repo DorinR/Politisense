@@ -29,6 +29,72 @@ exports.checkIfUserExists = (req, res) => {
     .catch(console.error)
 }
 
+exports.generateResetLink = (req, res) => {
+  const token = crypto.randomBytes(20).toString('hex')
+  const email = req.body.email
+  new Firestore().User()
+    .where('email', '==', email)
+    .update({ resetPasswordToken: token, resetPasswordExpires: Date.now() + 3600000 })
+    .then(result => {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: `${process.env.EMAIL_ADDRESS}`,
+          pass: `${process.env.EMAIL_PASSWORD}`
+        }
+      })
+      const mailOptions = {
+        from: 'politisense@gmail.com',
+        to: email,
+        subject: 'Link to Password Reset',
+        text:
+                  'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                  'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n' +
+                  `https://politisense.herokuapp.com/reset/${token}\n\n` +
+                  'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+      }
+      transporter.sendMail(mailOptions, (err) => {
+        if (err) {
+          res.status(400).json({ success: false, message: err })
+        } else {
+          res.json({
+            success: true,
+            data: 'email sent'
+          })
+        }
+      })
+    }).catch(err => {
+      res.status(500).json({ message: 'server error', success: false })
+      console.error(err)
+    })
+}
+
+exports.checkTokenValid = (req, res) => {
+  const token = req.body.token
+  const db = new Firestore()
+  let user = {}
+  db.User()
+    .where('resetPasswordToken', '==', token)
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty || snapshot.size < 1) {
+        res.status(200).json({ success: false, message: 'no token available', data: {} })
+      } else {
+        snapshot.forEach(doc => {
+          user = doc.data()
+        })
+        if (user.resetPasswordExpires > Date.now()) {
+          res.status(200).json({ success: true, data: user })
+        } else {
+          res.status(200).json({ success: false, message: 'expired token', data: {} })
+        }
+      }
+    }).catch(err => {
+      res.status(500).json({ message: 'server error', success: false })
+      console.error(err)
+    })
+}
+
 exports.getUserInterests = (req, res) => {
   const email = req.body.email
   const db = new Firestore()
