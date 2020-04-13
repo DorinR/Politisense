@@ -122,9 +122,9 @@ export default function CategoryCard (props) {
       case 'Criminal':
         return <GavelIcon color='primary' />
       case 'Religion':
-        return <FontAwesomeIcon icon={faPrayingHands} color='#43D0C4' size='lg' />
+        return <FontAwesomeIcon icon={faPrayingHands} color='#00BCD4' size='lg' />
       case 'Human Rights':
-        return <FontAwesomeIcon icon={faBalanceScale} color='#43D0C4' size='lg' />
+        return <FontAwesomeIcon icon={faBalanceScale} color='#00BCD4' size='lg' />
       default:
         return <IndeterminateCheckBoxIcon color='primary' />
     }

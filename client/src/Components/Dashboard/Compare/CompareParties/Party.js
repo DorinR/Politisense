@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 26,
     width: 150,
     height: 150,
-    border: '3px solid #41aaa8'
+    border: '3px solid #00BCD4'
   },
   card: {
     width: 420
@@ -302,7 +302,7 @@ export default function Party(props) {
                   alt='Party Logo'
                   src={partyImageUrl}
                   className={classes.bigAvatar}
-                  style={{ backgroundColor: '#43D0C4' }}>
+                  style={{ backgroundColor: '#00BCD4' }}>
                   <AccountBalanceIcon style={{ fontSize: 80 }} />
                 </Avatar>
               </Grid>

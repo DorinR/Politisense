@@ -34,7 +34,7 @@ const useStyles = makeStyles({
     textAlign: 'center'
   },
   MuiAvatar: {
-    backgroundColor: '#43D0C4'
+    backgroundColor: '#00BCD4'
   },
   container: {
     margin: '20px',
