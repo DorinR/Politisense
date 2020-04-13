@@ -1,3 +1,4 @@
+/* eslint-env react */
 import React, { useEffect, useState } from 'react'
 import { Redirect, Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
@@ -153,7 +154,6 @@ function ChangeAccountPassword (props) {
   if (changeCompleted) {
     return <Redirect to={{ pathname: '/login', state: { user: user } }} />
   }
-  /* eslint-disable */
   return (
     <div>
       <div className={classes.root}>
@@ -166,69 +166,76 @@ function ChangeAccountPassword (props) {
         </AppBar>
       </div>
       {statusReceived
-        ? <div>
-          {validToken ? <div>
-            <Container maxWidth='xs'>
-              <Grid container spacing={3}>
-                <form className={classes.form} noValidate onSubmit={handleSubmit}>
-                  <Grid item xs={12}>
-                    <TextField
-                      onChange={e => setPassword(e.target.value)}
-                      margin='normal'
-                      variant='filled'
-                      required
-                      fullWidth
-                      name='password'
-                      label='New Password'
-                      type='password'
-                      id='password'
-                      autoComplete='current-password'
-                      error={errors.password !== ''}
-                      helperText={errors.password}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      onChange={e => setPasswordConfirm(e.target.value)}
-                      margin='normal'
-                      variant='filled'
-                      required
-                      fullWidth
-                      name='passwordConfirm'
-                      label='Confirm Password'
-                      type='password'
-                      id='passwordConfirm'
-                      autoComplete='current-password'
-                      error={errors.passwordConfirm !== ''}
-                      helperText={errors.passwordConfirm}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      type='submit'
-                      variant='contained'
-                      color='primary'
-                      size='large'
-                      className={classes.button}
-                    >
-                      <SaveIcon />
-                      <Box m={0.5} />
-                                            Save New Password
-                    </Button>
-                  </Grid>
-                </form>
-              </Grid>
-            </Container>
-                        </div> : <Box className={classes.invalid}>
-            <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
-                            The reset link you followed has expired or is invalid
-                          </Typography>
-            <Link variant='body2' to='/reset' align='center'>
-                            Generate new link here
-                          </Link>
-                   </Box>}
-          </div>
-        : <CenteredCircularProgress/>}
+        ? (
+          <div>
+            {validToken
+              ? (
+                <div>
+                  <Container maxWidth='xs'>
+                    <Grid container spacing={3}>
+                      <form className={classes.form} noValidate onSubmit={handleSubmit}>
+                        <Grid item xs={12}>
+                          <TextField
+                            onChange={e => setPassword(e.target.value)}
+                            margin='normal'
+                            variant='filled'
+                            required
+                            fullWidth
+                            name='password'
+                            label='New Password'
+                            type='password'
+                            id='password'
+                            autoComplete='current-password'
+                            error={errors.password !== ''}
+                            helperText={errors.password}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            onChange={e => setPasswordConfirm(e.target.value)}
+                            margin='normal'
+                            variant='filled'
+                            required
+                            fullWidth
+                            name='passwordConfirm'
+                            label='Confirm Password'
+                            type='password'
+                            id='passwordConfirm'
+                            autoComplete='current-password'
+                            error={errors.passwordConfirm !== ''}
+                            helperText={errors.passwordConfirm}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Button
+                            type='submit'
+                            variant='contained'
+                            color='primary'
+                            size='large'
+                            className={classes.button}
+                          >
+                            <SaveIcon />
+                            <Box m={0.5} />
+                            Save New Password
+                          </Button>
+                        </Grid>
+                      </form>
+                    </Grid>
+                  </Container>
+                </div>
+              )
+              : (
+                <Box className={classes.invalid}>
+                  <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
+                                The reset link you followed has expired or is invalid
+                  </Typography>
+                  <Link variant='body2' to='/reset' align='center'>
+                                Generate new link here
+                  </Link>
+                </Box>
+              )}
+          </div>)
+        : (<CenteredCircularProgress />)}
     </div>
   )
 }
