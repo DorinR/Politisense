@@ -18,6 +18,8 @@ import Alert from '@material-ui/lab/Alert'
 import { getIpPostalCode } from './GetIpAddress'
 import ListItemText from '@material-ui/core/ListItemText'
 import Divider from '@material-ui/core/Divider'
+import TextField from '@material-ui/core/TextField'
+import Container from '@material-ui/core/Container'
 
 const useStyles = makeStyles({
     card: {
@@ -107,14 +109,13 @@ export default function Voting() {
     const preventDefault = (event) => event.preventDefault()
     const [userEmail, setUserEmail] = useState('')
     const [hasNotClicked, setHasNotClicked] = useState([])
+    const [filter, setFilter] = React.useState('')
+    const [filteredBills, setfilteredBills] = React.useState([])
 
     useEffect(() => {
         async function getData() {
-            console.log('INSIDE THE VOTING!')
             const user = JSON.parse(localStorage.getItem('user'))
-            console.log('user ', user)
             const userDetails = await fetchUserData(user.email)
-            console.log('userDetails ', userDetails)
             const postalCode = userDetails.postalCode.substring(0, 3)
             setUserEmail(userDetails.email)
             setStoragePostalCode(postalCode)
@@ -122,11 +123,29 @@ export default function Voting() {
             setIpPostalCode(ipAddress)
             const recentLegislativeActivities = await fetchRecentBills()
             const listBills = recentLegislativeActivities[0].data[0]
-            console.log(listBills)
-            setRecentBills(listBills)
+            console.log(listBills.slice(0, 100))
+            setRecentBills(listBills.slice(0, 100))
         }
         getData()
     }, [name])
+
+    useEffect(() => {
+        let filtered
+        if (filter === '') {
+            filtered = recentBills
+        } else {
+            filtered = recentBills.filter((bills) =>
+                bills.title.toLowerCase().includes(filter.toLowerCase())
+            )
+            console.log("filtered in else -- ", filtered)
+        }
+        console.log("filtered ", filtered)
+        setfilteredBills(filtered)
+    }, [filter, recentBills])
+
+    const handleFilterChange = (e) => {
+        setFilter(e.target.value)
+    }
 
     const registerButtonClick = (event, number, title, link, description, date, index) => {
         event.preventDefault()
@@ -160,58 +179,76 @@ export default function Voting() {
     }
 
     return (
-        <Grid item xs={12} align='center'>
-            <List className={classes.root}>
-                {recentBills.map((bills, index) => (
-                    <ListItem key={index} value={bills}>
-                        <ListItemAvatar>
-                            <Avatar src='http://www.pngall.com/wp-content/uploads/2016/07/Canada-Leaf-PNG-Clipart.png' />
-                        </ListItemAvatar>
-                        <Card className={classes.root}>
-                            <CardContent>
-                                <Typography className={classes.title} color='primary' gutterBottom>
-                                    {bills.title}
-                                </Typography>
-                                <Typography className={classes.date}>
-                                    Retrieved on {bills.date}
-                                </Typography>
-                                <CardActions>
-                                    <Typography className={classes.details}>
-                                        Get more details
-                  </Typography>
-                                    <Typography className={classes.link}>
-                                        <Link href='#' onClick={preventDefault} className={classes.link}>
-                                            {bills.link}
-                                        </Link>
+        <Grid>
+            <TextField
+                label='Filter through bills'
+                className={classes.search}
+                variant='outlined'
+                onChange={handleFilterChange}
+                color='primary'
+            />
+            {/* {filteredBills && filteredBills.length > 0 ? ( */}
+            <Grid item xs={12} align='center'>
+                {/* {filteredBills.map((recentBills) => ( */}
+                <List className={classes.root}>
+                    {recentBills.map((bills, index) => (
+                        <ListItem key={index} value={bills}>
+                            <ListItemAvatar>
+                                <Avatar src='http://www.pngall.com/wp-content/uploads/2016/07/Canada-Leaf-PNG-Clipart.png' />
+                            </ListItemAvatar>
+                            <Card className={classes.root}>
+                                <CardContent>
+                                    <Typography className={classes.title} color='primary' gutterBottom>
+                                        {bills.title}
                                     </Typography>
-                                </CardActions>
-                                <Typography variant='body2' component='p'>
-                                    {bills.description}
-                                </Typography>
-                                {storagePostalCode === ipPostalCode && bills.description !== ''
-                                    ? <Alert className={classes.alert} severity='error'>
-                                        Read the bill properly. Once you cast your vote, it cannot be undone!
-                    </Alert> : ''}
-                                {storagePostalCode === ipPostalCode && !hasNotClicked.includes(index) && bills.description !== ''
-                                    ? <ButtonGroup>
-                                        <Button value='yes' id={index} className={classes.for} onClick={(event) => registerButtonClick(event, bills.number, bills.title, bills.link, bills.description, bills.date, index)}>For</Button>
-                                        <Button value='no' id={index} className={classes.against} onClick={(event) => registerButtonClick(event, bills.number, bills.title, bills.link, bills.description, bills.date, index)}>Against</Button>
-                                    </ButtonGroup> : ''}
-                                {bills.description !== '' && hasNotClicked.includes(index)
-                                    ? <List component='nav' className={classes.root} aria-label='mailbox folders'>
-                                        <ListItem>
-                                            <ListItemText primary='For' /> {bills.yes}
-                                        </ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            <ListItemText primary='Against' /> {bills.no}
-                                        </ListItem>
-                                    </List> : ''}
-                            </CardContent>
-                        </Card>
-                    </ListItem>
-                ))}
-            </List>
+                                    <Typography className={classes.date}>
+                                        Retrieved on {bills.date}
+                                    </Typography>
+                                    <CardActions>
+                                        <Typography className={classes.details}>
+                                            Get more details
+                                             </Typography>
+                                        <Typography className={classes.link}>
+                                            <Link href='#' onClick={preventDefault} className={classes.link}>
+                                                {bills.link}
+                                            </Link>
+                                        </Typography>
+                                    </CardActions>
+                                    <Typography variant='body2' component='p'>
+                                        {bills.description}
+                                    </Typography>
+                                    {storagePostalCode === ipPostalCode && bills.description !== ''
+                                        ? <Alert className={classes.alert} severity='error'>
+                                            Read the bill properly. Once you cast your vote, it cannot be undone!
+                                      </Alert> : ''}
+                                    {storagePostalCode === ipPostalCode && !hasNotClicked.includes(index) && bills.description !== ''
+                                        ? <ButtonGroup>
+                                            <Button value='yes' id={index} className={classes.for} onClick={(event) => registerButtonClick(event, bills.number, bills.title, bills.link, bills.description, bills.date, index)}>For</Button>
+                                            <Button value='no' id={index} className={classes.against} onClick={(event) => registerButtonClick(event, bills.number, bills.title, bills.link, bills.description, bills.date, index)}>Against</Button>
+                                        </ButtonGroup> : ''}
+                                    {bills.description !== '' && hasNotClicked.includes(index)
+                                        ? <List component='nav' className={classes.root} aria-label='mailbox folders'>
+                                            <ListItem>
+                                                <ListItemText primary='For' /> {bills.yes}
+                                            </ListItem>
+                                            <Divider />
+                                            <ListItem>
+                                                <ListItemText primary='Against' /> {bills.no}
+                                            </ListItem>
+                                        </List> : ''}
+                                </CardContent>
+                            </Card>
+                        </ListItem>
+                    ))}
+                </List>
+            // ))}
+            </Grid>) : (
+            <Typography variant='h5' component='h2'>
+                No Results Found
+                    </Typography>
+            {/* )} */}
         </Grid>
     )
+
 }
+
