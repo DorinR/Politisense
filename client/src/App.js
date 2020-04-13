@@ -94,20 +94,17 @@ const App = () => {
       </Sidebar>
     </div>
   );
-  const PrivateRoute = ({ component: Component, ...rest }) => (
-    <Route
-      {...rest}
-      render={(
-        props // eslint-disable-next-line
-      ) =>
-        localStorage.getItem("user") ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to="/login" />
-        )
-      }
-    />
-  );
+    const PrivateRoute = ({ component: Component, ...rest }) => (
+        <Route
+            {...rest}
+            render={props =>
+                localStorage.getItem('user') ? (
+                    <Component {...props} {...rest} />
+                ) : (
+                    <Redirect to='/login' /> // eslint-disable-next-line
+                )}
+        />
+    )
 
   return (
     <Router>
