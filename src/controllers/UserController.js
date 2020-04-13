@@ -63,8 +63,10 @@ exports.generateResetLink = (req, res) => {
           })
         }
       })
-    }
-    )
+    }).catch(err => {
+      res.status(500).json({ message: 'server error', success: false })
+      console.error(err)
+    })
 }
 
 exports.checkTokenValid = (req, res) => {
@@ -87,8 +89,10 @@ exports.checkTokenValid = (req, res) => {
           res.status(200).json({ success: false, message: 'expired token', data: {} })
         }
       }
+    }).catch(err => {
+      res.status(500).json({ message: 'server error', success: false })
+      console.error(err)
     })
-    .catch(console.error)
 }
 
 exports.getUserInterests = (req, res) => {
