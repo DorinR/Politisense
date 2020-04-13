@@ -9,9 +9,7 @@ export async function fetchCategories () {
 }
 
 export async function checkUserExists (email) {
-  return axios.post('/api/users/checkIfUserExists', { email: email }).then(res => {
-    return res
-  })
+  return axios.post('/api/users/checkIfUserExists', { email: email })
 }
 
 export function mergeArrays (rawData) {

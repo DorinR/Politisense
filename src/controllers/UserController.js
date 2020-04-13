@@ -156,7 +156,7 @@ exports.generateActivationLink = (req, res) => {
         subject: 'Link to Activate Account',
         text:
                     'Please visit the following link to activate your account.\n\n' +
-                    `http://localhost:3000/activate/${token}\n\n` +
+                    `https://politisense.herokuapp.com/activate/${token}\n\n` +
                     'If you did not request this, please ignore this email.\n'
       }
       transporter.sendMail(mailOptions, (err) => {
@@ -217,7 +217,7 @@ exports.userSignup = async (req, res) => {
                 subject: 'Link to Activate Account',
                 text:
                           'Please visit the following link to activate your account.\n\n' +
-                          `http://localhost:3000/activate/${token}\n\n` +
+                          `https://politisense.herokuapp.com/activate/${token}\n\n` +
                           'If you did not request this, please ignore this email.\n'
               }
               transporter.sendMail(mailOptions, (err) => {

@@ -88,7 +88,6 @@ const App = () => {
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
           <PrivateRoute path='/map' component={MapContainer} />
-          <PrivateRoute path='/logout' component={Logout} />
           <PrivateRoute
             path='/map'
             component={MapContainer}

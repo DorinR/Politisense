@@ -55,9 +55,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export async function generateActivationLink (email) {
-  return axios.post('/api/users/generateActivationLink', { email: email }).then(res => {
-    return res
-  })
+  return axios.post('/api/users/generateActivationLink', { email: email })
 }
 
 export default function Reset () {
@@ -88,7 +86,7 @@ export default function Reset () {
     }
   }, [email])
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault()
     const user = {
       email: email
@@ -97,14 +95,10 @@ export default function Reset () {
     const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     const errors = {}
     errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
-    if (
-      errors.email === ''
-    ) {
-      checkUserExists(email).then(res => {
-        generateActivationLink(email).then(
-          handleClickSuccess()
-        )
-      })
+    if (errors.email === '') {
+      await checkUserExists(email)
+      await generateActivationLink(email)
+      handleClickSuccess()
     }
     setErrors(errors)
   }

@@ -1,3 +1,4 @@
+/* eslint-env react */
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import {
@@ -40,17 +41,20 @@ export default function PrivateRoute (props) {
   }, [])
 
   return (
-  /* eslint-disable indent */
     <div>
-      {loading ? <CenteredCircularProgress />
+      {loading
+        ? (
+          <CenteredCircularProgress />
+        )
         : <Route
           {...rest}
           render={props =>
-            verified ? (
-              <Component {...props} />
-            ) : (
-              unverified()
-          )}
+            verified
+              ? (
+                <Component {...props} />
+              )
+              : unverified()}
+              /* eslint-disable-next-line indent */
           />}
     </div>
   )

@@ -53,13 +53,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export async function activateAccount (token) {
-  console.log(token)
-  let result = ''
-  await axios.post('/api/users/activateAccount', { token: token }).then(res => {
-    result = res
-    console.log(res)
-  })
-  return result
+  return axios.post('/api/users/activateAccount', { token: token })
 }
 
 export default function Activate (props) {
