@@ -281,9 +281,7 @@ export default function MyMP (props) {
                 xl={8}
                 xs={12}
               >
-                <BillHistoryTable
-                  representative={userRepresentative}
-                />
+                {userRepresentative ? <BillHistoryTable representative={userRepresentative} /> : ''}
               </Grid>
             </Grid>
           </div>)

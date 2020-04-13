@@ -259,7 +259,7 @@ exports.votingHistory = async (req, res) => {
     })
   )
     .then((votes) => {
-      Utils.success(res, 'successfully retrieved votes', votes.flat())
+      Utils.success(res, 'successfully retrieved votes', mergeArrays(votes))
     })
     .catch((e) => {
       console.error(e)
