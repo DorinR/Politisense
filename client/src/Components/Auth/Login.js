@@ -17,7 +17,7 @@ import {
 import { tokenAuthenticate } from './authenticate'
 
 const gridStyle = {
-  display: 'flex',
+  // display: 'flex',
   justifyContent: 'center'
 }
 
@@ -44,9 +44,10 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   },
   social: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    // display: 'flex',
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    width: '100%'
   },
   routerLink: {
     textDecoration: 'none',
@@ -57,6 +58,9 @@ const useStyles = makeStyles(theme => ({
   },
   quote: {
     color: '#43D0C4'
+  },
+  container: {
+    width: '100%'
   }
 }))
 
@@ -235,7 +239,7 @@ export default function Login(props) {
                   className={classes.submit}>
                   Log in
                 </Button>
-                <Grid container>
+                <Grid container className={classes.container}>
                   <Grid item xs>
                     <Link
                       variant='body2'
@@ -260,9 +264,9 @@ export default function Login(props) {
                 style={{ textAlign: 'center' }}>
                 OR
               </Typography>
-              <div className='Wrapper' style={gridStyle}>
+              <div className={classes.container} style={gridStyle}>
                 <Grid container justify='center'>
-                  <Grid item xs={6} className={classes.social}>
+                  <Grid item xs={12} className={classes.social}>
                     <FacebookLoginButton
                       onClick={() => {
                         validateUserFromSocialProviders(
@@ -270,9 +274,11 @@ export default function Login(props) {
                           handleSocialLogin
                         )
                       }}
-                    />
+                    >
+                      <span className={classes.text}>Facebook</span>
+                    </FacebookLoginButton>
                   </Grid>
-                  <Grid item xs={6} className={classes.social}>
+                  <Grid item xs={12} className={classes.social}>
                     <TwitterLoginButton
                       onClick={() =>
                         validateUserFromSocialProviders(
@@ -280,9 +286,11 @@ export default function Login(props) {
                           handleSocialLogin
                         )
                       }
-                    />
+                    >
+                      <span className={classes.text}>Twitter</span>
+                    </TwitterLoginButton>
                   </Grid>
-                  <Grid item xs={6} className={classes.social}>
+                  <Grid item xs={12} className={classes.social}>
                     <GoogleLoginButton
                       type='button'
                       id='test'
@@ -292,7 +300,9 @@ export default function Login(props) {
                           handleSocialLogin
                         )
                       }
-                    />
+                    >
+                      <span className={classes.text}>Google</span>
+                    </GoogleLoginButton>
                   </Grid>
                 </Grid>
               </div>
