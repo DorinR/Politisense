@@ -1,5 +1,7 @@
 import { mergeArrays } from '../../client/src/Components/Dashboard/Utilities/CommonUsedFunctions'
 const Firestore = require('@firestore').Firestore
+const fs = require('fs')
+const path = require('path')
 exports.getAllBillsByHead = (req, res) => {
   const db = new Firestore()
   const votes = db.Vote()
@@ -408,4 +410,43 @@ exports.getNumberOfBillsSponsoredByParty = async (req, res) => {
         }
       })
     })
+}
+exports.fetchCategoriesFromTxtFiles = async (req, res) => {
+  const dir = path.join(__dirname, '../util/action/classify_action/vocabularies/')
+  throwIfDoesNotExist(dir)
+  let filenames = getFilesFromDirectory(dir)
+  filenames = filterByExpectedFormat(filenames)
+  const tags = createTagsFromFilenames(filenames)
+  if (tags) {
+    res.status(200).json({
+      success: true,
+      data: tags
+    })
+  } else {
+    res.status(400).json({
+      success: true,
+      data: 'No Categories'
+    })
+  }
+}
+function throwIfDoesNotExist (directory) {
+  if (!fs.existsSync(directory)) {
+    throw new Error('ERROR: could not locate vocabularies directory')
+  }
+}
+
+function getFilesFromDirectory (directory) {
+  let filenames = fs.readdirSync(directory)
+  filenames = filterByExpectedFormat(filenames)
+  return filenames
+}
+function filterByExpectedFormat (filenames) {
+  return filenames.filter(file => {
+    return file.includes('vocab_') && file.includes('.txt')
+  })
+}
+function createTagsFromFilenames (filenames) {
+  return filenames.map(file => {
+    return file.slice(6, file.length - 4)
+  })
 }
