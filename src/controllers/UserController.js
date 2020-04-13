@@ -170,7 +170,10 @@ exports.generateActivationLink = (req, res) => {
         }
       })
     }
-    )
+    ).catch(err => {
+      res.status(500).json({ message: 'server error', success: false })
+      console.error(err)
+    })
 }
 
 exports.userSignup = async (req, res) => {
@@ -235,8 +238,10 @@ exports.userSignup = async (req, res) => {
             res.json({
               success: true
             })
+          }).catch(err => {
+            res.status(500).json({ message: 'server error', success: false })
+            console.error(err)
           })
-          .catch(console.error)
       } else {
         res.json({
           success: false,
@@ -244,7 +249,10 @@ exports.userSignup = async (req, res) => {
         })
       }
     })
-    .catch(console.error)
+    .catch(err => {
+      res.status(500).json({ message: 'server error', success: false })
+      console.error(err)
+    })
 }
 exports.userLogin = (req, res) => {
   const credentials = {
