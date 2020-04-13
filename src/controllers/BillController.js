@@ -413,7 +413,12 @@ exports.getNumberOfBillsSponsoredByParty = async (req, res) => {
 }
 exports.fetchCategoriesFromTxtFiles = async (req, res) => {
   const dir = path.join(__dirname, '../util/action/classify_action/vocabularies/')
-  throwIfDoesNotExist(dir)
+  if(!dir){
+    res.status(400).json({
+      success: false,
+      data: 'No Categories'
+    })
+  }
   let filenames = getFilesFromDirectory(dir)
   filenames = filterByExpectedFormat(filenames)
   const tags = createTagsFromFilenames(filenames)
@@ -424,16 +429,12 @@ exports.fetchCategoriesFromTxtFiles = async (req, res) => {
     })
   } else {
     res.status(400).json({
-      success: true,
+      success: false,
       data: 'No Categories'
     })
   }
 }
-function throwIfDoesNotExist (directory) {
-  if (!fs.existsSync(directory)) {
-    throw new Error('ERROR: could not locate vocabularies directory')
-  }
-}
+
 
 function getFilesFromDirectory (directory) {
   let filenames = fs.readdirSync(directory)
