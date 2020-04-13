@@ -1,4 +1,4 @@
-const Job = require('../util/Job').AbstractJob
+const Job = require('./Job').AbstractJob
 const Actions = require('@action')
 const Scraper = Actions.LinkScraperAction
 const Parser = Actions.TextParserAction

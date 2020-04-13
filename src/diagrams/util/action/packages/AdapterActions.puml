@@ -1,0 +1,45 @@
+@startuml
+package Errors #e0e0d1 {
+    class RequestError
+}
+    interface Action <T, U>
+package AdapterActions #e0e0d1{
+     Action <|-- BillLinkFetchAdapterAction
+     Action <|-- PoliticianAfterAdapterAction
+     Action <|-- QueryResponseAdapterAction
+     Action <|-- RoleFetchLinkAdapterAction
+     Action <|-- RoleQueryResponseAdapterAction
+
+    class BillLinkFetchAdapterAction {
+        - params : Object
+        + BillLinkFetchAdapterAction(params: Object) : BillLinkFetchAdapterAction
+        + perform(void) : Promise<Object>
+    }
+
+    class PoliticianAfterAdapterAction {
+        - prefix : String
+        + PoliticianAfterAdapterAction(prefixLink: String) : BillLinkFetchAdapterAction
+        + perform(void) : Promise<Array<String>>
+    }
+
+    class QueryResponseAdapterAction {
+        - params : Object
+        + QueryResponseAdapterAction(params: Object) : QueryResponseAdapterAction
+        + perform(void) : Promise<Object>
+    }
+
+    class RoleFetchLinkAdapterAction {
+        - params : Object
+        + RoleFetchLinkAdapterAction(params: Object) : RoleFetchLinkAdapterAction
+        + perform(void) : Promise<Object>
+    }
+    RoleFetchLinkAdapterAction <-- Errors
+
+    class RoleQueryResponseAdapterAction {
+        - params : Object
+        + RoleQueryResponseAdapterAction(params: Object) : RoleQueryResponseAdapterAction
+        + perform(void) : Promise<Object>
+    }
+}
+
+@enduml

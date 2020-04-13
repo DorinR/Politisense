@@ -1,0 +1,52 @@
+@startuml
+
+interface Action <T,U>
+package FetchActions #e0e0d1 {
+    class PDFParseAction {
+        - buffer: Uint8Array
+        - parser: pdfreader::PdfReader
+        - text: String
+        - bill: String
+        - url: String
+        + PDFParseAction(url: String, bill: String) : PDFParseAction
+        + perform(buffer: Uint8Array) : Promise<String>
+    }
+    Action <|-- PDFParseAction
+
+    class SelectionAction {
+        - raw: Array<String>
+        - selected: Array<String>
+        - selector: String
+        + SelectionAction(selector: String): SelectionAction
+        + perform(raw : Array<String>) : Object
+    }
+    Action <|-- SelectionAction
+
+    class GroupSelectionAction {
+        - group: Array<String>
+        - selector: String
+        + GroupSelectionAction(selector: String, group: Array<String>): GroupSelectionAction
+        + perform(void) : Promise<String>
+        {static} - primaryFilter(group: Array<String>, selector: String) : Array<String>
+        {static} - fallbackFilter(group: Array<String>, selector: String) : Array<String>
+    }
+    Action <|-- GroupSelectionAction
+
+    class TextParserAction {
+        - tag: String
+        - filter: Function
+        - xml: Boolean
+        - load: Function
+        + TextParserAction(xml: Boolean, tag: String, filter: Function) : TextParserAction
+        + perform(content: String): Promise<Array<String>>
+        - loadAsXml(content: String): void
+    }
+    Action <|-- TextParserAction
+}
+FetchActions --> Errors
+package Errors #e0e0d1 {
+    class PDFParseError
+    class ParseError
+}
+
+@enduml

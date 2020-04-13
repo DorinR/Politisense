@@ -1,0 +1,35 @@
+@startuml
+class Error <<E, yellow>>
+package Graphs #e0e0d1 {
+    class Vertex {
+       # data: String
+       + Vertex(data: String) : Vertex
+    }
+
+    class TypeVertex<T> extends Vertex {
+       - type : T
+       + Vertex(type: T, data: String) : Vertex
+    }
+    class InvalidVertexError <<E, yellow>> extends Error {
+        - message: String
+        + InvalidVertexError(message : String): InvalidVertexError
+    }
+
+    class DirectedGraph {
+        # adjacencyList: Map
+        + addVertex(v : Vertex) : void
+        + addEdge(from: Vertex, to: Vertex) : void
+        {static} - check(v : T) : void
+        + forEach(fn : Function) : void
+        + get(v : Vertex) : Array<Vertex>
+        + eulerWalkDepthFirst(vertex: Vertex, depth) : Array<Vertex>
+    }
+
+    class UndirectedGraph extends DirectedGraph {
+        + addEdge(from: Vertex, to: Vertex) : void
+    }
+
+    DirectedGraph --> Vertex
+}
+
+@enduml
