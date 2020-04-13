@@ -97,14 +97,14 @@ export default function SignUp (props) {
     const nameFormat = /^[a-z ,.'-]+$/i
     // eslint-disable-next-line no-useless-escape
     const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-    const passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+    const passwordFormat = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/ // 8 character, 1 symbol, 1 upper, 1 lower, 1 digit
     let errors = {}
     const nameError = 'Invalid name format, Please use only letters or hyphens'
     errors.firstname = !user.firstname.match(nameFormat) ? nameError : ''
     errors.lastname = !user.lastname.match(nameFormat) ? nameError : ''
     errors.email = !user.email.match(emailFormat) ? 'Invalid email' : ''
     errors.password = !user.password.match(passwordFormat)
-      ? 'Invalid password format, please use at least 8 characters, comprised of alphanumeric characters'
+      ? 'Invalid password format, please use at least 8 characters, with atleast 1 uppercase and lowercase letter, 1 digit and 1 special character'
       : ''
     errors.passwordConfirm = !(user.password === passwordConfirm)
       ? 'Passwords do not match, please re-enter confirmation password'
@@ -222,11 +222,10 @@ export default function SignUp (props) {
                   label='Password'
                   type='password'
                   id='password'
-
-                  placeholder='8 characters, at least one letter and one digit'
+                  placeholder='Password'
                   autoComplete='current-password'
                   error={errors.password !== ''}
-                  helperText={errors.password}
+                  helperText={errors.password ? errors.password : '8 characters, 1 uppercase/lowercase letter, 1 symbol and 1 digit'}
                 />
               </Grid>
               <Grid item xs={12}>
