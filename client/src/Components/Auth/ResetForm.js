@@ -128,7 +128,7 @@ function ChangeAccountPassword (props) {
 
   const handleSubmit = e => {
     e.preventDefault()
-    const passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+    const passwordFormat = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
     const errors = {}
 
     const user = {
@@ -187,7 +187,7 @@ function ChangeAccountPassword (props) {
                             id='password'
                             autoComplete='current-password'
                             error={errors.password !== ''}
-                            helperText={errors.password}
+                            helperText={errors.password ? errors.password : '8 characters, 1 uppercase/lowercase letter, 1 symbol and 1 digit'}
                           />
                         </Grid>
                         <Grid item xs={12}>
