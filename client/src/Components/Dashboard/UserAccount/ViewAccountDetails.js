@@ -105,10 +105,10 @@ export default function ViewAccountDetails () {
         </Container>
       ) : (
         <Container>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
+          <br />
+          <br />
+          <br />
+          <br />
           <CenteredCircularProgress />
         </Container>
       )}
