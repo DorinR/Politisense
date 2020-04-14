@@ -47,4 +47,6 @@ router.get(
 
 router.get('/representative/voting-history/:representative', controller.representativeVotingHistory)
 
+router.get('/:name/getRepresentativesDateEntryParliament', controller.getRepresentativesDateEntryParliament)
+
 module.exports = router

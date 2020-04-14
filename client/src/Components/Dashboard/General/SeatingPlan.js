@@ -7,7 +7,6 @@ import { titleCase } from '../Utilities/CommonUsedFunctions'
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
 import Dialog from '@material-ui/core/Dialog'
 import Slide from '@material-ui/core/Slide'
 import Box from '@material-ui/core/Box'
@@ -46,20 +45,25 @@ function SeatingPlanHelpDialog (props) {
         <DialogTitle>What is a {props.parties.status} government?</DialogTitle>
         <DialogContent>
           {props.parties.status === 'Minority' ? (
-            <DialogContentText>
-                In Canada's parliamentary system of responsible government, minority governments occur when no party has a majority of seats in the legislature.
-                Typically, but not necessarily, the party with a plurality of seats forms the government.
-                In a minority situation, governments must rely on the support of other parties to stay in power, providing less stability than a majority government.
-                In Canada, political parties rarely form official coalition governments to form a majority.
-            </DialogContentText>
+            <span>
+              <Typography>In Canada, the party that wins a plurality of seats is invited to form the Government by the Governor-General.</Typography>
+              <br />
+              <Typography>Minority governments occur when no party has a majority of seats in the House of Commons.</Typography>
+              <br />
+              <Typography>Minority governments rely on the cooperation of other parties to pass legislation and to fulfill other governmental functions.</Typography>
+              <br />
+              <Typography>While not unheard-of, it is uncommon for parties in Canada to govern cooperatively in a coalition government.</Typography>
+              <br />
+            </span>
           ) : (
-            <DialogContentText>
-                A majority government refers to one or multiple governing parties that hold an absolute majority of seats in legislature.
-                This is as opposed to a minority government, where the largest party in a legislature only has a plurality of seats.
-                A majority government is usually assured of having its legislation passed and rarely, if ever, has to fear being defeated in parliament, a state
-                also known as a working majority. In contrast, a minority government must constantly bargain for support from other parties in order to pass
-                legislation and avoid being defeated on motions of no confidence.
-            </DialogContentText>
+            <span>
+              <Typography>In Canada, the party that wins a plurality of seats is invited to form the Government by the Governor-General.</Typography>
+              <br />
+              <Typography>Minority governments occur when no party has a strict majority of seats in the House of Commons.</Typography>
+              <br />
+              <Typography>Majority governments can pass legislation and to fulfill other governmental functions without cooperation from other parties</Typography>
+              <br />
+            </span>
           )}
         </DialogContent>
       </Dialog>

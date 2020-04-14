@@ -1,5 +1,7 @@
 import { Authentication as Auth, Firestore } from '@firestore'
 import represent from 'represent'
+import crypto from 'crypto'
+const nodemailer = require('nodemailer')
 
 exports.checkIfUserExists = (req, res) => {
   const email = req.body.email
@@ -27,6 +29,72 @@ exports.checkIfUserExists = (req, res) => {
     .catch(console.error)
 }
 
+exports.generateResetLink = (req, res) => {
+  const token = crypto.randomBytes(20).toString('hex')
+  const email = req.body.email
+  new Firestore().User()
+    .where('email', '==', email)
+    .update({ resetPasswordToken: token, resetPasswordExpires: Date.now() + 3600000 })
+    .then(result => {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: `${process.env.EMAIL_ADDRESS}`,
+          pass: `${process.env.EMAIL_PASSWORD}`
+        }
+      })
+      const mailOptions = {
+        from: 'politisense@gmail.com',
+        to: email,
+        subject: 'Link to Password Reset',
+        text:
+                  'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                  'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n' +
+                  `https://politisense.herokuapp.com/reset/${token}\n\n` +
+                  'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+      }
+      transporter.sendMail(mailOptions, (err) => {
+        if (err) {
+          res.status(400).json({ success: false, message: err })
+        } else {
+          res.json({
+            success: true,
+            data: 'email sent'
+          })
+        }
+      })
+    }).catch(err => {
+      res.status(500).json({ message: 'server error', success: false })
+      console.error(err)
+    })
+}
+
+exports.checkTokenValid = (req, res) => {
+  const token = req.body.token
+  const db = new Firestore()
+  let user = {}
+  db.User()
+    .where('resetPasswordToken', '==', token)
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty || snapshot.size < 1) {
+        res.status(200).json({ success: false, message: 'no token available', data: {} })
+      } else {
+        snapshot.forEach(doc => {
+          user = doc.data()
+        })
+        if (user.resetPasswordExpires > Date.now()) {
+          res.status(200).json({ success: true, data: user })
+        } else {
+          res.status(200).json({ success: false, message: 'expired token', data: {} })
+        }
+      }
+    }).catch(err => {
+      res.status(500).json({ message: 'server error', success: false })
+      console.error(err)
+    })
+}
+
 exports.getUserInterests = (req, res) => {
   const email = req.body.email
   const db = new Firestore()
@@ -51,14 +119,77 @@ exports.getUserInterests = (req, res) => {
     .catch(console.error)
 }
 
+exports.activateAccount = (req, res) => {
+  const token = req.body.token
+  new Firestore().User()
+    .where('verifyToken', '==', token)
+    .update({ verified: 'true' })
+    .then(result => {
+      res.json({
+        success: true,
+        data: 'verified'
+      })
+    }).catch(console.error)
+}
+
+exports.generateActivationLink = (req, res) => {
+  const email = req.body.email
+  let user = {}
+  new Firestore().User()
+    .where('email', '==', email)
+    .select()
+    .then(snapshot => {
+      snapshot.forEach(doc => {
+        user = doc.data()
+      })
+      const token = user.verifyToken
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: `${process.env.EMAIL_ADDRESS}`,
+          pass: `${process.env.EMAIL_PASSWORD}`
+        }
+      })
+      const mailOptions = {
+        from: 'politisense@gmail.com',
+        to: email,
+        subject: 'Link to Activate Account',
+        text:
+                    'Please visit the following link to activate your account.\n\n' +
+                    `https://politisense.herokuapp.com/activate/${token}\n\n` +
+                    'If you did not request this, please ignore this email.\n'
+      }
+      transporter.sendMail(mailOptions, (err) => {
+        if (err) {
+          res.status(400).json({ success: false, message: err })
+        } else {
+          res.json({
+            success: true,
+            data: 'email sent'
+          })
+        }
+      })
+    }
+    ).catch(err => {
+      res.status(500).json({ message: 'server error', success: false })
+      console.error(err)
+    })
+}
+
 exports.userSignup = async (req, res) => {
+  const token = crypto.randomBytes(20).toString('hex')
   const user = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     email: req.body.email,
     postalCode: req.body.postalCode,
     categories: req.body.categories,
-    riding: req.body.riding
+    riding: req.body.riding,
+    verifyToken: token,
+    verified: false
+  }
+  if (req.body.type === 'social') {
+    user.verified = true
   }
   if (req.body.password) {
     user.password = Auth.hashPassword(req.body.password)
@@ -75,11 +206,42 @@ exports.userSignup = async (req, res) => {
           .User()
           .insert(user)
           .then(() => {
+            if (req.body.type !== 'social') {
+              const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: `${process.env.EMAIL_ADDRESS}`,
+                  pass: `${process.env.EMAIL_PASSWORD}`
+                }
+              })
+              const mailOptions = {
+                from: 'politisense@gmail.com',
+                to: user.email,
+                subject: 'Link to Activate Account',
+                text:
+                          'Please visit the following link to activate your account.\n\n' +
+                          `https://politisense.herokuapp.com/activate/${token}\n\n` +
+                          'If you did not request this, please ignore this email.\n'
+              }
+              transporter.sendMail(mailOptions, (err) => {
+                if (err) {
+                  res.status(400).json({ success: false, message: err })
+                } else {
+                  res.json({
+                    success: true,
+                    data: 'email sent'
+                  })
+                }
+              })
+            }
+
             res.json({
               success: true
             })
+          }).catch(err => {
+            res.status(500).json({ message: 'server error', success: false })
+            console.error(err)
           })
-          .catch(console.error)
       } else {
         res.json({
           success: false,
@@ -87,7 +249,10 @@ exports.userSignup = async (req, res) => {
         })
       }
     })
-    .catch(console.error)
+    .catch(err => {
+      res.status(500).json({ message: 'server error', success: false })
+      console.error(err)
+    })
 }
 exports.userLogin = (req, res) => {
   const credentials = {
@@ -99,6 +264,40 @@ exports.userLogin = (req, res) => {
     .then((json) => {
       console.log(`${json.success ? 'Successful' : 'Unsuccessful'} login for ${credentials.email} with message: ${json.auth}`)
       res.json(json)
+    })
+    .catch(console.error)
+}
+
+exports.checkUserVerified = (req, res) => {
+  const email = req.body.email
+  let user = {}
+  const db = new Firestore()
+  db.User()
+    .where('email', '==', email)
+    .select()
+    .then(snapshot => {
+      if (snapshot.empty || snapshot.size > 1) {
+        res.json({
+          success: false,
+          message: 'doesnt exist',
+          data: {}
+        })
+      } else {
+        snapshot.forEach(doc => {
+          user = doc.data()
+        })
+        if (user.verified) {
+          res.json({
+            success: true,
+            message: 'verified'
+          })
+        } else {
+          res.json({
+            success: true,
+            message: 'unverfied'
+          })
+        }
+      }
     })
     .catch(console.error)
 }

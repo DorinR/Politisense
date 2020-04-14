@@ -30,22 +30,22 @@ import { PARTY_COLORS } from '../../Sidebar/RidingShape/partyColors'
 import DividerBlock from '../../Utilities/DividerBlock'
 import ColoredText from '../../Utilities/ColoredText'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   bigAvatar: {
     marginLeft: 26,
     width: 150,
     height: 150,
-    border: '3px solid #41aaa8'
+    border: '3px solid #00BCD4'
   },
   card: {
-    width: 420
-  }
+    width: 420,
+  },
 }))
 
 async function getPartyData(party) {
   return axios
     .get(`/api/parties/${party.toLowerCase()}/getAllPartydata`)
-    .then(res => {
+    .then((res) => {
       if (res.data.success) {
         return res.data.data
       }
@@ -56,7 +56,7 @@ async function getPartyData(party) {
 async function getNumberOfBillsSponsoredByParty(party) {
   return axios
     .get(`/api/bills/${party.toLowerCase()}/getNumberOfBillsSponsoredByParty`)
-    .then(res => {
+    .then((res) => {
       if (res.data.success) {
         return res.data.data
       }
@@ -69,7 +69,7 @@ async function getSpendingItemsForParty(party) {
     .get(
       `/api/financialRecords/${party.toLowerCase()}/getAllSpendingItemsForParty`
     )
-    .then(res => {
+    .then((res) => {
       if (res.data.success) {
         return res.data.data
       }
@@ -96,10 +96,10 @@ export function getSpendingCategoriesAverages(spendingItems) {
     giftsItemsCount,
     giftsTotal,
     advertisingItemsCount,
-    advertisingTotal
+    advertisingTotal,
   ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-  spendingItems.forEach(item => {
+  spendingItems.forEach((item) => {
     item.amount = parseInt(item.amount)
     if (typeof item.amount === 'number' && !isNaN(item.amount)) {
       switch (item.category) {
@@ -144,14 +144,14 @@ export function getSpendingCategoriesAverages(spendingItems) {
     travelAverage,
     hospitalityAverage,
     giftsAverage,
-    advertisingAverage
+    advertisingAverage,
   }
 }
 
 export function getAverage(...nums) {
   let count = 0
   let total = 0
-  nums.forEach(num => {
+  nums.forEach((num) => {
     num = parseInt(num)
     if (typeof num === 'number' && !isNaN(num)) {
       count++
@@ -253,7 +253,7 @@ export default function Party(props) {
         travelAverage,
         hospitalityAverage,
         giftsAverage,
-        advertisingAverage
+        advertisingAverage,
       } = getSpendingCategoriesAverages(spendingItems)
       setAverageTotalSpending(
         getAverage(
@@ -279,7 +279,7 @@ export default function Party(props) {
     }
   }, [party])
 
-  const updatePartyFromSwitcher = newParty => {
+  const updatePartyFromSwitcher = (newParty) => {
     setLoadingComplete(false)
     setIsDoneLoadingBillsData(false)
     setIsDoneLoadingSpendingData(false)
@@ -302,12 +302,12 @@ export default function Party(props) {
                   alt='Party Logo'
                   src={partyImageUrl}
                   className={classes.bigAvatar}
-                  style={{ backgroundColor: '#43D0C4' }}>
+                  style={{ backgroundColor: '#00BCD4' }}>
                   <AccountBalanceIcon style={{ fontSize: 80 }} />
                 </Avatar>
               </Grid>
             </Grid>
-            {loadingComplete ? (
+            {loadingComplete && (
               <List>
                 <DividerBlock text='General' color={iconColor} />
                 <ListItem>
@@ -485,9 +485,10 @@ export default function Party(props) {
                   </ListItemText>
                 </ListItem>
               </List>
-            ) : (
+            )}
+            {isLoadingData && (
               <Grid item style={{ paddingTop: '10px' }}>
-                {skeleton.map(skeleton => {
+                {skeleton.map((skeleton) => {
                   return <Skeleton animation={isLoadingData} />
                 })}
               </Grid>

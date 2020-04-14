@@ -10,7 +10,7 @@ import canadaimage from '../../assets/canada.jpg'
 import logo from '../../assets/PolotisenseTentativeLogo.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFacebook, faTwitter, faGoogle } from '@fortawesome/free-brands-svg-icons'
-
+import logo from '../../assets/politisenseLogoMedium.png'
 import axios from 'axios'
 import { tokenAuthenticate } from './authenticate'
 
@@ -46,20 +46,14 @@ const useStyles = makeStyles(theme => ({
   },
   routerLink: {
     textDecoration: 'none',
-    color: '#43D0C4'
+    color: '#00BCD4'
   },
   logo: {
     margin: theme.spacing(15, 0, 2)
   },
-  quote: {
-    color: '#43D0C4'
-  },
   container: {
     width: '100%'
   },
-  test: {
-    backgroundColor: 'red'
-  }
 }))
 
 const FacebookTheme = createMuiTheme({
@@ -158,7 +152,8 @@ export default function Login(props) {
             lastname: user.displayName
               ? user.displayName.substr(user.displayName.indexOf(' ') + 1)
               : ' ',
-            email: user.email
+            email: user.email,
+            type: 'social'
           }
           props.history.push({
             pathname: '/question',
@@ -265,7 +260,7 @@ export default function Login(props) {
                   <Grid item xs>
                     <Link
                       variant='body2'
-                      to='/signup'
+                      to='/reset'
                       className={classes.routerLink}>
                       Forgot password?
                     </Link>
