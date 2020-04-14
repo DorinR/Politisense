@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { useEffect, useRef } from 'react'
-export async function fetchCategories () {
-  return axios.get('/api/bills/fetchCategories').then((res) => {
+
+export async function fetchCategoriesFromTxtFiles () {
+  return axios.get('/api/bills/fetchCategoriesFromTxtFiles').then((res) => {
     if (res.data.success) {
       return res.data.data
     }
