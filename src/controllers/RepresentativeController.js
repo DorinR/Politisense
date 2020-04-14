@@ -32,7 +32,7 @@ exports.getImageData = async (req, res) => {
 }
 
 exports.getRepresentativeByRiding = (req, res) => {
-  console.log(`inside function`, req.params.riding)
+  console.log('inside function', req.params.riding)
   const db = new Firestore()
   const riding = req.params.riding.toLowerCase()
   return db
@@ -54,7 +54,7 @@ exports.getRepresentativeByRiding = (req, res) => {
     })
     .catch(console.error)
 }
-async function getAllRepsForEachParliament(parliamentNo) {
+async function getAllRepsForEachParliament (parliamentNo) {
   const db = new Firestore().forParliament(parliamentNo)
   const politicians = []
   await db
@@ -305,7 +305,7 @@ exports.getParliamentNumber = async (req, res) => {
     })
   }
 
-  async function findRepForSpecificParliament(parliament, name) {
+  async function findRepForSpecificParliament (parliament, name) {
     const db = new Firestore().forParliament(parliament)
     const politicians = []
     await db
@@ -368,7 +368,7 @@ exports.getParliamentNumber = async (req, res) => {
       })
   }
 
-  function getMemberIDInParliament(snapshot) {
+  function getMemberIDInParliament (snapshot) {
     if (snapshot.empty || snapshot.size > 1) {
       return null
     }
@@ -379,7 +379,7 @@ exports.getParliamentNumber = async (req, res) => {
     return id
   }
 
-  function addBillData(votes, allBills, index) {
+  function addBillData (votes, allBills, index) {
     const voteMap = mapVotesByBill(votes)
     const billIDs = Object.keys(voteMap)
     return Promise.resolve(allBills[index]).then((snapshot) => {
@@ -388,7 +388,7 @@ exports.getParliamentNumber = async (req, res) => {
     })
   }
 
-  function joinVotesToVoteRecords(id, parliament) {
+  function joinVotesToVoteRecords (id, parliament) {
     const db = new Firestore().forParliament(parliament)
     const memberVotes = db.Vote().where('member', '==', id)
     return db
@@ -399,7 +399,7 @@ exports.getParliamentNumber = async (req, res) => {
       })
   }
 
-  function addBillDataToMap(voteMap, billIDs, snapshot) {
+  function addBillDataToMap (voteMap, billIDs, snapshot) {
     snapshot.forEach((doc) => {
       if (billIDs.includes(doc.id)) {
         voteMap[doc.id].bill = doc.data()
@@ -407,7 +407,7 @@ exports.getParliamentNumber = async (req, res) => {
     })
   }
 
-  function mapVotesByBill(votes) {
+  function mapVotesByBill (votes) {
     const voteMap = {}
     votes.forEach((vote) => {
       voteMap[vote.bill] = vote
@@ -415,7 +415,7 @@ exports.getParliamentNumber = async (req, res) => {
     return voteMap
   }
 
-  function createExpectedRecord(vote) {
+  function createExpectedRecord (vote) {
     return {
       number: vote.billNumber,
       title: vote.bill.title,
@@ -429,11 +429,11 @@ exports.getParliamentNumber = async (req, res) => {
     }
   }
 
-  function isRecordComplete(vote) {
+  function isRecordComplete (vote) {
     return vote.dateVoted && vote.number
   }
 
-  async function fetchRolesByParliament(parliamentNo, repName) {
+  async function fetchRolesByParliament (parliamentNo, repName) {
     const id = await fetchIDbyRepName(parliamentNo, repName)
     if (id) {
       const roles = await fetchrolesbyID(parliamentNo, id)
@@ -442,7 +442,7 @@ exports.getParliamentNumber = async (req, res) => {
     return []
   }
 
-  async function fetchIDbyRepName(parliamentNo, repName) {
+  async function fetchIDbyRepName (parliamentNo, repName) {
     const db = new Firestore().forParliament(parliamentNo)
     let id = null
     await db
@@ -462,7 +462,7 @@ exports.getParliamentNumber = async (req, res) => {
     return id
   }
 
-  async function fetchrolesbyID(parliamentNo, id) {
+  async function fetchrolesbyID (parliamentNo, id) {
     const roles = []
     return new Firestore()
       .forParliament(parliamentNo)

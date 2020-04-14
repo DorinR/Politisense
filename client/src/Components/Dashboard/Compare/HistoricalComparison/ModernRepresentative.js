@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import RepresentativeImage from '../../Sidebar/RepresentativeImage'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import Avatar from '@material-ui/core/Avatar'
@@ -29,7 +28,7 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchCurrentRepresentative(riding) {
+async function fetchCurrentRepresentative (riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
@@ -41,7 +40,7 @@ async function fetchCurrentRepresentative(riding) {
     .catch(console.error)
 }
 
-async function fetchRepresentativeId(representative) {
+async function fetchRepresentativeId (representative) {
   return axios
     .get(`/api/representatives/${representative}/getRepresentativeId`)
     .then(res => {
@@ -52,12 +51,12 @@ async function fetchRepresentativeId(representative) {
     .catch(console.error)
 }
 
-async function fetchRepresentativeSpending(member, data) {
+async function fetchRepresentativeSpending (member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
   return res.data.data
 }
 
-export default function ModernRepresentative() {
+export default function ModernRepresentative () {
   const classes = useStyles()
   const [name] = useState('')
   const [totalBills, setTotalBills] = useState(0)
@@ -67,21 +66,22 @@ export default function ModernRepresentative() {
   const [politicalParty, setPoliticalParty] = React.useState([])
   const [partyImageUrl, setPartyImageUrl] = useState('')
   const [spending, setSpending] = useState(0)
+  const [representativeImage, setRepresentativeImage] = useState('')
 
   useEffect(() => {
-    async function getIssuedBillsByHead(head) {
+    async function getIssuedBillsByHead (head) {
       const res = await axios.get(
         `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
       )
       return res.data.data
     }
 
-    async function getData(mp) {
+    async function getData (mp) {
       // eslint-disable-next-line
       const user = JSON.parse(localStorage.getItem('user'))
       const riding = await fetchUserRiding(user.email)
       const currentRepresentative = await fetchCurrentRepresentative(riding)
-      console.log("currentRepresentative ", partyData)
+      setRepresentativeImage(currentRepresentative.imageUrl)
       setCurrentRepresentative(currentRepresentative.name)
       const member = await fetchRepresentativeId(currentRepresentative.name)
       const parliamentData = { parliament: 43 }
@@ -92,7 +92,6 @@ export default function ModernRepresentative() {
       setTotalBills(total)
       setPoliticalParty(currentRepresentative.party)
       const partyData = await getPartyData(currentRepresentative.party)
-      console.log("partyData ", partyData)
       setPartyImageUrl(partyData.imageUrl)
       const issuedBillsByHead = await getIssuedBillsByHead(name)
       if (issuedBillsByHead.length !== 0) {
@@ -124,9 +123,16 @@ export default function ModernRepresentative() {
                 />
               </Grid>
               <Grid item xs={9}>
-                <RepresentativeImage
-                  align='center'
-                  representativeToLoad={name}
+                <Avatar
+                  alt={currentRepresentative}
+                  src={representativeImage}
+                  style={{
+                    marginLeft: 26,
+                    width: 150,
+                    height: 150,
+                    border: '3px solid #41aaa8'
+                  }}
+                  className={classes.bigAvatar}
                 />
               </Grid>
             </Grid>

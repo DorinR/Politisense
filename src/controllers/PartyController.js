@@ -4,7 +4,7 @@ exports.getAllPartyData = (req, res) => {
   console.log('party: ', req.params.party)
   const db = new Firestore()
   const party = req.params.party
-  db.Party()
+  db.PoliticalParty()
     .where('name', '==', party)
     .select()
     .then(snapshot => {

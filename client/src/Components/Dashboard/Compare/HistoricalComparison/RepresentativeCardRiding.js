@@ -16,7 +16,7 @@ import FlagIcon from '@material-ui/icons/Flag'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import Box from '@material-ui/core/Box'
-import { capitalizedName, getPartyColor, calculateTotalVotesBills, getPartyData, numericalStyling } from '../../Utilities/CommonUsedFunctions'
+import { capitalizedName, getPartyColor, getPartyData, numericalStyling } from '../../Utilities/CommonUsedFunctions'
 import DividerBlock from '../../Utilities/DividerBlock'
 import ColoredText from '../../Utilities/ColoredText'
 
@@ -29,30 +29,30 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchPastRepresentativeId(representative, data) {
+async function fetchPastRepresentativeId (representative, data) {
   console.log('INSIDE FETCH REP ID')
   const res = await axios.post(`/api/representatives/${representative}/getPastRepresentativeId`, data)
   console.log('res.data.data ', res.data.data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeVotes(member, data) {
+async function fetchPastRepresentativeVotes (member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativeVotes`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativePairedVotes(member, data) {
+async function fetchPastRepresentativePairedVotes (member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativePairedVotes`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeSpending(member, data) {
+async function fetchPastRepresentativeSpending (member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
   console.log(res.data.data)
   return res.data.data
 }
 
-function getStartYear(parlSession) {
+function getStartYear (parlSession) {
   switch (parlSession) {
     case 43:
       return 2019
@@ -67,7 +67,7 @@ function getStartYear(parlSession) {
   }
 }
 
-export default function RepresentativeCard() {
+export default function RepresentativeCard () {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -84,11 +84,10 @@ export default function RepresentativeCard() {
     setName(mpObject.name)
     setImageUrl(mpObject.imageUrl)
     setPoliticalParty(mpObject.party)
-    console.log('mpObject ', mpObject)
   }
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const data = { start: startDate }
       const member = await fetchPastRepresentativeId(name, data)
       const partyData = await getPartyData(politicalParty)
@@ -97,13 +96,11 @@ export default function RepresentativeCard() {
       const startYear = getStartYear(parliamentSession)
       const parliamentData = { parliament: parliamentSession, year: startYear }
       const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, data)
-      console.log("parliamentData.parliamentSession ", parliamentData.parliament)
       setParliamentNumber(parliamentData.parliament)
       if (parliamentData.parliament >= 40) {
         const expensesYear = await fetchPastRepresentativeSpending(member, parliamentData)
         setTotalExpensesYear(expensesYear)
       }
-      console.log("totalExpensesYear ", totalExpensesYear)
       setPartyImageUrl(partyData.imageUrl)
       setNbBills(pastRepresentativeVotes.length)
       setNbPairedBills(pastRepresentativePairedVotes.length)

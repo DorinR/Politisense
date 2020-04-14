@@ -132,7 +132,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function fetchRepresentative(riding) {
+export async function fetchRepresentative (riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
@@ -143,7 +143,7 @@ export async function fetchRepresentative(riding) {
     .catch(console.error)
 }
 
-export default function MiniDrawer({ children }) {
+export default function MiniDrawer ({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -159,10 +159,11 @@ export default function MiniDrawer({ children }) {
 
   useEffect(() => {
     handleDrawerOpen()
-    async function getData() {
+    async function getData () {
       // eslint-disable-next-line
       const user = JSON.parse(localStorage.getItem('user'))
       if (user) {
+        // eslint-disable-next-line
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
       }
@@ -171,7 +172,7 @@ export default function MiniDrawer({ children }) {
   }, [user])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (riding) {
         const representative = await fetchRepresentative(riding)
         setUserRepresentative(representative)
@@ -306,8 +307,8 @@ export default function MiniDrawer({ children }) {
             {theme.direction === 'rtl' ? (
               <ChevronRightIcon />
             ) : (
-                <ChevronLeftIcon />
-              )}
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </div>
         <Divider />
@@ -324,8 +325,8 @@ export default function MiniDrawer({ children }) {
               />
             </ListItemAvatar>
           ) : (
-              <CenteredCircularProgress />
-            )}
+            <CenteredCircularProgress />
+          )}
         </ListItem>
         {open && riding && user && userRepresentative ? (
           <ListItem>
