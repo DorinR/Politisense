@@ -9,7 +9,7 @@ import { SnackbarProvider } from 'notistack'
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#43D0C4',
+      main: '#00BCD4',
       contrastText: '#fff'
     }
   },

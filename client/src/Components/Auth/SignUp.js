@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
   },
   routerLink: {
     textDecoration: 'none',
-    color: '#43D0C4'
+    color: '#00BCD4'
   }
 }))
 
@@ -256,10 +256,23 @@ export default function SignUp (props) {
             >
               CONTINUE WITH SIGN UP
             </Button>
-            <Grid container justify='flex-end'>
+            <Grid container>
+              <Grid item xs>
+                <Link
+                  variant='body2'
+                  to='/activate'
+                  className={classes.routerLink}
+                >
+                  Need an activation link?
+                </Link>
+              </Grid>
               <Grid item>
-                <Link variant='body2' to='/' className={classes.routerLink}>
-                  Already have an account? Log in
+                <Link
+                  variant='body2'
+                  to='/login'
+                  className={classes.routerLink}
+                >
+                  {'Already have an account? Login'}
                 </Link>
               </Grid>
             </Grid>

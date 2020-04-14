@@ -122,9 +122,9 @@ export default function CategoryCard (props) {
       case 'Criminal':
         return <GavelIcon color='primary' />
       case 'Religion':
-        return <FontAwesomeIcon icon={faPrayingHands} color='#43D0C4' size='lg' />
+        return <FontAwesomeIcon icon={faPrayingHands} color='#00BCD4' size='lg' />
       case 'Human Rights':
-        return <FontAwesomeIcon icon={faBalanceScale} color='#43D0C4' size='lg' />
+        return <FontAwesomeIcon icon={faBalanceScale} color='#00BCD4' size='lg' />
       default:
         return <IndeterminateCheckBoxIcon color='primary' />
     }
@@ -152,7 +152,7 @@ export default function CategoryCard (props) {
               </div>
 
             }
-            title={formattingCategory(props.title)}
+            title={props.title}
           />
           <DeleteCategoryDialog
             classes={{ paper: classes.paper }}
@@ -167,8 +167,6 @@ export default function CategoryCard (props) {
             {data.length
               ? <BarChartWrapper data={data} categoryType={props.title} />
               : 'title is empty!!'}
-            <br />
-            <br />
             <br />
             <TableContainer className={classes.container}>
               <Table className={classes.table} size='small' aria-label='a dense table'>
@@ -224,7 +222,7 @@ export default function CategoryCard (props) {
             categoryName={props.title}
           />
           <CardContent>
-            <div> There is no data for this Category</div>
+            <div> There is no data for this category</div>
           </CardContent>
         </Card>
         <BillDialog billInfo={billInfo} open={billOpen} onClose={handleBillClose} />

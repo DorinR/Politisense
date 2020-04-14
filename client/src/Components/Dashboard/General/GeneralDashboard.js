@@ -11,8 +11,7 @@ import Container from '@material-ui/core/Container'
 import Slide from '@material-ui/core/Slide'
 import CardContent from '@material-ui/core/CardContent'
 import 'typeface-roboto'
-// eslint-disable-next-line
-import HelpIcon from "@material-ui/icons/Help";
+import HelpIcon from '@material-ui/icons/Help'
 import RepresentativeImage from '../Sidebar/RepresentativeImage'
 import MinisterHelpDialog from './MinisterHelpDialog'
 import TextField from '@material-ui/core/TextField'
@@ -21,11 +20,102 @@ import axios from 'axios'
 import { titleCase } from '../Utilities/CommonUsedFunctions'
 import SeatingPlan from './SeatingPlan'
 import CenteredCircularProgress from '../Utilities/CenteredCircularProgress'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 const capitalize = require('capitalize')
 
 export const Transition = React.forwardRef(function Transition (props, ref) {
   return <Slide direction='up' ref={ref} {...props} />
 })
+
+async function getMinisters (setPrimeMinister) {
+  return axios
+    .get('/api/parliament/getCabinetMinisters')
+    .then((res) => {
+      const result = []
+      if (res.data.success) {
+        for (let i = 0; i < res.data.data.length; i++) {
+          if (res.data.data[i].title === 'prime minister') {
+            result.prime = res.data.data[i]
+            setPrimeMinister(res.data.data[i])
+            continue
+          }
+          result[i] = {}
+          result[i].name = res.data.data[i].name
+          result[i].title = res.data.data[i].title
+          const fullNameArr = res.data.data[i].name.split(' ')
+          const nameArr = []
+          nameArr.push(fullNameArr[0])
+          nameArr.push(fullNameArr[fullNameArr.length - 1])
+          let linkName = ''
+          for (let j = 0; j < nameArr.length; j++) {
+            linkName += '-' + nameArr[j]
+          }
+
+          result[i].description = [
+            res.data.data[i].fromDate,
+            res.data.data[i].riding,
+            'https://pm.gc.ca/en/cabinet/honourable' + linkName
+          ]
+
+          result[i].id = res.data.data[i].title
+          result[i].data = res.data.data[i]
+        }
+      }
+      return result
+    })
+    .catch((err) => console.error(err))
+}
+
+async function getPartyInfo () {
+  return axios
+    .get('/api/parliament/getPartyInfo')
+    .then((res) => {
+      if (res.data.success) {
+        const result = []
+        let max = 0
+        for (let i = 0; i < res.data.data.length; i++) {
+          result[i] = {}
+
+          result[i].name = res.data.data[i].name
+          result[i].seats = res.data.data[i].seats
+          result[i].proportionalSeats = res.data.data[i].seats
+          switch (res.data.data[i].name) {
+            case 'liberal':
+              result[i].color = '#D71921'
+              break
+            case 'conservative':
+              result[i].color = '#0C499C'
+              break
+            case 'ndp':
+              result[i].color = '#EF7E52'
+              break
+            case 'bloc québécois':
+              result[i].color = '#02819E'
+              break
+            case 'green party':
+              result[i].color = '#2E8724'
+              break
+            case 'independent':
+              result[i].color = '#78D7CE'
+              break
+            default:
+              result[i].color = 'white'
+          }
+          if (res.data.data[i].seats > max) {
+            max = res.data.data[i].seats
+            result.current = result[i]
+          }
+        }
+        if (max >= 170) {
+          result.status = 'Majority'
+        } else {
+          result.status = 'Minority'
+        }
+        return result
+      }
+    })
+    .catch(console.error)
+}
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -33,6 +123,23 @@ const useStyles = makeStyles((theme) => ({
       margin: 0,
       padding: 0,
       listStyle: 'none'
+    },
+    html: {
+      [theme.breakpoints.up('xs')]: {
+        fontSize: 10
+      },
+      [theme.breakpoints.up('sm')]: {
+        fontSize: 12
+      },
+      [theme.breakpoints.up('md')]: {
+        fontSize: 14
+      },
+      [theme.breakpoints.up('lg')]: {
+        fontSize: 16
+      },
+      [theme.breakpoints.up('xl')]: {
+        fontSize: 18
+      }
     }
   },
   card: {
@@ -57,7 +164,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer'
   },
   cardHeader: {
-    backgroundColor: '#43D0C4',
+    backgroundColor: '#00BCD4',
     color: 'white',
     height: '100px'
   },
@@ -90,99 +197,11 @@ export default function GeneralDashboard () {
   const [filteredMinisters, setFilteredMinisters] = React.useState([])
   const [primeMinister, setPrimeMinister] = React.useState(null)
 
-  async function getMinisters () {
-    return axios
-      .get('/api/parliament/getCabinetMinisters')
-      .then((res) => {
-        const result = []
-        if (res.data.success) {
-          for (let i = 0; i < res.data.data.length; i++) {
-            if (res.data.data[i].title === 'prime minister') {
-              result.prime = res.data.data[i]
-              setPrimeMinister(res.data.data[i])
-              continue
-            }
-            result[i] = {}
-            result[i].name = res.data.data[i].name
-            result[i].title = res.data.data[i].title
-            const fullNameArr = res.data.data[i].name.split(' ')
-            const nameArr = []
-            nameArr.push(fullNameArr[0])
-            nameArr.push(fullNameArr[fullNameArr.length - 1])
-            let linkName = ''
-            for (let j = 0; j < nameArr.length; j++) {
-              linkName += '-' + nameArr[j]
-            }
-
-            result[i].description = [
-              res.data.data[i].fromDate,
-              res.data.data[i].riding,
-              'https://pm.gc.ca/en/cabinet/honourable' + linkName
-            ]
-
-            result[i].id = res.data.data[i].title
-            result[i].data = res.data.data[i]
-          }
-        }
-        return result
-      })
-      .catch((err) => console.error(err))
-  }
-
-  async function getPartyInfo () {
-    return axios
-      .get('/api/parliament/getPartyInfo')
-      .then((res) => {
-        if (res.data.success) {
-          const result = []
-          let max = 0
-          for (let i = 0; i < res.data.data.length; i++) {
-            result[i] = {}
-
-            result[i].name = res.data.data[i].name
-            result[i].seats = res.data.data[i].seats
-            result[i].proportionalSeats = res.data.data[i].seats
-            switch (res.data.data[i].name) {
-              case 'liberal':
-                result[i].color = '#D71921'
-                break
-              case 'conservative':
-                result[i].color = '#0C499C'
-                break
-              case 'ndp':
-                result[i].color = '#EF7E52'
-                break
-              case 'bloc québécois':
-                result[i].color = '#02819E'
-                break
-              case 'green party':
-                result[i].color = '#2E8724'
-                break
-              case 'independent':
-                result[i].color = '#78D7CE'
-                break
-              default:
-                result[i].color = 'white'
-            }
-            if (res.data.data[i].seats > max) {
-              max = res.data.data[i].seats
-              result.current = result[i]
-            }
-          }
-          if (max >= 170) {
-            result.status = 'Majority'
-          } else {
-            result.status = 'Minority'
-          }
-          return result
-        }
-      })
-      .catch(console.error)
-  }
+  const small = useMediaQuery(theme => theme.breakpoints.down('sm'))
 
   useEffect(() => {
     async function getData () {
-      const mins = await getMinisters()
+      const mins = await getMinisters(setPrimeMinister)
       setMinisters(mins)
     }
     getData()
@@ -238,56 +257,74 @@ export default function GeneralDashboard () {
             </Typography>
           </Container>
           <SeatingPlan partiesToUse={parties} classes={classes} />
-          <Container className={classes.prime}>
-            <Card>
-              <CardHeader
-                title={titleCase(ministers.prime.name)}
-                subheader={titleCase(ministers.prime.title)}
-                titleTypographyProps={{ align: 'center' }}
-                subheaderTypographyProps={{ align: 'center' }}
-                className={classes.cardHeader}
-              />
-              {primeMinister ? (
-                <CardContent>
-                  <div className={classes.image}>
-                    <RepresentativeImage representative={primeMinister} />
-                  </div>
-                  <ul>
-                    <Typography
-                      component='li'
-                      variant='subtitle1'
-                      align='center'
-                    >
-                      <span style={{ fontWeight: 'bold' }}>Year Elected</span>{' '}
-                      {primeMinister.fromDate}
-                    </Typography>
-                    <Typography
-                      component='li'
-                      variant='subtitle1'
-                      align='center'
-                    >
-                      <span style={{ fontWeight: 'bold' }}>Riding</span>{' '}
-                      {titleCase(primeMinister.riding)}
-                    </Typography>
-                    <Typography
-                      component='li'
-                      variant='subtitle1'
-                      align='center'
-                    >
-                      <Link href={getLink(primeMinister.name)}>
+          <Container
+            align='center'
+          >
+            <Grid
+              container
+              className={classes.prime}
+              alignItems='center'
+              direction='row'
+            >
+              <Grid
+                item
+                alignItems='center'
+                direction='row'
+                xs={12}
+                sm={16}
+                md={8}
+              >
+                <Card>
+                  <CardHeader
+                    title={titleCase(ministers.prime.name)}
+                    subheader={titleCase(ministers.prime.title)}
+                    titleTypographyProps={{ align: 'center' }}
+                    subheaderTypographyProps={{ align: 'center' }}
+                    className={classes.cardHeader}
+                  />
+                  {primeMinister ? (
+                    <CardContent>
+                      <div className={classes.image}>
+                        <RepresentativeImage representative={primeMinister} />
+                      </div>
+                      <ul>
+                        <Typography
+                          component='li'
+                          variant='subtitle1'
+                          align='center'
+                        >
+                          <span style={{ fontWeight: 'bold' }}>Year Elected</span>{' '}
+                          {primeMinister.fromDate}
+                        </Typography>
+                        <Typography
+                          component='li'
+                          variant='subtitle1'
+                          align='center'
+                        >
+                          <span style={{ fontWeight: 'bold' }}>Riding</span>{' '}
+                          {titleCase(primeMinister.riding)}
+                        </Typography>
+                        <Typography
+                          component='li'
+                          variant='subtitle1'
+                          align='center'
+                        >
+                          <Link href={getLink(primeMinister.name)}>
                         More information
-                      </Link>
-                    </Typography>
-                  </ul>
-                </CardContent>
-              ) : (
-                <Grid container alignItems='center' justify='center'>
-                  <Grid item>
-                    <CircularProgress />
-                  </Grid>
-                </Grid>
-              )}
-            </Card>
+                          </Link>
+                        </Typography>
+                      </ul>
+                    </CardContent>
+                  ) : (
+                    <Grid container alignItems='center' justify='center'>
+                      <Grid item>
+                        <CircularProgress />
+                      </Grid>
+                    </Grid>
+                  )}
+                </Card>
+              </Grid>
+            </Grid>
           </Container>
           <Container>
             <TextField
@@ -297,11 +334,19 @@ export default function GeneralDashboard () {
               onChange={handleFilterChange}
               color='primary'
             />
-            <Grid container spacing={5} alignItems='flex-end'>
+            <Grid
+              container
+              direction={small ? 'column' : 'row'}
+              alignItems={small ? 'center' : 'flex-start'}
+              spacing={5}
+            >
               {filteredMinisters && filteredMinisters.length > 0 ? (
                 filteredMinisters.map((minister) => (
-                  <Grid item key={minister.title} xs={4}>
-                    <Card className={classes.card}>
+                  <Grid item key={minister.title} xs={12} sm={16} md={4}>
+                    <Card
+                      className={classes.card}
+                      min-width={small ? '50%' : '33%'}
+                    >
                       <CardHeader
                         title={capitalize.words(minister.name)}
                         subheader={titleCase(minister.title)}
@@ -348,7 +393,7 @@ export default function GeneralDashboard () {
                   </Grid>
                 ))
               ) : (
-                <Grid item xs={4}>
+                <Grid item xs={1}>
                   <Typography variant='h5' component='h2'>
                     No Results Found
                   </Typography>

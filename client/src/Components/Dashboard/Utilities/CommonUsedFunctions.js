@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { useEffect, useRef } from 'react'
-export async function fetchCategories () {
-  return axios.get('/api/bills/fetchCategories').then((res) => {
+
+export async function fetchCategoriesFromTxtFiles () {
+  return axios.get('/api/bills/fetchCategoriesFromTxtFiles').then((res) => {
     if (res.data.success) {
       return res.data.data
     }
@@ -10,6 +11,10 @@ export async function fetchCategories () {
 
 export function pwFormat (sponsor) {
   return /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/ // 8 character, 1 symbol, 1 upper, 1 lower, 1 digit
+}
+
+export async function checkUserExists (email) {
+  return axios.post('/api/users/checkIfUserExists', { email: email })
 }
 
 export function mergeArrays (rawData) {
@@ -228,6 +233,7 @@ export async function fetchRepresentative (riding) {
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then((res) => {
       if (res.data.success) {
+        console.log(res.data)
         return res.data.data
       }
     })
