@@ -196,17 +196,14 @@ const Sidebar = withRouter((props) => {
   useEffect(() => {
     // eslint-disable-next-line no-undef
     const user = JSON.parse(localStorage.getItem('user'))
-    console.log(user)
     setUser(user)
   }, [])
 
   const [riding, setRiding] = useState(undefined)
   useEffect(() => {
     async function getData () {
-      console.log(user)
       if (user) {
         const riding = await fetchUserRiding(user.email)
-        console.log(riding)
         setRiding(riding)
       }
     }
