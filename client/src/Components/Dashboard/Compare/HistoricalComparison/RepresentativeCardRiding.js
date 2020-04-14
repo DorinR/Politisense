@@ -75,7 +75,6 @@ export default function RepresentativeCard () {
       const partyData = await getPartyData(politicalParty)
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, data)
       const parliamentSession = pastRepresentativeVotes[0].parliament
-      // const startYear = getStartYear(parliamentSession)
       const parliamentData = { parliament: parliamentSession, year: startDate }
       const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, data)
       setParliamentNumber(parliamentData.parliament)
