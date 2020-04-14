@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/styles'
 import { Drawer, Typography, ListItem, List } from '@material-ui/core'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import PeopleIcon from '@material-ui/icons/People'
-import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import SidebarNav from './SidebarNav'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
@@ -34,12 +33,15 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2)
   },
   drawer: {
-    width: 240,
+    width: 270,
     backgroundColor: '#1E2125',
     flexGrow: 1,
     [theme.breakpoints.up('xl')]: {
       width: 300
-    }
+    },
+    display: 'flex',
+    overflow: "hidden",
+    flexDirection: 'column',
   },
   chevronLeftIcon: {
     color: 'white',
@@ -50,9 +52,8 @@ const useStyles = makeStyles(theme => ({
       marginLeft: '40%'
     }
   },
-
   drawerXl: {
-    width: 300,
+    width: 350,
     backgroundColor: '#1E2125',
     flexGrow: 1
   },
@@ -116,7 +117,7 @@ const useStyles = makeStyles(theme => ({
       paddingLeft: drawerWidthXlMode + 10
     },
     [theme.breakpoints.down('lg')]: {
-      paddingLeft: drawerWidth
+      paddingLeft: drawerWidth+20
     }
   },
   content: {
@@ -195,15 +196,17 @@ const Sidebar = withRouter((props) => {
   useEffect(() => {
     // eslint-disable-next-line no-undef
     const user = JSON.parse(localStorage.getItem('user'))
+    console.log(user)
     setUser(user)
   }, [])
 
   const [riding, setRiding] = useState(undefined)
-  // const prevRiding = usePrevious(riding)
   useEffect(() => {
     async function getData () {
+      console.log(user)
       if (user) {
         const riding = await fetchUserRiding(user.email)
+        console.log(riding)
         setRiding(riding)
       }
     }
@@ -211,6 +214,7 @@ const Sidebar = withRouter((props) => {
   }, [user])
   const [data, setData] = useState(null)
   const logicalCondition = (data && riding && riding !== data.riding) || (!data && riding)
+
   useEffect(() => {
     async function getData () {
       if (logicalCondition) {
@@ -256,11 +260,6 @@ const Sidebar = withRouter((props) => {
       title: 'Map',
       href: '/map',
       icon: <MapIcon />
-    },
-    {
-      title: 'Account',
-      href: '/account',
-      icon: <AccountBoxIcon />
     },
     {
       title: 'Logout',

@@ -111,6 +111,11 @@ const Topbar = withRouter((props) => {
           onClick={() => { props.history.push('/map') }}
         >Map
         </Button>
+        <Button
+            style={{ color: 'white', textTransform: 'none' }} variant='text'
+            onClick={() => { props.history.push('/account') }}
+        >Account
+        </Button>
         <IconButton
           className={classes.signOutButton}
           onClick={() => { props.history.push('/logout') }}
