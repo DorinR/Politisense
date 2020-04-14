@@ -125,6 +125,9 @@ export default function Voting() {
             const listBills = recentLegislativeActivities[0].data[0]
             console.log(listBills.slice(0, 100))
             setRecentBills(listBills.slice(0, 100))
+            const voting = await fetchVotingActivity(user.email)
+            console.log("voting ", voting)
+            console.log("voting userHasVoted", voting[0].userHasVoted)
         }
         getData()
     }, [name])
@@ -158,6 +161,22 @@ export default function Voting() {
         }
 
         registerVote(userEmail, number, title, link, description, date, event.currentTarget.value, index)
+    }
+
+    async function fetchVotingActivity(userEmail) {
+        return axios
+            .post('http://localhost:5000/api/voting/index',
+                {
+                    user: { email: userEmail }
+
+                })
+            .then(res => {
+                if (res.data.success) {
+                    return res.data.data
+                }
+                return null
+            })
+            .catch(console.error)
     }
 
     async function registerVote(userEmail, number, title, link, description, date, vote, index) {
