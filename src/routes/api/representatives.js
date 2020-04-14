@@ -8,6 +8,8 @@ const controller = require('../../controllers/Controller')
 // @access Public
 router.get('/:riding/getRepresentative', controller.getRepresentativeByRiding)
 
+router.get('/:riding/getRepresentative', controller.getMpByRiding)
+
 router.get('/:member/getParliamentNumber', controller.getParliamentNumber)
 
 router.post('/:name/getPastRepresentativeId', controller.getPastRepresentativeId)

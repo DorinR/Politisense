@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
@@ -56,17 +56,10 @@ const useStyles = makeStyles(theme => ({
 const MpProfile = props => {
   const { className, ...rest } = props
   const classes = useStyles()
-
-  const [data, setData] = useState(null)
-  useEffect(() => {
-    if (props.data !== data) {
-      setData(props.data)
-    }
-  }, [props.data, data])
-
+  console.log(props)
   return (
     <div>
-      {data ? (
+      {props.representative && props.ridingCode && props.riding ? (
         <div
           {...rest}
           className={clsx(classes.root, className)}
@@ -75,32 +68,32 @@ const MpProfile = props => {
             className={classes.name}
             variant='h6'
           >
-            {data.name ? capitalizedName(data.name) : ''}
+            {props.representative.name ? capitalizedName(props.representative.name) : ''}
           </Typography>
-          {data.riding ? data.riding.length > 22
+          {props.representative.riding ? props.representative.riding.length > 22
             ? (
               <div className={classes.containerLongRidingName}>
                 <Typography className={classes.fontColorTypography} variant='caption'>Represents</Typography>
-                <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(data.riding)}</Typography>
-              </div>) : (<Typography className={classes.fontColorTypography} variant='caption'>{'Represents: ' + capitalizedName(data.riding)}</Typography>)
+                <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(props.representative.riding)}</Typography>
+              </div>) : (<Typography className={classes.fontColorTypography} variant='caption'>{'Represents: ' + capitalizedName(props.representative.riding)}</Typography>)
             : (<Typography className={classes.fontColorTypography} variant='caption'>Represents</Typography>)}
 
-          {data.party ? data.party.length > 15
+          {props.representative.party ? props.representative.party.length > 15
             ? (
               <div className={classes.containerLongRidingName}>
                 <Typography className={classes.fontColorTypography} variant='caption'>Political Party:</Typography>
-                <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(data.party)}</Typography>
+                <Typography className={classes.longRidingName} variant='caption'>{capitalizedName(props.representative.party)}</Typography>
               </div>
             )
-            : (<Typography className={classes.fontColorTypography} variant='caption'>{'Political Party: ' + capitalizedName(data.party)}</Typography>)
+            : (<Typography className={classes.fontColorTypography} variant='caption'>{'Political Party: ' + capitalizedName(props.representative.party)}</Typography>)
             : (<Typography className={classes.fontColorTypography} variant='caption'>Political Party: </Typography>)}
 
-          <Typography className={classes.fontColorTypography} variant='caption'>{'Total Population: '} {data.riding ? (<RidingPopulation riding={data.riding} />) : ''}</Typography>
-          <Typography className={classes.fontColorTypography} variant='caption'>{'Member Since: '} {data.start ? loadingTextdata({ fromDate: data.start, toDate: data.end }) : ''}</Typography>
+          <Typography className={classes.fontColorTypography} variant='caption'>{'Total Population: '} {props.representative.riding ? (<RidingPopulation riding={props.riding} />) : ''}</Typography>
+          <Typography className={classes.fontColorTypography} variant='caption'>{'Member Since: '} {props.representative.start ? loadingTextdata({ fromDate: props.representative.start, toDate: props.representative.end }) : ''}</Typography>
           <div className={classes.shapeContainer}>
             <RidingShapeContainer
-              ridingCode={data.ridingCode}
-              politicalParty={data.party}
+              ridingCode={props.ridingCode}
+              politicalParty={props.representative.party}
             />
           </div>
         </div>

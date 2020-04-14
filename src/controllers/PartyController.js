@@ -7,14 +7,14 @@ exports.getAllPartyData = (req, res) => {
   db.PoliticalParty()
     .where('name', '==', party)
     .select()
-    .then(snapshot => {
+    .then((snapshot) => {
       if (snapshot.empty) {
         res.status(404).json({
           success: false,
           message: 'No party with that name found'
         })
       }
-      snapshot.forEach(doc => {
+      snapshot.forEach((doc) => {
         res.status(200).json({
           success: true,
           data: doc.data()

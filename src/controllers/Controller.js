@@ -54,6 +54,9 @@ module.exports = {
   getRepresentativeByRiding: function (req, res) {
     return RepresentativeController.getRepresentativeByRiding(req, res)
   },
+  getMpByRiding: function (req, res) {
+    return RepresentativeController.getMpByRiding(req, res)
+  },
   getPastRepresentativeVotes: function (req, res) {
     return VoteController.getPastRepresentativeVotes(req, res)
   },
