@@ -224,6 +224,7 @@ export async function fetchRepresentative (riding) {
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then((res) => {
       if (res.data.success) {
+        console.log(res.data)
         return res.data.data
       }
     })
