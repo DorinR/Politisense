@@ -29,30 +29,27 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchPastRepresentativeId (representative, data) {
-  console.log('INSIDE FETCH REP ID')
+async function fetchPastRepresentativeId(representative, data) {
   const res = await axios.post(`/api/representatives/${representative}/getPastRepresentativeId`, data)
-  console.log('res.data.data ', res.data.data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeVotes (member, data) {
+async function fetchPastRepresentativeVotes(member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativeVotes`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativePairedVotes (member, data) {
+async function fetchPastRepresentativePairedVotes(member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativePairedVotes`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeSpending (member, data) {
+async function fetchPastRepresentativeSpending(member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
-  console.log(res.data.data)
   return res.data.data
 }
 
-function getStartYear (parlSession) {
+function getStartYear(parlSession) {
   switch (parlSession) {
     case 43:
       return 2019
@@ -75,7 +72,7 @@ function getStartYear (parlSession) {
   }
 }
 
-export default function RepresentativeCard () {
+export default function RepresentativeCard() {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -95,7 +92,7 @@ export default function RepresentativeCard () {
   }
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const data = { start: startDate }
       const member = await fetchPastRepresentativeId(name, data)
       const partyData = await getPartyData(politicalParty)
@@ -125,7 +122,7 @@ export default function RepresentativeCard () {
           height: 115
         }}
       >
-        <PastMPSwitcher functionUpdate={updateNameFromSwitcher} />
+        <PastMPSwitcher changeRepresentative={updateNameFromSwitcher} />
       </Grid>
       <Grid item xs={12} align='center'>
         <Card className={classes.card}>
