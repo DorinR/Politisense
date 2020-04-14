@@ -28,7 +28,7 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchCurrentRepresentative (riding) {
+async function fetchCurrentRepresentative(riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
@@ -40,7 +40,7 @@ async function fetchCurrentRepresentative (riding) {
     .catch(console.error)
 }
 
-async function fetchRepresentativeId (representative) {
+async function fetchRepresentativeId(representative) {
   return axios
     .get(`/api/representatives/${representative}/getRepresentativeId`)
     .then(res => {
@@ -51,56 +51,91 @@ async function fetchRepresentativeId (representative) {
     .catch(console.error)
 }
 
-async function fetchRepresentativeSpending (member, data) {
+async function fetchRepresentativeSpending(member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
   return res.data.data
 }
 
-export default function ModernRepresentative () {
+export default function ModernRepresentative() {
   const classes = useStyles()
-  const [name] = useState('')
-  const [totalBills, setTotalBills] = useState(0)
-  const [issuedBills, setIssuedBills] = useState(0)
-  const [currentRepresentative, setCurrentRepresentative] = React.useState([])
-  const [politicalParty, setPoliticalParty] = React.useState([])
+  const [totalBills, setTotalBills] = useState(null)
+  const [issuedBills, setIssuedBills] = useState(null)
+  const [currentRepresentative, setCurrentRepresentative] = useState(null)
+  const [politicalParty, setPoliticalParty] = useState(null)
   const [partyImageUrl, setPartyImageUrl] = useState('')
-  const [spending, setSpending] = useState(0)
+  const [spending, setSpending] = useState(null)
   const [representativeImage, setRepresentativeImage] = useState('')
+  const [user, setUser] = useState(null)
+  const [riding, setRiding] = useState(null)
 
   useEffect(() => {
-    async function getIssuedBillsByHead (head) {
-      const res = await axios.get(
-        `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
-      )
-      return res.data.data
+    if (!user) {
+      // eslint-disable-next-line no-undef
+      const usr = JSON.parse(localStorage.getItem('user'))
+      setUser(usr)
     }
+  }, [user])
 
-    async function getData (mp) {
-      // eslint-disable-next-line
-      const user = JSON.parse(localStorage.getItem('user'))
+  useEffect(() => {
+    async function getData() {
+      // eslint-disable-next-line no-undef
       const riding = await fetchUserRiding(user.email)
-      const currentRepresentative = await fetchCurrentRepresentative(riding)
-      setRepresentativeImage(currentRepresentative.imageUrl)
-      setCurrentRepresentative(currentRepresentative.name)
+      setRiding(riding)
+    }
+    if (user) {
+      getData()
+    }
+  }, [user])
+
+  useEffect(() => {
+    async function getData() {
+      const cr = await fetchCurrentRepresentative(riding)
+      setRepresentativeImage(cr.imageUrl)
+      setCurrentRepresentative(cr)
+    }
+    if (riding) {
+      getData()
+    }
+  }, [riding])
+
+  useEffect(() => {
+    async function getData() {
+      // eslint-disable-next-line no-undef
       const member = await fetchRepresentativeId(currentRepresentative.name)
       const parliamentData = { parliament: 43 }
       const spending = await fetchRepresentativeSpending(member, parliamentData)
       setSpending(spending)
+    }
+    if (currentRepresentative) {
+      getData()
+    }
+  }, [currentRepresentative])
+
+  useEffect(() => {
+    async function getData(mp) {
+
+      async function getIssuedBillsByHead(head) {
+        const res = await axios.get(
+          `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
+        )
+        return res.data.data
+      }
       const bills = await getAllBillsByHead(currentRepresentative.name)
-      const total = calculateTotalVotesBills(bills)
-      setTotalBills(total)
+      if (Number.isInteger(bills)) {
+        setTotalBills(bills)
+      }
       setPoliticalParty(currentRepresentative.party)
       const partyData = await getPartyData(currentRepresentative.party)
       setPartyImageUrl(partyData.imageUrl)
-      const issuedBillsByHead = await getIssuedBillsByHead(name)
-      if (issuedBillsByHead.length !== 0) {
-        setIssuedBills(issuedBillsByHead.length)
+      const issuedBillsByHead = await getIssuedBillsByHead(currentRepresentative.name)
+      if (Number.isInteger(issuedBillsByHead)) {
+        setIssuedBills(issuedBillsByHead)
       }
     }
     if (currentRepresentative) {
       getData()
     }
-  }, [])
+  }, [currentRepresentative])
 
   return (
     <Grid container spacing={2}>
@@ -135,73 +170,74 @@ export default function ModernRepresentative () {
                 />
               </Grid>
             </Grid>
-            <List>
-              <DividerBlock text='Profile' color={getPartyColor(politicalParty).backgroundColor} />
-              <Box m={3} />
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar style={getPartyColor(politicalParty)}>
-                    <PersonIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText>{capitalizedName(currentRepresentative)}</ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar style={getPartyColor(politicalParty)}>
-                    <FlagIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText>{capitalizedName(politicalParty)}</ListItemText>
-              </ListItem>
-              <Box m={2} />
-              <DividerBlock
-                text='Spending'
-                color={getPartyColor(politicalParty).backgroundColor}
-                infoBubbleTitle='Cumulative spending to this point in time'
-                infoBubbleText='Only available data is displayed'
-                infoBubbleColor='white'
-              />
-              <Box m={2} />
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar style={getPartyColor(politicalParty)}>
-                    <DollarIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText>Year-to-Date Expenditures : <ColoredText text={numericalStyling(spending)} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
-              </ListItem>
-              <Box m={2} />
-              <DividerBlock
-                text='Legislative'
-                color={getPartyColor(politicalParty).backgroundColor}
-                infoBubbleTitle='Number of Bills Sponsored by Members of this Party'
-                infoBubbleText={'This is a breakdown of the number of bills that were sponsored by members of the given party. We can see the total number of bills that were sponsored, as well as the portion of those that passed and entered into law, and the portion of those that were not voted into law. To see details about the bills your representative has voted on, go to the "My MP" tab'}
-                infoBubbleColor='white'
-              />
-              <Box m={2} />
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar style={getPartyColor(politicalParty)}>
-                    <FormatListNumberedIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText>
-                  Voted Bills to Date: <ColoredText text={totalBills} color={getPartyColor(politicalParty).backgroundColor} />
-                </ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar style={getPartyColor(politicalParty)}>
-                    <AssignmentIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText>
-                  {' '}
+            {currentRepresentative && politicalParty ? (
+              <List>
+                <DividerBlock text='Profile' color={getPartyColor(politicalParty).backgroundColor} />
+                <Box m={3} />
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar style={getPartyColor(politicalParty)}>
+                      <PersonIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>{capitalizedName(currentRepresentative.name)}</ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar style={getPartyColor(politicalParty)}>
+                      <FlagIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>{capitalizedName(politicalParty)}</ListItemText>
+                </ListItem>
+                <Box m={2} />
+                <DividerBlock
+                  text='Spending'
+                  color={getPartyColor(politicalParty).backgroundColor}
+                  infoBubbleTitle='Cumulative spending to this point in time'
+                  infoBubbleText='Only available data is displayed'
+                  infoBubbleColor='white'
+                />
+                <Box m={2} />
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar style={getPartyColor(politicalParty)}>
+                      <DollarIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>Year-to-Date Expenditures : <ColoredText text={numericalStyling(spending)} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                </ListItem>
+                <Box m={2} />
+                <DividerBlock
+                  text='Legislative'
+                  color={getPartyColor(politicalParty).backgroundColor}
+                  infoBubbleTitle='Number of Bills Sponsored by Members of this Party'
+                  infoBubbleText={'This is a breakdown of the number of bills that were sponsored by members of the given party. We can see the total number of bills that were sponsored, as well as the portion of those that passed and entered into law, and the portion of those that were not voted into law. To see details about the bills your representative has voted on, go to the "My MP" tab'}
+                  infoBubbleColor='white'
+                />
+                <Box m={2} />
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar style={getPartyColor(politicalParty)}>
+                      <FormatListNumberedIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>
+                    Voted Bills to Date: <ColoredText text={totalBills} color={getPartyColor(politicalParty).backgroundColor} />
+                  </ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar style={getPartyColor(politicalParty)}>
+                      <AssignmentIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>
+                    {' '}
                   Issued Bills to Date: <ColoredText text={issuedBills} color={getPartyColor(politicalParty).backgroundColor} />
-                </ListItemText>
-              </ListItem>
-            </List>
+                  </ListItemText>
+                </ListItem>
+              </List>) : ''}
           </CardContent>
         </Card>
       </Grid>

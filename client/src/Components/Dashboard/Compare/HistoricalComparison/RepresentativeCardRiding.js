@@ -29,50 +29,27 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchPastRepresentativeId (representative, data) {
+async function fetchPastRepresentativeId(representative, data) {
   const res = await axios.post(`/api/representatives/${representative}/getPastRepresentativeId`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeVotes (member, data) {
+async function fetchPastRepresentativeVotes(member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativeVotes`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativePairedVotes (member, data) {
+async function fetchPastRepresentativePairedVotes(member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativePairedVotes`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeSpending (member, data) {
+async function fetchPastRepresentativeSpending(member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
   return res.data.data
 }
 
-function getStartYear (parlSession) {
-  switch (parlSession) {
-    case 43:
-      return 2019
-    case 42:
-      return 2015
-    case 41:
-      return 2011
-    case 40:
-      return 2008
-    case 39:
-      return 2006
-    case 38:
-      return 2004
-    case 37:
-      return 2001
-    case 36:
-      return 1997
-    default:
-      return 'no financial data for this parliament session'
-  }
-}
-
-export default function RepresentativeCard () {
+export default function RepresentativeCard() {
   const classes = useStyles()
   const [name, setName] = useState('')
   const [politicalParty, setPoliticalParty] = useState('')
@@ -92,14 +69,14 @@ export default function RepresentativeCard () {
   }
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       const data = { start: startDate }
       const member = await fetchPastRepresentativeId(name, data)
       const partyData = await getPartyData(politicalParty)
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, data)
       const parliamentSession = pastRepresentativeVotes[0].parliament
-      const startYear = getStartYear(parliamentSession)
-      const parliamentData = { parliament: parliamentSession, year: startYear }
+      // const startYear = getStartYear(parliamentSession)
+      const parliamentData = { parliament: parliamentSession, year: startDate }
       const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, data)
       setParliamentNumber(parliamentData.parliament)
       if (parliamentData.parliament >= 40) {

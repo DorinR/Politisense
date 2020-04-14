@@ -42,53 +42,50 @@ const MenuProps = {
   }
 }
 
-async function fetchPastRepresentatives (riding) {
-  let pastRepresentatives = []
-  await axios
+async function fetchPastRepresentatives(riding) {
+  return axios
     .get(`/api/representatives/${riding}/getPastRepresentatives`)
     .then(res => {
       if (res.data.success) {
-        pastRepresentatives = res.data.data
+        console.log("res.data.data ", res.data.data)
+        return res.data.data
       }
     })
     .catch(err => console.error(err))
-  return pastRepresentatives
 }
 
-export default function PastMPSwitcher (props) {
+export default function PastMPSwitcher(props) {
   // eslint-disable-next-line
   const { changeRepresentative, ...other } = props
   const classes = useStyles()
   const [mp, setMp] = React.useState([])
   const [dropdownMps, setDropdownMps] = React.useState([])
 
-  async function populateDropdownMps (mps) {
+  async function populateDropdownMps(mps) {
     setDropdownMps(mps)
   }
 
-  function getRep (reps, start) {
-    let mp = {}
-    for (let i = 0; i < reps.length; i++) {
-      if (reps[i].start === start) {
-        mp = reps[i]
-      }
-    }
+  function getRep(reps, start) {
+    let mp = reps.find(representative => representative.start === start)
     return mp
   }
 
-  function handleChange (event) {
+  function handleChange(event) {
     setMp(event.target.value)
     const mp = getRep(dropdownMps, event.target.value)
     changeRepresentative(mp)
   }
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       // eslint-disable-next-line
       const user = JSON.parse(localStorage.getItem('user'))
       const riding = await fetchUserRiding(user.email)
       const pastRepresentatives = await fetchPastRepresentatives(riding)
-      populateDropdownMps(pastRepresentatives)
+      console.log("pastRepresentatives ", pastRepresentatives)
+      if (pastRepresentatives) {
+        populateDropdownMps(pastRepresentatives)
+      }
     }
     getData()
   }, [mp])
