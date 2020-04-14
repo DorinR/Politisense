@@ -28,7 +28,7 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchCurrentRepresentative(riding) {
+async function fetchCurrentRepresentative (riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
@@ -40,7 +40,7 @@ async function fetchCurrentRepresentative(riding) {
     .catch(console.error)
 }
 
-async function fetchRepresentativeId(representative) {
+async function fetchRepresentativeId (representative) {
   return axios
     .get(`/api/representatives/${representative}/getRepresentativeId`)
     .then(res => {
@@ -51,17 +51,16 @@ async function fetchRepresentativeId(representative) {
     .catch(console.error)
 }
 
-async function fetchRepresentativeSpending(member, data) {
+async function fetchRepresentativeSpending (member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
   return res.data.data
 }
 
-export default function ModernRepresentative() {
+export default function ModernRepresentative () {
   const classes = useStyles()
   const [name] = useState('')
   const [totalBills, setTotalBills] = useState(0)
   const [issuedBills, setIssuedBills] = useState(0)
-  const [mp] = React.useState([])
   const [currentRepresentative, setCurrentRepresentative] = React.useState([])
   const [politicalParty, setPoliticalParty] = React.useState([])
   const [partyImageUrl, setPartyImageUrl] = useState('')
@@ -69,14 +68,14 @@ export default function ModernRepresentative() {
   const [representativeImage, setRepresentativeImage] = useState('')
 
   useEffect(() => {
-    async function getIssuedBillsByHead(head) {
+    async function getIssuedBillsByHead (head) {
       const res = await axios.get(
         `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
       )
       return res.data.data
     }
 
-    async function getData(mp) {
+    async function getData (mp) {
       // eslint-disable-next-line
       const user = JSON.parse(localStorage.getItem('user'))
       const riding = await fetchUserRiding(user.email)
