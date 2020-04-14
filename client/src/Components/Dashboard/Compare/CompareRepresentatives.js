@@ -100,8 +100,8 @@ export default function CompareRepresentatives () {
     }
   }, [head1, head2])
 
-  const comparePartiesExplanationTitle = 'Compare Ministers'
-  const comparePartiesExplanationDescription = `Compare your MP's information and contributions to previous MPs of the same riding.`
+  const comparePartiesExplanationTitle = 'Compare Representatives'
+  const comparePartiesExplanationDescription = `Compare your representative's information and contributions to previous MPs of the same riding.`
 
   return (
     <>
@@ -124,7 +124,7 @@ export default function CompareRepresentatives () {
                 color='textPrimary'
                 gutterBottom
             >
-              Past vs Present Ministers
+              Past vs Present Representatives
               <span className={classes.customTooltip}>
               <InfoBubble
                   title={comparePartiesExplanationTitle}

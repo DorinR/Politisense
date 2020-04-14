@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 1.5)
   },
   content: {
-    padding: theme.spacing(8, 0, 6)
+    padding: theme.spacing(2, 0, 6)
   },
   prime: {
     marginTop: '30px',
