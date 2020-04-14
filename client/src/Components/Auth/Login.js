@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import canadaimage from '../../assets/canada.jpg'
-import logo from '../../assets/PolotisenseTentativeLogo.png'
+import logo from '../../assets/politisenseLogoMedium.png'
 import axios from 'axios'
 import {
   FacebookLoginButton,
@@ -50,13 +50,13 @@ const useStyles = makeStyles(theme => ({
   },
   routerLink: {
     textDecoration: 'none',
-    color: '#43D0C4'
+    color: '#00BCD4'
   },
   logo: {
     margin: theme.spacing(15, 0, 2)
   },
   quote: {
-    color: '#43D0C4'
+    color: '#00BCD4'
   }
 }))
 

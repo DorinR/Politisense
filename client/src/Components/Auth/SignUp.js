@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
   routerLink: {
     textDecoration: 'none',
-    color: '#43D0C4'
+    color: '#00BCD4'
   }
 }))
 

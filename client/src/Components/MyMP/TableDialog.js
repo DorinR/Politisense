@@ -15,7 +15,7 @@ import { formattingCategory, capitalizedName } from '../Dashboard/Utilities/Comm
 
 const useStyles = makeStyles({
   avatar: {
-    backgroundColor: '#43D0C4'
+    backgroundColor: '#00BCD4'
   },
   table: {
     minWidth: 650

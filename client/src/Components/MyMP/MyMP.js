@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Grid from '@material-ui/core/Grid'
 import axios from 'axios'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import CategoryDashboard from '../Dashboard/CategoryDashboard'
 import BillHistoryTable from '../Dashboard/PastBills/BillHistoryTable'
@@ -24,6 +23,7 @@ import {
 import {
   CssBaseline
 } from '@material-ui/core'
+import CenteredCircularProgress from '../Dashboard/Utilities/CenteredCircularProgress'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -298,16 +298,7 @@ export default function MyMP (props) {
             </Grid>
           </div>)
         : (
-          <div style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)'
-          }}
-          >
-            <CircularProgress style={{ color: '#00bcd4' }} />
-          </div>)}
-
+          <CenteredCircularProgress />)}
     </div>
   )
 }

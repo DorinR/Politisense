@@ -31,7 +31,7 @@ const styles = theme => ({
     color: theme.palette.grey[500]
   },
   avatar: {
-    backgroundColor: '#43D0C4'
+    backgroundColor: '#00BCD4'
   }
 })
 
@@ -55,7 +55,7 @@ const DialogTitle = withStyles(styles)(props => {
 
 const useStyles = makeStyles({
   avatar: {
-    backgroundColor: '#43D0C4'
+    backgroundColor: '#00BCD4'
   }
 })
 
