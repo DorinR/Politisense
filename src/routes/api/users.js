@@ -9,6 +9,8 @@ router.post('/login', controller.userLogin)
 router.post('/socialLogin', controller.socialLogin)
 router.post('/setRiding', controller.setRiding)
 router.post('/checkIfUserExists', controller.checkIfUserExists)
+router.post('/generateResetLink', controller.generateResetLink)
+router.post('/checkTokenValid', controller.checkTokenValid)
 
 // @route post api/users/signup
 // @desc  signup User

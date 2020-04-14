@@ -37,6 +37,12 @@ module.exports = {
   checkIfUserExists: function (req, res) {
     return UserController.checkIfUserExists(req, res)
   },
+  generateResetLink: function (req, res) {
+    return UserController.generateResetLink(req, res)
+  },
+  checkTokenValid: function (req, res) {
+    return UserController.checkTokenValid(req, res)
+  },
   getUserInterests: function (req, res) {
     return UserController.getUserInterests(req, res)
   },
