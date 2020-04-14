@@ -14,6 +14,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import CenteredCircularProgress from '../Dashboard/Utilities/CenteredCircularProgress'
+import { pwFormat } from '../Dashboard/Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -128,7 +129,7 @@ function ChangeAccountPassword (props) {
 
   const handleSubmit = e => {
     e.preventDefault()
-    const passwordFormat = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+    const passwordFormat = pwFormat()
     const errors = {}
 
     const user = {

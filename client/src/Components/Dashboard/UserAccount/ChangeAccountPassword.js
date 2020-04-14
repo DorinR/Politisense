@@ -10,6 +10,7 @@ import axios from 'axios'
 import SaveIcon from '@material-ui/icons/Save'
 import { withSnackbar } from 'notistack'
 import bcrypt from 'bcryptjs'
+import { pwFormat } from '../Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -122,7 +123,7 @@ function ChangeAccountPassword (props) {
 
   const handleSubmit = e => {
     e.preventDefault()
-    const passwordFormat = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+    const passwordFormat = pwFormat()
     const errors = {}
 
     const user = {

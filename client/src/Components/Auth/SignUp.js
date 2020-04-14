@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import { pwFormat } from '../Dashboard/Utilities/CommonUsedFunctions'
 import axios from 'axios'
 
 const useStyles = makeStyles(theme => ({
@@ -97,7 +98,7 @@ export default function SignUp (props) {
     const nameFormat = /^[a-z ,.'-]+$/i
     // eslint-disable-next-line no-useless-escape
     const emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-    const passwordFormat = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/ // 8 character, 1 symbol, 1 upper, 1 lower, 1 digit
+    const passwordFormat = pwFormat()
     let errors = {}
     const nameError = 'Invalid name format, Please use only letters or hyphens'
     errors.firstname = !user.firstname.match(nameFormat) ? nameError : ''
