@@ -62,6 +62,14 @@ function getStartYear (parlSession) {
       return 2011
     case 40:
       return 2008
+    case 39:
+      return 2006
+    case 38:
+      return 2004
+    case 37:
+      return 2001
+    case 36:
+      return 1997
     default:
       return 'no financial data for this parliament session'
   }
