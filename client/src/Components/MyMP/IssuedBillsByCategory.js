@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
     cursor: 'pointer'
   },
   cardHeader: {
-    backgroundColor: '#43D0C4',
+    backgroundColor: '#00BCD4',
     color: 'white',
     height: '100px'
   },

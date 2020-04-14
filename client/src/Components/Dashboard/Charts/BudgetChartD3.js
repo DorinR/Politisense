@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 import { capitalizedName } from '../Utilities/CommonUsedFunctions'
 
-const segColor = ['#eb4d55', '#43D0C4']
+const segColor = ['#eb4d55', '#00BCD4']
 export default class BudgetChartD3 {
   constructor (element, data) {
     const budgetData = {
