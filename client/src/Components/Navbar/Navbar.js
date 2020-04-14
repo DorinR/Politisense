@@ -40,8 +40,8 @@ const useStyles = makeStyles(theme => ({
       width: 300
     },
     display: 'flex',
-    overflow: "hidden",
-    flexDirection: 'column',
+    overflow: 'hidden',
+    flexDirection: 'column'
   },
   chevronLeftIcon: {
     color: 'white',
@@ -117,7 +117,7 @@ const useStyles = makeStyles(theme => ({
       paddingLeft: drawerWidthXlMode + 10
     },
     [theme.breakpoints.down('lg')]: {
-      paddingLeft: drawerWidth+20
+      paddingLeft: drawerWidth + 20
     }
   },
   content: {

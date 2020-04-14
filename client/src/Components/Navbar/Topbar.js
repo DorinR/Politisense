@@ -112,8 +112,8 @@ const Topbar = withRouter((props) => {
         >Map
         </Button>
         <Button
-            style={{ color: 'white', textTransform: 'none' }} variant='text'
-            onClick={() => { props.history.push('/account') }}
+          style={{ color: 'white', textTransform: 'none' }} variant='text'
+          onClick={() => { props.history.push('/account') }}
         >Account
         </Button>
         <IconButton
