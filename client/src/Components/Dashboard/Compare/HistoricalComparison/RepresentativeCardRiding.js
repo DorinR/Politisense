@@ -149,99 +149,100 @@ export default function RepresentativeCard () {
                 />
               </Grid>
             </Grid>
-            <List>
-              <DividerBlock text='Profile' color={getPartyColor(politicalParty).backgroundColor} />
-              <Box m={3} />
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar style={getPartyColor(politicalParty)}>
-                    <PersonIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText>{capitalizedName(name)}</ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar style={getPartyColor(politicalParty)}>
-                    <FlagIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText>{capitalizedName(politicalParty)}</ListItemText>
-              </ListItem>
-              <Box m={2} />
-              {parliamentNumber >= 40 ? (
+            {parliamentNumber ? (
+              <List>
+                <DividerBlock text='Profile' color={getPartyColor(politicalParty).backgroundColor} />
+                <Box m={3} />
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar style={getPartyColor(politicalParty)}>
+                      <PersonIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>{capitalizedName(name)}</ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar style={getPartyColor(politicalParty)}>
+                      <FlagIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText>{capitalizedName(politicalParty)}</ListItemText>
+                </ListItem>
+                <Box m={2} />
+                {parliamentNumber >= 40 ? (
+                  <DividerBlock
+                    text='Spending'
+                    color={getPartyColor(politicalParty).backgroundColor}
+                    infoBubbleTitle='Cumulative spending'
+                    infoBubbleText='Only available data is displayed'
+                    infoBubbleColor='white'
+                  />) : ''}
+                <Box m={2} />
+                {numericalStyling(totalExpensesYear[0]) !== 'NaN' && parliamentNumber >= 40 ? (
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar style={getPartyColor(politicalParty)}>
+                        <DollarIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText>{startDate} : <ColoredText text={numericalStyling(totalExpensesYear[0])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                  </ListItem>) : ''}
+                {numericalStyling(totalExpensesYear[1]) !== 'NaN' && parliamentNumber >= 40 ? (
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar style={getPartyColor(politicalParty)}>
+                        <DollarIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText>{startDate + 1} : <ColoredText text={numericalStyling(totalExpensesYear[1])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                  </ListItem>) : ''}
+                {numericalStyling(totalExpensesYear[2]) !== 'NaN' && parliamentNumber >= 40 ? (
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar style={getPartyColor(politicalParty)}>
+                        <DollarIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText>{startDate + 2} : <ColoredText text={numericalStyling(totalExpensesYear[2])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                  </ListItem>) : ''}
+                {numericalStyling(totalExpensesYear[3]) !== 'NaN' && parliamentNumber >= 40 ? (
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar style={getPartyColor(politicalParty)}>
+                        <DollarIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText>{startDate + 3} : <ColoredText text={numericalStyling(totalExpensesYear[3])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                  </ListItem>) : ''}
+                <Box m={2} />
                 <DividerBlock
-                  text='Spending'
+                  text='Legislative'
                   color={getPartyColor(politicalParty).backgroundColor}
-                  infoBubbleTitle='Cumulative spending'
-                  infoBubbleText='Only available data is displayed'
+                  infoBubbleTitle='Number of Bills Sponsored by Members of this Party'
+                  infoBubbleText={'This is a breakdown of the number of bills that were sponsored by members of the given party. We can see the total number of bills that were sponsored, as well as the portion of those that passed and entered into law, and the portion of those that were not voted into law. To see details about the bills your representative has voted on, go to the "My MP" tab'}
                   infoBubbleColor='white'
-                />) : ''}
-              <Box m={2} />
-              {numericalStyling(totalExpensesYear[0]) !== 'NaN' && parliamentNumber >= 40 ? (
+                />
+                <Box m={2} />
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar style={getPartyColor(politicalParty)}>
-                      <DollarIcon />
+                      <FormatListNumberedIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>{startDate} : <ColoredText text={numericalStyling(totalExpensesYear[0])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
-                </ListItem>) : ''}
-              {numericalStyling(totalExpensesYear[1]) !== 'NaN' && parliamentNumber >= 40 ? (
+                  <ListItemText> Total Voted Bills: <ColoredText text={nbBills} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                </ListItem>
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar style={getPartyColor(politicalParty)}>
-                      <DollarIcon />
+                      <AssignmentIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>{startDate + 1} : <ColoredText text={numericalStyling(totalExpensesYear[1])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
-                </ListItem>) : ''}
-              {numericalStyling(totalExpensesYear[2]) !== 'NaN' && parliamentNumber >= 40 ? (
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar style={getPartyColor(politicalParty)}>
-                      <DollarIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText>{startDate + 2} : <ColoredText text={numericalStyling(totalExpensesYear[2])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
-                </ListItem>) : ''}
-              {numericalStyling(totalExpensesYear[3]) !== 'NaN' && parliamentNumber >= 40 ? (
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar style={getPartyColor(politicalParty)}>
-                      <DollarIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText>{startDate + 3} : <ColoredText text={numericalStyling(totalExpensesYear[3])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
-                </ListItem>) : ''}
-              <Box m={2} />
-              <DividerBlock
-                text='Legislative'
-                color={getPartyColor(politicalParty).backgroundColor}
-                infoBubbleTitle='Number of Bills Sponsored by Members of this Party'
-                infoBubbleText={'This is a breakdown of the number of bills that were sponsored by members of the given party. We can see the total number of bills that were sponsored, as well as the portion of those that passed and entered into law, and the portion of those that were not voted into law. To see details about the bills your representative has voted on, go to the "My MP" tab'}
-                infoBubbleColor='white'
-              />
-              <Box m={2} />
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar style={getPartyColor(politicalParty)}>
-                    <FormatListNumberedIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText> Total Voted Bills: <ColoredText text={nbBills} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar style={getPartyColor(politicalParty)}>
-                    <AssignmentIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText>
-                  Total Issued Bills: <ColoredText text={nbPairedBills} color={getPartyColor(politicalParty).backgroundColor} />
-                </ListItemText>
-              </ListItem>
-            </List>
+                  <ListItemText>
+                    Total Issued Bills: <ColoredText text={nbPairedBills} color={getPartyColor(politicalParty).backgroundColor} />
+                  </ListItemText>
+                </ListItem>
+              </List>) : ''}
           </CardContent>
         </Card>
       </Grid>
