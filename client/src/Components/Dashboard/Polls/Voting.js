@@ -121,13 +121,15 @@ export default function Voting() {
             setStoragePostalCode(postalCode)
             const ipAddress = await getIpPostalCode()
             setIpPostalCode(ipAddress)
-            const recentLegislativeActivities = await fetchRecentBills()
-            const listBills = recentLegislativeActivities[0].data[0]
-            console.log(listBills.slice(0, 100))
-            setRecentBills(listBills.slice(0, 100))
-            const voting = await fetchVotingActivity(user.email)
-            console.log("voting ", voting)
-            console.log("voting userHasVoted", voting[0].userHasVoted)
+            // const voting = await fetchVotingActivity(user.email)
+            // console.log("voting ", voting.slice(0, 100))
+            // console.log("voting userHasVoted", voting[0].userHasVoted)
+            // const recentLegislativeActivities = await fetchRecentBills()
+            const recentLegislativeActivities = await fetchVotingActivity(user.email)
+            // console.log("recentLegislativeActivities ", recentLegislativeActivities)
+            //const listBills = recentLegislativeActivities[0].data[0]
+            console.log(recentLegislativeActivities.slice(0, 100))
+            setRecentBills(recentLegislativeActivities.slice(0, 100))
         }
         getData()
     }, [name])
@@ -141,7 +143,6 @@ export default function Voting() {
                 bills.title.toLowerCase().includes(filter.toLowerCase())
             )
         }
-        console.log("filtered ", filtered)
         setfilteredBills(filtered)
     }, [filter, recentBills])
 
@@ -196,6 +197,8 @@ export default function Voting() {
             .catch(err => console.log(err))
     }
 
+    // !hasNotClicked.includes(index)
+
     return (
         <Grid>
             <TextField
@@ -239,12 +242,12 @@ export default function Voting() {
                                             ? <Alert className={classes.alert} severity='error'>
                                                 Read the bill properly. Once you cast your vote, it cannot be undone!
                                       </Alert> : ''}
-                                        {storagePostalCode === ipPostalCode && !hasNotClicked.includes(index) && bills.description !== ''
+                                        {storagePostalCode === ipPostalCode && bills.userHasVoted == false && bills.description !== ''
                                             ? <ButtonGroup>
                                                 <Button value='yes' id={index} className={classes.for} onClick={(event) => registerButtonClick(event, bills.number, bills.title, bills.link, bills.description, bills.date, index)}>For</Button>
                                                 <Button value='no' id={index} className={classes.against} onClick={(event) => registerButtonClick(event, bills.number, bills.title, bills.link, bills.description, bills.date, index)}>Against</Button>
                                             </ButtonGroup> : ''}
-                                        {bills.description !== '' && hasNotClicked.includes(index)
+                                        {bills.description !== '' && bills.userHasVoted == true
                                             ? <List component='nav' className={classes.root} aria-label='mailbox folders'>
                                                 <ListItem>
                                                     <ListItemText primary='For' /> {bills.yes}
