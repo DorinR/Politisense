@@ -104,15 +104,16 @@ export function getSavedActivities() {
 export function duplicateActivityMap(storedActivities) {
   const activityMap = {}
   storedActivities.forEach(act => {
-    activityMap[act.data.title] = act.data
+    activityMap[act.data.title + act.data.description] = act.data
   })
   return activityMap
 }
 
 export function userVoteExistsMap(userVotes) {
   const voteMap = {}
-  userVotes.forEach(vote => {
-    voteMap[vote.activity] = true
+  // eslint-disable-next-line no-unused
+  userVotes.forEach(({id, data}) => {
+    voteMap[data.activity] = true
   })
   return voteMap
 }
@@ -139,21 +140,13 @@ export function getActivityRecords(req, res, user) {
 
 export function replaceNewVotesWithExisting(activity, activityMap) {
   if (Object.keys(activityMap).includes(activity.title) &&
-    Object.values(activityMap).includes(activity.description)) {
+    Object.keys(activityMap).includes(activity.description)) {
     return activityMap[activity.title]
   } else {
     activity.yes = 0
     activity.no = 0
     return activity
   }
-}
-export function addHasVotedTag(activity, voteMap) {
-  if (Object.keys(voteMap).includes(activity.id)) {
-    activity.data.userHasVoted = true
-    return activity.data
-  }
-  activity.userHasVoted = false
-  return activity
 }
 
 export function validateUserVotingParameters(req, res) {

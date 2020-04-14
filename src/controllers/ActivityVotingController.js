@@ -14,16 +14,19 @@ module.exports.index = async (req, res) => {
   if (!newActivities || !userVotes || !storedActivities) {
     return
   }
-
-  const activityMap = utils.duplicateActivityMap(storedActivities)
   const voteMap = utils.userVoteExistsMap(userVotes)
 
-  newActivities = newActivities
-    .map(activity => {
+  storedActivities.forEach(({id, data}) => {
+    if (Object.keys(voteMap).includes(id)) {
+      data.userHasVoted = true
+    } else {
+      data.userHasVoted = false
+    }
+  })
+
+  const activityMap = utils.duplicateActivityMap(storedActivities)
+  newActivities = newActivities.map(activity => {
       return utils.replaceNewVotesWithExisting(activity, activityMap)
-    })
-    .map(activity => {
-      return utils.addHasVotedTag(activity, voteMap)
     })
 
   utils.success(res, 'successfully retrieved activity list', newActivities)
