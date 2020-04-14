@@ -182,6 +182,9 @@ module.exports = {
   fetchCategories: function (req, res) {
     return BillController.fetchCategories(req, res)
   },
+  fetchCategoriesFromTxtFiles: function (req, res) {
+    return BillController.fetchCategoriesFromTxtFiles(req, res)
+  },
 
   getAllRepsFromAllParliaments: function (req, res) {
     return RepresentativeController.getAllRepsFromAllParliaments(req, res)

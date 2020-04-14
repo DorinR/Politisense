@@ -72,7 +72,7 @@ const Committees = props => {
     async function getData () {
       if (representative) {
         const roles = await getAllRolesByRep('committee', representative)
-        if (roles.length !== 0) {
+        if (roles && roles.length !== 0) {
           setData(roles)
         }
       }
