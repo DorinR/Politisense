@@ -413,7 +413,6 @@ exports.getNumberOfBillsSponsoredByParty = async (req, res) => {
 }
 exports.fetchCategoriesFromTxtFiles = async (req, res) => {
     const dir = path.join(__dirname, '../util/action/classify_action/vocabularies/')
-    try{
         if (fs.existsSync(dir)) {
             let filenames = getFilesFromDirectory(dir)
             filenames = filterByExpectedFormat(filenames)
@@ -435,7 +434,6 @@ exports.fetchCategoriesFromTxtFiles = async (req, res) => {
                 data: 'No Categories'
             })
         }
-    }catch(err){console.log(err)}
 }
 
 function getFilesFromDirectory (directory) {
