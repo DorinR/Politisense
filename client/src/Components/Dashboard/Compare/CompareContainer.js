@@ -6,7 +6,7 @@ import Box from '@material-ui/core/Box'
 
 const useStyles = makeStyles((theme) => ({
   container: {
-      padding: theme.spacing(2, 0, 6)
+    padding: theme.spacing(2, 0, 6)
   }
 }))
 

@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
 import D3ChartHeadVsHeadContainer from '../D3ChartHeadVsHeadContainer'
 import Grow from '@material-ui/core/Grow'
-import InfoBubble from "../Utilities/InfoBubble";
+import InfoBubble from '../Utilities/InfoBubble'
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -100,8 +100,8 @@ export default function CompareRepresentatives () {
     }
   }, [head1, head2])
 
-  const comparePartiesExplanationTitle = 'Compare Representatives'
-  const comparePartiesExplanationDescription = `Compare your representative's information and contributions to previous MPs of the same riding.`
+  const compareRepsExplanationTitle = 'Compare Representatives'
+  const compareRepsExplanationDescription = 'Compare your representative\'s information and contributions to previous MPs of the same riding.'
 
   return (
     <>
@@ -110,27 +110,27 @@ export default function CompareRepresentatives () {
         <Container maxWidth='l'>
           <Container>
             <Typography
-                component='h1'
-                variant='h2'
-                align='center'
-                color='textPrimary'
-                gutterBottom
+              component='h1'
+              variant='h2'
+              align='center'
+              color='textPrimary'
+              gutterBottom
             >
               Compare
             </Typography>
             <Typography
-                component='h4'
-                variant='h4'
-                color='textPrimary'
-                gutterBottom
+              component='h4'
+              variant='h4'
+              color='textPrimary'
+              gutterBottom
             >
               Past vs Present Representatives
               <span className={classes.customTooltip}>
-              <InfoBubble
-                  title={comparePartiesExplanationTitle}
-                  text={comparePartiesExplanationDescription}
-              />
-            </span>
+                <InfoBubble
+                  title={compareRepsExplanationTitle}
+                  text={compareRepsExplanationDescription}
+                />
+              </span>
             </Typography>
           </Container>
           <div>

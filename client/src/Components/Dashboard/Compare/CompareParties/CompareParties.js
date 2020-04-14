@@ -60,24 +60,24 @@ export default function CompareParties () {
     The metrics are calculated based on currently elected members of this party.`
 
   return (
-    <>
+    <div>
       <CssBaseline />
       <div>
         <Container maxWidth='l'>
           <Container>
             <Typography
-                component='h4'
-                variant='h4'
-                color='textPrimary'
-                gutterBottom
+              component='h4'
+              variant='h4'
+              color='textPrimary'
+              gutterBottom
             >
               Parties
               <span className={classes.customTooltip}>
-              <InfoBubble
+                <InfoBubble
                   title={comparePartiesExplanationTitle}
                   text={comparePartiesExplanationDescription}
-              />
-            </span>
+                />
+              </span>
             </Typography>
           </Container>
           <div>
@@ -92,6 +92,6 @@ export default function CompareParties () {
           </div>
         </Container>
       </div>
-    </>
+    </div>
   )
 }
