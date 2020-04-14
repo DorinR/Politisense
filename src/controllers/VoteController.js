@@ -29,7 +29,7 @@ exports.getAllVotesByRepresentative = async (req, res) => {
 
 exports.getPastRepresentativePairedVotes = async (req, res) => {
   const parliaments = [36, 37, 38, 39, 40, 41, 42]
-  const db = new Firestore(false)
+  const db = new Firestore()
   const politiciansVotes = parliaments.map(parl => {
     return db
       .forParliament(parl)
@@ -57,10 +57,6 @@ exports.getPastRepresentativePairedVotes = async (req, res) => {
     })
     .catch(e => {
       console.error(e)
-      res.status(500).json({
-        success: false,
-        message: e.message
-      })
     })
 }
 
@@ -94,9 +90,5 @@ exports.getPastRepresentativeVotes = async (req, res) => {
     })
     .catch(e => {
       console.error(e)
-      res.status(500).json({
-        success: false,
-        message: e.message
-      })
     })
 }

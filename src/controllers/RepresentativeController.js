@@ -32,7 +32,6 @@ exports.getImageData = async (req, res) => {
 }
 
 exports.getRepresentativeByRiding = (req, res) => {
-  console.log('inside function', req.params.riding)
   const db = new Firestore()
   const riding = req.params.riding.toLowerCase()
   return db
@@ -54,7 +53,8 @@ exports.getRepresentativeByRiding = (req, res) => {
     })
     .catch(console.error)
 }
-async function getAllRepsForEachParliament (parliamentNo) {
+
+async function getAllRepsForEachParliament(parliamentNo) {
   const db = new Firestore().forParliament(parliamentNo)
   const politicians = []
   await db
@@ -190,7 +190,10 @@ exports.getRepresentativesInfo = (req, res) => {
       })
     })
     .catch((err) => {
-      console.log('Error getting documents', err)
+      res.status(400).json({
+        success: false,
+        message: err
+      })
     })
 }
 
@@ -223,7 +226,6 @@ exports.getRepresentativeId = async (req, res) => {
 }
 
 exports.getPastRepresentativeId = async (req, res) => {
-  console.log('start mandate of MP ', req.body.start)
   const parliaments = [36, 37, 38, 39, 40, 41, 42]
   const db = new Firestore()
   parliaments.map(parl => {
@@ -241,273 +243,242 @@ exports.getPastRepresentativeId = async (req, res) => {
           })
         })
       })
-      .catch(err => {
-        console.log('Error getting documents', err)
+      .catch((err) => {
+        res.status(400).json({
+          success: false,
+          message: err
+        })
       })
   })
 }
 
-exports.getParliamentNumber = async (req, res) => {
-  console.log('from frontend member Parl:', req.params.member)
-  const parliaments = [36, 37, 38, 39, 40, 41, 42]
-  const db = new Firestore()
-  parliaments.map(parl => {
-    return db
-      .forParliament(parl)
-      .Politician()
-      .where(db.FieldPath.documentId(), '==', req.params.member)
-      .select()
-      .then(snapshot => {
-        const docs = []
-        snapshot.forEach(doc => {
-          console.log('parl:', parl)
-          docs.push({
-            data: doc.data(),
-            parliament: parl
-          })
-        })
-        return parl
-      })
+exports.getRepresentativesDateEntryParliament = async (req, res) => {
+  const name = req.params.name.toLowerCase()
+  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
+  const rawData = await Promise.all(
+    parliaments.map((parliament) => {
+      return findRepForSpecificParliament(parliament, name)
+    })
+  )
+  const jointArray = mergeArrays(rawData)
+  const dayEntryParliament = Math.min.apply(
+    Math,
+    jointArray.map(function (o) {
+      return o
+    })
+  )
+  res.status(200).json({
+    success: true,
+    data: dayEntryParliament
   })
+}
 
-  Promise.all(parliaments)
-    .then(doc => {
-      res.status(200).json({
-        success: true,
-        data: doc
+async function findRepForSpecificParliament(parliament, name) {
+  const db = new Firestore().forParliament(parliament)
+  const politicians = []
+  await db
+    .Politician()
+    .where('name', '==', name)
+    .select()
+    .then((snapshot) => {
+      if (snapshot.empty) {
+        return []
+      }
+      snapshot.forEach((doc) => {
+        politicians.push(doc.data().start)
+      })
+
+      return politicians
+    })
+  return politicians
+}
+exports.votingHistory = async (req, res) => {
+  if (!req.params.representative) {
+    Utils.error(res, 400, 'invalid request')
+    return
+  }
+  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
+  const allBills = parliaments.map((parliament) => {
+    return new Firestore().forParliament(parliament).Bill().select()
+  })
+  Promise.all(
+    parliaments.map((parliament) => {
+      return new Promise((resolve) => {
+        new Firestore()
+          .forParliament(parliament)
+          .Politician()
+          .where('name', '==', req.params.representative)
+          .select()
+          .then((snapshot) => {
+            return getMemberIDInParliament(snapshot)
+          })
+          .then((id) => {
+            if (!id) resolve([])
+            return joinVotesToVoteRecords(id, parliament)
+          })
+          .then((votes) => {
+            const index = parliaments.indexOf(parliament)
+            return addBillData(votes, allBills, index)
+          })
+          .then((votes) => {
+            return votes.map(createExpectedRecord).filter(isRecordComplete)
+          })
+          .then(resolve)
       })
     })
-    .catch(e => {
+  )
+    .then((votes) => {
+      Utils.success(res, 'successfully retrieved votes', votes.flat())
+    })
+    .catch((e) => {
       console.error(e)
-      res.status(500).json({
+      Utils.error(res, 500, 'internal server error')
+    })
+}
+
+function getMemberIDInParliament(snapshot) {
+  if (snapshot.empty || snapshot.size > 1) {
+    return null
+  }
+  let id = null
+  snapshot.forEach((doc) => {
+    id = doc.id
+  })
+  return id
+}
+
+function addBillData(votes, allBills, index) {
+  const voteMap = mapVotesByBill(votes)
+  const billIDs = Object.keys(voteMap)
+  return Promise.resolve(allBills[index]).then((snapshot) => {
+    addBillDataToMap(voteMap, billIDs, snapshot)
+    return Object.values(voteMap)
+  })
+}
+
+function joinVotesToVoteRecords(id, parliament) {
+  const db = new Firestore().forParliament(parliament)
+  const memberVotes = db.Vote().where('member', '==', id)
+  return db
+    .VoteRecord()
+    .innerJoin('_id', memberVotes, 'vote')
+    .then((results) => {
+      return results
+    })
+}
+
+function addBillDataToMap(voteMap, billIDs, snapshot) {
+  snapshot.forEach((doc) => {
+    if (billIDs.includes(doc.id)) {
+      voteMap[doc.id].bill = doc.data()
+    }
+  })
+}
+
+function mapVotesByBill(votes) {
+  const voteMap = {}
+  votes.forEach((vote) => {
+    voteMap[vote.bill] = vote
+  })
+  return voteMap
+}
+
+function createExpectedRecord(vote) {
+  return {
+    number: vote.billNumber,
+    title: vote.bill.title,
+    dateVoted: vote.bill.dateVoted,
+    link: vote.bill.link,
+    name: vote.name,
+    sponsorName: vote.sponsorAffiliations,
+    result: vote.yeas > vote.nays,
+    vote: vote.yea,
+    paired: vote.paired
+  }
+}
+
+function isRecordComplete(vote) {
+  return vote.dateVoted && vote.number
+}
+
+async function fetchRolesByParliament(parliamentNo, repName) {
+  const id = await fetchIDbyRepName(parliamentNo, repName)
+  if (id) {
+    const roles = await fetchrolesbyID(parliamentNo, id)
+    return roles
+  }
+  return []
+}
+
+async function fetchIDbyRepName(parliamentNo, repName) {
+  const db = new Firestore().forParliament(parliamentNo)
+  let id = null
+  await db
+    .Politician()
+    .where('name', '==', repName)
+    .select()
+    .then((snapshot) => {
+      if (snapshot.empty) {
+        return 'nothing there 1'
+      }
+      snapshot.forEach((doc) => {
+        id = doc.id
+      })
+
+      return id
+    })
+  return id
+}
+
+async function fetchrolesbyID(parliamentNo, id) {
+  const roles = []
+  return new Firestore()
+    .forParliament(parliamentNo)
+    .Role()
+    .where('politician', '==', id)
+    .select()
+    .then((snapshot) => {
+      if (snapshot.empty) {
+        return []
+      }
+      snapshot.forEach((doc) => {
+        const { fromDate, group, title, toDate, type } = doc.data()
+        const test = {
+          fromDate: fromDate,
+          group: group,
+          title: title,
+          toDate: toDate,
+          type: type
+        }
+        roles.push(test)
+      })
+      return roles
+    })
+    .catch((err) => {
+      res.status(400).json({
         success: false,
-        message: e.message
+        message: err
       })
     })
-  exports.getRepresentativesDateEntryParliament = async (req, res) => {
-    const name = req.params.name.toLowerCase()
-    const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
-    const rawData = await Promise.all(
-      parliaments.map((parliament) => {
-        return findRepForSpecificParliament(parliament, name)
-      })
-    )
-    const jointArray = mergeArrays(rawData)
-    const dayEntryParliament = Math.min.apply(
-      Math,
-      jointArray.map(function (o) {
-        return o
-      })
-    )
+}
+
+exports.getAllRolesByRep = async (req, res) => {
+  const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
+  const rawData = await Promise.all(
+    parliaments.map((parliament) => {
+      return fetchRolesByParliament(parliament, req.params.repName)
+    })
+  )
+  if (checkIsEmptyRawData(rawData)) {
     res.status(200).json({
       success: true,
-      data: dayEntryParliament
+      data: rawData
     })
-  }
-
-  async function findRepForSpecificParliament (parliament, name) {
-    const db = new Firestore().forParliament(parliament)
-    const politicians = []
-    await db
-      .Politician()
-      .where('name', '==', name)
-      .select()
-      .then((snapshot) => {
-        if (snapshot.empty) {
-          return []
-        }
-        snapshot.forEach((doc) => {
-          politicians.push(doc.data().start)
-        })
-
-        return politicians
-      })
-    return politicians
-  }
-  exports.votingHistory = async (req, res) => {
-    if (!req.params.representative) {
-      Utils.error(res, 400, 'invalid request')
-      return
-    }
-    const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
-    const allBills = parliaments.map((parliament) => {
-      return new Firestore().forParliament(parliament).Bill().select()
+  } else {
+    res.status(404).json({
+      success: false,
+      message: 'no data found'
     })
-    Promise.all(
-      parliaments.map((parliament) => {
-        return new Promise((resolve) => {
-          new Firestore()
-            .forParliament(parliament)
-            .Politician()
-            .where('name', '==', req.params.representative)
-            .select()
-            .then((snapshot) => {
-              return getMemberIDInParliament(snapshot)
-            })
-            .then((id) => {
-              if (!id) resolve([])
-              return joinVotesToVoteRecords(id, parliament)
-            })
-            .then((votes) => {
-              const index = parliaments.indexOf(parliament)
-              return addBillData(votes, allBills, index)
-            })
-            .then((votes) => {
-              return votes.map(createExpectedRecord).filter(isRecordComplete)
-            })
-            .then(resolve)
-        })
-      })
-    )
-      .then((votes) => {
-        Utils.success(res, 'successfully retrieved votes', votes.flat())
-      })
-      .catch((e) => {
-        console.error(e)
-        Utils.error(res, 500, 'internal server error')
-      })
-  }
-
-  function getMemberIDInParliament (snapshot) {
-    if (snapshot.empty || snapshot.size > 1) {
-      return null
-    }
-    let id = null
-    snapshot.forEach((doc) => {
-      id = doc.id
-    })
-    return id
-  }
-
-  function addBillData (votes, allBills, index) {
-    const voteMap = mapVotesByBill(votes)
-    const billIDs = Object.keys(voteMap)
-    return Promise.resolve(allBills[index]).then((snapshot) => {
-      addBillDataToMap(voteMap, billIDs, snapshot)
-      return Object.values(voteMap)
-    })
-  }
-
-  function joinVotesToVoteRecords (id, parliament) {
-    const db = new Firestore().forParliament(parliament)
-    const memberVotes = db.Vote().where('member', '==', id)
-    return db
-      .VoteRecord()
-      .innerJoin('_id', memberVotes, 'vote')
-      .then((results) => {
-        return results
-      })
-  }
-
-  function addBillDataToMap (voteMap, billIDs, snapshot) {
-    snapshot.forEach((doc) => {
-      if (billIDs.includes(doc.id)) {
-        voteMap[doc.id].bill = doc.data()
-      }
-    })
-  }
-
-  function mapVotesByBill (votes) {
-    const voteMap = {}
-    votes.forEach((vote) => {
-      voteMap[vote.bill] = vote
-    })
-    return voteMap
-  }
-
-  function createExpectedRecord (vote) {
-    return {
-      number: vote.billNumber,
-      title: vote.bill.title,
-      dateVoted: vote.bill.dateVoted,
-      link: vote.bill.link,
-      name: vote.name,
-      sponsorName: vote.sponsorAffiliations,
-      result: vote.yeas > vote.nays,
-      vote: vote.yea,
-      paired: vote.paired
-    }
-  }
-
-  function isRecordComplete (vote) {
-    return vote.dateVoted && vote.number
-  }
-
-  async function fetchRolesByParliament (parliamentNo, repName) {
-    const id = await fetchIDbyRepName(parliamentNo, repName)
-    if (id) {
-      const roles = await fetchrolesbyID(parliamentNo, id)
-      return roles
-    }
-    return []
-  }
-
-  async function fetchIDbyRepName (parliamentNo, repName) {
-    const db = new Firestore().forParliament(parliamentNo)
-    let id = null
-    await db
-      .Politician()
-      .where('name', '==', repName)
-      .select()
-      .then((snapshot) => {
-        if (snapshot.empty) {
-          return 'nothing there 1'
-        }
-        snapshot.forEach((doc) => {
-          id = doc.id
-        })
-
-        return id
-      })
-    return id
-  }
-
-  async function fetchrolesbyID (parliamentNo, id) {
-    const roles = []
-    return new Firestore()
-      .forParliament(parliamentNo)
-      .Role()
-      .where('politician', '==', id)
-      .select()
-      .then((snapshot) => {
-        if (snapshot.empty) {
-          return []
-        }
-        snapshot.forEach((doc) => {
-          const { fromDate, group, title, toDate, type } = doc.data()
-          const test = {
-            fromDate: fromDate,
-            group: group,
-            title: title,
-            toDate: toDate,
-            type: type
-          }
-          roles.push(test)
-        })
-        return roles
-      })
-      .catch((err) => {
-        console.log('Error getting documents', err)
-      })
-  }
-
-  exports.getAllRolesByRep = async (req, res) => {
-    const parliaments = [36, 37, 38, 39, 40, 41, 42, 43]
-    const rawData = await Promise.all(
-      parliaments.map((parliament) => {
-        return fetchRolesByParliament(parliament, req.params.repName)
-      })
-    )
-    if (checkIsEmptyRawData(rawData)) {
-      res.status(200).json({
-        success: true,
-        data: rawData
-      })
-    } else {
-      res.status(404).json({
-        success: false,
-        message: 'no data found'
-      })
-    }
   }
 }
+
