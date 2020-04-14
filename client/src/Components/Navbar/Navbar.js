@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/styles'
 import { Drawer, Typography, ListItem, List } from '@material-ui/core'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import PeopleIcon from '@material-ui/icons/People'
-import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import SidebarNav from './SidebarNav'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
@@ -16,7 +15,11 @@ import { useTheme } from '@material-ui/core/styles'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import { fetchUserRiding, fetchRepresentative, fetchRidingCode } from '../Dashboard/Utilities/CommonUsedFunctions'
+import {
+  fetchUserRiding,
+  fetchRepresentative,
+  fetchRidingCode
+} from '../Dashboard/Utilities/CommonUsedFunctions'
 import AppBar from '@material-ui/core/AppBar'
 import Topbar from './Topbar'
 import Avatar from '@material-ui/core/Avatar'
@@ -24,7 +27,7 @@ import { withRouter } from 'react-router-dom'
 
 const drawerWidth = 220
 const drawerWidthXlMode = 250
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: '#1E2125',
     display: 'flex',
@@ -34,12 +37,15 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2)
   },
   drawer: {
-    width: 240,
+    width: 270,
     backgroundColor: '#1E2125',
     flexGrow: 1,
     [theme.breakpoints.up('xl')]: {
       width: 300
-    }
+    },
+    display: 'flex',
+    overflow: 'hidden',
+    flexDirection: 'column'
   },
   chevronLeftIcon: {
     color: 'white',
@@ -50,9 +56,8 @@ const useStyles = makeStyles(theme => ({
       marginLeft: '40%'
     }
   },
-
   drawerXl: {
-    width: 300,
+    width: 350,
     backgroundColor: '#1E2125',
     flexGrow: 1
   },
@@ -85,7 +90,6 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#1E2125',
     textDecoration: 'none',
     color: 'WHITE'
-
   },
   divider1: {
     backgroundColor: 'grey'
@@ -109,14 +113,13 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen
     })
-
   },
   shiftContent: {
     [theme.breakpoints.up('xl')]: {
       paddingLeft: drawerWidthXlMode + 10
     },
     [theme.breakpoints.down('lg')]: {
-      paddingLeft: drawerWidth
+      paddingLeft: drawerWidth + 20
     }
   },
   content: {
@@ -178,7 +181,6 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('lg')]: {
       paddingTop: theme.spacing(1)
     }
-
   }
 }))
 const Sidebar = withRouter((props) => {
@@ -216,7 +218,6 @@ const Sidebar = withRouter((props) => {
     async function getData () {
       if (riding) {
         const rep = await fetchRepresentative(riding)
-        console.log(rep)
         setRepresentative(rep)
       }
     }
@@ -256,15 +257,9 @@ const Sidebar = withRouter((props) => {
       icon: <MapIcon />
     },
     {
-      title: 'Account',
-      href: '/account',
-      icon: <AccountBoxIcon />
-    },
-    {
       title: 'Logout',
       href: '/logout',
       icon: <ExitToAppIcon />
-
     }
   ]
 
@@ -280,22 +275,47 @@ const Sidebar = withRouter((props) => {
       >
         <div>
           <List className={classes.flexContainer}>
-            <ListItem button onClick={() => { props.history.push({ pathname: '/general' }) }}>
+            <ListItem
+              button
+              onClick={() => {
+                props.history.push({ pathname: '/general' })
+              }}
+            >
               <AccountBalanceIcon className={classes.icon} />
-              <Typography variant='h5' style={{ color: 'white' }}>Politisense</Typography>
+              <Typography variant='h5' style={{ color: 'white' }}>
+                Politisense
+              </Typography>
             </ListItem>
             <ListItem>
-              {theme.direction === 'ltr' ? <ChevronLeftIcon className={classes.chevronLeftIcon} onClick={handleSidebarClose} /> : <ChevronRightIcon />}
+              {theme.direction === 'ltr' ? (
+                <ChevronLeftIcon
+                  className={classes.chevronLeftIcon}
+                  onClick={handleSidebarClose}
+                />
+              ) : (
+                <ChevronRightIcon />
+              )}
             </ListItem>
           </List>
         </div>
-        <AppBar position='fixed' className={clsx(classes.appBar, { [classes.appBarShift]: openSidebar })} />
+        <AppBar
+          position='fixed'
+          className={clsx(classes.appBar, {
+            [classes.appBarShift]: openSidebar
+          })}
+        />
         <Divider className={classes.divider1} />
         <div>
           {representative && ridingCode && riding ? (
             <div>
               <ListItemAvatar style={{ paddingTop: theme.spacing(1) }}>
-                {<Avatar alt={representative ? representative.name : ''} src={representative ? representative.imageUrl : ''} className={classes.bigAvatar} />}
+                {
+                  <Avatar
+                    alt={representative ? representative.name : ''}
+                    src={representative ? representative.imageUrl : ''}
+                    className={classes.bigAvatar}
+                  />
+                }
               </ListItemAvatar>
               <MpProfile
                 representative={representative}
@@ -314,15 +334,13 @@ const Sidebar = withRouter((props) => {
           [classes.shiftContent]: true
         })}
       >
-        <main className={clsx(classes.content, {
-          [classes.contentShift]: openSidebar
-        })}
+        <main
+          className={clsx(classes.content, {
+            [classes.contentShift]: openSidebar
+          })}
         >
-          <div>
-            {props.children}
-          </div>
+          <div>{props.children}</div>
         </main>
-
       </div>
     </div>
   )
