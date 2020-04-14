@@ -138,13 +138,23 @@ export function getActivityRecords(req, res, user) {
     })
 }
 
+export function applyStoredVotes(storedActivities, voteMap) {
+  storedActivities.forEach(({id, data}) => {
+    if (Object.keys(voteMap).includes(id)) {
+      data.userHasVoted = true
+    } else {
+      data.userHasVoted = false
+    }
+  })
+}
+
 export function replaceNewVotesWithExisting(activity, activityMap) {
-  if (Object.keys(activityMap).includes(activity.title) &&
-    Object.keys(activityMap).includes(activity.description)) {
-    return activityMap[activity.title]
+  if (Object.keys(activityMap).includes(activity.title + activity.description)) {
+    return activityMap[activity.title + activity.description]
   } else {
     activity.yes = 0
     activity.no = 0
+    activity.userHasVoted = false
     return activity
   }
 }

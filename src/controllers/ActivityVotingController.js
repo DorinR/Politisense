@@ -15,20 +15,12 @@ module.exports.index = async (req, res) => {
     return
   }
   const voteMap = utils.userVoteExistsMap(userVotes)
-
-  storedActivities.forEach(({id, data}) => {
-    if (Object.keys(voteMap).includes(id)) {
-      data.userHasVoted = true
-    } else {
-      data.userHasVoted = false
-    }
-  })
+  utils.applyStoredVotes(storedActivities, voteMap)
 
   const activityMap = utils.duplicateActivityMap(storedActivities)
   newActivities = newActivities.map(activity => {
       return utils.replaceNewVotesWithExisting(activity, activityMap)
     })
-
   utils.success(res, 'successfully retrieved activity list', newActivities)
 }
 
