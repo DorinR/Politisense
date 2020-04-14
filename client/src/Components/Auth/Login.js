@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     width: '100%'
-  },
+  }
 }))
 
 const FacebookTheme = createMuiTheme({
