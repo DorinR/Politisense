@@ -51,45 +51,53 @@ async function fetchPastRepresentativeSpending (member, data) {
 
 export default function RepresentativeCard () {
   const classes = useStyles()
-  const [name, setName] = useState('')
-  const [politicalParty, setPoliticalParty] = useState('')
-  const [imageUrl, setImageUrl] = useState('')
-  const [startDate, setStartDate] = useState('')
   const [nbBills, setNbBills] = useState(0)
   const [nbPairedBills, setNbPairedBills] = useState(0)
   const [partyImageUrl, setPartyImageUrl] = useState('')
   const [totalExpensesYear, setTotalExpensesYear] = useState(0)
   const [parliamentNumber, setParliamentNumber] = useState(0)
+  const [member, setMember] = useState(null)
+  const [mpDropdown, setMpDropdown] = useState(null)
+  const [dataObject, setDataObject] = useState(null)
 
   const updateNameFromSwitcher = mpObject => {
-    setStartDate(mpObject.start)
-    setName(mpObject.name)
-    setImageUrl(mpObject.imageUrl)
-    setPoliticalParty(mpObject.party)
+    setMpDropdown(mpObject)
   }
 
   useEffect(() => {
     async function getData () {
-      const data = { start: startDate }
-      const member = await fetchPastRepresentativeId(name, data)
-      const partyData = await getPartyData(politicalParty)
-      const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, data)
+      // eslint-disable-next-line no-undef
+      const data = { start: mpDropdown.start }
+      setDataObject(data)
+      const member = await fetchPastRepresentativeId(mpDropdown.name, data)
+      setMember(member)
+      const partyData = await getPartyData(mpDropdown.party)
+      setPartyImageUrl(partyData.imageUrl)
+    }
+    if (mpDropdown) {
+      getData()
+    }
+  }, [mpDropdown])
+
+  useEffect(() => {
+    async function getData () {
+      // eslint-disable-next-line no-undef
+      const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, dataObject)
       const parliamentSession = pastRepresentativeVotes[0].parliament
-      const parliamentData = { parliament: parliamentSession, year: startDate }
-      const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, data)
+      const parliamentData = { parliament: parliamentSession, year: dataObject.start }
+      const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, dataObject)
       setParliamentNumber(parliamentData.parliament)
       if (parliamentData.parliament >= 40) {
         const expensesYear = await fetchPastRepresentativeSpending(member, parliamentData)
         setTotalExpensesYear(expensesYear)
       }
-      setPartyImageUrl(partyData.imageUrl)
       setNbBills(pastRepresentativeVotes.length)
       setNbPairedBills(pastRepresentativePairedVotes.length)
     }
-    if (startDate) {
+    if (member && dataObject) {
       getData()
     }
-  }, [startDate])
+  }, [member, dataObject])
 
   return (
     <Grid container spacing={2}>
@@ -118,43 +126,44 @@ export default function RepresentativeCard () {
                 ><FlagIcon />
                 </Avatar>
               </Grid>
-              <Grid item xs={9}>
-                <Avatar
-                  style={{
-                    marginLeft: 26,
-                    width: 150,
-                    height: 150,
-                    border: '3px solid #41aaa8'
-                  }}
-                  alt={name} src={imageUrl} className={classes.bigAvatar}
-                />
-              </Grid>
+              {mpDropdown ? (
+                <Grid item xs={9}>
+                  <Avatar
+                    style={{
+                      marginLeft: 26,
+                      width: 150,
+                      height: 150,
+                      border: '3px solid #41aaa8'
+                    }}
+                    alt={mpDropdown.name} src={mpDropdown.imageUrl} className={classes.bigAvatar}
+                  />
+                </Grid>) : ''}
             </Grid>
             {parliamentNumber ? (
               <List>
-                <DividerBlock text='Profile' color={getPartyColor(politicalParty).backgroundColor} />
+                <DividerBlock text='Profile' color={getPartyColor(mpDropdown.party).backgroundColor} />
                 <Box m={3} />
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar style={getPartyColor(politicalParty)}>
+                    <Avatar style={getPartyColor(mpDropdown.party)}>
                       <PersonIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>{capitalizedName(name)}</ListItemText>
+                  <ListItemText>{capitalizedName(mpDropdown.name)}</ListItemText>
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar style={getPartyColor(politicalParty)}>
+                    <Avatar style={getPartyColor(mpDropdown.party)}>
                       <FlagIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>{capitalizedName(politicalParty)}</ListItemText>
+                  <ListItemText>{capitalizedName(mpDropdown.party)}</ListItemText>
                 </ListItem>
                 <Box m={2} />
                 {parliamentNumber >= 40 ? (
                   <DividerBlock
                     text='Spending'
-                    color={getPartyColor(politicalParty).backgroundColor}
+                    color={getPartyColor(mpDropdown.party).backgroundColor}
                     infoBubbleTitle='Cumulative spending'
                     infoBubbleText='Only available data is displayed'
                     infoBubbleColor='white'
@@ -163,43 +172,43 @@ export default function RepresentativeCard () {
                 {numericalStyling(totalExpensesYear[0]) !== 'NaN' && parliamentNumber >= 40 ? (
                   <ListItem>
                     <ListItemAvatar>
-                      <Avatar style={getPartyColor(politicalParty)}>
+                      <Avatar style={getPartyColor(mpDropdown.party)}>
                         <DollarIcon />
                       </Avatar>
                     </ListItemAvatar>
-                    <ListItemText>{startDate} : <ColoredText text={numericalStyling(totalExpensesYear[0])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                    <ListItemText>{dataObject.start} : <ColoredText text={numericalStyling(totalExpensesYear[0])} color={getPartyColor(mpDropdown.party).backgroundColor} /></ListItemText>
                   </ListItem>) : ''}
                 {numericalStyling(totalExpensesYear[1]) !== 'NaN' && parliamentNumber >= 40 ? (
                   <ListItem>
                     <ListItemAvatar>
-                      <Avatar style={getPartyColor(politicalParty)}>
+                      <Avatar style={getPartyColor(mpDropdown.party)}>
                         <DollarIcon />
                       </Avatar>
                     </ListItemAvatar>
-                    <ListItemText>{startDate + 1} : <ColoredText text={numericalStyling(totalExpensesYear[1])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                    <ListItemText>{dataObject.start + 1} : <ColoredText text={numericalStyling(totalExpensesYear[1])} color={getPartyColor(mpDropdown.party).backgroundColor} /></ListItemText>
                   </ListItem>) : ''}
                 {numericalStyling(totalExpensesYear[2]) !== 'NaN' && parliamentNumber >= 40 ? (
                   <ListItem>
                     <ListItemAvatar>
-                      <Avatar style={getPartyColor(politicalParty)}>
+                      <Avatar style={getPartyColor(mpDropdown.party)}>
                         <DollarIcon />
                       </Avatar>
                     </ListItemAvatar>
-                    <ListItemText>{startDate + 2} : <ColoredText text={numericalStyling(totalExpensesYear[2])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                    <ListItemText>{dataObject.start + 2} : <ColoredText text={numericalStyling(totalExpensesYear[2])} color={getPartyColor(mpDropdown.party).backgroundColor} /></ListItemText>
                   </ListItem>) : ''}
                 {numericalStyling(totalExpensesYear[3]) !== 'NaN' && parliamentNumber >= 40 ? (
                   <ListItem>
                     <ListItemAvatar>
-                      <Avatar style={getPartyColor(politicalParty)}>
+                      <Avatar style={getPartyColor(mpDropdown.party)}>
                         <DollarIcon />
                       </Avatar>
                     </ListItemAvatar>
-                    <ListItemText>{startDate + 3} : <ColoredText text={numericalStyling(totalExpensesYear[3])} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                    <ListItemText>{dataObject.start + 3} : <ColoredText text={numericalStyling(totalExpensesYear[3])} color={getPartyColor(mpDropdown.party).backgroundColor} /></ListItemText>
                   </ListItem>) : ''}
                 <Box m={2} />
                 <DividerBlock
                   text='Legislative'
-                  color={getPartyColor(politicalParty).backgroundColor}
+                  color={getPartyColor(mpDropdown.party).backgroundColor}
                   infoBubbleTitle='Number of Bills Sponsored by Members of this Party'
                   infoBubbleText={'This is a breakdown of the number of bills that were sponsored by members of the given party. We can see the total number of bills that were sponsored, as well as the portion of those that passed and entered into law, and the portion of those that were not voted into law. To see details about the bills your representative has voted on, go to the "My MP" tab'}
                   infoBubbleColor='white'
@@ -207,20 +216,20 @@ export default function RepresentativeCard () {
                 <Box m={2} />
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar style={getPartyColor(politicalParty)}>
+                    <Avatar style={getPartyColor(mpDropdown.party)}>
                       <FormatListNumberedIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText> Total Voted Bills: <ColoredText text={nbBills} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                  <ListItemText> Total Voted Bills: <ColoredText text={nbBills} color={getPartyColor(mpDropdown.party).backgroundColor} /></ListItemText>
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar style={getPartyColor(politicalParty)}>
+                    <Avatar style={getPartyColor(mpDropdown.party)}>
                       <AssignmentIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    Total Issued Bills: <ColoredText text={nbPairedBills} color={getPartyColor(politicalParty).backgroundColor} />
+                    Total Issued Bills: <ColoredText text={nbPairedBills} color={getPartyColor(mpDropdown.party).backgroundColor} />
                   </ListItemText>
                 </ListItem>
               </List>) : ''}

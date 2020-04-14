@@ -87,7 +87,6 @@ const App = () => {
       <Sidebar>
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
-          <PrivateRoute path='/map' component={MapContainer} />
           <PrivateRoute
             path='/map'
             component={MapContainer}
