@@ -412,29 +412,31 @@ exports.getNumberOfBillsSponsoredByParty = async (req, res) => {
     })
 }
 exports.fetchCategoriesFromTxtFiles = async (req, res) => {
-  const dir = path.join(__dirname, '../util/action/classify_action/vocabularies/')
-  if(!dir){
-    res.status(400).json({
-      success: false,
-      data: 'No Categories'
-    })
-  }
-  let filenames = getFilesFromDirectory(dir)
-  filenames = filterByExpectedFormat(filenames)
-  const tags = createTagsFromFilenames(filenames)
-  if (tags) {
-    res.status(200).json({
-      success: true,
-      data: tags
-    })
-  } else {
-    res.status(400).json({
-      success: false,
-      data: 'No Categories'
-    })
-  }
+    const dir = path.join(__dirname, '../util/action/classify_action/vocabularies/')
+    try{
+        if (fs.existsSync(dir)) {
+            let filenames = getFilesFromDirectory(dir)
+            filenames = filterByExpectedFormat(filenames)
+            const tags = createTagsFromFilenames(filenames)
+            if (tags) {
+                res.status(200).json({
+                    success: true,
+                    data: tags
+                })
+            } else {
+                res.status(400).json({
+                    success: false,
+                    data: 'No Categories'
+                })
+            }
+        }else {
+            res.status(400).json({
+                success: false,
+                data: 'No Categories'
+            })
+        }
+    }catch(err){console.log(err)}
 }
-
 
 function getFilesFromDirectory (directory) {
   let filenames = fs.readdirSync(directory)
