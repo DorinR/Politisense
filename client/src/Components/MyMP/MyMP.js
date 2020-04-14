@@ -11,7 +11,15 @@ import Committees from './Committees'
 import IssuedBillsByMP from './IssuedBillsByMP'
 import Bipartisan from './Bipartisan'
 import MPActivityDistribution from './MPActivityDistribution'
-import { fetchCategories, fetchUserRiding, fetchRepresentative, createDataSetDonut, createDataPieBarTable, createRadarRows, createDataSetRadar } from '../Dashboard/Utilities/CommonUsedFunctions'
+import {
+  fetchUserRiding,
+  fetchRepresentative,
+  createDataSetDonut,
+  createDataPieBarTable,
+  createRadarRows,
+  createDataSetRadar,
+  fetchCategoriesFromTxtFiles
+} from '../Dashboard/Utilities/CommonUsedFunctions'
 import {
   CssBaseline
 } from '@material-ui/core'
@@ -30,17 +38,19 @@ export default function MyMP (props) {
   const [categoryList, setCategoryList] = React.useState(null)
   useEffect(() => {
     async function getData () {
-      const categories = await fetchCategories()
+      const categories = await fetchCategoriesFromTxtFiles()
       setCategoryList(categories)
     }
     getData()
   }, [])
 
   useEffect(() => {
-    // eslint-disable-next-line no-undef
-    const user = JSON.parse(localStorage.getItem('user'))
-    setUser(user)
-  }, [])
+    if (!user) {
+      // eslint-disable-next-line no-undef
+      const usr = JSON.parse(localStorage.getItem('user'))
+      setUser(usr)
+    }
+  }, [user])
 
   async function getAllRepsFromAllParliaments () {
     return axios

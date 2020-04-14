@@ -18,7 +18,7 @@ import FormLabel from '@material-ui/core/FormLabel'
 import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 import { Redirect } from 'react-router'
-import { fetchCategories, formattingCategory } from './Dashboard/Utilities/CommonUsedFunctions'
+import { formattingCategory, fetchCategoriesFromTxtFiles } from './Dashboard/Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -99,7 +99,7 @@ export default function HorizontalLinearStepper (props) {
   const [options, setOptions] = useState([])
   React.useEffect(() => {
     async function getCategoryList () {
-      const categories = await fetchCategories()
+      const categories = await fetchCategoriesFromTxtFiles()
       setOptions(categories)
     }
     getCategoryList()
@@ -188,7 +188,7 @@ export default function HorizontalLinearStepper (props) {
   const [riding, setRiding] = React.useState(null)
   const [user] = React.useState(props.location.state.user)
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault()
     if (riding) {
       const userToSignup = user
@@ -198,7 +198,7 @@ export default function HorizontalLinearStepper (props) {
 
       // eslint-disable-next-line no-undef
       localStorage.setItem('user', JSON.stringify(userToSignup))
-      axios.post('/api/users/signup', userToSignup)
+      await axios.post('/api/users/signup', userToSignup)
       props.history.push('/general')
     }
   }
