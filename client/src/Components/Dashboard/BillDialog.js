@@ -17,7 +17,7 @@ import { capitalizedName } from './Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles({
   avatar: {
-    backgroundColor: '#43D0C4'
+    backgroundColor: '#00BCD4'
   }
 })
 

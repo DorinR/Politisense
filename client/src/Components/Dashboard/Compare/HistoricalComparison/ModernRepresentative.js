@@ -10,7 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import PersonIcon from '@material-ui/icons/Person'
 import DollarIcon from '@material-ui/icons/Money'
 import axios from 'axios'
-import { getAllBillsByHead, capitalizedName, fetchUserRiding, calculateTotalVotesBills, getPartyColor, getPartyData, numericalStyling } from '../../Utilities/CommonUsedFunctions'
+import { getAllBillsByHead, capitalizedName, fetchUserRiding, getPartyColor, getPartyData, numericalStyling } from '../../Utilities/CommonUsedFunctions'
 import Grid from '@material-ui/core/Grid'
 import FlagIcon from '@material-ui/icons/Flag'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
@@ -28,7 +28,7 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchCurrentRepresentative(riding) {
+async function fetchCurrentRepresentative (riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then(res => {
@@ -40,7 +40,7 @@ async function fetchCurrentRepresentative(riding) {
     .catch(console.error)
 }
 
-async function fetchRepresentativeId(representative) {
+async function fetchRepresentativeId (representative) {
   return axios
     .get(`/api/representatives/${representative}/getRepresentativeId`)
     .then(res => {
@@ -51,12 +51,12 @@ async function fetchRepresentativeId(representative) {
     .catch(console.error)
 }
 
-async function fetchRepresentativeSpending(member, data) {
+async function fetchRepresentativeSpending (member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
   return res.data.data
 }
 
-export default function ModernRepresentative() {
+export default function ModernRepresentative () {
   const classes = useStyles()
   const [totalBills, setTotalBills] = useState(null)
   const [issuedBills, setIssuedBills] = useState(null)
@@ -77,7 +77,7 @@ export default function ModernRepresentative() {
   }, [user])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       // eslint-disable-next-line no-undef
       const riding = await fetchUserRiding(user.email)
       setRiding(riding)
@@ -88,7 +88,7 @@ export default function ModernRepresentative() {
   }, [user])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const cr = await fetchCurrentRepresentative(riding)
       setRepresentativeImage(cr.imageUrl)
       setCurrentRepresentative(cr)
@@ -99,7 +99,7 @@ export default function ModernRepresentative() {
   }, [riding])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       // eslint-disable-next-line no-undef
       const member = await fetchRepresentativeId(currentRepresentative.name)
       const parliamentData = { parliament: 43 }
@@ -112,9 +112,8 @@ export default function ModernRepresentative() {
   }, [currentRepresentative])
 
   useEffect(() => {
-    async function getData(mp) {
-
-      async function getIssuedBillsByHead(head) {
+    async function getData (mp) {
+      async function getIssuedBillsByHead (head) {
         const res = await axios.get(
           `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
         )

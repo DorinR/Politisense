@@ -40,4 +40,8 @@ router.get(
 
 router.get('/:head/getAllBillsBySponsorName', controller.getAllBillsBySponsorName)
 
+router.get(
+  '/fetchCategoriesFromTxtFiles',
+  controller.fetchCategoriesFromTxtFiles
+)
 module.exports = router
