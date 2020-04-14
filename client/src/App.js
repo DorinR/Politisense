@@ -74,16 +74,12 @@ const App = () => {
     <div className='container'>
       <Route exact path='/' render={() => <Redirect to='/login' />} />
       <Route exact path='/signup' component={SignUp} />
-      <Route path='/signup' component={SignUp} />
       <Route exact path='/activate' component={ActivateForm} />
       <Route exact path='/activate/:token' component={Activate} />
       <Route exact path='/reset' component={Reset} />
       <Route exact path='/reset/:token' component={ResetForm} />
       <Route exact path='/login' component={Login} />
       <Route exact path='/logout' component={Logout} />
-      <Route wxact path='/reset/:token' component={ResetForm} />
-      <Route path='/login' component={Login} />
-      <Route path='/logout' component={Logout} />
     </div>
   )
 
@@ -92,7 +88,7 @@ const App = () => {
       <Sidebar>
         <div>
           <Route exact path='/' render={() => <Redirect to='/login' />} />
-          <PrivateRoute path='/map' component={MapContainer} />
+
           <PrivateRoute
             path='/map'
             component={MapContainer}
@@ -115,14 +111,12 @@ const App = () => {
       <Switch>
         <Route exact path='/' render={() => <Redirect to='/login' />} />
         <Route exact path='/(login)' component={LoginContainer} />
-        <Route path='/logout' component={LoginContainer} />
         <Route exact path='/logout' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
         <Route exact path='/activate' component={LoginContainer} />
         <Route exact path='/activate/:token' component={LoginContainer} />
         <Route exact path='/reset' component={LoginContainer} />
         <Route exact path='/reset/:token' component={LoginContainer} />
-        <Route exact path='/404' component={NotFound} />
         <Route exact path='/question' component={Questionnaire} />
         <Route exact path='/map' component={DefaultContainer} />
         <Route exact path='/account' component={DefaultContainer} />
@@ -130,6 +124,7 @@ const App = () => {
         <Route exact path='/myRepresentative' component={DefaultContainer} />
         <Route exact path='/compare' component={DefaultContainer} />
         <Route exact path='/performance' component={DefaultContainer} />
+        <Route exact path='/404' component={NotFound} />
         <Route component={NotFound} />
       </Switch>
     </Router>
