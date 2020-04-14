@@ -132,7 +132,8 @@ export default function Login(props) {
             lastname: user.displayName
               ? user.displayName.substr(user.displayName.indexOf(' ') + 1)
               : ' ',
-            email: user.email
+            email: user.email,
+            type: 'social'
           }
           props.history.push({
             pathname: '/question',

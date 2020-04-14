@@ -9,6 +9,10 @@ export async function fetchCategoriesFromTxtFiles () {
   })
 }
 
+export async function checkUserExists (email) {
+  return axios.post('/api/users/checkIfUserExists', { email: email })
+}
+
 export function mergeArrays (rawData) {
   let jointArray = []
 

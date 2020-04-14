@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     marginRight: theme.spacing(1)
+    // width: '100%'
   },
   instructions: {
     marginTop: theme.spacing(1),
@@ -54,8 +55,11 @@ const useStyles = makeStyles(theme => ({
   pad: {
     marginTop: 10
   },
-  test: {
+  center: {
     textAlign: 'center'
+  },
+  final: {
+    width: '100%'
   }
 }))
 
@@ -295,30 +299,28 @@ export default function HorizontalLinearStepper (props) {
         </Grid>
         <Grid container direction='row' justify='center' alignItems='center'>
           <Grid item xs={3}>
-            <div className={classes.test}>
+            <div className={classes.center}>
               {activeStep === steps.length ? (
                 <div>
                   <Typography className={classes.instructions}>
-                    Registration process complete
+                    You're almost done! Once you confirm, we will send you an email with a link to activate your account!
                   </Typography>
-                  <div className={classes.actions}>
-                    <Button
-                      className={classes.button}
-                      onClick={handleReset}
-                      variant='contained'
-                      color='primary'
-                    >
-                      Redo registration
-                    </Button>
-                    <Button
-                      onClick={handleSubmit}
-                      variant='contained'
-                      color='primary'
-                      className={classes.button}
-                    >
-                      Go to Politisense
-                    </Button>
-                  </div>
+                  <Button
+                    className={classes.button}
+                    onClick={handleReset}
+                    variant='contained'
+                    color='primary'
+                  >
+                        Redo Registration
+                  </Button>
+                  <Button
+                    onClick={handleSubmit}
+                    variant='contained'
+                    color='primary'
+                    className={classes.button}
+                  >
+                        Confirm
+                  </Button>
                 </div>
               ) : (
                 <div>
