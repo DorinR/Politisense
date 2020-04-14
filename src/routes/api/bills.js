@@ -37,4 +37,7 @@ router.get(
   '/fetchCategories',
   controller.fetchCategories
 )
+
+router.get('/:head/getAllBillsBySponsorName', controller.getAllBillsBySponsorName)
+
 module.exports = router

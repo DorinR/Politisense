@@ -47,7 +47,7 @@ exports.getAllBillsByHead = (req, res) => {
                 })
                 res.json({
                   success: true,
-                  data: finalArray
+                  data: finalArray.length
                 })
               })
           }
@@ -55,7 +55,7 @@ exports.getAllBillsByHead = (req, res) => {
     })
 }
 
-async function fetchIDbyPoliticianName (parliamentNo, repName) {
+async function fetchIDbyPoliticianName(parliamentNo, repName) {
   const db = new Firestore(false).forParliament(parliamentNo)
   let id = null
   await db.Politician()
@@ -74,7 +74,7 @@ async function fetchIDbyPoliticianName (parliamentNo, repName) {
   return id
 }
 
-async function getAllVoteRecordsByRep (repId, parliamentNo) {
+async function getAllVoteRecordsByRep(repId, parliamentNo) {
   const db = new Firestore(false).forParliament(parliamentNo)
   const votes = db.Vote()
   const voteRecord = db.VoteRecord().where('type', '==', 'assent')
@@ -90,7 +90,7 @@ async function getAllVoteRecordsByRep (repId, parliamentNo) {
     }).catch(e => console.log('invalid parameters in inner join or in where clause', e))
   return allVotes
 }
-async function getAllBillsByParliamentAndRep (parliamentNo, repName) {
+async function getAllBillsByParliamentAndRep(parliamentNo, repName) {
   const db = new Firestore(false).forParliament(parliamentNo)
   const bills = db.Bill()
   const billClassification = db.BillClassification()
@@ -139,7 +139,7 @@ exports.getAllBillsByRepForAllParliaments = async (req, res) => {
   })
 }
 
-async function getBillsClassifiedBySponsor (parliamentNo, repName) {
+async function getBillsClassifiedBySponsor(parliamentNo, repName) {
   const db = new Firestore(false).forParliament(parliamentNo)
   const bill = db.Bill()
   const billClassification = db.BillClassification()
@@ -161,7 +161,7 @@ async function getBillsClassifiedBySponsor (parliamentNo, repName) {
 }
 // we should have 14 unique bills
 // we should have 14 voting records
-async function getVotingRecordsForBills (repName, parliamentNo) {
+async function getVotingRecordsForBills(repName, parliamentNo) {
   const db = new Firestore(false).forParliament(parliamentNo)
   const voteRecord = db.VoteRecord().where('type', '==', 'assent')
   const billsTotalVotes = []
@@ -175,7 +175,7 @@ async function getVotingRecordsForBills (repName, parliamentNo) {
     }).catch(e => console.log('invalid repName or invalid parameters in inner join', e))
   return billsTotalVotes
 }
-async function extractAllBillsAndVotingRecordsByParliamentAndSponsor (parliamentNo, repName) {
+async function extractAllBillsAndVotingRecordsByParliamentAndSponsor(parliamentNo, repName) {
   const finalArray = []
   const classifiedBills = await getBillsClassifiedBySponsor(parliamentNo, repName)
   const votingRecords = await getVotingRecordsForBills(repName, parliamentNo)
@@ -196,7 +196,7 @@ async function extractAllBillsAndVotingRecordsByParliamentAndSponsor (parliament
   return finalArray
 }
 
-async function fetchBillsByParliamentAndSponsor (parliamentNo, repName) {
+async function fetchBillsByParliamentAndSponsor(parliamentNo, repName) {
   const id = await fetchIDbyPoliticianName(parliamentNo, repName)
   let bills = []
   if (id) {
@@ -205,7 +205,7 @@ async function fetchBillsByParliamentAndSponsor (parliamentNo, repName) {
   return bills
 }
 
-async function getAllBillsByParliamentWithoutRep (parliamentNo) {
+async function getAllBillsByParliamentWithoutRep(parliamentNo) {
   const db = new Firestore().forParliament(parliamentNo)
   const billClassification = db.BillClassification()
   const bills = []
@@ -408,4 +408,34 @@ exports.getNumberOfBillsSponsoredByParty = async (req, res) => {
         }
       })
     })
+}
+
+async function getIssuedBillsParliament43(parliamentNo, repName) {
+  const db = new Firestore(false).forParliament(parliamentNo)
+  const bill = db.Bill()
+  const sponsoredBills = []
+
+  await bill
+    .where('sponsorName', '==', repName)
+    .select()
+    .then(result => {
+      if (result.empty) {
+        console.log('No sponsored bills for ' + repName)
+        return []
+      }
+      result.forEach(bill => {
+        sponsoredBills.push(bill)
+      })
+    }).catch(e => console.log('invalid parameters', e))
+  return sponsoredBills
+}
+
+exports.getAllBillsBySponsorName = async (req, res) => {
+  const repName = req.params.head.toLowerCase()
+  const parliament = 43
+  const rawData = await getIssuedBillsParliament43(parliament, repName)
+  res.status(200).json({
+    success: true,
+    data: rawData.length
+  })
 }

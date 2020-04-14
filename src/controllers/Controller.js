@@ -215,5 +215,8 @@ module.exports = {
   },
   representativeVotingHistory: function (req, res) {
     return RepresentativeController.votingHistory(req, res)
+  },
+  getAllBillsBySponsorName: function (req, res) {
+    return BillController.getAllBillsBySponsorName(req, res)
   }
 }
