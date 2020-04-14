@@ -1,12 +1,12 @@
 import MapWrapper from './MapWrapper'
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React, { useState } from 'react'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import InfoBubble from '../Dashboard/Utilities/InfoBubble'
 import CenteredCircularProgress from '../Dashboard/Utilities/CenteredCircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
+import axios from 'axios'
 
 const useStyles = makeStyles({
   root: {
@@ -32,57 +32,46 @@ const useStyles = makeStyles({
   },
   mapCentering: {
     textAlign: 'center'
+  },
+  bigAvatar: {
+    marginLeft: '35%',
+    width: 100,
+    height: 100,
+    border: '3px'
+  },
+  stylingIcons: {
+    background: '#43D0C4'
   }
 })
 
-export default function MapContainer () {
+const MapContainer = (props) => {
   const classes = useStyles()
-  const [ridingCodes, setRidingCodes] = useState(null)
-  const [shapeData, setShapeData] = useState('')
-  const [ridingMpData, setRidingMpData] = useState('')
+  const [contents, setContents] = useState(null)
 
-  useEffect(() => {
-    async function fetchData () {
-      return axios
-        .get('/api/ridings/getRidingByRidingCode')
-        .then(res => {
-          if (res.data.success) {
-            setRidingCodes(res.data.data)
-          }
-        })
-        .catch(console.error)
+  async function fetchRepresentativeEntryDateIntoParliament (name) {
+    return axios
+      .get(`/api/representatives/${name}/getRepresentativesDateEntryParliament`)
+      .then(res => {
+        if (res.data.success) {
+          return res.data.data
+        }
+      })
+      .catch(console.error)
+  }
+
+  const handleSetContentsMap = async (currentRidingcontents) => {
+    if (contents) {
+      if (contents[0].name !== currentRidingcontents[0].name) {
+        const dateEntry = await fetchRepresentativeEntryDateIntoParliament(currentRidingcontents[0].name)
+        currentRidingcontents[0].dateEntry = dateEntry
+        setContents(currentRidingcontents)
+      }
+    } else {
+      const dateEntry = await fetchRepresentativeEntryDateIntoParliament(currentRidingcontents[0].name)
+      currentRidingcontents[0].dateEntry = dateEntry
+      setContents(currentRidingcontents)
     }
-    fetchData()
-  }, [])
-
-  useEffect(() => {
-    async function fetchData () {
-      return axios
-        .get('/api/mapSupportData/shape/getMapSupportData')
-        .then(res => {
-          if (res.data.success) {
-            setShapeData(res.data.data)
-          }
-        })
-        .catch(console.error)
-    }
-    fetchData()
-  }, [])
-
-  useEffect(() => {
-    async function fetchData () {
-      return axios
-        .get('/api/mapSupportData/electionResults/getMapSupportData')
-        .then(res => {
-          if (res.data.success) {
-            setRidingMpData(res.data.data)
-          }
-        })
-        .catch(console.error)
-    }
-    fetchData()
-  }, [])
-
+  }
   return (
     <div>
       <Box m={2} />
@@ -94,6 +83,7 @@ export default function MapContainer () {
             color='textPrimary'
             gutterBottom
         >
+          {props ? props.test : 'nothing'}
           Explore Canadian Ridings
           <span className={classes.customTooltip}>
           <InfoBubble
@@ -107,11 +97,14 @@ export default function MapContainer () {
         </Typography>
       </Container>
       <Container>
-        {ridingCodes && shapeData && ridingMpData ? (
+        {props.ridingCodes && props.shapeData && props.ridingMpData ? (
           <MapWrapper
-            ridingCodes={ridingCodes}
-            shapeData={shapeData}
-            ridingMpData={ridingMpData}
+            ridingCodes={props.ridingCodes}
+            shapeData={props.shapeData}
+            ridingMpData={props.ridingMpData}
+            handleOpenModal={handleSetContentsMap}
+            selectedRiding={contents ? contents[1] : ''}
+            contents={contents ? contents[0] : ''}
           />
         ) : (
           <CenteredCircularProgress />
@@ -120,3 +113,4 @@ export default function MapContainer () {
     </div>
   )
 }
+export default MapContainer
