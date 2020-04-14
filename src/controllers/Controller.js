@@ -37,6 +37,21 @@ module.exports = {
   checkIfUserExists: function (req, res) {
     return UserController.checkIfUserExists(req, res)
   },
+  checkUserVerified: function (req, res) {
+    return UserController.checkUserVerified(req, res)
+  },
+  activateAccount: function (req, res) {
+    return UserController.activateAccount(req, res)
+  },
+  generateActivationLink: function (req, res) {
+    return UserController.generateActivationLink(req, res)
+  },
+  generateResetLink: function (req, res) {
+    return UserController.generateResetLink(req, res)
+  },
+  checkTokenValid: function (req, res) {
+    return UserController.checkTokenValid(req, res)
+  },
   getUserInterests: function (req, res) {
     return UserController.getUserInterests(req, res)
   },
@@ -171,11 +186,19 @@ module.exports = {
   fetchCategories: function (req, res) {
     return BillController.fetchCategories(req, res)
   },
+  fetchCategoriesFromTxtFiles: function (req, res) {
+    return BillController.fetchCategoriesFromTxtFiles(req, res)
+  },
 
   getAllRepsFromAllParliaments: function (req, res) {
     return RepresentativeController.getAllRepsFromAllParliaments(req, res)
   },
-
+  getRepresentativesDateEntryParliament: function (req, res) {
+    return RepresentativeController.getRepresentativesDateEntryParliament(
+      req,
+      res
+    )
+  },
   representativeVotingHistory: function (req, res) {
     return RepresentativeController.votingHistory(req, res)
   }

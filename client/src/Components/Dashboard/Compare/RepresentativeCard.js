@@ -29,7 +29,7 @@ const useStyles = makeStyles({
     width: 350
   },
   avatar: {
-    backgroundColor: '#43D0C4'
+    backgroundColor: '#00BCD4'
   }
 })
 

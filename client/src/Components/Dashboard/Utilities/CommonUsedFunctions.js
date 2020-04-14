@@ -1,19 +1,22 @@
 import axios from 'axios'
 import { useEffect, useRef } from 'react'
-export async function fetchCategories() {
-  return axios
-    .get('/api/bills/fetchCategories')
-    .then(res => {
-      if (res.data.success) {
-        return res.data.data
-      }
-    })
+
+export async function fetchCategoriesFromTxtFiles() {
+  return axios.get('/api/bills/fetchCategoriesFromTxtFiles').then((res) => {
+    if (res.data.success) {
+      return res.data.data
+    }
+  })
+}
+
+export async function checkUserExists(email) {
+  return axios.post('/api/users/checkIfUserExists', { email: email })
 }
 
 export function mergeArrays(rawData) {
   let jointArray = []
 
-  rawData.forEach(array => {
+  rawData.forEach((array) => {
     if (array) {
       jointArray = [...jointArray, ...array]
     }
@@ -32,7 +35,8 @@ export function formattingCategory(element) {
 export function capitalizedName(sponsor) {
   if (sponsor && isNaN(sponsor)) {
     let name = sponsor
-    name = name.toLowerCase()
+    name = name
+      .toLowerCase()
       .split(' ')
       .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
       .join(' ')
@@ -41,9 +45,10 @@ export function capitalizedName(sponsor) {
   return null
 }
 
-export function getPercentagePartisanIndex(element, arr) { // Utility function to compute percentage.
+export function getPercentagePartisanIndex(element, arr) {
+  // Utility function to compute percentage.
   let sum = 0
-  arr.forEach(element => {
+  arr.forEach((element) => {
     sum = sum + element.freq
   })
   const fraction = ((element.freq / sum) * 100).toFixed(1)
@@ -56,14 +61,17 @@ export function loadingTextTitle(element) {
     case 'parliamentary':
       title = element.title
       break
-    // eslint-disable-next-line no-lone-blocks
-    case 'association': {
-      if (element.group.includes('inter-')) {
-        title = element.group.slice(0, element.group.indexOf('inter-'))
-      } else {
-        title = element.group.slice(0, element.group.indexOf('parliamentary'))
+    case 'association':// eslint-disable-next-line no-lone-blocks
+      {
+        if (element.group.includes('inter-')) {
+          title = element.group.slice(0, element.group.indexOf('inter-'))
+        } else {
+          title = element.group.slice(
+            0,
+            element.group.indexOf('parliamentary')
+          )
+        }
       }
-    }
       break
     case 'committee':
       title = element.group
@@ -80,17 +88,17 @@ export function loadingTextdata(element) {
   if (element.fromDate === 0 && element.toDate === 0) {
     return 'Present'
   }
-  if (element.fromDate !== 0 && (element.toDate === 0)) {
+  if (element.fromDate !== 0 && element.toDate === 0) {
     return `${element.fromDate} - Present`
   }
-  if (element.fromDate !== 0 && (element.toDate !== 0)) {
+  if (element.fromDate !== 0 && element.toDate !== 0) {
     return `${element.fromDate} - ${element.toDate}`
   }
 }
 
 export function checkIsEmptyRawData(arrs) {
   let counter = 0
-  arrs.forEach(arr => {
+  arrs.forEach((arr) => {
     if (arr.length !== 0 && arr !== null) {
       counter = counter + arr.length
     }
@@ -105,39 +113,45 @@ export function checkIsEmptyRawData(arrs) {
 export function mergeArraysAndFilteringByType(type, ...arrays) {
   let jointArray = []
 
-  arrays.forEach(array => {
+  arrays.forEach((array) => {
     jointArray = [...jointArray, ...array]
   })
   const mergedArrays = [...new Set([...jointArray])]
 
-  const uniqueElements = mergedArrays.filter((thing, index, self) =>
-    index === self.findIndex((element) => (
-      element.title === thing.title && element.group === thing.group && element.toDate === thing.toDate && element.fromDate === thing.fromDate
-    ))
+  const uniqueElements = mergedArrays.filter(
+    (thing, index, self) =>
+      index ===
+      self.findIndex(
+        (element) =>
+          element.title === thing.title &&
+          element.group === thing.group &&
+          element.toDate === thing.toDate &&
+          element.fromDate === thing.fromDate
+      )
   )
 
   if (uniqueElements.length === 0) {
     return null
   }
   if (type === 'role') {
-    return uniqueElements.filter(item => item.group === 'none')
+    return uniqueElements.filter((item) => item.group === 'none')
   }
   if (type === 'committee') {
-    return uniqueElements.filter(item => item.type === 'committee')
+    return uniqueElements.filter((item) => item.type === 'committee')
   }
   if (type === 'association') {
-    return uniqueElements.filter(item => item.group.includes('association'))
+    return uniqueElements.filter((item) => item.group.includes('association'))
   }
 }
 
 export async function getAllRolesByRep(type, repName) {
   return axios
     .get(`/api/representatives/${repName}/getAllRolesByRep`)
-    .then(res => {
+    .then((res) => {
       if (res.data.success) {
         const data = res.data.data
         const arrays = []
-        data.forEach(arr => arrays.push(arr))
+        data.forEach((arr) => arrays.push(arr))
         const mpRoles = mergeArraysAndFilteringByType(type, ...arrays)
         const mpRolesSorted = sortingBasedOnDate(mpRoles)
         return mpRolesSorted
@@ -171,25 +185,27 @@ export function sortingBasedOnDate(arr) {
 export const getDescription = async (ministry) => {
   return axios
     .post('api/parliament/getRoleDescription', { ministry: ministry })
-    .then(res => {
+    .then((res) => {
       let desc = ''
       if (res.data.success) {
         desc = res.data.data.description
       }
       return desc
-    }).catch(console.error)
+    })
+    .catch(console.error)
 }
 
 export function titleCase(str) {
   const regex = /(^|\b(?!(and?|at?|the|for|to|but|by|of)\b))\w+/g
-  return str.toLowerCase()
-    .replace(regex, s => s[0].toUpperCase() + s.slice(1))
+  return str
+    .toLowerCase()
+    .replace(regex, (s) => s[0].toUpperCase() + s.slice(1))
 }
 
 export async function fetchUserRiding(userEmail) {
   return axios
     .get(`/api/users/${userEmail}/getUser`)
-    .then(res => {
+    .then((res) => {
       if (res.data.success) {
         return res.data.data.riding
       }
@@ -200,7 +216,7 @@ export async function fetchUserRiding(userEmail) {
 export async function fetchRidingCode(riding) {
   return axios
     .get(`/api/ridings/getRidingCode/${encodeURI(riding)}`)
-    .then(res => {
+    .then((res) => {
       if (res.data.success) {
         return res.data.data.code
       }
@@ -211,8 +227,9 @@ export async function fetchRidingCode(riding) {
 export async function fetchRepresentative(riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
-    .then(res => {
+    .then((res) => {
       if (res.data.success) {
+        console.log(res.data)
         return res.data.data
       }
     })
@@ -220,10 +237,12 @@ export async function fetchRepresentative(riding) {
 }
 
 export function totalBillsArray(arr) {
-  const totalBills = arr.filter((thing, index, self) =>
-    index === self.findIndex((t) => (
-      t.billsClassified.number === thing.billsClassified.number
-    ))
+  const totalBills = arr.filter(
+    (thing, index, self) =>
+      index ===
+      self.findIndex(
+        (t) => t.billsClassified.number === thing.billsClassified.number
+      )
   )
   return totalBills.length
 }
@@ -234,7 +253,7 @@ export function formatNumber(num) {
 
 export function createVariablesRadar(categories) {
   const lables = []
-  categories.forEach(category => {
+  categories.forEach((category) => {
     lables.push({ key: category, label: category })
   })
   return lables
@@ -245,9 +264,9 @@ export function createDataSetRadar(categories, data) {
   let temp = {}
   const dataSetRadar = {}
   let maxValue = 0
-  categories.forEach(category => {
+  categories.forEach((category) => {
     let totalvotes = 0
-    data.forEach(bill => {
+    data.forEach((bill) => {
       if (bill.billData.category === category.toLowerCase()) {
         totalvotes++
       }
@@ -257,7 +276,7 @@ export function createDataSetRadar(categories, data) {
     dataArray.push(temp)
   })
 
-  dataArray.forEach(category => {
+  dataArray.forEach((category) => {
     if (category.value > maxValue) {
       maxValue = category.value
     }
@@ -270,11 +289,13 @@ export function createDataSetRadar(categories, data) {
   return [dataSetRadar, maxValue]
 }
 export function getPoliticalPartyFromSponsor(sponsors) {
-  const politicalParties = [...new Set(sponsors.map(item => item.party))]
+  const politicalParties = [...new Set(sponsors.map((item) => item.party))]
   return politicalParties
 }
 
-export function createPartyCountersForBiPartisanIndex(politicalPartiesFromAllParliaments) {
+export function createPartyCountersForBiPartisanIndex(
+  politicalPartiesFromAllParliaments
+) {
   const partiesCounters = []
   politicalPartiesFromAllParliaments.forEach((party) => {
     partiesCounters.push({ partyType: party, counter: 0 })
@@ -283,11 +304,19 @@ export function createPartyCountersForBiPartisanIndex(politicalPartiesFromAllPar
 }
 export function getBillsForBiPartisanIndex(mpdata, sponsors) {
   const bills = []
-  mpdata.forEach(bill => {
+  mpdata.forEach((bill) => {
     if (bill.voteRecord.yea === true) {
-      sponsors.forEach(sponsor => {
+      sponsors.forEach((sponsor) => {
         if (sponsor.name === bill.billData.sponsorName) {
-          if (!(bills && bills.find(element => element.billDetails.billData.number === bill.billData.number))) {
+          if (
+            !(
+              bills &&
+              bills.find(
+                (element) =>
+                  element.billDetails.billData.number === bill.billData.number
+              )
+            )
+          ) {
             bills.push({ billDetails: bill, category: sponsor.party })
           }
         }
@@ -297,14 +326,22 @@ export function getBillsForBiPartisanIndex(mpdata, sponsors) {
   return bills
 }
 
-export function getPartiesDataForBiPartisanIndex(mpdata, sponsors, partiesCounters) {
+export function getPartiesDataForBiPartisanIndex(
+  mpdata,
+  sponsors,
+  partiesCounters
+) {
   const partiesData = []
-  mpdata.forEach(bill => {
+  mpdata.forEach((bill) => {
     if (bill.voteRecord.yea === true) {
-      sponsors.forEach(sponsor => {
+      sponsors.forEach((sponsor) => {
         if (sponsor.name === bill.billData.sponsorName) {
           partiesCounters.forEach((party) => {
-            if (sponsor.party === party.partyType && party.partyType !== '' && party.partyType !== undefined) {
+            if (
+              sponsor.party === party.partyType &&
+              party.partyType !== '' &&
+              party.partyType !== undefined
+            ) {
               party.counter++
             }
           })
@@ -312,17 +349,22 @@ export function getPartiesDataForBiPartisanIndex(mpdata, sponsors, partiesCounte
       })
     }
   })
-  partiesCounters.forEach(element => {
-    partiesData.push({ label: element.partyType, freq: element.counter, value: 0 })
+  partiesCounters.forEach((element) => {
+    partiesData.push({
+      label: element.partyType,
+      freq: element.counter,
+      value: 0
+    })
   })
   return partiesData
 }
 
 export function formattingPartiesData(partiesData) {
-  partiesData = partiesData.filter(element =>
-    element.label !== undefined && element.label !== '' && element.freq !== 0
+  partiesData = partiesData.filter(
+    (element) =>
+      element.label !== undefined && element.label !== '' && element.freq !== 0
   )
-  partiesData.forEach(element => {
+  partiesData.forEach((element) => {
     element.label = capitalizedName(element.label)
     element.value = getPercentagePartisanIndex(element, partiesData)
   })
@@ -333,13 +375,21 @@ export function formattingPartiesData(partiesData) {
 }
 
 export function createDataSetDonut(sponsors, mpdata) {
-  const politicalPartiesFromAllParliaments = getPoliticalPartyFromSponsor(sponsors)
+  const politicalPartiesFromAllParliaments = getPoliticalPartyFromSponsor(
+    sponsors
+  )
   let bills = []
   let partiesData = []
-  const partiesCounters = createPartyCountersForBiPartisanIndex(politicalPartiesFromAllParliaments)
+  const partiesCounters = createPartyCountersForBiPartisanIndex(
+    politicalPartiesFromAllParliaments
+  )
   if (mpdata.length) {
     bills = getBillsForBiPartisanIndex(mpdata, sponsors)
-    partiesData = getPartiesDataForBiPartisanIndex(mpdata, sponsors, partiesCounters)
+    partiesData = getPartiesDataForBiPartisanIndex(
+      mpdata,
+      sponsors,
+      partiesCounters
+    )
   }
   partiesData = formattingPartiesData(partiesData)
   return [partiesData, bills]
@@ -347,10 +397,14 @@ export function createDataSetDonut(sponsors, mpdata) {
 
 export function createDataPieBarTable(categories, data) {
   const billsForSpecificCategory = []
-  categories.forEach(category => {
-    data.forEach(bill => {
-      if (bill.billsClassified.category === (category.toLowerCase())) {
-        pushToArrayUniqueBillsForPieBar(billsForSpecificCategory, bill, category)
+  categories.forEach((category) => {
+    data.forEach((bill) => {
+      if (bill.billsClassified.category === category.toLowerCase()) {
+        pushToArrayUniqueBillsForPieBar(
+          billsForSpecificCategory,
+          bill,
+          category
+        )
       }
     })
   })
@@ -363,7 +417,14 @@ export function sortBasedOnLargest(list) {
   })
 }
 export function AssignColorForEachItem(list) {
-  const colors = ['#32afa9', '#556fb5', '#00818a', '#293462', '#7189bf', '#d45079']
+  const colors = [
+    '#32afa9',
+    '#556fb5',
+    '#00818a',
+    '#293462',
+    '#7189bf',
+    '#d45079'
+  ]
 
   list.forEach((item, index) => {
     item.color = colors[index]
@@ -373,12 +434,14 @@ export function AssignColorForEachItem(list) {
 
 export function roundUpToNearestInteger(num) {
   if (num % 10 === 0) return num + 5
-  return (10 - num % 10) + num
+  return 10 - (num % 10) + num
 }
 
 export function pushToArrayUniqueBillsForPieBar(arr, obj, category) {
   if (arr.length !== 0) {
-    const index = arr.findIndex((e) => e.bill.billsClassified.number === obj.billsClassified.number)
+    const index = arr.findIndex(
+      (e) => e.bill.billsClassified.number === obj.billsClassified.number
+    )
     if (index === -1) {
       if (obj.voteRecord.yeas > obj.voteRecord.nays) {
         arr.push({ bill: obj, category: [category], status: 'Passed' })
@@ -401,7 +464,9 @@ export function pushToArrayUniqueBillsForPieBar(arr, obj, category) {
 }
 export function pushToArrayUniqueBillsForRadar(arr, obj, category) {
   if (arr.length !== 0) {
-    const index = arr.findIndex((e) => e.bill.billData.number === obj.billData.number)
+    const index = arr.findIndex(
+      (e) => e.bill.billData.number === obj.billData.number
+    )
     if (index === -1) {
       if (obj.voteRecord.yea) {
         arr.push({ bill: obj, category: [category], status: 'Yea' })
@@ -426,9 +491,9 @@ export function pushToArrayUniqueBillsForRadar(arr, obj, category) {
 
 export function createRadarRows(bills, categoryList) {
   const rows = []
-  categoryList.forEach(category => {
-    bills.forEach(bill => {
-      if (bill.billData.category === (category.toLowerCase())) {
+  categoryList.forEach((category) => {
+    bills.forEach((bill) => {
+      if (bill.billData.category === category.toLowerCase()) {
         pushToArrayUniqueBillsForRadar(rows, bill, category)
       }
     })
@@ -438,10 +503,8 @@ export function createRadarRows(bills, categoryList) {
 
 export async function fetchRepresentativeId(representative) {
   return axios
-    .get(
-      `/api/representatives/${representative}/getRepresentativeId`
-    )
-    .then(res => {
+    .get(`/api/representatives/${representative}/getRepresentativeId`)
+    .then((res) => {
       if (res.data.success) {
         return res.data.data
       }

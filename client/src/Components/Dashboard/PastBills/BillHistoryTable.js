@@ -84,7 +84,10 @@ async function votingHistory(representative) {
       }
       return []
     })
-    .catch(console.error)
+    .catch(e => {
+      console.error(e)
+      return []
+    })
 }
 
 function generateTableRows(bills) {

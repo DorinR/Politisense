@@ -29,7 +29,7 @@ export default function RidingPopulation(props) {
   return (
     <span>
       {population ? (
-        <span>{population}</span>
+        <span>{Number(population).toLocaleString('fr-CA')}</span>
       ) : (
           <span>
             <LinearProgress />

@@ -3,7 +3,7 @@ import * as topojson from 'topojson-client'
 import { PARTY_COLORS } from '../../Components/Dashboard/Sidebar/RidingShape/partyColors'
 
 export default class D3Chart {
-  constructor (ridingCodes, shapeData, ridingMpData) {
+  constructor (ridingCodes, shapeData, ridingMpData, handleOpenModal, selectedRiding, tag) {
     const ridingRepresentative = d3.map()
     const width = parseInt(d3.select('#map-wrapper').style('width'))
     const mapRatio = 0.75
@@ -19,7 +19,7 @@ export default class D3Chart {
     const path = d3.geoPath().projection(projection)
 
     const map = d3
-      .select('#map')
+      .select(tag)
       .attr('width', width)
       .attr('height', height)
 
@@ -87,7 +87,7 @@ export default class D3Chart {
           })
         }
       })
-      selectRiding(clickedShape.properties.ID, representativeInfo)
+      selectRiding(clickedShape.properties.ID, representativeInfo, clickedShape)
       const bounds = path.bounds(clickedShape)
       const dx = bounds[1][0] - bounds[0][0]
       const dy = bounds[1][1] - bounds[0][1]
@@ -108,102 +108,12 @@ export default class D3Chart {
         )
     }
 
-    function displayRepresentativeInfo (m, politicianInfo) {
-      const r = ridingMpData.Election.Riding[m]
-      // eslint-disable-next-line no-unused-vars
-      let candidatecontent = ''
-      let votesCounted = 0
-
-      for (let i = 0; i < r.Candidate.length; i++) {
-        votesCounted += r.Candidate[i].V
-      }
-
-      for (let i = 0; i < Math.min(5, r.Candidate.length); i++) {
-        const entry = r.Candidate[i]
-        let echeck = ''
-        if (entry.E !== 'Yes') {
-          echeck = ''
-        } else {
-          echeck =
-            " <span class='echeck'><image class='' src='icons/check.svg' border='0'></span>"
-        }
-
-        let percnt = ''
-        if (votesCounted > 0) {
-          percnt = ((entry.V / votesCounted) * 100).toFixed(1)
-        } else {
-          percnt = 0
-        }
-
-        const candidateline =
-          '<tr class="candidateline"><td class="candidate-name"><div class="party-marker marker' +
-          entry.PE +
-          '"></div>' +
-          entry.FN +
-          ' ' +
-          entry.LN +
-          ' <span>(' +
-          entry.PE +
-          ')</span>' +
-          echeck +
-          '</td><td class="candidate-votes">' +
-          d3.format(',')(entry.V) +
-          '</td><td class="candidate-percentage">' +
-          percnt +
-          '</td></tr>'
-
-        candidatecontent += candidateline
-      }
-
-      const polticainRow =
-        '<tr class="candidateline"><td class="candidate-name">' +
-        politicianInfo.name +
-        '</td> <td class="candidate-votes">' +
-        politicianInfo.party +
-        '</td><td class="candidate-percentage">' +
-        politicianInfo.riding +
-        '</td></tr>'
-
-      const representativeInfoContainer = d3.select(
-        '#representativeInfoContainer'
-      )
-
-      representativeInfoContainer
-        .selectAll('image')
-        .data([])
-        .remove()
-
-      representativeInfoContainer
-        .append('image')
-        .attr('xlink:href', politicianInfo.imageUrl)
-        .attr('width', 200)
-        .attr('height', 200)
-
-      d3.select('#tooltip')
-        .select('#value')
-        .html(function () {
-          return (
-            "<div class='tooltiptop'>" +
-            "<p class='ridingname'> Representative Info </p>" +
-            "<table class='candidatebox'>" +
-            "<tr class='candidateline'>" +
-            "<th class='nametitle'>Name: </th>" +
-            '<th>Party </th>' +
-            '<th>Riding</th>' +
-            '</tr>' +
-            polticainRow +
-            '</table>'
-          )
-        })
-    }
-
-    function selectRiding (ridingId, representativeInfo) {
+    function selectRiding (ridingId, representativeInfo, clickedShape) {
       const selectedRiding = d3.select(".riding[data-id='" + ridingId + "']")
       selectedRiding.node().parentNode.appendChild(selectedRiding.node())
       d3.select('.activenode').classed('activenode', false)
       selectedRiding.classed('activenode', true)
-      displayRepresentativeInfo(ridingId, representativeInfo)
-      d3.selectAll('#tooltip').classed('hidden', false)
+      handleOpenModal([representativeInfo, clickedShape])
     }
 
     function zoomin () {

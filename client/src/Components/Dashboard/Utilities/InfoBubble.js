@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 export default function InfoBubble(props) {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
-  const [color, setColor] = React.useState('#43D0C4')
+  const [color, setColor] = React.useState('#00BCD4')
 
   const handleClickOpen = () => {
     setOpen(true)

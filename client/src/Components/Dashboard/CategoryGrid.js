@@ -12,6 +12,7 @@ import AddIcon from '@material-ui/icons/Add'
 import axios from 'axios'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { Hidden } from '@material-ui/core'
+import { formattingCategory } from './Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -145,7 +146,7 @@ export default function CategoryGrid(props) {
                 <Grid item xs={4} key={categoryList[index]}>
                   <CategoryCard
                     id={index}
-                    title={category}
+                    title={formattingCategory(category)}
                     delete={deleteEvent}
                     representative={props.representativedata}
                     data={props.representativedata}

@@ -39,4 +39,8 @@ router.get(
   '/fetchCategories',
   controller.fetchCategories
 )
+router.get(
+  '/fetchCategoriesFromTxtFiles',
+  controller.fetchCategoriesFromTxtFiles
+)
 module.exports = router
