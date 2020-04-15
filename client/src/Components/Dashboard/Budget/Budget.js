@@ -13,15 +13,15 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import TrendingUpIcon from '@material-ui/icons/TrendingUp'
-import MenuItem from '@material-ui/core/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
-import Menu from '@material-ui/core/Menu'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
 import { formatNumber, fetchRepresentative, fetchUserRiding, fetchRepresentativeId } from '../Utilities/CommonUsedFunctions'
 import MoneyIcon from '@material-ui/icons/Money'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import { Transition } from '../General/GeneralDashboard'
+import DescriptionDialog from '../../MyMP/DescriptionDialog'
+import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded'
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%'
@@ -29,6 +29,9 @@ const useStyles = makeStyles(theme => ({
   content: {
     alignItems: 'center',
     display: 'flex'
+  },
+  titleHeader: {
+    fontWeight: 700
   },
   title: {
     color: '#263238',
@@ -93,8 +96,7 @@ const useStyles = makeStyles(theme => ({
 const Budget = props => {
   const { className, ...rest } = props
   const classes = useStyles()
-  const [anchorEl, setAnchorEl] = React.useState(null)
-  const open = Boolean(anchorEl)
+  const [open, setOpen] = React.useState(false)
   const [openBudgetChart, setOpenBudgetChart] = React.useState(false)
   const handleClosingChartDialog = () => {
     setOpenBudgetChart(false)
@@ -102,21 +104,14 @@ const Budget = props => {
   const handleOpeningChartDialog = () => {
     setOpenBudgetChart(true)
   }
-  const options = [
-    '2019',
-    '2018',
-    '2017'
-  ]
-
-  const ITEM_HEIGHT = 48
-
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget)
+  const handleClickOpen = () => {
+    setOpen(true)
   }
 
   const handleClose = () => {
-    setAnchorEl(null)
+    setOpen(false)
   }
+
   const [user, setUser] = useState(null)
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -227,7 +222,7 @@ const Budget = props => {
             >
               <Grid item>
                 <Typography
-                  className={classes.title}
+                  className={classes.titleHeader}
                   color='textSecondary'
                   gutterBottom
                   variant='caption'
@@ -314,35 +309,9 @@ const Budget = props => {
             }}
             title='Budget'
             action={
-              <div>
-                <IconButton
-                  aria-label='more'
-                  aria-controls='long-menu'
-                  aria-haspopup='true'
-                  onClick={handleClick}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu
-                  id='long-menu'
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={open}
-                  onClose={handleClose}
-                  PaperProps={{
-                    style: {
-                      maxHeight: ITEM_HEIGHT * 4.5,
-                      width: 200
-                    }
-                  }}
-                >
-                  {options.map(option => (
-                    <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </div>
+              <IconButton aria-label='settings' onClick={handleClickOpen}>
+                <HelpOutlineRoundedIcon />
+              </IconButton>
             }
           />
           <Divider />
@@ -420,6 +389,16 @@ const Budget = props => {
             </Container>
           </CardContent>
         </Card>
+        <DescriptionDialog
+          open={open}
+          onClose={handleClose}
+          d3
+          explaination={{
+            title: 'Budget',
+            body: 'This section compares spending between the current member of parliament ( MP ) and the average of all current members of parliament '
+          }}
+          transition={Transition}
+        />
       </Hidden>
     </div>
   )
