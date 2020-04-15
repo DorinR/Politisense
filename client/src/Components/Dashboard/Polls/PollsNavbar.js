@@ -19,6 +19,6 @@ export default function PollsNavbar () {
   const classes = useStyles()
 
   return (
-    <Alert severity='info' className={classes.info}>Please reload the page after voting to see results </Alert>
+    <Alert severity='info' className={classes.info}>Carefully read every bill before voting on it </Alert>
   )
 }

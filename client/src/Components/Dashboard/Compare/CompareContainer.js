@@ -15,9 +15,9 @@ export default function CompareContainer () {
 
   return (
     <div className={classes.container}>
-      <CompareRidings />
-      <Box m={15} />
       <CompareParties />
+      <Box m={15} />
+      <CompareRidings />
     </div>
   )
 }
