@@ -28,7 +28,7 @@ import ColoredText from '../../Utilities/ColoredText'
 
 const useStyles = makeStyles({
   avatar: {
-    backgroundColor: '#43D0C4'
+    backgroundColor: '#00BCD4'
   },
   card: {
     width: 420
@@ -163,7 +163,7 @@ export default function ModernRepresentative () {
                     marginLeft: 12,
                     width: 100,
                     height: 100,
-                    border: '3px solid #41aaa8'
+                    border: '3px solid #00BCD4'
                   }}
                 />
               </Grid>
@@ -175,7 +175,7 @@ export default function ModernRepresentative () {
                     marginLeft: 26,
                     width: 150,
                     height: 150,
-                    border: '3px solid #41aaa8'
+                    border: '3px solid #00BCD4'
                   }}
                   className={classes.bigAvatar}
                 />
