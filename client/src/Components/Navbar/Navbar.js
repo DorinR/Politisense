@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/styles'
-import { Drawer, Typography, ListItem, List } from '@material-ui/core'
+import { Drawer, ListItem, List } from '@material-ui/core'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import PeopleIcon from '@material-ui/icons/People'
 import SidebarNav from './SidebarNav'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import MpProfile from './MpProfile'
 import Divider from '@material-ui/core/Divider'
 import MapIcon from '@material-ui/icons/Map'
@@ -24,6 +23,8 @@ import AppBar from '@material-ui/core/AppBar'
 import Topbar from './Topbar'
 import Avatar from '@material-ui/core/Avatar'
 import { withRouter } from 'react-router-dom'
+import politisenseLogo from '../../politisenseLogo.png'
+import Grid from '@material-ui/core/Grid'
 
 const drawerWidth = 220
 const drawerWidthXlMode = 250
@@ -49,11 +50,12 @@ const useStyles = makeStyles((theme) => ({
   },
   chevronLeftIcon: {
     color: 'white',
+    marginTop: '26%',
     [theme.breakpoints.up('xl')]: {
-      marginLeft: '60%'
+      marginLeft: '30%'
     },
     [theme.breakpoints.down('lg')]: {
-      marginLeft: '40%'
+      marginLeft: '20%'
     }
   },
   drawerXl: {
@@ -169,7 +171,6 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   bigAvatarXL: {
-    marginLeft: theme.spacing(12),
     width: 100,
     height: 100,
     border: '3px solid #00bcd4'
@@ -179,7 +180,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     padding: 0,
     [theme.breakpoints.down('lg')]: {
-      paddingTop: theme.spacing(1)
+      paddingTop: theme.spacing(0)
     }
   }
 }))
@@ -247,7 +248,7 @@ const Sidebar = withRouter((props) => {
       icon: <PeopleIcon />
     },
     {
-      title: 'Head to Head',
+      title: 'Compare',
       href: '/compare',
       icon: <CompareArrowsIcon />
     },
@@ -275,27 +276,30 @@ const Sidebar = withRouter((props) => {
       >
         <div>
           <List className={classes.flexContainer}>
-            <ListItem
-              button
-              onClick={() => {
-                props.history.push({ pathname: '/general' })
-              }}
-            >
-              <AccountBalanceIcon className={classes.icon} />
-              <Typography variant='h5' style={{ color: 'white' }}>
-                Politisense
-              </Typography>
-            </ListItem>
-            <ListItem>
-              {theme.direction === 'ltr' ? (
-                <ChevronLeftIcon
-                  className={classes.chevronLeftIcon}
-                  onClick={handleSidebarClose}
-                />
-              ) : (
-                <ChevronRightIcon />
-              )}
-            </ListItem>
+            <Grid container spacing={1}>
+              <Grid item xs={9}>
+                <ListItem
+                  button
+                  onClick={() => {
+                    props.history.push({ pathname: '/general' })
+                  }}
+                >
+                  <img src={politisenseLogo} style={{ width: '126%' }} />
+                </ListItem>
+              </Grid>
+              <Grid item xs={3}>
+                <ListItem>
+                  {theme.direction === 'ltr' ? (
+                    <ChevronLeftIcon
+                      className={classes.chevronLeftIcon}
+                      onClick={handleSidebarClose}
+                    />
+                  ) : (
+                    <ChevronRightIcon />
+                  )}
+                </ListItem>
+              </Grid>
+            </Grid>
           </List>
         </div>
         <AppBar
@@ -308,7 +312,9 @@ const Sidebar = withRouter((props) => {
         <div>
           {representative && ridingCode && riding ? (
             <div>
-              <ListItemAvatar style={{ paddingTop: theme.spacing(1) }}>
+              <ListItemAvatar
+                style={{ paddingTop: theme.spacing(2), marginLeft: '5%' }}
+              >
                 {
                   <Avatar
                     alt={representative ? representative.name : ''}
