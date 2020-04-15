@@ -120,6 +120,7 @@ const App = () => {
         <Route exact path='/map' component={DefaultContainer} />
         <Route exact path='/account' component={DefaultContainer} />
         <Route exact path='/general' component={DefaultContainer} />
+        <Route exact path='/polls' component={DefaultContainer} />
         <Route exact path='/myRepresentative' component={DefaultContainer} />
         <Route exact path='/compare' component={DefaultContainer} />
         <Route exact path='/performance' component={DefaultContainer} />

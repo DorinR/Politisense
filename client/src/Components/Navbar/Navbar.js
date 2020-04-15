@@ -26,6 +26,7 @@ import Avatar from '@material-ui/core/Avatar'
 import { withRouter } from 'react-router-dom'
 import politisenseLogo from '../../politisenseLogo.png'
 import Grid from '@material-ui/core/Grid'
+import HowToVoteIcon from '@material-ui/icons/HowToVote'
 
 const drawerWidth = 220
 const drawerWidthXlMode = 250
@@ -262,6 +263,11 @@ const Sidebar = withRouter((props) => {
       title: 'Map',
       href: '/map',
       icon: <MapIcon />
+    },
+    {
+      title: 'Polls',
+      href: '/polls',
+      icon: <HowToVoteIcon />
     },
     {
       title: 'Logout',

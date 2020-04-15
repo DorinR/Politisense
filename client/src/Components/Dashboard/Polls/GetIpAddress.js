@@ -4,14 +4,7 @@ import axios from 'axios'
 export async function getIpInfo () {
   return axios.get('https://ipapi.co/json/').then((response) => {
     const data = response.data
-    // this.setState({
-    //     country: data.country_name,
-    //     postalCode: data.postal,
-    //     city: data.city,
-    //     region: data.region
-    // });
     console.log(data.country_name)
-    console.log(data.postal)
     return data.country_name
   }).catch((error) => {
     console.log(error)
