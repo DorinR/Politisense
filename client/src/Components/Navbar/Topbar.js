@@ -4,15 +4,20 @@ import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
 import {
-  AppBar, Toolbar, IconButton,
-  Typography, ListItem, List
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  ListItem,
+  List
 } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import InputIcon from '@material-ui/icons/Input'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import Button from '@material-ui/core/Button'
+import Box from '@material-ui/core/Box'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     boxShadow: 'none',
     backgroundColor: '#00bcd4'
@@ -33,7 +38,6 @@ const useStyles = makeStyles(theme => ({
     height: 32,
     width: 32,
     color: 'white'
-
   },
   routerLink: {
     textDecoration: 'none',
@@ -45,7 +49,6 @@ const useStyles = makeStyles(theme => ({
   hide: {
     display: 'none'
   }
-
 }))
 
 const flexContainer = {
@@ -58,9 +61,7 @@ const Topbar = withRouter((props) => {
   const { className, onSidebarOpen } = props
   const classes = useStyles()
   return (
-    <AppBar
-      className={clsx(classes.root, className)}
-    >
+    <AppBar className={clsx(classes.root, className)}>
       <Toolbar>
         <div>
           <List style={flexContainer}>
@@ -74,51 +75,46 @@ const Topbar = withRouter((props) => {
                 <MenuIcon />
               </IconButton>
             </ListItem>
-            {props.open === false
-              ? (
-                <ListItem button onClick={() => { props.history.push({ pathname: '/general' }) }}>
-                  <AccountBalanceIcon className={classes.icon} />
-                  <Typography variant='h6' style={{ color: 'white' }}>Politisense</Typography>
-                </ListItem>
-              )
-              : (
-                <ListItem>
-                  <AccountBalanceIcon className={classes.icon} />
-                  <Typography variant='h6' style={{ color: 'white' }}>Politisense</Typography>
-                </ListItem>
-              )}
+            {props.open === false ? (
+              <ListItem
+                button
+                onClick={() => {
+                  props.history.push({ pathname: '/general' })
+                }}
+              >
+                <AccountBalanceIcon className={classes.icon} />
+                <Box m={1} />
+                <Typography variant='h6' style={{ color: 'white' }}>
+                  Politisense
+                </Typography>
+              </ListItem>
+            ) : (
+              <ListItem>
+                <AccountBalanceIcon className={classes.icon} />
+                <Box m={1} />
+                <Typography variant='h6' style={{ color: 'white' }}>
+                  Politisense
+                </Typography>
+              </ListItem>
+            )}
           </List>
         </div>
 
         <div className={classes.flexGrow} />
         <Button
-          style={{ color: 'white', textTransform: 'none' }} variant='text'
-          onClick={() => { props.history.push('/general') }}
-        >General
-        </Button>
-        <Button
-          style={{ color: 'white', textTransform: 'none' }} variant='text'
-          onClick={() => { props.history.push('/myRepresentative') }}
-        >My MP
-        </Button>
-        <Button
-          style={{ color: 'white', textTransform: 'none' }} variant='text'
-          onClick={() => { props.history.push('/compare') }}
-        >Head To Head
-        </Button>
-        <Button
-          style={{ color: 'white', textTransform: 'none' }} variant='text'
-          onClick={() => { props.history.push('/map') }}
-        >Map
-        </Button>
-        <Button
-          style={{ color: 'white', textTransform: 'none' }} variant='text'
-          onClick={() => { props.history.push('/account') }}
-        >Account
+          style={{ color: 'white', textTransform: 'none' }}
+          variant='text'
+          onClick={() => {
+            props.history.push('/account')
+          }}
+        >
+          Account
         </Button>
         <IconButton
           className={classes.signOutButton}
-          onClick={() => { props.history.push('/logout') }}
+          onClick={() => {
+            props.history.push('/logout')
+          }}
         >
           <InputIcon style={{ color: 'white' }} />
         </IconButton>

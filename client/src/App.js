@@ -17,6 +17,7 @@ import Questionnaire from './Components/Questionnaire'
 import MyMP from './Components/MyMP/MyMP'
 import GeneralDashboard from './Components/Dashboard/General/GeneralDashboard'
 import Sidebar from './Components/Navbar/Navbar'
+import NotFound from './Components/NotFound'
 import CompareContainer from './Components/Dashboard/Compare/CompareContainer'
 import IssuedBillsByCategory from './Components/MyMP/IssuedBillsByCategory'
 import MapContainer from './Components/Map/MapContainer'
@@ -26,13 +27,13 @@ const App = () => {
   const LoginContainer = () => (
     <div className='container'>
       <Route exact path='/' render={() => <Redirect to='/login' />} />
-      <Route path='/signup' component={SignUp} />
+      <Route exact path='/signup' component={SignUp} />
       <Route exact path='/activate' component={ActivateForm} />
       <Route exact path='/activate/:token' component={Activate} />
       <Route exact path='/reset' component={Reset} />
-      <Route wxact path='/reset/:token' component={ResetForm} />
-      <Route path='/login' component={Login} />
-      <Route path='/logout' component={Logout} />
+      <Route exact path='/reset/:token' component={ResetForm} />
+      <Route exact path='/login' component={Login} />
+      <Route exact path='/logout' component={Logout} />
     </div>
   )
 
@@ -56,15 +57,23 @@ const App = () => {
   return (
     <Router>
       <Switch>
+        <Route exact path='/' render={() => <Redirect to='/login' />} />
         <Route exact path='/(login)' component={LoginContainer} />
-        <Route path='/logout' component={LoginContainer} />
+        <Route exact path='/logout' component={LoginContainer} />
         <Route exact path='/signup' component={LoginContainer} />
         <Route exact path='/activate' component={LoginContainer} />
         <Route exact path='/activate/:token' component={LoginContainer} />
         <Route exact path='/reset' component={LoginContainer} />
         <Route exact path='/reset/:token' component={LoginContainer} />
         <Route exact path='/question' component={Questionnaire} />
-        <Route component={DefaultContainer} />
+        <Route exact path='/map' component={DefaultContainer} />
+        <Route exact path='/account' component={DefaultContainer} />
+        <Route exact path='/general' component={DefaultContainer} />
+        <Route exact path='/myRepresentative' component={DefaultContainer} />
+        <Route exact path='/compare' component={DefaultContainer} />
+        <Route exact path='/performance' component={DefaultContainer} />
+        <Route exact path='/404' component={NotFound} />
+        <Route component={NotFound} />
       </Switch>
     </Router>
   )

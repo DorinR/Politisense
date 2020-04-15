@@ -55,31 +55,30 @@ export default function CompareParties () {
     }
   }
 
-  const comparePartiesExplanationTitle = 'Compare Parties Feature'
+  const comparePartiesExplanationTitle = 'Compare Parties'
   const comparePartiesExplanationDescription = `This is a comparison of some metrics regarding both parties. 
     The metrics are calculated based on currently elected members of this party.`
 
   return (
-    <>
+    <div>
       <CssBaseline />
       <div>
         <Container maxWidth='l'>
           <Container>
             <Typography
-              style={{ display: 'inline-block' }}
-              className={classes.customHeaders}
-              align='left'
-              color='primary'
+              component='h4'
+              variant='h4'
+              color='textPrimary'
               gutterBottom
             >
-              Compare Parties
+              Parties
+              <span className={classes.customTooltip}>
+                <InfoBubble
+                  title={comparePartiesExplanationTitle}
+                  text={comparePartiesExplanationDescription}
+                />
+              </span>
             </Typography>
-            <span className={classes.customTooltip}>
-              <InfoBubble
-                title={comparePartiesExplanationTitle}
-                text={comparePartiesExplanationDescription}
-              />
-            </span>
           </Container>
           <div>
             <Grid container spacing={2}>
@@ -93,6 +92,6 @@ export default function CompareParties () {
           </div>
         </Container>
       </div>
-    </>
+    </div>
   )
 }

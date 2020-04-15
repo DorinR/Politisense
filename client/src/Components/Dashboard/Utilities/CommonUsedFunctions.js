@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { useEffect, useRef } from 'react'
 
 export async function fetchCategoriesFromTxtFiles () {
   return axios.get('/api/bills/fetchCategoriesFromTxtFiles').then((res) => {
@@ -7,6 +6,10 @@ export async function fetchCategoriesFromTxtFiles () {
       return res.data.data
     }
   })
+}
+
+export function pwFormat (sponsor) {
+  return /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/ // 8 character, 1 symbol, 1 upper, 1 lower, 1 digit
 }
 
 export async function checkUserExists (email) {
@@ -511,10 +514,13 @@ export async function fetchRepresentativeId (representative) {
     .catch(console.error)
 }
 
-export function usePrevious (value) {
-  const ref = useRef()
-  useEffect(() => {
-    ref.current = value
-  })
-  return ref.current
+export async function fetchRepresentativeEntryDateIntoParliament (name) {
+  return axios
+    .get(`/api/representatives/${name}/getRepresentativesDateEntryParliament`)
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+    .catch(console.error)
 }
