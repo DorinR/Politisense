@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 26,
     width: 150,
     height: 150,
-    border: '3px solid #00BCD4'
+    border: '3px solid #00BCD4',
   },
   card: {
     width: 420,
@@ -227,7 +227,7 @@ export default function Party(props) {
     async function getData() {
       const partyData = await getPartyData(party)
       setPartyImageUrl(partyData.imageUrl)
-      setSeatsHeld(partyData.numberOfSeats)
+      setSeatsHeld(partyData.seats)
       const numberOfBillsSponsored = await getNumberOfBillsSponsoredByParty(
         party
       )
