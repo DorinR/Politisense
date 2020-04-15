@@ -18,7 +18,6 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import axios from 'axios'
-import { Redirect } from 'react-router'
 
 function TabPanel (props) {
   const { children, value, index, ...other } = props
@@ -63,7 +62,7 @@ export async function deleteAccount () {
 
 }
 
-export default function FullWidthTabs () {
+export default function FullWidthTabs (props) {
   const classes = useStyles()
   const theme = useTheme()
   const [value, setValue] = React.useState(0)
@@ -84,7 +83,7 @@ export default function FullWidthTabs () {
     return axios
       .post('/api/users/deleteAccount', { email: user.email })
       .then(res => {
-        return <Redirect to='/login' />
+        props.history.push('/logout')
       })
       .catch(console.error)
   }
