@@ -55,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
 const MpProfile = (props) => {
   const { className, ...rest } = props
   const classes = useStyles()
-  console.log(props)
   return (
     <div>
       {props.representative && props.ridingCode && props.riding ? (
