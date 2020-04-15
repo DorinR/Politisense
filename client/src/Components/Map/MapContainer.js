@@ -110,7 +110,7 @@ const MapContainer = () => {
   }
 
   const handleSetContentsMap = async (currentRidingcontents) => {
-    if (contents && contents[0].name !== currentRidingcontents[0].name) {
+    if (!contents || (contents && contents[0].name !== currentRidingcontents[0].name)) {
       currentRidingcontents[0].dateEntry = await fetchRepresentativeEntryDateIntoParliament(currentRidingcontents[0].name)
       setContents(currentRidingcontents)
     }
