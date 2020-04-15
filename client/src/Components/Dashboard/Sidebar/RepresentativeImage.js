@@ -7,13 +7,13 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(6),
     width: 100,
     height: 100,
-    border: '3px solid #00bcd4'
+    border: '3px solid #00BCD4'
   },
   bigAvatarXL: {
     marginLeft: theme.spacing(10),
     width: 100,
     height: 100,
-    border: '3px solid #00bcd4'
+    border: '3px solid #00BCD4'
   }
 }))
 

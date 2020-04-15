@@ -7,6 +7,7 @@ import InfoBubble from '../Dashboard/Utilities/InfoBubble'
 import CenteredCircularProgress from '../Dashboard/Utilities/CenteredCircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import { fetchRepresentativeEntryDateIntoParliament } from '../Dashboard/Utilities/CommonUsedFunctions'
+import axios from 'axios'
 
 const useStyles = makeStyles({
   root: {
@@ -99,6 +100,7 @@ const MapContainer = () => {
   }, [ridingMpData])
 
   const handleSetContentsMap = async (currentRidingcontents) => {
+    console.log(currentRidingcontents)
     if (!contents || (contents && contents[0].name !== currentRidingcontents[0].name)) {
       currentRidingcontents[0].dateEntry = await fetchRepresentativeEntryDateIntoParliament(currentRidingcontents[0].name)
       setContents(currentRidingcontents)
@@ -115,7 +117,7 @@ const MapContainer = () => {
           color='textPrimary'
           gutterBottom
         >
-          Explore Canadian Ridings
+          Canada's Electoral Ridings
           <span className={classes.customTooltip}>
             <InfoBubble
               title='How To Use the Map'
