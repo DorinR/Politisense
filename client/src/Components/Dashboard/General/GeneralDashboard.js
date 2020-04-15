@@ -253,7 +253,7 @@ export default function GeneralDashboard () {
               color='textPrimary'
               gutterBottom
             >
-              Your Government
+              My Government
             </Typography>
           </Container>
           <SeatingPlan partiesToUse={parties} classes={classes} />

@@ -10,6 +10,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import Slide from '@material-ui/core/Slide'
 import Box from '@material-ui/core/Box'
+import Divider from '@material-ui/core/Divider'
 
 const capitalize = require('capitalize')
 
@@ -112,33 +113,33 @@ export default function SeatingPlan (props) {
   const [open, setOpen] = React.useState(false)
 
   return (
-    <Container maxWidth='md' component='main' my={20}>
-      {rows.length > 0 && props.partiesToUse ? (
-        <Grid container direction='column' justify='left' alignItems='left'>
-          <Grid item xs={10}>
-            <Typography variant='h4' color='textPrimary' pb={20}>
-              <span
-                style={{ fontWeight: 'bold', color: props.partiesToUse.current.color }}
-              >
-                {titleCase(props.partiesToUse.current.name)} {props.partiesToUse.status}
-              </span>
-              <HelpIcon
-                className={props.classes.help}
-                color='primary'
-                onClick={() => { setOpen(true) }}
-              />
-              <SeatingPlanHelpDialog
-                classes={props.classes}
-                parties={props.partiesToUse}
-                setOpen={setOpen}
-                open={open}
-              />
-            </Typography>
-          </Grid>
-          <Grid item xs={30}>
-            <Typography variant='h5' color='textPrimary' gutterBottom>Seats in Parliament</Typography>
+    <Container maxWidth='md' component='main' my={20} justify='center'>
+      <Divider />
+      <br />
+      {rows.length > 0 && props.partiesToUse && parties ? (
+        <Grid container direction='column' justify='center' alignItems='left'>
+          <Grid item xs={30} alignItems='left' justify='center'>
             <Grid container direction='row' spacing={2}>
               <Grid item md={3} my={2}>
+                <Typography variant='h5' color='textPrimary' pb={20}>
+                  <span
+                    style={{ fontWeight: 'bold', color: props.partiesToUse.current.color }}
+                  >
+                    {titleCase(props.partiesToUse.current.name)} {props.partiesToUse.status}
+                  </span>
+                  <HelpIcon
+                    className={props.classes.help}
+                    color='primary'
+                    onClick={() => { setOpen(true) }}
+                  />
+                  <SeatingPlanHelpDialog
+                    classes={props.classes}
+                    parties={props.partiesToUse}
+                    setOpen={setOpen}
+                    open={open}
+                  />
+                </Typography>
+                <Typography variant='h6' color='textPrimary' gutterBottom>Seats in Parliament</Typography>
                 <div>
                   {parties.map((party) =>
                     <Typography key={party.name} variant='body2' color='textPrimary' my={2}>
@@ -168,6 +169,9 @@ export default function SeatingPlan (props) {
                 </Box>
               </Grid>
             </Grid>
+            <br />
+            <br />
+            <Divider />
           </Grid>
         </Grid>
       ) : (
