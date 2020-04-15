@@ -58,10 +58,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export async function deleteAccount () {
-
-}
-
 export default function FullWidthTabs (props) {
   const classes = useStyles()
   const theme = useTheme()
