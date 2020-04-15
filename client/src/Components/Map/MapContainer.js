@@ -6,7 +6,7 @@ import Box from '@material-ui/core/Box'
 import InfoBubble from '../Dashboard/Utilities/InfoBubble'
 import CenteredCircularProgress from '../Dashboard/Utilities/CenteredCircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
-import axios from 'axios'
+import { fetchRepresentativeEntryDateIntoParliament } from '../Dashboard/Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles({
   root: {
@@ -48,17 +48,6 @@ const MapContainer = (props) => {
   const classes = useStyles()
   const [contents, setContents] = useState(null)
 
-  async function fetchRepresentativeEntryDateIntoParliament (name) {
-    return axios
-      .get(`/api/representatives/${name}/getRepresentativesDateEntryParliament`)
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data
-        }
-      })
-      .catch(console.error)
-  }
-
   const handleSetContentsMap = async (currentRidingcontents) => {
     if (contents) {
       if (contents[0].name !== currentRidingcontents[0].name) {
@@ -77,24 +66,24 @@ const MapContainer = (props) => {
       <Box m={2} />
       <Container>
         <Typography
-          style={{ display: 'inline-block' }}
-          className={classes.customHeaders}
-          align='left'
-          color='primary'
+          component='h1'
+          variant='h2'
+          align='center'
+          color='textPrimary'
           gutterBottom
         >
           {props ? props.test : 'nothing'}
           Explore Canadian Ridings
+          <span className={classes.customTooltip}>
+            <InfoBubble
+              title='How To Use the Map'
+              text={
+                // eslint-disable-next-line indent
+              "Zooming on this map is done the same way you scroll on a webpage. Just use the clickwheel on your mouse or use two fingers on your trackpad. Click on a given riding and the map will automatically zoom-in to the appropriate level. Clicking on the 'Reset Zoom Level' button will bring the zoom level back to what it was at the beginning"
+              }
+            />
+          </span>
         </Typography>
-        <span className={classes.customTooltip}>
-          <InfoBubble
-            title='How To Use the Map'
-            text={
-              /* eslint-disable-next-line indent */
-            "Zooming on this map is done the same way you scroll on a webpage. Just use the clickwheel on your mouse or use two fingers on your trackpad. Click on a given riding and the map will automatically zoom-in to the appropriate level. Clicking on the 'Reset Zoom Level' button will bring the zoom level back to what it was at the beginning"
-            }
-          />
-        </span>
       </Container>
       <Container>
         {props.ridingCodes && props.shapeData && props.ridingMpData ? (

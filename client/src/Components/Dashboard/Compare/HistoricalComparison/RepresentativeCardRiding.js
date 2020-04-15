@@ -29,27 +29,27 @@ const useStyles = makeStyles({
   }
 })
 
-async function fetchPastRepresentativeId(representative, data) {
+async function fetchPastRepresentativeId (representative, data) {
   const res = await axios.post(`/api/representatives/${representative}/getPastRepresentativeId`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeVotes(member, data) {
+async function fetchPastRepresentativeVotes (member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativeVotes`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativePairedVotes(member, data) {
+async function fetchPastRepresentativePairedVotes (member, data) {
   const res = await axios.get(`/api/votes/${member}/getPastRepresentativePairedVotes`, data)
   return res.data.data
 }
 
-async function fetchPastRepresentativeSpending(member, data) {
+async function fetchPastRepresentativeSpending (member, data) {
   const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
   return res.data.data
 }
 
-export default function RepresentativeCard() {
+export default function RepresentativeCard () {
   const classes = useStyles()
   const [nbBills, setNbBills] = useState(0)
   const [nbPairedBills, setNbPairedBills] = useState(0)
@@ -66,7 +66,7 @@ export default function RepresentativeCard() {
   }
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       // eslint-disable-next-line no-undef
       const data = { start: mpDropdown.start }
       setDataObject(data)
@@ -81,7 +81,7 @@ export default function RepresentativeCard() {
   }, [mpDropdown])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       // eslint-disable-next-line no-undef
       const partyData = await getPartyData(mpDropdown.party)
       setPartyImageUrl(partyData.imageUrl)
@@ -92,7 +92,7 @@ export default function RepresentativeCard() {
   }, [mpDropdown])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       // eslint-disable-next-line no-undef
       const pastRepresentativeVotes = await fetchPastRepresentativeVotes(member, dataObject)
       const parliamentSession = pastRepresentativeVotes[0].parliament
@@ -105,7 +105,7 @@ export default function RepresentativeCard() {
   }, [member, mpDropdown])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       // eslint-disable-next-line no-undef
       const pastRepresentativePairedVotes = await fetchPastRepresentativePairedVotes(member, dataObject)
       setNbPairedBills(pastRepresentativePairedVotes.length)
@@ -116,7 +116,7 @@ export default function RepresentativeCard() {
   }, [member, mpDropdown])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       // eslint-disable-next-line no-undef
       const parliamentData = { parliament: parliamentSession, year: dataObject.start }
       setParliamentNumber(parliamentData.parliament)

@@ -14,6 +14,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import CenteredCircularProgress from '../Dashboard/Utilities/CenteredCircularProgress'
+import { pwFormat } from '../Dashboard/Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -128,7 +129,7 @@ function ChangeAccountPassword (props) {
 
   const handleSubmit = e => {
     e.preventDefault()
-    const passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+    const passwordFormat = pwFormat()
     const errors = {}
 
     const user = {
@@ -187,7 +188,7 @@ function ChangeAccountPassword (props) {
                             id='password'
                             autoComplete='current-password'
                             error={errors.password !== ''}
-                            helperText={errors.password}
+                            helperText={errors.password ? errors.password : '8 characters, 1 uppercase/lowercase letter, 1 symbol and 1 digit'}
                           />
                         </Grid>
                         <Grid item xs={12}>
