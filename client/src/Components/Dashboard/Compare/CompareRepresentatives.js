@@ -101,7 +101,7 @@ export default function CompareRepresentatives () {
   }, [head1, head2])
 
   const compareRepsExplanationTitle = 'Compare Representatives'
-  const compareRepsExplanationDescription = 'Compare your representative\'s information and contributions to previous MPs of the same riding.'
+  const compareRepsExplanationDescription = 'Compare your representative\'s information and contributions to previous representatives of the same riding.'
 
   return (
     <>
