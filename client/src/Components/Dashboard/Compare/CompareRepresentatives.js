@@ -30,9 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export async function getAllBillsByHead (head) {
-  const res = await axios.get(
-    `http://localhost:5000/api/bills/${head}/getAllBillsByHead`
-  )
+  const res = await axios.get(`/api/bills/${head}/getAllBillsByHead`)
   return res.data.data
 }
 export function calcPercent (percent) {
