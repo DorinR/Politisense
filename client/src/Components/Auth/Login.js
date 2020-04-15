@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid'
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import canadaimage from '../../assets/canada.jpg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFacebook, faTwitter, faGoogle } from '@fortawesome/free-brands-svg-icons'
+import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 import logo from '../../assets/politisenseLogoMedium.png'
 import axios from 'axios'
 import { tokenAuthenticate } from './authenticate'
@@ -54,22 +54,6 @@ const useStyles = makeStyles(theme => ({
     width: '100%'
   }
 }))
-
-const FacebookTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#4267B2'
-    }
-  }
-})
-
-const TwitterTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#1A91DA'
-    }
-  }
-})
 
 const GoogleTheme = createMuiTheme({
   palette: {
@@ -282,42 +266,6 @@ export default function Login(props) {
               </Typography>
               <div className={classes.container} style={gridStyle}>
                 <Grid container justify='center'>
-                  <Grid item xs={12} className={classes.social}>
-                    <ThemeProvider theme={FacebookTheme}>
-                    <Button
-                        type='submit'
-                        fullWidth
-                        variant='outlined'
-                        color='primary'
-                        onClick={() => {
-                          validateUserFromSocialProviders(
-                              'facebook',
-                              handleSocialLogin
-                          )
-                        }}
-                        >
-                      <FontAwesomeIcon size="lg" icon={faFacebook} />&nbsp;Continue with Facebook
-                    </Button>
-                    </ThemeProvider>
-                  </Grid>
-                  <Grid item xs={12} className={classes.social} gu>
-                    <ThemeProvider theme={TwitterTheme}>
-                      <Button
-                          type='submit'
-                          fullWidth
-                          variant='outlined'
-                          color='primary'
-                          onClick={() =>
-                              validateUserFromSocialProviders(
-                                  'twitter',
-                                  handleSocialLogin
-                              )
-                          }
-                          >
-                        <FontAwesomeIcon size="lg" icon={faTwitter} />&nbsp;Continue with Twitter
-                      </Button>
-                    </ThemeProvider>
-                  </Grid>
                   <Grid item xs={12} className={classes.social}>
                     <ThemeProvider theme={GoogleTheme}>
                       <Button
