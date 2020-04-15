@@ -4,12 +4,11 @@ import CompareRepresentatives from './CompareRepresentatives'
 import CompareParties from './CompareParties/CompareParties'
 import Box from '@material-ui/core/Box'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   container: {
-    margin: '20px',
-    marginTop: '30px'
+    padding: theme.spacing(2, 0, 6)
   }
-})
+}))
 
 export default function CompareContainer () {
   const classes = useStyles()

@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
 import D3ChartHeadVsHeadContainer from '../D3ChartHeadVsHeadContainer'
 import Grow from '@material-ui/core/Grow'
+import InfoBubble from '../Utilities/InfoBubble'
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -99,6 +100,9 @@ export default function CompareRepresentatives () {
     }
   }, [head1, head2])
 
+  const compareRepsExplanationTitle = 'Compare Representatives'
+  const compareRepsExplanationDescription = 'Compare your representative\'s information and contributions to previous representatives of the same riding.'
+
   return (
     <>
       <CssBaseline />
@@ -106,25 +110,29 @@ export default function CompareRepresentatives () {
         <Container maxWidth='l'>
           <Container>
             <Typography
-              style={{ display: 'inline-block' }}
-              className={classes.customHeaders}
-              align='left'
+              component='h1'
+              variant='h2'
+              align='center'
               color='textPrimary'
               gutterBottom
             >
-              Ridings: Past vs Present
+              Compare
+            </Typography>
+            <Typography
+              component='h4'
+              variant='h4'
+              color='textPrimary'
+              gutterBottom
+            >
+              Past vs Present Representatives
+              <span className={classes.customTooltip}>
+                <InfoBubble
+                  title={compareRepsExplanationTitle}
+                  text={compareRepsExplanationDescription}
+                />
+              </span>
             </Typography>
           </Container>
-          <Typography
-            variant='h5'
-            align='center'
-            color='textSecondary'
-            paragraph
-          >
-            Select a riding of your choice and compare the current MP to previous MPs through
-            performance in terms of bills sponsored and voted pm and then see
-            how much or how little they agree on!
-          </Typography>
           <div>
             <Grid container spacing={2}>
               <Grid item xs={6}>
