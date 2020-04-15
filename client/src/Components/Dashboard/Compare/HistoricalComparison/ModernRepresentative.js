@@ -10,7 +10,14 @@ import ListItemText from '@material-ui/core/ListItemText'
 import PersonIcon from '@material-ui/icons/Person'
 import DollarIcon from '@material-ui/icons/Money'
 import axios from 'axios'
-import { getAllBillsByHead, capitalizedName, fetchUserRiding, getPartyColor, getPartyData, numericalStyling } from '../../Utilities/CommonUsedFunctions'
+import {
+  getAllBillsByHead,
+  capitalizedName,
+  fetchUserRiding,
+  getPartyColor,
+  getPartyData,
+  numericalStyling
+} from '../../Utilities/CommonUsedFunctions'
 import Grid from '@material-ui/core/Grid'
 import FlagIcon from '@material-ui/icons/Flag'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
@@ -31,7 +38,7 @@ const useStyles = makeStyles({
 async function fetchCurrentRepresentative (riding) {
   return axios
     .get(`/api/representatives/${riding}/getRepresentative`)
-    .then(res => {
+    .then((res) => {
       if (res.data.success) {
         return res.data.data
       }
@@ -43,7 +50,7 @@ async function fetchCurrentRepresentative (riding) {
 async function fetchRepresentativeId (representative) {
   return axios
     .get(`/api/representatives/${representative}/getRepresentativeId`)
-    .then(res => {
+    .then((res) => {
       if (res.data.success) {
         return res.data.data
       }
@@ -52,7 +59,10 @@ async function fetchRepresentativeId (representative) {
 }
 
 async function fetchRepresentativeSpending (member, data) {
-  const res = await axios.post(`/api/budgets/budget/${member}/fetchMemberExpenditures`, data)
+  const res = await axios.post(
+    `/api/budgets/budget/${member}/fetchMemberExpenditures`,
+    data
+  )
   return res.data.data
 }
 
@@ -115,7 +125,7 @@ export default function ModernRepresentative () {
     async function getData (mp) {
       async function getIssuedBillsByHead (head) {
         const res = await axios.get(
-          `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
+          `/api/bills/${head}/getAllBillsBySponsorName`
         )
         return res.data.data
       }
@@ -126,7 +136,9 @@ export default function ModernRepresentative () {
       setPoliticalParty(currentRepresentative.party)
       const partyData = await getPartyData(currentRepresentative.party)
       setPartyImageUrl(partyData.imageUrl)
-      const issuedBillsByHead = await getIssuedBillsByHead(currentRepresentative.name)
+      const issuedBillsByHead = await getIssuedBillsByHead(
+        currentRepresentative.name
+      )
       if (Number.isInteger(issuedBillsByHead)) {
         setIssuedBills(issuedBillsByHead)
       }
@@ -171,7 +183,10 @@ export default function ModernRepresentative () {
             </Grid>
             {currentRepresentative && politicalParty ? (
               <List>
-                <DividerBlock text='Profile' color={getPartyColor(politicalParty).backgroundColor} />
+                <DividerBlock
+                  text='Profile'
+                  color={getPartyColor(politicalParty).backgroundColor}
+                />
                 <Box m={3} />
                 <ListItem>
                   <ListItemAvatar>
@@ -179,7 +194,9 @@ export default function ModernRepresentative () {
                       <PersonIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>{capitalizedName(currentRepresentative.name)}</ListItemText>
+                  <ListItemText>
+                    {capitalizedName(currentRepresentative.name)}
+                  </ListItemText>
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
@@ -204,14 +221,23 @@ export default function ModernRepresentative () {
                       <DollarIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText>Year-to-Date Expenditures : <ColoredText text={numericalStyling(spending)} color={getPartyColor(politicalParty).backgroundColor} /></ListItemText>
+                  <ListItemText>
+                    Year-to-Date Expenditures :{' '}
+                    <ColoredText
+                      text={numericalStyling(spending)}
+                      color={getPartyColor(politicalParty).backgroundColor}
+                    />
+                  </ListItemText>
                 </ListItem>
                 <Box m={2} />
                 <DividerBlock
                   text='Legislative'
                   color={getPartyColor(politicalParty).backgroundColor}
                   infoBubbleTitle='Number of Bills Sponsored by Members of this Party'
-                  infoBubbleText={'This is a breakdown of the number of bills that were sponsored by members of the given party. We can see the total number of bills that were sponsored, as well as the portion of those that passed and entered into law, and the portion of those that were not voted into law. To see details about the bills your representative has voted on, go to the "My MP" tab'}
+                  infoBubbleText={
+                    // eslint-disable-next-line
+                    'This is a breakdown of the number of bills that were sponsored by members of the given party. We can see the total number of bills that were sponsored, as well as the portion of those that passed and entered into law, and the portion of those that were not voted into law. To see details about the bills your representative has voted on, go to the "My MP" tab'
+                  }
                   infoBubbleColor='white'
                 />
                 <Box m={2} />
@@ -222,7 +248,11 @@ export default function ModernRepresentative () {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText>
-                    Voted Bills to Date: <ColoredText text={totalBills} color={getPartyColor(politicalParty).backgroundColor} />
+                    Voted Bills to Date:{' '}
+                    <ColoredText
+                      text={totalBills}
+                      color={getPartyColor(politicalParty).backgroundColor}
+                    />
                   </ListItemText>
                 </ListItem>
                 <ListItem>
@@ -233,10 +263,17 @@ export default function ModernRepresentative () {
                   </ListItemAvatar>
                   <ListItemText>
                     {' '}
-                  Issued Bills to Date: <ColoredText text={issuedBills} color={getPartyColor(politicalParty).backgroundColor} />
+                    Issued Bills to Date:{' '}
+                    <ColoredText
+                      text={issuedBills}
+                      color={getPartyColor(politicalParty).backgroundColor}
+                    />
                   </ListItemText>
                 </ListItem>
-              </List>) : ''}
+              </List>
+            ) : (
+              ''
+            )}
           </CardContent>
         </Card>
       </Grid>
