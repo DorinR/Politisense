@@ -40,7 +40,7 @@ export default class D3Chart {
       .innerRadius(radius - 20)
       .outerRadius(radius)
 
-    const colors = ['#3282b8', '#26d06d']
+    const colors = ['#3282b8', '#c9df8a']
 
     const svg = d3.select(element)
       .append('svg')

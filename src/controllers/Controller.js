@@ -66,12 +66,33 @@ module.exports = {
   getRepresentativeByRiding: function (req, res) {
     return RepresentativeController.getRepresentativeByRiding(req, res)
   },
+  getMpByRiding: function (req, res) {
+    return RepresentativeController.getMpByRiding(req, res)
+  },
+  getPastRepresentativeVotes: function (req, res) {
+    return VoteController.getPastRepresentativeVotes(req, res)
+  },
+  getPastRepresentativePairedVotes: function (req, res) {
+    return VoteController.getPastRepresentativePairedVotes(req, res)
+  },
   getAllRepresentatives: function (req, res) {
     return RepresentativeController.getAllRepresentatives(req, res)
   },
 
+  getPastRepresentatives: function (req, res) {
+    return RepresentativeController.getPastRepresentatives(req, res)
+  },
+
   getRepresentativeId: function (req, res) {
     return RepresentativeController.getRepresentativeId(req, res)
+  },
+
+  getPastRepresentativeId: function (req, res) {
+    return RepresentativeController.getPastRepresentativeId(req, res)
+  },
+
+  getRepresentative: function (req, res) {
+    return RepresentativeController.getParliamentData(req, res)
   },
 
   getCabinetMinisters: function (req, res) {
@@ -192,6 +213,15 @@ module.exports = {
   getAllRepsFromAllParliaments: function (req, res) {
     return RepresentativeController.getAllRepsFromAllParliaments(req, res)
   },
+
+  fetchMemberExpenditures: function (req, res) {
+    return BudgetController.pastMemberExpenditures(req, res)
+  },
+
+  getParliamentNumber: function (req, res) {
+    return RepresentativeController.getParliamentNumber(req, res)
+  },
+
   getRepresentativesDateEntryParliament: function (req, res) {
     return RepresentativeController.getRepresentativesDateEntryParliament(
       req,
@@ -200,5 +230,8 @@ module.exports = {
   },
   representativeVotingHistory: function (req, res) {
     return RepresentativeController.votingHistory(req, res)
+  },
+  getAllBillsBySponsorName: function (req, res) {
+    return BillController.getAllBillsBySponsorName(req, res)
   }
 }

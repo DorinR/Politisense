@@ -18,6 +18,7 @@ import {
   fetchUserRiding,
   fetchRepresentative,
   fetchRidingCode
+  , fetchRepresentativeEntryDateIntoParliament
 } from '../Dashboard/Utilities/CommonUsedFunctions'
 import AppBar from '@material-ui/core/AppBar'
 import Topbar from './Topbar'
@@ -215,10 +216,14 @@ const Sidebar = withRouter((props) => {
   }, [user])
 
   const [representative, setRepresentative] = useState(null)
+  const [entryDate, setEntryDate] = useState(null)
+
   useEffect(() => {
     async function getData () {
       if (riding) {
         const rep = await fetchRepresentative(riding)
+        const EntryDate = await fetchRepresentativeEntryDateIntoParliament(rep.name)
+        setEntryDate(EntryDate)
         setRepresentative(rep)
       }
     }
@@ -238,12 +243,12 @@ const Sidebar = withRouter((props) => {
 
   const pages = [
     {
-      title: 'General',
+      title: 'My Government',
       href: '/general',
       icon: <DashboardIcon />
     },
     {
-      title: 'My MP',
+      title: 'My Representative',
       href: '/myRepresentative',
       icon: <PeopleIcon />
     },
@@ -253,7 +258,7 @@ const Sidebar = withRouter((props) => {
       icon: <CompareArrowsIcon />
     },
     {
-      title: 'Map',
+      title: 'Explore',
       href: '/map',
       icon: <MapIcon />
     },
@@ -317,6 +322,7 @@ const Sidebar = withRouter((props) => {
               >
                 {
                   <Avatar
+                    // eslint-disable-next-line
                     alt={representative ? representative.name : ''}
                     src={representative ? representative.imageUrl : ''}
                     className={classes.bigAvatar}
@@ -325,6 +331,7 @@ const Sidebar = withRouter((props) => {
               </ListItemAvatar>
               <MpProfile
                 representative={representative}
+                entryDate={entryDate}
                 ridingCode={ridingCode}
                 riding={riding}
               />

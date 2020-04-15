@@ -1,11 +1,12 @@
 import MapWrapper from './MapWrapper'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import InfoBubble from '../Dashboard/Utilities/InfoBubble'
 import CenteredCircularProgress from '../Dashboard/Utilities/CenteredCircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
+import { fetchRepresentativeEntryDateIntoParliament } from '../Dashboard/Utilities/CommonUsedFunctions'
 import axios from 'axios'
 
 const useStyles = makeStyles({
@@ -44,31 +45,64 @@ const useStyles = makeStyles({
   }
 })
 
-const MapContainer = (props) => {
+const MapContainer = () => {
   const classes = useStyles()
   const [contents, setContents] = useState(null)
+  const [ridingCodes, setRidingCodes] = useState(null)
+  const [shapeData, setShapeData] = useState(null)
+  const [ridingMpData, setRidingMpData] = useState(null)
+  useEffect(() => {
+    async function fetchData () {
+      return axios
+        .get('/api/ridings/getRidingByRidingCode')
+        .then((res) => {
+          if (res.data.success) {
+            setRidingCodes(res.data.data)
+          }
+        })
+        .catch(console.error)
+    }
+    if (!ridingCodes) {
+      fetchData()
+    }
+  }, [ridingCodes])
 
-  async function fetchRepresentativeEntryDateIntoParliament (name) {
-    return axios
-      .get(`/api/representatives/${name}/getRepresentativesDateEntryParliament`)
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data
-        }
-      })
-      .catch(console.error)
-  }
+  useEffect(() => {
+    async function fetchData () {
+      return axios
+        .get('/api/mapSupportData/shape/getMapSupportData')
+        .then((res) => {
+          if (res.data.success) {
+            setShapeData(res.data.data)
+          }
+        })
+        .catch(console.error)
+    }
+    if (!shapeData) {
+      fetchData()
+    }
+  }, [shapeData])
+
+  useEffect(() => {
+    async function fetchData () {
+      return axios
+        .get('/api/mapSupportData/electionResults/getMapSupportData')
+        .then((res) => {
+          if (res.data.success) {
+            setRidingMpData(res.data.data)
+          }
+        })
+        .catch(console.error)
+    }
+    if (!ridingMpData) {
+      fetchData()
+    }
+  }, [ridingMpData])
 
   const handleSetContentsMap = async (currentRidingcontents) => {
-    if (contents) {
-      if (contents[0].name !== currentRidingcontents[0].name) {
-        const dateEntry = await fetchRepresentativeEntryDateIntoParliament(currentRidingcontents[0].name)
-        currentRidingcontents[0].dateEntry = dateEntry
-        setContents(currentRidingcontents)
-      }
-    } else {
-      const dateEntry = await fetchRepresentativeEntryDateIntoParliament(currentRidingcontents[0].name)
-      currentRidingcontents[0].dateEntry = dateEntry
+    console.log(currentRidingcontents)
+    if (!contents || (contents && contents[0].name !== currentRidingcontents[0].name)) {
+      currentRidingcontents[0].dateEntry = await fetchRepresentativeEntryDateIntoParliament(currentRidingcontents[0].name)
       setContents(currentRidingcontents)
     }
   }
@@ -77,31 +111,30 @@ const MapContainer = (props) => {
       <Box m={2} />
       <Container>
         <Typography
-          style={{ display: 'inline-block' }}
-          className={classes.customHeaders}
-          align='left'
-          color='primary'
+          component='h1'
+          variant='h2'
+          align='center'
+          color='textPrimary'
           gutterBottom
         >
-          {props ? props.test : 'nothing'}
-          Explore Canadian Ridings
+          Canada's Electoral Ridings
+          <span className={classes.customTooltip}>
+            <InfoBubble
+              title='How To Use the Map'
+              text={
+                // eslint-disable-next-line indent
+              "Zooming on this map is done the same way you scroll on a webpage. Just use the clickwheel on your mouse or use two fingers on your trackpad. Click on a given riding and the map will automatically zoom-in to the appropriate level. Clicking on the 'Reset Zoom Level' button will bring the zoom level back to what it was at the beginning"
+              }
+            />
+          </span>
         </Typography>
-        <span className={classes.customTooltip}>
-          <InfoBubble
-            title='How To Use the Map'
-            text={
-              /* eslint-disable-next-line indent */
-            "Zooming on this map is done the same way you scroll on a webpage. Just use the clickwheel on your mouse or use two fingers on your trackpad. Click on a given riding and the map will automatically zoom-in to the appropriate level. Clicking on the 'Reset Zoom Level' button will bring the zoom level back to what it was at the beginning"
-            }
-          />
-        </span>
       </Container>
       <Container>
-        {props.ridingCodes && props.shapeData && props.ridingMpData ? (
+        {ridingCodes && shapeData && ridingMpData ? (
           <MapWrapper
-            ridingCodes={props.ridingCodes}
-            shapeData={props.shapeData}
-            ridingMpData={props.ridingMpData}
+            ridingCodes={ridingCodes}
+            shapeData={shapeData}
+            ridingMpData={ridingMpData}
             handleOpenModal={handleSetContentsMap}
             selectedRiding={contents ? contents[1] : ''}
             contents={contents ? contents[0] : ''}

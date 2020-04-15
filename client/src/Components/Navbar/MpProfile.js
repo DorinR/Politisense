@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
 import { Typography } from '@material-ui/core'
 import {
-  loadingTextdata,
   capitalizedName
 } from '../Dashboard/Utilities/CommonUsedFunctions'
 import RidingPopulation from '../Dashboard/Sidebar/RidingPopulation/RidingPopulation'
@@ -56,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
 const MpProfile = (props) => {
   const { className, ...rest } = props
   const classes = useStyles()
-  console.log(props)
   return (
     <div>
       {props.representative && props.ridingCode && props.riding ? (
@@ -143,11 +141,8 @@ const MpProfile = (props) => {
           </Typography>
           <Typography className={classes.fontColorTypography} variant='caption'>
             {'Member Since: '}{' '}
-            {props.representative.start
-              ? loadingTextdata({
-                fromDate: props.representative.start,
-                toDate: props.representative.end
-              })
+            {props.entryDate
+              ? props.entryDate
               : ''}
           </Typography>
           <div className={classes.shapeContainer}>

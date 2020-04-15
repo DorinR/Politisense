@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { useEffect, useRef } from 'react'
 
 export async function fetchCategoriesFromTxtFiles () {
   return axios.get('/api/bills/fetchCategoriesFromTxtFiles').then((res) => {
@@ -47,6 +46,115 @@ export function capitalizedName (sponsor) {
     return name
   }
   return null
+}
+
+export function calculateTotalVotesBills (bills) {
+  let totalBills = 0
+  if (bills) {
+    bills.forEach(bill => totalBills++)
+  }
+  return totalBills
+}
+
+export function getPartyColor (partyName) {
+  switch (partyName) {
+    case 'liberal':
+      return {
+        backgroundColor: '#D71921',
+        color: 'white'
+      }
+    case 'conservative':
+      return {
+        backgroundColor: '#0C499C',
+        color: 'white'
+      }
+    case 'ndp':
+      return {
+        backgroundColor: '#EF7E52',
+        color: 'white'
+      }
+    case 'bloc québécois':
+      return {
+        backgroundColor: '#02819E',
+        color: 'white'
+      }
+    case 'green party':
+      return {
+        backgroundColor: '#2E8724',
+        color: 'white'
+      }
+    case 'independent':
+      return {
+        backgroundColor: 'black',
+        color: 'white'
+      }
+    default:
+      return {
+        backgroundColor: 'white',
+        color: 'white'
+      }
+  }
+}
+
+export function numericalStyling (amount) {
+  const styling = Math.floor(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return styling
+}
+
+export function getPortraitColor (partyName) {
+  switch (partyName) {
+    case 'liberal':
+      return {
+        marginRight: 26,
+        width: 50,
+        height: 50,
+        border: '4px solid #D71921'
+      }
+    case 'conservative':
+      return {
+        marginRight: 26,
+        marginTop: -10,
+        width: 50,
+        height: 50,
+        border: '3px solid #0C499C'
+      }
+    case 'ndp':
+      return {
+        marginRight: 26,
+        width: 50,
+        height: 50,
+        border: '4px solid #EF7E52'
+      }
+    case 'bloc québécois':
+      return {
+        marginRight: 26,
+        width: 50,
+        height: 50,
+        border: '3px solid #02819E'
+      }
+    case 'green party':
+      return {
+        marginRight: 26,
+        width: 50,
+        height: 50,
+        border: '3px solid #2E8724'
+      }
+    case 'independent':
+      return {
+        marginRight: 26,
+        marginBottom: 10,
+        width: 50,
+        height: 50,
+        border: '3px solid black'
+      }
+    default:
+      return {
+        marginRight: 26,
+        width: 50,
+        height: 50,
+        border: '3px solid white'
+      }
+  }
 }
 
 export function getPercentagePartisanIndex (element, arr) {
@@ -217,6 +325,26 @@ export async function fetchUserRiding (userEmail) {
     .catch(console.error)
 }
 
+export async function getAllBillsByHead (head) {
+  const res = await axios.get(`/api/bills/${head}/getAllBillsByHead`)
+  return res.data.data
+}
+
+export function calcPercent (percent) {
+  return [percent, 100 - percent]
+}
+
+export async function getPartyData (party) {
+  return axios
+    .get(`/api/parties/${party.toLowerCase()}/getAllPartydata`)
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+    .catch(console.error)
+}
+
 export async function fetchRidingCode (riding) {
   return axios
     .get(`/api/ridings/getRidingCode/${encodeURI(riding)}`)
@@ -233,7 +361,6 @@ export async function fetchRepresentative (riding) {
     .get(`/api/representatives/${riding}/getRepresentative`)
     .then((res) => {
       if (res.data.success) {
-        console.log(res.data)
         return res.data.data
       }
     })
@@ -292,6 +419,7 @@ export function createDataSetRadar (categories, data) {
   maxValue = roundUpToNearestInteger(maxValue)
   return [dataSetRadar, maxValue]
 }
+
 export function getPoliticalPartyFromSponsor (sponsors) {
   const politicalParties = [...new Set(sponsors.map((item) => item.party))]
   return politicalParties
@@ -306,6 +434,7 @@ export function createPartyCountersForBiPartisanIndex (
   })
   return partiesCounters
 }
+
 export function getBillsForBiPartisanIndex (mpdata, sponsors) {
   const bills = []
   mpdata.forEach((bill) => {
@@ -415,11 +544,13 @@ export function createDataPieBarTable (categories, data) {
 
   return billsForSpecificCategory
 }
+
 export function sortBasedOnLargest (list) {
   return list.sort(function (a, b) {
     return a.value - b.value
   })
 }
+
 export function AssignColorForEachItem (list) {
   const colors = [
     '#32afa9',
@@ -466,6 +597,7 @@ export function pushToArrayUniqueBillsForPieBar (arr, obj, category) {
     }
   }
 }
+
 export function pushToArrayUniqueBillsForRadar (arr, obj, category) {
   if (arr.length !== 0) {
     const index = arr.findIndex(
@@ -516,10 +648,13 @@ export async function fetchRepresentativeId (representative) {
     .catch(console.error)
 }
 
-export function usePrevious (value) {
-  const ref = useRef()
-  useEffect(() => {
-    ref.current = value
-  })
-  return ref.current
+export async function fetchRepresentativeEntryDateIntoParliament (name) {
+  return axios
+    .get(`/api/representatives/${name}/getRepresentativesDateEntryParliament`)
+    .then(res => {
+      if (res.data.success) {
+        return res.data.data
+      }
+    })
+    .catch(console.error)
 }

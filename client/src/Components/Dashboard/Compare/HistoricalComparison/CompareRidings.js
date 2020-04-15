@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Party from './Party'
+import ModernRepresentative from './ModernRepresentative'
+import RepresentativeCardRiding from './RepresentativeCardRiding'
+import { getAllBillsByHead } from '../../Utilities/CommonUsedFunctions'
 import Typography from '@material-ui/core/Typography'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
@@ -24,47 +26,37 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export function calcPercent (percent) {
-  return [percent, 100 - percent]
-}
-
-export default function CompareParties () {
+export default function CompareRepresentatives () {
+  // eslint-disable-next-line no-use-before-define
   const classes = useStyles()
-  const [party1, setParty1] = useState('')
-  const [party2, setParty2] = useState('')
+  const [pastRep, setPastRep] = useState('')
 
-  const updateHead1 = (head) => {
-    if (head === party1 || head === '') {
+  const updatePastRep = (rep) => {
+    if (pastRep === rep || rep === '') {
     } else {
-      setParty1(head)
+      setPastRep(rep)
     }
   }
 
-  const updateHead2 = (head) => {
-    if (party2 === head || head === '') {
-    } else {
-      setParty2(head)
+  useEffect(() => {
+    async function getBills () {
+      await getAllBillsByHead(pastRep, 'pastRep')
     }
-  }
 
-  const comparePartiesExplanationTitle = 'Compare Parties'
-  const comparePartiesExplanationDescription = `This is a comparison of some metrics regarding both parties. 
-    The metrics are calculated based on currently elected members of this party.`
+    if (pastRep !== '') {
+      getBills()
+    }
+  }, [pastRep])
+
+  const compareHistoricalExplanationTitle = 'Riding History'
+  const compareHistoricalExplanationDescription =
+    'Compare the data of the current elected representative in your riding with representatives that previously held office in your riding!'
 
   return (
-    <div>
+    <>
       <CssBaseline />
       <div>
         <Container maxWidth='l'>
-          <Typography
-            component='h1'
-            variant='h2'
-            align='center'
-            color='textPrimary'
-            gutterBottom
-          >
-            Compare
-          </Typography>
           <Container>
             <Typography
               component='h4'
@@ -72,11 +64,11 @@ export default function CompareParties () {
               color='textPrimary'
               gutterBottom
             >
-              Parties
+              Past Represententatives
               <span className={classes.customTooltip}>
                 <InfoBubble
-                  title={comparePartiesExplanationTitle}
-                  text={comparePartiesExplanationDescription}
+                  title={compareHistoricalExplanationTitle}
+                  text={compareHistoricalExplanationDescription}
                 />
               </span>
             </Typography>
@@ -84,15 +76,15 @@ export default function CompareParties () {
           <div>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <Party updateHead={updateHead1} />
+                <ModernRepresentative />
               </Grid>
               <Grid item xs={6}>
-                <Party updateHead={updateHead2} />
+                <RepresentativeCardRiding updateHead={updatePastRep} />
               </Grid>
             </Grid>
           </div>
         </Container>
       </div>
-    </div>
+    </>
   )
 }
