@@ -139,143 +139,143 @@ export default function CategoryGrid (props) {
   return (
     <div className={classes.container}>
       <Hidden smDown>
-      <Grid container spacing={2}>
-        {props.representativedata && categoryList ? (
-          categoryList.map((category, index) => {
-            return (
-              <Grid item xs={4} key={categoryList[index]}>
-                <CategoryCard
-                  id={index}
-                  title={formattingCategory(category)}
-                  delete={deleteEvent}
-                  representative={props.representativedata}
-                  data={props.representativedata}
-                />
-              </Grid>
-            );
-          })
-        ) : (
-          <div
-            style={{
-              position: "relative",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)"
-            }}
-          >
-            <CircularProgress style={{ color: "#00bcd4" }} />
-          </div>
-        )}
-        {(counter === 0 || counter < 3) &&
-        props.representativedata &&
-        categoryList ? (
-          <Grid item md={4}>
-            <Card className={classes.card}>
-              <CardActionArea>
-                <CardContent>
-                  <div onClick={handleClickListItem}>
-                    <Typography
-                      gutterBottom
-                      variant="h5"
-                      component="h2"
-                      align="center"
-                      style={{ color: "white" }}
-                    >
-                      Add New Category
-                    </Typography>
-                    <div align="center">
-                      <AddIcon
-                        fontSize="large"
-                        style={{ color: "white", fontSize: 100 }}
-                      />
-                    </div>
-                  </div>
-                  <ConfirmationDialogRaw
-                    classes={{ paper: classes.paper }}
-                    keepMounted
-                    open={open}
-                    onClose={handleClose}
-                    value={value}
-                    existedcategories={categoryList}
-                    allcategories ={props.categorylist}
-                  />
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ) : (
-          <div />
-        )}
-      </Grid>
-      </Hidden>
-      <Hidden mdUp>
-        <Grid container spacing={2} direction="column" justify="center" alignItems= "center">
+        <Grid container spacing={2}>
           {props.representativedata && categoryList ? (
-              categoryList.map((category, index) => {
-                return (
-                    <Grid item xs={12} key={categoryList[index]}>
-                      <CategoryCard
-                          id={index}
-                          title={category}
-                          delete={deleteEvent}
-                          representative={props.representativedata}
-                          data={props.representativedata}
-                      />
-                    </Grid>
-                );
-              })
+            categoryList.map((category, index) => {
+              return (
+                <Grid item xs={4} key={categoryList[index]}>
+                  <CategoryCard
+                    id={index}
+                    title={formattingCategory(category)}
+                    delete={deleteEvent}
+                    representative={props.representativedata}
+                    data={props.representativedata}
+                  />
+                </Grid>
+              );
+            })
           ) : (
               <div
-                  style={{
-                    position: "relative",
-                    left: "50%",
-                    top: "50%",
-                    transform: "translate(-50%, -50%)"
-                  }}
+                style={{
+                  position: "relative",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)"
+                }}
               >
                 <CircularProgress style={{ color: "#00bcd4" }} />
               </div>
-          )}
+            )}
           {(counter === 0 || counter < 3) &&
-          props.representativedata &&
-          categoryList ? (
+            props.representativedata &&
+            categoryList ? (
               <Grid item md={4}>
                 <Card className={classes.card}>
                   <CardActionArea>
                     <CardContent>
                       <div onClick={handleClickListItem}>
                         <Typography
-                            gutterBottom
-                            variant="h5"
-                            component="h2"
-                            align="center"
-                            style={{ color: "white" }}
+                          gutterBottom
+                          variant="h5"
+                          component="h2"
+                          align="center"
+                          style={{ color: "white" }}
                         >
                           Add New Category
-                        </Typography>
+                    </Typography>
                         <div align="center">
                           <AddIcon
-                              fontSize="large"
-                              style={{ color: "white", fontSize: 100 }}
+                            fontSize="large"
+                            style={{ color: "white", fontSize: 100 }}
                           />
                         </div>
                       </div>
                       <ConfirmationDialogRaw
-                          classes={{ paper: classes.paper }}
-                          keepMounted
-                          open={open}
-                          onClose={handleClose}
-                          value={value}
-                          existedcategories={categoryList}
-                          allcategories ={props.categorylist}
+                        classes={{ paper: classes.paper }}
+                        keepMounted
+                        open={open}
+                        onClose={handleClose}
+                        value={value}
+                        existedcategories={categoryList}
+                        allcategories={props.categorylist}
                       />
                     </CardContent>
                   </CardActionArea>
                 </Card>
               </Grid>
-          ) : (
+            ) : (
               <div />
-          )}
+            )}
+        </Grid>
+      </Hidden>
+      <Hidden mdUp>
+        <Grid container spacing={2} direction="column" justify="center" alignItems="center">
+          {props.representativedata && categoryList ? (
+            categoryList.map((category, index) => {
+              return (
+                <Grid item xs={12} key={categoryList[index]}>
+                  <CategoryCard
+                    id={index}
+                    title={category}
+                    delete={deleteEvent}
+                    representative={props.representativedata}
+                    data={props.representativedata}
+                  />
+                </Grid>
+              );
+            })
+          ) : (
+              <div
+                style={{
+                  position: "relative",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)"
+                }}
+              >
+                <CircularProgress style={{ color: "#00bcd4" }} />
+              </div>
+            )}
+          {(counter === 0 || counter < 3) &&
+            props.representativedata &&
+            categoryList ? (
+              <Grid item md={4}>
+                <Card className={classes.card}>
+                  <CardActionArea>
+                    <CardContent>
+                      <div onClick={handleClickListItem}>
+                        <Typography
+                          gutterBottom
+                          variant="h5"
+                          component="h2"
+                          align="center"
+                          style={{ color: "white" }}
+                        >
+                          Add New Category
+                        </Typography>
+                        <div align="center">
+                          <AddIcon
+                            fontSize="large"
+                            style={{ color: "white", fontSize: 100 }}
+                          />
+                        </div>
+                      </div>
+                      <ConfirmationDialogRaw
+                        classes={{ paper: classes.paper }}
+                        keepMounted
+                        open={open}
+                        onClose={handleClose}
+                        value={value}
+                        existedcategories={categoryList}
+                        allcategories={props.categorylist}
+                      />
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            ) : (
+              <div />
+            )}
         </Grid>
       </Hidden>
     </div>
