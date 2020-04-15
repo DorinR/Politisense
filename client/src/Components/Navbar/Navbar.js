@@ -243,12 +243,12 @@ const Sidebar = withRouter((props) => {
 
   const pages = [
     {
-      title: 'General',
+      title: 'My Government',
       href: '/general',
       icon: <DashboardIcon />
     },
     {
-      title: 'My MP',
+      title: 'My Representative',
       href: '/myRepresentative',
       icon: <PeopleIcon />
     },
@@ -258,7 +258,7 @@ const Sidebar = withRouter((props) => {
       icon: <CompareArrowsIcon />
     },
     {
-      title: 'Map',
+      title: 'Explore',
       href: '/map',
       icon: <MapIcon />
     },
@@ -322,6 +322,7 @@ const Sidebar = withRouter((props) => {
               >
                 {
                   <Avatar
+                    // eslint-disable-next-line
                     alt={representative ? representative.name : ''}
                     src={representative ? representative.imageUrl : ''}
                     className={classes.bigAvatar}

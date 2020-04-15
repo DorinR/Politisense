@@ -22,6 +22,7 @@ import FlagIcon from '@material-ui/icons/Flag'
 import LocationOnIcon from '@material-ui/icons/LocationOn'
 import Divider from '@material-ui/core/Divider'
 import CardHeader from '@material-ui/core/CardHeader'
+import RepresentativeImage from '../Dashboard/Sidebar/RepresentativeImage'
 
 const stylingRepInfoCard = {
   bigAvatar: {
@@ -32,7 +33,7 @@ const stylingRepInfoCard = {
     border: '3px'
   },
   stylingIcons: {
-    background: '#43D0C4'
+    background: '#00BCD4'
   }
 }
 
@@ -54,8 +55,6 @@ export default class ChartWrapper extends Component {
   }
 
   render () {
-    console.log(this.props.contents)
-
     return (
       <div ref='mapHolder'>
         <div id='map-holder'>
@@ -96,13 +95,20 @@ export default class ChartWrapper extends Component {
             </Grid>
             <Grid item xs={4}>
               {this.props.contents ? (
-                <Card borderRadius='borderRadius' borderColor='grey.500' style={{ marginLeft: '20%' }}>
+                <Card borderRadius='borderRadius' borderColor='grey.500' style={{ marginLeft: '10%' }}>
                   <CardHeader
                     style={{ textAlign: 'center' }}
-                    title='Representative Info'
+                    title='Current Representative'
                   />
                   <Divider />
-                  <Avatar alt={this.props.contents.name} src={this.props.contents.imageUrl} style={stylingRepInfoCard.bigAvatar} />
+                  <div
+                    align='center'
+                    style={{ marginLeft: '-15%' }}
+                  >
+                    <RepresentativeImage
+                      representative={this.props.contents}
+                    />
+                  </div>
                   <CardContent>
                     <Divider />
                     <List>
