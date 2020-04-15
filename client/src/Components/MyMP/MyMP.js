@@ -32,7 +32,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function MyMP (props) {
-  console.log('INSIDE MY MP')
   const classes = useStyles()
   const [user, setUser] = useState(null)
   const [barPieRows, setBarPieRows] = React.useState([])

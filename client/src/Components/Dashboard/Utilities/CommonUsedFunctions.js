@@ -659,3 +659,18 @@ export async function fetchRepresentativeEntryDateIntoParliament (name) {
     })
     .catch(console.error)
 }
+
+export async function fetchUserData (userEmail) {
+  let result = ''
+  await axios
+    .get(`/api/users/${userEmail}/getUser`,
+      { params: { changepassword: userEmail } })
+    .then(res => {
+      if (res.data.success) {
+        const user = res.data.data
+        result = user
+      }
+    })
+    .catch(console.error)
+  return result
+}

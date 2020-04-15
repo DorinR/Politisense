@@ -265,7 +265,7 @@ const Sidebar = withRouter((props) => {
       icon: <MapIcon />
     },
     {
-      title: 'Polls',
+      title: 'Current Events',
       href: '/polls',
       icon: <HowToVoteIcon />
     },

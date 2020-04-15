@@ -15,13 +15,6 @@ class LegislativeActivityScraper extends QueueManager {
     return manager
   }
 
-  accumulate (result) {
-    if (result) {
-      this.result.push(result)
-    }
-    return result
-  }
-
   constructor (wait = 1000) {
     super(wait)
     this.params = [

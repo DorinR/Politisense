@@ -115,7 +115,7 @@ export default function ModernRepresentative () {
     async function getData (mp) {
       async function getIssuedBillsByHead (head) {
         const res = await axios.get(
-          `http://localhost:5000/api/bills/${head}/getAllBillsBySponsorName`
+          `/api/bills/${head}/getAllBillsBySponsorName`
         )
         return res.data.data
       }

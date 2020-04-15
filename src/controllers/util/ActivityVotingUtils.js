@@ -14,7 +14,6 @@ export function error (response, status, message) {
 }
 
 export function success (response, message, data) {
-  console.info(message)
   response
     .status(200)
     .json({
@@ -234,7 +233,6 @@ export function canUserVoteOnActivity (user, activity) {
 }
 
 export function insertNewVote (user, activity) {
-  console.log('activity ', activity)
   return new Firestore()
     .LegislativeActivityVote()
     .insert(

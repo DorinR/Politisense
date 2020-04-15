@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
@@ -19,6 +18,7 @@ import { getIpPostalCode } from './GetIpAddress'
 import ListItemText from '@material-ui/core/ListItemText'
 import Divider from '@material-ui/core/Divider'
 import TextField from '@material-ui/core/TextField'
+import { fetchUserData } from '../Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles({
   card: {
@@ -72,21 +72,6 @@ const useStyles = makeStyles({
   }
 })
 
-export async function fetchUserData (userEmail) {
-  let result = ''
-  await axios
-    .get(`http://localhost:5000/api/users/${userEmail}/getUser`,
-      { params: { changepassword: userEmail } })
-    .then(res => {
-      if (res.data.success) {
-        const user = res.data.data
-        result = user
-      }
-    })
-    .catch(err => console.log(err))
-  return result
-}
-
 export default function Voting () {
   const classes = useStyles()
   const [recentBills, setRecentBills] = useState([])
@@ -135,8 +120,9 @@ export default function Voting () {
     if (filter === '') {
       filtered = recentBills
     } else {
-      filtered = recentBills.filter((bills) =>
-        bills.title.toLowerCase().includes(filter.toLowerCase())
+      filtered = recentBills.filter((bills) => {
+          return bills.title.toLowerCase().includes(filter.toLowerCase())
+      }     
       )
     }
     setfilteredBills(filtered)
@@ -160,7 +146,7 @@ export default function Voting () {
 
   async function fetchVotingActivity (userEmail) {
     return axios
-      .post('http://localhost:5000/api/voting/index',
+      .post('/api/voting/index',
         {
           user: { email: userEmail }
 
@@ -175,7 +161,7 @@ export default function Voting () {
   }
 
   async function registerVote (userEmail, number, title, link, description, date, vote, index) {
-    await axios.post('http://localhost:5000/api/voting/vote',
+    await axios.post('/api/voting/vote',
       {
 
         user: { email: userEmail },
@@ -203,49 +189,49 @@ export default function Voting () {
       {filteredBills && filteredBills.length > 0 ? (
         <Grid item xs={12} align='center'>
           <List className={classes.root}>
-            {filteredBills.map((bills, index) => (
-              <ListItem key={index} value={bills}>
+            {filteredBills.map((bill, index) => (
+              <ListItem key={index} value={bill}>
                 <ListItemAvatar>
                   <Avatar src='http://www.pngall.com/wp-content/uploads/2016/07/Canada-Leaf-PNG-Clipart.png' />
                 </ListItemAvatar>
                 <Card className={classes.root}>
                   <CardContent>
                     <Typography className={classes.title} color='primary' gutterBottom>
-                      {bills.title}
+                      {bill.title}
                     </Typography>
                     <Typography className={classes.date}>
-                                            Retrieved on {bills.date}
+                                            Retrieved on {bill.date}
                     </Typography>
                     <CardActions>
                       <Typography className={classes.details}>
                                                 Get more details
                       </Typography>
                       <Typography className={classes.link}>
-                        <Link href='#' onClick={preventDefault} className={classes.link}>
-                          {bills.link}
+                        <Link href={bill.link} onClick={preventDefault} className={classes.link}>
+                        {bill.link}
                         </Link>
                       </Typography>
                     </CardActions>
                     <Typography variant='body2' component='p'>
-                      {bills.description}
+                      {bill.description}
                     </Typography>
-                    {storagePostalCode === ipPostalCode && bills.description !== ''
+                    {storagePostalCode === ipPostalCode && bill.description !== ''
                       ? <Alert className={classes.alert} severity='error'>
                                                 Read the bill properly. Once you cast your vote, it cannot be undone!
                         </Alert> : ''}
-                    {storagePostalCode === ipPostalCode && bills.userHasVoted === false && bills.description !== ''
+                    {storagePostalCode === ipPostalCode && bill.userHasVoted === false && bill.description !== ''
                       ? <ButtonGroup>
-                        <Button value='yes' id={index} className={classes.for} onClick={(event) => registerButtonClick(event, bills.number, bills.title, bills.link, bills.description, bills.date, index)}>For</Button>
-                        <Button value='no' id={index} className={classes.against} onClick={(event) => registerButtonClick(event, bills.number, bills.title, bills.link, bills.description, bills.date, index)}>Against</Button>
+                        <Button value='yes' id={index} className={classes.for} onClick={(event) => registerButtonClick(event, bill.number, bill.title, bill.link, bill.description, bill.date, index)}>For</Button>
+                        <Button value='no' id={index} className={classes.against} onClick={(event) => registerButtonClick(event, bill.number, bill.title, bill.link, bill.description, bill.date, index)}>Against</Button>
                         </ButtonGroup> : ''}
-                    {bills.description !== '' && bills.userHasVoted === true
+                    {bill.description !== '' && bill.userHasVoted === true
                       ? <List component='nav' className={classes.root} aria-label='mailbox folders'>
                         <ListItem>
-                          <ListItemText primary='For' /> {bills.yes}
+                          <ListItemText primary='For' /> {bill.yes}
                         </ListItem>
                         <Divider />
                         <ListItem>
-                          <ListItemText primary='Against' /> {bills.no}
+                          <ListItemText primary='Against' /> {bill.no}
                         </ListItem>
                         </List> : ''}
                   </CardContent>
