@@ -89,14 +89,14 @@ const Topbar = withRouter((props) => {
                 </Typography>
               </ListItem>
             ) : (
-                <ListItem>
-                  <AccountBalanceIcon className={classes.icon} />
-                  <Box m={1} />
-                  <Typography variant='h6' style={{ color: 'white' }}>
+              <ListItem>
+                <AccountBalanceIcon className={classes.icon} />
+                <Box m={1} />
+                <Typography variant='h6' style={{ color: 'white' }}>
                     Politisense
                 </Typography>
-                </ListItem>
-              )}
+              </ListItem>
+            )}
           </List>
         </div>
 

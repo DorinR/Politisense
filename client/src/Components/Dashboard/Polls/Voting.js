@@ -86,6 +86,7 @@ export default function Voting () {
 
   useEffect(() => {
     if (!user) {
+      // eslint-disable-next-line
       const usr = JSON.parse(localStorage.getItem('user'))
       setUser(usr)
     }
@@ -121,8 +122,8 @@ export default function Voting () {
       filtered = recentBills
     } else {
       filtered = recentBills.filter((bills) => {
-          return bills.title.toLowerCase().includes(filter.toLowerCase())
-      }     
+        return bills.title.toLowerCase().includes(filter.toLowerCase())
+      }
       )
     }
     setfilteredBills(filtered)
@@ -135,10 +136,12 @@ export default function Voting () {
   const registerButtonClick = (event, number, title, link, description, date, index) => {
     event.preventDefault()
     if (event.currentTarget.value === 'yes') {
-            alert('You voted For this bill. Reload to see results')
+      // eslint-disable-next-line
+      alert('You voted For this bill. Reload to see results')
     }
     if (event.currentTarget.value === 'no') {
-            alert('You voted Against this bill. Reload to see results')
+      // eslint-disable-next-line
+      alert('You voted Against this bill. Reload to see results')
     }
 
     registerVote(userEmail, number, title, link, description, date, event.currentTarget.value, index)
@@ -199,33 +202,27 @@ export default function Voting () {
                     <Typography className={classes.title} color='primary' gutterBottom>
                       {bill.title}
                     </Typography>
-                    <Typography className={classes.date}>
-                                            Retrieved on {bill.date}
-                    </Typography>
+                    <Typography className={classes.date}> Retrieved on {bill.date}</Typography>
                     <CardActions>
-                      <Typography className={classes.details}>
-                                                Get more details
-                      </Typography>
+                      <Typography className={classes.details}> Get more details </Typography>
                       <Typography className={classes.link}>
                         <Link href={bill.link} onClick={preventDefault} className={classes.link}>
-                        {bill.link}
+                          {bill.link}
                         </Link>
                       </Typography>
                     </CardActions>
-                    <Typography variant='body2' component='p'>
-                      {bill.description}
-                    </Typography>
-                    {storagePostalCode === ipPostalCode && bill.description !== ''
-                      ? <Alert className={classes.alert} severity='error'>
-                                                Read the bill properly. Once you cast your vote, it cannot be undone!
-                        </Alert> : ''}
-                    {storagePostalCode === ipPostalCode && bill.userHasVoted === false && bill.description !== ''
-                      ? <ButtonGroup>
+                    <Typography variant='body2' component='p'> {bill.description} </Typography>
+                    {storagePostalCode === ipPostalCode && bill.description !== '' ? (
+                      <Alert className={classes.alert} severity='error'>
+                                                  Read the bill properly. Once you cast your vote, it cannot be undone!
+                      </Alert>) : ''}
+                    {storagePostalCode === ipPostalCode && bill.userHasVoted === false && bill.description !== '' ? (
+                      <ButtonGroup>
                         <Button value='yes' id={index} className={classes.for} onClick={(event) => registerButtonClick(event, bill.number, bill.title, bill.link, bill.description, bill.date, index)}>For</Button>
                         <Button value='no' id={index} className={classes.against} onClick={(event) => registerButtonClick(event, bill.number, bill.title, bill.link, bill.description, bill.date, index)}>Against</Button>
-                        </ButtonGroup> : ''}
-                    {bill.description !== '' && bill.userHasVoted === true
-                      ? <List component='nav' className={classes.root} aria-label='mailbox folders'>
+                      </ButtonGroup>) : ''}
+                    {bill.description !== '' && bill.userHasVoted === true ? (
+                      <List component='nav' className={classes.root} aria-label='mailbox folders'>
                         <ListItem>
                           <ListItemText primary='For' /> {bill.yes}
                         </ListItem>
@@ -233,18 +230,18 @@ export default function Voting () {
                         <ListItem>
                           <ListItemText primary='Against' /> {bill.no}
                         </ListItem>
-                        </List> : ''}
+                      </List>) : ''}
                   </CardContent>
                 </Card>
               </ListItem>
             ))}
           </List>
-        </Grid>)
-        : (
-          <Typography variant='h5' component='h2'>
+        </Grid>
+      ) : (
+        <Typography variant='h5' component='h2'>
                         No Results Found
-          </Typography>
-        )}
+        </Typography>
+      )}
     </Grid>
   )
 }
