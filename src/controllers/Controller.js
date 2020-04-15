@@ -52,6 +52,9 @@ module.exports = {
   checkTokenValid: function (req, res) {
     return UserController.checkTokenValid(req, res)
   },
+  deleteAccount: function (req, res) {
+    return UserController.deleteAccount(req, res)
+  },
   getUserInterests: function (req, res) {
     return UserController.getUserInterests(req, res)
   },

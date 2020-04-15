@@ -14,6 +14,7 @@ router.post('/activateAccount', controller.activateAccount)
 router.post('/generateActivationLink', controller.generateActivationLink)
 router.post('/generateResetLink', controller.generateResetLink)
 router.post('/checkTokenValid', controller.checkTokenValid)
+router.post('/deleteAccount', controller.deleteAccount)
 
 // @route post api/users/signup
 // @desc  signup User

@@ -1,6 +1,7 @@
 import { Authentication as Auth, Firestore } from '@firestore'
 import represent from 'represent'
 import crypto from 'crypto'
+const utils = require('./util/ActivityVotingUtils')
 const nodemailer = require('nodemailer')
 
 exports.checkIfUserExists = (req, res) => {
@@ -27,6 +28,37 @@ exports.checkIfUserExists = (req, res) => {
       }
     })
     .catch(console.error)
+}
+
+exports.deleteAccount = async (req, res) => {
+  const user = await utils.retrieveUser(res, req.body.email)
+  if (user) {
+    new Firestore().User()
+      .where('email', '==', req.body.email)
+      .delete()
+      .then(snapshot => {
+        return new Firestore().LegislativeActivityVote()
+          .where('user', '==', user.id)
+          .delete()
+          .then(snapshot => {
+            res.json({
+              success: true,
+              data: 'user was successfully deleted'
+            })
+          }).catch(err => {
+            res.status(500).json({ message: 'server error', success: false })
+            console.error(err)
+          })
+      }).catch(err => {
+        res.status(500).json({ message: 'server error', success: false })
+        console.error(err)
+      })
+  } else {
+    res.json({
+      success: false,
+      data: 'user was not found'
+    })
+  }
 }
 
 exports.generateResetLink = (req, res) => {
