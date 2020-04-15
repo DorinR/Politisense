@@ -5,19 +5,15 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
-import { makeStyles } from '@material-ui/core/styles'
+import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import canadaimage from '../../assets/canada.jpg'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFacebook, faTwitter, faGoogle } from '@fortawesome/free-brands-svg-icons'
 import logo from '../../assets/politisenseLogoMedium.png'
 import axios from 'axios'
-import {
-  FacebookLoginButton,
-  GoogleLoginButton,
-  TwitterLoginButton
-} from 'react-social-login-buttons'
 import { tokenAuthenticate } from './authenticate'
 
 const gridStyle = {
-  display: 'flex',
   justifyContent: 'center'
 }
 
@@ -44,9 +40,8 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   },
   social: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    width: '100%',
+    paddingBottom: '12px'
   },
   routerLink: {
     textDecoration: 'none',
@@ -55,10 +50,34 @@ const useStyles = makeStyles(theme => ({
   logo: {
     margin: theme.spacing(15, 0, 2)
   },
-  quote: {
-    color: '#00BCD4'
+  container: {
+    width: '100%'
   }
 }))
+
+const FacebookTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#4267B2'
+    }
+  }
+})
+
+const TwitterTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#1A91DA'
+    }
+  }
+})
+
+const GoogleTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#CB4023'
+    }
+  }
+})
 
 export function checkEmailFormat (email) {
   /* eslint-disable */
@@ -236,7 +255,7 @@ export default function Login(props) {
                   className={classes.submit}>
                   Log in
                 </Button>
-                <Grid container>
+                <Grid container className={classes.container}>
                   <Grid item xs>
                     <Link
                       variant='body2'
@@ -261,39 +280,61 @@ export default function Login(props) {
                 style={{ textAlign: 'center' }}>
                 OR
               </Typography>
-              <div className='Wrapper' style={gridStyle}>
+              <div className={classes.container} style={gridStyle}>
                 <Grid container justify='center'>
-                  <Grid item xs={6} className={classes.social}>
-                    <FacebookLoginButton
-                      onClick={() => {
-                        validateUserFromSocialProviders(
-                          'facebook',
-                          handleSocialLogin
-                        )
-                      }}
-                    />
+                  <Grid item xs={12} className={classes.social}>
+                    <ThemeProvider theme={FacebookTheme}>
+                    <Button
+                        type='submit'
+                        fullWidth
+                        variant='outlined'
+                        color='primary'
+                        onClick={() => {
+                          validateUserFromSocialProviders(
+                              'facebook',
+                              handleSocialLogin
+                          )
+                        }}
+                        >
+                      <FontAwesomeIcon size="lg" icon={faFacebook} />&nbsp;Continue with Facebook
+                    </Button>
+                    </ThemeProvider>
                   </Grid>
-                  <Grid item xs={6} className={classes.social}>
-                    <TwitterLoginButton
-                      onClick={() =>
-                        validateUserFromSocialProviders(
-                          'twitter',
-                          handleSocialLogin
-                        )
-                      }
-                    />
+                  <Grid item xs={12} className={classes.social} gu>
+                    <ThemeProvider theme={TwitterTheme}>
+                      <Button
+                          type='submit'
+                          fullWidth
+                          variant='outlined'
+                          color='primary'
+                          onClick={() =>
+                              validateUserFromSocialProviders(
+                                  'twitter',
+                                  handleSocialLogin
+                              )
+                          }
+                          >
+                        <FontAwesomeIcon size="lg" icon={faTwitter} />&nbsp;Continue with Twitter
+                      </Button>
+                    </ThemeProvider>
                   </Grid>
-                  <Grid item xs={6} className={classes.social}>
-                    <GoogleLoginButton
-                      type='button'
-                      id='test'
-                      onClick={() =>
-                        validateUserFromSocialProviders(
-                          'google',
-                          handleSocialLogin
-                        )
-                      }
-                    />
+                  <Grid item xs={12} className={classes.social}>
+                    <ThemeProvider theme={GoogleTheme}>
+                      <Button
+                          type='submit'
+                          fullWidth
+                          color='primary'
+                          variant="outlined"
+                          onClick={() =>
+                              validateUserFromSocialProviders(
+                                  'google',
+                                  handleSocialLogin
+                              )
+                          }
+                      >
+                        <FontAwesomeIcon size="lg" icon={faGoogle} />&nbsp;Continue with Google
+                      </Button>
+                    </ThemeProvider>
                   </Grid>
                 </Grid>
               </div>
