@@ -90,61 +90,18 @@ const Topbar = withRouter((props) => {
                 </Typography>
               </ListItem>
             ) : (
-              <ListItem>
-                <AccountBalanceIcon className={classes.icon} />
-                <Box m={1} />
-                <Typography variant='h6' style={{ color: 'white' }}>
-                  Politisense
+                <ListItem>
+                  <AccountBalanceIcon className={classes.icon} />
+                  <Box m={1} />
+                  <Typography variant='h6' style={{ color: 'white' }}>
+                    Politisense
                 </Typography>
-              </ListItem>
-            )}
+                </ListItem>
+              )}
           </List>
         </div>
 
         <div className={classes.flexGrow} />
-        <Button
-          style={{ color: 'white', textTransform: 'none' }}
-          variant='text'
-          onClick={() => {
-            props.history.push('/general')
-          }}
-        >
-          General
-        </Button>
-        <Button
-          style={{ color: 'white', textTransform: 'none' }}
-          variant='text'
-          onClick={() => {
-            props.history.push('/myRepresentative')
-          }}
-        >
-          My MP
-        </Button>
-        <Button
-          style={{ color: 'white', textTransform: 'none' }}
-          variant='text'
-          onClick={() => {
-            props.history.push('/compare')
-          }}
-        >
-          Compare
-        </Button>
-        <Button
-          style={{ color: 'white', textTransform: 'none' }}
-          variant='text'
-          onClick={() => {
-            props.history.push('/map')
-          }}
-        >
-          Map
-        </Button>
-        {props.country && props.country === 'Canada'
-          ? <Button
-            style={{ color: 'white', textTransform: 'none' }} variant='text'
-            onClick={() => { props.history.push('/polls') }}
-          >
-            Polls
-            </Button> : ''}
         <Button
           style={{ color: 'white', textTransform: 'none' }}
           variant='text'

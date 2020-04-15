@@ -6,7 +6,7 @@ import Box from '@material-ui/core/Box'
 import InfoBubble from '../Dashboard/Utilities/InfoBubble'
 import CenteredCircularProgress from '../Dashboard/Utilities/CenteredCircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
-import axios from 'axios'
+import { fetchRepresentativeEntryDateIntoParliament } from '../Dashboard/Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles({
   root: {
@@ -47,17 +47,6 @@ const useStyles = makeStyles({
 const MapContainer = (props) => {
   const classes = useStyles()
   const [contents, setContents] = useState(null)
-
-  async function fetchRepresentativeEntryDateIntoParliament (name) {
-    return axios
-      .get(`/api/representatives/${name}/getRepresentativesDateEntryParliament`)
-      .then(res => {
-        if (res.data.success) {
-          return res.data.data
-        }
-      })
-      .catch(console.error)
-  }
 
   const handleSetContentsMap = async (currentRidingcontents) => {
     if (contents) {

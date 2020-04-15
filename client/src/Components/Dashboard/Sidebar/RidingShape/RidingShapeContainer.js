@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import RidingShape from './RidingShape'
 import Box from '@material-ui/core/Box'
-import CenteredCircularProgress from '../../Utilities/CenteredCircularProgress'
 
 export async function fetchRidingShape (ridingCode) {
   try {
@@ -44,9 +43,7 @@ export default function RidingShapeContainer (props) {
           politicalParty={props.politicalParty}
           code={ridingCode}
         />
-      ) : (
-        <CenteredCircularProgress />
-      )}
+      ) : (<div />)}
       <Box mx='auto' />
     </div>
   )
