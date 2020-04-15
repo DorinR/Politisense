@@ -11,6 +11,7 @@ import ViewAccountDetails from './ViewAccountDetails'
 import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
 import ChangeAccountPassword from './ChangeAccountPassword'
+import Button from '@material-ui/core/Button'
 
 function TabPanel (props) {
   const { children, value, index, ...other } = props
@@ -102,7 +103,7 @@ export default function FullWidthTabs () {
 
   return (
       <Grid container>
-        <Container>
+        <Container maxWidth="sm">
           <div className={classes.content}>
             <AppBar position='static' color='default'>
               <Tabs
@@ -129,6 +130,15 @@ export default function FullWidthTabs () {
                 <ChangeAccountPassword />
               </TabPanel>
             </SwipeableViews>
+              <Container>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                >
+                  Delete Account
+                </Button>
+              </Container>
           </div>
         </Container>
       </Grid>
