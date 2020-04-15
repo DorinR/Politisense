@@ -54,8 +54,6 @@ export default class ChartWrapper extends Component {
   }
 
   render () {
-    console.log(this.props.contents)
-
     return (
       <div ref='mapHolder'>
         <div id='map-holder'>
