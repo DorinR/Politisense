@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
 import InfoBubble from '../../Utilities/InfoBubble'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   content: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6)
@@ -31,7 +31,7 @@ export default function CompareRepresentatives () {
   const classes = useStyles()
   const [pastRep, setPastRep] = useState('')
 
-  const updatePastRep = rep => {
+  const updatePastRep = (rep) => {
     if (pastRep === rep || rep === '') {
     } else {
       setPastRep(rep)
@@ -49,7 +49,8 @@ export default function CompareRepresentatives () {
   }, [pastRep])
 
   const compareHistoricalExplanationTitle = 'Riding History'
-  const compareHistoricalExplanationDescription = 'Have a look at the historical data of past MPs of your riding!'
+  const compareHistoricalExplanationDescription =
+    'Compare the data of the current elected representative in your riding with representatives that previously held office in your riding!'
 
   return (
     <>
@@ -58,20 +59,19 @@ export default function CompareRepresentatives () {
         <Container maxWidth='l'>
           <Container>
             <Typography
-              style={{ display: 'inline-block' }}
-              className={classes.customHeaders}
-              align='left'
-              color='primary'
+              component='h4'
+              variant='h4'
+              color='textPrimary'
               gutterBottom
             >
-              Riding History
+              Past Represententatives
+              <span className={classes.customTooltip}>
+                <InfoBubble
+                  title={compareHistoricalExplanationTitle}
+                  text={compareHistoricalExplanationDescription}
+                />
+              </span>
             </Typography>
-            <span className={classes.customTooltip}>
-              <InfoBubble
-                title={compareHistoricalExplanationTitle}
-                text={compareHistoricalExplanationDescription}
-              />
-            </span>
           </Container>
           <div>
             <Grid container spacing={2}>
