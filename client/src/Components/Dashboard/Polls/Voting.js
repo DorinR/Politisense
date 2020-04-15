@@ -101,7 +101,6 @@ export default function Voting () {
 
   useEffect(() => {
     if (!user) {
-      // eslint-disable-next-line no-undef
       const usr = JSON.parse(localStorage.getItem('user'))
       setUser(usr)
     }
@@ -150,11 +149,9 @@ export default function Voting () {
   const registerButtonClick = (event, number, title, link, description, date, index) => {
     event.preventDefault()
     if (event.currentTarget.value === 'yes') {
-      // eslint-disable-next-line
             alert('You voted For this bill. Reload to see results')
     }
     if (event.currentTarget.value === 'no') {
-      // eslint-disable-next-line
             alert('You voted Against this bill. Reload to see results')
     }
 
