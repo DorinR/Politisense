@@ -23,7 +23,6 @@ export default class D3Chart {
 
     const width = 150
     const height = 150
-    const opacity = 0.8
     const radius = Math.min(width, height) / 2
 
     // The d3.pie() function takes in a dataset and creates handy data for us to generate a pie chart in the SVG.
@@ -40,7 +39,7 @@ export default class D3Chart {
       .innerRadius(radius - 20)
       .outerRadius(radius)
 
-    const colors = ['#3282b8', '#c9df8a']
+    const colors = ['#3282b8', '#ea728c']
 
     const svg = d3.select(element)
       .append('svg')
@@ -61,9 +60,8 @@ export default class D3Chart {
     arcs.append('path')
       .attr('fill', (d, i) => { return colors[i] })
       .attr('d', createArc)
-      .style('opacity', opacity)
 
-    var legend = svg.append('svg')
+    const legend = svg.append('svg')
       .attr('preserveAspectRatio', 'xMinYMin')
       .attr('class', 'legend')
       .selectAll('g')

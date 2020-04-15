@@ -203,99 +203,67 @@ export default function MyMP (props) {
               container
               spacing={4}
             >
-              <Grid
-                item
-                lg={3}
-                sm={6}
-                xl={3}
-                xs={12}
-              >
-                {categoryList && userRepresentative ? (
-                  <IssuedBillsByMP
-                    issuedbills={userRepIssuedBills}
-                    categorylist={categoryList}
-                    representative={userRepresentative.name}
-                    rows={barPieRows}
-                  />)
-                  : ('')}
-              </Grid>
-              <Grid
-                item
-                lg={3}
-                sm={6}
-                xl={3}
-                xs={12}
-              >
-                {userRepresentative ? <Roles representative={userRepresentative.name} /> : ''}
-              </Grid>
-              <Grid
-                item
-                lg={3}
-                sm={6}
-                xl={3}
-                xs={12}
-              >
-                {userRepresentative ? <Committees representative={userRepresentative.name} /> : ''}
-              </Grid>
-              <Grid
-                item
-                lg={3}
-                sm={6}
-                xl={3}
-                xs={12}
-              >
-                {userRepresentative ? <Associations representative={userRepresentative.name} /> : ''}
-              </Grid>
-              <Grid
-                item
-                lg={8}
-                md={12}
-                xl={8}
-                xs={12}
-              >
+              {categoryList && userRepresentative
+                ? (
+                  <Grid item lg={3} sm={6} xl={3} xs={12}>
+                    <IssuedBillsByMP
+                      issuedbills={userRepIssuedBills}
+                      categorylist={categoryList}
+                      representative={userRepresentative.name}
+                      rows={barPieRows}
+                    />
+                  </Grid>
+                ) : ('')}
+              {userRepresentative
+                ? (<Grid item lg={3} sm={6} xl={3} xs={12}><Roles representative={userRepresentative.name} /></Grid>) : ('')}
+
+              {userRepresentative
+                ? (<Grid item lg={3} sm={6} xl={3} xs={12}><Committees representative={userRepresentative.name} /></Grid>) : ''}
+              {userRepresentative
+                ? (<Grid item lg={3} sm={6} xl={3} xs={12}><Associations representative={userRepresentative.name} /></Grid>) : ''}
+              <Grid item lg={8} md={12} xl={8} xs={12}>
                 <Budget />
               </Grid>
-              <Grid
-                item
-                lg={4}
-                md={6}
-                xl={4}
-                xs={12}
-              >
-                <div>
-                  {donutData && representativeData ? (
-                    <Bipartisan data={donutData[0]} rows={donutData[1]} title='gauge' />) : ''}
-                </div>
-              </Grid>
-              <Grid
-                item
-                lg={12}
-                md={12}
-                xl={12}
-                xs={12}
-              >{user && representativeData && categoryList ? <CategoryDashboard user={user} representativedata={representativeData} categorylist={categoryList} /> : ''}
-              </Grid>
-              <Grid
-                item
-                lg={4}
-                md={6}
-                xl={4}
-                xs={12}
-              >
-                {radarData && categoryList ? (
-                  <MPActivityDistribution radardata={radarData} rows={radarDataRows} categorylist={categoryList} />) : ''}
-              </Grid>
-              <Grid
-                item
-                lg={8}
-                md={12}
-                xl={8}
-                xs={12}
-              >
-                <BillHistoryTable
-                  representative={userRepresentative}
-                />
-              </Grid>
+              {donutData && donutData[1].length !== 0 && representativeData ? (
+                <Grid
+                  item
+                  lg={4}
+                  md={6}
+                  xl={4}
+                  xs={12}
+                >
+                  <div>
+                    <Bipartisan data={donutData[0]} rows={donutData[1]} />
+                  </div>
+                </Grid>
+              ) : ''}
+              {user && representativeData && categoryList
+                ? (
+                  <Grid
+                    item
+                    lg={12}
+                    md={12}
+                    xl={12}
+                    xs={12}
+                  >
+                    <CategoryDashboard user={user} representativedata={representativeData} categorylist={categoryList} />
+                  </Grid>
+                )
+                : ''}
+              {radarData && categoryList
+                ? (
+                  <Grid
+                    item
+                    lg={4}
+                    md={6}
+                    xl={4}
+                    xs={12}
+                  >
+                    <MPActivityDistribution radardata={radarData} rows={radarDataRows} categorylist={categoryList} />
+                  </Grid>
+                ) : ''}
+              {userRepresentative
+                ? (<Grid item lg={8} md={12} xl={8} xs={12}>  <BillHistoryTable representative={userRepresentative} /></Grid>) : ''}
             </Grid>
           </div>)
         : (
