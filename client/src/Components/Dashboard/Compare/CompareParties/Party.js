@@ -228,7 +228,7 @@ export default function Party(props) {
     async function getData() {
       const partyData = await getPartyData(party)
       setPartyImageUrl(partyData.imageUrl)
-      setSeatsHeld(partyData.numberOfSeats)
+      setSeatsHeld(partyData.seats)
       const numberOfBillsSponsored = await getNumberOfBillsSponsoredByParty(
         party
       )
