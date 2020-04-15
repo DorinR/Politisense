@@ -138,11 +138,11 @@ export default function Voting () {
     event.preventDefault()
     if (event.currentTarget.value === 'yes') {
       // eslint-disable-next-line
-      alert('You voted For this bill. Reload to see results')
+      alert('You voted For this bill')
     }
     if (event.currentTarget.value === 'no') {
       // eslint-disable-next-line
-      alert('You voted Against this bill. Reload to see results')
+      alert('You voted Against this ')
     }
 
     registerVote(userEmail, number, title, link, description, date, event.currentTarget.value, index)
