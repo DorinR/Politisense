@@ -39,6 +39,9 @@ router.get(
   '/fetchCategories',
   controller.fetchCategories
 )
+
+router.get('/:head/getAllBillsBySponsorName', controller.getAllBillsBySponsorName)
+
 router.get(
   '/fetchCategoriesFromTxtFiles',
   controller.fetchCategoriesFromTxtFiles

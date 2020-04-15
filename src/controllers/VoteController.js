@@ -26,3 +26,69 @@ exports.getAllVotesByRepresentative = async (req, res) => {
     })
     .catch(console.error)
 }
+
+exports.getPastRepresentativePairedVotes = async (req, res) => {
+  const parliaments = [36, 37, 38, 39, 40, 41, 42]
+  const db = new Firestore()
+  const politiciansVotes = parliaments.map(parl => {
+    return db
+      .forParliament(parl)
+      .Vote()
+      .where('member', '==', req.params.member)
+      .where('paired', '==', true)
+      .select()
+      .then(snapshot => {
+        const docs = []
+        snapshot.forEach(doc => {
+          docs.push({
+            data: doc.data(),
+            parliament: parl
+          })
+        })
+        return docs
+      })
+  })
+  Promise.all(politiciansVotes)
+    .then(votes => {
+      res.status(200).json({
+        success: true,
+        data: votes.flat()
+      })
+    })
+    .catch(e => {
+      console.error(e)
+    })
+}
+
+exports.getPastRepresentativeVotes = async (req, res) => {
+  const parliaments = [36, 37, 38, 39, 40, 41, 42]
+  const db = new Firestore(false)
+  const politiciansVotes = parliaments.map(parl => {
+    return db
+      .forParliament(parl)
+      .Vote()
+      .where('member', '==', req.params.member)
+      .select()
+      .then(snapshot => {
+        const docs = []
+        snapshot.forEach(doc => {
+          docs.push({
+            data: doc.data(),
+            parliament: parl
+          })
+        })
+        return docs
+      })
+  })
+
+  Promise.all(politiciansVotes)
+    .then(votes => {
+      res.status(200).json({
+        success: true,
+        data: votes.flat()
+      })
+    })
+    .catch(e => {
+      console.error(e)
+    })
+}

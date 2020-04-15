@@ -8,6 +8,11 @@ const controller = require('../../controllers/Controller')
 // @access Public
 router.get('/:riding/getRepresentative', controller.getRepresentativeByRiding)
 
+router.get('/:riding/getRepresentative', controller.getMpByRiding)
+
+router.get('/:member/getParliamentNumber', controller.getParliamentNumber)
+
+router.post('/:name/getPastRepresentativeId', controller.getPastRepresentativeId)
 // @route post api/representatives/:riding/getRepresentative
 // @desc  get representative by riding
 // @access Public
@@ -19,6 +24,12 @@ router.get('/getCabinetMinisters', controller.getCabinetMinisters)
 router.get('/getAllRepresentatives', controller.getAllRepresentatives)
 
 router.get('/:name/getRepresentativesInfo', controller.getRepresentativesInfo)
+
+// @route post api/getPastRepresentatives
+// @desc  get all past representatives for a given riding
+// @access Public
+router.get('/:riding/getPastRepresentatives', controller.getPastRepresentatives)
+
 // @route post api/:representative/getRepresentativeId
 // @desc get id of representative
 // @access Public

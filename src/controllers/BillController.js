@@ -49,7 +49,7 @@ exports.getAllBillsByHead = (req, res) => {
                 })
                 res.json({
                   success: true,
-                  data: finalArray
+                  data: finalArray.length
                 })
               })
           }
@@ -411,6 +411,37 @@ exports.getNumberOfBillsSponsoredByParty = async (req, res) => {
       })
     })
 }
+
+async function getIssuedBillsParliament43 (parliamentNo, repName) {
+  const db = new Firestore(false).forParliament(parliamentNo)
+  const bill = db.Bill()
+  const sponsoredBills = []
+
+  await bill
+    .where('sponsorName', '==', repName)
+    .select()
+    .then(result => {
+      if (result.empty) {
+        console.log('No sponsored bills for ' + repName)
+        return []
+      }
+      result.forEach(bill => {
+        sponsoredBills.push(bill)
+      })
+    }).catch(e => console.log('invalid parameters', e))
+  return sponsoredBills
+}
+
+exports.getAllBillsBySponsorName = async (req, res) => {
+  const repName = req.params.head.toLowerCase()
+  const parliament = 43
+  const rawData = await getIssuedBillsParliament43(parliament, repName)
+  res.status(200).json({
+    success: true,
+    data: rawData.length
+  })
+}
+
 exports.fetchCategoriesFromTxtFiles = async (req, res) => {
   const dir = path.join(__dirname, '../util/action/classify_action/vocabularies/')
   if (fs.existsSync(dir)) {
