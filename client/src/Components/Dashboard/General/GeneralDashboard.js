@@ -153,7 +153,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 1.5)
   },
   content: {
-    padding: theme.spacing(2, 0, 6)
+    padding: theme.spacing(2, 0, 2)
   },
   prime: {
     marginTop: '30px',
@@ -174,6 +174,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'baseline',
     marginBottom: theme.spacing(2),
     marginRight: theme.spacing(4)
+  },
+  seatPad: {
+    paddingLeft: '150px'
   }
 }))
 
@@ -253,7 +256,7 @@ export default function GeneralDashboard () {
               color='textPrimary'
               gutterBottom
             >
-              Your Government
+              My Government
             </Typography>
           </Container>
           <SeatingPlan partiesToUse={parties} classes={classes} />
@@ -265,6 +268,7 @@ export default function GeneralDashboard () {
               className={classes.prime}
               alignItems='center'
               direction='row'
+              justify='center'
             >
               <Grid
                 item
