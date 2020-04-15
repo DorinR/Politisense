@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 26,
     width: 150,
     height: 150,
-    border: '3px solid #00BCD4'
+    border: '3px solid #00BCD4',
   },
   card: {
     width: 420,
@@ -216,6 +216,7 @@ export default function Party(props) {
   useEffect(() => {
     if (isDoneLoadingBillsData && isDoneLoadingSpendingData) {
       setLoadingComplete(true)
+      setIsLoadingData(false)
     }
   }, [party, isDoneLoadingBillsData, isDoneLoadingSpendingData])
 
