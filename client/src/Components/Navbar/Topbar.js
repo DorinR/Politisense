@@ -105,42 +105,6 @@ const Topbar = withRouter((props) => {
           style={{ color: 'white', textTransform: 'none' }}
           variant='text'
           onClick={() => {
-            props.history.push('/general')
-          }}
-        >
-          General
-        </Button>
-        <Button
-          style={{ color: 'white', textTransform: 'none' }}
-          variant='text'
-          onClick={() => {
-            props.history.push('/myRepresentative')
-          }}
-        >
-          My MP
-        </Button>
-        <Button
-          style={{ color: 'white', textTransform: 'none' }}
-          variant='text'
-          onClick={() => {
-            props.history.push('/compare')
-          }}
-        >
-          Compare
-        </Button>
-        <Button
-          style={{ color: 'white', textTransform: 'none' }}
-          variant='text'
-          onClick={() => {
-            props.history.push('/map')
-          }}
-        >
-          Map
-        </Button>
-        <Button
-          style={{ color: 'white', textTransform: 'none' }}
-          variant='text'
-          onClick={() => {
             props.history.push('/account')
           }}
         >
