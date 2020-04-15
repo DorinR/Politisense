@@ -126,6 +126,7 @@ export default function Voting () {
       }
       )
     }
+    console.log(filtered)
     setfilteredBills(filtered)
   }, [filter, recentBills])
 
@@ -175,6 +176,7 @@ export default function Voting () {
       .then(res => {
         if (res.data.success) {
           setHasNotClicked([...hasNotClicked, index])
+          window.location.reload(false)
         }
       })
       .catch(err => console.log(err))
