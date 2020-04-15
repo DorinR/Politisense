@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
 import InfoBubble from '../../Utilities/InfoBubble'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   content: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6)
@@ -33,14 +33,14 @@ export default function CompareParties () {
   const [party1, setParty1] = useState('')
   const [party2, setParty2] = useState('')
 
-  const updateHead1 = head => {
+  const updateHead1 = (head) => {
     if (head === party1 || head === '') {
     } else {
       setParty1(head)
     }
   }
 
-  const updateHead2 = head => {
+  const updateHead2 = (head) => {
     if (party2 === head || head === '') {
     } else {
       setParty2(head)
@@ -56,6 +56,15 @@ export default function CompareParties () {
       <CssBaseline />
       <div>
         <Container maxWidth='l'>
+          <Typography
+            component='h1'
+            variant='h2'
+            align='center'
+            color='textPrimary'
+            gutterBottom
+          >
+            Compare
+          </Typography>
           <Container>
             <Typography
               component='h4'

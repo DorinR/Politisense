@@ -10,7 +10,7 @@ import D3ChartHeadVsHeadContainer from '../D3ChartHeadVsHeadContainer'
 import Grow from '@material-ui/core/Grow'
 import InfoBubble from '../Utilities/InfoBubble'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   content: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6)
@@ -45,7 +45,7 @@ export default function CompareRepresentatives () {
   const [head2, setHead2] = useState('')
   const [dataSet, setDataSet] = useState([])
 
-  const updateHead1 = head => {
+  const updateHead1 = (head) => {
     if (head === head1 || head === '') {
     } else {
       setDataSet([])
@@ -53,7 +53,7 @@ export default function CompareRepresentatives () {
     }
   }
 
-  const updateHead2 = head => {
+  const updateHead2 = (head) => {
     if (head2 === head || head === '') {
     } else {
       setHead2(head)
@@ -101,7 +101,8 @@ export default function CompareRepresentatives () {
   }, [head1, head2])
 
   const compareRepsExplanationTitle = 'Compare Representatives'
-  const compareRepsExplanationDescription = 'Compare your representative\'s information and contributions to previous representatives of the same riding.'
+  const compareRepsExplanationDescription =
+    "Compare your representative's information and contributions to previous representatives of the same riding."
 
   return (
     <>
