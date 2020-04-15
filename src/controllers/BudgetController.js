@@ -1,5 +1,6 @@
 const Firestore = require('@firestore').Firestore
 const ExpenditureComputeAction = require('@action').ExpenditureComputeAction
+const Utils = require('./util/ActivityVotingUtils')
 
 function fetchAverageExpenditures (parliament = 43, year = 2019) {
   return new Firestore()
@@ -45,6 +46,34 @@ function fetchMemberExpenditures (member, parliament = 43, year = 2019) {
         })
     })
     .catch(console.error)
+}
+
+exports.pastMemberExpenditures = async (req, res) => {
+  const ParliamentToYears = {
+    40: [2012],
+    41: [2013, 2014],
+    42: [2015, 2016, 2017, 2018],
+    43: [2019]
+  }
+  const parliament = req.body.parliament
+  const years = ParliamentToYears[`${parliament}`]
+  Promise.all(
+    years.map(year => {
+      return fetchMemberExpenditures(req.params.member, parliament, year)
+    })
+  )
+    .then(expenditures => {
+      return expenditures.map(expenditure => {
+        return expenditure.reduce((a, b) => { return a + b })
+      })
+    })
+    .then(data => {
+      Utils.success(res, 'expenditures retreived', data)
+    })
+    .catch(e => {
+      console.log(e)
+      Utils.error(res, 500, 'unspecified server error')
+    })
 }
 
 exports.budgetData = async (req, res) => {
