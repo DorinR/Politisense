@@ -10,7 +10,7 @@ import Radio from '@material-ui/core/Radio'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { formattingCategory } from './Utilities/CommonUsedFunctions'
 
-export function ConfirmationDialogRaw(props) {
+export function ConfirmationDialogRaw (props) {
   const { onClose, value: valueProp, open, ...other } = props
   const [value, setValue] = React.useState(valueProp)
   const radioGroupRef = React.useRef(null)

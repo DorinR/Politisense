@@ -19,7 +19,6 @@ import { getIpPostalCode } from './GetIpAddress'
 import ListItemText from '@material-ui/core/ListItemText'
 import Divider from '@material-ui/core/Divider'
 import TextField from '@material-ui/core/TextField'
-import Container from '@material-ui/core/Container'
 
 const useStyles = makeStyles({
     card: {
@@ -109,8 +108,8 @@ export default function Voting() {
     const preventDefault = (event) => event.preventDefault()
     const [userEmail, setUserEmail] = useState('')
     const [hasNotClicked, setHasNotClicked] = useState([])
-    const [filter, setFilter] = React.useState('')
-    const [filteredBills, setfilteredBills] = React.useState([])
+    const [filter, setFilter] = useState('')
+    const [filteredBills, setfilteredBills] = useState([])
 
     useEffect(() => {
         async function getData() {
@@ -121,13 +120,7 @@ export default function Voting() {
             setStoragePostalCode(postalCode)
             const ipAddress = await getIpPostalCode()
             setIpPostalCode(ipAddress)
-            // const voting = await fetchVotingActivity(user.email)
-            // console.log("voting ", voting.slice(0, 100))
-            // console.log("voting userHasVoted", voting[0].userHasVoted)
-            // const recentLegislativeActivities = await fetchRecentBills()
             const recentLegislativeActivities = await fetchVotingActivity(user.email)
-            // console.log("recentLegislativeActivities ", recentLegislativeActivities)
-            //const listBills = recentLegislativeActivities[0].data[0]
             console.log(recentLegislativeActivities.slice(0, 100))
             setRecentBills(recentLegislativeActivities.slice(0, 100))
         }
@@ -154,11 +147,11 @@ export default function Voting() {
         event.preventDefault()
         if (event.currentTarget.value === 'yes') {
             // eslint-disable-next-line
-            alert('You voted For this bill')
+            alert('You voted For this bill. Reload to see results')
         }
         if (event.currentTarget.value === 'no') {
             // eslint-disable-next-line
-            alert('You voted Against this bill')
+            alert('You voted Against this bill. Reload to see results')
         }
 
         registerVote(userEmail, number, title, link, description, date, event.currentTarget.value, index)
@@ -197,8 +190,6 @@ export default function Voting() {
             .catch(err => console.log(err))
     }
 
-    // !hasNotClicked.includes(index)
-
     return (
         <Grid>
             <TextField
@@ -210,7 +201,6 @@ export default function Voting() {
             />
             {filteredBills && filteredBills.length > 0 ? (
                 <Grid item xs={12} align='center'>
-                    {/* {filteredBills.map((recentBills) => ( */}
                     <List className={classes.root}>
                         {filteredBills.map((bills, index) => (
                             <ListItem key={index} value={bills}>
@@ -262,7 +252,6 @@ export default function Voting() {
                             </ListItem>
                         ))}
                     </List>
-                // ))}
                 </Grid>) : (
                     <Typography variant='h5' component='h2'>
                         No Results Found
@@ -272,4 +261,3 @@ export default function Voting() {
     )
 
 }
-

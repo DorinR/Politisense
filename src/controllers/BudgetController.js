@@ -1,7 +1,7 @@
 const Firestore = require('@firestore').Firestore
 const ExpenditureComputeAction = require('@action').ExpenditureComputeAction
 
-function fetchAverageExpenditures(parliament = 43, year = 2019) {
+function fetchAverageExpenditures (parliament = 43, year = 2019) {
   return new Firestore()
     .forParliament(parliament)
     .atYear(year)
@@ -28,7 +28,7 @@ function fetchAverageExpenditures(parliament = 43, year = 2019) {
     .catch(console.error)
 }
 
-function fetchMemberExpenditures(member, parliament = 43, year = 2019) {
+function fetchMemberExpenditures (member, parliament = 43, year = 2019) {
   return new ExpenditureComputeAction({
     parliament: parliament,
     year: year,

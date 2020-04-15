@@ -56,11 +56,11 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function CategoryGrid(props) {
+export default function CategoryGrid (props) {
   const classes = useStyles()
   const [categoryList, setCategoryList] = React.useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (props.user) {
         const interests = await getUserInterests(props.user.email)
         setCategoryList(interests)
@@ -69,7 +69,7 @@ export default function CategoryGrid(props) {
     getData()
   }, [props.user])
 
-  async function getUserInterests(email) {
+  async function getUserInterests (email) {
     return axios
       .post('/api/users/getUserInterests', { email: email })
       .then(res => {
@@ -115,7 +115,7 @@ export default function CategoryGrid(props) {
       .catch(console.error)
   }
 
-  async function updateUserCategory(categoryList) {
+  async function updateUserCategory (categoryList) {
     return axios
       .post('/api/users/updateUserCategory', {
         email: props.user.email,

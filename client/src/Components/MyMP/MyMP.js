@@ -31,15 +31,15 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function MyMP(props) {
-  console.log("INSIDE MY MP")
+export default function MyMP (props) {
+  console.log('INSIDE MY MP')
   const classes = useStyles()
   const [user, setUser] = useState(null)
   const [barPieRows, setBarPieRows] = React.useState([])
   const [categoryList, setCategoryList] = React.useState(null)
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const categories = await fetchCategoriesFromTxtFiles()
       setCategoryList(categories)
     }
@@ -54,7 +54,7 @@ export default function MyMP(props) {
     }
   }, [user])
 
-  async function getAllRepsFromAllParliaments() {
+  async function getAllRepsFromAllParliaments () {
     return axios
       .get('/api/representatives/getAllRepsFromAllParliaments')
       .then(res => {
@@ -66,7 +66,7 @@ export default function MyMP(props) {
   }
   const [allMPsFromAllParliaments, setAllMPsFromAllParliaments] = React.useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const mpsFromAllParliaments = await getAllRepsFromAllParliaments()
       setAllMPsFromAllParliaments(mpsFromAllParliaments)
     }
@@ -75,7 +75,7 @@ export default function MyMP(props) {
 
   const [riding, setRiding] = useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (user) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -86,7 +86,7 @@ export default function MyMP(props) {
 
   const [userRepresentative, setUserRepresentative] = React.useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (riding) {
         const representative = await fetchRepresentative(riding)
         setUserRepresentative(representative)
@@ -95,7 +95,7 @@ export default function MyMP(props) {
     getData()
   }, [riding])
 
-  async function getAllBillsByRepForAllParliaments(head) {
+  async function getAllBillsByRepForAllParliaments (head) {
     return axios
       .get(`/api/bills/${head}/getAllBillsByRepForAllParliaments`)
       .then(res => {
@@ -108,7 +108,7 @@ export default function MyMP(props) {
   const [radarDataRows, setRadarDataRows] = React.useState(null)
   const [representativeData, setRepresentativeData] = React.useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (userRepresentative) {
         const billsByRep = await getAllBillsByRepForAllParliaments(userRepresentative.name)
         setRepresentativeData(billsByRep)
@@ -118,7 +118,7 @@ export default function MyMP(props) {
   }, [userRepresentative])
 
   useEffect(() => {
-    function getData() {
+    function getData () {
       if (categoryList && representativeData) {
         const radarRows = createRadarRows(representativeData, categoryList)
         setRadarDataRows(radarRows)
@@ -127,7 +127,7 @@ export default function MyMP(props) {
     getData()
   }, [representativeData, categoryList])
 
-  async function getAllBillsBySponsorForAllParliaments(head) {
+  async function getAllBillsBySponsorForAllParliaments (head) {
     return axios
       .get(`/api/bills/${head}/getAllBillsBySponsorForAllParliaments`)
       .then(res => {
@@ -139,7 +139,7 @@ export default function MyMP(props) {
   }
   const [uniqueIssuedBills, setUniqueIssuedBills] = React.useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (userRepresentative) {
         const issuedBillByUserRep = await getAllBillsBySponsorForAllParliaments(
           userRepresentative.name
@@ -157,7 +157,7 @@ export default function MyMP(props) {
 
   const [userRepIssuedBills, setUserRepIssuedBills] = React.useState(null)
   useEffect(() => {
-    function getData() {
+    function getData () {
       if ((uniqueIssuedBills && uniqueIssuedBills.length !== 0)) {
         setUserRepIssuedBills(uniqueIssuedBills)
       }
@@ -166,7 +166,7 @@ export default function MyMP(props) {
   }, [uniqueIssuedBills])
 
   useEffect(() => {
-    function getData() {
+    function getData () {
       if (userRepIssuedBills) {
         const rows = createDataPieBarTable(categoryList, userRepIssuedBills)
         setBarPieRows(rows)
@@ -177,7 +177,7 @@ export default function MyMP(props) {
 
   const [donutData, setDonutData] = React.useState(null)
   useEffect(() => {
-    function getDataForDonutD3() {
+    function getDataForDonutD3 () {
       if (allMPsFromAllParliaments && representativeData) {
         const data = createDataSetDonut(allMPsFromAllParliaments, representativeData)
         setDonutData(data)

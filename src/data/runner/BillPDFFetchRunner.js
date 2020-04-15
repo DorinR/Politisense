@@ -9,7 +9,7 @@ const InvalidParameterError = require('../error/errors').InvalidParameterError
 const Parameters = require('@parameter')
 
 class BillPDFFetchRunner extends QueueManager {
-  static create(params, wait = 5000) {
+  static create (params, wait = 5000) {
     const manager = new BillPDFFetchRunner(params, wait)
     manager
       .setStartAction(new StartAction(manager))
@@ -19,7 +19,7 @@ class BillPDFFetchRunner extends QueueManager {
     return manager
   }
 
-  constructor(params, wait = 5000) {
+  constructor (params, wait = 5000) {
     super(wait)
     if (!params[0].url) {
       throw new InvalidParameterError('ERROR: no url to bill pdf provided')
@@ -36,7 +36,7 @@ class BillPDFFetchRunner extends QueueManager {
     this.maxQueryCount = this.queryCount
   }
 
-  finish() {
+  finish () {
     console.log(`INFO: ${BillPDFFetchRunner.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 }

@@ -24,7 +24,6 @@ import AppBar from '@material-ui/core/AppBar'
 import Topbar from './Topbar'
 import Avatar from '@material-ui/core/Avatar'
 import { withRouter } from 'react-router-dom'
-import { getIpInfo } from '../Dashboard/Polls/GetIpAddress'
 
 const drawerWidth = 220
 const drawerWidthXlMode = 250
@@ -189,7 +188,7 @@ const Sidebar = withRouter((props) => {
   const theme = useTheme()
   const [user, setUser] = useState(null)
   const [openSidebar, setOpenSidebar] = useState(true)
-  const [userCountry, setUserCountry] = useState("")
+  const [userCountry] = useState('')
   const handleSidebarOpen = () => {
     setOpenSidebar(true)
   }
@@ -206,7 +205,7 @@ const Sidebar = withRouter((props) => {
 
   const [riding, setRiding] = useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (user) {
         const riding = await fetchUserRiding(user.email)
         setRiding(riding)
@@ -217,7 +216,7 @@ const Sidebar = withRouter((props) => {
 
   const [representative, setRepresentative] = useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (riding) {
         const rep = await fetchRepresentative(riding)
         setRepresentative(rep)
@@ -228,7 +227,7 @@ const Sidebar = withRouter((props) => {
 
   const [ridingCode, setRidingCode] = useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (riding) {
         const code = await fetchRidingCode(riding)
         setRidingCode(code)
@@ -295,8 +294,8 @@ const Sidebar = withRouter((props) => {
                   onClick={handleSidebarClose}
                 />
               ) : (
-                  <ChevronRightIcon />
-                )}
+                <ChevronRightIcon />
+              )}
             </ListItem>
           </List>
         </div>

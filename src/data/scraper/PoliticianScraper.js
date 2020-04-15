@@ -3,7 +3,7 @@ const Components = require('@manager')
 const Parameters = require('@parameter')
 
 class PoliticianScraper extends Components.QueueManager {
-  static create(params, wait = 5000) {
+  static create (params, wait = 5000) {
     const manager = new PoliticianScraper(params, wait)
     manager
       .setStartAction(new Components.Start.Politician(manager))
@@ -14,7 +14,7 @@ class PoliticianScraper extends Components.QueueManager {
     return manager
   }
 
-  constructor(params, wait = 5000) {
+  constructor (params, wait = 5000) {
     super(wait)
     this.parliaments = []
     this.setParliaments(params.parliaments)
@@ -32,11 +32,11 @@ class PoliticianScraper extends Components.QueueManager {
     this.maxQueryCount = this.queryCount
   }
 
-  finish() {
+  finish () {
     console.log(`INFO: ${PoliticianScraper.name}: Data found for ${this.queryCount}/${this.maxQueryCount} queries from passed params`)
   }
 
-  setParliaments(parliaments) {
+  setParliaments (parliaments) {
     if (typeof parliaments === 'undefined' ||
       (typeof parliaments === typeof '' && parliaments.toLowerCase().includes('all'))) {
       this.parliaments.push('all')
@@ -47,7 +47,7 @@ class PoliticianScraper extends Components.QueueManager {
     }
   }
 
-  setCaucuses(caucuses) {
+  setCaucuses (caucuses) {
     if (typeof caucuses === 'undefined' ||
       (typeof caucuses === typeof ' ' && caucuses.toLowerCase().includes('all'))) {
       this.caucuses.push('all')
@@ -59,7 +59,7 @@ class PoliticianScraper extends Components.QueueManager {
     }
   }
 
-  setProvinces(provinces) {
+  setProvinces (provinces) {
     if (typeof provinces === 'undefined' ||
       (typeof provinces === typeof ' ' && provinces.toLowerCase().includes('all'))) {
       this.provinces.push('all')
@@ -70,7 +70,7 @@ class PoliticianScraper extends Components.QueueManager {
     }
   }
 
-  setGenders(genders) {
+  setGenders (genders) {
     if (typeof genders === 'undefined' ||
       (typeof genders === typeof ' ' && genders.toLowerCase().includes('all'))) {
       this.genders.push('all')
@@ -84,7 +84,7 @@ class PoliticianScraper extends Components.QueueManager {
     }
   }
 
-  setLastNamePrefixes(lastNamePrefixes) {
+  setLastNamePrefixes (lastNamePrefixes) {
     if (typeof lastNamePrefixes === 'undefined' ||
       (typeof lastNamePrefixes === 'string' && lastNamePrefixes.toLowerCase().includes('all'))) {
       this.lastNamePrefixes.push('')
@@ -98,7 +98,7 @@ class PoliticianScraper extends Components.QueueManager {
     }
   }
 
-  createQueries(url) {
+  createQueries (url) {
     this.parliaments.forEach(parliament => {
       this.caucuses.forEach(caucus => {
         this.provinces.forEach(province => {

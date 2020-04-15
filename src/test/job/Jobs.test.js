@@ -15,16 +15,16 @@ describe('Jobs', () => {
 
   }
   beforeAll(() => {
-    jobs.push(Jobs.BillPDFFetchJob.create(params, () => {}))
-    jobs.push(Jobs.BillLinkFetchJob.create(params, () => {}))
-    jobs.push(Jobs.ClassificationJob.create(params, () => {}))
-    jobs.push(Jobs.PoliticianFetchJob.create(params, () => {}))
-    jobs.push(Jobs.RoleFetchJob.create(params, () => {}))
-    jobs.push(Jobs.ScrapeJob.create(params, () => {}))
-    jobs.push(Jobs.VoteParticipantFetchJob.create(params, () => {}))
-    jobs.push(Jobs.VoteRecordFetchJob.create(params, () => {}))
-    jobs.push(Jobs.CategoryGenerationJob.create(params, () => {}))
-    jobs.push(Jobs.LegislativeActivityFetchJob.create(params, () => {}))
+    jobs.push(Jobs.BillPDFFetchJob.create(params, () => { }))
+    jobs.push(Jobs.BillLinkFetchJob.create(params, () => { }))
+    jobs.push(Jobs.ClassificationJob.create(params, () => { }))
+    jobs.push(Jobs.PoliticianFetchJob.create(params, () => { }))
+    jobs.push(Jobs.RoleFetchJob.create(params, () => { }))
+    jobs.push(Jobs.ScrapeJob.create(params, () => { }))
+    jobs.push(Jobs.VoteParticipantFetchJob.create(params, () => { }))
+    jobs.push(Jobs.VoteRecordFetchJob.create(params, () => { }))
+    jobs.push(Jobs.CategoryGenerationJob.create(params, () => { }))
+    jobs.push(Jobs.LegislativeActivityFetchJob.create(params, () => { }))
   })
 
   test('BillPDFFetchJob.js', async (done) => {
@@ -83,11 +83,7 @@ describe('Jobs', () => {
     Assert.equal(job.registry[2], 'BillClassificationAction')
 
     Assert.equal(job.actions[3].name, 'bound perform')
-<<<<<<< Updated upstream
-    Assert.equal(job.registry[3], 'ClassificationResultAdapterAction')
-=======
     Assert.equal(job.registry[3], 'QueryResponseAdapterAction')
->>>>>>> Stashed changes
     done()
   })
 

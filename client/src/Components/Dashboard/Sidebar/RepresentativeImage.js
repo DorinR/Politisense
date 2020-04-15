@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export default function RepresentativeImage(props) {
+export default function RepresentativeImage (props) {
   const classes = useStyles()
   return (
     <div>

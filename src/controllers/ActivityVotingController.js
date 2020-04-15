@@ -19,8 +19,8 @@ module.exports.index = async (req, res) => {
 
   const activityMap = utils.duplicateActivityMap(storedActivities)
   newActivities = newActivities.map(activity => {
-      return utils.replaceNewVotesWithExisting(activity, activityMap)
-    })
+    return utils.replaceNewVotesWithExisting(activity, activityMap)
+  })
   utils.success(res, 'successfully retrieved activity list', newActivities)
 }
 

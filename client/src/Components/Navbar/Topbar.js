@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import clsx from 'clsx'
@@ -112,13 +113,12 @@ const Topbar = withRouter((props) => {
         >Map
         </Button>
         {props.country && props.country === 'Canada'
-          ?
-          <Button
+          ? <Button
             style={{ color: 'white', textTransform: 'none' }} variant='text'
             onClick={() => { props.history.push('/polls') }}
           >
             Polls
-              </Button> : ''}
+            </Button> : ''}
         <Button
           style={{ color: 'white', textTransform: 'none' }} variant='text'
           onClick={() => { props.history.push('/account') }}

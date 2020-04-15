@@ -23,11 +23,11 @@ import CenteredCircularProgress from '../Utilities/CenteredCircularProgress'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 const capitalize = require('capitalize')
 
-export const Transition = React.forwardRef(function Transition(props, ref) {
+export const Transition = React.forwardRef(function Transition (props, ref) {
   return <Slide direction='up' ref={ref} {...props} />
 })
 
-async function getMinisters(setPrimeMinister) {
+async function getMinisters (setPrimeMinister) {
   return axios
     .get('/api/parliament/getCabinetMinisters')
     .then((res) => {
@@ -66,7 +66,7 @@ async function getMinisters(setPrimeMinister) {
     .catch((err) => console.error(err))
 }
 
-async function getPartyInfo() {
+async function getPartyInfo () {
   return axios
     .get('/api/parliament/getPartyInfo')
     .then((res) => {
@@ -177,7 +177,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export function getLink(str) {
+export function getLink (str) {
   const nameArr = str.split(' ')
   return (
     'https://pm.gc.ca/en/cabinet/right-honourable-' +
@@ -187,7 +187,7 @@ export function getLink(str) {
   )
 }
 
-export default function GeneralDashboard() {
+export default function GeneralDashboard () {
   const classes = useStyles()
   const [ministerOpen, setMinisterOpen] = React.useState(false)
   const [currentMinistry, setCurrentMinistry] = React.useState('')
@@ -200,7 +200,7 @@ export default function GeneralDashboard() {
   const small = useMediaQuery(theme => theme.breakpoints.down('sm'))
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const mins = await getMinisters(setPrimeMinister)
       setMinisters(mins)
     }
@@ -208,7 +208,7 @@ export default function GeneralDashboard() {
   }, [])
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       const partyInfo = await getPartyInfo()
       setParties(partyInfo)
     }
@@ -316,12 +316,12 @@ export default function GeneralDashboard() {
                       </ul>
                     </CardContent>
                   ) : (
-                      <Grid container alignItems='center' justify='center'>
-                        <Grid item>
-                          <CircularProgress />
-                        </Grid>
+                    <Grid container alignItems='center' justify='center'>
+                      <Grid item>
+                        <CircularProgress />
                       </Grid>
-                    )}
+                    </Grid>
+                  )}
                 </Card>
               </Grid>
             </Grid>
@@ -393,20 +393,20 @@ export default function GeneralDashboard() {
                   </Grid>
                 ))
               ) : (
-                  <Grid item xs={1}>
-                    <Typography variant='h5' component='h2'>
+                <Grid item xs={1}>
+                  <Typography variant='h5' component='h2'>
                       No Results Found
                   </Typography>
-                  </Grid>
-                )}
+                </Grid>
+              )}
             </Grid>
           </Container>
         </div>
       ) : (
-          <div>
-            <CenteredCircularProgress />
-          </div>
-        )}
+        <div>
+          <CenteredCircularProgress />
+        </div>
+      )}
       <MinisterHelpDialog
         ministry={currentMinistry}
         open={ministerOpen}

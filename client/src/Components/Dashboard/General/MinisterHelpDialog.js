@@ -6,13 +6,13 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import { getDescription } from '../Utilities/CommonUsedFunctions'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-export default function MinisterHelpDialog(props) {
+export default function MinisterHelpDialog (props) {
   const { onClose, open } = props
   const [text, setText] = React.useState('')
 
   useEffect(() => {
     setText('')
-    async function getData() {
+    async function getData () {
       const desc = await getDescription(props.ministry)
       setText(desc)
     }

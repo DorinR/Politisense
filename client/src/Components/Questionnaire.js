@@ -63,11 +63,11 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function getSteps() {
+function getSteps () {
   return ['Voting Issue', 'Area of Interest', 'Postal Code']
 }
 
-async function validateRiding(postalCode) {
+async function validateRiding (postalCode) {
   return axios.post('/api/users/setRiding', {
     postalCode: postalCode
   })
@@ -82,7 +82,7 @@ async function validateRiding(postalCode) {
     })
 }
 
-export default function HorizontalLinearStepper(props) {
+export default function HorizontalLinearStepper (props) {
   const classes = useStyles()
   const [activeStep, setActiveStep] = useState(0)
   const steps = getSteps()
@@ -102,14 +102,14 @@ export default function HorizontalLinearStepper(props) {
 
   const [options, setOptions] = useState([])
   React.useEffect(() => {
-    async function getCategoryList() {
+    async function getCategoryList () {
       const categories = await fetchCategoriesFromTxtFiles()
       setOptions(categories)
     }
     getCategoryList()
   }, [])
 
-  function getStepContent(step) {
+  function getStepContent (step) {
     switch (step) {
       case 0:
         return (
@@ -323,30 +323,30 @@ export default function HorizontalLinearStepper(props) {
                   </Button>
                 </div>
               ) : (
-                  <div>
-                    <div className={classes.question}>
-                      <div className={classes.instructions}>
-                        {getStepContent(activeStep)}
-                      </div>
-                    </div>
-                    <div className={classes.actions}>
-                      <Button
-                        onClick={handleBack}
-                        className={classes.button}
-                      >
-                        Back
-                    </Button>
-                      <Button
-                        variant='contained'
-                        color='primary'
-                        onClick={handleNext}
-                        className={classes.button}
-                      >
-                        Next
-                    </Button>
+                <div>
+                  <div className={classes.question}>
+                    <div className={classes.instructions}>
+                      {getStepContent(activeStep)}
                     </div>
                   </div>
-                )}
+                  <div className={classes.actions}>
+                    <Button
+                      onClick={handleBack}
+                      className={classes.button}
+                    >
+                        Back
+                    </Button>
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      onClick={handleNext}
+                      className={classes.button}
+                    >
+                        Next
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           </Grid>
         </Grid>

@@ -20,7 +20,7 @@ const config = {
 Object.freeze(config)
 
 class _Firestore {
-  constructor() {
+  constructor () {
     this.config = config
     if (fs.apps.length === 0) {
       this.app = fs.initializeApp(this.config)
@@ -33,7 +33,7 @@ class _Firestore {
 }
 
 var instance = null
-function getInstance() {
+function getInstance () {
   if (!instance) {
     instance = new _Firestore()
   }
@@ -41,7 +41,7 @@ function getInstance() {
 }
 
 class Firestore {
-  constructor(legacy = false) {
+  constructor (legacy = false) {
     this.firestore = getInstance()
     this.reference = this.firestore.db
     this.firebase = this.firestore.firebase
@@ -50,134 +50,134 @@ class Firestore {
     this.legacy = legacy
   }
 
-  forParliament(parliament) {
+  forParliament (parliament) {
     this.parliament = parliament
     return this
   }
 
-  atYear(year) {
+  atYear (year) {
     this.year = year
     return this
   }
 
-  AverageExpenditure() {
+  AverageExpenditure () {
     Firestore.legacyCollectionError(this.legacy)
     const collection = `${this.parliament}/politicians/expenditure/${this.year}/averages`
     return this.createReference(collection)
   }
 
-  Admin() {
+  Admin () {
     Firestore.legacyCollectionError(this.legacy)
     const collection = 'static/users/admin'
     return this.createReference(collection)
   }
 
-  Bill() {
+  Bill () {
     const collection = this.legacy ? 'bills' : `${this.parliament}/bills/bill`
     return this.createReference(collection)
   }
 
-  BillClassification() {
+  BillClassification () {
     const collection = this.legacy
       ? 'bill_classification'
       : `${this.parliament}/bills/tag`
     return this.createReference(collection)
   }
 
-  FinancialRecord() {
+  FinancialRecord () {
     const collection = this.legacy
       ? 'financialRecord'
       : `${this.parliament}/politicians/expenditure/${this.year}/expenditures`
     return this.createReference(collection)
   }
 
-  MinisterDescription() {
+  MinisterDescription () {
     Firestore.legacyCollectionError(this.legacy)
     const collection = 'static/minister_descriptions/description'
     return this.createReference(collection)
   }
 
-  PoliticalParty() {
+  PoliticalParty () {
     const collection = this.legacy
       ? 'parties'
       : `${this.parliament}/parties/party`
     return this.createReference(collection)
   }
 
-  LegislativeActivityVote() {
+  LegislativeActivityVote () {
     Firestore.legacyCollectionError(this.legacy)
     return this.createReference(
       `${this.parliament}/legislative_activities/vote`
     )
   }
 
-  LegislativeActivity() {
+  LegislativeActivity () {
     Firestore.legacyCollectionError(this.legacy)
     return this.createReference(
       `${this.parliament}/legislative_activities/activity`
     )
   }
 
-  Politician() {
+  Politician () {
     const collection = this.legacy
       ? 'politicians'
       : `${this.parliament}/politicians/politician`
     return this.createReference(collection)
   }
 
-  Riding() {
+  Riding () {
     const collection = this.legacy ? 'ridings' : 'static/ridings/riding'
     return this.createReference(collection)
   }
 
-  Role() {
+  Role () {
     const collection = this.legacy ? 'roles' : `${this.parliament}/roles/role`
     return this.createReference(collection)
   }
 
-  TfIdfClassification() {
+  TfIdfClassification () {
     const collection = this.legacy
       ? 'tf_idf_bill'
       : `${this.parliament}/bills/raw`
     return this.createReference(collection)
   }
 
-  User() {
+  User () {
     const collection = this.legacy ? 'users' : 'static/users/user'
     return this.createReference(collection)
   }
 
-  Vote() {
+  Vote () {
     const collection = this.legacy
       ? 'votes'
       : `${this.parliament}/voters/voter`
     return this.createReference(collection)
   }
 
-  VoteRecord() {
+  VoteRecord () {
     const collection = this.legacy
       ? 'voteRecord'
       : `${this.parliament}/vote_records/vote_record`
     return this.createReference(collection)
   }
 
-  MapSupportData() {
+  MapSupportData () {
     Firestore.legacyCollectionError(this.legacy)
     const collection = 'static/map_support_data/map_support_data'
     return this.createReference(collection)
   }
 
-  createReference(collection) {
+  createReference (collection) {
     return new Reference(this.reference.collection(collection), collection)
   }
 
-  static legacyCollectionError(legacy) {
+  static legacyCollectionError (legacy) {
     if (legacy) {
       throw new Error('ERROR: collection not available in legacy mode')
     }
   }
 
-  async close() {
+  async close () {
     await this.firestore.app
       .delete()
       .then(result => {
@@ -189,7 +189,7 @@ class Firestore {
       .catch(e => { })
   }
 
-  static copyCollection(from, to) {
+  static copyCollection (from, to) {
     return new Promise(resolve => {
       from
         .select()

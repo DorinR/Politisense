@@ -7,13 +7,13 @@ const Parameters = require('@parameter')
 const InsertAction = require('../../action/classify_action/UpdateCollectionAction').UpdateCollectionAction
 
 class UpdateBeforeAction extends QueueAction {
-  constructor(manager) {
+  constructor (manager) {
     super()
     this.manager = manager
     this.updates = new UpdateGraph().orderedUpdates(manager.params)
   }
 
-  async perform() {
+  async perform () {
     let currentDepth = -1
     let index = 0
     this.manager.params = []
@@ -75,7 +75,7 @@ class UpdateBeforeAction extends QueueAction {
     console.log(`INFO: ${UpdateBeforeAction.name}: structured updates into ${this.manager.updateJobQueue.length} phases`)
   }
 
-  static createParams(vertex) {
+  static createParams (vertex) {
     const params = {
       parliaments: Object.assign(Parameters.Parliament.Number),
       sessions: Object.assign(Parameters.Parliament.Session),
@@ -87,7 +87,7 @@ class UpdateBeforeAction extends QueueAction {
     return params
   }
 
-  static addActions(job, params, update) {
+  static addActions (job, params, update) {
     // eslint-disable-next-line new-cap
     const typeCheck = new update.type(params)
     if (typeCheck instanceof QueueManager) {

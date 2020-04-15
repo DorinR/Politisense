@@ -4,13 +4,13 @@ const Model = require('@firestore').Models.Model
 const Parameters = require('@parameter')
 
 class UpdateCollectionAction extends Action {
-  constructor(params) {
+  constructor (params) {
     super()
     const { collection } = params
     this.collection = collection
   }
 
-  async perform(results) {
+  async perform (results) {
     if (results.length === 0) {
       return []
     }
@@ -37,12 +37,12 @@ class UpdateCollectionAction extends Action {
     )
   }
 
-  static sanitiseCollection(parliament, collection) {
+  static sanitiseCollection (parliament, collection) {
     return collection()
       .delete()
   }
 
-  static removeDuplicates(results) {
+  static removeDuplicates (results) {
     let i = 0
     while (i < results.length) {
       const { params, data } = results[i]
@@ -63,7 +63,7 @@ class UpdateCollectionAction extends Action {
     }
   }
 
-  addData(db, collection, data) {
+  addData (db, collection, data) {
     let first = true
     return Promise.all(
       data.map(datum => {
@@ -82,14 +82,14 @@ class UpdateCollectionAction extends Action {
     })
   }
 
-  static getData(data) {
+  static getData (data) {
     if (Array.isArray(data[0])) {
       data = data.flat()
     }
     return data
   }
 
-  static getParliament(params) {
+  static getParliament (params) {
     let parliament
     if (params.parliament) {
       parliament = params.parliament
@@ -103,7 +103,7 @@ class UpdateCollectionAction extends Action {
     return parliament
   }
 
-  static createNewCollectionReference(db, collection) {
+  static createNewCollectionReference (db, collection) {
     const hierarchy = collection().hierarchy()
     let ref = db.reference.collection(hierarchy[0])
     ref = ref.doc(hierarchy[1])

@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export async function signupAPICall(user) {
+export async function signupAPICall (user) {
   return axios
     .post('/api/users/checkIfUserExists', user)
     .then(res => {
@@ -55,7 +55,7 @@ export async function signupAPICall(user) {
     .catch(console.error)
 }
 
-export default function SignUp(props) {
+export default function SignUp (props) {
   const classes = useStyles()
   const refs = {}
   const [email, setEmail] = useState('')
@@ -72,7 +72,7 @@ export default function SignUp(props) {
     passwordConfirm: ''
   })
 
-  function checkIfFormIsValid() {
+  function checkIfFormIsValid () {
     if (firstname && lastname && email && password && passwordConfirm) {
       setValidForm(true)
     }

@@ -66,19 +66,19 @@ const RegisteredVertices = {
 Object.freeze(RegisteredVertices)
 
 class UpdateDependencyGraph extends Graph {
-  constructor() {
+  constructor () {
     super()
     this.addVertices()
     this.addEdges()
   }
 
-  addVertices() {
+  addVertices () {
     Object.keys(RegisteredVertices).forEach(key => {
       this.addVertex(RegisteredVertices[key])
     })
   }
 
-  addEdges() {
+  addEdges () {
     this.forEach((adj, v) => {
       if (v.type === 'root') {
         this.addEdge(v, RegisteredVertices.politicians)
@@ -101,7 +101,7 @@ class UpdateDependencyGraph extends Graph {
     })
   }
 
-  orderedUpdates(start) {
+  orderedUpdates (start) {
     if (!RegisteredVertices[start]) {
       throw new Error(`ERROR: ${start} is not in the update dependency graph`)
     }
@@ -116,23 +116,23 @@ class UpdateDependencyGraph extends Graph {
   }
 }
 
-function removeUtilityTags(v) {
+function removeUtilityTags (v) {
   return v.vertex.type !== Parameters.UpdateNode.All && v.vertex.type !== Parameters.UpdateNode.None
 }
 
-function depthSort(v, w) {
+function depthSort (v, w) {
   if (v.depth < w.depth) return -1
   if (v.depth > w.depth) return 1
   return 0
 }
 
-function reverseDepthSort(v, w) {
+function reverseDepthSort (v, w) {
   if (v.depth < w.depth) return 1
   if (v.depth > w.depth) return -1
   return 0
 }
 var seen = {}
-function removeDuplicates(v) {
+function removeDuplicates (v) {
   // eslint-disable-next-line no-prototype-builtins
   return seen.hasOwnProperty(v.vertex.data.collection.name) ? false : (seen[v.vertex.data.collection.name] = true)
 }

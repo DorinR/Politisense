@@ -32,14 +32,14 @@ imageURLs["people's party"] =
 Object.freeze(imageURLs)
 
 class PartyClassificationAction extends Action {
-  constructor(params) {
+  constructor (params) {
     super()
     this.parliament = params.parliament || 43
     const db = new Firestore().forParliament(this.parliament)
     this.politicians = this.retrievePoliticians(db)
   }
 
-  retrievePoliticians(db) {
+  retrievePoliticians (db) {
     return db
       .Politician()
       .select()
@@ -58,11 +58,11 @@ class PartyClassificationAction extends Action {
       .catch(console.error)
   }
 
-  perform() {
+  perform () {
     return this.createDerivedPartyModels()
   }
 
-  async createDerivedPartyModels() {
+  async createDerivedPartyModels () {
     this.politicians = await Promise.resolve(this.politicians)
 
     const parties = {}

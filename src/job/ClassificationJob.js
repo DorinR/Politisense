@@ -6,12 +6,12 @@ const AbstractJob = require('./Job').AbstractJob
 const FormatAction = require('../util/action/adapter_action/ClassificationResultAdapterAction').ClassificationResultAdapterAction
 
 class ClassificationJob extends AbstractJob {
-  constructor(params, callback) {
+  constructor (params, callback) {
     super(params, callback)
     this.params = params
   }
 
-  static create(params, cb) {
+  static create (params, cb) {
     const job = new ClassificationJob(params, cb)
     job
       .addAction(new QueueManagerWrapperAction(BillLinkFetchRunner, params))

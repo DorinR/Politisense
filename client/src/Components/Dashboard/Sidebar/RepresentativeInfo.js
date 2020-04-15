@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export async function fetchRidingCode(riding) {
+export async function fetchRidingCode (riding) {
   return axios
     .get(`/api/ridings/getRidingCode/${encodeURI(riding)}`)
     .then((res) => {
@@ -38,12 +38,12 @@ export async function fetchRidingCode(riding) {
     .catch(console.error)
 }
 
-export default function RepresentativeInfo(props) {
+export default function RepresentativeInfo (props) {
   const classes = useStyles()
 
   const [ridingCode, setRidingCode] = useState(null)
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       if (props.riding) {
         const code = await fetchRidingCode(props.riding)
         setRidingCode(code)
@@ -84,8 +84,8 @@ export default function RepresentativeInfo(props) {
               onChange={props.onChange}
             />
           ) : (
-              <CenteredCircularProgress />
-            )}
+            <CenteredCircularProgress />
+          )}
           <Box m={1} />
           {ridingCode && props.representative.party ? (
             <RidingShapeContainer
@@ -93,8 +93,8 @@ export default function RepresentativeInfo(props) {
               politicalParty={props.representative.party}
             />
           ) : (
-              <CenteredCircularProgress />
-            )}
+            <CenteredCircularProgress />
+          )}
           <Box m={1} />
         </CardContent>
       </Card>
@@ -107,8 +107,8 @@ export default function RepresentativeInfo(props) {
           {props.riding ? (
             <RidingPopulation riding={props.riding} />
           ) : (
-              <CenteredCircularProgress />
-            )}
+            <CenteredCircularProgress />
+          )}
         </CardContent>
       </Card>
       <Box m={1} />

@@ -14,7 +14,9 @@ import ResetForm from './Components/Auth/ResetForm'
 import Logout from './Components/Logout'
 import UserAccountTabs from './Components/Dashboard/UserAccount/UserAccountTabs'
 import Questionnaire from './Components/Questionnaire'
+import MyMP from './Components/MyMP/MyMP'
 import GeneralDashboard from './Components/Dashboard/General/GeneralDashboard'
+import Sidebar from './Components/Navbar/Navbar'
 import CategoryDashboard from './Components/Dashboard/CategoryDashboard'
 import BillHistoryTable from './Components/Dashboard/PastBills/BillHistoryTable'
 import BudgetContainer from './Components/Dashboard/Budget/BudgetContainer'
@@ -29,7 +31,7 @@ const App = () => {
   const [shapeData, setShapeData] = useState('')
   const [ridingMpData, setRidingMpData] = useState('')
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData () {
       return axios
         .get('/api/ridings/getRidingByRidingCode')
         .then((res) => {
@@ -44,7 +46,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData () {
       return axios
         .get('/api/mapSupportData/shape/getMapSupportData')
         .then((res) => {
@@ -58,7 +60,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData () {
       return axios
         .get('/api/mapSupportData/electionResults/getMapSupportData')
         .then((res) => {
@@ -107,7 +109,7 @@ const App = () => {
           <PrivateRoute path='/myRepresentative' component={MyMP} />
         </div>
       </Sidebar>
-    </div >
+    </div>
   )
 
   return (
