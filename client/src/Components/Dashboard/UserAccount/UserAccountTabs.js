@@ -12,6 +12,13 @@ import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
 import ChangeAccountPassword from './ChangeAccountPassword'
 import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import axios from "axios";
+import {tokenAuthenticate} from "../../Auth/authenticate";
 
 function TabPanel (props) {
   const { children, value, index, ...other } = props
@@ -44,54 +51,41 @@ function a11yProps (index) {
 }
 
 const useStyles = makeStyles((theme) => ({
-  card: {
-    height: 350
-  },
-  search: {
-    marginBottom: '30px',
-    backgroundColor: 'white'
-  },
-  link: {
-    margin: theme.spacing(1, 1.5)
-  },
   content: {
     padding: theme.spacing(8, 0, 6)
   },
-  prime: {
-    marginTop: '30px',
-    marginBottom: '30px',
-    width: '45%'
+  button: {
+    justifyContent: 'center'
   },
-  help: {
-    cursor: 'pointer'
-  },
-  cardHeader: {
-    backgroundColor: '#00BCD4',
-    color: 'white',
-    height: '100px'
-  },
-  image: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'baseline',
-    marginBottom: theme.spacing(2),
-    marginRight: theme.spacing(4)
-  }
 }))
 
-// const useStyles = makeStyles(theme => ({
-//   root: {
-//     backgroundColor: theme.palette.background.paper,
-//     width: 500,
-//     marginTop: 30,
-//     marginLeft: 20
-//   }
-// }))
+export async function deleteAccount() {
+  return axios
+      .post('/api/users/deleteAccount')
+      .then(res => {
+      })
+      .catch(e => {
+      })
+}
 
 export default function FullWidthTabs () {
   const classes = useStyles()
   const theme = useTheme()
   const [value, setValue] = React.useState(0)
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleCloseDelete = () => {
+    setOpen(false);
+    deleteAccount()
+  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -130,15 +124,37 @@ export default function FullWidthTabs () {
                 <ChangeAccountPassword />
               </TabPanel>
             </SwipeableViews>
-              <Container>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    className={classes.button}
-                >
-                  Delete Account
+            <Grid container justify = "center">
+              <Button
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                  onClick={handleClickOpen}
+              >
+                Delete Account
+              </Button>
+            </Grid>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{"Are you sure you want to delete your account?"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  This action cannot be undone.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Cancel
                 </Button>
-              </Container>
+                <Button onClick={handleCloseDelete} color="primary" autoFocus>
+                  Delete
+                </Button>
+              </DialogActions>
+            </Dialog>
           </div>
         </Container>
       </Grid>
