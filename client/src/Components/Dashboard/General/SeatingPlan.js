@@ -118,7 +118,7 @@ export default function SeatingPlan (props) {
       <br />
       {rows.length > 0 && props.partiesToUse && parties ? (
         <Grid container direction='column' justify='center' alignItems='left'>
-          <Grid item xs={30} alignItems='left' justify='center'>
+          <Grid container direction='row' spacing={2} className={props.classes.seatPad}>
             <Grid container direction='row' spacing={2}>
               <Grid item md={3} my={2}>
                 <Typography variant='h5' color='textPrimary' pb={20}>
