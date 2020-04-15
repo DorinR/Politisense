@@ -10,6 +10,7 @@ import axios from 'axios'
 import SaveIcon from '@material-ui/icons/Save'
 import { withSnackbar } from 'notistack'
 import bcrypt from 'bcryptjs'
+import { pwFormat } from '../Utilities/CommonUsedFunctions'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -122,8 +123,7 @@ function ChangeAccountPassword (props) {
 
   const handleSubmit = e => {
     e.preventDefault()
-
-    const passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+    const passwordFormat = pwFormat()
     const errors = {}
 
     const user = {
@@ -154,7 +154,7 @@ function ChangeAccountPassword (props) {
     }
   }
   if (changeCompleted) {
-    return <Redirect to={{ pathname: '/dashboard', state: { user: user } }} />
+    return <Redirect to={{ pathname: '/general', state: { user: user } }} />
   }
   return (
     <div>
@@ -189,7 +189,7 @@ function ChangeAccountPassword (props) {
                 id='password'
                 autoComplete='current-password'
                 error={errors.password !== ''}
-                helperText={errors.password}
+                helperText={errors.password ? errors.password : '8 characters, 1 uppercase/lowercase letter, 1 symbol and 1 digit'}
               />
             </Grid>
             <Grid item xs={12}>

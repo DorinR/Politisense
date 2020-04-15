@@ -9,6 +9,10 @@ export async function fetchCategoriesFromTxtFiles () {
   })
 }
 
+export function pwFormat (sponsor) {
+  return /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/ // 8 character, 1 symbol, 1 upper, 1 lower, 1 digit
+}
+
 export async function checkUserExists (email) {
   return axios.post('/api/users/checkIfUserExists', { email: email })
 }
