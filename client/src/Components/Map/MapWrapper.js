@@ -95,14 +95,15 @@ export default class ChartWrapper extends Component {
             </Grid>
             <Grid item xs={4}>
               {this.props.contents ? (
-                <Card borderRadius='borderRadius' borderColor='grey.500' style={{ marginLeft: '20%' }}>
+                <Card borderRadius='borderRadius' borderColor='grey.500' style={{ marginLeft: '10%' }}>
                   <CardHeader
                     style={{ textAlign: 'center' }}
                     title='Current Representative'
                   />
                   <Divider />
                   <div
-                    align='left'
+                    align='center'
+                    style={{ marginLeft: '-15%' }}
                   >
                     <RepresentativeImage
                       representative={this.props.contents}
